@@ -1,0 +1,18 @@
+# CARouter routes this model to OVHcloud AI Endpoints (Gravelines, FR; foreign-owned, off by default).
+# Price: Free plan CAD 0.0741 in / 0.2775 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# Effort: reasoning_effort passes through to OVHcloud: low|medium|high
+#   (providers/ovhcloud/models/gpt-oss-20b.toml).
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.0531
+
+[cost.text.output]
+price = 0.1988

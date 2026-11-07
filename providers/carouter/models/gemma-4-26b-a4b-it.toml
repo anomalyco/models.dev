@@ -1,0 +1,18 @@
+# CARouter routes this model to Scaleway (Paris, FR; foreign-owned, off by default).
+# Price: Free plan CAD 0.4625 in / 0.9252 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# Effort: reasoning_effort passes through to Scaleway: none|low|medium|high
+#   (providers/scaleway/models/gemma-4-26b-a4b-it.toml).
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.3313
+
+[cost.text.output]
+price = 0.6627

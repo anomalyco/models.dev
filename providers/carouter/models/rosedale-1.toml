@@ -1,0 +1,26 @@
+# CARouter routes this model to Augure (Canada; Canadian-owned, off by default).
+# Price: Free plan CAD 2.875 in / 6.9 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# Effort: reasoning_effort passes through to Augure; "none" is served as "low" and there is no
+#   thinking-off mode, so the four forwarded levels are listed (https://augureai.ca/docs/api).
+#   CARouter documents image input only (no PDF).
+schema = 2
+base_model = "augure/rosedale-1"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.0593
+
+[cost.text.output]
+price = 4.9423

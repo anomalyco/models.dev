@@ -1,0 +1,34 @@
+# Sources (accessed 2026-11-04):
+# - https://huggingface.co/jaredpalmer/kev-4b (Apache-2.0; LoRA adapter + pointer head on
+#   Qwen/Qwen3.5-4B-Base; implements TypeSafe's System One API; Kev 1.0 first published 2026-09-24)
+# - https://github.com/jaredpalmer/kev (training code, evaluation suites)
+# Context: 8,192 tokens is the validated context on the model card (longer states are served
+#   but not validated).
+# Output: probabilities over the options of each typed question, no generated text, so there
+#   is nothing to sample (temperature/top_p/top_k false).
+schema = 2
+type = "decision"
+name = "Kev 4B"
+description = "Open decision model that answers typed questions about a text with calibrated probabilities in one forward pass"
+open_weights = true
+release_date = "2026-09-24"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/jaredpalmer/kev-4b"

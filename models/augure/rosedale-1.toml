@@ -1,0 +1,29 @@
+# Augure (Toronto) builds this model. Lab facts only; hosts set reasoning controls, prices and APIs.
+# Sources (accessed 2026-11-04): https://augureai.ca/docs/models (1M context, 32,768 output cap),
+#   https://augureai.ca/docs/api (1M = 1,048,576 tokens; image_url and PDF file parts on every
+#   model; temperature and top_p, no top_k; tools), https://augureai.ca/docs/changelog, and
+#   https://carouter.ai/llms-full.txt ("post-trained from GLM 5.2").
+# Release date: Augure publishes none; first attested on the API in the 2026-08-18 changelog
+#   entry, so the month is used.
+# Facts cross-checked against Augure's own provider files in models.dev PR #11786.
+# Knowledge cutoff is not published by Augure.
+schema = 2
+name = "Rosedale One"
+description = "Augure's long-context reasoning model with a 1M-token window for whole-document analysis, tool calling and agent loops"
+open_weights = false
+release_date = "2026-08"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 32_768

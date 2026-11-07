@@ -1,0 +1,29 @@
+# CARouter routes this model to CARouter Cloud (Ottawa, ON; Canadian-owned, on by default).
+# Other live routes: scaleway (used only when the account enables them).
+# Price: Free plan CAD 0.2755 in / 0.1193 cached input / 1.9987 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# Toggle: chat_template_kwargs.enable_thinking = true|false (vLLM, CARouter Cloud's engine; CARouter documents "a switchable thinking mode" without naming the field; not tested live)
+# CARouter Cloud serves it on vLLM with a per-workspace prefix cache (cached input billed lower,
+#   cache_salt accepted). CARouter documents image input, not video.
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 32_768
+
+[cost.text.input]
+price = 0.1973
+cache = { read = 0.0855 }
+
+[cost.text.output]
+price = 1.4316

@@ -1,0 +1,27 @@
+# CARouter routes this model to Augure (Canada; Canadian-owned, off by default).
+# Price: Free plan CAD 1.725 in / 3.45 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# Effort: reasoning_effort passes through to Augure: none|minimal|low|medium|high, none turns
+#   thinking off (https://augureai.ca/docs/api). CARouter's catalog lists no image input and no
+#   function calling for this model, so both are off here.
+schema = 2
+base_model = "augure/ossington-5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.2356
+
+[cost.text.output]
+price = 2.4712

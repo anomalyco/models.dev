@@ -1,0 +1,24 @@
+# CARouter routes this model to Scaleway (Paris, FR; foreign-owned, off by default).
+# Price: Free plan CAD 0.7401 in / 0.148 cached input / 1.4802 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# Effort: reasoning_effort passes through to Scaleway: none|low|high|max
+#   (providers/scaleway/models/deepseek-v4-flash-0731.toml).
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+output = 32_768
+
+[cost.text.input]
+price = 0.5301
+cache = { read = 0.106 }
+
+[cost.text.output]
+price = 1.0602
