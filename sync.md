@@ -199,6 +199,15 @@ EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
 - A `cache` or `prompt_cache` feature sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet. Authored `implicit` / `explicit` details are kept.
 - `base_model` files never carry model facts (dates, `family`, `knowledge`, `open_weights`); they come from the lab. Only standalone files keep them.
 
+## Keln Notes
+
+- Run with `bun models:sync keln` or `bun keln:sync`. Registration enables the hourly provider-specific workflow; no API key or new workflow secret is required.
+- Source: the public `https://api.keln.ai/v1/models` endpoint (OpenRouter's shape). Prices are USD per token as decimal strings and convert exactly to USD per million tokens. `context_length`, `input_modalities` and the per-model `reasoning` object are API-authoritative.
+- Model IDs use the Hugging Face organisation; `deepseek-ai/` and `minimaxai/` map to the `deepseek` and `minimax` metadata labs, every other prefix resolves as published. Lab facts, release dates and output limits are inherited via `base_model`.
+- Reasoning options come from the published `reasoning` object: `supported_efforts` becomes an effort option (with `none` when thinking can be switched off), an on/off-only model gets a toggle, and an always-on model with no published levels gets `[]`. Each file's header names the wire field.
+- Only rows whose `output_modalities` include `text` sync. Keln also lists decision-output models (e.g. `cloudflare/clef`); they cannot serve chat, so they are filtered out at parse time and their files are removed like retired models.
+- Rows without a lab base or published controls are reported and keep their files; models absent from the API are removed. Empty, malformed and duplicate-ID inventories fail before writes.
+
 ## OpenRouter Notes
 
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
