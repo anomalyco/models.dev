@@ -1,0 +1,15 @@
+# Alias for kimi-k2.6 in Tencent Token Plan International.
+# Toggle: thinking.type = enabled|disabled
+base_model = "moonshotai/kimi-k2.6"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
