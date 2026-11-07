@@ -1,0 +1,12 @@
+# Effort: reasoning_effort = none|high|max
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+
+[limit]
+context = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

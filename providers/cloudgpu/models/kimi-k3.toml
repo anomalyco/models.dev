@@ -1,0 +1,16 @@
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
