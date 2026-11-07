@@ -1,0 +1,10 @@
+# Text/image/motion routes: https://mixroute.ai/docs/model-api/kuaishou/kling-2.6
+# Catalog: https://api.mixroute.ai/v1/models
+# Service: https://mixroute.ai/models/kling-2.6/
+schema = 2
+base_model = "kuaishou/kling-v2.6"
+
+[api.videos]
+base_url = "https://api.mixroute.ai"
+path = "/kling/text-to-video/kling-2.6"
+sdk = { aisdk = "none", opencodeai = "none" }

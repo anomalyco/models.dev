@@ -1,0 +1,10 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/openrouter/models/moonshotai/kimi-k2.5.toml
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]

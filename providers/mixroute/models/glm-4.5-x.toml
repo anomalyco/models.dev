@@ -1,0 +1,12 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Alias reference: providers/zai/models/glm-4.5-x.toml
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-4.5"
+name = "GLM-4.5-X"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]

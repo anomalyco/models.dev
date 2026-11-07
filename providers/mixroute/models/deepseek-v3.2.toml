@@ -1,0 +1,10 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/openrouter/models/deepseek/deepseek-v3.2.toml
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]

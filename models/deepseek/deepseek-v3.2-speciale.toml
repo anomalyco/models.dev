@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Speciale
+# Source: https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Speciale/blob/main/config.json
+# Source: https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Speciale/blob/main/generation_config.json
+schema = 2
+name = "DeepSeek V3.2 Speciale"
+description = "High-compute DeepSeek V3.2 reasoning model"
+open_weights = true
+release_date = "2025-12-01"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 163840

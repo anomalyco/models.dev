@@ -1,0 +1,11 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/commandcode/models/deepseek/deepseek-v4-pro.toml
+# Live 2026-11-01: reasoning_effort=low with thinking.type=enabled returned HTTP 200 and reasoning_content.
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]

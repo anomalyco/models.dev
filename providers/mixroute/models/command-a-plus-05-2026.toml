@@ -1,0 +1,10 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/cohere/models/command-a-plus-05-2026.toml
+# Toggle: thinking.type = enabled|disabled; thinking.token_budget sets the budget
+schema = 2
+base_model = "cohere/command-a-plus-05-2026"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1 } }
+
+[api.chat-completions]

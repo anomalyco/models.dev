@@ -1,0 +1,14 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Service: https://mixroute.ai/models/deepseek-v3-2-speciale/
+schema = 2
+base_model = "deepseek/deepseek-v3.2-speciale"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 131072
+output = 128000
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }

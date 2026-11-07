@@ -1,0 +1,16 @@
+# Custom-tool probe 2026-11-01, responses: text, lark, regex returned custom tool calls; grammar probes matched ZZ[0-9]{3}.
+# Custom-tool probe 2026-11-01, chat-completions: text, lark, regex returned custom tool calls; grammar probes matched ZZ[0-9]{3}.
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/openai/models/gpt-5-mini.toml
+schema = 2
+base_model = "openai/gpt-5-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+
+[api.chat-completions]
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }

@@ -1,0 +1,10 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/minimax/models/MiniMax-M3.toml
+# Toggle: thinking.type = adaptive|disabled
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]

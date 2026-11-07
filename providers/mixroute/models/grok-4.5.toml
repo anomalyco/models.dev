@@ -1,0 +1,9 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/xai/models/grok-4.5.toml
+schema = 2
+base_model = "xai/grok-4.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[api.chat-completions]

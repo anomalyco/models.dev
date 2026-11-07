@@ -1,0 +1,14 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/google/models/gemini-2.5-flash.toml
+# Toggle: generationConfig.thinkingConfig.thinkingBudget = 0 disables thinking
+schema = 2
+base_model = "google/gemini-2.5-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24576 } }
+
+[api.generate-content]
+base_url = "https://api.mixroute.ai/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[api.chat-completions]

@@ -1,0 +1,11 @@
+# Custom-tool probe 2026-11-01, responses: rejected (400); Invalid value: 'custom'.
+# Custom-tool probe 2026-11-01, chat-completions: rejected (400); Invalid value: 'custom'..
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/openai/models/o3.toml
+schema = 2
+base_model = "openai/o3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]
