@@ -1,0 +1,26 @@
+# Sources (accessed 2026-10-15, re-verified on the live feed 2026-10-22):
+# - Model id, USD pricing and limits: https://pool.linkrra.com/v1/models?format=openrouter
+#   (schema_version 2.4; cost_usd is per token: 0.000000017 prompt / 0.000000085 completion).
+# - limit.context 32,768: the deployment's window as declared by the live feed
+#   (below the lab model's 131k). limit.output is not restated: the lab value (32,768)
+#   is inherited and matches the feed's max output.
+# - tools + structured_output: live probe - a request carrying `tools` returns
+#   finish_reason "tool_calls" with a well-formed call, and response_format json_schema
+#   returns schema-conforming JSON (both inherited from the lab entry).
+# - reasoning: the lab model reasons; the feed advertises reasoning_effort and the live
+#   endpoint accepts reasoning_effort low|medium|high (HTTP 200), so the host exposes the
+#   native effort control.
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.017
+
+[cost.text.output]
+price = 0.085
+
+[limit]
+context = 32_768
