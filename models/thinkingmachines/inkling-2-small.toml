@@ -1,0 +1,41 @@
+# Sources (accessed 2026-11-07):
+# - https://thinkingmachines.ai/news/inkling-2-small/
+# - https://thinkingmachines.ai/model-card/inkling-2-small/
+# Weights are closed at release; the lab plans to publish them under Apache-2.0 after safety testing.
+# Input: the model card lists "any pixel-based image input" without naming formats, so the generic image modality is used.
+schema = 2
+name = "Inkling 2 Small"
+description = "Multimodal MoE reasoning model (594B total, 17B active) for agentic coding, vision, and knowledge work"
+family = "ling"
+open_weights = false
+release_date = "2026-11-05"
+license = "Proprietary"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[[links]]
+url = "https://thinkingmachines.ai/news/inkling-2-small/"
+type = "announcement"
+
+[[links]]
+url = "https://thinkingmachines.ai/model-card/inkling-2-small/"
+type = "model_card"
+
+[[benchmarks]]
+name = "Artificial Analysis Intelligence Index"
+score = 30.6
+version = "v5.0"
+source = "https://thinkingmachines.ai/news/inkling-2-small/"
