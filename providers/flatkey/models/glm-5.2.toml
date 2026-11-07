@@ -1,0 +1,14 @@
+# Pricing: https://flatkey.ai/models (accessed 2026-10-21), USD per 1M tokens; "Cache" column = cache read.
+# Effort: reasoning_effort on /v1/chat/completions; levels match the same-surface peer providers/openrouter/models/z-ai/glm-5.2.toml.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
+
+[cost.text.input]
+price = 0.84
+cache = { read = 0.156 }
+
+[cost.text.output]
+price = 2.64
