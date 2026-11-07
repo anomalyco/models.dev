@@ -1,0 +1,24 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-10-26, accessed 2026-10-26). Token prices are USD per 1M tokens.
+# AIsa is a multi-model relay: reasoning controls follow the underlying lab API and relay peers.
+# Reasoning baseline: providers/anthropic/models/claude-sonnet-5-5.toml and OpenRouter peers.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 10

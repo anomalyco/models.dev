@@ -1,0 +1,28 @@
+# Sources (accessed 2026-10-26):
+# https://www.alibabacloud.com/help/en/model-studio/qwen-mt-lite (text modalities, 16,384 context, 8,192 input/output)
+# https://www.alibabacloud.com/help/en/model-studio/newly-released-models (released 2025-11-19)
+# https://www.alibabacloud.com/help/en/model-studio/text-generation-model (no thinking or function calling)
+# https://www.alibabacloud.com/help/en/model-studio/qwen-mt-api (temperature, top_p and top_k)
+# Single-turn translation with translation_options; no system messages. Knowledge cutoff is not published.
+schema = 2
+name = "Qwen-MT Lite"
+description = "Lightweight Qwen translation model for fast, low-cost multilingual translation with terminology and domain control"
+family = "qwen"
+open_weights = false
+release_date = "2025-11-19"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 16_384
+input = 8_192
+output = 8_192

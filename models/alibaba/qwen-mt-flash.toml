@@ -1,0 +1,31 @@
+# Sources (accessed 2026-09-15):
+# https://www.alibabacloud.com/help/en/model-studio/qwen-mt-flash
+# https://www.alibabacloud.com/help/en/model-studio/machine-translation
+# September 17 rename announcement: https://www.alibabacloud.com/zh/notice/model_studio_update_of_qwenmt_series_5a7
+# Release follows the earliest actual qwen-mt-flash lifecycle row (China: 2025-11-06;
+# international: 2025-11-11): https://www.alibabacloud.com/help/en/model-studio/newly-released-models (accessed 2026-10-26).
+# Single-turn translation API (translation_options); Function Calling and Structured Outputs listed as Unsupported.
+# No snapshots published; last_updated = release. Knowledge cutoff not published.
+# Sampling: temperature, top_p and top_k are documented in https://www.alibabacloud.com/help/en/model-studio/qwen-mt-api (accessed 2026-10-26).
+schema = 2
+name = "Qwen-MT Flash"
+description = "Qwen3-based translation model for rapid, cost-effective translation across 92 languages with terminology and domain control"
+family = "qwen"
+release_date = "2025-11-06"
+open_weights = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 16_384
+input = 8_192
+output = 8_192
+
+[modalities]
+input = ["text"]
+output = ["text"]

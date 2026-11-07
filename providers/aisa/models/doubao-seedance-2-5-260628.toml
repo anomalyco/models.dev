@@ -1,0 +1,12 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-10-26, accessed 2026-10-26). Token prices are USD per 1M tokens.
+# AIsa serves the Seedance 2.5 video model through its video-generation route.
+# Cost omitted: the public API repeats resolutions with different video-token prices but
+# provides no condition that distinguishes those tiers; zero text prices are placeholders.
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/seedance-2.5"
+
+[api.videos]
+path = "/video/generations"
+sdk = { aisdk = "none", opencodeai = "none" }
