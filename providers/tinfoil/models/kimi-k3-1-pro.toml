@@ -1,0 +1,29 @@
+# Sources (accessed 2026-11-07):
+# - https://inference.tinfoil.sh/v1/models (prices, served context, experimental status)
+# - https://docs.tinfoil.sh/models/chat#kimi-k3-1-pro (text/image inputs, tools, structured output)
+# - https://docs.tinfoil.sh/guides/reasoning (always-on; reasoning_effort = low|high|max, default max; response field reasoning)
+# - https://docs.tinfoil.sh/guides/image-processing (JPEG, PNG, GIF, WebP via image_url)
+# - https://docs.tinfoil.sh/sdk/prompt-caching (implicit prompt-prefix caching)
+# The host's 262144-token context overrides the lab limit; the lab output limit is inherited.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+status = "beta"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 20
