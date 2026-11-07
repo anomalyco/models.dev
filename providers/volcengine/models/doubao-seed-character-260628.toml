@@ -1,16 +1,22 @@
-# The provider modalities table requires both input and output in schema-v2.
 # Limits: public Ark Docs MCP ark_get_model("doubao-seed-character-260628"), 2026-11-07.
 # https://ark.volcengine.com/region:cn-beijing/docs/model-list
-# Ark Docs MCP lists text/image input for this version; video is not inherited from the lab.
+# The provider modalities table requires both input and output in schema-v2.
+# Ark Docs MCP lists text/image input; video is not inherited from the lab.
 # Its pricing billing_condition.max_prompt_tokens is 32768 for the first price band.
 # Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-character-260628`
 # CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
-# Host reasoning controls (2026-11-07):
-# https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking
-# Effort: reasoning_effort = minimal|low|medium|high; minimal disables thinking.
-# Accepted aliases: none->minimal, xhigh/max->high. Do not repeat equivalent levels.
-# The current docs and Docs MCP disagree on the default effort, so no default is declared.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = minimal|low|high, and it must be paired with
+# thinking.type=enabled. This model defaults thinking OFF, so a graded effort sent
+# on its own is rejected: "Invalid combination of reasoning_effort and thinking
+# type: low + disabled". 'none' is likewise unavailable; 'minimal' is the off value.
+# Only three levels are separable. With thinking enabled, n=4 runs per level on a
+# prompt hard enough to consume the budget:
+#   minimal 0 0 0 0                 low  1347/1258/1166/1149
+#   high    1709/2696/1695/1513     max  2304/1881/1985/1480
+# max overlaps high rather than exceeding it, and medium/xhigh sit inside the same
+# band, so they are dropped.
 schema = 2
 base_model = "bytedance-seed/seed-character"
 
@@ -32,7 +38,7 @@ input = [
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "high"] }
 structured_output = true
 
 [limit]
