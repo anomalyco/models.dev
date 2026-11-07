@@ -1,0 +1,14 @@
+# Source: https://routerplex.com/api/models (accessed 2026-10-20).
+# Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
+# cache_read is listed only where cached prompt tokens bill below the input rate.
+base_model = "minimax/MiniMax-M2.7"
+
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.025
+
+[limit]
+context = 196_000

@@ -1,0 +1,13 @@
+# Source: https://routerplex.com/api/models (accessed 2026-10-20).
+# Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
+# cache_read is listed only where cached prompt tokens bill below the input rate.
+base_model = "tencent/hy4-preview"
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "high"]
+
+[cost]
+input = 0.834
+output = 2.501
+cache_read = 0.042

@@ -1,0 +1,20 @@
+# Source: https://routerplex.com/api/models (accessed 2026-10-20).
+# Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
+# cache_read is listed only where cached prompt tokens bill below the input rate.
+# Toggle: `thinking.type` = enabled|disabled. Effort: `reasoning_effort` = low|high|max.
+base_model = "deepseek/deepseek-v4-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.8
+output = 2.39
+cache_read = 0.21

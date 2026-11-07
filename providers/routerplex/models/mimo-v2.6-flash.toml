@@ -1,0 +1,15 @@
+# Source: https://routerplex.com/api/models (accessed 2026-10-20).
+# Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
+# cache_read is listed only where cached prompt tokens bill below the input rate.
+# Toggle: `thinking.type` = enabled|disabled.
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.14
+output = 0.28
