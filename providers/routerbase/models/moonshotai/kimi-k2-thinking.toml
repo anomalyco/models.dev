@@ -1,0 +1,21 @@
+# Prices: GET https://routerbase.com/api/models/moonshotai/kimi-k2-thinking/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Same upstream controls as providers/novita-ai/models/moonshotai/kimi-k2-thinking.toml (RouterBase forwards them unchanged):
+schema = 2
+base_model = "moonshotai/kimi-k2-thinking"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 98_304
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.51
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2.125
