@@ -1,0 +1,37 @@
+# Effort: Messages `output_config.effort` = low|medium|high|xhigh|max with `thinking.type = adaptive`; Databricks sets no default (Anthropic uses `high`), and reasoning can't be disabled.
+# Models, inputs and lifecycle (accessed 2026-10-28): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Data retention: prompts and responses are kept for 30 days for trust and safety; workspaces that opt out of data retention can't use this model (supported-models).
+# Reasoning (accessed 2026-10-28): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Pricing (accessed 2026-10-28): DBU rates from https://www.databricks.com/product/pricing/proprietary-foundation-model-serving x USD 0.070/DBU (`prop_model_serving` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json: Anthropic, Google, OpenAI and SpaceXAI on AWS Premium/Enterprise, every region).
+# Standard DBU per 1M input/output/cache-read/5m-write/1h-write tokens: 142.857/714.286/3.571/178.571/285.714.
+# The pricing page marks this model with a 10% DBU uplift when regional processing (data residency) is enabled: the 1.1x multiplier when region is not global.
+# Batch inference is billed per DBU-hour, not per token; not modeled.
+# Images: JPEG, PNG, GIF, WebP; up to 100 per API request, larger than 8000x8000 px rejected (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-vision-models).
+# Cache: `cache_control` on Databricks-hosted Claude (https://docs.databricks.com/aws/en/machine-learning/model-serving/score-foundation-models#prompt-caching); 5m and 1h write prices from the pricing page.
+# structured_output: not recorded. Chat Completions `response_format` returns HTTP 400 for this model, and the Messages `output_config.format` note lists only Opus 5.5, Sonnet 5.5 and Haiku 5.5 (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-anthropic-messages).
+# system_updates, effort_updates and tools.updates are undocumented on Databricks and untested (no Databricks key).
+# APIs: Anthropic Messages API at /serving-endpoints/anthropic/v1/messages only (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-anthropic-messages). query-reason-models documents this model's reasoning controls on Messages only.
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[limit]
+image = { max_per_request = 100, max_width = 8_000, max_height = 8_000 }
+
+[api.messages]
+base_url = "https://${DATABRICKS_HOST}/serving-endpoints/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 10
+cache = { read = 0.25, write = { "5m" = 12.5, "1h" = 20 } }
+
+[cost.text.output]
+price = 50
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1
