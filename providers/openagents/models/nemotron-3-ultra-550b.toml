@@ -1,0 +1,14 @@
+# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
+# Messages controls: `reasoning_effort = none|medium|high`; `reasoning_budget = -1..32768` (NVIDIA NIM/Baseten peer baseline).
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"], budget = { min = -1, max = 32_768 } }
+
+[cost.text.input]
+price = 1.8
+
+[cost.text.output]
+price = 3.4
+

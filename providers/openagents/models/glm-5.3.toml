@@ -1,0 +1,14 @@
+# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
+# Effort: Messages `output_config.effort = low|high|max`. `thinking.type=disabled` did not suppress thinking in the live probe, so no toggle is advertised.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 1.9
+
+[cost.text.output]
+price = 6.8
+
