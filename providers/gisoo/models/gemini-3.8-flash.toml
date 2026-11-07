@@ -1,0 +1,12 @@
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.05
+cache = { read = 0.105 }
+
+[cost.text.output]
+price = 5.25
