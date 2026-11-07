@@ -11,6 +11,9 @@ base_model = "alibaba/qwen3.7-plus"
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = {} }
 
+[limit]
+output = 131_072
+
 [cost.text.input]
 price = 0.4
 cache = { read = 0.08 }

@@ -1,0 +1,26 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-10-22).
+# Toggle: $.reasoning = true|false (or the :think suffix); the gateway maps it to chat_template_kwargs.enable_thinking.
+# Measured: reasons by default; reasoning = false -> no reasoning. A top-level enable_thinking is inert
+# and thinking_budget is not honoured (16 still produced ~2,900 reasoning characters); reasoning_effort -> 400 "exposes thinking as an on/off mode", so no effort is listed.
+schema = 2
+base_model = "alibaba/qwen3.5-4b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = false
+
+[limit]
+context = 131_072
+output = 65_536
+
+[cost.text.input]
+price = 1
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 3

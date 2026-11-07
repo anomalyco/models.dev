@@ -1,0 +1,21 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-10-22).
+# Measured: reasons by default (reasoning tokens in usage, no reasoning text); reasoning_effort and
+# reasoning.effort -> 400 "does not expose a thinking mode", so there is no caller control.
+schema = 2
+base_model = "openai/gpt-5-mini"
+base_model_omit = ["limit.input"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 2
