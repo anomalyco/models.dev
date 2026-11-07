@@ -1,0 +1,23 @@
+# Effort: reasoning_effort = low|high|max (forwarded unchanged)
+# Input: text, JPEG and PNG. A 32x32 PNG and a 32x32 JPEG sent through https://synthorai.io/v1
+# on 2026-10-26 were read back correctly (2/2 runs each). Other image types and video were
+# not tested, so they are left out.
+# Limits: inherited from the lab entry (context 1_048_576, output 131_072).
+# Price: https://synthorai.io/api/pricing (read 2026-10-26), USD per million tokens.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

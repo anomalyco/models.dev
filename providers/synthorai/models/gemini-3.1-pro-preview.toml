@@ -1,0 +1,24 @@
+# Effort: reasoning_effort low|medium|high -> generationConfig.thinkingConfig.thinkingLevel.
+# Price: https://synthorai.io/api/pricing (read 2026-10-26), USD per million tokens.
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18
