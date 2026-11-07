@@ -3,6 +3,8 @@
 # output = input x completion_ratio. Prompt-cache pricing is not published, so none is declared.
 # Reasoning: passthrough of the upstream Anthropic Messages controls on the /v1/messages
 # surface declared below; chat-completions (provider default) does not expose them.
+# Toggle: $.thinking.type = "enabled"|"disabled"
+# Budget: integer $.thinking.budget_tokens
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
@@ -11,7 +13,7 @@ reasoning = { supported = true, toggle = true, budget = {} }
 
 [api.messages]
 base_url = "https://api.teapotrouter.com"
-sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.35
