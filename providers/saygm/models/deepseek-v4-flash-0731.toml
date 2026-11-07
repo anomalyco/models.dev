@@ -1,0 +1,21 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.418
+cache = { read = 0.0133 }
+
+[cost.text.output]
+price = 1.254
