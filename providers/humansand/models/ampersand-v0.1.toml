@@ -1,0 +1,34 @@
+# Sources, by field (all under https://ampersand.humansand.ai/docs/):
+# - cost: PRICING.html "Input, excluding cached tokens $1.00 / Cached input $0.20 / Output, including reasoning
+#   tokens $5.20" per million tokens; cache write is not billed separately (no row for it).
+# - cache implicit only: PRICING.html "Cached input is the input that the model server reports as reused from its
+#   cache ... a cache hit is not guaranteed"; the API has no cache-control field.
+# - reasoning effort: API_REFERENCE.html "Models with reasoning selection support reasoning.effort="high" or "max""
+#   (wire field agent.reasoning.effort; default when omitted is the endpoint default, currently high). No reasoning
+#   text is returned, only token counts (PRICING.html "private reasoning text is not returned").
+# - tools updates = false / system_updates = false: API_REFERENCE.html, tools and instructions are agent settings
+#   captured at session creation; only metadata and agent.reasoning.effort can be updated on a session.
+# - status beta: every endpoint requires the `OpenAI-Beta: agents=v1` header (API_REFERENCE.html, "Authentication
+#   and requests"); the model id itself is ampersand-v0.1.
+# Served through the Agents API (sessions + input events), not chat completions, hence [api.agents] and no
+# @opencode/ai entry point yet.
+schema = 2
+base_model = "humansand/ampersand-v0.1"
+status = "beta"
+
+[capabilities]
+tools = { supported = true, updates = false }
+reasoning = { supported = true, effort = ["high", "max"], default = { type = "effort", value = "high" } }
+system_updates = false
+cache = { supported = true, implicit = true, explicit = false }
+
+[cost.text.input]
+price = 1.0
+cache = { read = 0.2, write = 0 }
+
+[cost.text.output]
+price = 5.2
+
+[api.agents]
+base_url = "https://ampersand.humansand.ai/v1"
+sdk = { aisdk = "opencode-humansand", opencodeai = "none" }
