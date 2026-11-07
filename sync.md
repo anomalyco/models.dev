@@ -28,6 +28,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync volcengine` syncs Volcengine Ark's public text model data.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -156,6 +157,15 @@ Each provider writes to a fixed provider branch like `automation/sync-models-ope
 CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get an hourly provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
+
+## Volcengine Notes
+
+- Source: only the public `https://ark.volcengine.com/region:cn-beijing/docs/model-list.md`. No API key or additional workflow secret is required. Registration enables the existing hourly provider-specific sync.
+- Public text generation models are synced, including multimodal understanding models. New versions in explicitly mapped Seed 2.1 Pro/Lite, GLM 5.3 Flash and Kimi K3.1 Pro families can create provider TOMLs when their canonical lab metadata and curated same-family host controls already exist. Seed 2.1 Turbo and GLM 5.2 require a separate review of their curated reasoning controls before automatic creation is enabled. These models, new families, missing canonical metadata, unknown reasoning controls and unresolved limits use the existing missing-model issue workflow. Retiring versions are not newly created; existing files absent from the docs are retained.
+- New files inherit model facts from `base_model`, use the known family's host reasoning/API settings and omit prices. Existing prices, context price bands, cache details, service tiers and source headers are preserved; this source does not provide pricing.
+- Automatic creation requires the mapped canonical and curated peer entries to already exist on `dev`. Merge the initial Volcengine catalog refresh before enabling automatic creation for the newly added families; absent prerequisites are reported as missing-model issues rather than generating partial files.
+- Documented tool and structured-output support can enable those capabilities; missing labels do not disable curated values. `即将下线` marks a listed model deprecated. Existing reasoning controls are preserved.
+- Exact integer token limits can update directly. A `k` value is used only when its decimal or binary interpretation matches the already-curated precise value of that model or its same-family peer. Ambiguous changes preserve existing limits and produce notices; new versions needing unknown precise limits go through the missing-model issue workflow.
 
 ## Eden AI Notes
 
