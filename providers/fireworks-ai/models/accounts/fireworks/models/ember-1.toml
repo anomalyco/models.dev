@@ -2,11 +2,10 @@
 # - https://fireworks.ai/models/fireworks/ember-1 — Ember-1 model card: specialized Fireworks model built on Kimi K3, ~40% fewer tokens, $3.00/$0.30/$15.00 per 1M, 1040k context, image input + function calling supported, MoE 2.78T, Created 9/22/2026, Provider Fireworks, Kind Base model.
 # - https://app.fireworks.ai/models/fireworks/ember-1 — Hugging Face N/A (no open weights), Context 1M, usage example max_tokens 131072, Research Preview Serverless, Function-calling/LLM/Vision tags.
 # - https://fireworks.ai/blog/ember-1 (published 9/23/2026) — Fireworks' own model from Fireworks Research, built on Kimi K3, shorter reasoning traces, Research Preview on Serverless.
-# - https://docs.fireworks.ai/api-reference/post-chatcompletions and https://docs.fireworks.ai/guides/reasoning — reasoning_effort low|medium|high|max|xhigh|none and thinking.type enabled|disabled with budget_tokens >= 1024; Kimi K3 tiers: low selects Low, medium promotes to high, high selects High, xhigh promotes to max, max selects Max.
+# - https://docs.fireworks.ai/api-reference/post-chatcompletions and https://docs.fireworks.ai/guides/reasoning — reasoning_effort low|medium|high|max|xhigh|none and thinking.type enabled|disabled (budget_tokens >= 1024 accepted but not enforced, see below); Kimi K3 tiers: low selects Low, medium promotes to high, high selects High, xhigh promotes to max, max selects Max.
 # - Peer surface: providers/fireworks-ai/models/accounts/fireworks/models/kimi-k3.toml (same Fireworks serverless reasoning API, built on Kimi K3).
 # Toggle: thinking.type = enabled|disabled (reasoning_effort = none|false also disables)
 # Effort: reasoning_effort = low|medium|high|max; medium promotes to high, xhigh promotes to max
-# Budget: thinking.budget_tokens >= 1024 (integer reasoning-token cap)
 # Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
 #   and returned schema-shaped JSON without being asked for JSON in a live test (2026-10-21).
 # Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
