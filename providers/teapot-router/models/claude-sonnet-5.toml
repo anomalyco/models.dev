@@ -3,8 +3,11 @@
 # output = input x completion_ratio. Prompt-cache pricing is not published, so none is declared.
 # Reasoning: passthrough of the upstream Anthropic Messages controls on the /v1/messages
 # surface declared below; chat-completions (provider default) does not expose them.
-# Toggle: $.thinking.type = "enabled"|"disabled"
+# Toggle: $.thinking.type = "adaptive"|"disabled"
 # Effort: $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max"
+# Live probe 2026-11-07 on https://api.teapotrouter.com/v1/messages: thinking.type="adaptive"
+# accepted (HTTP 200, thinking block returned); thinking.type="enabled" without budget_tokens
+# rejected — matches the lab and same-surface peer wire values.
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
