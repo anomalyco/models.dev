@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/jwest33/gemma-3-4b-null-space-abliterated-RP-writer
+name = "gemma-3-4b-null-space-abliterated-RP-writer"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "gemma"
+release_date = "2026-01-09"
+last_updated = "2026-01-09"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/jwest33/gemma-3-4b-null-space-abliterated-RP-writer"

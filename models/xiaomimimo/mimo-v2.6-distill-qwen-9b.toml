@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B
+name = "MiMo-V2.6-Distill-Qwen-9B"
+description = "Xiaomi’s agentic 9B SFT: coding, tool use, terminal tasks. SWE-Verified 61.1 avg@3."
+family = "qwen"
+release_date = "2026-09-21"
+last_updated = "2026-09-22"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B"

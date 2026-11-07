@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/d0gra/uncensored-stage1-hacker
+name = "uncensored-stage1-hacker"
+description = "No lecture layer. Answers the prompt you actually wrote."
+release_date = "2026-04-11"
+last_updated = "2026-04-11"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 40960
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/d0gra/uncensored-stage1-hacker"

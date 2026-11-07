@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/aifeifei798/llama3-8B-DarkIdol-2.1-Uncensored-1048K
+name = "llama3-8B-DarkIdol-2.1-Uncensored-1048K"
+description = "No lecture layer. Answers the prompt you actually wrote."
+family = "llama"
+release_date = "2024-06-27"
+last_updated = "2024-07-03"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 1048576
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/aifeifei798/llama3-8B-DarkIdol-2.1-Uncensored-1048K"

@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/coder3101/Cydonia-24B-v4.3-vision-heretic
+name = "Cydonia-24B-v4.3-vision-heretic"
+description = "Roleplay finetune with serious prose quality. The Drummer adjacent."
+release_date = "2026-02-07"
+last_updated = "2026-02-11"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/coder3101/Cydonia-24B-v4.3-vision-heretic"

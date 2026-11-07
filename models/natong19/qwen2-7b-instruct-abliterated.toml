@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/natong19/Qwen2-7B-Instruct-abliterated
+name = "Qwen2-7B-Instruct-abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "qwen"
+release_date = "2024-06-14"
+last_updated = "2024-06-14"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/natong19/Qwen2-7B-Instruct-abliterated"

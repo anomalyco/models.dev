@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/TheDrummer/UnslopNemo-12B-v4.1
+name = "UnslopNemo-12B-v4.1"
+description = "TheDrummer special. RP community royalty."
+release_date = "2024-10-23"
+last_updated = "2024-11-07"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 1024000
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/TheDrummer/UnslopNemo-12B-v4.1"

@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/jwest33/gemma-3-12b-it-null-space-abliterated
+name = "gemma-3-12b-it-null-space-abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "gemma"
+release_date = "2025-12-16"
+last_updated = "2025-12-20"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/jwest33/gemma-3-12b-it-null-space-abliterated"

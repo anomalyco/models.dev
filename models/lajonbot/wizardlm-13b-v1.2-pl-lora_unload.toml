@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/Lajonbot/WizardLM-13B-V1.2-PL-lora_unload
+name = "WizardLM-13B-V1.2-PL-lora_unload"
+description = "Niche community finetune with a cult following. Hard to find hosted anywhere else."
+release_date = "2023-08-02"
+last_updated = "2023-08-02"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 2048
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Lajonbot/WizardLM-13B-V1.2-PL-lora_unload"

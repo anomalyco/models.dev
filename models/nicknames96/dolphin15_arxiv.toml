@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/Nicknames96/dolphin15_arxiv
+name = "dolphin15_arxiv"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+family = "phi"
+release_date = "2025-03-31"
+last_updated = "2025-03-31"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Nicknames96/dolphin15_arxiv"

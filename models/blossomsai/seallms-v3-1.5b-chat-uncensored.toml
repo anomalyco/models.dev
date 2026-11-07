@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/BlossomsAI/SeaLLMs-v3-1.5B-Chat-Uncensored
+name = "SeaLLMs-v3-1.5B-Chat-Uncensored"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+release_date = "2024-12-03"
+last_updated = "2025-02-12"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/BlossomsAI/SeaLLMs-v3-1.5B-Chat-Uncensored"

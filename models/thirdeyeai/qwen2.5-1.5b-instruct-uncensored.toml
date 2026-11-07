@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/thirdeyeai/Qwen2.5-1.5B-Instruct-uncensored
+name = "Qwen2.5-1.5B-Instruct-uncensored"
+description = "No lecture layer. Answers the prompt you actually wrote."
+family = "qwen"
+release_date = "2024-12-12"
+last_updated = "2024-12-12"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/thirdeyeai/Qwen2.5-1.5B-Instruct-uncensored"
