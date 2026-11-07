@@ -1,0 +1,20 @@
+# NetMind model ID: Qwen/Qwen3.7-Plus.
+# Pricing source: https://platform-api.netmind.ai/inference/modelPrice (checked 2026-10-12).
+# Pricing maps input/output/cache fields and context tiers from that response.
+# Toggle: reasoning.enabled = true|false
+# Budget: reasoning.max_tokens = <integer reasoning tokens>
+# Relay baseline: https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# https://www.netmind.ai/product/inference
+base_model = "alibaba/qwen3.7-plus"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[cost]
+input = 0.274
+output = 1.096
+cache_read = 0.0548
+
+[[cost.tiers]]
+tier = { type = "context", size = 256000 }
+input = 0.822
+output = 3.288
+cache_read = 0.164
