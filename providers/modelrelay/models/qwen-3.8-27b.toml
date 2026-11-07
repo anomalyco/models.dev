@@ -1,0 +1,21 @@
+# Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
+# Upstream route: Cerebras. Cached input is billed at the uncached rate.
+# Omitting effort selects Cerebras's default (high).
+# Effort: reasoning_effort (Chat Completions) = none|low|medium|high
+# https://docs.modelrelay.ai/core/reasoning-effort
+base_model = "alibaba/qwen3.8-27b"
+temperature = false
+
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high"] }]
+
+[cost]
+input = 0.99
+output = 1.49
+cache_read = 0.99
+
+[limit]
+context = 131_072
+output = 40_960
+
+[modalities]
+input = ["text", "image"]

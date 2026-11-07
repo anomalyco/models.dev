@@ -1,0 +1,23 @@
+# Source: GET https://api.modelrelay.ai/v1/models (accessed 2026-10-09)
+# Served by Fireworks; cost is the Fireworks price, as /v1/models reports. Thinking-only: none is an
+# alias for low, so it is not listed.
+# Effort: reasoning_effort (Chat Completions) = low|high|max. max verified with a served request 2026-10-09
+# (137 reasoning tokens vs 3-4 at low/high on the same prompt). If a request fails over to the
+# Together or NEAR AI route, max is rejected with HTTP 400 rather than downgraded.
+# Effort table: github.com/tensor-systems/modelrelay providers/effort/matrix.go
+# https://docs.modelrelay.ai/core/reasoning-effort
+base_model = "zhipuai/glm-5.3-flash"
+temperature = false
+
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.15
+output = 0.5
+cache_read = 0.029
+
+[limit]
+context = 1_048_576
+
+[modalities]
+input = ["text", "image"]
