@@ -1,0 +1,23 @@
+# CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
+# cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio,
+# cached input = input x cache_ratio (service/text_quota.go bills a cached prompt token at cache_ratio of a fresh one).
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-23).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-23): "deepseek-v4-flash-0731-thinking".
+# Always-on alias: this id is served with reasoning enabled and the gateway serves no
+# non-thinking sibling of it, so the thinking control lives on `deepseek/deepseek-v4-flash-0731` hosts only.
+# Effort: reasoning_effort = low|high|max (top-level, forwarded verbatim)
+# The reasoning controls mirror providers/alibaba for the same model on this surface.
+# Live gateway row: model_ratio=0.05, completion_ratio=9.9, cache_ratio=0.1, enable_groups=['pro'].
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 Thinking"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.99

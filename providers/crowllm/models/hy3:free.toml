@@ -1,0 +1,22 @@
+# CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
+# cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio,
+# cached input = input x cache_ratio (service/text_quota.go bills a cached prompt token at cache_ratio of a fresh one).
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-23).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-23): "hy3:free".
+# Off is effort=none; graded levels, no toggle.
+# Effort: reasoning_effort = none|low|high (top-level, forwarded verbatim)
+# The reasoning controls mirror providers/kenari for the same model on this surface.
+# Set adjusted from providers/aimlapi: 12 of the 16 openai-compatible hosts that publish this model author `none` as the off level.
+# Live gateway row: model_ratio=0, completion_ratio=3.838461538462, cache_ratio=0.453846153846, enable_groups=['free', 'pro'].
+schema = 2
+base_model = "tencent/hy3"
+name = "Hy3 (free)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

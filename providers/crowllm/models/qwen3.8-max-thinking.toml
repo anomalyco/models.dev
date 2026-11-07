@@ -1,0 +1,24 @@
+# CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
+# cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio,
+# cached input = input x cache_ratio (service/text_quota.go bills a cached prompt token at cache_ratio of a fresh one).
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-23).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-23): "qwen3.8-max-thinking".
+# Always-on alias: reasoning is enabled for this id and cannot be turned off here;
+# `qwen3.8-max` is the id that takes the thinking control.
+# Effort: reasoning_effort = low|medium|xhigh (top-level, forwarded verbatim)
+# Budget: thinking_budget = 0..262144 reasoning tokens; relaykit/dto/openai_request.go keeps the field for any qwen* upstream model and drops it for the rest
+# The reasoning controls mirror providers/alibaba for the same model on this surface.
+# Live gateway row: model_ratio=0.695, completion_ratio=2.151079136691, cache_ratio=0.125, enable_groups=['pro'].
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen3.8 Max Thinking"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[cost.text.input]
+price = 1.39
+cache = { read = 0.17375 }
+
+[cost.text.output]
+price = 2.99

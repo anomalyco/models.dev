@@ -1,0 +1,23 @@
+# CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
+# cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio,
+# cached input = input x cache_ratio (service/text_quota.go bills a cached prompt token at cache_ratio of a fresh one).
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-23).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-23): "gemini-3.6-flash-thinking".
+# Always-on alias: reasoning is enabled for this id and cannot be turned off here;
+# `gemini-3.6-flash` is the id that takes the thinking control.
+# Effort: extra_body.google.thinking_config.thinking_level = minimal|low|medium|high (forwarded to generationConfig.thinkingConfig)
+# The reasoning controls mirror providers/google for the same model on this surface.
+# Live gateway row: model_ratio=0.375, completion_ratio=2.333333333333, cache_ratio=0.1, enable_groups=['pro'].
+schema = 2
+base_model = "google/gemini-3.6-flash"
+name = "Gemini 3.6 Flash Thinking"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.75
