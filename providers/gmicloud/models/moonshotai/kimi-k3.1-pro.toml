@@ -1,0 +1,18 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: copied from providers/moonshotai/models/kimi-k3.1-pro.toml (first-party entry).
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+# limit.context omitted: identical to the lab's 1_048_576 (provider files hold only real overrides).
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = { "5m" = 2, "1h" = 4 } }
+
+[cost.text.output]
+price = 10

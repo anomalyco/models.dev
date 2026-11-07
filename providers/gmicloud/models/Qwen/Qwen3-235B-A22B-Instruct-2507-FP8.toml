@@ -1,0 +1,14 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: no first-party or relay entry found; see PR body.
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+
+# limit.context omitted: identical to the lab's 262_144 (provider files hold only real overrides).
+
+[cost.text.input]
+price = 0.35
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 1.4
