@@ -1,0 +1,8 @@
+# OpenAI-compatible gateway serving Workers AI open-weight models on prepaid credits.
+# Upstream is public per model: GET https://api.clfaigateway.dev/v1/public/models -> cf_model_id.
+name = "CLF AI Gateway"
+env = ["CLF_AI_GATEWAY_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.clfaigateway.dev/v1"
+doc = "https://clfaigateway.dev/docs"
