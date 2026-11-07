@@ -1,18 +1,21 @@
+# Toggle: thinking.type = enabled|disabled (default disabled; chat_template_kwargs.enable_thinking = true|false
+#   does the same). No graded effort is authored, as on Xiaomi's own API.
 # MiMo V2.6 Flash served by Heabsy on dedicated GPUs in the EEA (EEA tier, zero data retention).
 # Weights: official Xiaomi MiMo-V2.6-Flash (MOPD update), https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-MOPD
-# Model ID: requests use model = "mimo-v26-flash" (https://heabsy.com/models/mimo-v26-flash).
+# Model ID: requests use model = "mimo-v26-flash" (https://heabsy.com/models/mimo-v26-flash, "model id: mimo-v26-flash").
 # API reference: https://api.heabsy.com/docs
-# Feed (accessed 2026-11-07, https://api.heabsy.com/site/v1/models, entry "mimo-v26-flash"):
-# max_context_length 1,048,576 (same as the base model, inherited); max_tokens 65,536, so limit.output is
-# overridden (the base model file lists 131,072); image formats image/png, image/jpeg, image/webp;
-# prices $0.50 input, $0.20 cached input, $1.50 output per 1M tokens.
+# Model page (accessed 2026-11-07, https://heabsy.com/models/mimo-v26-flash): context window 1M tokens,
+# max output 65,536 tokens, vision input; $0.50 input, $0.20 cached input, $1.50 output per 1M tokens.
+# Feed (accessed 2026-11-07, https://api.heabsy.com/site/v1/models, entry "mimo-v26-flash"): the same values,
+# max_context_length 1,048,576 and image formats image/png, image/jpeg, image/webp.
+# Context 1,048,576 is the same as the base model and is inherited; limit.output is overridden (the base
+# model file lists 131,072).
 # Modalities: text and the three image formats the feed lists (image input checked live on 2026-10-30).
 # Audio and video are not listed for this endpoint, so the inherited audio/video MIME types are overridden.
-# Effort: reasoning_effort = none|low|medium|high|xhigh; thinking is off unless reasoning_effort asks for it.
 # Probed live against api.heabsy.com/v1/chat/completions on 2026-11-07 (temperature 0, max_tokens 1000):
-# omitted and none -> 0 reasoning tokens, no reasoning_content; low/medium/high/xhigh -> 200 with
-# reasoning_content present; chat_template_kwargs.enable_thinking=false and thinking.type=disabled also turn
-# it off. Requests with max_tokens < 256 run without thinking.
+# omitted -> 0 reasoning tokens, no reasoning_content; thinking.type=enabled and enable_thinking=true ->
+# reasoning_content present; thinking.type=disabled and enable_thinking=false -> off.
+# Requests with max_tokens < 256 run without thinking.
 # Cache: automatic prefix cache, billed at the cached-input price.
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
@@ -25,7 +28,7 @@ output = ["text"]
 output = 65_536
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "medium", "high", "xhigh"] }
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
 cache = { implicit = true }
 
 [api.chat-completions]
