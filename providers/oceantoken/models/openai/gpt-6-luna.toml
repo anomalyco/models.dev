@@ -1,0 +1,20 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Price: 90% of the lab's list price (the catalog's official price x 0.9); every customer is billed this since 2026-10-18.
+# Effort: reasoning_effort on POST /v1/chat/completions
+base_model = "openai/gpt-6-luna"
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] },
+]
+
+[cost]
+input = 0.09
+output = 0.45
+cache_read = 0.009
+cache_write = 0.1125
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 0.18
+output = 0.675
+cache_read = 0.018
+cache_write = 0.225

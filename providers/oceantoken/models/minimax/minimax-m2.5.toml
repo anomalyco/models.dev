@@ -1,0 +1,14 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+base_model = "minimax/MiniMax-M2.5"
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.03
+
+[limit]
+output = 32_768

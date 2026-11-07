@@ -1,0 +1,15 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Effort: reasoning_effort on POST /v1/chat/completions
+base_model = "thinkingmachines/inkling"
+reasoning_options = [
+  { type = "effort", values = ["none", "minimal", "low", "medium", "high", "max"] },
+]
+
+[cost]
+input = 0.95
+output = 4.05
+cache_read = 0.16
+
+[limit]
+context = 524_288
+output = 471_859

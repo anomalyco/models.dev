@@ -1,0 +1,13 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
+
+[cost]
+input = 0.2
+output = 0.7
+
+[limit]
+output = 16_384
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]

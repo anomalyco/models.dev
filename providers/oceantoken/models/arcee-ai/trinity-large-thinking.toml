@@ -1,0 +1,12 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+base_model = "arcee-ai/trinity-large-thinking"
+reasoning_options = []
+
+[cost]
+input = 0.25
+output = 0.8
+cache_read = 0.06
+
+[limit]
+context = 262_144
+output = 80_000

@@ -1,0 +1,14 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Effort: reasoning_effort on POST /v1/chat/completions
+base_model = "deepseek/deepseek-v4-pro-0813"
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "high", "max"] },
+]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 1.32
+output = 3.96
+cache_read = 0.044

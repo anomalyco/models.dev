@@ -1,0 +1,11 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Effort: reasoning_effort on POST /v1/chat/completions
+base_model = "upstage/solar-pro4"
+reasoning_options = [
+  { type = "effort", values = ["none", "low", "medium", "high"] },
+]
+
+[cost]
+input = 0.09
+output = 0.36
+cache_read = 0.018
