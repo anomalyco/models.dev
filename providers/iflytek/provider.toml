@@ -1,0 +1,40 @@
+name = "iFlytek"
+npm = "@ai-sdk/openai-compatible"
+env = ["IFLYTEK_API_KEY"]
+# iFlytek MaaS Inference API (讯飞星辰MaaS推理服务).
+# OpenAI-compatible chat completions at /v2/chat/completions.
+# Text-only endpoint — base lab multimodal capabilities (image/video/audio
+# input on Kimi, Qwen) are not exposed on this API.
+#
+# Reasoning controls per model family (from host docs, accessed 2026-09-14):
+# - DeepSeek V4 Pro: thinking.type toggle (enabled|disabled) + effort
+#   high|max (host-specific intensity control via reasoning_effort or
+#   output_config.effort).
+# - DeepSeek V4 Flash: thinking.type toggle + effort low|high|max.
+# - DeepSeek V3.2: thinking.type toggle only (hybrid model, matches
+#   established relay baseline from OpenRouter/TokenGo/Novita).
+# - GLM-5.2: effort high|max only (only GLM on this host with graded effort).
+# - GLM-5.1, GLM-5: enable_thinking toggle only (no graded effort).
+# - GLM-4.7-Flash: enable_thinking toggle (matches first-party zhipuai
+#   baseline and empiriolabs/poe peers; host docs: enable_thinking bool
+#   applies to thinking models, GLM-4.7-Flash is a thinking model).
+# - Kimi K2.5/K2.6: enable_thinking toggle only.
+# - MiniMax M2.5: always-on reasoning, no caller control ([]).
+# - Qwen 397B/3.6-35B/3.5-35B: enable_thinking toggle only (host "OSS"
+#   phrase targets OpenAI OSS gpt-oss, not Qwen; no budget_tokens, no
+#   graded effort).
+# - Qwen3-Coder-Next: non-reasoning.
+# - Spark-X2.5/X2-Flash (first-party): enable_thinking toggle + effort high|max.
+# - Spark-X2.5-4B/1.7B (open-weight): enable_thinking toggle + effort high|max
+#   (same Spark surface as flagship).
+#
+# All reasoning models return message.reasoning_content (interleaved).
+# Tool calling: only DeepSeek V3.2 and GLM-4.7 series per host docs.
+# JSON mode: response_format = {"type": "json_object"} on DeepSeek, GLM, Kimi,
+# Qwen series; set search_disable=true recommended under JSON mode.
+#
+# Sources:
+# https://www.xfyun.cn/doc/spark/推理服务-http.html
+# https://www.xfyun.cn/doc/spark/TokenPlan.html
+doc = "https://www.xfyun.cn/doc/spark/%E6%8E%A8%E7%90%86%E6%9C%8D%E5%8A%A1-http.html"
+api = "https://maas-api.cn-huabei-1.xf-yun.com/v2"
