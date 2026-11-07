@@ -1,0 +1,17 @@
+# Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
+# served on the GreenPT tier, $1.10/$4.40 per 1M tokens with $0.275 cached input, 1M context, no image input.
+# Reasoning surface copied from the underlying host entry (providers/greenpt/models/glm-5.3.toml):
+# reasoning_effort = none|minimal|low|medium|high; accepted by the gateway (probe, 2026-11-01).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.275 }
+
+[cost.text.output]
+price = 4.4
