@@ -1,0 +1,29 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM reasoning: /v1/models exposes only `thinking`; the provider API has no
+# toggle, effort or budget request field (provider.toml audit, 2026-06-25).
+# RouteLLM input_modalities: ["text","image"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1000000
+# RouteLLM max_completion_tokens: 128000
+# RouteLLM input_token_rate: 0.000008
+# RouteLLM output_token_rate: 0.00004
+# RouteLLM cached_input_token_rate: 0.0000004
+# RouteLLM thinking: None
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+name = "Claude Opus 5.5 Fast"
+description = "Fast lane of Claude Opus 5.5, served by Abacus at a higher per-token rate"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 40

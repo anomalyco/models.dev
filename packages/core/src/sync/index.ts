@@ -19,6 +19,7 @@ import {
 import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from "../translate.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
+import { abacus } from "./providers/abacus.js";
 import { aiand } from "./providers/aiand.js";
 import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
@@ -184,6 +185,7 @@ export interface SyncResult {
 }
 
 export const providers: {
+  abacus: SyncProvider<any>;
   aiand: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
@@ -231,6 +233,7 @@ export const providers: {
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  abacus,
   aiand,
   aimlapi,
   ambient,
@@ -281,6 +284,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "abacus",
     "aimlapi",
     "crossmodel",
     "edenai",
