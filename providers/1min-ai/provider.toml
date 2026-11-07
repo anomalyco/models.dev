@@ -1,0 +1,19 @@
+# Catalog: GET https://api.1min.ai/openai/v1/models (2026-10-31). Credit-based pricing; no
+# authoritative USD token prices are published, so [cost.*] is omitted for every model.
+# Live checks 2026-10-31: tools and streaming work. temperature is rejected for all OpenAI
+# models and for DeepSeek ("Omit temperature for this model"). reasoning_effort is accepted
+# only for OpenAI models, with the enum none|minimal|low|medium|high|xhigh (`max`/`ultra`
+# are rejected). For every non-OpenAI family, every control shape tried (thinking,
+# enable_thinking, reasoning, reasoning.effort, reasoning_effort, thinking_budget,
+# chat_template_kwargs) returns 400 ("Unrecognized key" or "supported only for OpenAI
+# reasoning models"), so those entries are always-on with no caller control. reasoning_content
+# is never returned even though reasoning tokens are billed, so no reasoning_field is set.
+# Reasoning evidence: deepseek-flash 52, glm-5.3 153, kimi-k2.6 303 and muse-spark-1.3 585
+# reasoning_tokens on normal prompts (always-on). Mistral models report reasoning_tokens=0
+# on repeated prompts with every control rejected, so they are marked supported=false.
+name = "1min.ai"
+env = ["1MIN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+doc = "https://1min.ai"
+api = "https://api.1min.ai/openai/v1"
