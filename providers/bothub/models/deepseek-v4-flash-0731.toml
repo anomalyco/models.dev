@@ -1,7 +1,6 @@
-# Pricing: https://bothub.ru/models lists 48,82 / 146,47 RUB per 1M input / output tokens
-# (checked 2026-10-21).
-# RUB converted to USD at the CBR rate 82.8879 RUB/USD (2026-10-21), rounded to 4 decimals.
-# The per-model page (https://bothub.ru/<id>) shows prices about 6% higher.
+# Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
+# (checked 2026-11-03): 0.07 / 0.33 USD per 1M input / output tokens.
+# Price taken from ECO mode; PRO may differ.
 # Controls: bothub exposes a single reasoning_effort parameter on
 # POST /v1/chat/completions (see providers/bothub/provider.toml); no
 # thinking.type toggle is documented for this host. Levels verified
@@ -17,7 +16,7 @@ structured_output = true
 legacy_interleaved = true
 
 [cost.text.input]
-price = 0.589
+price = 0.07
 
 [cost.text.output]
-price = 1.7671
+price = 0.33

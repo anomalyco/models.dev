@@ -1,0 +1,26 @@
+# Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
+# (checked 2026-11-03): 33.13 / 198.75 USD per 1M input / output tokens.
+# Price taken from ECO mode; PRO may differ.
+schema = 2
+base_model = "openai/gpt-5.5-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+structured_output = true
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 33.13
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272000 } }
+price = 66.25
+
+[cost.text.output]
+price = 198.75
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272000 } }
+price = 298.13
