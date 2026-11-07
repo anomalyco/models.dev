@@ -1,0 +1,8 @@
+# Example alias only. LiteLLM has no built-in models: each proxy maps its own aliases
+# (model_list[].model_name) to a backend, so this ID works only if the proxy config defines it.
+# Metadata comes from the GPT-6 Luna lab entry; cost is omitted because pricing depends on the backend.
+# LiteLLM forwards reasoning_effort to the backend; values match the OpenAI entry.
+# https://docs.litellm.ai/docs/proxy/configs
+# https://docs.litellm.ai/docs/reasoning_content
+base_model = "openai/gpt-6-luna"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
