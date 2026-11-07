@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-06):
+# - https://meragpt.com/docs/decider: answers typed questions (noul, choice, score) about a JSON `state` with a
+#   probability distribution for each, on POST /v1/systemone; up to 64 questions, 2 to 10 labels or levels; no text
+#   generated, so output is never billed.
+# - GET https://meragpt.com/v1/models: context_window 4096, max_output_tokens 0, release_date 2026-09-22.
+# Output: probabilities read from the model's scores, nothing sampled (temperature/top_p/top_k false).
+schema = 2
+v2_only = true
+type = "decision"
+name = "Decider 1"
+description = "meraGPT decision model that answers typed yes/no, choice and score questions about a JSON state with calibrated probabilities"
+open_weights = false
+release_date = "2026-09-22"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 4_096
+output = 0
