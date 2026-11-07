@@ -1,0 +1,29 @@
+# Price: https://cloudcode.one/models.json (accessed 2026-10-23); one flat rate at every hour.
+# Effort: reasoning_effort = none|low|high|max (none turns reasoning off; minimal is read as low)
+# Checked live through the Chat Completions endpoint on 2026-10-23:
+# - none returned no reasoning; low gave about half the reasoning of high, and max the most.
+# - thinking.type is not forwarded: thinking disabled still reasoned 2.9k-3.5k chars, the same as enabled,
+#   so off is reasoning_effort none and there is no toggle.
+# - Caching is automatic: a repeated 15.5k-token prefix came back with 15,488 cached tokens.
+# - Tool calls work across turns, with reasoning on or off, whether or not the client replays the
+#   previous reasoning_content.
+# - A json_schema response_format is rejected (400), so no structured output.
+# - top_k is not applied.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.705
+cache = { read = 0.0568 }
+
+[cost.text.output]
+price = 5.115

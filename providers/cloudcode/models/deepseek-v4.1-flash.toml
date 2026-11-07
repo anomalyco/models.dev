@@ -1,0 +1,33 @@
+# Price: https://cloudcode.one/models.json (accessed 2026-10-23).
+# Effort: reasoning_effort = none|low|high|max (none turns reasoning off)
+# Checked live through the Chat Completions endpoint on 2026-10-23:
+# - Text only on this host: a request carrying an image is served and billed as glm-5.3-flash, not this model.
+# - none returned no reasoning on every request; low, high and max set the model's own effort level
+#   (on a short arithmetic prompt only max ran visibly longer).
+# - thinking.type is not forwarded: thinking disabled still reasoned 2.1k-2.2k chars, the same as enabled,
+#   so off is reasoning_effort none and there is no toggle.
+# - Caching is automatic: a repeated 15.5k-token prefix came back with 15,232 cached tokens.
+# - A strict json_schema response_format returned schema-valid JSON.
+# - top_k is not applied.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.27
+cache = { read = 0.0054 }
+
+[cost.text.output]
+price = 1.08
