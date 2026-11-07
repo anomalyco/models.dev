@@ -1,0 +1,20 @@
+# Served through NVIDIA NIM. $0 per token (see provider.toml).
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Live 2026-10-22 through api.inferall.ai: enable_thinking true 210, false 0 reasoning
+# characters on the same prompt; reasoning returned in message.reasoning_content. Tool calls,
+# strict json_schema output and a PNG image input verified live.
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
