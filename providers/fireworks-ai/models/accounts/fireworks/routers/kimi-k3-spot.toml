@@ -12,6 +12,7 @@
 # Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting).
 # Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
 # Per API: system_updates sits on [api.chat-completions] only, as on the Standard sibling, where only Chat Completions was tested.
+# No budget: Fireworks doesn't enforce thinking.budget_tokens on its other Kimi K3 routes (live tests 2026-11-07); this route returned 404 then.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Spot"
@@ -22,7 +23,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 
