@@ -1,0 +1,18 @@
+# Always reasons: Lyceum says it can't be disabled ({"thinking": false} is accepted but ignored). https://docs.lyceum.technology/docs/inference/serverless#controlling-reasoning
+# Effort: low|medium|xhigh (Qwen3.8 ladder; levels undocumented for this model). Lyceum documents no reasoning budget field, so no budget.
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.63 }
+
+[cost.text.output]
+price = 6

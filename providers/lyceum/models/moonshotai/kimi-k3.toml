@@ -1,0 +1,20 @@
+# Effort: reasoning_effort none|low|high|max (none = off). Lyceum also accepts medium, but Kimi K3 has no native medium.
+# Off: reasoning_effort "none" or chat_template_kwargs {"thinking": false}, the same switch, so none is in effort and there's no toggle. https://docs.lyceum.technology/docs/inference/serverless#controlling-reasoning
+# Reasoning field unpinned: Lyceum returns reasoning_content or reasoning depending on serving path. https://docs.lyceum.technology/docs/inference/serverless#reasoning-models
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.75 }
+
+[cost.text.output]
+price = 15

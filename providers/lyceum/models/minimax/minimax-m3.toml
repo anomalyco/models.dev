@@ -1,0 +1,24 @@
+# Always reasons: Lyceum says it "cannot be disabled" (reasoning_effort none is accepted but ignored; no other switch is documented). https://docs.lyceum.technology/docs/inference/serverless#controlling-reasoning
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2

@@ -1,0 +1,18 @@
+# Effort: reasoning_effort none|high|max (none = off).
+# Off: reasoning_effort "none" or chat_template_kwargs {"enable_thinking": false}, the same switch, so none is in effort and there's no toggle. https://docs.lyceum.technology/docs/inference/serverless#controlling-reasoning
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.38 }
+
+[cost.text.output]
+price = 4.5

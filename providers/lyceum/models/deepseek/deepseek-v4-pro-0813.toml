@@ -1,0 +1,19 @@
+# Effort: reasoning_effort none|low|high|max (none = off).
+# Off: reasoning_effort "none" or chat_template_kwargs {"thinking": false}, the same switch, so none is in effort and there's no toggle. https://docs.lyceum.technology/docs/inference/serverless#controlling-reasoning
+# Trace comes back in message.reasoning, which v1 can't express, so no reasoning field is pinned. https://docs.lyceum.technology/docs/inference/serverless#reasoning-models
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 4
