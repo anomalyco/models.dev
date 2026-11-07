@@ -1,0 +1,12 @@
+# xxapi serves Claude models on the Anthropic Messages API and GPT models on the
+# OpenAI Responses API, both under https://xxapi.ai/v1 with the same API key header.
+# Each model file sets its API: Claude through @ai-sdk/anthropic (/v1/messages),
+# GPT through @ai-sdk/openai (/v1/responses).
+# Setup guide (OpenCode, provider ID xxapi): https://docs.xxapi.ai/opencode
+# Model list and prices: https://xxapi.ai/pricing
+name = "xxapi"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["XXAPI_API_KEY"]
+api = "https://xxapi.ai/v1"
+doc = "https://docs.xxapi.ai/opencode"
