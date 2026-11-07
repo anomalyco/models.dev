@@ -1,0 +1,33 @@
+# Jad CoWork is a host-unique routing alias, not an upstream model: each request
+# is scored and sent to one model in a curated pool, so no single base_model
+# applies. release_date is the date this alias was added to the catalog.
+# Reasoning toggle on POST /v1/chat/completions: body "thinking": true | false.
+# "reasoning" and "include_reasoning" are accepted as aliases. Default: on.
+schema = 2
+name = "Jad CoWork"
+description = "Jad AI's default assistant. Routes each turn across a curated pool of fast and large models with tools, image input, and a thinking toggle."
+family = "auto"
+open_weights = false
+release_date = "2026-11-07"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+temperature = false
+
+[limit]
+context = 65_000
+output = 32_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,33 @@
+# Jad Go is a host-unique routing alias, not an upstream model: each request is
+# scored and sent to one model in a small low-latency pool, so no single
+# base_model applies. release_date is the date this alias was added to the catalog.
+# Reasoning toggle on POST /v1/chat/completions: body "thinking": true | false.
+# "reasoning" and "include_reasoning" are accepted as aliases. Default: on.
+schema = 2
+name = "Jad Go"
+description = "Fast, low-latency Jad AI model for short answers. Keeps the thinking toggle and the full toolset while routing across a small pool of fast models."
+family = "auto"
+open_weights = false
+release_date = "2026-11-07"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+temperature = false
+
+[limit]
+context = 256_000
+output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

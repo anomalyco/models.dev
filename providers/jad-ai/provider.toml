@@ -1,0 +1,9 @@
+name = "Jad AI"
+env = ["JAD_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# OpenAI-compatible gateway: POST https://jadai.freesrv.com/v1/chat/completions.
+# The three model IDs are Jad's curated routing pools, not upstream model names.
+# Reasoning toggle is a request body field: "thinking": true | false (default true).
+api = "https://jadai.freesrv.com/v1"
+doc = "https://jadai.freesrv.com"
