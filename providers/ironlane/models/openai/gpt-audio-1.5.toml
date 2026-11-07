@@ -1,0 +1,22 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-04;
+# list prices of the default provider, USD per 1M tokens (or per stated unit).
+# Capabilities: Ironlane's POST /v1/chat/completions takes text messages with no tools, response_format or image/pdf parts.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-audio-1.5"
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10
+
+[cost.audio.input]
+price = 32
+
+[cost.audio.output]
+price = 64
