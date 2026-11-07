@@ -1,0 +1,15 @@
+# Prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
+# Effort: reasoning_effort = none|low|medium|high
+# Inception's levels (low/medium/high). This endpoint accepts none and it disables reasoning (0 reasoning tokens), as on NanoGPT and Venice; Inception's own API spells that level instant, which is why its entry omits none. max is rejected (400). Tested live 2026-10-22.
+schema = 2
+base_model = "inception/mercury-3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.35

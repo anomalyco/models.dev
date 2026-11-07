@@ -1,0 +1,18 @@
+# Context and prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
+# Effort: reasoning_effort = low|medium|high
+# gpt-oss levels; reasoning length grows low → high (reasoning_content). Tested live 2026-10-22.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.097
+cache = { read = 0.053 }
+
+[cost.text.output]
+price = 0.727
