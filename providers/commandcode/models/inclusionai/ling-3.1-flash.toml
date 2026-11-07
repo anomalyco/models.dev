@@ -1,0 +1,19 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: the levels this host published for the same model as
+#   inclusionai/ling-3.1-flash:free (low/medium/high), and the Vercel peer agrees. Live
+#   2026-10-29: low/medium/high accepted and reasoning_effort = off rejected; the host reports
+#   no reasoning-token count for this model, so the levels cannot be separated by volume.
+schema = 2
+base_model = "inclusionai/ling-3.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.9

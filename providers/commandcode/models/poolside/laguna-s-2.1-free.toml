@@ -1,0 +1,22 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: always on. Live 2026-10-29: reasoning_effort = off is rejected ("Only models that
+#   can turn thinking off support it"), while omitted and low both ran at the reasoning ceiling.
+#   The native switches are not forwarded either: chat_template_kwargs.enable_thinking = false
+#   and thinking.type = disabled both still reason (500 reasoning tokens each).
+schema = 2
+base_model = "poolside/laguna-s-2.1"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 256_000
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

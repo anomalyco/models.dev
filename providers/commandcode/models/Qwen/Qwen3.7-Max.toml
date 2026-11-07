@@ -1,0 +1,19 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: always on. Qwen3.7 Max reasons with reasoning_effort omitted (280 reasoning
+#   tokens) and rejects reasoning_effort = off. enable_thinking = false still reasons (191)
+#   and thinking_budget = 32 is ignored (191), so there is no caller control this host
+#   exposes.
+schema = 2
+base_model = "alibaba/qwen3.7-max"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 7.5
