@@ -1,0 +1,19 @@
+# Source: https://api.experientiallabs.ai/api/models/command-r-08-2024
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "cohere/command-r-08-2024"
+name = "Command R (08-2024)"
+
+[capabilities]
+structured_output = true
+
+[limit]
+input = 124_000
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 0.6

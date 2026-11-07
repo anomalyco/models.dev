@@ -1,0 +1,21 @@
+# Source: https://api.experientiallabs.ai/api/models/solar-pro4
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/upstage/models/solar-pro4.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = none|minimal|low|medium|high|xhigh|max.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "upstage/solar-pro4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+input = 393_216
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.6

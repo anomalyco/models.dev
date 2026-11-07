@@ -1,0 +1,27 @@
+# Source: https://api.experientiallabs.ai/api/models/qwen3-coder-flash
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "alibaba/qwen3-coder-flash"
+
+[capabilities]
+structured_output = true
+
+[limit]
+input = 934_464
+
+[cost.text.input]
+price = 0.195
+cache = { read = 0.039 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.325
+cache = { read = 0.065 }
+
+[cost.text.output]
+price = 0.975
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.625

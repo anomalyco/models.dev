@@ -1,0 +1,23 @@
+# Source: https://api.experientiallabs.ai/api/models/inkling-small
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/openrouter/models/thinkingmachines/inkling-small.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = none|minimal|low|medium|high|max.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "thinkingmachines/inkling-small"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
+structured_output = false
+
+[limit]
+context = 524_288
+input = 458_752
+output = 65_536
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1.2

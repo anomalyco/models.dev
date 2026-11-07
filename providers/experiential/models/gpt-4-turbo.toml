@@ -1,0 +1,22 @@
+# Source: https://api.experientiallabs.ai/api/models/gpt-4-turbo
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "openai/gpt-4-turbo"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = false
+
+[limit]
+input = 123_904
+
+[cost.text.input]
+price = 10
+cache = { read = 10 }
+
+[cost.text.output]
+price = 30

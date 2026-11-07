@@ -1,0 +1,21 @@
+# Source: https://api.experientiallabs.ai/api/models/mercury-3
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/inception/models/mercury-3.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = low|medium|high.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "inception/mercury-3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+input = 868_928
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02, write = 0.2 }
+
+[cost.text.output]
+price = 0.7

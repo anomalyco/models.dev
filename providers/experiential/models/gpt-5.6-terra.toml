@@ -1,0 +1,27 @@
+# Source: https://api.experientiallabs.ai/api/models/gpt-5.6-terra
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/openai/models/gpt-5.6-terra.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = none|low|medium|high|xhigh.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "openai/gpt-5.6-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 18

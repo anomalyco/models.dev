@@ -1,0 +1,22 @@
+# Source: https://api.experientiallabs.ai/api/models/deepseek-v4.1-flash
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: https://api-docs.deepseek.com/guides/thinking_mode/; intersected with published default-route efforts.
+# Effort: top-level reasoning_effort = none|high.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+
+[limit]
+context = 1_048_576
+input = 655_360
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

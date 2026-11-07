@@ -1,0 +1,23 @@
+# Source: https://api.experientiallabs.ai/api/models/gpt-5-nano
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host model.input_modalities = ["text","image","pdf"]; additional host inputs: pdf.
+# Reasoning baseline: providers/openai/models/gpt-5-nano.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = minimal|low|medium|high.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "openai/gpt-5-nano"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.4

@@ -1,0 +1,21 @@
+# Source: https://api.experientiallabs.ai/api/models/gemini-3.5-flash
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/google/models/gemini-3.5-flash.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = minimal|low|medium|high.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "google/gemini-3.5-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+input = 1_048_576
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15, write = 0.233333333 }
+
+[cost.text.output]
+price = 9

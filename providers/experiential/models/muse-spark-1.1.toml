@@ -1,0 +1,26 @@
+# Source: https://api.experientiallabs.ai/api/models/muse-spark-1.1
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host model.input_modalities = ["text","image","video","pdf","audio"]; additional host inputs: audio.
+# Reasoning baseline: providers/meta/models/muse-spark-1.1.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = minimal|low|medium|high|xhigh.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "meta/muse-spark-1.1"
+
+[modalities]
+input = ["text", "image", "video", "application/pdf", "audio"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[limit]
+input = 1_048_576
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

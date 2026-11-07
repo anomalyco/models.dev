@@ -1,0 +1,20 @@
+# Source: https://api.experientiallabs.ai/api/models/llama-3.1-70b-instruct
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "meta/llama-3.1-70b-instruct"
+name = "Llama 3.1 70B Instruct"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 131_072
+input = 114_688
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 0.4

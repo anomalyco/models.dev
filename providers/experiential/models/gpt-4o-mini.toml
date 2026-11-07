@@ -1,0 +1,22 @@
+# Source: https://api.experientiallabs.ai/api/models/gpt-4o-mini
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "openai/gpt-4o-mini"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[limit]
+input = 111_616
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075, write = 0.1875 }
+
+[cost.text.output]
+price = 0.6

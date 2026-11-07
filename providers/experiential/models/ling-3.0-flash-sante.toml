@@ -1,0 +1,21 @@
+# Source: https://api.experientiallabs.ai/api/models/ling-3.0-flash-sante
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/vercel/models/inclusionai/ling-3.0-flash-sante.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = none|low|medium|high.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "inclusionai/ling-3.0-flash-sante"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = false
+
+[limit]
+input = 229_376
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.22

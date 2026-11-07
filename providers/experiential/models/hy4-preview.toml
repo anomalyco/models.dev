@@ -1,0 +1,23 @@
+# Source: https://api.experientiallabs.ai/api/models/hy4-preview
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: providers/openrouter/models/tencent/hy4-preview.toml; restricted to all default serving routes.
+# Effort: top-level reasoning_effort = none|low|high.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "tencent/hy4-preview"
+name = "Tencent Hy4 Preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+input = 936_000
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501

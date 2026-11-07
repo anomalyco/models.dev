@@ -1,0 +1,26 @@
+# Source: https://api.experientiallabs.ai/api/models/deepseek-v4.1-flash-uncensored
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: https://huggingface.co/dealignai/DeepSeek-V4.1-Flash-1017-UNCENSORED-FP8; intersected with published default-route efforts.
+# Effort: top-level reasoning_effort = none|low|high|max.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "dealignai/deepseek-v4.1-flash-1017-uncensored"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = false
+temperature = false
+
+[limit]
+input = 655_360
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.3 }
+
+[cost.text.output]
+price = 1.2

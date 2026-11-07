@@ -1,0 +1,19 @@
+# Source: https://api.experientiallabs.ai/api/models/kimi-k2-0905
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+schema = 2
+base_model = "moonshotai/kimi-k2-0905"
+name = "Kimi K2 0905"
+
+[capabilities]
+structured_output = false
+
+[limit]
+input = 163_840
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.6 }
+
+[cost.text.output]
+price = 2.5

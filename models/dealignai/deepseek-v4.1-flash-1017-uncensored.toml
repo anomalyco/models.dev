@@ -1,0 +1,28 @@
+# Source: https://huggingface.co/dealignai/DeepSeek-V4.1-Flash-1017-UNCENSORED-FP8
+# Release date: Hugging Face repository creation; capabilities retained from the upstream checkpoint.
+schema = 2
+name = "DeepSeek V4.1 Flash 1017 Uncensored"
+description = "dealignai's weight-modified DeepSeek V4.1 Flash 1017 checkpoint, retaining vision, reasoning and tool calling."
+family = "deepseek-flash"
+open_weights = true
+release_date = "2026-10-18"
+license = "MIT"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/dealignai/DeepSeek-V4.1-Flash-1017-UNCENSORED-FP8"
