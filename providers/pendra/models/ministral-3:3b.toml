@@ -1,0 +1,23 @@
+# Input: text and PNG, JPEG, GIF or BMP images, plus WebP from worker v3.146.0 (older workers fail on it). Pendra's workers decode the image for every vision model, so other formats (TIFF, animated WebP) fail, and take no audio or video.
+# Tool choice: auto, none, required or a named tool. Pendra forces required and named calls with a grammar.
+# Cache: implicit. Workers reuse a repeated prompt prefix with no markers (cached_tokens in usage).
+# Context: the lab's window is the most Pendra serves; a worker may run a smaller window sized to its memory.
+# Generated from Pendra's model catalogue (served at https://api.pendra.ai/api/v1/catalogue)
+# Self-hosted on your own workers: no per-token or per-request charge at the API.
+schema = 2
+base_model = "mistral/ministral-3-3b-instruct-2512"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

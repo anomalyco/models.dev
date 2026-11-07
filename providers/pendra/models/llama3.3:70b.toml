@@ -1,7 +1,15 @@
-# Pendra serves Llama 3.3 70B as a text-only chat model (no vision).
-# Self-hosted on your own workers — no per-token charge at the API.
+# Tool choice: auto, none, required or a named tool. Pendra forces required and named calls with a grammar.
+# Cache: implicit. Workers reuse a repeated prompt prefix with no markers (cached_tokens in usage).
+# Context: the lab's window is the most Pendra serves; a worker may run a smaller window sized to its memory.
+# Generated from Pendra's model catalogue (served at https://api.pendra.ai/api/v1/catalogue)
+# Self-hosted on your own workers: no per-token or per-request charge at the API.
 schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0
