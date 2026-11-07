@@ -1,0 +1,13 @@
+# Fikra API is an OpenAI-compatible inference API for open-weight models,
+# billed per token in USD with M-Pesa and mobile-money top-ups.
+# POST /v1/chat/completions accepts the standard OpenAI request surface:
+# the whitelist includes tools, tool_choice, n, seed, stop, presence/frequency
+# penalty and response_format (structured JSON output). `thinking` and
+# `reasoning_effort` are deliberately not exposed, so reasoning controls
+# stay off at provider level for every model.
+# https://fikraapi.co.ke/docs (accessed 2026-10-19)
+name = "Fikra API"
+env = ["FIKRA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://fikraapi.co.ke/docs"
+api = "https://fikraapi.co.ke/v1"
