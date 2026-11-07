@@ -1,0 +1,45 @@
+# TopxAI's private fine-tuned deployment, not DeepSeek's official API. Defined
+# inline because this variant does not have the official model's weights/benchmarks.
+# Launched 2026-10-24; replaces the retired deepseek-flash ID with no forwarding alias.
+# https://ai.topxea.com/blog/deepseek-flash-abliterated
+# Effort: reasoning_effort = none|low|high|max on Chat Completions (default high).
+# none disables reasoning, so there is no additional toggle. Text/image input,
+# limits, protocols and prices: https://ai.topxea.com/docs/deepseek-flash-abliterated
+# and https://ai.topxea.com/api/pricing (accessed 2026-10-25).
+# Fixed prices at every hour and context length; automatic cache reads, no separate
+# cache-write charge. Official DeepSeek comparison prices and peak hours do not apply.
+# Responses is stateless; send the full conversation. Messages converts to Chat.
+schema = 2
+name = "DeepSeek Flash Abliterated"
+description = "Private fine-tuned deployment on TopxAI with text and image input, 1M context and optional reasoning"
+family = "deepseek"
+open_weights = false
+release_date = "2026-10-24"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2.4

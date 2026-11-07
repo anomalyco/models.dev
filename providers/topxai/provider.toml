@@ -1,0 +1,20 @@
+# TopxAI serves hosted lab models and private fine-tuned deployments through one
+# OpenAI- and Anthropic-compatible endpoint, with fixed USD prices on prepaid credit.
+# Prices below are the Auto-route price, the lowest-priced line for each model:
+# the shared pool for Claude, GPT and Grok; the official line for Kimi K3.1 Pro;
+# private deployments for GLM-5.3-Abliterated and deepseek-flash-Abliterated.
+# Kimi's retained retail prices are 120% of its current lab list price. The private
+# deployments have their own prices; the public comparison prices are not their tariffs.
+# Live table and JSON: https://ai.topxea.com/pricing and
+# https://ai.topxea.com/api/pricing (accessed 2026-10-25).
+# Raw Chat (/v1/chat/completions): reasoning_effort selects the model's effort.
+# Responses (/v1/responses): reasoning.effort selects effort on supported models.
+# Raw Messages (/v1/messages, Claude): thinking and output_config.effort pass through.
+# Other Messages models use the conversion documented at
+# https://ai.topxea.com/docs/api-reference (accessed 2026-10-25).
+name = "TopxAI"
+env = ["TOPXAI_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://ai.topxea.com/v1"
+doc = "https://ai.topxea.com/docs"

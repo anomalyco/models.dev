@@ -1,0 +1,19 @@
+# Effort only, as the lab and peers author this model: $.output_config.effort on
+# /v1/messages, $.reasoning_effort on /v1/chat/completions, both forwarded unchanged.
+# https://ai.topxea.com/docs/api-reference (accessed 2026-10-23)
+# Shared-pool price, 50% of Anthropic's list on every lane; cache writes for the 5m and
+# 1h TTLs from the same table.
+# https://ai.topxea.com/pricing/claude-fable-5-1 (accessed 2026-10-23)
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 5
+cache = { read = 0.125, write = { "5m" = 6.25, "1h" = 10 } }
+
+[cost.text.output]
+price = 25
