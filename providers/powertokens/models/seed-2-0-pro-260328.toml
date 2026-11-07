@@ -1,0 +1,28 @@
+# Pricing: https://powertokens.ai/pricing (USD per 1M tokens, re-checked 2026-10-08)
+# Request fields: https://docs.powertokens.ai/en/zmodelChat/byteplus/seed-2-0-pro-260328.md (re-checked 2026-10-08)
+# Endpoint matrix: https://docs.powertokens.ai/en/ecosystem-tools/text-model-protocols.md
+# Served via BytePlus ModelArk.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = minimal|low|medium|high
+# Host OpenAPI enum for this model is only those four effort values.
+# none, xhigh, and max are not in the documented enum.
+base_model = "bytedance-seed/seed-2.0-pro"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["minimal", "low", "medium", "high"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.475
+output = 2.85
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 0.95
+output = 5.7

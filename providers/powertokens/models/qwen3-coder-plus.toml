@@ -1,0 +1,31 @@
+# Pricing: https://powertokens.ai/pricing (USD per 1M tokens, accessed 2026-10-01)
+# Request fields: https://docs.powertokens.ai/en/zmodelChat/ali/qwen3-coder-plus.md (accessed 2026-10-01)
+# Endpoint matrix: https://docs.powertokens.ai/en/ecosystem-tools/text-model-protocols.md
+base_model = "alibaba/qwen3-coder-plus"
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 32_000 }
+input = 1.8
+output = 9
+cache_read = 0.18
+cache_write = 2.25
+
+[[cost.tiers]]
+tier = { type = "context", size = 128_000 }
+input = 3
+output = 15
+cache_read = 0.3
+cache_write = 3.75
+
+[[cost.tiers]]
+tier = { type = "context", size = 256_000 }
+input = 6
+output = 60
+cache_read = 0.6
+cache_write = 7.5
