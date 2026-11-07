@@ -1,0 +1,40 @@
+# Ultra-fast (Preview) serving path for DeepSeek V4.1 Flash 1017: same model, 6-8x generation speed, selected by model ID
+#   (no service_tier): https://docs.fireworks.ai/serverless/serverless-modes. Chat completions echo the underlying
+#   accounts/fireworks/models/deepseek-v4p1-flash-1017 (live 2026-11-07).
+# Pricing $2.40 / $0.048 / $9.60 per 1M (input / cached input / output), no Priority: https://docs.fireworks.ai/serverless/pricing
+#   and GET https://api.fireworks.ai/v1/serverless/models (serverless_mode "ultrafast", usage_identifier = this ID, 2026-11-07).
+# Lab identity, minor update to V4.1 Flash: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables; live 2026-11-07)
+# Effort: reasoning_effort = low|high|max (same surface as sibling accounts/fireworks/models/deepseek-v4p1-flash-1017; native DeepSeek Flash
+#   effort set low|high|max: https://api-docs.deepseek.com/guides/thinking_mode/). Unknown values are rejected with a 400.
+# Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Live 2026-11-07: json_schema response_format, required tool calls, base64 PNG input, Responses and Messages all worked on this ID.
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# system_updates = true: after a system message sent after the first turn, 10686 of 10826 prompt tokens still came from the cache (live 2026-11-07, 2 trials).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Ultra-fast"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.4
+cache = { read = 0.048 }
+
+[cost.text.output]
+price = 9.6
