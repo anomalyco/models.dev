@@ -4,8 +4,8 @@ schema = 2
 base_model = "cohere/command-r7b-12-2024"
 
 [capabilities]
-tools = { supported = false }
 structured_output = true
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [api.chat-completions]
 
