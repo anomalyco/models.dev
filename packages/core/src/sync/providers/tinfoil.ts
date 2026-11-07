@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { ExistingModel, SyncedFullModel, SyncedModel, SyncProvider } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://inference.tinfoil.sh/v1/models";
@@ -94,7 +95,7 @@ export function buildTinfoilModel(
     throw new Error(`Tinfoil model ${model.id} has incomplete local pricing or limits required for sync`);
   }
   if (model.reasoning && existing.reasoning_options === undefined) {
-    throw new Error(`Tinfoil model ${model.id} requires hand-authored reasoning_options; the catalog exposes no reasoning controls`);
+    throw new MissingReasoningOptionsError(model.id, "requires hand-authored reasoning_options; verify Tinfoil's documented controls before syncing");
   }
 
   const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = existing;

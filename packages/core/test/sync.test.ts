@@ -1525,13 +1525,76 @@ test("requires authored Tinfoil controls instead of inventing an empty set", () 
   expect(() => buildTinfoilModel(tinfoilModel(), {
     ...existingTinfoilGLM,
     reasoning_options: undefined,
-  })).toThrow("requires hand-authored reasoning_options");
+  })).toThrow(MissingReasoningOptionsError);
 
   const model = buildTinfoilModel(tinfoilModel(), {
     ...existingTinfoilGLM,
     reasoning_options: [],
   });
   expect(model.reasoning_options).toEqual([]);
+});
+
+test("Tinfoil sync preserves models needing reasoning controls and continues other updates and notices", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-tinfoil-"));
+  const modelsDir = path.join(dir, "providers", "tinfoil", "models");
+  const reasonerPath = path.join(modelsDir, "new-reasoner.toml");
+  const chatPath = path.join(modelsDir, "existing-chat-model.toml");
+  const existing = [
+    "schema = 2",
+    'name = "Existing model"',
+    'description = "Existing Tinfoil model"',
+    'release_date = "2026-01-01"',
+    "open_weights = true",
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
+    "",
+    "[limit]",
+    "context = 1_000",
+    "output = 100",
+    "",
+    "[cost.text.input]",
+    "price = 1",
+    "",
+    "[cost.text.output]",
+    "price = 2",
+    "",
+  ].join("\n");
+
+  try {
+    await mkdir(path.join(dir, "models"));
+    await Promise.all([Bun.write(reasonerPath, existing), Bun.write(chatPath, existing)]);
+    const result = await syncProvider({
+      ...tinfoil,
+      modelsDir,
+      async fetchModels() {
+        return {
+          object: "list",
+          data: [
+            tinfoilModel({ id: "new-reasoner" }),
+            tinfoilModel({ id: "existing-chat-model", reasoning: false }),
+            tinfoilModel({ id: "new-chat-model" }),
+          ],
+        };
+      },
+    });
+
+    expect(result).toMatchObject({ created: 0, updated: 1, deleted: 0, unchanged: 1 });
+    expect(await Bun.file(reasonerPath).text()).toBe(existing);
+    expect(Bun.TOML.parse(await Bun.file(chatPath).text())).toMatchObject({
+      cost: { text: { input: { price: 1.5, cache: { read: 0.375 } }, output: { price: 5.25 } } },
+    });
+    expect(await Bun.file(path.join(modelsDir, "new-chat-model.toml")).exists()).toBe(false);
+    expect(result.notices).toContain("new-reasoner: requires hand-authored reasoning_options; verify Tinfoil's documented controls before syncing");
+    expect(result.notices).toContain("Skipped remote IDs: `new-chat-model`");
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });
 
 test("removes stale Tinfoil cache pricing when the public catalog omits it", () => {
