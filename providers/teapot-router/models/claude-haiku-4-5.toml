@@ -5,6 +5,8 @@
 # surface declared below; chat-completions (provider default) does not expose them.
 # Toggle: $.thinking.type = "enabled"|"disabled"
 # Budget: integer $.thinking.budget_tokens
+# Live probe 2026-11-07 on https://api.teapotrouter.com/v1/messages: thinking.type="disabled"
+# accepted (HTTP 200, normal completion) — the toggle works on this host.
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
