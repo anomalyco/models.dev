@@ -1,0 +1,30 @@
+# Prices from https://www.ruapi.ai/pricing (standard rate), checked 2026-10-23. USD per 1M tokens.
+# Reasoning tokens are billed at the output rate.
+# RuAPI sets its own DeepSeek prices (one rate around the clock, no peak/off-peak), so they are not a fixed
+# multiple of DeepSeek's list prices; the values below are exactly what https://www.ruapi.ai/pricing shows.
+# `deepseek-flash` serves DeepSeek V4.1 Flash 1017 (images accepted): https://docs.ruapi.ai/en/deepseek-api
+# OpenAI-compatible POST https://www.ruapi.ai/v1/chat/completions; thinking and reasoning_effort are
+# forwarded unchanged, reasoning comes back in reasoning_content; prompt caching is automatic.
+# Structured output: response_format is forwarded unchanged; DeepSeek accepts json_object but rejects strict
+# json_schema with 400, so structured_output = false (as in providers/alibaba-token-plan).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek Flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.168
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 1.44
+reasoning = 1.44
