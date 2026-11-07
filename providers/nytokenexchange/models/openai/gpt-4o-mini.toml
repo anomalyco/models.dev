@@ -1,0 +1,16 @@
+schema = 2
+base_model = "openai/gpt-4o-mini"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.15825
+cache = { read = 0.079125 }
+
+[cost.text.output]
+price = 0.633
