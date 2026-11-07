@@ -1,0 +1,14 @@
+# cheapaimodel is an OpenAI-compatible relay: it resells first-party models
+# (DeepSeek, Z.ai, xAI, Moonshot) through one key, billed in USD per token.
+# Public catalog with prices, limits and modalities (no auth):
+#   https://cheapaimodel.ai/api/models (fetched 2026-10-27)
+# Prices are list price times a per-group discount and move with the monthly
+# USD/CNY fixing used by the upstream, so they can shift slightly month to month.
+# Reasoning controls are passed through to the lab and mapped from each lab's
+# first-party entry (not probed per host).
+name = "cheapaimodel"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["CHEAPAIMODEL_API_KEY"]
+api = "https://api.cheapaimodel.ai/v1"
+doc = "https://cheapaimodel.ai/docs"
