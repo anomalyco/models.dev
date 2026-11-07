@@ -7,9 +7,7 @@ on:
     types: [missing-model]
 
 permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+  contents: read
 
 concurrency: issue-fixer-${{ github.event.issue.number || github.event.client_payload.issue_number }}
 
@@ -25,21 +23,26 @@ jobs:
         || (github.event.action == 'labeled' && github.event.label.name == 'fixer:run')
       )
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
     env:
-      GH_TOKEN: ${{ github.token }}
       ISSUE_NUMBER: ${{ github.event.issue.number || github.event.client_payload.issue_number }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          ref: dev
+          ref: ${{ github.sha }}
+          persist-credentials: false
 
       - name: Load issue
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           ISSUE_FILE="$RUNNER_TEMP/issue.json"
-          gh issue view "$ISSUE_NUMBER" --json number,title,body,labels > "$ISSUE_FILE"
+          gh issue view "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --json number,title,body,labels > "$ISSUE_FILE"
           echo "ISSUE_FILE=$ISSUE_FILE" >> "$GITHUB_ENV"
 
       - name: Install opencode
@@ -53,9 +56,8 @@ jobs:
         run: |
           set -euo pipefail
           EVENTS_FILE="$RUNNER_TEMP/issue-fixer-events.jsonl"
-          RESPONSE_FILE="$RUNNER_TEMP/issue-fixer-response.md"
           PROMPT_FILE="$RUNNER_TEMP/issue-fixer-prompt.md"
-          echo "RESPONSE_FILE=$RESPONSE_FILE" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/out"
 
           jq -r '
             "A new GitHub issue was opened in anomalyco/models.dev.\n\n"
@@ -68,52 +70,121 @@ jobs:
 
           opencode run --agent issue-fixer -m opencode/muse-spark-1.3 --variant xhigh --format json < "$PROMPT_FILE" | tee "$EVENTS_FILE"
 
-          if ! jq -ers 'map(select(.type == "text") | .part.text) | last | select(length > 0)' "$EVENTS_FILE" > "$RESPONSE_FILE"; then
+          if ! jq -ers 'map(select(.type == "text") | .part.text) | last | select(length > 0)' "$EVENTS_FILE" > "$RUNNER_TEMP/out/response.md"; then
             echo "Issue fixer did not produce a final response." >&2
             exit 1
           fi
 
-      - name: Check changed paths
-        if: success()
-        run: |
-          while IFS= read -r line; do
-            path="${line:3}"
-            case "$path" in
-              models/*.toml|providers/*.toml) ;;
-              *) exit 1 ;;
-            esac
-          done < <(git status --porcelain)
-
-      - name: Create pull request
-        if: success()
-        env:
-          BRANCH: issue-${{ github.event.issue.number || github.event.client_payload.issue_number }}
+      - name: Save catalog
         run: |
           set -euo pipefail
-          ISSUE_TITLE="$(jq -r .title "$ISSUE_FILE")"
+          tar -cf "$RUNNER_TEMP/out/catalog.tar" models providers
+          jq -r .title "$ISSUE_FILE" > "$RUNNER_TEMP/out/title.txt"
 
-          if [ -z "$(git status --porcelain)" ]; then
-            if [ -s "$RESPONSE_FILE" ]; then
-              gh issue comment "$ISSUE_NUMBER" --body-file "$RESPONSE_FILE"
-            fi
+      - name: Upload changes
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: issue-fixer
+          path: ${{ runner.temp }}/out
+          retention-days: 3
+
+  publish:
+    needs: fix
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      ISSUE_NUMBER: ${{ github.event.issue.number || github.event.client_payload.issue_number }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Setup git committer
+        id: committer
+        uses: ./.github/actions/setup-git-committer
+        with:
+          opencode-app-id: ${{ vars.OPENCODE_APP_ID }}
+          opencode-app-secret: ${{ secrets.OPENCODE_APP_SECRET }}
+
+      - name: Download changes
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: issue-fixer
+          path: ${{ runner.temp }}/out
+
+      - name: Check changes
+        id: apply
+        run: |
+          set -euo pipefail
+          STAGE="$RUNNER_TEMP/stage"
+          mkdir "$STAGE"
+          tar -xf "$RUNNER_TEMP/out/catalog.tar" -C "$STAGE"
+          bad="$({
+            find "$STAGE" -mindepth 1 -maxdepth 1 ! -name models ! -name providers
+            find "$STAGE" \( -name .git -o -name '.git*' \)
+            find "$STAGE" ! -type f ! -type d ! -type l
+            find "$STAGE" -type f -links +1
+          } | head -20)"
+          if [ -n "$bad" ]; then
+            echo "Unexpected entries in the agent's files:" >&2
+            echo "$bad" >&2
+            exit 1
+          fi
+          rm -rf models providers
+          cp -a "$STAGE/models" "$STAGE/providers" .
+          git add -A models providers
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -c "$BRANCH"
-          git add -A
+          while IFS= read -r path; do
+            case "$path" in
+              models/*.toml|providers/*.toml) ;;
+              *) echo "Unexpected changed path: $path" >&2; exit 1 ;;
+            esac
+          done < <(git diff --cached --no-renames --name-only)
+          git diff --cached --no-renames --raw --no-abbrev | awk '$2 != "100644" && $2 != "000000" { print "Unexpected file mode: " $0; bad = 1 } END { exit bad }' >&2
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on issue
+        if: steps.apply.outputs.changed == 'false'
+        env:
+          GH_TOKEN: ${{ steps.committer.outputs.token }}
+        run: |
+          if [ -s "$RUNNER_TEMP/out/response.md" ]; then
+            gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/out/response.md"
+          fi
+
+      - name: Create pull request
+        if: steps.apply.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.committer.outputs.token }}
+          BRANCH: issue-${{ github.event.issue.number || github.event.client_payload.issue_number }}
+        run: |
+          set -euo pipefail
+          ISSUE_TITLE="$(cat "$RUNNER_TEMP/out/title.txt")"
           TITLE="fix: ${ISSUE_TITLE:0:200}"
+
+          git switch -c "$BRANCH"
           git commit -m "$TITLE"
-          git push origin "$BRANCH"
+          git push --force origin "$BRANCH"
+
+          if [ -n "$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$BRANCH" --base dev --json number --jq '.[0].number')" ]; then
+            exit 0
+          fi
 
           PR_BODY="$RUNNER_TEMP/issue-fixer-pr-body.md"
           {
-            cat "$RESPONSE_FILE"
+            cat "$RUNNER_TEMP/out/response.md"
             echo
             echo "Closes #$ISSUE_NUMBER"
             echo
             echo "Automated by the issue fixer: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           } > "$PR_BODY"
 
-          gh pr create --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY"
+          gh pr create --repo "$GITHUB_REPOSITORY" --base dev --head "$BRANCH" --title "$TITLE" --body-file "$PR_BODY"
