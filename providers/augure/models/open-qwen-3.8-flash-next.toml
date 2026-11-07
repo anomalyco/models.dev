@@ -1,0 +1,37 @@
+# Augure Open (preview): Qwen3.8-Flash-Next open weights hosted in Canada for developer
+# API keys. Sources (accessed 2026-10-27): https://augureai.ca/docs/models (256K context,
+# 32,768 output cap, CAD prices; text only, image and file parts get 400
+# unsupported_content; messages reach the model unchanged; reasoning_effort is sent to
+# the model unchanged; thinking returned as reasoning_content; n = 1 only), and
+# https://augureai.ca/docs/changelog (added 2026-10-22). Augure's API has temperature and
+# top_p but no top_k.
+# Effort: passed through unchanged, so the model's native levels apply
+# (low|medium|xhigh, see models/alibaba/qwen3.8-flash-next.toml).
+# Prices: CAD 2.00 in / 4.00 out per 1M tokens, converted to USD at the Bank of Canada
+# rate of 1.4038 CAD per USD (2026-10-27), rounded to 2 decimals. Cached input is billed
+# at the standard input rate. Preview: no SLA and pricing may change, hence status = beta.
+schema = 2
+base_model = "alibaba/qwen3.8-flash-next"
+status = "beta"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+stream_usage = true
+top_k = false
+
+[limit]
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.42
+
+[cost.text.output]
+price = 2.85
