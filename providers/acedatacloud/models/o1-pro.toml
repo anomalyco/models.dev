@@ -1,0 +1,16 @@
+# Public catalog: https://platform.acedata.cloud/models/o1-pro
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/ed972a38-ecef-4fcb-af33-750de42d25dc
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort (Chat Completions), or reasoning.effort (Responses)
+base_model = "openai/o1-pro"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
+[cost]
+input = 55.189929375
+output = 220.759717325
+
+[provider]
+npm = "@ai-sdk/openai"
+api = "https://api.acedata.cloud/openai"
+shape = "responses"
