@@ -1,0 +1,9 @@
+# Served by GWDG SAIA (Chat AI), https://docs.hpc.gwdg.de/services/ai-services/chat-ai/models/index.html
+# (accessed 2026-10-27). GWDG lists these models as free to use, so no prices are published.
+# The docs list no per-model reasoning controls; reasoning models are always-on here.
+schema = 2
+v2_only = true
+base_model = "intfloat/e5-mistral-7b-instruct"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }

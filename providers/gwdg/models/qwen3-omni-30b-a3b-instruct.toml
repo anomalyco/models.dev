@@ -1,0 +1,10 @@
+# Served by GWDG SAIA (Chat AI), https://docs.hpc.gwdg.de/services/ai-services/chat-ai/models/index.html
+# (accessed 2026-10-27). GWDG lists these models as free to use, so no prices are published.
+# Served context probed live 2026-10-27 (max_model_len 65536), same as the lab file; GWDG's docs say 256k.
+# GWDG serves text output only; the lab file also lists speech output. The [modalities] override must repeat input.
+schema = 2
+base_model = "alibaba/qwen3-omni-30b-a3b-instruct"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv", "audio/amr", "audio/wav", "audio/3gpp", "audio/aac", "audio/mpeg"]
+output = ["text"]

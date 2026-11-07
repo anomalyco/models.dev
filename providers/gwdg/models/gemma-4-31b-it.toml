@@ -1,0 +1,9 @@
+# Served by GWDG SAIA (Chat AI), https://docs.hpc.gwdg.de/services/ai-services/chat-ai/models/index.html
+# (accessed 2026-10-27). GWDG lists these models as free to use, so no prices are published.
+# Toggle: chat_template_kwargs.enable_thinking = true|false; off by default (tested live 2026-10-27;
+# any reasoning_effort other than none also turns it on, with no difference between levels)
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = false } }

@@ -1,0 +1,9 @@
+# Served by GWDG SAIA (Chat AI), https://docs.hpc.gwdg.de/services/ai-services/chat-ai/models/index.html
+# (accessed 2026-10-27). GWDG lists these models as free to use, so no prices are published.
+# Effort: reasoning_effort = none|low|medium|xhigh (tested live 2026-10-27; "high" and "max" are rejected
+# with HTTP 400; default xhigh; none turns reasoning off; no budget field)
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }

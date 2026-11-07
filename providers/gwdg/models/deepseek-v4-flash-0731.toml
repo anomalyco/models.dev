@@ -1,0 +1,10 @@
+# Served by GWDG SAIA (Chat AI), https://docs.hpc.gwdg.de/services/ai-services/chat-ai/models/index.html
+# (accessed 2026-10-27). GWDG lists these models as free to use, so no prices are published.
+# Toggle: chat_template_kwargs.enable_thinking = true|false; off by default
+# Effort: reasoning_effort = low|high|max turns reasoning on (tested live 2026-10-27;
+# the native thinking.type field has no effect)
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = false }, effort = ["low", "high", "max"] }
