@@ -1,3 +1,4 @@
+# Context: NagaAI's upstream serves 1,000,000 tokens for this model, more than the lab's 262,144 (catalog limits.context_window checked against the serving providers 2026-11-07).
 # Reasoning: no controls. The catalog lists no reasoning_effort for this ID, so NagaAI drops the field and the model reasons by its default.
 schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
@@ -6,6 +7,9 @@ name = "Nemotron 3.5 Lightning 30B A3B (free)"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+
+[limit]
+context = 1_000_000
 
 [api.responses]
 

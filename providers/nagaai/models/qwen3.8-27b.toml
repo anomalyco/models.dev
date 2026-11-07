@@ -1,3 +1,4 @@
+# Context: NagaAI's upstream serves 1,000,000 tokens for this model, more than the lab's 262,144 (catalog limits.context_window checked against the serving providers 2026-11-07).
 # Reasoning controls: from providers/openrouter for the same base model, on NagaAI's effort scale.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
@@ -5,6 +6,9 @@ base_model = "alibaba/qwen3.8-27b"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
+
+[limit]
+context = 1_000_000
 
 [modalities]
 input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]

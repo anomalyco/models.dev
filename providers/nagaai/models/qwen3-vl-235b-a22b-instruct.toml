@@ -1,8 +1,12 @@
+# Context: NagaAI's upstream serves 262,144 tokens for this model, more than the lab's 131,072 (catalog limits.context_window checked against the serving providers 2026-11-07).
 schema = 2
 base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
 
 [capabilities]
 structured_output = true
+
+[limit]
+context = 262_144
 
 [api.responses]
 

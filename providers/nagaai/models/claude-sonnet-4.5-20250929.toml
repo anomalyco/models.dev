@@ -1,3 +1,4 @@
+# Context: NagaAI's upstream serves 1,000,000 tokens for this model, more than the lab's 200,000 (catalog limits.context_window checked against the serving providers 2026-11-07).
 # Toggle: reasoning.effort (Responses) or reasoning_effort (Chat Completions) = "none" turns reasoning off; any other level turns it on.
 # Reasoning controls: from providers/vercel for the same base model, on NagaAI's effort scale.
 schema = 2
@@ -6,6 +7,9 @@ base_model = "anthropic/claude-sonnet-4-5-20250929"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+
+[limit]
+context = 1_000_000
 
 [api.responses]
 

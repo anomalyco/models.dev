@@ -1,3 +1,4 @@
+# Context: NagaAI's upstream serves 163,840 tokens for this model, more than the lab's 128,000 (catalog limits.context_window checked against the serving providers 2026-11-07).
 # Toggle: reasoning.effort (Responses) or reasoning_effort (Chat Completions) = "none" turns reasoning off; any other level turns it on.
 # Reasoning controls: from providers/openrouter for the same base model, on NagaAI's effort scale.
 schema = 2
@@ -6,6 +7,9 @@ base_model = "deepseek/deepseek-v3.2"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+
+[limit]
+context = 163_840
 
 [api.responses]
 
