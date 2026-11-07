@@ -1,0 +1,13 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-23); Standard group, the default for new accounts.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.76
+cache = { read = 0.1606 }
+
+[cost.text.output]
+price = 3.157

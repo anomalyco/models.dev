@@ -1,0 +1,14 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-23); Standard group, the default for new accounts.
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "zhipuai/glm-4.6"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+
+[cost.text.input]
+price = 0.48
+cache = { read = 0.096 }
+
+[cost.text.output]
+price = 1.92

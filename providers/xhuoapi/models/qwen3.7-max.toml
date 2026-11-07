@@ -1,0 +1,14 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-23); Standard group, the default for new accounts.
+# Toggle: enable_thinking = true|false (Tested on XHuoAPI Chat Completions 2026-10-23; thinking_budget was not enforced in the same test, so no budget is listed)
+schema = 2
+base_model = "alibaba/qwen3.7-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 6
