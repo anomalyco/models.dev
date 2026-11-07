@@ -2,9 +2,10 @@
 # Sources (accessed 2026-11-07):
 # - https://ollama.com/library/kimi-k3.1-pro (1M context; Text, Image; vision, tools, thinking; $2.00 input, $0.20 cached, $10.00 output)
 # - https://ollama.com/pricing (kimi-k3.1-pro: $2.00 input, $0.20 cached input, $10.00 output per 1M tokens)
-# - https://ollama.com/api/show (capabilities: vision, thinking, completion, tools; kimi-k3.context_length 1048576)
-# - https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart (reasoning_effort low|high|max, default max; Moonshot says K3.1 Pro always thinks)
-# - Live POST https://ollama.com/v1/chat/completions (2026-11-07): no reasoning_effort returns a `reasoning` field; `reasoning_effort=none` returns content and no reasoning field, so this host can turn thinking off. Unknown effort strings also return 200, so the level list stays low|high|max.
+# - https://ollama.com/api/show (2026-11-07: capabilities vision, thinking, completion, tools; kimi-k3.context_length 1048576; thinking.values [false, low, medium, high, max], default max)
+# Toggle: native POST /api/chat and /api/generate `think` = true|false. OpenAI POST /v1/chat/completions maps `reasoning_effort` / `reasoning.effort` = none to off (https://docs.ollama.com/capabilities/thinking, https://docs.ollama.com/openai).
+#   Live 2026-11-07: `reasoning_effort=none` returns content and no `reasoning` field; unknown `reasoning_effort=nope` still returns `reasoning`. Native `think=false` returns no `thinking`; `think=nope` still thinks.
+# Effort: named levels from thinking.values are low|medium|high|max. `false` is the off switch, not an effort name.
 # Modalities: the library page says Text, Image. The lab file also lists video; Ollama does not, so input drops video. Image types match the other Ollama Cloud Kimi entry.
 # Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, accessed 2026-10-21).
 # Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
@@ -20,7 +21,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "medium", "high", "max"] }
 structured_output = false
 cache = { implicit = true }
 
