@@ -1,0 +1,12 @@
+# sonar-deep-research on TommyAPI serves perplexity/sonar-deep-research (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "perplexity/sonar-deep-research"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 2.6
+
+[cost.text.output]
+price = 10.4

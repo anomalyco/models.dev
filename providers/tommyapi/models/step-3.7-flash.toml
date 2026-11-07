@@ -1,0 +1,12 @@
+# step-3.7-flash on TommyAPI serves stepfun/step-3.7-flash (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "stepfun/step-3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.26
+
+[cost.text.output]
+price = 1.495

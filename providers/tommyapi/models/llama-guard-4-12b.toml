@@ -1,0 +1,13 @@
+# llama-guard-4-12b on TommyAPI serves meta/llama-guard-4-12b (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "meta/llama-guard-4-12b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.234
+
+[cost.text.output]
+price = 0.234

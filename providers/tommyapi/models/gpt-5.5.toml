@@ -1,0 +1,12 @@
+# gpt-5.5 on TommyAPI serves openai/gpt-5.5 (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "openai/gpt-5.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 5.0
+
+[cost.text.output]
+price = 30.0

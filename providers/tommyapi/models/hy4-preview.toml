@@ -1,0 +1,12 @@
+# hy4-preview on TommyAPI serves tencent/hy4-preview (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "tencent/hy4-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+
+[cost.text.input]
+price = 1.0842
+
+[cost.text.output]
+price = 3.2513

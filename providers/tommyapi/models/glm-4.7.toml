@@ -1,0 +1,12 @@
+# glm-4.7 on TommyAPI serves zhipuai/glm-4.7 (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "zhipuai/glm-4.7"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.78
+
+[cost.text.output]
+price = 2.86

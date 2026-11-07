@@ -1,0 +1,12 @@
+# hy3 on TommyAPI serves tencent/hy3 (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "tencent/hy3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+
+[cost.text.input]
+price = 0.1716
+
+[cost.text.output]
+price = 0.6864

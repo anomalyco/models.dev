@@ -1,0 +1,12 @@
+# solar-pro4 on TommyAPI serves upstage/solar-pro4 (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "upstage/solar-pro4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.195
+
+[cost.text.output]
+price = 0.78

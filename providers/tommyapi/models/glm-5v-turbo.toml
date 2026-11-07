@@ -1,0 +1,12 @@
+# glm-5v-turbo on TommyAPI serves zhipuai/glm-5v-turbo (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "zhipuai/glm-5v-turbo"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 1.56
+
+[cost.text.output]
+price = 5.1999

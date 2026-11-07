@@ -1,0 +1,12 @@
+# gemini-3.8-flash on TommyAPI serves google/gemini-3.8-flash (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.0725
+
+[cost.text.output]
+price = 5.3625

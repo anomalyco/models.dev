@@ -1,0 +1,12 @@
+# nova-2-lite-v1 on TommyAPI serves amazon/nova-2-lite-v1 (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "amazon/nova-2-lite-v1"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.39
+
+[cost.text.output]
+price = 3.25

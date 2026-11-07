@@ -1,0 +1,12 @@
+# gpt-6-sol on TommyAPI serves openai/gpt-6-sol (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "openai/gpt-6-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2.6
+
+[cost.text.output]
+price = 13.0

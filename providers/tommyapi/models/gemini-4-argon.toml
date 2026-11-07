@@ -1,0 +1,12 @@
+# gemini-4-argon on TommyAPI serves google/gemini-4-argon (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 2.6
+
+[cost.text.output]
+price = 13.0
