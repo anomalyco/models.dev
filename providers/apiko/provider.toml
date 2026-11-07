@@ -1,0 +1,9 @@
+# Relay provider: APIKO forwards to upstream lab endpoints (Anthropic, OpenAI, Google, DeepSeek, Moonshot, Zhipu, Alibaba, xAI).
+# Prices: public catalog https://apiko.app/api/public/models (USD per 1M tokens, accessed 2026-10-28, rounded to 4 decimals); model pages https://apiko.app/models
+# Output is capped at 32,000 tokens on every text model (max_tokens above that is lowered by the gateway).
+name = "APIKO"
+env = ["APIKO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.apiko.app/v1"
+doc = "https://apiko.app/docs/introduction"

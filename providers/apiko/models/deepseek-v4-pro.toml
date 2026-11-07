@@ -1,0 +1,24 @@
+# Effort: reasoning_effort = none|low|high|max; reasoning is off with effort=none (thinking.type = disabled is also passed through).
+# Probed 2026-10-28 on POST https://api.apiko.app/v1/chat/completions: none returned no reasoning_content,
+# low/high/max returned reasoning_content; a tool call came back as tool_calls.
+# Price: https://apiko.app/api/public/models (2026-10-28), model page https://apiko.app/models/deepseek-v4-pro
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+tools = { supported = true }
+cache = { implicit = true }
+
+[limit]
+output = 32_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.405
+cache = { read = 0.0135 }
+
+[cost.text.output]
+price = 1.2149
