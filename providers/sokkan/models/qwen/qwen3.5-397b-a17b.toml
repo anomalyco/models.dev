@@ -1,0 +1,23 @@
+# Sources (accessed 2026-10-22): GET https://router.sokkan.ch/v1/models (pricing in USD per 1M tokens,
+#   context_length, max_output_tokens, availability "on_demand"), https://router.sokkan.ch/docs
+# Toggle: reasoning_effort = "none" (off) | any other accepted value (on); thinking is on when omitted. Binary, not graded.
+# Live 2026-10-22 (one arithmetic word problem, max_tokens 6000, two calls per value, completion_tokens_details.reasoning_tokens):
+#   "none" -> 6 completion tokens, no reasoning; minimal/low/medium/high/xhigh/omitted -> 3,772 to 6,000 completion
+#   tokens with no ordering by level (low 4,022/3,772, medium 4,427/4,002, high 4,574/5,816, xhigh 3,839/5,486).
+#   The Qwen-native enable_thinking, chat_template_kwargs.enable_thinking and thinking_budget are rejected (HTTP 400).
+# Zone: EU. Cached input is billed at the input price.
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+output = 32_768
+
+[cost.text.input]
+price = 1
+cache = { read = 1 }
+
+[cost.text.output]
+price = 6

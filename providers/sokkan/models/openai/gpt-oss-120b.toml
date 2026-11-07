@@ -1,0 +1,18 @@
+# Sources (accessed 2026-10-22): GET https://router.sokkan.ch/v1/models (pricing in USD per 1M tokens,
+#   context_length, max_output_tokens, availability "on_demand"), https://router.sokkan.ch/docs
+# Effort: reasoning_effort = low|medium|high (Chat Completions), forwarded unchanged to the serving backend.
+# Live 2026-10-22 (max_tokens 64, one call per value): low -> finish "stop" after 16 tokens with an answer;
+#   medium/high and omitted -> finish "length" at 64 tokens of reasoning; "bogus" -> HTTP 422 listing the accepted enum.
+# Zone: EU. Context and output match the lab entry. Cached input is billed at the input price.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 0.5
