@@ -1,0 +1,13 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "cohere/command-a-translate-08-2025"
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10
