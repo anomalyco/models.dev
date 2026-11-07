@@ -1,5 +1,6 @@
 # Effort: reasoning_effort = none|low|high|max; thinking is off unless reasoning_effort asks for it (minimal maps to low, medium to high, xhigh to max).
 # Cache: automatic; a repeated prompt returns usage.prompt_tokens_details.cached_tokens.
+# top_k: not in the catalog's supported_sampling_parameters; the API ignores it (even top_k: "x" returns 200).
 # Pricing: https://www.runwally.com/pricing
 # Limits and modalities: GET https://inference.runanywhere.ai/v1/models
 schema = 2
@@ -8,6 +9,7 @@ base_model = "deepseek/deepseek-v4-flash-0731"
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "high", "max"] }
 structured_output = true
+top_k = false
 cache = { implicit = true }
 
 [limit]
@@ -18,8 +20,8 @@ output = 65_536
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.44
-cache = { read = 0.014 }
+price = 0.293
+cache = { read = 0.0093 }
 
 [cost.text.output]
-price = 1.32
+price = 0.88
