@@ -1,0 +1,21 @@
+# Prices: https://aki.io/#pricing and GET /openai/v1/models (checked 2026-11-07) list EUR per
+# 1M tokens (net); converted to USD at the ECB reference rate of 1.1165 USD/EUR (2026-11-06).
+# Effort: reasoning_effort = none|low|medium|high (verified live 2026-11-07: "none" disables
+# reasoning and "high" keeps it on; low and medium follow the same-model peers)
+schema = 2
+base_model = "aleph-alpha/kolibri-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 262_144
+output = 81_920
+
+[cost.text.input]
+price = 0.167475
+cache = { read = 0.0837375 }
+
+[cost.text.output]
+price = 0.614075
