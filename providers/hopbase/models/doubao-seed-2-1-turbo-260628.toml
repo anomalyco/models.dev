@@ -1,0 +1,39 @@
+# Verified live 2026-10-31 against POST https://api.hop-base.com/v1/chat/completions with this exact
+# model ID: non-streaming, streaming (stream_options.include_usage returns usage), and a
+# tool call (tool_choice auto) that returned a well-formed function call.
+# Limits: 256K context, up to 128K output tokens (https://hop-base.com/llms.txt).
+# tool_choice: none honoured; required/named returned finish_reason tool_calls without a parsed call
+# in this probe, so only auto and none are declared.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max, all accepted live; none and
+# minimal return 0 reasoning tokens, so no separate toggle is declared (thinking.type = disabled is
+# also accepted). An unknown value returns HTTP 400. Relative effort was not benchmarked.
+# Reasoning text is returned in message.reasoning_content and delta.reasoning_content.
+# Images: a red PNG data URL returned "Red"; HopBase documents image input (public URL or base64)
+# but not video, so input is limited to text and common image types here.
+# Structured output: json_schema with strict = true returned an enum-valid object.
+# Pricing: HopBase list price, USD; equals the official Volcano Engine CNY list price converted at 6.8 CNY/USD (2026-10-31).
+schema = 2
+base_model = "bytedance-seed/seed-2.1-turbo"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+stream_usage = true
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.4412
+cache = { read = 0.0883 }
+
+[cost.text.output]
+price = 2.2059
