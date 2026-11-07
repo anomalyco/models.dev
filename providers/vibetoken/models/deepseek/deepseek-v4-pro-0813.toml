@@ -1,0 +1,21 @@
+# Prices: GET https://vibetoken.cn/api/models/deepseek/deepseek-v4-pro-0813/pricing (2026-10-30), what the host charges:
+# input/output = list x (1 - discount); cache reads and writes bill at list.
+# CNY converted to USD at 1 CNY = 0.15011 USD (ECB reference rate, 2026-10-29).
+# Off-peak hours bill lower; the standard (peak) rate is listed.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.675495
+cache = { read = 0.045033 }
+
+[cost.text.output]
+price = 2.026485
