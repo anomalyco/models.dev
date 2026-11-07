@@ -1,0 +1,17 @@
+# Source: https://septorlabs.com/models/gemini-3.5-flash-lite
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "google/gemini-3.5-flash-lite"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.027 }
+
+[cost.text.output]
+price = 2.5

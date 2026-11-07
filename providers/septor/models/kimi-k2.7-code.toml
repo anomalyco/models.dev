@@ -1,0 +1,20 @@
+# Price = midpoint of Septor's published range (input 0.249492-0.8625, output 1.134059-4.025 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/kimi-k2.7-code
+# Effort: reasoning_effort = low|medium|high (https://septorlabs.com/docs/introduction)
+# Always-on reasoning: reasoning_effort = none is accepted and falls back to low.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.555996
+cache = { read = 0.208 }
+
+[cost.text.output]
+price = 2.57953

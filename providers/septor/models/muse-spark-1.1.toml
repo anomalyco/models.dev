@@ -1,0 +1,22 @@
+# Price = midpoint of Septor's published range (input 0.934375-1.4375, output 3.176875-4.8875 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/muse-spark-1.1
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "meta/muse-spark-1.1"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 943718
+
+[cost.text.input]
+price = 1.185938
+cache = { read = 0.195 }
+
+[cost.text.output]
+price = 4.032188

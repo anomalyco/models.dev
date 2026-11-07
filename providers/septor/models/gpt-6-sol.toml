@@ -1,0 +1,19 @@
+# Price = midpoint of Septor's published range (input 0.358976-2, output 1.794879-10 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/gpt-6-sol
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "openai/gpt-6-sol"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.179488
+cache = { read = 0.276 }
+
+[cost.text.output]
+price = 5.897439

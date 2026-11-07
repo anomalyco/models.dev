@@ -1,0 +1,19 @@
+# Price = midpoint of Septor's published range (input 3.7375-5, output 18.6875-25 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/claude-opus-4.7
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "anthropic/claude-opus-4-7"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 4.36875
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 21.84375
