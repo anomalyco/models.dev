@@ -7,9 +7,6 @@ base_model = "anthropic/claude-sonnet-4-5-20250929"
 reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[limit]
-context = 1_000_000
-
 [api.responses]
 
 [api.chat-completions]

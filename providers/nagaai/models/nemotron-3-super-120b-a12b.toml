@@ -6,9 +6,6 @@ base_model = "nvidia/nemotron-3-super-120b-a12b"
 reasoning = { supported = true, effort = ["none", "low", "medium"] }
 structured_output = true
 
-[limit]
-context = 1_000_000
-
 [api.responses]
 
 [api.chat-completions]

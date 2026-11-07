@@ -1,4 +1,5 @@
 # Reasoning controls: from providers/openrouter for the same base model, on NagaAI's effort scale.
+# tools.freeform on [api.responses] only, "text" only: NagaAI's Responses API takes custom tools and returns custom_tool_call items, but passes a lark or regex grammar to the model in the tool description instead of enforcing it. Chat Completions drops custom tools.
 schema = 2
 base_model = "openai/gpt-5.4-pro"
 
@@ -7,6 +8,7 @@ reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
 structured_output = true
 
 [api.responses]
+capabilities = { tools = { freeform = ["text"] } }
 
 [api.chat-completions]
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }

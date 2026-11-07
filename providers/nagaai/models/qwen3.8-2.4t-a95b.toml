@@ -6,9 +6,6 @@ base_model = "alibaba/qwen3.8-2.4t-a95b"
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
 
-[limit]
-context = 1_048_576
-
 [api.responses]
 
 [api.chat-completions]

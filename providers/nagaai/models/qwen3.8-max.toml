@@ -1,9 +1,10 @@
-# Reasoning controls: from providers/vercel for the same base model, on NagaAI's effort scale.
+# Reasoning controls: from providers/requesty for the same base model, on NagaAI's effort scale.
 schema = 2
-base_model = "alibaba/qwen3.8-max-preview"
+base_model = "alibaba/qwen3.8-max"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
 
 [modalities]
 input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]

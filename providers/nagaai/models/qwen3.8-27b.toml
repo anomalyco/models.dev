@@ -6,9 +6,6 @@ base_model = "alibaba/qwen3.8-27b"
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
 
-[limit]
-context = 1_000_000
-
 [modalities]
 input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 output = ["text"]
