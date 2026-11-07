@@ -1,0 +1,33 @@
+# Sources (accessed 2026-10-27): https://inference.tinfoil.sh/v1/models (USD/MTok, context 32768; experimental).
+# https://docs.tinfoil.sh/models/decisions and https://docs.tinfoil.sh/guides/decision-outputs
+# Checkpoint mapping, text-only input and disabled prefix caching:
+# https://github.com/tinfoilsh/confidential-decision-models/blob/main/tinfoil-config.yml
+# https://github.com/tinfoilsh/confidential-decision-models/blob/main/README.md
+# Aliases may change checkpoints; recheck base_model against the deployment config when updating.
+# This is OpenAI's {model,input,questions} Decisions protocol, not System One; no generated/output tokens are billed.
+# status beta: the public catalog marks experimental=true, matching Tinfoil's existing experimental-model convention.
+# AuthoredModelV2 requires input and output together, so the text-only override repeats the base output.
+schema = 2
+v2_only = true
+base_model = "vllm-sr/d3"
+name = "Decision Large"
+status = "beta"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+cache = false
+
+[limit]
+context = 32_768
+
+[api.decisions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 0
