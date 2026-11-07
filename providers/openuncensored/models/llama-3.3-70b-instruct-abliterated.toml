@@ -1,0 +1,31 @@
+# Served by Open Uncensored through nanogpt, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/llama-3.3-70b-instruct-abliterated
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/huihui-ai/Llama-3.3-70B-Instruct-abliterated.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+name = "Llama 3.3 70B Instruct abliterated"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+family = "llama"
+open_weights = true
+release_date = "2025-08-08"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 32_768
+input = 32_768
+output = 16_384
+
+[cost.text.input]
+price = 0.7
+
+[cost.text.output]
+price = 0.7

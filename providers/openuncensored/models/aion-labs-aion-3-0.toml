@@ -1,0 +1,23 @@
+# Served by Open Uncensored through venice, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/aion-labs-aion-3-0
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/venice/models/aion-labs-aion-3-0.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+base_model = "aion-labs/aion-3.0"
+name = "Aion 3.0"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 3.75
+cache = { read = 0.9375 }
+
+[cost.text.output]
+price = 7.5

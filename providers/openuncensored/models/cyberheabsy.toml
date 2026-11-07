@@ -1,0 +1,30 @@
+# Served by Open Uncensored through nanogpt, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/cyberheabsy
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/heabsy/cyberheabsy.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+name = "CyberHeabsy"
+description = "A low-refusal text model for authorized security research, roleplay, and creative writing. It preserves tool calling after refusal removal, supports optional reasoning, and has a 1M-token context window."
+open_weights = false
+release_date = "2026-09-27"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = false
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 65_536
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 4.5

@@ -1,0 +1,31 @@
+# Served by Open Uncensored through nanogpt, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/qwen3.8-27b-uncensored-fast
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/heabsy/qwen3.8-27b-uncensored-fast.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+name = "Qwen 3.8 27B Uncensored Fast by Heabsy"
+description = "Heabsy's NVFP4 build of Qwen3.8-27B by Alibaba Cloud, with refusal removal based on huihui-ai's Huihui-Qwen3.8-27B-abliterated. Quantized and calibrated by Heabsy, with unpublished weights under the Heabsy Model License. Supports text and image input, tools, and optional reasoning capped at 16,384 tokens within the output budget. This named build is separate from Qwen 3.8 27B Uncensored."
+family = "qwen"
+open_weights = false
+release_date = "2026-10-16"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+
+[limit]
+context = 524_288
+input = 524_288
+output = 235_929
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3

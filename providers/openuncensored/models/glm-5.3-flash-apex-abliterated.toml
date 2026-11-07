@@ -1,0 +1,31 @@
+# Served by Open Uncensored through nanogpt, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/glm-5.3-flash-apex-abliterated
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/z-ai/glm-5.3-flash-apex-abliterated.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+name = "Apex Flash 1 Abliterated"
+description = "Apex Flash 1 Abliterated is an experimental derivative of Cantina Security and Yeta's Apex Flash 1 with modified refusal behavior."
+family = "glm"
+open_weights = true
+release_date = "2026-10-05"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = false
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 32_768
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.5

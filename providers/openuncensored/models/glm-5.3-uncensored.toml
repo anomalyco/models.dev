@@ -1,0 +1,31 @@
+# Served by Open Uncensored through nanogpt, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/glm-5.3-uncensored
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/z-ai/glm-5.3-uncensored.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+name = "GLM 5.3 Uncensored"
+description = "An experimental uncensored version of the full GLM 5.3 reasoning model for chat, creative writing, coding, and tool use. It may show unusual behavior or inconsistent response quality."
+family = "glm"
+open_weights = true
+release_date = "2026-09-26"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = false
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 2.25

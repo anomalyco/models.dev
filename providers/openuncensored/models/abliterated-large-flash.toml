@@ -1,0 +1,29 @@
+# Served by Open Uncensored through abliteration-ai, venice, nanogpt, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/abliterated-large-flash
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/venice/models/abliteration-abliterated-model-large-flash.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+name = "Abliterated Large Flash"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+open_weights = false
+release_date = "2026-10-23"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2

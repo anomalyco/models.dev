@@ -1,0 +1,30 @@
+# Served by Open Uncensored through venice, nanogpt, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/deepseek-v4.1-flash-uncensored
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/venice/models/deepseek-v4-1-flash-uncensored.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+name = "DeepSeek V4.1 Flash Uncensored"
+description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+family = "deepseek"
+open_weights = true
+release_date = "2026-10-23"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[cost.text.input]
+price = 0.33
+
+[cost.text.output]
+price = 1.32

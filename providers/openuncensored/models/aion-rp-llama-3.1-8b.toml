@@ -1,0 +1,22 @@
+# Served by Open Uncensored through nanogpt, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/aion-rp-llama-3.1-8b
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/aion-labs/aion-rp-llama-3.1-8b.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+base_model = "aion-labs/aion-rp-llama-3.1-8b"
+name = "Llama 3.1 8b (uncensored)"
+
+[capabilities]
+tools = { supported = true }
+structured_output = false
+
+[limit]
+input = 32_768
+output = 16_384
+
+[cost.text.input]
+price = 0.8
+
+[cost.text.output]
+price = 1.6

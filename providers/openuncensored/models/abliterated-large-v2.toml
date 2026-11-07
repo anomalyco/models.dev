@@ -1,0 +1,32 @@
+# Served by Open Uncensored through abliteration-ai, venice, nanogpt, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/abliterated-large-v2
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/abliteration-ai/models/abliterated-model-large-v2.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+name = "Abliterated Model Large V2"
+description = "GLM-5.3 model abliterated and finetuned for cyber, ML red teaming, and agent testing"
+open_weights = false
+release_date = "2026-08-29"
+last_updated = "2026-08-31"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 999_990
+
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 5

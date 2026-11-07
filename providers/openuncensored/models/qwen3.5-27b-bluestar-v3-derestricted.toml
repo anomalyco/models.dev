@@ -1,0 +1,31 @@
+# Served by Open Uncensored through nanogpt, at the serving provider's per-token
+# price with no markup: https://openuncensored.com/models/qwen3.5-27b-bluestar-v3-derestricted
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/Qwen3.5-27B-BlueStar-v3-Derestricted.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+name = "Qwen3.5 27B BlueStar v3 Derestricted"
+description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "qwen3.5"
+open_weights = true
+release_date = "2026-04-30"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+
+[limit]
+context = 262_144
+input = 262_144
+output = 16_384
+
+[cost.text.input]
+price = 0.306
+
+[cost.text.output]
+price = 0.306
