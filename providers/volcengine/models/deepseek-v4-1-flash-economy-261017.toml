@@ -1,0 +1,41 @@
+# Implicit cache: the deepseek-v4-1-flash-economy-261017 row lists Chat API support:
+# https://ark.volcengine.com/region:cn-beijing/docs/model-list#ed095742
+# Exact model identity (primary version 261017): https://ark.volcengine.com/models/deepseek-v4-1-flash-economy.md
+# The 1017 upgrade explicitly retains context caching:
+# https://ark.volcengine.com/region:cn-beijing/docs/deepseek-v4-1-flash.md
+# Keep the canonical model's known limits; no precise Ark 1017 token-limit record was available.
+# Sources (accessed 2026-11-07):
+# - Models, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list
+# - CNY list prices: https://ark.volcengine.com/region:cn-beijing/docs/model-pricing
+# - Host reasoning controls: https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking
+# CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
+# Reuse this provider's fixed conversion rate; all prices are USD per million tokens.
+# Chat controls: reasoning_effort = none|low|high|max (default high); none disables thinking.
+# Accepted aliases: minimal->low, medium/xhigh->high. There is no separate reasoning budget.
+# Peak prices are 2x on Mon-Fri 09:00-12:00 and 14:00-18:00 Asia/Shanghai;
+# base prices below are off-peak. The multiplier includes input, cache reads and output.
+# Economy uses the same weights as the standard model:
+# https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-model-release
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash Economy 1017"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.11875
+cache = { read = 0.00237 }
+
+[cost.text.output]
+price = 0.47499
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

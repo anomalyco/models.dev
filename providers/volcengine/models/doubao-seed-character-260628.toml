@@ -1,3 +1,8 @@
+# Limits: public Ark Docs MCP ark_get_model("doubao-seed-character-260628"), 2026-11-07.
+# https://ark.volcengine.com/region:cn-beijing/docs/model-list
+# The provider modalities table requires both input and output in schema-v2.
+# Ark Docs MCP lists text/image input; video is not inherited from the lab.
+# Its pricing billing_condition.max_prompt_tokens is 32768 for the first price band.
 # Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-character-260628`
 # CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
@@ -15,9 +20,31 @@
 schema = 2
 base_model = "bytedance-seed/seed-character"
 
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/x-icon",
+  "image/x-icns",
+  "image/sgi",
+  "image/jp2",
+  "image/heic",
+]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "high"] }
 structured_output = true
+
+[limit]
+context = 131_072
+input = 98_304
+output = 32_768
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -27,7 +54,7 @@ price = 0.11875
 cache = { read = 0.02375 }
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 32_000 } }
+when = { context = { gt = 32_768 } }
 price = 0.17812
 cache = { read = 0.02375 }
 
@@ -35,5 +62,5 @@ cache = { read = 0.02375 }
 price = 0.29687
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 32_000 } }
+when = { context = { gt = 32_768 } }
 price = 0.8906
