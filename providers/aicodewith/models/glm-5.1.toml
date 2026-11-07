@@ -1,0 +1,18 @@
+# Toggle: thinking.type = enabled|disabled
+# Verified live on POST https://api.aicodewith.ai/v1/chat/completions (2026-10-13): disabled -> 0 reasoning tokens, no reasoning_content;
+# enabled/omitted -> reasoning_content + 120-195 reasoning tokens. reasoning_effort (none/low/high) is accepted but does not turn thinking off.
+# Pricing source: https://aicodewith.ai/zh/models (accessed 2026-10-12); per 1M tokens, CNY.
+# Limits/modalities source: https://api.aicodewith.ai/models (accessed 2026-10-12).
+# CNY→USD rate: 6.700304, 2026-10-12, source: https://open.er-api.com/v6/latest/USD
+# Reasoning controls mirror providers/zhipuai/models/glm-5.1.toml (relay forwards the upstream request body).
+base_model = "zhipuai/glm-5.1"
+reasoning_options = [{ type = "toggle" }]
+
+[cost]
+input = 0.8955
+output = 3.5819
+cache_read = 0.3134
+
+[limit]
+context = 200_000
+output = 128_000

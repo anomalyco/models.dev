@@ -1,0 +1,17 @@
+# Toggle: thinking.type = enabled|disabled
+# Pricing source: https://aicodewith.ai/zh/models (accessed 2026-10-12); per 1M tokens, CNY.
+# Limits/modalities source: https://api.aicodewith.ai/models (accessed 2026-10-12).
+# CNY→USD rate: 6.700304, 2026-10-12, source: https://open.er-api.com/v6/latest/USD
+# Peak-hour (BJT 09-12, 14-18) list price shown; off-peak is 0.5x.
+# Reasoning controls mirror providers/302ai/models/deepseek-flash.toml (relay forwards the upstream request body).
+base_model = "deepseek/deepseek-v4.1-flash"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.2985
+output = 1.194
+cache_read = 0.006
+
+[limit]
+context = 1_000_000
+output = 393_216

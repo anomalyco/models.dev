@@ -1,0 +1,19 @@
+# Pricing source: https://aicodewith.ai/zh/models (accessed 2026-10-12); per 1M tokens, USD.
+# Limits/modalities source: https://api.aicodewith.ai/models (accessed 2026-10-12).
+# Reasoning controls mirror providers/anthropic/models/claude-fable-5.toml (relay forwards the upstream request body).
+base_model = "anthropic/claude-fable-5"
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+
+[provider]
+npm = "@ai-sdk/anthropic"
+api = "https://api.aicodewith.ai/v1"
+
+[cost]
+input = 10
+output = 50
+cache_read = 1
+cache_write = 12.5
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
