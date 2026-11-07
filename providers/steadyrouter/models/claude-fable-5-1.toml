@@ -1,0 +1,6 @@
+# Live probe through https://api.steadyrouter.com/v1/chat/completions, 2026-11-05.
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }

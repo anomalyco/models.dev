@@ -1,0 +1,11 @@
+# Effort: reasoning_effort = low|high|max
+# Live probe through https://api.steadyrouter.com/v1/chat/completions, 2026-11-06.
+# Live 2026-11-06: reasoning came back in reasoning_content at every effort tried; reasoning tokens went with effort (low 20, high 48, unset 435).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

@@ -1,0 +1,6 @@
+# Images: POST /v1/images/generations (https://www.steadyrouter.com/site/docs.html#images)
+schema = 2
+base_model = "openai/gpt-image-2"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }

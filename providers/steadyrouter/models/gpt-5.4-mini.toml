@@ -1,0 +1,8 @@
+# Live probe through https://api.steadyrouter.com/v1/chat/completions, 2026-11-06.
+# tools.freeform, Chat Completions: custom tools forced with tool_choice, 2026-11-06. Regex ZZ[0-9]{3} (4 tries) and the equivalent lark both returned ZZ123; text returned free text. The Azure sources refuse custom tools and the gateway moves the request to another source, so this relies on that fallback.
+schema = 2
+base_model = "openai/gpt-5.4-mini"
+
+[capabilities]
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
