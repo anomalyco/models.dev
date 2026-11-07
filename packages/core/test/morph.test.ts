@@ -78,8 +78,29 @@ test("fails on a feed entry without a text price", () => {
   expect(() => buildMorphModel(model, authored())).toThrow("missing a text price or limit");
 });
 
-test("skips OpenRouter aliases and unready entries without reporting them missing", () => {
+test("prices a decision model's input only and keeps its authored output limit", () => {
+  const model = morphModel({
+    id: "reflex",
+    input_modalities: [{
+      type: "text",
+      supported_inputs: { max_context_length: { value: 65_536 } },
+      pricing: [
+        { type: "prompt", cost_usd: "0.000000042" },
+        { type: "cached_prompt", cost_usd: "0.000000008" },
+      ],
+    }, { type: "image" }],
+    output_modalities: [{ type: "decisions" }],
+  });
+  const built = buildMorphModel(model, authored({ cost: { input: 0.042, output: 0 }, limit: { context: 65_536, output: 0 } }));
+  expect(built).toMatchObject({
+    cost: { input: 0.042, output: 0, cache_read: 0.008 },
+    limit: { context: 65_536, output: 0 },
+  });
+});
+
+test("skips OpenRouter aliases, approval-only and unready entries without reporting them missing", () => {
   expect(morph.sourceID(morphModel({ id: "morph-dsv4flash-0731" }))).toBeUndefined();
+  expect(morph.sourceID(morphModel({ id: "morph-dsv41flash-abliterated" }))).toBeUndefined();
   expect(morph.sourceID(morphModel({ is_ready: false }))).toBeUndefined();
   expect(morph.sourceID(morphModel({ id: "morph-new" }))).toBe("morph-new");
   expect(morph.translateModel(morphModel({ id: "morph-new" }), context({}))).toBeUndefined();
