@@ -1,0 +1,26 @@
+# Inputs on this host: text, images, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# Toggle: reasoning_effort = none turns thinking off (Zurelay sends thinking.type = disabled upstream);
+# any other level, or leaving it out, thinks (tested 2026-11-03: no reasoning came back with none, and it did without).
+# https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/mimo-v2.6-pro (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.32
+cache = { read = 0.0026 }
+
+[cost.text.output]
+price = 0.64

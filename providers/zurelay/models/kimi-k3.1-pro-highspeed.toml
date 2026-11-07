@@ -1,0 +1,24 @@
+# Kimi K3.1 Pro served from Moonshot's faster Highspeed deployment, at its own price.
+# Inputs on this host: text, images, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# Effort: reasoning_effort = low|high|max on POST /v1/chat/completions; default max.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/kimi-k3.1-pro-highspeed (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro Highspeed"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[cost.text.input]
+price = 3.3
+cache = { read = 0.165 }
+
+[cost.text.output]
+price = 16.5

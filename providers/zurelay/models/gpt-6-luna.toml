@@ -1,0 +1,27 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max on POST /v1/chat/completions; default medium.
+# none turns thinking off.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/gpt-6-luna (USD per 1M tokens, accessed 2026-11-03).
+# Prompts over 272,000 tokens: 2x every input price, 1.5x output, as the lab bills them.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "medium" } }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.025
+cache = { read = 0.0025 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.05
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.125
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.1875

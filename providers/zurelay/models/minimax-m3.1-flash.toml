@@ -1,0 +1,22 @@
+# Inputs on this host: text, images, video, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# Effort: reasoning_effort = low|medium|high|xhigh|max on POST /v1/chat/completions; default max.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/minimax-m3.1-flash (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "max" } }
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/quicktime"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.24

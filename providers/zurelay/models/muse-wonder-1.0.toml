@@ -1,0 +1,16 @@
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max on POST /v1/chat/completions; default high.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/muse-wonder-1.0 (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
+base_model = "meta/muse-wonder-1.0"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "high" } }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 6
