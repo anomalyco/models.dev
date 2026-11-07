@@ -1,3 +1,5 @@
+# Implicit cache: the deepseek-v4-1-flash-260910 row lists Chat API support:
+# https://ark.volcengine.com/region:cn-beijing/docs/model-list#ed095742
 # Sources (accessed 2026-11-07):
 # - Models, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list
 # - CNY list prices: https://ark.volcengine.com/region:cn-beijing/docs/model-pricing
@@ -6,9 +8,7 @@
 # Reuse this provider's fixed conversion rate; all prices are USD per million tokens.
 # Chat controls: reasoning_effort = none|low|high|max (default high); none disables thinking.
 # Accepted aliases: minimal->low, medium/xhigh->high. There is no separate reasoning budget.
-# Limits: model-list documents 1024k context and 384k output for this version.
-# Convert k with 1024 tokens, matching the exact 1048576/393216 values returned by
-# public Ark Docs MCP for deepseek-v4-1-flash-260910; no 1017 MCP record is available.
+# Exact limits: public Ark Docs MCP ark_get_model("deepseek-v4-1-flash-260910").
 # Peak prices are 2x on Mon-Fri 09:00-12:00 and 14:00-18:00 Asia/Shanghai;
 # base prices below are off-peak. The multiplier includes input, cache reads and output.
 schema = 2

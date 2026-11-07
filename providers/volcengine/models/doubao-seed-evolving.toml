@@ -3,20 +3,18 @@
 # Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-evolving`
 # CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
-# Host controls: https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking (2026-11-07)
-# Effort: reasoning_effort = minimal|low|medium|high; minimal disables thinking.
-# Accepted aliases: none->minimal, xhigh/max->high. Do not repeat equivalent levels.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# none/minimal disable thinking, so no separate toggle: sending effort alone
+# already enables it, and thinking.type=disabled + a graded effort is rejected.
 schema = 2
 base_model = "bytedance-seed/seed-evolving"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["minimal", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
 [limit]
-context = 1_048_576
 input = 1_048_576
-output = 262_144
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

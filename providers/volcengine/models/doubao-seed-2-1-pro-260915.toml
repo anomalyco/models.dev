@@ -1,3 +1,5 @@
+# Implicit cache: the doubao-seed-2-1-pro-260915 row lists Chat API support:
+# https://ark.volcengine.com/region:cn-beijing/docs/model-list#ed095742
 # Sources (accessed 2026-11-07):
 # - Models, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list
 # - CNY list prices: https://ark.volcengine.com/region:cn-beijing/docs/model-pricing
@@ -17,9 +19,7 @@ structured_output = true
 cache = { implicit = true }
 
 [limit]
-context = 1_048_576
 input = 1_048_576
-output = 262_144
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
