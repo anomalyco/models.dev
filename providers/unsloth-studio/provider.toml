@@ -1,0 +1,13 @@
+# OpenAI-compatible local API served by Unsloth Studio / Unsloth Desktop (llama-server backed).
+# Authentication: Authorization: Bearer sk-unsloth-… (keys are minted in the app, or by `unsloth start`).
+# The model inventory is per-machine — whatever is downloaded/loaded in the app — so the models
+# below are common examples; opencode discovers the live inventory at runtime via its local
+# provider plugin (the same mechanism used for Ollama, LM Studio and vLLM).
+# https://unsloth.ai/docs/basics/api (accessed 2026-10-27)
+# https://unsloth.ai/docs/integrations/opencode (accessed 2026-10-27)
+name = "Unsloth Studio"
+env = ["UNSLOTH_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "http://127.0.0.1:8888/v1"
+doc = "https://unsloth.ai/docs/basics/api"
