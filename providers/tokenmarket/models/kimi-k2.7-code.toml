@@ -1,0 +1,14 @@
+# Alibaba Cloud (DashScope) channel. Align with the operator-level control
+# documented by same-channel peers: `thinking_budget` is a numeric cap and the
+# channel-level `enable_thinking` control is exposed. No bounds are documented.
+# https://www.alibabacloud.com/help/en/model-studio/kimi-api
+base_model = "moonshotai/kimi-k2.7-code"
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.768
+output = 3.176
+cache_read = 0.152
