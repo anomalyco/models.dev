@@ -1,0 +1,19 @@
+# Toggle: chat_template_kwargs.thinking = false disables reasoning (verified live 2026-11-04);
+# chat_template_kwargs.enable_thinking is ignored. reasoning_effort "none" also returns no reasoning.
+# Source: live probes, 2026-11-04. The older TensorX reasoning page still says Kimi cannot toggle; the probes settle it.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 3
+cache = { read = 0.75 }
+
+[cost.text.output]
+price = 15
