@@ -1,0 +1,17 @@
+# SahabatMobile retail pricing (USD/MTok); source: https://www.sahabatmobile.com/dashboard/packages (accessed 2026-11-05)
+# Toggle: enable_thinking true|false; Effort: reasoning_effort = low|medium|xhigh; Budget: thinking_budget (0..262144, reasoning tokens, not combinable with reasoning_effort)
+# Reasoning wire paths per upstream Qwen docs: https://docs.qwencloud.com/developer-guides/text-generation/thinking
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.00
+
+[cost.text.output]
+price = 6.00
