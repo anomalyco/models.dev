@@ -1,0 +1,9 @@
+name = "Butler"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# APIs (https://butlercompute.com/platform/, accessed 2026-11-05): POST /v1/systemone (System One format) and
+# /v1/decisions (OpenAI Decisions format) for decision models; /v1/chat/completions, /v1/responses and /v1/messages
+# for chat models; GET /v1/models lists the models a key can call. Bearer key in the Authorization header.
+api = "https://api.butlercompute.com/v1"
+env = ["BUTLER_API_KEY"]
+doc = "https://butlercompute.com/platform/"
