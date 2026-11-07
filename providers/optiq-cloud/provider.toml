@@ -1,0 +1,12 @@
+name = "OptiQ Cloud"
+env = ["OPTIQ_CLOUD_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# OpenAI-compatible Chat Completions: POST /chat/completions, plus GET /models
+# (prices, context window and max output; no key needed).
+# Auth: Bearer key (sk-optiq-cloud-...) from https://cloud.mlx-optiq.com/dashboard/keys
+# Effort: reasoning_effort (or reasoning.effort). Every model thinks by default.
+# thinking, enable_thinking, reasoning.enabled and reasoning.max_tokens are
+# refused with a 400. https://mlx-optiq.com/docs/cloud/api (accessed 2026-11-06)
+api = "https://cloud.mlx-optiq.com/api/v1"
+doc = "https://mlx-optiq.com/docs/cloud/api"
