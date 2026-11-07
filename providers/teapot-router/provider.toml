@@ -1,0 +1,10 @@
+# Teapot Router — OpenAI-compatible and Anthropic-compatible API gateway for
+# coding agents (Claude Code, Codex, OpenCode) and OpenAI SDKs. Dual protocol,
+# per-key billing, balance never expires. Prices in model files are
+# standard-account prices; see https://teapotrouter.com/pricing.
+name = "Teapot Router"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["TEAPOT_ROUTER_API_KEY"]
+api = "https://api.teapotrouter.com/v1"
+doc = "https://teapotrouter.com/docs"

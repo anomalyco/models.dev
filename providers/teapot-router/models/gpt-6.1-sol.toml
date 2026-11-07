@@ -1,0 +1,15 @@
+# Prices: Teapot Router public pricing endpoint https://teapotrouter.com/api/pricing (retrieved 2026-11-07).
+# Standard account group: USD per million tokens = model_ratio x 2 x 0.35 standard group ratio;
+# output = input x completion_ratio. Prompt-cache pricing is not published, so none is declared.
+# Reasoning: $.reasoning_effort passthrough on /v1/chat/completions, same as the upstream OpenAI API.
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.7
+
+[cost.text.output]
+price = 1.4

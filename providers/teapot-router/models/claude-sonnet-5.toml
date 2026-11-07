@@ -1,0 +1,16 @@
+# Prices: Teapot Router public pricing endpoint https://teapotrouter.com/api/pricing (retrieved 2026-11-07).
+# Standard account group: USD per million tokens = model_ratio x 2 x 0.35 standard group ratio;
+# output = input x completion_ratio. Prompt-cache pricing is not published, so none is declared.
+# Reasoning: passthrough of the Anthropic Messages controls on api.teapotrouter.com
+# (thinking.type toggle + output_config.effort), same as the upstream Anthropic API.
+schema = 2
+base_model = "anthropic/claude-sonnet-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.7
+
+[cost.text.output]
+price = 3.5
