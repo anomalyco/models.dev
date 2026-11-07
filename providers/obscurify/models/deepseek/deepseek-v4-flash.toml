@@ -1,0 +1,17 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = low|high|max
+# Controls follow the DeepSeek entries (providers/deepseek/models/deepseek-v4-pro.toml): toggle plus low|high|max.
+# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: reasoning.enabled = false removed the reasoning (6/6) and true returned it (2/2); low and max accepted, max reasoned longer (3 runs each). thinking.type was not applied reliably here, so the toggle is reasoning.enabled. Re-checked 2026-10-28: reasoning.enabled = false gave no reasoning (2/2), true reasoned; low, high and max accepted.
+# Limits: GET https://obscurify.ai/v1/models reports context_length 1048576 (lab file: 1000000) and no max output. A prompt longer than the lab's window could not be verified here, so context and output are inherited from the lab.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.1183
+
+[cost.text.output]
+price = 0.2366

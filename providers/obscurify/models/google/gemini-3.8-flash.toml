@@ -1,0 +1,15 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Effort: reasoning_effort = low|medium|high
+# Controls follow providers/google/models/gemini-3.8-flash.toml.
+# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: low and high accepted (no reasoning returned at low, reasoning returned at high).
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.82875
+
+[cost.text.output]
+price = 4.14375

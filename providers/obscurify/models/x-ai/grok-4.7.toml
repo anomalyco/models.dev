@@ -1,0 +1,15 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Effort: reasoning_effort = low|medium|high|xhigh
+# Controls follow providers/xai/models/grok-4.7.toml.
+# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: low and xhigh accepted, xhigh used about 2x the completion tokens.
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 2.21
+
+[cost.text.output]
+price = 6.63

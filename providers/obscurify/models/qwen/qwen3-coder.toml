@@ -1,0 +1,13 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Limits: GET https://obscurify.ai/v1/models reports context_length 262000 (lab file: 262144), so context = 262_000; it reports no max output, so output is inherited from the lab.
+schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+
+[limit]
+context = 262_000
+
+[cost.text.input]
+price = 0.14365
+
+[cost.text.output]
+price = 0.5525

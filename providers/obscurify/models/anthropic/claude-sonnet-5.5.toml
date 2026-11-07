@@ -1,0 +1,15 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+# Controls follow providers/anthropic/models/claude-sonnet-5-5.toml (thinking cannot be turned off).
+# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: low and max accepted (no reasoning at low, reasoning returned at max).
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2.21
+
+[cost.text.output]
+price = 11.05
