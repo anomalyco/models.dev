@@ -11,6 +11,10 @@ const API_ENDPOINT = "https://www.morphllm.com/api/models/json?prices=list";
 // is the OpenRouter-facing name of morph-dsv4flash (same weights and prices).
 const ALIASES = new Set(["morph-dsv4flash-0731"]);
 
+// Approval-only models: accounts without privileged access get a 403
+// (https://docs.morphllm.com/sdk/components/fast-models#deepseek-uncensored).
+const RESTRICTED = new Set(["morph-dsv41flash-abliterated"]);
+
 const Price = z.object({
   type: z.string(),
   cost_usd: z.string(),
@@ -50,7 +54,7 @@ export const morph = {
   // the feed cannot express, so new IDs open an issue for a hand-authored file.
   skipCreates: true,
   sourceID(model) {
-    return ALIASES.has(model.id) || model.is_ready === false ? undefined : model.id;
+    return ALIASES.has(model.id) || RESTRICTED.has(model.id) || model.is_ready === false ? undefined : model.id;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
@@ -88,14 +92,18 @@ export async function fetchMorphModels(fetcher: typeof fetch = fetch) {
 }
 
 // The feed states list price, cached-input price, context and output limit;
-// everything else in the file is hand-authored and kept.
+// everything else in the file is hand-authored and kept. A decision model
+// (reflex) outputs `decisions` with no completion price or output limit: it
+// generates nothing, so output stays free and its limit stays as authored.
 export function buildMorphModel(model: MorphModel, existing: ExistingModel): SyncedModel {
   const text = model.input_modalities.find((modality) => modality.type === "text");
+  const decisions = model.output_modalities.some((modality) => modality.type === "decisions");
   const output = model.output_modalities.find((modality) => modality.type === "text");
   const input = perMillion(text?.pricing, "prompt");
-  const completion = perMillion(output?.pricing, "completion");
+  const completion = decisions ? 0 : perMillion(output?.pricing, "completion");
   const context = text?.supported_inputs?.max_context_length.value;
-  if (input === undefined || completion === undefined || context === undefined || output?.max_length === undefined) {
+  const outputLimit = decisions ? existing.limit?.output : output?.max_length?.value;
+  if (input === undefined || completion === undefined || context === undefined || outputLimit === undefined) {
     throw new Error(`Morph model ${model.id} is missing a text price or limit in the feed`);
   }
 
@@ -106,7 +114,7 @@ export function buildMorphModel(model: MorphModel, existing: ExistingModel): Syn
     output: completion,
     cache_read: perMillion(text?.pricing, "cached_prompt"),
   };
-  const limit = { ...existing.limit, context, output: output.max_length.value };
+  const limit = { ...existing.limit, context, output: outputLimit };
   const values = { ...current, cost, limit } as SyncedFullModel;
 
   return baseModel === undefined
