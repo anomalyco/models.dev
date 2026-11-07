@@ -1,0 +1,16 @@
+# Pricing and context length: GMI Cloud console model page (accessed 2026-10-20).
+# Input $0.30, output $1.20, cache read $0.006 per 1M tokens; context 1,048,575; fp8.
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+structured_output = true
+reasoning_options = []
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.30
+output = 1.20
+cache_read = 0.006
+
+[limit]
+context = 1_048_575
