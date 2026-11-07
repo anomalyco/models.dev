@@ -1,0 +1,34 @@
+# Qwen3.8 27B served by Heabsy on dedicated GPUs in the EEA (EEA tier, zero data retention).
+# Model ID: requests use model = "qwen38" (https://heabsy.com/models/qwen38, "model id: qwen38").
+# API reference: https://api.heabsy.com/docs
+# Pricing (accessed 2026-10-29, https://heabsy.com/models/qwen38): $1.05 input, $0.08 cached input,
+# $3.15 output per 1M tokens.
+# Context (accessed 2026-10-29, https://heabsy.com/models/qwen38, "Context window 512K tokens"):
+# 524,288 tokens on this host, so limit.context is overridden; the base model file lists 262,144.
+# Max output 32,768 is the same as the base model and is inherited.
+# Modalities: text and image input on this host (image input checked live on 2026-10-29).
+# Video is not listed for this endpoint, so the inherited video MIME types are overridden.
+# Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off, so no separate toggle).
+# Probed live against api.heabsy.com/v1/chat/completions on 2026-10-21 (temperature 0, fixed prompt,
+# three runs per level; reasoning tokens from usage.completion_tokens_details.reasoning_tokens):
+# none 0/0/0 (2 completion tokens); low 90/90/90; medium 95/95/95; xhigh 123/123/123, the same as
+# the omitted default. high is accepted and folded to xhigh, so it is not listed.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[limit]
+context = 524_288
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 1.05
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 3.15
