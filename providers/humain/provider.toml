@@ -1,0 +1,12 @@
+name = "HUMAIN"
+env = ["HUMAIN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# HUMAIN Node gateway (platform: https://platform.node.humain.com).
+# Auth: Authorization: Bearer <key> (or x-api-key).
+# Catalog: GET https://api.node.humainaic.com/v1/models (requires a key; lists
+# context_length, max_output_tokens and USD pricing per million tokens).
+# The current models are served on Chat Completions only: /v1/responses and
+# /v1/messages return "This model does not support ..." (live check 2026-11-01).
+api = "https://api.node.humainaic.com/v1"
+doc = "https://platform.node.humain.com"
