@@ -98,6 +98,9 @@ export const ModelFamilyValues = [
   // Recursive Flint
   "flint",
 
+  // Callstack Apex
+  "apex",
+
   // Mistral family
   "mistral",
   "mistral-large",

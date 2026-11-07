@@ -1,0 +1,21 @@
+# Pinned snapshot of Apex. The "callstack/Apex" alias always points at the newest one.
+# Served `model` string documented on the model page, alongside the alias:
+# https://apex.callstack.com/models ("apex-20261001 | Pinned snapshot | Generally available |
+# 1 October 2026"). A pinned snapshot never changes while it is available, and Callstack gives
+# at least six months' notice before retiring one.
+# Effort: reasoning_effort = none|low|medium|xhigh (same surface as the callstack/Apex alias).
+# Cache: cached input is billed at $0.20 / 1M (https://apex.callstack.com/), with no
+# cache_control markers documented, so caching is implicit.
+schema = 2
+base_model = "callstack/apex"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3
