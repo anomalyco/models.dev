@@ -1,31 +1,7 @@
+import { normalizeSearchText, rankSearchItems, type SearchIndexItem, type SearchResult } from "./search.js";
 import { costSummary } from "./shared.js";
 
 type SortDirection = "asc" | "desc";
-
-interface SearchIndexItem {
-  type: "model" | "provider" | "lab";
-  title: string;
-  id: string;
-  href: string;
-  logo: string;
-  tokens: string[];
-  lab?: string;
-  modelCount?: number;
-  providerCount?: number;
-  context?: number;
-  releaseDate?: string;
-  inputCost?: number;
-  outputCost?: number;
-  description?: string;
-  npm?: string;
-  api?: string;
-  updated?: string;
-}
-
-interface SearchResult {
-  item: SearchIndexItem;
-  score: number;
-}
 
 const helpModal = document.getElementById("modal") as HTMLDialogElement | null;
 const modalClose = document.getElementById("close");
@@ -120,112 +96,6 @@ function loadSearchIndex() {
       searchIndexLoading = false;
     });
   return searchIndexRequest;
-}
-
-function normalizeSearchText(value: string) {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-}
-
-function searchFields(item: SearchIndexItem) {
-  return [item.title, item.id, ...item.tokens].filter(Boolean);
-}
-
-function fuzzySequenceScore(haystack: string, needle: string) {
-  let score = 0;
-  let previousIndex = -1;
-  let searchFrom = 0;
-
-  for (const character of needle) {
-    const index = haystack.indexOf(character, searchFrom);
-    if (index === -1) return 0;
-
-    if (index === 0 || haystack[index - 1] === " ") {
-      score += 8;
-    } else if (index === previousIndex + 1) {
-      score += 6;
-    } else {
-      score += 2;
-    }
-
-    previousIndex = index;
-    searchFrom = index + 1;
-  }
-
-  return score + Math.max(0, 12 - haystack.length / 8);
-}
-
-function scoreTerm(field: string, term: string) {
-  const normalized = normalizeSearchText(field);
-  if (!normalized) return 0;
-  if (normalized === term) return 120;
-  if (normalized.startsWith(term)) return 100;
-  if (normalized.split(" ").some((word) => word.startsWith(term))) return 82;
-
-  const index = normalized.indexOf(term);
-  if (index !== -1) return 64 - Math.min(index, 24);
-
-  return fuzzySequenceScore(normalized, term);
-}
-
-function scoreSearchItem(item: SearchIndexItem, query: string) {
-  const terms = normalizeSearchText(query).split(/\s+/).filter(Boolean);
-  if (terms.length === 0) return 1;
-
-  let score = 0;
-  for (const term of terms) {
-    let best = 0;
-    for (const field of searchFields(item)) {
-      best = Math.max(best, scoreTerm(field, term));
-    }
-    if (best <= 0) return 0;
-    score += best;
-  }
-
-  const normalizedTitle = normalizeSearchText(item.title);
-  const normalizedId = normalizeSearchText(item.id);
-  const normalizedQuery = normalizeSearchText(query);
-  if (normalizedTitle === normalizedQuery || normalizedId === normalizedQuery) {
-    score += 120;
-  } else if (normalizedTitle.startsWith(normalizedQuery)) {
-    score += 44;
-  } else if (normalizedId.startsWith(normalizedQuery)) {
-    score += 36;
-  }
-
-  if (item.type === "model") score += 8;
-  return score;
-}
-
-function rankSearchItems(query: string) {
-  const normalizedQuery = normalizeSearchText(query);
-  const results = searchItems
-    .map((item) => ({ item, score: scoreSearchItem(item, normalizedQuery) }))
-    .filter((result) => result.score > 0)
-    .sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      const dateComparison = compareSearchDates(
-        searchSortDate(a.item),
-        searchSortDate(b.item),
-      );
-      if (dateComparison !== 0) return dateComparison;
-      return a.item.title.localeCompare(b.item.title, undefined, {
-        numeric: true,
-        sensitivity: "base",
-      });
-    });
-
-  return normalizedQuery ? results.slice(0, 40) : results.slice(0, 18);
-}
-
-function compareSearchDates(a?: string, b?: string) {
-  if (a === undefined && b === undefined) return 0;
-  if (a === undefined) return 1;
-  if (b === undefined) return -1;
-  return b.localeCompare(a);
-}
-
-function searchSortDate(item: SearchIndexItem) {
-  return item.releaseDate ?? item.updated;
 }
 
 function formatCompactNumber(value?: number) {
@@ -401,7 +271,7 @@ function renderSearchResults() {
   if (!searchInput || !searchResults || !searchCount || !searchEmpty) return;
 
   const query = searchInput.value;
-  rankedSearchResults = rankSearchItems(query);
+  rankedSearchResults = rankSearchItems(searchItems, query);
   activeSearchIndex = rankedSearchResults.length > 0 ? 0 : -1;
   searchResults.replaceChildren();
 
