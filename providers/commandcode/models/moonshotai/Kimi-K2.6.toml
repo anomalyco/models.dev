@@ -1,0 +1,39 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning and reasoning_details (array).
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
+#   thinking.type=disabled, reasoning.enabled=false, chat_template_kwargs.enable_thinking=false
+#   -> HTTP 200, reasoning still returned.
+#   Repeated trials (n=3-5, easy and hard prompts): reasoning tokens low {254-1034} /
+#   high {254-877} / xhigh {284-348} - ranges overlap at every level; no level or switch changes
+#   the reasoning output.
+#   Paired test (10 fixed prompts, low vs xhigh on the same prompt): mean Δ +324 reasoning tokens
+#   (8 higher, 2 lower), sign p = 0.11; one pair hit the 6000-token output cap and inflates the
+#   mean - excluding that pair leaves 7/10 higher, still not significant.
+#   (Note: first-party Moonshot's kimi-k2.6 surface has a thinking toggle;
+#   this gateway serves the model always-thinking with no caller control.)
+# Response field: reasoning_details (array). OpenCode replay has not been verified for
+#   this field; replay_reasoning=false keeps it out of the generated interleaved metadata.
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+# Output ceiling: capped at the host context window (prompt plus completion), as Kimi-K2.7-Code.
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 256_000
+context = 256_000
+
+[api.chat-completions]
+compatibility = { replay_reasoning = false }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4

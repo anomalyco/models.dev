@@ -1,0 +1,31 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Live /chat/completions (2026-10-21): served as a plain chat model - zero reasoning on this host.
+#   n=10+ calls (easy and hard prompts): 0 reasoning tokens, no reasoning / reasoning_content /
+#   reasoning_details fields ever returned.
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option; low/high
+#   -> HTTP 200 with zero reasoning tokens (no effect).
+#   Enable attempts thinking.type=enabled, enable_thinking=true, reasoning.enabled=true and
+#   chat_template_kwargs.enable_thinking=true -> HTTP 200, still zero reasoning. So the reasoning
+#   capability is not exposed here; reasoning = false reflects this host's surface.
+# Interleaved: none (no reasoning side channel observed; plain tool round-trip passes).
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+# Output ceiling: capped at the host context window (prompt plus completion), as Kimi-K2.7-Code.
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
+
+[capabilities]
+reasoning = { supported = false }
+
+[limit]
+output = 256_000
+context = 256_000
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3
