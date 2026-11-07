@@ -1,0 +1,24 @@
+# Prices: https://api.pirislabs.io/v1/models (verified 2026-10-28).
+# The host returns reasoning in `reasoning`, which v1 cannot represent; omit the mapping.
+# Cached input pricing is published, but cache hits were not observed on this deployment.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.30
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 1.20
