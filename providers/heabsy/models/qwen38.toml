@@ -1,30 +1,36 @@
 # Qwen3.8 27B served by Heabsy on dedicated GPUs in the EEA (EEA tier, zero data retention).
 # Model ID: requests use model = "qwen38" (https://heabsy.com/models/qwen38, "model id: qwen38").
 # API reference: https://api.heabsy.com/docs
-# Pricing (accessed 2026-10-29, https://heabsy.com/models/qwen38): $1.05 input, $0.08 cached input,
-# $3.15 output per 1M tokens.
-# Context (accessed 2026-10-29, https://heabsy.com/models/qwen38, "Context window 512K tokens"):
-# 524,288 tokens on this host, so limit.context is overridden; the base model file lists 262,144.
+# Feed (accessed 2026-11-07, https://api.heabsy.com/site/v1/models, entry "qwen38"):
+# max_context_length 524,288; max_tokens 32,768; image formats image/png, image/jpeg, image/webp;
+# prices $1.05 input, $0.08 cached input, $3.15 output per 1M tokens (same on https://heabsy.com/models/qwen38).
+# Context: 524,288 tokens on this host, so limit.context is overridden; the base model file lists 262,144.
 # Max output 32,768 is the same as the base model and is inherited.
-# Modalities: text and image input on this host (image input checked live on 2026-10-29).
+# Modalities: text and the three image formats the feed lists (image input checked live on 2026-10-29).
 # Video is not listed for this endpoint, so the inherited video MIME types are overridden.
-# Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off, so no separate toggle).
-# Probed live against api.heabsy.com/v1/chat/completions on 2026-10-21 (temperature 0, fixed prompt,
-# three runs per level; reasoning tokens from usage.completion_tokens_details.reasoning_tokens):
-# none 0/0/0 (2 completion tokens); low 90/90/90; medium 95/95/95; xhigh 123/123/123, the same as
-# the omitted default. high is accepted and folded to xhigh, so it is not listed.
+# Effort: reasoning_effort = none|low|medium|xhigh; thinking is off unless reasoning_effort asks for it.
+# Probed live against api.heabsy.com/v1/chat/completions on 2026-11-07 (temperature 0, max_tokens 1000):
+# omitted and none -> 0 reasoning tokens, no reasoning_content; low/medium/high/xhigh -> reasoning_content
+# present; chat_template_kwargs.enable_thinking=false and thinking.type=disabled also turn it off.
+# Graded levels from the 2026-10-21 probe (fixed prompt, three runs per level): low 90, medium 95, xhigh 123;
+# high is accepted and folded to xhigh, so it is not listed. Requests with max_tokens < 256 run without thinking.
+# Cache: automatic prefix cache, billed at the cached-input price.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
 [modalities]
-input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [limit]
 context = 524_288
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "medium", "xhigh"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 1.05
