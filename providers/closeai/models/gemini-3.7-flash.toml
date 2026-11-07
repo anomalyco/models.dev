@@ -1,0 +1,9 @@
+base_model = "google/gemini-3.7-flash"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]
+
+[provider]
+npm = "@ai-sdk/google"
+api = "https://api.openai-proxy.org/google/v1beta"
