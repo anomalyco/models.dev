@@ -1,7 +1,13 @@
-# Teapot Router — OpenAI-compatible and Anthropic-compatible API gateway for
-# coding agents (Claude Code, Codex, OpenCode) and OpenAI SDKs. Dual protocol,
-# per-key billing, balance never expires. Prices in model files are
-# standard-account prices; see https://teapotrouter.com/pricing.
+# Teapot Router — API gateway for coding agents (Claude Code, Codex, OpenCode)
+# and OpenAI SDKs. Per-key billing, balance never expires. Prices in model
+# files are standard-account prices; see https://teapotrouter.com/pricing.
+# Raw Chat (OpenAI-compatible, provider default surface): https://api.teapotrouter.com/v1,
+#   $.reasoning_effort passthrough for GPT models. https://teapotrouter.com/docs
+# Raw Messages (Anthropic-compatible, declared per Claude model via [api.messages]):
+#   base https://api.teapotrouter.com, endpoint /v1/messages, with $.thinking.type /
+#   $.thinking.budget_tokens / $.output_config.effort passthrough — the surface Claude
+#   Code uses via ANTHROPIC_BASE_URL=https://api.teapotrouter.com. Reasoning controls
+#   below apply to that surface; upstream semantics are identical to the Anthropic API.
 name = "Teapot Router"
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"
