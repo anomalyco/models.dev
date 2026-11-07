@@ -1,0 +1,26 @@
+# Adzuki AI (https://adzukiai.com) — OpenAI-compatible gateway, chat completions
+# only. The request body is proxied verbatim to the lab's deployment (via JD
+# Cloud MaaS); nothing below is renamed or remapped by the gateway.
+# Cost: https://adzukiai.com/pricing.json (checked 2026-10-28), USD per 1M tokens.
+# Cache: automatic prefix cache on the upstream; hits are billed at the
+#   `cache_read` rate published in the same file.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# No separate toggle: same Volcengine Ark surface as the Seed 2.0 entries
+#   (providers/volcengine/models/doubao-seed-2-1-pro-260628.toml).
+
+schema = 2
+base_model = "bytedance-seed/seed-2.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.7143
+cache = { read = 0.3429 }
+
+[cost.text.output]
+price = 8.5714
