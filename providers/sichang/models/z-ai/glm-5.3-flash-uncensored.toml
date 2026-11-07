@@ -1,0 +1,27 @@
+# https://sichang.xyz/docs/models/chat/z-ai--glm-5.3-flash-uncensored (accessed 2026-10-21)
+# That page lists the served context and max output (max_tokens is capped to it) and states that
+# reasoning / reasoning_effort / thinking request fields are ignored.
+name = "GLM 5.3 Flash Uncensored"
+description = "Uncensored GLM-5.3 Flash for unrestricted chat, long-form fiction, and million-token context"
+family = "glm-flash"
+release_date = "2026-07-29"
+last_updated = "2026-10-20"
+attachment = true
+reasoning = false
+tool_call = true
+structured_output = false
+temperature = true
+open_weights = true
+
+[cost]
+input = 0.2991
+output = 1.1964
+cache_read = 0.1196
+
+[limit]
+context = 1_000_000
+output = 16_000
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
