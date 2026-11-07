@@ -1,0 +1,53 @@
+# The provider modalities table requires both input and output in schema-v2.
+# Sources (accessed 2026-11-07):
+# - Models, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list
+# - CNY list prices: https://ark.volcengine.com/region:cn-beijing/docs/model-pricing
+# - Host reasoning controls: https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking
+# CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
+# Reuse this provider's fixed conversion rate; all prices are USD per million tokens.
+# Always thinks; reasoning_effort = low|high|max (default max), no thinking toggle.
+# low/medium map to low, xhigh/max map to max; high remains high.
+# Ark's model list documents 1024k context and maximum answer (1k=1024 tokens).
+# Ark input MIME types: https://ark.volcengine.com/region:cn-beijing/docs/image-understanding
+# https://ark.volcengine.com/region:cn-beijing/docs/video-understanding (video input must be Base64).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/x-icon",
+  "image/x-icns",
+  "image/sgi",
+  "image/jp2",
+  "image/heic",
+  "video/mp4",
+  "video/x-msvideo",
+  "video/quicktime",
+]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+input = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.92964
+cache = { read = 0.19296 }
+
+[cost.text.output]
+price = 10.0935
