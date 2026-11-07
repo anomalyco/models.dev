@@ -1,0 +1,16 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "claude-opus-5-5" in OpenAI protocol (/v1), $0.0447562/$0.2237809 per MTok input/output.
+# Cache read: $0.0022378 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/anthropic/models/claude-opus-5-5.toml, exactly as authored there; no separate on/off field on this surface.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.0447562
+cache = { read = 0.0022378 }
+
+[cost.text.output]
+price = 0.2237809

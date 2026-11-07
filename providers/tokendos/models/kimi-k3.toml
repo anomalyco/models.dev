@@ -1,0 +1,16 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "kimi-k3" in OpenAI protocol (/v1), $2.9889496/$14.9447478 per MTok input/output.
+# Cache read: $0.298895 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/moonshotai/models/kimi-k3.toml, exactly as authored there; no separate on/off field on this surface.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 2.9889496
+cache = { read = 0.298895 }
+
+[cost.text.output]
+price = 14.9447478

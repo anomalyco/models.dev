@@ -1,0 +1,16 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "gemini-3.8-flash" in OpenAI protocol (/v1), $0.0149492/$0.0747459 per MTok input/output.
+# Cache read: $0.0014949 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/google/models/gemini-3.8-flash.toml, exactly as authored there; no separate on/off field on this surface.
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.0149492
+cache = { read = 0.0014949 }
+
+[cost.text.output]
+price = 0.0747459
