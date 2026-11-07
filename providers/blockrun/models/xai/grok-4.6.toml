@@ -1,0 +1,15 @@
+# BlockRun catalog 2026-09-29T23:31:20.524862+00:00 (source/catalog.json); upstream model facts inherited.
+base_model = "xai/grok-4.6"
+
+[cost]
+input = 2
+output = 6
+cache_read = 0.5
+
+[limit]
+context = 500_000
+output = 16_384
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high"]

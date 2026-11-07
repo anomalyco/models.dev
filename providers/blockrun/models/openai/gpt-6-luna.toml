@@ -1,0 +1,16 @@
+# BlockRun catalog 2026-09-29T23:31:20.524862+00:00 (source/catalog.json); upstream model facts inherited.
+base_model = "openai/gpt-6-luna"
+
+[cost]
+input = 0.1
+output = 0.5
+cache_read = 0.01
+cache_write = 0.125
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[[reasoning_options]]
+type = "effort"
+values = ["none", "low", "medium", "high", "xhigh", "max"]

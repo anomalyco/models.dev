@@ -1,0 +1,16 @@
+# BlockRun catalog 2026-09-29T23:31:20.524862+00:00 (source/catalog.json); upstream model facts inherited.
+base_model = "anthropic/claude-haiku-4-5"
+
+[cost]
+input = 1
+output = 5
+cache_read = 0.1
+cache_write = 1.25
+
+[limit]
+context = 200_000
+output = 64_000
+
+[[reasoning_options]]
+type = "budget_tokens"
+min = 1_024

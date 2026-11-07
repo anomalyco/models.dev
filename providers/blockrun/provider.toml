@@ -1,0 +1,13 @@
+name = "BlockRun"
+env = ["BLOCKRUN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.blockrun.ai/v1"
+# OpenAI-compatible chat gateway. Models are passed through to the upstream lab
+# unchanged; pricing below is what BlockRun charges per token class, in USD per
+# 1M tokens, and matches the price returned in the 402 before a call is paid.
+# Reasoning controls are whatever the upstream model accepts; BlockRun does not
+# add a gateway-level reasoning vocabulary.
+# Sources:
+# https://blockrun.ai/llms.txt
+# https://github.com/BlockRunAI/model-catalog
+doc = "https://blockrun.ai/docs"

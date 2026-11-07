@@ -1,0 +1,14 @@
+# BlockRun catalog 2026-09-29T23:31:20.524862+00:00 (source/catalog.json); upstream model facts inherited.
+base_model = "openai/o1"
+
+[cost]
+input = 15
+output = 60
+cache_read = 7.5
+
+[limit]
+context = 200_000
+output = 100_000
+
+[[reasoning_options]]
+type = "toggle"
