@@ -1,0 +1,29 @@
+# Prices: GET https://www.runcrate.ai/api/models/catalog (accessed 2026-10-29), USD per 1M tokens as billed
+# (openai/gpt-oss-120b): input 0.03885, cached input 0.0058275, output 0.1785. context_length 131,072,
+# the same as the lab entry.
+# Reasoning is always on with no caller control on this host. Live 2026-10-24, POST
+# https://api.runcrate.ai/v1/chat/completions with reasoning_effort = low|medium|high, 6 prompts (3 short,
+# 3 harder maths), each run 4 times per level: median completion_tokens_details.reasoning_tokens was low
+# 779.5, medium 778.5, high 786 (24 runs per level), and no single prompt ordered by level (per-prompt
+# medians low/medium/high: 162.5/152/144.5, 775/744.5/810.5, 216/214/239.5, 1684/1812.5/1570,
+# 1126.5/1426.5/876.5, 828/824/826). reasoning.effort low|high did not change it either (median 229 vs
+# 193 on the 3 short prompts). Reasoning text is in reasoning_content.
+# Live 2026-10-24: a tool call round-tripped; a strict json_schema response validated; a repeated
+# 6,378-token prompt reported 6,144 cached_tokens; image input is refused with HTTP 400.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.03885
+cache = { read = 0.0058275 }
+
+[cost.text.output]
+price = 0.1785

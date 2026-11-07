@@ -1,0 +1,29 @@
+# Prices: GET https://www.runcrate.ai/api/models/catalog (accessed 2026-10-29), USD per 1M tokens as billed
+# (zai-org/GLM-5.3): input 0.590625, cached input 0.13125, output 2.625. context_length 1,048,576
+# there and in GET https://api.runcrate.ai/v1/models.
+# Effort: reasoning_effort = low|high|max on POST https://api.runcrate.ai/v1/chat/completions
+# (live 2026-10-24): on one prompt max produced 3,191 completion tokens against 999 (low) and
+# 1,097 (high). Z.ai documents low, high and max and no way to turn thinking off, so no toggle.
+# Reasoning text is returned in reasoning_content (live).
+# Live 2026-10-24: a tool call round-tripped; a strict json_schema response validated; a repeated
+# 7,455-token prompt reported 7,424 cached_tokens. Text-only input, as the lab entry.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.590625
+cache = { read = 0.13125 }
+
+[cost.text.output]
+price = 2.625
