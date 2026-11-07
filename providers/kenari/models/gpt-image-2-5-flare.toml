@@ -1,0 +1,12 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: per generated image (pricing_lines output_image, Rp 550), / 17,500 IDR per USD.
+# Images: POST /v1/images/generations (https://kenari.id/en/docs/images)
+schema = 2
+base_model = "openai/gpt-image-2.5-flare"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.03142857
