@@ -9,9 +9,6 @@ output = ["text"]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning" }
-
 [cost.text.input]
 price = 0.45
 cache = { read = 0.45 }

@@ -12,9 +12,6 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 context = 196_608
 output = 65_536
 
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning" }
-
 [cost.text.input]
 price = 0.1
 cache = { read = 0.02 }

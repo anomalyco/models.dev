@@ -11,9 +11,6 @@ structured_output = true
 context = 524_288
 output = 65_536
 
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning" }
-
 [cost.text.input]
 price = 1.4
 cache = { read = 0.26 }
