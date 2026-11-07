@@ -1,0 +1,23 @@
+# https://pika.art
+schema = 2
+v2_only = true
+type = "video"
+name = "Pika V2.2"
+description = "Pika 2.2 (early 2025) is a versatile video model supporting text-to-video and image-to-video."
+open_weights = false
+release_date = "2025-02-27"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

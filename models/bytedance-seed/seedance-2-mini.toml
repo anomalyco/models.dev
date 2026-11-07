@@ -1,0 +1,24 @@
+# https://seed.bytedance.com/en/seedance
+schema = 2
+v2_only = true
+type = "video"
+name = "Seedance 2 Mini"
+description = "Seedance 2 Mini (often branded as Dreamina Seedance 2.0 Mini on BytePlus ModelArk) is a low-cost, fast text-to-video and image-to-video generation model that produces short 480p or 720p clips with optional native audio."
+family = "seed"
+open_weights = false
+release_date = "2026-02-12"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

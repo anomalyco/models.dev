@@ -1,0 +1,19 @@
+# No caller reasoning control (R1 always reasons):
+# Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning and
+#   include_reasoning with no schema (no enum, no toggle, no budget); no reasoning_effort or thinking.
+# DeepSeek R1 has no native effort or thinking toggle (lab deepseek/deepseek-r1, providers/openrouter
+#   deepseek-r1-0528 with no controls), and FastRouter's reasoning table lists no DeepSeek control, so the
+#   reasoning parameter is dropped for this route rather than forwarded.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
+# Peer: providers/fastrouter deepseek-r1-distill-llama-70b [].
+# Limit: context_length 163840, max_completion_tokens 163840
+base_model = "deepseek/deepseek-r1"
+reasoning_options = []
+
+[cost]
+input = 0.5
+output = 2.18
+
+[limit]
+context = 163_840
+output = 163_840

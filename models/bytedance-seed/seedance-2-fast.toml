@@ -1,0 +1,24 @@
+# https://seed.bytedance.com/en/seedance
+schema = 2
+v2_only = true
+type = "video"
+name = "Seedance 2 Fast"
+description = "bytedance/seedance-2-fast is the fast-generation variant of ByteDance’s Seedance 2 video model."
+family = "seed"
+open_weights = false
+release_date = "2026-02-11"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

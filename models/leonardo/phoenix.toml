@@ -1,0 +1,23 @@
+# https://docs.leonardo.ai
+schema = 2
+v2_only = true
+type = "image"
+name = "Phoenix"
+description = "Phoenix is Leonardo.AI's flagship foundational text-to-image model designed for exceptional prompt adherence and photorealistic results up to 5 megapixels."
+open_weights = false
+release_date = "2024-06-14"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,0 +1,23 @@
+# No caller reasoning control on this route (affirmative, not unverified):
+# Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters is exactly
+#   max_tokens, temperature, top_p, top_k, stop, tools, tool_choice, response_format, and
+#   supported_params_details adds only max_completion_tokens and stream. No reasoning, reasoning_effort,
+#   include_reasoning, or thinking field, unlike the sibling deepseek/deepseek-v4-pro route (reasoning +
+#   include_reasoning) and deepseek/deepseek-v4.1-flash (reasoning enum low|medium|high).
+# FastRouter docs list no DeepSeek control in the reasoning table; for unlisted models the reasoning
+#   parameter is dropped rather than forwarded, and reasoning stays on by default for supported models.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
+# Lab deepseek/deepseek-v4-flash reasons (thinking.type + reasoning_effort low|high|max on DeepSeek's own
+#   API); this host exposes neither, so [] rather than copying the first-party controls.
+# Limit: context_length 1048576, max_completion_tokens 65536
+base_model = "deepseek/deepseek-v4-flash"
+reasoning_options = []
+
+[cost]
+input = 0.09
+output = 0.18
+cache_read = 0.018
+
+[limit]
+context = 1_048_576
+output = 65_536

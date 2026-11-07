@@ -1,0 +1,27 @@
+# https://huggingface.co/Qwen/Qwen3-14B
+schema = 2
+name = "Qwen3 14B"
+description = "A versatile dense model offering powerful reasoning abilities paired with efficient dialogue processing."
+family = "qwen"
+open_weights = true
+license = "Apache 2.0"
+release_date = "2025-04-28"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 8_192
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-14B"
