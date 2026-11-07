@@ -1,0 +1,20 @@
+# Bumo Router (multi-model relay, OpenAI-compatible Chat Completions), billed in USD.
+# Prices: https://router.bumo.ai/api/v1/models (accessed 2026-11-02); flat rate, the catalog row has no tiers.
+# Docs: https://bumo.ai/docs/api
+# Effort: reasoning_effort = none|low|medium|high|max (none = thinking off)
+# Budget: thinking.budget_tokens in the Chat Completions body (LiteLLM Anthropic param, https://docs.litellm.ai/docs/reasoning_content; Anthropic minimum 1024)
+# Wire: the Chat Completions body is forwarded unchanged to a LiteLLM Anthropic adapter. Live probe 2026-11-04 on claude-opus-4-6: thinking = {type = enabled, budget_tokens = 1024} returned reasoning_content (39 reasoning tokens).
+schema = 2
+base_model = "anthropic/claude-opus-4-6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1_024 } }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
+
+[cost.text.input]
+price = 5.3
+cache = { read = 0.53, write = { "5m" = 6.625, "1h" = 10.6 } }
+
+[cost.text.output]
+price = 26.5

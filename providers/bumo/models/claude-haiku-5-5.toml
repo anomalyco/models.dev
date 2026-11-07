@@ -1,0 +1,28 @@
+# Bumo Router (multi-model relay, OpenAI-compatible Chat Completions), billed in USD.
+# Prices: https://router.bumo.ai/api/v1/models (accessed 2026-11-02); the catalog row lists prompt-length tiers, mirrored as overrides.
+# Docs: https://bumo.ai/docs/api
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (none = thinking off)
+# Wire: the Chat Completions body is forwarded unchanged to a LiteLLM Anthropic adapter (lab-mapped, not probed on this host).
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
+
+[cost.text.input]
+price = 0.106
+cache = { read = 0.0106, write = { "5m" = 0.1325, "1h" = 0.212 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.53
+cache = { read = 0.053, write = { "5m" = 0.6625, "1h" = 1.06 } }
+
+[cost.text.output]
+price = 0.53
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.65
