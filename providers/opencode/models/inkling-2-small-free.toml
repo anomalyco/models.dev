@@ -1,0 +1,18 @@
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+name = "Inkling 2 Small Free"
+description = "Inkling 2 Small, free for a limited time"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
