@@ -1,4 +1,7 @@
-# Prices: GET https://api.intelligence.io.solutions/api/v1/models input/output/cache_read_token_price (USD per token, 2026-10-21); io.net documents this endpoint as the pricing source and lists no cache-write price.
+# io.net IO Intelligence listing of meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8.
+# /models advertises a 430,000-token window but the endpoint rejects requests above 131,072 tokens, so the smaller value is used.
+# Prices, limits, modalities and capability flags come from GET https://api.intelligence.io.solutions/api/v1/models (public, USD per token, read 2026-10-26); reasoning controls were verified live against POST /chat/completions on 2026-10-13 (see provider.toml).
+# Cache: /api/v1/models reports supports_prompt_cache = false for this deployment, so no cache price is listed.
 # knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
 base_model = "meta/llama-4-maverick-17b-instruct"
@@ -6,13 +9,15 @@ name = "Llama 4 Maverick 17B 128E Instruct"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
 knowledge = "2024-12"
 
+[capabilities]
+tools = { supported = false }
+cache = false
+
 [limit]
-context = 430_000
-output = 4_096
+context = 131_072
 
 [cost.text.input]
 price = 0.26875
-cache = { read = 0.134375 }
 
 [cost.text.output]
 price = 0.82625
