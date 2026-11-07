@@ -1,0 +1,40 @@
+# CheapestToken relay of xai/grok-4.6 (routed via azure: azure/grok-4.6). Override-only file:
+# identity/description/dates inherit from the base_model lab entry.
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 2 / our output 4.5 / cached 0.5; long 4 / 9 / 1) — our reseller prices, intentionally
+# different from xAI list prices (xAI: output 6, long 12; providers/xai/models/grok-4.6.toml).
+# Long tier: the whole call bills at the long prices when input tokens STRICTLY exceed 200,000
+# (short_context_limit 200000 in our billing catalog; gt semantics — strictly-greater boundary,
+# Azure-style, vs xAI's gte). Binding billing rule: the switch happens only when input tokens
+# strictly exceed the limit.
+# Limit: served caps follow the azure same-surface peer (providers/azure/models/grok-4.6.toml:
+# context 200_000 / output 128_000); our catalog's 500K display value follows the xAI base spec.
+# Reasoning: reasoning_effort is not forwarded on this route (400 "azure does not support
+# parameters: ['reasoning_effort']", live 2026-10-31), so there is no caller effort control here.
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
+schema = 2
+base_model = "xai/grok-4.6"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+
+[limit]
+context = 200_000
+output = 128_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 4.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 9

@@ -1,0 +1,35 @@
+# CheapestToken relay of openai/gpt-6.1-terra (routed via azure: azure/gpt-6.1-terra). Override-only file:
+# identity/description/dates/limits inherit from the base_model lab entry.
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 1 / our output 4 / cached 0.05 / cache write 1.25; long 2 / 6 / 0.1 / 2.5) — intentionally
+# different from upstream list prices.
+# Long tier: the whole call bills at the long prices when input tokens STRICTLY exceed 272,000
+# (short_context_limit 272000, gt semantics — Azure-style strictly-greater boundary).
+# Tools: live on our /v1 chat/completions 2026-10-31: strict function tools, tool_choice
+# none/auto/required/named, custom tools freeform text + lark + regex grammar (regex ZZ[0-9]{3}
+# returned ZZ123 — grammar enforced). No tool_search on chat/completions (400 "Supported values
+# are: 'function' and 'custom'"); plain tool-call round trip verified 2026-10-31.
+# Effort: reasoning_effort = none|low|medium|high|xhigh (chat/completions; an invalid value → 400
+# listing exactly these five, live 2026-10-31 — no "max" on this route; none disables reasoning).
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 6

@@ -1,0 +1,41 @@
+# CheapestToken relay of nvidia/nemotron-3.5-super-vl-120b-a12b (routed via digitalocean:
+# openai/nemotron-3.5-super-vl). Override-only file: identity/description/dates inherit from the
+# base_model lab entry (context identical to the lab 1_048_576, so only the output delta is
+# kept); display name is our catalog's ("NVIDIA Nemotron 3.5 Super VL",
+# GET https://api.cheapest-token.com/api/v1/models display_name).
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Modalities: input = text + image/jpeg/png (no video) — matches the DO same-surface peer
+# (providers/digitalocean/models/nemotron-3.5-super-vl.toml:10-12); the lab video/mp4 is
+# not served on this route.
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 0.3 / our output 0.65 / cached 0.06).
+# Limit: output 1_048_576 follows the digitalocean same-surface peer (providers/digitalocean/
+# models/nemotron-3.5-super-vl.toml); context inherits the lab 1_048_576.
+# Toggle evidence (live on our /v1 2026-10-31): chat_template_kwargs.enable_thinking=false →
+# 200 without reasoning (2/2 runs), =true → 200 with reasoning; the same field the nvidia
+# first-party entry documents (providers/nvidia/models/nvidia/nemotron-3.5-super-vl-120b-a12b.toml).
+# reasoning_effort is not authored: the field is unvalidated on this route (an arbitrary value →
+# 200); reasoning_effort=none also disables reasoning (4/4 runs) but no graded levels are
+# provable, so only the native toggle is documented. thinking → 400 UnsupportedParamsError.
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+name = "NVIDIA Nemotron 3.5 Super VL"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+
+[limit]
+output = 1_048_576
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.65
