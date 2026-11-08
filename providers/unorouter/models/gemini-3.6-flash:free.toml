@@ -1,0 +1,12 @@
+# Free: is_free = true in https://api.unorouter.com/api/pricing (accessed 2026-11-08).
+schema = 2
+base_model = "google/gemini-3.6-flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

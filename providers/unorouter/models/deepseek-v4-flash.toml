@@ -1,4 +1,5 @@
-# Deprecated: its model page on https://unorouter.com/en/models tags it "Deprecated" (accessed 2026-10-21).
+# Deprecated: tagged "Deprecated" in https://api.unorouter.com/api/pricing (accessed 2026-11-08).
+# Prices: list prices from https://api.unorouter.com/api/pricing (accessed 2026-11-08), before group discounts.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 status = "deprecated"
@@ -8,7 +9,7 @@ reasoning = { supported = true }
 structured_output = true
 
 [cost.text.input]
-price = 0.0625
+price = 0.14
 
 [cost.text.output]
-price = 0.125
+price = 0.28

@@ -1,9 +1,13 @@
+# Free: is_free = true in https://api.unorouter.com/api/pricing (accessed 2026-11-08).
 schema = 2
 base_model = "google/gemma-4-31b-it"
 
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+
+[limit]
+output = 16_384
 
 [cost.text.input]
 price = 0

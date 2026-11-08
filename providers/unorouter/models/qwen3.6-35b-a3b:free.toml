@@ -1,0 +1,12 @@
+# Free: is_free = true in https://api.unorouter.com/api/pricing (accessed 2026-11-08).
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

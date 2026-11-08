@@ -1,8 +1,12 @@
+# Free: is_free = true in https://api.unorouter.com/api/pricing (accessed 2026-11-08).
 schema = 2
 base_model = "zhipuai/glm-4.5-flash"
 
 [capabilities]
 reasoning = { supported = true }
+
+[limit]
+output = 32_000
 
 [cost.text.input]
 price = 0
