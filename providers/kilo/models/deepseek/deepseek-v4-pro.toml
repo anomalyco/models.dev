@@ -11,7 +11,8 @@ reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
 structured_output = true
 
 [limit]
-context = 1_024_000
+context = 1_048_576
+output = 393_216
 
 [cost.text.input]
 price = 1.6
