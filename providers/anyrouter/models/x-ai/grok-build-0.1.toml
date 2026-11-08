@@ -12,12 +12,16 @@
 # (a 404 whose message is "Model ... is a Bring Your Own Key (BYOK) only
 # model") — the serving routes are BYOK-only — so no rung could be measured
 # here.
+schema = 2
 base_model = "xai/grok-build-0.1"
-reasoning_options = []
 
-[cost]
-input = 1
-output = 2
+[capabilities]
+reasoning = { supported = true }
+[cost.text.input]
+price = 1
 
+[cost.text.output]
+price = 2
 [modalities]
 input = ["text", "image"]
+output = ["text"]

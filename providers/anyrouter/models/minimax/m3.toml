@@ -21,12 +21,15 @@
 # out of upstream credit for most of the day (402 → 502), which is why `low`
 # could not be re-measured. The ask for published per-listing values is in the
 # PR. See the provider header.
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning_options = []
 
-[cost]
-input = 0.3
-output = 1.2
+[capabilities]
+reasoning = { supported = true }
+[cost.text.input]
+price = 0.3
 
+[cost.text.output]
+price = 1.2
 [limit]
 output = 16_384

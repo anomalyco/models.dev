@@ -16,23 +16,23 @@
 # separated from each other on a preset — the member the router picks decides
 # how deep a rung reasons — so only the verified off position is published.
 # Effort: reasoning_effort = none
+schema = 2
 name = "AnyRouter Auto"
 description = "Router across top-usage and stable models mixing free-tier and credit-billed routes, with health-aware fallback"
 family = "model-router"
+open_weights = false
 release_date = "2026-06-08"
 last_updated = "2026-06-08"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none"] }]
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = false
-
-[limit]
-context = 1_000_000
-output = 65_536
-
 [modalities]
 input = ["text"]
 output = ["text"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none"] }
+temperature = true
+top_p = true
+top_k = false
+structured_output = false
+[limit]
+context = 1_000_000
+output = 65_536

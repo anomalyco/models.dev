@@ -13,12 +13,16 @@
 # OpenRouter peer publish the same ladder for this model, so that is published
 # unchanged.
 # Effort: reasoning_effort = low|medium|high|xhigh
+schema = 2
 base_model = "xai/grok-4.7"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
-[cost]
-input = 1.6
-output = 4.8
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+[cost.text.input]
+price = 1.6
 
+[cost.text.output]
+price = 4.8
 [modalities]
 input = ["text", "image"]
+output = ["text"]

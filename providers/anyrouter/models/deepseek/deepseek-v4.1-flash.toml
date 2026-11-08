@@ -16,12 +16,15 @@
 # low|high|max; the toggle has no wire on this host, so the ladder they agree
 # on is published, and `max` is kept because this route accepts and honors it.
 # Effort: reasoning_effort = none|low|high|max
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
-[cost]
-input = 0.155
-output = 0.62
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+[cost.text.input]
+price = 0.155
 
+[cost.text.output]
+price = 0.62
 [limit]
 context = 1_048_576

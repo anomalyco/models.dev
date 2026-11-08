@@ -17,12 +17,15 @@
 # rest — so the numbers are from the runs that got through, not from a clean
 # sample. See the provider header.
 # Effort: reasoning_effort = none
+schema = 2
 base_model = "zhipuai/glm-4.7-flash"
-reasoning_options = [{ type = "effort", values = ["none"] }]
 
-[cost]
-input = 0.06
-output = 0.4
+[capabilities]
+reasoning = { supported = true, effort = ["none"] }
+[cost.text.input]
+price = 0.06
 
+[cost.text.output]
+price = 0.4
 [limit]
 output = 128_000

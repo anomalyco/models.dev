@@ -14,27 +14,28 @@
 # (dots-studio/dots-3-note-preview) uses the whole budget whatever the value —
 # so only the verified off position is published.
 # Effort: reasoning_effort = none
+schema = 2
 name = "AnyRouter Free"
 description = "Router across free platform models and the donated free pool, with automatic fallback and no credit deduction"
 family = "model-router"
+open_weights = false
 release_date = "2026-06-08"
 last_updated = "2026-06-08"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none"] }]
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = false
-
-[cost]
-input = 0
-output = 0
-
-[limit]
-context = 1_000_000
-output = 131_072
-
 [modalities]
 input = ["text"]
 output = ["text"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none"] }
+temperature = true
+top_p = true
+top_k = false
+structured_output = false
+[limit]
+context = 1_000_000
+output = 131_072
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -11,12 +11,16 @@
 # gone there is no control left to publish. See the provider header.
 # Unverified on this host: every effort value returns 502 "All upstream
 # providers failed" for a plain key, because the serving routes are BYOK-only.
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
-reasoning_options = []
 
-[cost]
-input = 0.95
-output = 4
+[capabilities]
+reasoning = { supported = true }
+[cost.text.input]
+price = 0.95
 
+[cost.text.output]
+price = 4
 [modalities]
 input = ["text", "image"]
+output = ["text"]

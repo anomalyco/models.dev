@@ -16,9 +16,13 @@
 # `high` is left off because it is in neither baseline. No budget is published:
 # `reasoning.max_tokens` is a Responses-endpoint control per the host's docs.
 # Effort: reasoning_effort = none|low|medium
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium"] }]
 
-[cost]
-input = 0.085
-output = 0.4
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium"] }
+[cost.text.input]
+price = 0.085
+
+[cost.text.output]
+price = 0.4

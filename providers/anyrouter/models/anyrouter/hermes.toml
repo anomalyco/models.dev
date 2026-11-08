@@ -15,23 +15,23 @@
 # with a 400 is not a control, and nothing else could be verified, so nothing is
 # published. Chat takes the flat `reasoning_effort` and has no toggle (see the
 # provider header).
+schema = 2
 name = "AnyRouter Hermes"
 description = "Router across the top tool-calling models for autonomous agents, ranked by agentic score, with automatic fallback"
 family = "model-router"
+open_weights = false
 release_date = "2026-06-08"
 last_updated = "2026-06-08"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = false
-
-[limit]
-context = 1_000_000
-output = 65_536
-
 [modalities]
 input = ["text"]
 output = ["text"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+structured_output = false
+[limit]
+context = 1_000_000
+output = 65_536

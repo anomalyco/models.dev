@@ -14,23 +14,23 @@
 # rung — including the off sentinel — can be shown to change anything, and a
 # rung that is merely accepted is not a control. Chat takes the flat
 # `reasoning_effort` and has no toggle (see the provider header).
+schema = 2
 name = "AnyRouter Latest"
 description = "Router to the latest stable production chat model serving traffic, with automatic fallback"
 family = "model-router"
+open_weights = false
 release_date = "2026-06-08"
 last_updated = "2026-06-08"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = false
-
-[limit]
-context = 1_000_000
-output = 64_000
-
 [modalities]
 input = ["text"]
 output = ["text"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+structured_output = false
+[limit]
+context = 1_000_000
+output = 64_000

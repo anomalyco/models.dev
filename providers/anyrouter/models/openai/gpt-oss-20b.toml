@@ -13,9 +13,13 @@
 # multi-step work: low=273, medium=629, high=698 reasoning tokens, so depth
 # tracks the value. This is the complete accepted set and it matches the peer.
 # Effort: reasoning_effort = low|medium|high
+schema = 2
 base_model = "openai/gpt-oss-20b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.03
-output = 0.14
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+[cost.text.input]
+price = 0.03
+
+[cost.text.output]
+price = 0.14
