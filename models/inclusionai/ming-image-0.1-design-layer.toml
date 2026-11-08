@@ -4,6 +4,7 @@
 #   output: https://developer.ant-ling.com/zh-CN/docs/api-reference/image/edits/
 # - Pricing (CNY 0.10 per output image): https://developer.ant-ling.com/zh-CN/docs/models/price/
 # Not open-weights as of 2026-11-08. No token limits documented; billed per output image.
+# Input stays generic: the edits API takes image[] files but documents no accepted formats.
 schema = 2
 v2_only = true
 type = "image"
@@ -14,7 +15,7 @@ release_date = "2026-10-27"
 
 [modalities]
 input = ["text", "image"]
-output = ["image"]
+output = ["image/png"]
 
 [capabilities]
 tools = { supported = false }

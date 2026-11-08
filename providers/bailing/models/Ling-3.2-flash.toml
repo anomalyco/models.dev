@@ -12,7 +12,6 @@ base_model = "inclusionai/ling-3.2-flash"
 [capabilities]
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
 structured_output = true
-top_k = false
 cache = { implicit = true }
 
 [api.chat-completions]
