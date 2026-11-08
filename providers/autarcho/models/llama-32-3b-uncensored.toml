@@ -1,0 +1,11 @@
+# Prices: https://api.autarcho.com/model/1a01383341be9bf04a904e168089401c3f0533b3af4089d3536d8b36e497ccd6/price
+# Billing is on generated tokens only. Input tokens are not charged, so the input
+# price is a real 0 rather than an unknown.
+schema = 2
+base_model = "meta/llama-3.2-3b-instruct"
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 3
