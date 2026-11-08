@@ -4,7 +4,9 @@
 # - Model page: https://inference.dagon.so/models/kimi-k3.1-pro-abliterated
 # - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
 #   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
-# Upstream: Silk Compute. Always thinks; effort ladder matches Moonshot first-party (reasoning_effort = low|high|max).
+# Upstream: Silk Compute. Effort: reasoning_effort = none|low|high|max. Live probe 2026-11-08
+# (POST /v1/chat/completions, Silk route): "none" -> 0 reasoning tokens (reasoning off); low 2851; high 2642;
+# max hit Silk's 524 timeout; unset 2993.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro Abliterated"
@@ -15,7 +17,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }
 
 [limit]
