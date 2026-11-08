@@ -1,0 +1,14 @@
+# Pricing: https://entrim.ai/pricing/ (accessed 2026-11-08). POST /v1/embeddings returns a
+# 4096-dimensional vector; output is not a generative token limit (live 2026-11-08).
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-embedding-8b"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0
