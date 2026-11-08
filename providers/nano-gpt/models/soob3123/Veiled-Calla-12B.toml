@@ -1,8 +1,6 @@
-# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
 name = "Veiled Calla 12B"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
+description = "Veiled Calla 12B is a 12B parameter model that is a more advanced version of Calla 12B."
 open_weights = true
 release_date = "2025-04-13"
 
@@ -22,7 +20,6 @@ output = 8_192
 
 [cost.text.input]
 price = 0.3
-cache = { read = 0.15 }
 
 [cost.text.output]
 price = 0.3

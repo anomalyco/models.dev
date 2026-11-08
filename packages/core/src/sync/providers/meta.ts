@@ -2,10 +2,11 @@ import { z } from "zod";
 
 import type { SyncProvider, SyncedModel } from "../index.js";
 
-const MODELS_ENDPOINT = "https://dev.meta.ai/docs/models.md";
-const PRICING_ENDPOINT = "https://dev.meta.ai/docs/pricing-rate-limits.md";
 
-const MetaResponse = z.object({ models: z.string(), pricing: z.string() });
+const DOCS = "https://dev.meta.ai/docs";
+
+// `families` holds each model family's own docs page (e.g. muse-spark.md), which now carries its availability table.
+const MetaResponse = z.object({ models: z.string(), pricing: z.string(), families: z.array(z.string()).default([]) });
 const MetaModel = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9.-]*$/),
   context: z.number().int().positive().safe(),
@@ -89,10 +90,13 @@ function familyModels(section: string) {
   });
 }
 
+// Prose ("a 1,048,576-token context window") or a family page's at-a-glance row ("| **Context window** | 1,048,576 tokens |").
 function familyContext(section: string) {
   const windows = new Set(
-    [...section.matchAll(/(?<![\d,])(\d{1,3}(?:,\d{3})+|\d+)-token context window/g)]
-      .map((match) => Number(match[1]!.replaceAll(",", ""))),
+    [
+      ...section.matchAll(/(?<![\d,])(\d{1,3}(?:,\d{3})+|\d+)-token context window/g),
+      ...section.matchAll(/^\|\s*\*\*Context window\*\*\s*\|\s*(\d{1,3}(?:,\d{3})+|\d+) tokens\s*\|/gm),
+    ].map((match) => Number(match[1]!.replaceAll(",", ""))),
   );
   if (windows.size !== 1) throw new Error(`Meta docs need exactly one ${sectionID(section)} context window`);
   return [...windows][0]!;
@@ -123,7 +127,9 @@ function familyCost(pricing: string, family: string, mode: Mode) {
 export function parseMetaModels(raw: unknown): MetaModel[] {
   const response = MetaResponse.parse(raw);
   const ids = new Set<string>();
-  const models = sections(response.models, "##").flatMap((section) => {
+  // A family page is one section titled by its "# " heading.
+  const families = response.families.map((page) => page.replace(/^\s*# /, ""));
+  const models = [...sections(response.models, "##"), ...families].flatMap((section) => {
     const documented = familyModels(section);
     if (documented.length === 0) return [];
     const family = sectionID(section);
@@ -143,13 +149,20 @@ export function parseMetaModels(raw: unknown): MetaModel[] {
   return models;
 }
 
+// Model families whose overview section in models.md links to their own page (`## Muse Spark` → docs/muse-spark).
+export function familyPages(models: string) {
+  return sections(models, "##").map(sectionID).filter((id) => models.includes(`${DOCS}/${id})`));
+}
+
 export async function fetchMetaModels(fetcher: typeof fetch = fetch) {
-  const [models, pricing] = await Promise.all([MODELS_ENDPOINT, PRICING_ENDPOINT].map(async (url) => {
-    const response = await fetcher(url);
+  const get = async (page: string) => {
+    const response = await fetcher(`${DOCS}/${page}.md`);
     if (!response.ok) throw new Error(`Meta docs request failed: ${response.status} ${response.statusText}`);
     return response.text();
-  }));
-  return { models, pricing };
+  };
+  const [models, pricing] = await Promise.all([get("models"), get("pricing-rate-limits")]);
+  const families = await Promise.all(familyPages(models).map(get));
+  return { models, pricing, families };
 }
 
 export const meta = {
