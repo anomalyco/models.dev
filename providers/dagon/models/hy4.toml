@@ -13,10 +13,6 @@ reasoning = { supported = true, effort = ["none", "low", "high"] }
 cache = { implicit = true }
 top_k = false
 
-[limit]
-context = 1_048_576
-output = 65_536
-
 [cost.text.input]
 price = 1.76
 cache = { read = 0.33 }

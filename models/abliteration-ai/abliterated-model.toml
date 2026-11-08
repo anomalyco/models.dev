@@ -1,0 +1,29 @@
+# Sources (accessed 2026-11-08):
+# - Models, input types, context and max output: https://docs.abliteration.ai/models
+# - Capabilities (tools, structured outputs, reasoning effort; reasoning can be disabled on every
+#   model except Abliterated Large v2): https://docs.abliteration.ai/compatibility-matrix
+# - Sampling: temperature and top_p on Chat Completions, plus top_k on Messages:
+#   https://docs.abliteration.ai/api-reference/chat-completions
+#   https://docs.abliteration.ai/api-reference/messages
+# - Image MIME types: https://docs.abliteration.ai/capabilities/images
+# - open_weights and release date as in providers/abliteration-ai/models/abliterated-model.toml
+schema = 2
+name = "Abliterated Model"
+description = "Multimodal abliterated model for analyzing text, images, documents, and rich media"
+open_weights = true
+release_date = "2026-01-06"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 262_134

@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-08):
+# - Models, input types, context and max output: https://docs.abliteration.ai/models
+# - Capabilities (tools, structured outputs, reasoning effort; reasoning can be disabled on every
+#   model except Abliterated Large v2): https://docs.abliteration.ai/compatibility-matrix
+# - Sampling: temperature and top_p on Chat Completions, plus top_k on Messages:
+#   https://docs.abliteration.ai/api-reference/chat-completions
+#   https://docs.abliteration.ai/api-reference/messages
+# - Launch announcement (GLM-5.3 base): https://abliteration.ai/blog/introducing-abliterated-model-large-v2
+schema = 2
+name = "Abliterated Large v2"
+description = "GLM-5.3 model abliterated and finetuned for cyber, ML red teaming, and agent testing"
+open_weights = false
+release_date = "2026-08-29"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 999_990

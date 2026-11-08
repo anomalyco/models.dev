@@ -4,29 +4,16 @@
 # - Model page: https://inference.dagon.so/models/abliterated-model-large-v2
 # - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
 #   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
-# Host-unique abliteration.ai model (served upstream by abliteration.ai); defined inline like providers/abliteration-ai.
 # Reasoning cannot be disabled; low, high, max (https://docs.abliteration.ai/capabilities/thinking).
-# Image MIME types: https://docs.abliteration.ai/capabilities/images
 schema = 2
-name = "Abliterated Large v2"
-description = "GLM-5.3 model abliterated and post-trained by abliteration.ai"
-open_weights = false
-release_date = "2026-08-29"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "abliteration-ai/abliterated-model-large-v2"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
-temperature = true
-top_p = true
 top_k = false
 
 [limit]
-context = 1_000_000
 output = 65_536
 
 [cost.text.input]

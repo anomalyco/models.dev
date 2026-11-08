@@ -4,29 +4,16 @@
 # - Model page: https://inference.dagon.so/models/abliterated-model-large-flash
 # - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
 #   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
-# Host-unique abliteration.ai model (served upstream by abliteration.ai); defined inline like providers/abliteration-ai.
 # Reasoning can be turned off or set to low, high or max (https://docs.abliteration.ai/models).
-# Image MIME types: https://docs.abliteration.ai/capabilities/images
 schema = 2
-name = "Abliterated Large Flash"
-description = "Abliterated reasoning model by abliteration.ai based on DeepSeek V4.1-Flash-1017, with image input"
-open_weights = false
-release_date = "2026-10-23"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["text"]
+base_model = "abliteration-ai/abliterated-model-large-flash"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }
-temperature = true
-top_p = true
 top_k = false
 
 [limit]
-context = 1_048_576
 output = 65_536
 
 [cost.text.input]

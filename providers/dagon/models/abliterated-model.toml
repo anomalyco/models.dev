@@ -4,29 +4,16 @@
 # - Model page: https://inference.dagon.so/models/abliterated-model
 # - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
 #   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
-# Host-unique abliteration.ai model (served upstream by abliteration.ai); defined inline like providers/abliteration-ai.
 # Effort ladder per https://docs.abliteration.ai/capabilities/thinking ("none" disables reasoning).
-# Image MIME types: https://docs.abliteration.ai/capabilities/images
 schema = 2
-name = "Abliterated Model"
-description = "Multimodal abliterated model by abliteration.ai for text, images and documents"
-open_weights = true
-release_date = "2026-01-06"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["text"]
+base_model = "abliteration-ai/abliterated-model"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 cache = { implicit = true }
-temperature = true
-top_p = true
 top_k = false
 
 [limit]
-context = 262_144
 output = 65_536
 
 [cost.text.input]
