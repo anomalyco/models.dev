@@ -1,0 +1,33 @@
+# API: InvokeModel, POST https://bedrock-runtime.{region}.amazonaws.com/model/{modelId}/invoke (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModel.html).
+# Request: {"taskType": "SINGLE_EMBEDDING", "singleEmbeddingParams": {...}} (https://docs.aws.amazon.com/nova/latest/nova2-userguide/embeddings.html).
+#   InvokeModel takes one input of up to 8K tokens or 30 s of audio/video; longer inputs need StartAsyncInvoke (SEGMENTED_EMBEDDING).
+# Served: ListFoundationModels (byOutputModality=EMBEDDING) lists it ACTIVE with ON_DEMAND inference; live InvokeModel returned 200 (us-east-1, 2026-11-08).
+#   Text and PNG image requests both returned embeddings.
+# Pricing: https://aws.amazon.com/bedrock/pricing/ and https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json (us-east-1, checked 2026-11-08).
+#   NovaMultiModalEmbeddings: $0.000135 per 1K text tokens, $0.00006 per standard image, $0.0006 per document image
+#   (image.detailLevel = DOCUMENT_IMAGE; not modelled below), $0.0007 per second of video, $0.00014 per second of audio.
+# No cross-Region inference profiles exist for this model (ListInferenceProfiles, 2026-11-08).
+schema = 2
+v2_only = true
+base_model = "amazon/nova-2-multimodal-embeddings"
+
+[api.invoke-model]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.135
+
+[cost.text.output]
+price = 0
+
+[cost.image.input]
+unit = "image"
+price = 0.00006
+
+[cost.audio.input]
+unit = "second"
+price = 0.00014
+
+[cost.video.input]
+unit = "second"
+price = 0.0007

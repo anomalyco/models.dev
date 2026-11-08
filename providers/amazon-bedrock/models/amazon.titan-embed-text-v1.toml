@@ -1,0 +1,17 @@
+# API: InvokeModel, POST https://bedrock-runtime.{region}.amazonaws.com/model/{modelId}/invoke (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModel.html).
+# Request: {"inputText"} (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-titan-embed-text.html).
+# Served: ListFoundationModels (byOutputModality=EMBEDDING) lists it ACTIVE with ON_DEMAND inference; live InvokeModel returned 200 (us-east-1, 2026-11-08).
+# Pricing: https://aws.amazon.com/bedrock/pricing/ and https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json (us-east-1, checked 2026-11-08).
+#   TitanEmbeddingsG1-Text $0.0001 per 1K input tokens (on-demand).
+schema = 2
+v2_only = true
+base_model = "amazon/titan-embed-text-v1"
+
+[api.invoke-model]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0

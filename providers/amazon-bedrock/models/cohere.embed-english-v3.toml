@@ -1,0 +1,26 @@
+# API: InvokeModel, POST https://bedrock-runtime.{region}.amazonaws.com/model/{modelId}/invoke (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModel.html).
+# Request: {"input_type", "texts" | "images", "truncate", "embedding_types"} (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-embed-v3.html).
+#   Bedrock takes texts of up to 512 tokens (96 per call) or one image per call, image/jpeg or image/png only.
+# Served: ListFoundationModels (byOutputModality=EMBEDDING) lists it ACTIVE with ON_DEMAND inference; live InvokeModel returned 200 (us-east-1, 2026-11-08).
+# Pricing: https://aws.amazon.com/bedrock/pricing/ and https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json (us-east-1, same in us-west-2 and eu-west-1, checked 2026-11-08).
+#   $0.10 per 1M input tokens and $0.0001 per image (on-demand).
+schema = 2
+v2_only = true
+base_model = "cohere/embed-english-v3.0"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["embedding"]
+
+[api.invoke-model]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0
+
+[cost.image.input]
+unit = "image"
+price = 0.0001

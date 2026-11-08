@@ -1,0 +1,22 @@
+# API: InvokeModel, POST https://bedrock-runtime.{region}.amazonaws.com/model/{modelId}/invoke (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModel.html).
+# Request: {"inputText", "inputImage" (base64), "embeddingConfig"} (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-titan-embed-mm.html).
+# Served: ListFoundationModels (byOutputModality=EMBEDDING) lists it ACTIVE with ON_DEMAND inference; live InvokeModel returned 200 (us-east-1, 2026-11-08).
+#   Text-only and text+PNG requests both returned 1,024-dimension embeddings.
+# Pricing: https://aws.amazon.com/bedrock/pricing/ and https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json (us-east-1, checked 2026-11-08).
+#   TitanEmbeddingsG1-Image $0.0008 per 1K input tokens and $0.00006 per input image (on-demand).
+schema = 2
+v2_only = true
+base_model = "amazon/titan-embed-image-v1"
+
+[api.invoke-model]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.8
+
+[cost.text.output]
+price = 0
+
+[cost.image.input]
+unit = "image"
+price = 0.00006

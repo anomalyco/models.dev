@@ -1,0 +1,29 @@
+# Sources:
+# - https://docs.aws.amazon.com/bedrock/latest/userguide/titan-multiemb-models.html
+#   (max 256 input text tokens; images up to 25 MB and 2048 x 2048 px; PNG and JPEG; 1,024 (default), 384 or 256 dimensions)
+# - Request shape (inputText and/or inputImage): https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-titan-embed-mm.html
+# - Release: Bedrock ListFoundationModels startOfLifeTime 2023-11-29
+#   (https://aws.amazon.com/about-aws/whats-new/2023/11/amazon-titan-multimodal-embeddings-model-bedrock/)
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Titan Multimodal Embeddings G1"
+description = "Text and image embedding model for multimodal search and recommendations"
+family = "titan-embed"
+open_weights = false
+release_date = "2023-11-29"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 256
+output = 0

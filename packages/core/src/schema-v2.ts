@@ -427,6 +427,8 @@ export const ApiProtocolV2Values = [
   "responses",
   "messages",
   "converse",
+  // Amazon Bedrock InvokeModel: POST /model/{modelId}/invoke, body shape depends on the model.
+  "invoke-model",
   "generate-content",
   "interactions",
   "cohere-chat",

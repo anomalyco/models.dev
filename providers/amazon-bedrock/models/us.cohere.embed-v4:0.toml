@@ -1,0 +1,19 @@
+# API: InvokeModel, POST https://bedrock-runtime.{region}.amazonaws.com/model/{modelId}/invoke (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModel.html).
+# Request: {"input_type", "texts" | "images" | "inputs", "output_dimension", "max_tokens", "truncate"} (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-embed-v4.html).
+#   Up to ~128K tokens per input; images png/jpeg/webp/gif up to 5 MB, billed as input tokens (~pixels / 784 * 4).
+# US cross-Region profile listed by ListInferenceProfiles (us-east-1, us-east-2, us-west-2); live InvokeModel returned 200 (us-east-1, 2026-11-08).
+# Pricing: https://aws.amazon.com/bedrock/pricing/ and https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json (us-east-1, same in us-west-2 and eu-west-1, checked 2026-11-08).
+#   $0.12 per 1M input tokens (on-demand); no separate image price.
+schema = 2
+v2_only = true
+base_model = "cohere/embed-v4.0"
+name = "Embed 4 (US)"
+
+[api.invoke-model]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 0

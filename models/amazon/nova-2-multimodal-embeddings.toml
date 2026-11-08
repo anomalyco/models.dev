@@ -1,0 +1,48 @@
+# Sources:
+# - https://docs.aws.amazon.com/nova/latest/nova2-userguide/embeddings.html
+#   (text, document images, images, video and audio in one space; 8K tokens or 30 s of video/audio per input;
+#   3072, 1024, 384 or 256 dimensions; images PNG, JPEG, WEBP, GIF; audio MP3, WAV, OGG;
+#   video MP4, MOV, MKV, WEBM, FLV, MPEG, MPG, WMV, 3GP)
+# - https://aws.amazon.com/blogs/aws/amazon-nova-multimodal-embeddings-now-available-in-amazon-bedrock/
+#   (text up to 8,192 tokens, 200 languages)
+# - Release: Bedrock ListFoundationModels startOfLifeTime 2025-10-28
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Nova Multimodal Embeddings"
+description = "Multimodal embedding model for text, documents, images, video, and audio in a single vector space"
+family = "nova"
+open_weights = false
+release_date = "2025-10-28"
+
+[modalities]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/gif",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/ogg",
+  "video/mp4",
+  "video/quicktime",
+  "video/x-matroska",
+  "video/webm",
+  "video/x-flv",
+  "video/mpeg",
+  "video/x-ms-wmv",
+  "video/3gpp",
+]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
