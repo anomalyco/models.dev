@@ -1,0 +1,31 @@
+# https://huggingface.co/BAAI/bge-en-icl (Apache-2.0; Mistral-7B based, in-context learning embedding model, 4096 dimensions)
+# Context: max_seq_length 32768 (https://huggingface.co/BAAI/bge-en-icl/blob/main/sentence_bert_config.json).
+# Repository created 2024-07-25 (Hugging Face API createdAt). Paper: https://arxiv.org/abs/2409.15700
+schema = 2
+v2_only = true
+type = "embedding"
+name = "BGE EN ICL"
+description = "LLM-based English embedding model that takes few-shot examples in the query"
+family = "bge"
+open_weights = true
+release_date = "2024-07-25"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/BAAI/bge-en-icl"
