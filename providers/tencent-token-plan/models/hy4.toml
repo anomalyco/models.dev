@@ -1,43 +1,20 @@
-# Stable Hy4 lab identity with Tencent Token Plan-specific overrides (not preview).
-# Available as hy4 in General and Hy plans; first documented here on 2026-11-04:
+# Stable Hy4. Tencent has not published a separate price row for the stable id (the China-site
+#   price table lists only "Hy4 preview", accessed 2026-10-21), so it carries the Hy4 preview
+#   listing: CNY 6 / 18 / 0.3 per MTok (input / output / cache hit) → USD 0.834 / 2.501 / 0.042
+#   per MTok via list_price / tax_rate * FX. Revisit when a stable-id row appears.
+# Effort: reasoning_effort = none|high (default high). "none" is how thinking is turned off on
+#   this id, so per AGENTS.md there is no separate toggle entry.
 # https://cloud.tencent.com/document/product/1823/130060
-# Specs/images (PNG/JPEG/WEBP/static GIF), tools and JSON output:
-# https://cloud.tencent.com/document/product/1823/132252
-# Hy-only plan overview still excludes multimodal access; image capability here
-# follows the General-plan listing and Hy4 guide, not a Hy-only entitlement claim.
-# Toggle: thinking.type = enabled|disabled (default enabled); reasoning_effort
-# high/no_think is an alternate binary control, so expose toggle without graded effort.
 # https://cloud.tencent.com/document/product/1823/131208
-# Sampling: temperature/top_p supported; client top_k ignored:
-# https://cloud.tencent.com/document/product/1823/135872
-# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
-# List input/output/cache-read: 120/360/6 points/MTok; 20 points = CNY 1.
-# https://cloud.tencent.com/document/product/1823/133811 (checked 2026-11-04)
-# USD/MTok = points / 20 / 6.684036; FX USD 1 = CNY 6.684036, 2026-11-04:
-# https://open.er-api.com/v6/latest/USD
-# Prepaid-credit equivalents; temporary discounts excluded, no separate cache-write rate.
 schema = 2
 base_model = "tencent/hy4"
-name = "hy4"
-description = "Tencent Hy4 model for agent tasks, reasoning and image understanding."
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
-structured_output = true
-cache = { implicit = true }
-top_k = false
-
-[limit]
-context = 1_024_000
-input = 960_000
-output = 64_000
-
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+reasoning = { supported = true, effort = ["none", "high"] }
 
 [cost.text.input]
-price = 0.89766123
-cache = { read = 0.04488306 }
+price = 0.834
+cache = { read = 0.042 }
 
 [cost.text.output]
-price = 2.69298370
+price = 2.501
