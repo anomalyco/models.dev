@@ -1,0 +1,25 @@
+# Sources (accessed 2026-11-08):
+# - Limits, input types, prices (cheapest upstream route plus 10% markup; prices float with the
+#   routed upstream): https://inference.dagon.so/v1/models
+# - Model page: https://inference.dagon.so/models/hy4
+# - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
+#   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
+# Upstream: Silk Compute. Standard (non-abliterated) Hy4. Dagon probed reasoning_effort none, low and high on this route (2026-11-06).
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+cache = { implicit = true }
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[cost.text.input]
+price = 1.76
+cache = { read = 0.33 }
+
+[cost.text.output]
+price = 3.52

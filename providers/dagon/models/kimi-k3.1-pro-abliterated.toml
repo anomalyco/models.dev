@@ -1,0 +1,30 @@
+# Sources (accessed 2026-11-08):
+# - Limits, input types, prices (cheapest upstream route plus 10% markup; prices float with the
+#   routed upstream): https://inference.dagon.so/v1/models
+# - Model page: https://inference.dagon.so/models/kimi-k3.1-pro-abliterated
+# - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
+#   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
+# Upstream: Silk Compute. Always thinks; effort ladder matches Moonshot first-party (reasoning_effort = low|high|max).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro Abliterated"
+description = "Abliterated variant of Kimi K3.1 Pro (refusal behavior removed), routed by Dagon Inference"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[cost.text.input]
+price = 5.5
+cache = { read = 0.55 }
+
+[cost.text.output]
+price = 16.5

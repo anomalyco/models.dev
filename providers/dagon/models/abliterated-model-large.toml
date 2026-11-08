@@ -1,0 +1,38 @@
+# Sources (accessed 2026-11-08):
+# - Limits, input types, prices (cheapest upstream route plus 10% markup; prices float with the
+#   routed upstream): https://inference.dagon.so/v1/models
+# - Model page: https://inference.dagon.so/models/abliterated-model-large
+# - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
+#   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
+# Host-unique abliteration.ai model (served upstream by abliteration.ai); defined inline like providers/abliteration-ai.
+# Deprecated upstream; still accepted by Dagon for existing integrations (deprecated: true in /v1/models).
+# Image MIME types: https://docs.abliteration.ai/capabilities/images
+schema = 2
+name = "Abliterated Large"
+description = "GLM-5.2 model abliterated and finetuned by abliteration.ai; superseded by Abliterated Large v2"
+open_weights = false
+release_date = "2026-07-25"
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+cache = { implicit = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[cost.text.input]
+price = 3.3
+cache = { read = 0.33 }
+
+[cost.text.output]
+price = 5.5

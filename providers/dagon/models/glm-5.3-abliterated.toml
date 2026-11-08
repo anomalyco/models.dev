@@ -1,0 +1,27 @@
+# Sources (accessed 2026-11-08):
+# - Limits, input types, prices (cheapest upstream route plus 10% markup; prices float with the
+#   routed upstream): https://inference.dagon.so/v1/models
+# - Model page: https://inference.dagon.so/models/glm-5.3-abliterated
+# - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
+#   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
+# Upstreams: Refuseless, Experiential Labs, Silk Compute. Effort ladder matches GLM-5.3 relay peers.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 Abliterated"
+description = "Abliterated variant of GLM-5.3 (refusal behavior removed), routed by Dagon Inference"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.165 }
+
+[cost.text.output]
+price = 2.2
