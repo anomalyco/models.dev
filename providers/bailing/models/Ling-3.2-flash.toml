@@ -1,0 +1,22 @@
+# Sources (developer.ant-ling.com, accessed 2026-11-08):
+# - API: POST /v1/chat/completions and Anthropic-compatible POST /anthropic/v1/messages.
+#   Request surface: temperature [0,1], top_p, tools, response_format (json_object /
+#   json_schema per the structured-outputs tutorial), enable_search; no top_k, no
+#   documented output cap (the Anthropic API defaults max_tokens to 32000).
+# - Thinking (3.2 series): thinking.type = enabled|disabled, default enabled.
+# - No cost: free for the first two weeks after the 2026-11-05 launch and no list price
+#   published yet (https://developer.ant-ling.com/zh-CN/docs/models/price/).
+schema = 2
+base_model = "inclusionai/ling-3.2-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://api.ant-ling.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

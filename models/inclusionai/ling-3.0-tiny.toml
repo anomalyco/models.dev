@@ -1,0 +1,32 @@
+# Sources (accessed 2026-11-08):
+# - Weights (MIT, 7.9B total / 1.3B active): https://huggingface.co/inclusionAI/Ling-3.0-tiny
+# - Platform launch 2026-08-07 (changelog v2.0.2): https://developer.ant-ling.com/zh-CN/docs/getting-started/changelog/
+# Context: native max_position_embeddings 131,072; the card's Terminal-Bench evals use a
+# 256K YaRN window (context-length 262144, rope scaling 2.0). Evals cap max_new_tokens at 32K.
+# Sampling: the model card recommends temperature=1.0, top_p=0.95, top_k=20.
+schema = 2
+name = "Ling 3.0 Tiny"
+description = "Lightweight hybrid-linear MoE reasoning model with 7.9B total and 1.3B active parameters for on-device deployment and offline agents"
+family = "ling"
+open_weights = true
+release_date = "2026-08-07"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/Ling-3.0-tiny"

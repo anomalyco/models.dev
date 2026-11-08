@@ -1,0 +1,36 @@
+# Sources (developer.ant-ling.com, accessed 2026-11-08):
+# - API: POST /v1/chat/completions and Anthropic-compatible POST /anthropic/v1/messages.
+#   Request surface: temperature [0,1], top_p, tools, response_format (json_object /
+#   json_schema per the structured-outputs tutorial), enable_search; no top_k, no
+#   documented output cap (the Anthropic API defaults max_tokens to 32000).
+# - Thinking (3.1 series): thinking.type = enabled|disabled, default enabled.
+# - Served context 1M (model page); the open weights ship 256K.
+# - Pricing (list, CNY per Mtok): input ¥2 / output ¥6 / cache read ¥0.4
+#   (https://developer.ant-ling.com/zh-CN/docs/models/price/). CNY→USD rate 6.690826,
+#   2026-11-08, source: https://open.er-api.com/v6/latest/USD; the result matches
+#   Bailing's own USD list price on OpenRouter ($0.30/$0.90/$0.06 cache read).
+# - Cache: implicit (cache-hit pricing, no explicit cache markers documented).
+schema = 2
+base_model = "inclusionai/ling-3.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://api.ant-ling.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.9

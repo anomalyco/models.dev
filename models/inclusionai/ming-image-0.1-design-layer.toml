@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-08):
+# - Release 2026-10-27 (changelog v2.0.5): https://developer.ant-ling.com/zh-CN/docs/getting-started/changelog/
+# - Layer decomposition only, on /v1/images/edits with exactly one input image, always PNG
+#   output: https://developer.ant-ling.com/zh-CN/docs/api-reference/image/edits/
+# - Pricing (CNY 0.10 per output image): https://developer.ant-ling.com/zh-CN/docs/models/price/
+# Not open-weights as of 2026-11-08. No token limits documented; billed per output image.
+schema = 2
+v2_only = true
+type = "image"
+name = "Ming Image 0.1 Design Layer"
+description = "Image model that decomposes a design into separate transparent layers for editing workflows"
+open_weights = false
+release_date = "2026-10-27"
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

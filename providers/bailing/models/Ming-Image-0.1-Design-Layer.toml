@@ -1,0 +1,15 @@
+# Sources (developer.ant-ling.com, accessed 2026-11-08):
+# - API: POST /v1/images/edits only (layer decomposition, exactly one input image, PNG
+#   output); billed per output image (usage.output_image_count).
+# - Pricing (list): CNY ¥0.10 per image (https://developer.ant-ling.com/zh-CN/docs/models/price/).
+#   CNY→USD rate 6.690826, 2026-11-08, source: https://open.er-api.com/v6/latest/USD.
+schema = 2
+v2_only = true
+base_model = "inclusionai/ming-image-0.1-design-layer"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.01495

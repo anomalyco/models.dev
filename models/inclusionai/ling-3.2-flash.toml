@@ -1,0 +1,27 @@
+# Sources (accessed 2026-11-08):
+# - Release 2026-11-05 (changelog v2.0.6): https://developer.ant-ling.com/zh-CN/docs/getting-started/changelog/
+# - Model page (560B total / 25B active, 1M context): https://developer.ant-ling.com/zh-CN/docs/models/ling/
+# Not open-weights as of 2026-11-08 (no checkpoint on https://huggingface.co/inclusionAI).
+# Input stays generic: the API docs name text/image/video input but no formats
+# (https://developer.ant-ling.com/zh-CN/docs/api-reference/chat/openai).
+schema = 2
+name = "Ling 3.2 Flash"
+description = "Native multimodal MoE model with 560B total and 25B active parameters for complex visual understanding, multimodal agents, 3D interaction, and medical imaging"
+family = "ling"
+open_weights = false
+release_date = "2026-11-05"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 32_768

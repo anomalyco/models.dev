@@ -1,12 +1,12 @@
+# First-party API of Ant Group's Bailing platform (Ling / Ming models).
+# Chat Completions is POST {api}/chat/completions; the Anthropic-compatible
+# Messages API is POST https://api.ant-ling.com/anthropic/v1/messages and is set
+# per model in [api.messages]. Image models use /v1/images/{generations,edits}.
+# Thinking (Ling 3.x): thinking.type = enabled|disabled, default enabled.
+# Sources (accessed 2026-11-08): https://developer.ant-ling.com/zh-CN/docs
 name = "Bailing"
 env = ["BAILING_API_TOKEN"]
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"
-# Raw HTTP reasoning controls (source accessed 2026-06-25):
-# POST https://api.tbox.cn/api/llm/v1/chat/completions. `api` is the prefix;
-# @ai-sdk/openai-compatible appends `/chat/completions`. The provider request
-# surface documents no reasoning toggle, effort, or token-budget request field;
-# Ring-1T being a reasoning model does not by itself establish such a control.
-# https://alipaytbox.yuque.com/sxs0ba/ling/intro
-doc = "https://alipaytbox.yuque.com/sxs0ba/ling/intro"
-api = "https://api.tbox.cn/api/llm/v1"
+doc = "https://developer.ant-ling.com/zh-CN/docs"
+api = "https://api.ant-ling.com/v1"
