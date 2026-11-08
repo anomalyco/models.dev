@@ -1,8 +1,28 @@
-# Prices: https://api.autarcho.com/model/1a01383341be9bf04a904e168089401c3f0533b3af4089d3536d8b36e497ccd6/price
-# Billing is on generated tokens only. Input tokens are not charged, so the input
-# price is a real 0 rather than an unknown.
+# Served id is this filename, confirmed from the gateway's own catalogue:
+# https://api.autarcho.com/observe/model/1a01383341be9bf04a904e168089401c3f0533b3af4089d3536d8b36e497ccd6
+# (alias "llama-32-3b-uncensored@1.0", verified, price 3 micro-USDC per token).
+#
+# Price evidence: the per-model quote at
+# https://api.autarcho.com/model/1a01383341be9bf04a904e168089401c3f0533b3af4089d3536d8b36e497ccd6/price?for_client=true
+# returns price_per_token_micro_usdc = 3, i.e. 3 USD per 1M generated tokens
+# (3e-6 USD x 1e6). That quote is the same resolver that bills the request.
+#
+# Input is not billed at all, so the input price is a real 0 rather than missing
+# data: https://github.com/autarcho/autarcho#pricing
+#
+# base_model is Meta's Llama 3.2 3B Instruct. This checkpoint is a
+# refusal-ablated derivative of it (same architecture and tokenizer, different
+# safety behaviour), so name and description are overridden rather than
+# inherited.
 schema = 2
 base_model = "meta/llama-3.2-3b-instruct"
+name = "Llama 3.2 3B Uncensored"
+description = "Refusal-ablated Llama 3.2 3B Instruct, served as GGUF: it answers prompts the stock instruct model declines, keeping the same 128k context and multilingual behaviour."
+
+[capabilities]
+tools = { supported = false }
+top_p = false
+top_k = false
 
 [cost.text.input]
 price = 0
