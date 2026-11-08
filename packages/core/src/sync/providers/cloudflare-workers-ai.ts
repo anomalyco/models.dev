@@ -59,6 +59,8 @@ const WorkersAiModel = OpenRouterModel.extend({
   responses_api: z.boolean().optional(),
   // The tool_choice values the request schema lists; unset when it doesn't list them.
   tool_choice: z.array(ToolChoiceV2).optional(),
+  // Search sets this (YYYY-MM-DD) once Cloudflare schedules the model's retirement.
+  deprecation_date: z.string().nullable().optional(),
 });
 type WorkersAiModel = z.infer<typeof WorkersAiModel>;
 
@@ -81,6 +83,7 @@ const CloudflareModel = z.object({
   reasoning: z.unknown().optional(),
   responses_api: z.boolean().optional(),
   tool_choice: z.array(ToolChoiceV2).optional(),
+  deprecation_date: z.string().nullable().optional(),
 }).passthrough();
 
 const CloudflareResponse = z.object({
@@ -382,8 +385,10 @@ export function buildWorkersAiModel(
     existingWithReasoningOptions,
     existing?.base_model ?? resolveCloudflareBaseModel(model),
   );
+  // A scheduled retirement marks the model deprecated; otherwise the file's own status is kept.
+  const lifecycle = model.deprecation_date == null ? synced : { ...synced, status: "deprecated" as const };
   const type = DECISION_MODELS.has(model.id) ? "decision" : existing?.type;
-  const decision = type === undefined ? synced : { ...synced, type };
+  const decision = type === undefined ? lifecycle : { ...lifecycle, type };
   // Workers AI search has no API address, so the file's own one (v1 `provider`) is kept.
   const typed = existing?.provider === undefined ? decision : { ...decision, provider: existing.provider };
   if ("base_model" in typed) return typed;
@@ -560,6 +565,7 @@ function normalizeModel(model: CloudflareModel) {
     reasoning,
     responses_api: model.responses_api,
     tool_choice: model.tool_choice,
+    deprecation_date: model.deprecation_date,
   });
 }
 
