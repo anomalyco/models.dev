@@ -1,0 +1,23 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Source: abliteration.ai's own model, served on its API (https://abliteration.ai)
+schema = 2
+name = "Abliterated Large Flash"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+open_weights = false
+release_date = "2026-10-23"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 131_072

@@ -1,8 +1,10 @@
-# Served by Open Uncensored through nanogpt, at the serving provider's per-token
-# price with no markup: https://openuncensored.com/models/glm-5.3-uncensored
+# Served by Open Uncensored through nanogpt. Price as
+# listed on https://openuncensored.com/models/glm-5.3-uncensored
 # Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
 # measure it on: providers/nano-gpt/models/z-ai/glm-5.3-uncensored.toml
 # Input is text only: the router replaces image parts with a note for text models.
+# Standalone (no base_model): the hosts serving this model do not say whose weights it is, and
+# several unrelated Hugging Face repos share the name, so there is no lab identity to point to.
 schema = 2
 name = "GLM 5.3 Uncensored"
 description = "An experimental uncensored version of the full GLM 5.3 reasoning model for chat, creative writing, coding, and tool use. It may show unusual behavior or inconsistent response quality."

@@ -1,0 +1,26 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Source: https://huggingface.co/mlabonne/NeuralDaredevil-8B-abliterated
+schema = 2
+name = "Neural Daredevil 8B abliterated"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+family = "llama"
+open_weights = true
+release_date = "2024-01-01"
+last_updated = "2024-12-01"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 8_192
+input = 8_192
+output = 8_192

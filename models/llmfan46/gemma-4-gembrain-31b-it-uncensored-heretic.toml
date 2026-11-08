@@ -1,0 +1,25 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Source: https://huggingface.co/llmfan46/Gemma-4-Gembrain-31B-it-uncensored-heretic
+schema = 2
+name = "Gemma 4 31B Gembrain Uncensored Heretic"
+description = "Gemma 4 31B Gembrain Uncensored Heretic is a community creative finetune for reasoning, multimodal chat, expressive writing, and roleplay."
+family = "gemma"
+open_weights = true
+release_date = "2026-05-15"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144

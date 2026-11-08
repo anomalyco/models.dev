@@ -1,0 +1,25 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Source: abliteration.ai's own model, served on its API (https://abliteration.ai)
+schema = 2
+name = "Abliterated Model Large V2"
+description = "GLM-5.3 model abliterated and finetuned for cyber, ML red teaming, and agent testing"
+open_weights = false
+release_date = "2026-08-29"
+last_updated = "2026-08-31"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
+input = 1_000_000
+output = 999_990

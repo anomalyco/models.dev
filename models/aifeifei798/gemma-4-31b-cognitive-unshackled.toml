@@ -1,0 +1,25 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Source: https://huggingface.co/aifeifei798/Gemma-4-31B-Cognitive-Unshackled
+schema = 2
+name = "Gemma 4 31B Cognitive Unshackled"
+description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "gemma"
+open_weights = true
+release_date = "2026-05-01"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+input = 262_144
+output = 16_384

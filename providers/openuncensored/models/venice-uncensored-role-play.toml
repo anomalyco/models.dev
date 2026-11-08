@@ -1,28 +1,13 @@
-# Served by Open Uncensored through venice, at the serving provider's per-token
-# price with no markup: https://openuncensored.com/models/venice-uncensored-role-play
+# Served by Open Uncensored through venice. Price as
+# listed on https://openuncensored.com/models/venice-uncensored-role-play
 # Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
 # measure it on: providers/venice/models/venice-uncensored-role-play.toml
 # Input is text only: the router replaces image parts with a note for text models.
 schema = 2
-name = "Venice Role Play Uncensored"
-description = "Multimodal model for analyzing text, images, documents, and rich media"
-family = "venice"
-open_weights = true
-release_date = "2026-02-20"
-last_updated = "2026-06-11"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "venice/venice-uncensored-role-play"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = false }
 structured_output = true
-
-[limit]
-context = 128_000
-output = 4_096
 
 [cost.text.input]
 price = 0.5

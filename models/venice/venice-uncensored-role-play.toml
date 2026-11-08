@@ -1,0 +1,25 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Source: Venice's own model (https://venice.ai)
+schema = 2
+name = "Venice Role Play Uncensored"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+family = "venice"
+open_weights = true
+release_date = "2026-02-20"
+last_updated = "2026-06-11"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 128_000
+output = 4_096

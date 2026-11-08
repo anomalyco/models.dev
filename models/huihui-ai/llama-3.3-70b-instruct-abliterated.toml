@@ -1,0 +1,25 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Source: https://huggingface.co/huihui-ai/Llama-3.3-70B-Instruct-abliterated
+schema = 2
+name = "Llama 3.3 70B Instruct abliterated"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
+family = "llama"
+open_weights = true
+release_date = "2025-08-08"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+input = 32_768
+output = 16_384

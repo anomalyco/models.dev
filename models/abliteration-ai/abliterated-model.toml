@@ -1,0 +1,25 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Source: abliteration.ai's own model, served on its API (https://abliteration.ai)
+schema = 2
+name = "Abliterated Model"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+open_weights = true
+release_date = "2026-01-06"
+last_updated = "2026-07-28"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 150_000
+input = 150_000
+output = 8_192
