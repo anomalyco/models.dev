@@ -1,0 +1,27 @@
+# Id, limits and features: GET https://router.inference.ai.exchange/v1/models (accessed 2026-11-04)
+# Prices: the auction picks an offer for each request, so the charge varies, and these are a guide.
+#   Median rates of the 7 offers with tools in GET https://router.inference.ai.exchange/v1/exchange/book
+#   on 2026-11-04: input 1.2, cache read 0.3, output 9.75. Each adds the exchange fee
+#   (https://inference.ai.exchange/docs/fees).
+# Cache: the exchange plans caching for each job, with no buyer setting
+#   (https://inference.ai.exchange/docs/caching). Each offer quotes its own read rate.
+# Effort: reasoning_effort = low|high|max, passed to the seller as written. Levels follow the lab's API.
+# No toggle: Chat Completions dispatch sends sellers only reasoning_effort. It drops thinking.type,
+#   enable_thinking, chat_template_kwargs and reasoning.enabled.
+# No none: it is forwarded, but a seller can ignore it, so it is not an off switch.
+# No budget: 0 of the 7 offers declare reasoning.budget_tokens.
+# reasoning_field is unset: the host returns "reasoning", which v1's interleaved.field does not allow.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.26
+cache = { read = 0.315 }
+
+[cost.text.output]
+price = 10.2
