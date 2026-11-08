@@ -4,12 +4,16 @@
 # - Model page: https://inference.dagon.so/models/hy4
 # - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
 #   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
-# Upstream: Silk Compute. Standard (non-abliterated) Hy4. Dagon probed reasoning_effort none, low and high on this route (2026-11-06).
+# Upstream: Silk Compute. Standard (non-abliterated) Hy4.
+# Effort: reasoning_effort = none|high (peer baseline: providers/tencent-token-plan, providers/opencode-go).
+# Dagon forwards reasoning_effort verbatim. Live probe 2026-11-08 (POST /v1/chat/completions, Silk route):
+# "none" -> HTTP 200 with 0 reasoning tokens (reasoning off); "low" -> 217 reasoning tokens; "high" -> HTTP 200,
+# truncated at the 150-token cap. low vs high could not be separated within the test budget, so "low" is left out.
 schema = 2
 base_model = "tencent/hy4"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high"] }
+reasoning = { supported = true, effort = ["none", "high"] }
 cache = { implicit = true }
 top_k = false
 

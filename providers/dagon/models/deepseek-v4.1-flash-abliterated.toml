@@ -4,7 +4,13 @@
 # - Model page: https://inference.dagon.so/models/deepseek-v4.1-flash-abliterated
 # - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
 #   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
-# Upstreams: Lutheos, Refuseless, Silk Compute, Experiential Labs. Text-only on this host. Effort ladder matches DeepSeek V4.1 Flash relay peers (reasoning_effort).
+# Upstreams: Lutheos, Refuseless, Silk Compute, Experiential Labs. Text-only on this host.
+# Effort: reasoning_effort = low|high|max (peer baseline: providers/deepseek, providers/hopper). Dagon forwards
+# reasoning_effort verbatim and forwards no thinking toggle on Chat Completions (no chat_template_kwargs/thinking),
+# so there is no toggle here. Live probe 2026-11-08 (POST /v1/chat/completions, served by the Lutheos route):
+# none/low/high/max and unset all returned HTTP 200; "none" still produced 89-103 reasoning tokens, so it does
+# not disable reasoning and is left out. Token counts did not separate the levels (77-113 on a short prompt,
+# all 1500 at a 1500-token cap on a harder one), so the list is the peer baseline.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash Abliterated"
@@ -15,7 +21,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
 top_k = false
 
