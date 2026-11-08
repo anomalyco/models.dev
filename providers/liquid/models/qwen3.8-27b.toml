@@ -5,17 +5,18 @@
 #   (https://inference.ai.exchange/docs/fees).
 # Cache: the exchange plans caching for each job, with no buyer setting
 #   (https://inference.ai.exchange/docs/caching). Each offer quotes its own read rate.
-# Effort: reasoning_effort = low|medium|xhigh, passed to the seller as written. Levels follow the lab's API.
+# Effort: reasoning_effort = none|low|medium|xhigh, passed to the seller as written. Levels follow the lab's API.
 # No toggle: Chat Completions dispatch sends sellers only reasoning_effort. It drops thinking.type,
 #   enable_thinking, chat_template_kwargs and reasoning.enabled.
-# No none: it is forwarded, but a seller can ignore it, so it is not an off switch.
+# Off is reasoning_effort = none, which the host forwards. Live probe on 2026-11-08:
+#   none gave 0 reasoning tokens and xhigh gave 51 on the same offer.
 # No budget: 0 of the 11 offers declare reasoning.budget_tokens.
 # reasoning_field is unset: the host returns "reasoning", which v1's interleaved.field does not allow.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
 cache = { implicit = true }
 
