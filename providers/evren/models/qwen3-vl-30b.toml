@@ -1,0 +1,26 @@
+# Sources (accessed 2026-11-10):
+# https://evren.ssyz.org.tr/llm/models
+# https://api.ssyz.org.tr/api/v1/public/llm-stats
+# https://evren-llmapi.ssyz.org.tr/openapi.json
+# Authenticated GET /v1/models and live stream probes confirmed the controls below.
+# Output allowance comes from the public portal's max_output_tokens, not the
+# authenticated API's default_max_output_tokens (which is only a request default).
+# EVREN bills in CR credits; no verified USD conversion is published, so cost is omitted.
+# The public inventory identifies this as non-thinking vision_chat.
+schema = 2
+base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
+v2_only = true
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 16_384
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }

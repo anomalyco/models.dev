@@ -1,0 +1,29 @@
+# Sources (accessed 2026-11-10):
+# https://evren.ssyz.org.tr/llm/models
+# https://api.ssyz.org.tr/api/v1/public/llm-stats
+# https://evren-llmapi.ssyz.org.tr/openapi.json
+# Authenticated GET /v1/models and live stream probes confirmed the controls below.
+# Output allowance comes from the public portal's max_output_tokens, not the
+# authenticated API's default_max_output_tokens (which is only a request default).
+# EVREN bills in CR credits; no verified USD conversion is published, so cost is omitted.
+# Toggle: thinking = true|false (EVREN gateway, not the lab's thinking.type).
+# Effort: reasoning_effort = low|high|max; baseline from providers/deepseek/models/deepseek-flash.toml.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+v2_only = true
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
