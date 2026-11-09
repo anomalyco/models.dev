@@ -1,0 +1,21 @@
+# Sources:
+# - https://iranrouter.net/docs
+# - https://iranrouter.net/models
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million, context_length)
+# IranRouter is a multi-model OpenAI-compatible relay; reasoning controls follow the underlying lab / same-surface peers.
+schema = 2
+v2_only = true
+base_model = "liquid/lfm-2.5-24b-a2b"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.7

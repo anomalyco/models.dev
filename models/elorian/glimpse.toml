@@ -1,0 +1,23 @@
+# Sources:
+# - https://openrouter.ai/elorian/glimpse
+# - OpenRouter model card / first listing ~2026-10-17
+schema = 2
+name = "Glimpse"
+description = "Multimodal reasoning model for visual analysis, planning, coding, and tool use"
+open_weights = false
+release_date = "2026-10-17"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/mpeg", "video/quicktime", "video/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 262_144
+output = 256_000

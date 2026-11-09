@@ -1,0 +1,10 @@
+# IranRouter is an OpenAI-compatible multi-model gateway (also exposes Anthropic Messages at /api/v1/messages).
+# Docs: https://iranrouter.net/docs
+# Models: https://iranrouter.net/models
+# Pricing: IranRouter bills at the upstream model's published USD rates (GET /api/v1/models pricing_per_million).
+name = "IranRouter"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["IRANROUTER_API_KEY"]
+api = "https://iranrouter.net/api/v1"
+doc = "https://iranrouter.net/models"

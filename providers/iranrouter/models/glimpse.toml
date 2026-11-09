@@ -1,0 +1,22 @@
+# Toggle: reasoning.enabled = true|false
+# Sources:
+# - https://iranrouter.net/docs
+# - https://iranrouter.net/models
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million, context_length)
+# IranRouter is a multi-model OpenAI-compatible relay; reasoning controls follow the underlying lab / same-surface peers.
+schema = 2
+v2_only = true
+base_model = "elorian/glimpse"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3
