@@ -92,6 +92,13 @@ test("parses documented token-priced models, mode prices in USD/MTok, and contex
       .replace("### Muse Wonder", "### Muse Wonder {#muse-wonder}")
       .replace("### Muse Spark", "### Muse Spark {#muse-spark}"),
   })).toHaveLength(3);
+  const swapped = pricing
+    .replaceAll(
+      "| Usage | Standard mode (per 1M tokens) | Contributor mode (per 1M tokens) |",
+      "| Usage | Contributor mode (per 1M tokens) | Standard mode (per 1M tokens) |",
+    )
+    .replace(/^\| (Cached input|Input|Output) \| ([^|]+) \| ([^|]+) \|$/gm, "| $1 | $3 | $2 |");
+  expect(parseMetaModels({ ...source, pricing: swapped })).toEqual(parseMetaModels(source));
 });
 
 test("rejects incomplete or changed docs rather than guessing prices or limits", () => {
