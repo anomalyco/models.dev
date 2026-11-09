@@ -4,13 +4,13 @@
 # The upstream model is GLM-5.3-Flash (the model page prices "GLM-5.3 Flash"), so base_model is
 # zhipuai/glm-5.3-flash.
 # Prices: catalog pricing (USD per token) x 1,000,000.
-# Effort: reasoning_effort = minimal|low|medium|high (Chat Completions). reasoning.effort (Responses)
+# Effort: reasoning_effort = minimal|low|medium|high|max (Chat Completions). reasoning.effort (Responses)
 # and output_config.effort (Messages) take the same levels.
 # These are the model's declared levels (the reasoning effort options on its model page). The gateway
 # moves an effort a model does not declare to the nearest declared one, upward first, and names the change
 # in the x-wiro-adjusted-parameters response header; none is rejected unless declared.
-# Live 2026-11-08 on this model: reasoning_effort = minimal and medium were accepted unchanged, and max
-# answered with x-wiro-adjusted-parameters: reasoning.effort=high.
+# Live 2026-11-08 on this model: reasoning_effort = minimal, medium and max were each accepted unchanged
+# (no x-wiro-adjusted-parameters header).
 # No toggle: GLM-5.3-Flash always reasons (its own API takes thinking.type = enabled only), and this
 # host answers reasoning.enabled = false with HTTP 400 "cannot turn reasoning off" (checked 2026-11-08).
 # Structured output: json_object and json_schema with strict (catalog structured_output_modes, strict_json_schema).
@@ -29,7 +29,7 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "max"] }
 structured_output = true
 top_k = false
 cache = { implicit = true }
