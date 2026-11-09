@@ -5,9 +5,12 @@
 # https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
 # Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted but adds no role header (+14 tokens), i.e. it is merged into the leading system prompt, as in the model's chat template.
 # No prefix cache on this model, so effort and tool changes keep nothing.
+# Deprecated: Workers AI retires this model on 2026-11-20; requests then return HTTP 410 Gone.
+# https://developers.cloudflare.com/changelog/post/2026-11-05-planned-model-deprecations/
 schema = 2
 base_model = "deepseek/deepseek-r1"
 name = "Deepseek R1 Distill Qwen 32B"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = false }
