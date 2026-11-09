@@ -8,6 +8,8 @@
 # Sibling id `gpt-6.1-sol-pro` on the same host reports context_length = 1_050_000 (see that file).
 schema = 2
 base_model = "openai/gpt-6.1-sol"
+# Truncated host context inherits lab limit.input which would exceed context; omit it (GET /api/v1/models context_length).
+base_model_omit = ["limit.input"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
