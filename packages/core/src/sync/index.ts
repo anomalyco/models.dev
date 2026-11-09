@@ -181,6 +181,8 @@ export interface SyncResult {
   unchanged: number;
   notices: string[];
   files: Array<{ status: "created" | "updated" | "deleted"; path: string }>;
+  /** Remote models that need a hand-authored entry (the missing-model issue set). */
+  missing: Array<{ id: string; reason?: string }>;
 }
 
 export const providers: {
@@ -627,7 +629,10 @@ export async function syncProvider<SourceModel>(
     }
   }
 
-  const result = summarize(provider, files, unchanged, notices);
+  const missing = provider.trackMissingModels === false
+    ? []
+    : [...issueModels].sort().map((id) => ({ id, ...(missingReasoning.has(id) ? { reason: missingReasoning.get(id) } : {}) }));
+  const result = summarize(provider, files, unchanged, notices, missing);
   console.log(
     `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
   );
@@ -1064,8 +1069,10 @@ function summarize(
   files: SyncResult["files"],
   unchanged: number,
   notices: string[],
+  missing: SyncResult["missing"],
 ): SyncResult {
   return {
+    missing,
     id: provider.id,
     name: provider.name,
     status: files.length > 0 ? "changed" : "unchanged",
@@ -1182,6 +1189,15 @@ export async function main(args = process.argv.slice(2)) {
   });
 
   await writeReport(target, results);
+
+  // Missing models as data, for a queue that replaces the missing-model issues.
+  const missingOut = args.find((arg) => arg.startsWith("--missing-out="))?.slice("--missing-out=".length);
+  if (missingOut) {
+    await Bun.write(
+      missingOut,
+      `${JSON.stringify(results.flatMap((result) => result.missing.map((model) => ({ provider: result.id, ...model }))), null, 2)}\n`,
+    );
+  }
 
   console.log("\nSync summary");
   for (const result of results) {
