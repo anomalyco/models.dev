@@ -6,7 +6,10 @@
 # Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
 # top_k = false: not in supported_parameters, and the lab's own API doesn't take it.
 # Limits differ from the lab (1_000_000/384_000): Zenifra serves context 1_000_000 and output 393_216.
-# No cost: Zenifra bills in BRL; USD prices are left out of this file.
+# Prices: Zenifra lists BRL per 1M tokens (pricing): input BRL 8.5, output BRL 17, cache read BRL 0.7;
+#   off-peak 14:00-00:00 UTC: input BRL 4.3, output BRL 8.5, cache read BRL 0.35 (overrides keep these exact values instead of a 0.5 multiplier).
+# USD = BRL / 5.5146, the Banco Central do Brasil PTAX selling rate for 2026-11-09 (closing bulletin):
+# https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='11-09-2026'&$format=json
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro"
@@ -23,3 +26,19 @@ output = 393_216
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.5414
+cache = { read = 0.1269 }
+
+[[cost.text.input.overrides]]
+when = { utc_hours = { gte = "14:00" } }
+price = 0.7797
+cache = { read = 0.0635 }
+
+[cost.text.output]
+price = 3.0827
+
+[[cost.text.output.overrides]]
+when = { utc_hours = { gte = "14:00" } }
+price = 1.5414

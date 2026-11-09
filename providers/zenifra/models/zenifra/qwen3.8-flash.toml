@@ -4,7 +4,9 @@
 # No toggle or budget: supported_parameters has no on/off or thinking-budget field (only reasoning_effort).
 # structured_output = true: capabilities.response_schema = true, structured_outputs = true.
 # Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
-# No cost: Zenifra bills in BRL; USD prices are left out of this file.
+# Prices: Zenifra lists BRL per 1M tokens (pricing): input BRL 0.6, output BRL 2, cache read BRL 0.1.
+# USD = BRL / 5.5146, the Banco Central do Brasil PTAX selling rate for 2026-11-09 (closing bulletin):
+# https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='11-09-2026'&$format=json
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
@@ -16,3 +18,10 @@ cache = { implicit = { min_tokens = 1_024 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1088
+cache = { read = 0.0181 }
+
+[cost.text.output]
+price = 0.3627

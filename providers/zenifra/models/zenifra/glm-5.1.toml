@@ -4,7 +4,10 @@
 # structured_output = true: capabilities.response_schema = true.
 # Cache: capabilities.prompt_caching = true, billed as cache_read_input.
 # Limits differ from the lab (200_000/131_072): Zenifra serves context 202_745 and output 131_072.
-# No cost: Zenifra bills in BRL; USD prices are left out of this file.
+# Prices: Zenifra lists BRL per 1M tokens (pricing): input BRL 5.95, output BRL 23.81, cache read BRL 1.19;
+#   above 32_000 input tokens (context_tiers min_input_tokens 32001): input BRL 7.94, output BRL 27.77, cache read BRL 1.59.
+# USD = BRL / 5.5146, the Banco Central do Brasil PTAX selling rate for 2026-11-09 (closing bulletin):
+# https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='11-09-2026'&$format=json
 schema = 2
 base_model = "zhipuai/glm-5.1"
 
@@ -19,3 +22,19 @@ context = 202_745
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.079
+cache = { read = 0.2158 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.4398
+cache = { read = 0.2883 }
+
+[cost.text.output]
+price = 4.3176
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 5.0357

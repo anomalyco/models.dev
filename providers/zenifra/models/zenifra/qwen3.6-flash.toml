@@ -4,7 +4,10 @@
 # structured_output = true: capabilities.response_schema = true.
 # Cache: capabilities.prompt_caching = true, billed as cache_read_input.
 # Limits differ from the lab (1_000_000/65_536): Zenifra serves context 991_808 and output 65_536.
-# No cost: Zenifra bills in BRL; USD prices are left out of this file.
+# Prices: Zenifra lists BRL per 1M tokens (pricing): input BRL 0.85, output BRL 5.1, cache read BRL 0.09;
+#   above 256_000 input tokens (context_tiers min_input_tokens 256001): input BRL 3.4, output BRL 20.4, cache read BRL 0.34.
+# USD = BRL / 5.5146, the Banco Central do Brasil PTAX selling rate for 2026-11-09 (closing bulletin):
+# https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='11-09-2026'&$format=json
 schema = 2
 base_model = "alibaba/qwen3.6-flash"
 
@@ -18,3 +21,19 @@ context = 991_808
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1541
+cache = { read = 0.0163 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.6165
+cache = { read = 0.0617 }
+
+[cost.text.output]
+price = 0.9248
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 3.6993
