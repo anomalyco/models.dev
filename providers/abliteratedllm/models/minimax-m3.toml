@@ -12,7 +12,9 @@
 # Stock model: MiniMax's original weights, not abliterated,
 #   on shared GPUs at our infrastructure provider, Fireworks (accounts/fireworks/models/minimax-m3).
 # Input: text and images (no video) for this ID; the lab lists the same four image types. Fireworks' model list says text
-#   only, but image parts get correct answers here (AbliteratedLLM check, 2026-11-04).
+#   only. Verified live on this host and ID on 2026-11-09 (POST /v1/chat/completions, base64 image_url, one request per
+#   type): JPEG, PNG, GIF and WebP each returned 200 with the three stripe colours of the test image named in order, and
+#   usage.prompt_tokens 355 against 139 for the same prompt without the image.
 # Reasoning controls copied from the same upstream's entry: providers/fireworks-ai/models/accounts/fireworks/models/minimax-m3.toml
 # Effort: reasoning_effort = low|medium|high (no toggle)
 schema = 2

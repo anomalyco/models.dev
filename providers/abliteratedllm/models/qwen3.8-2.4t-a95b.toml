@@ -11,8 +11,9 @@
 # Stock model: Alibaba's original weights, not abliterated,
 #   on shared GPUs at our infrastructure provider, Fireworks (accounts/fireworks/models/qwen3p8-2p4t-a95b).
 # Input: text and images. The lab file and the same upstream's entry say text only, but GET /v1/models lists image input for
-#   this ID: image parts get correct answers here (AbliteratedLLM check, 2026-11-04). Neither lists image types, so the four that
-#   our docs list as working are used.
+#   this ID. Verified live on this host and ID on 2026-11-09 (POST /v1/chat/completions, base64 image_url, one request per
+#   type): JPEG, PNG, GIF and WebP each returned 200 with the three stripe colours of the test image named in order, and
+#   usage.prompt_tokens 177 against 55 for the same prompt without the image.
 # Reasoning controls copied from the same upstream's entry: providers/fireworks-ai/models/accounts/fireworks/models/qwen3p8-2p4t-a95b.toml
 # Off is effort=none; graded levels, no toggle
 # Effort: reasoning_effort = none|low|medium|xhigh

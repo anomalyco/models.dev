@@ -11,9 +11,11 @@
 # - Same base URL also serves https://abliteratedllm.dev/docs/responses and https://abliteratedllm.dev/docs/messages.
 # Stock model: Z.ai's original weights, not abliterated,
 #   on shared GPUs at our infrastructure provider, Fireworks (accounts/fireworks/models/glm-5p3-flash).
-# Input: text, images and video. JPEG/PNG as on the same upstream's entry. The catalog lists video for this ID (sent as an https
-#   video_url; base64 video fails) and the docs name no video formats, so the lab's video types stay. PDF is left out: file parts
-#   fail on every model.
+# Input: text, images and video. JPEG/PNG as on the same upstream's entry. The catalog lists video for this ID, sent as an https
+#   video_url (base64 video fails). Verified live on this host and ID on 2026-11-09 (POST /v1/chat/completions, one request per
+#   container): an MP4 and a Matroska clip of the same scene and a QuickTime clip each returned 200 with an accurate description
+#   of the footage, and usage.prompt_tokens 3074 / 3074 / 3989 against 22 for the same prompt without a video. PDF is left out:
+#   file parts fail on every model.
 # Image types and reasoning controls follow the same upstream's entry: providers/fireworks-ai/models/accounts/fireworks/models/glm-5p3-flash.toml
 # Thinking-only (reasoning can't be turned off), no toggle
 # Effort: reasoning_effort = low|high|max
