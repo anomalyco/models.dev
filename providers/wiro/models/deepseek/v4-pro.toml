@@ -13,6 +13,9 @@
 # Same toggle and levels as providers/volcengine/models/deepseek-v4-pro-ga-260813.toml. Live 2026-11-08
 # on this model: reasoning.enabled = false gave an answer with 0 reasoning tokens.
 # Structured output: json_object and json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# Cache: the catalog prices cached input (input_cache_read) and no request field controls caching,
+# so cache = { implicit = true }. Cached tokens are billed at these catalog rates (checked live
+# 2026-11-08 with a repeated long prefix: the charged amount matched tokens x catalog prices).
 # Limits: context_length 1,048,576 (catalog), as DeepSeek's own GET /models reports.
 # Sampling: top_k is not in the catalog's supported_parameters.
 # APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
@@ -23,6 +26,7 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 top_k = false
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
@@ -37,6 +41,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 
 [cost.text.input]
 price = 1.32
+cache = { read = 0.044 }
 
 [cost.text.output]
 price = 3.96

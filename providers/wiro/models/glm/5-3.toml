@@ -14,6 +14,9 @@
 # No toggle: GLM-5.3-Flash always reasons (its own API takes thinking.type = enabled only), and a live
 # request here with reasoning.enabled = false still returned reasoning tokens.
 # Structured output: json_object and json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# Cache: the catalog prices cached input (input_cache_read) and no request field controls caching,
+# so cache = { implicit = true }. Cached tokens are billed at these catalog rates (checked live
+# 2026-11-08 with a repeated long prefix: the charged amount matched tokens x catalog prices).
 # Modalities: text and image input (catalog capabilities.input_modalities), with the lab's JPEG and PNG.
 # Limits: max_tokens 128,000 (catalog).
 # Sampling: top_k is not in the catalog's supported_parameters.
@@ -29,6 +32,7 @@ output = ["text"]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 top_k = false
+cache = { implicit = true }
 
 [limit]
 output = 128_000
@@ -43,6 +47,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 
 [cost.text.input]
 price = 0.15
+cache = { read = 0.03 }
 
 [cost.text.output]
 price = 0.5

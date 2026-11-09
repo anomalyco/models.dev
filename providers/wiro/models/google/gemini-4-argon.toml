@@ -2,12 +2,15 @@
 # and https://wiro.ai/docs/completions-api
 # Upstream: x_wiro.pricing_source.source_model = "google/gemini-4-argon".
 # Prices: catalog pricing (USD per token) x 1,000,000.
-# Rates double from 2026-12-01: the model page says standard rates ($4.00 input / $20.00 output)
-# apply from Dec 1, 2026.
+# Rates double from 2026-12-01: the model page says standard rates ($4.00 input / $0.20 cached input /
+# $20.00 output) apply from Dec 1, 2026.
 # Effort: reasoning_effort = low|medium|high (Chat Completions). reasoning.effort (Responses)
 # and output_config.effort (Messages) take the same levels.
 # Sent to Gemini as thinkingLevel, with the model page's options, the same set as Google's own API.
 # Structured output: json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# Cache: the catalog prices cached input (input_cache_read) and no request field controls caching,
+# so cache = { implicit = true }. Cached tokens are billed at these catalog rates (checked live
+# 2026-11-08 with a repeated long prefix: the charged amount matched tokens x catalog prices).
 # Modalities: text, image and document input (catalog capabilities.input_modalities). Images are the
 # gateway's JPEG, PNG, GIF and WebP within the lab's list, documents are PDF.
 # APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
@@ -21,6 +24,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { implicit = true }
 
 [api.chat-completions]
 
@@ -32,6 +36,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 
 [cost.text.input]
 price = 2
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 10

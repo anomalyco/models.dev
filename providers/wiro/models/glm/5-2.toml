@@ -15,6 +15,9 @@
 # x-wiro-adjusted-parameters: reasoning.effort=high. So low and medium are served as high and max as
 # high here, which leaves minimal and high as the distinct levels.
 # Structured output: not listed for this model (catalog structured_outputs = false).
+# Cache: the catalog prices cached input (input_cache_read) and no request field controls caching,
+# so cache = { implicit = true }. Cached tokens are billed at these catalog rates (checked live
+# 2026-11-08 with a repeated long prefix: the charged amount matched tokens x catalog prices).
 # Limits: context_length 1,048,576 and max_tokens 128,000 (catalog).
 # Sampling: top_k is not in the catalog's supported_parameters.
 # APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
@@ -24,6 +27,7 @@ base_model = "zhipuai/glm-5.2"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["minimal", "high"] }
 top_k = false
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
@@ -39,6 +43,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 
 [cost.text.input]
 price = 1.4
+cache = { read = 0.26 }
 
 [cost.text.output]
 price = 4.4

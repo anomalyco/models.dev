@@ -10,6 +10,12 @@
 # returned HTTP 400 "cannot turn reasoning off" on each of claude/fable-5, fable-5-1, opus-5, opus-5-5
 # and sonnet-5.
 # Structured output: json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# Cache: the catalog prices cached input (input_cache_read) and no request field controls caching,
+# so cache = { implicit = true }. Cached tokens are billed at these catalog rates (checked live
+# 2026-11-08 with a repeated long prefix: the charged amount matched tokens x catalog prices).
+# The gateway places the Anthropic cache breakpoints itself, on requests that declare tools or
+# continue a stored turn, so callers need no cache_control markers.
+# The cache write price is the catalog's input_cache_write, the 5-minute rate on the model page.
 # APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
 schema = 2
 base_model = "anthropic/claude-opus-5"
@@ -17,6 +23,7 @@ base_model = "anthropic/claude-opus-5"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [api.chat-completions]
 
@@ -28,6 +35,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 
 [cost.text.input]
 price = 5
+cache = { read = 0.5, write = 6.25 }
 
 [cost.text.output]
 price = 25

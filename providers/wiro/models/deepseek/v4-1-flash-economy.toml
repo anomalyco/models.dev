@@ -18,6 +18,9 @@
 # It declares the same levels as deepseek/v4-1-flash, where minimal was accepted unchanged and max
 # answered with x-wiro-adjusted-parameters: reasoning.effort=high.
 # Structured output: json_object and json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# Cache: the catalog prices cached input (input_cache_read) and no request field controls caching,
+# so cache = { implicit = true }. Cached tokens are billed at these catalog rates (checked live
+# 2026-11-08 with a repeated long prefix: the charged amount matched tokens x catalog prices).
 # Modalities: text and image input (catalog capabilities.input_modalities); the model page names JPEG, PNG and WebP.
 # Sampling: top_k is not in the catalog's supported_parameters.
 # APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
@@ -33,6 +36,7 @@ output = ["text"]
 reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 top_k = false
+cache = { implicit = true }
 
 [api.chat-completions]
 
@@ -44,6 +48,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 
 [cost.text.input]
 price = 0.12
+cache = { read = 0.0024 }
 
 [cost.text.output]
 price = 0.48
