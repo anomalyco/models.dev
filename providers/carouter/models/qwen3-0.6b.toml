@@ -2,7 +2,11 @@
 # Price: Free plan CAD 0.1715 in / 0.46 out per 1M tokens (https://carouter.ai/llms-full.txt,
 #   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
 #   (Bank of Canada, 2026-11-04).
-# Toggle: chat_template_kwargs.enable_thinking = true|false (vLLM, CARouter Cloud's engine; CARouter documents "a switchable thinking mode" without naming the field; not tested live)
+# Toggle: chat_template_kwargs.enable_thinking = true|false. Verified live 2026-11-09 on
+#   POST /v1/chat/completions (X-CArouter-Provider: CArouter Cloud): thinking is off by default on this
+#   route (unset, enable_thinking=false and reasoning_effort=none all returned 0 reasoning characters);
+#   enable_thinking=true returned 1,291 reasoning characters. reasoning_effort=high left it off, so there
+#   is no effort control.
 # CARouter Cloud serves a 2,048-token context with a 1,024-token output cap (catalog served_context
 #   / max_output_tokens), and lists no function calling or structured output.
 schema = 2

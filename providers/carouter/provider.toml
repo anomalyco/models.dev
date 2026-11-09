@@ -1,6 +1,9 @@
 # CARouter: OpenAI-compatible gateway in front of inference providers, with routing that
 # puts Canadian-owned, Canadian-hosted compute first (CARouter Cloud in Ottawa, Augure).
 # Foreign providers (Scaleway, OVHcloud) are listed but off until the account turns them on.
+# Turning a provider on is self-serve, with no approval: "Enable one under Settings > Providers. This
+#   is a configuration choice" (llms-full.txt, error providers_disabled). Off-by-default models are
+#   generally available, not gated.
 # Gateway is in alpha (per llms.txt); billing and metering are live.
 # Sources (accessed 2026-11-04):
 # - https://carouter.ai/llms-full.txt (endpoints, auth, routing, plans, every model and price)
