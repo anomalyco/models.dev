@@ -1,0 +1,21 @@
+# Wiro AI's Direct LLM Gateway is a multi-model relay: many labs' models behind one project key.
+# APIs: POST /v1/chat/completions (OpenAI Chat Completions), POST /v1/responses (OpenAI Responses)
+# and POST /v1/messages (Anthropic Messages; Anthropic SDKs use the origin https://llm.wiro.ai).
+# Every model in GET /v1/models lists all three. Model IDs are lowercase owner/model.
+# Auth: Authorization: Bearer or x-api-key. WIRO_API_KEY holds KEY, or KEY:SECRET for a Signature project.
+# Reasoning HTTP format (accessed 2026-11-08):
+# Chat Completions: reasoning_effort or reasoning.effort, reasoning.enabled = true|false, and
+# reasoning.max_tokens as a budget (not together with an effort). enabled and max_tokens checked live.
+# Responses: reasoning.effort.
+# Messages: output_config.effort, thinking.type = enabled|adaptive|disabled, thinking.budget_tokens (>= 1024).
+# Each model takes only its own controls and levels: supported_parameters and
+# capabilities.generation_controls in GET /v1/models, with the options on each model's page.
+# Sources:
+# https://wiro.ai/docs/completions-api
+# https://llm.wiro.ai/v1/models
+name = "Wiro AI"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["WIRO_API_KEY"]
+api = "https://llm.wiro.ai/v1"
+doc = "https://wiro.ai/docs/completions-api"

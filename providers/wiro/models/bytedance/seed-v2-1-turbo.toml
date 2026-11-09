@@ -1,0 +1,43 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/bytedance/seed-v2-1-turbo
+# and https://wiro.ai/docs/completions-api
+# Upstream: x_wiro.pricing_source.source_model = "bytedance/dola-seed-2-1-turbo-260628".
+# Prices: catalog pricing (USD per token) x 1,000,000.
+# Toggle: reasoning.enabled = true|false (Chat Completions) or thinking.type = enabled|disabled (Messages);
+# the model page offers enabled, disabled and auto. Live 2026-11-08 on bytedance/seed-v2-mini, which takes
+# the same switch: reasoning.enabled = false gave an answer with 0 reasoning tokens.
+# On Responses, reasoning.effort is the reasoning control.
+# Effort: reasoning_effort = minimal|low|medium|high (Chat Completions). reasoning.effort (Responses)
+# and output_config.effort (Messages) take the same levels.
+# These are the model page's options.
+# Structured output: json_object and json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# Modalities: text, image and document input (catalog capabilities.input_modalities). Images are the
+# gateway's JPEG, PNG, GIF and WebP, documents are PDF.
+# Limits: max_tokens 65,536 (catalog).
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "bytedance-seed/seed-2.1-turbo"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 2.5

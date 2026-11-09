@@ -1,0 +1,40 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/deepseek/v4-pro
+# and https://wiro.ai/docs/completions-api
+# Upstream: x_wiro.pricing_source.source_model = "bytedance/deepseek-v4-pro-ga-260813".
+# Prices: catalog pricing (USD per token) x 1,000,000.
+# Toggle: reasoning.enabled = true|false (Chat Completions) or thinking.type = enabled|disabled (Messages);
+# the model page offers enabled, disabled and auto. Live 2026-11-08 on bytedance/seed-v2-mini, which takes
+# the same switch: reasoning.enabled = false gave an answer with 0 reasoning tokens.
+# On Responses, reasoning.effort is the reasoning control.
+# Effort: reasoning_effort = minimal|low|medium|high (Chat Completions). reasoning.effort (Responses)
+# and output_config.effort (Messages) take the same levels.
+# These are the model page's options.
+# Same toggle and levels as providers/volcengine/models/deepseek-v4-pro-ga-260813.toml.
+# Structured output: json_object and json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# Limits: context_length 1,048,576 (catalog), as DeepSeek's own GET /models reports.
+# Sampling: top_k is not in the catalog's supported_parameters.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+top_k = false
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.32
+
+[cost.text.output]
+price = 3.96

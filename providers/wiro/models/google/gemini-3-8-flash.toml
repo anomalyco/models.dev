@@ -1,0 +1,45 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/google/gemini-3-8-flash
+# and https://wiro.ai/docs/completions-api
+# Upstream: x_wiro.pricing_source.source_model = "google/gemini-3.8-flash".
+# Prices: catalog pricing (USD per token) x 1,000,000.
+# Rates double from 2027-01-01: the model page says standard rates ($1.50 input / $7.50 output)
+# apply from Jan 1, 2027.
+# Effort: reasoning_effort = low|medium|high (Chat Completions). reasoning.effort (Responses)
+# and output_config.effort (Messages) take the same levels.
+# Sent to Gemini as thinkingLevel, with the model page's options, the same set as Google's own API.
+# Structured output: json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# Modalities: text, image and document input (catalog capabilities.input_modalities). Images are the
+# gateway's JPEG, PNG, GIF and WebP within the lab's list, documents are PDF.
+# Sampling: temperature, top_p and top_k are not in the catalog's supported_parameters.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = false
+top_p = false
+top_k = false
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.75
+
+[cost.text.output]
+price = 3.75
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = 2

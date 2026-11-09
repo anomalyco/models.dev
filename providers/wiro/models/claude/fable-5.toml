@@ -1,0 +1,30 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/claude/fable-5
+# and https://wiro.ai/docs/completions-api
+# Upstream: x_wiro.pricing_source.source_model = "anthropic/claude-fable-5".
+# Prices: catalog pricing (USD per token) x 1,000,000.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (Chat Completions). reasoning.effort (Responses)
+# and output_config.effort (Messages) take the same levels.
+# These are the model page's effort options, as on Anthropic's API. The model page lists an effort
+# control only, so no toggle is set.
+# Structured output: json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 10
+
+[cost.text.output]
+price = 50

@@ -1,0 +1,47 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/deepseek/v4-1-flash
+# and https://wiro.ai/docs/completions-api
+# Upstream: x_wiro.pricing_source.source_model = "bytedance/deepseek-v4-1-flash-261017".
+# Prices: base rates are off-peak. Peak is Mon-Fri 09:00-12:00 and 14:00-18:00 UTC+8 (01:00-04:00 and
+# 06:00-10:00 UTC) at twice the rate, per the model page; GET /v1/models shows the rate in force (peak
+# when fetched). No public-holiday exception is listed.
+# Toggle: reasoning.enabled = true|false (Chat Completions) or thinking.type = enabled|disabled (Messages);
+# the model page offers enabled, disabled and auto. Live 2026-11-08 on bytedance/seed-v2-mini, which takes
+# the same switch: reasoning.enabled = false gave an answer with 0 reasoning tokens.
+# On Responses, reasoning.effort is the reasoning control.
+# Effort: reasoning_effort = minimal|low|medium|high (Chat Completions). reasoning.effort (Responses)
+# and output_config.effort (Messages) take the same levels.
+# These are the model page's options.
+# Same toggle and levels as providers/volcengine/models/deepseek-v4-flash-ga-260731.toml.
+# Structured output: json_object and json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# Modalities: text and image input (catalog capabilities.input_modalities); the model page names JPEG, PNG and WebP.
+# Sampling: top_k is not in the catalog's supported_parameters.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+top_k = false
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
