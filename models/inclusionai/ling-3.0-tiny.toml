@@ -2,8 +2,11 @@
 # - Weights (MIT, 7.9B total / 1.3B active): https://huggingface.co/inclusionAI/Ling-3.0-tiny
 # - Platform launch 2026-08-07 (changelog v2.0.2): https://developer.ant-ling.com/zh-CN/docs/getting-started/changelog/
 # Context: native max_position_embeddings 131,072; the card's Terminal-Bench evals use a
-# 256K YaRN window (context-length 262144, rope scaling 2.0). Evals cap max_new_tokens at 32K.
-# Sampling: the model card recommends temperature=1.0, top_p=0.95, top_k=20.
+# 256K YaRN window (context-length 262144, rope scaling 2.0).
+# Sampling: the model card and generation_config.json recommend temperature=1.0, top_p=0.95, top_k=20.
+# Output: no documented model max (config.json has no output field; the card's eval cap of
+# max_new_tokens=32K is a harness setting, not a limit). output = 32_768 follows this repo's
+# Ling family convention (every Ling lab file uses it). Flagged for maintainer input in the PR.
 schema = 2
 name = "Ling 3.0 Tiny"
 description = "Lightweight hybrid-linear MoE reasoning model with 7.9B total and 1.3B active parameters for on-device deployment and offline agents"

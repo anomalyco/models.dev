@@ -1,8 +1,12 @@
 # Sources (accessed 2026-11-08):
 # - Release 2026-11-05 (changelog v2.0.6): https://developer.ant-ling.com/zh-CN/docs/getting-started/changelog/
 # - Model page (560B total / 25B active, 1M context): https://developer.ant-ling.com/zh-CN/docs/models/ling/
-# Output limit: no model card exists yet; the only first-party figure is the API's
-# max_tokens default of 32000 (https://developer.ant-ling.com/zh-CN/docs/api-reference/chat/anthropic/).
+# No documented output max exists (no model card; the Anthropic API's max_tokens default
+# of 32000 is a default, not a cap). output = 32_768 follows this repo's Ling family
+# convention (every Ling lab file uses it; the official multimodal tutorial example
+# passes max_completion_tokens: 32768). Flagged for maintainer input in the PR.
+# top_k follows the sibling weights cards (temperature/top_p/top_k recommended); the
+# first-party API documents no top_k, which the bailing provider overrides to false.
 # Not open-weights as of 2026-11-08 (no checkpoint on https://huggingface.co/inclusionAI).
 # Input stays generic: the API docs name text/image/video input but no formats
 # (https://developer.ant-ling.com/zh-CN/docs/api-reference/chat/openai).
@@ -22,8 +26,8 @@ tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-top_k = false
+top_k = true
 
 [limit]
 context = 1_000_000
-output = 32_000
+output = 32_768
