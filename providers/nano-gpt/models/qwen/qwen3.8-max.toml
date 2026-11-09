@@ -3,6 +3,10 @@
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = false }
 structured_output = true
