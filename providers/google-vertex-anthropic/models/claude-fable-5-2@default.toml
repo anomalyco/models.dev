@@ -1,6 +1,8 @@
 # Availability: claude-fable-5-2, GA, us and eu multi-region and global endpoints, 1M input / 128K output, text, image and PDF input: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/fable-5-2
-# Cost left out: Google sets Claude prices on Google Cloud (https://platform.claude.com/docs/en/about-claude/pricing#cloud-platform-pricing) and its partner-model price list (https://cloud.google.com/model-garden/partner-models/pricing) doesn't list Fable 5.2 yet (checked 2026-11-09).
-#   When it does: Google's model page says fast mode costs 2x the standard rates for every token type, with web search at the standard rate, and multi-region endpoints cost 10% more than global (https://platform.claude.com/docs/en/about-claude/pricing#cloud-platform-pricing).
+# Prices: Google's partner-model price list (https://cloud.google.com/model-garden/partner-models/pricing, linked from https://cloud.google.com/vertex-ai/generative-ai/pricing; checked 2026-11-09):
+#   global $8 input / $40 output, $10 5m and $16 1h cache write, $0.20 cache hit; US and EU multi-region $8.80 / $44 / $11 / $17.60 / $0.22 (1.1x).
+#   Same as Anthropic's list price (https://platform.claude.com/docs/en/about-claude/pricing#model-pricing), as for every prior Claude model on Vertex here.
+# Fast mode: 2x the standard rates for every token type (input, output, 5m and 1h cache write, cache hit), web search at the standard rate: Google's model page below.
 # Cache: 5m and 1h TTLs, 4 breakpoints, 512-token minimum on Google Cloud (Google managed): https://platform.claude.com/docs/en/build-with-claude/prompt-caching#cache-limitations, https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/prompt-caching
 # Mid-conversation updates follow the per-model, per-platform lists in Anthropic's docs, which cover Claude Models on Google Cloud (Google managed):
 # - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference with mid-conversation-tool-changes-2026-07-01)
@@ -18,6 +20,21 @@ system_updates = true
 effort_updates = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 service_tier = ["fast"]
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = { "5m" = 10, "1h" = 16 } }
+
+[cost.text.output]
+price = 40
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = 2
 
 [experimental.modes.fast]
 body = { speed = "fast" }
