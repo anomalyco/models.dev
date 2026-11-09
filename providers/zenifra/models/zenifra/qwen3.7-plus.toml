@@ -2,7 +2,6 @@
 # (public, no auth, accessed 2026-11-09): name "Qwen3.7 Plus", context_length 1000000, max_output_tokens 131072.
 # Toggle: enable_thinking = true|false on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: enable_thinking=false -> 0 reasoning tokens, default -> 192 reasoning tokens).
 # Budget: thinking_budget on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: thinking_budget=20 -> exactly 20 reasoning tokens).
-# No caller reasoning control (always_on = false, but no field turns it off): supported_parameters lists no reasoning_effort, on/off or thinking-budget field, so none is listed.
 # structured_output = true: capabilities.response_schema = true, structured_outputs = true.
 # Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
 # Limits differ from the lab (1_000_000/64_000): Zenifra serves context 1_000_000 and output 131_072.
