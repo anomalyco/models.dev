@@ -1,0 +1,17 @@
+schema = 2
+base_model = "mistral/mistral-nemo"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 8_192
+output = 4_096
+
+[cost.text.input]
+price = 0.09027
+cache = { read = 0.045135 }
+
+[cost.text.output]
+price = 0.10863

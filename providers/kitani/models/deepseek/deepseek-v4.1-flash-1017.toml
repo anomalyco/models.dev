@@ -1,0 +1,9 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.1
