@@ -1,0 +1,36 @@
+# Source: GET https://tchavi.com/api/v1/models (accessed 2026-11-09), the same
+# endpoint a buyer reads. Converted from Tchavi's credit price: 1 credit =
+# 0.3333 XOF, 600 XOF per USD. No promotion runs on this model today.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+# Reasoning: the publisher's full set. Tchavi's compatibility table refuses one
+# effort on this row, `minimal`, which is not part of the published set anyway,
+# so nothing is narrowed here. The earlier version of this file omitted `max`
+# while its own comment said only `minimal` was refused; the comment was right
+# and the list was wrong.
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+# Both routes are served, and both are declared because naming one [api.*] table
+# replaces the inferred set rather than adding to it. Chat Completions is listed
+# first so it stays the recommended route, which is what this row answered on
+# before and what the pull request's repro calls.
+[api.chat-completions]
+
+# Custom tools, probed live on 2026-11-19 rather than copied from another entry.
+# All three formats returned 200 on Responses with tool_choice = "required", and
+# the two grammars were enforced, not merely accepted: a regex `ZZ[0-9]{3}`
+# returned ZZ001 and the equivalent lark grammar returned ZZ482, while
+# `format = text` returned ordinary prose. So `freeform` sits here and nowhere
+# else: the same tool on Chat Completions is refused with a 400, "Missing
+# required parameter: 'tools[0].custom'".
+[api.responses]
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+
+[cost.text.input]
+price = 0.1222
+cache = { read = 0.0122, write = 0.1528 }
+
+[cost.text.output]
+price = 0.611

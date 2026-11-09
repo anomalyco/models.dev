@@ -1,0 +1,31 @@
+# Source: GET https://tchavi.com/api/v1/models (accessed 2026-11-09), the same
+# endpoint a buyer reads. Converted from Tchavi's credit price: 1 credit =
+# 0.3333 XOF, 600 XOF per USD.
+# EFFECTIVE price: a dated promotion of 10% runs until 2027-12-31. The list
+# price is $2.4386/$12.1932 per 1M; when the promotion ends the price
+# returns to it. Re-read the endpoint rather than trusting this file after that date.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+# Reasoning: Tchavi serves `none` and `max` only, and this is a Tchavi
+# restriction rather than the publisher's. Measured 2026-10-23 across the
+# published effort values: minimal, low, medium and high each wrote reasoning
+# until max_tokens and returned no answer at all, billed in full, so Tchavi now
+# refuses them before the call rather than charging for output nobody can use.
+# `none` and the default `max` answered normally. xhigh is refused without a
+# measurement and is listed nowhere here.
+[capabilities]
+reasoning = { supported = true, effort = ["none", "max"], default = { type = "effort", value = "max" } }
+
+[cost.text.input]
+price = 2.1948
+cache = { read = 0.2195 }
+
+[cost.text.output]
+price = 10.9739
+
+# Tchavi's own served ceiling, published on the same GET /v1/models above and
+# lower than the publisher's. The context window is the publisher's and is
+# inherited rather than restated.
+[limit]
+output = 943_718

@@ -1,0 +1,25 @@
+# Source: GET https://tchavi.com/api/v1/models (accessed 2026-11-09), the same
+# endpoint a buyer reads. Converted from Tchavi's credit price: 1 credit =
+# 0.3333 XOF, 600 XOF per USD. No promotion runs on this model today.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+# Reasoning: Tchavi forwards the effort to the publisher's own API and refuses
+# no value on this row, so the set is the publisher's: low, medium, high, xhigh,
+# max.
+#
+# No `toggle`, and that is a real difference from the publisher's own entry
+# rather than an omission. Tchavi is an OpenAI-shaped surface, and OpenAI's
+# `none` and `minimal` have no equivalent on a model that always thinks, so
+# Tchavi maps them to the floor effort instead of disabling thinking. A caller
+# cannot turn thinking off through Tchavi, so claiming a toggle would promise
+# something this surface does not do.
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.1222
+cache = { read = 0.0122, write = 0.1528 }
+
+[cost.text.output]
+price = 0.611

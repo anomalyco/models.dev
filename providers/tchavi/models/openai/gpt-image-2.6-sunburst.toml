@@ -1,0 +1,27 @@
+# Source: https://tchavi.com/api/model-tiers (accessed 2026-11-09), converted from
+# Tchavi's credit price: 1 credit = 0.3333 XOF, 600 XOF per USD.
+#
+# Tchavi sells this row at five quality tiers and bills per image:
+#   low 16 cr ($0.008888), medium 32 ($0.017776), high 118 ($0.065549),
+#   xhigh 208 ($0.115544), max 465 ($0.258307).
+# The price below is the row's default tier, `low`. A request that names NO
+# quality is billed at the `max` tier, because an unspecified quality is
+# rendered at whatever the renderer chooses; set `quality` explicitly to get
+# the tier you want.
+#
+# EFFECTIVE price: a dated promotion of 6% runs until 2027-12-31, so the default
+# tier bills 15.04 credits rather than 16. The list price is $0.008888 per image.
+# Every figure above re-read from the live row on 2026-11-18, including that date.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-image-2.6-sunburst"
+
+# Everything the publisher's entry already states is inherited: the name, the
+# description, the family, the release date, the modalities and their MIME
+# types, and the capability flags. Only what Tchavi changes is written here.
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.008355
