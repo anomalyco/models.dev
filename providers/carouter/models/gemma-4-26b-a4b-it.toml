@@ -4,12 +4,19 @@
 #   (Bank of Canada, 2026-11-04).
 # Effort: reasoning_effort passes through to Scaleway: none|low|medium|high
 #   (providers/scaleway/models/gemma-4-26b-a4b-it.toml).
+# Limits: Scaleway is the only route, so its 256,000 context / 16,384 output caps apply
+#   (providers/scaleway/models/gemma-4-26b-a4b-it.toml). CARouter's catalog repeats the lab's
+#   262,144 / 32,768 but gives no served_context for the Scaleway route.
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
+
+[limit]
+context = 256_000
+output = 16_384
 
 [cost.text.input]
 price = 0.3313
