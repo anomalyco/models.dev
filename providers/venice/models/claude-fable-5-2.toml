@@ -1,0 +1,35 @@
+schema = 2
+name = "Claude Fable 5.2"
+description = "Claude model for creative writing, analysis, and controlled agent workflows"
+family = "claude-fable"
+open_weights = false
+release_date = "2026-11-09"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = 10 }
+
+[cost.text.output]
+price = 40
+
+[cost.web_search]
+price = 10
