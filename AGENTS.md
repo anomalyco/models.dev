@@ -227,12 +227,16 @@ If the provider has a rich catalog API that can populate model data or authorita
 
 ## Lab pages (`labs/<lab-id>/`)
 
-A lab's `logo.svg` (same rules as provider logos) and optional `lab.toml` feed the website's lab pages only; neither is in the v1 or v2 API. `lab.toml` is v2 and holds just the lab's description:
+A lab's `logo.svg` (same rules as provider logos) and optional `lab.toml` feed the website's lab pages only; neither is in the v1 or v2 API. `lab.toml` is v2 and holds the lab's display name and description (each optional, at least one required):
 
 ```toml
 schema = 2
+name = "Voyage AI"
 description = "One or two sentences on what the lab builds."
 ```
+
+- `name` is the lab's official name and capitalization, from its own site or Hugging Face org. Without it, the site uses the name of the provider with the same id, else title-cases the id (`voyageai` → "Voyageai"), so set it whenever that comes out wrong. Note the source in a header comment when it isn't obvious.
+- Don't write a `description` you can't source; a name-only `lab.toml` is fine.
 
 ## Cost (always USD)
 
