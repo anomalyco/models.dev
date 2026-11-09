@@ -432,6 +432,8 @@ export const ApiProtocolV2Values = [
   "cohere-chat",
   "systemone",
   "decisions",
+  // Gemini Decisions API: `POST /v1beta/decisions` (`input` content blocks, `questions` map).
+  "gemini-decisions",
   "evaluate",
   "workers-ai-run",
   "images",
