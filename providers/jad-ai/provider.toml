@@ -1,3 +1,8 @@
+# Sources (reviewed 2026-11-09): https://jadai.freesrv.com/docs
+#   Endpoint:      https://jadai.freesrv.com/v1 — /docs#endpoint; src/routes/openai.ts
+#   Auth:          JAD_API_KEY, Authorization: Bearer jad_... — /docs#authentication
+#   Model IDs:     jad-ai, jad-go, jad-code — /docs#models; src/ai/models.ts
+#   Docs:          https://jadai.freesrv.com/docs
 name = "Jad AI"
 env = ["JAD_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
@@ -6,4 +11,4 @@ opencodeai = "@opencode/ai/providers/openai-compatible"
 # The three model IDs are Jad's curated routing pools, not upstream model names.
 # Reasoning toggle is a request body field: "thinking": true | false (default true).
 api = "https://jadai.freesrv.com/v1"
-doc = "https://jadai.freesrv.com"
+doc = "https://jadai.freesrv.com/docs"
