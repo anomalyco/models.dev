@@ -1,6 +1,11 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k3.1-pro
 # Toggle: thinking.type = enabled|disabled (live 2026-10-25: disabled returns no reasoning; reasoning_effort = none still reasons)
 # Effort: reasoning_effort = low|high|max
+# Mid-conversation, live Chat Completions (2026-10-27), cached/prompt tokens, control -> test:
+#   system_updates = true: a system message after the assistant turn was obeyed and kept the cache [8192/8228 -> 8192/8247].
+#   tools.updates = true (add only): Kimi's tool-carrying system message ({role: "system", tools: [...]}, no content) after the
+#   last user turn was answered with a call to the added tool and kept the cache [8192/8228 -> 8192/8338].
+#   Per API: both flags sit on [api.chat-completions] only, where they were tested; Messages and Responses are untested.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -15,6 +20,7 @@ output = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true, tools = { updates = true } }
 
 [api.messages]
 base_url = "https://api.novita.ai/anthropic/v1"

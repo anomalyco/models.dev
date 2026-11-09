@@ -69,7 +69,7 @@ const pricing = `
 | Generated image | $0.01 per image |
 `;
 
-const source = { models, pricing };
+const source = { models, pricing, families: [] };
 
 test("Meta sync is registered for direct and hourly runs", () => {
   expect(providers.meta).toBe(meta);
@@ -92,6 +92,13 @@ test("parses documented token-priced models, mode prices in USD/MTok, and contex
       .replace("### Muse Wonder", "### Muse Wonder {#muse-wonder}")
       .replace("### Muse Spark", "### Muse Spark {#muse-spark}"),
   })).toHaveLength(3);
+  const swapped = pricing
+    .replaceAll(
+      "| Usage | Standard mode (per 1M tokens) | Contributor mode (per 1M tokens) |",
+      "| Usage | Contributor mode (per 1M tokens) | Standard mode (per 1M tokens) |",
+    )
+    .replace(/^\| (Cached input|Input|Output) \| ([^|]+) \| ([^|]+) \|$/gm, "| $1 | $3 | $2 |");
+  expect(parseMetaModels({ ...source, pricing: swapped })).toEqual(parseMetaModels(source));
 });
 
 test("rejects incomplete or changed docs rather than guessing prices or limits", () => {
@@ -166,6 +173,74 @@ test("fetches only public docs without credentials and rejects HTTP failures", a
   expect(urls).toEqual(["https://dev.meta.ai/docs/models.md", "https://dev.meta.ai/docs/pricing-rate-limits.md"]);
   const failing = (async () => new Response("Unavailable", { status: 503 })) as typeof fetch;
   await expect(fetchMetaModels(failing)).rejects.toThrow("Meta docs request failed: 503");
+});
+
+// Since Nov 2026 models.md only summarizes each family and links to its own page, which has the availability table
+// and an at-a-glance context window row.
+const overview = `
+# Models
+
+## Muse Wonder
+
+| Model ID | Input | Output | Context window |
+| :---- | :---- | :---- | :---- |
+| \`muse-wonder-1.0\` | Text, image | Text | 1,048,576 tokens |
+
+See the [Muse Wonder](https://dev.meta.ai/docs/muse-wonder) page for specs.
+
+## Muse Spark
+
+See the [Muse Spark](https://dev.meta.ai/docs/muse-spark) page for every version.
+
+## Muse Image
+
+| Model ID | Input | Output |
+| :---- | :---- | :---- |
+| \`muse-image-1.0\` | Text, image | Image |
+`;
+
+const wonderPage = `# Muse Wonder
+
+## At a glance
+
+| | |
+| :---- | :---- |
+| **Model ID** | \`muse-wonder-1.0\` |
+| **Context window** | 1,048,576 tokens |
+
+## Availability
+
+| Variant | Model API (pay-as-you-go) | Muse Code |
+| :---- | :---- | :---- |
+| Muse Wonder (\`muse-wonder-1.0\`) | Available (Standard mode only) | Pay-as-you-go |
+| Muse Wonder Full | Not available | Power Usage |
+`;
+
+const sparkPage = `# Muse Spark
+
+## Versions
+
+Muse Spark comes in two versions. All return text and have a 1,048,576-token context window.
+
+## Availability
+
+| Version | Model API (pay-as-you-go) | Muse Code |
+| :---- | :---- | :---- |
+| Muse Spark 1.2 (\`muse-spark-1.2\`) | Standard mode | Pay-as-you-go |
+| Muse Spark 1.2 Contributor (\`muse-spark-1.2-contributor\`) | Contributor mode | Pay-as-you-go |
+`;
+
+test("reads availability from each family's own page when models.md only links to it", async () => {
+  const pages: Record<string, string> = { models: overview, "pricing-rate-limits": pricing, "muse-wonder": wonderPage, "muse-spark": sparkPage };
+  const urls: string[] = [];
+  const fetcher = (async (url: string) => {
+    urls.push(url);
+    const page = url.match(/docs\/([a-z0-9-]+)\.md$/)?.[1];
+    return page && page in pages ? new Response(pages[page]) : new Response("Not found", { status: 404 });
+  }) as typeof fetch;
+  const fetched = await fetchMetaModels(fetcher);
+  expect(urls.slice(2).sort()).toEqual(["https://dev.meta.ai/docs/muse-spark.md", "https://dev.meta.ai/docs/muse-wonder.md"]);
+  expect(parseMetaModels(fetched)).toEqual(parseMetaModels(source));
 });
 
 test("runner preserves inherited controls, retains absent models, and is idempotent", async () => {

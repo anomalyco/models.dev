@@ -65,6 +65,7 @@ import {
   mediaType,
   openrouter,
   resolveCanonicalBaseModel,
+  resolveMediaBaseModel,
   catalogCost,
   overrideWhen,
   withSystemOneMediaInput,
@@ -1467,6 +1468,7 @@ function tinfoilModel(overrides: Partial<TinfoilModel> = {}): TinfoilModel {
     tool_calling: true,
     multimodal: false,
     type: "chat",
+    endpoints: ["/v1/chat/completions", "/v1/responses"],
     ...overrides,
   };
 }
@@ -1532,6 +1534,22 @@ test("requires authored Tinfoil controls instead of inventing an empty set", () 
   expect(model.reasoning_options).toEqual([]);
 });
 
+test("takes Tinfoil effort levels from supported_efforts and keeps other authored controls", () => {
+  const model = buildTinfoilModel(tinfoilModel({ supported_efforts: ["max", "low", "high"] }), {
+    ...existingTinfoilGLM,
+    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["low", "medium", "high"] }],
+  });
+  expect(model.reasoning_options).toEqual([{ type: "toggle" }, { type: "effort", values: ["low", "high", "max"] }]);
+
+  // A model that newly reports reasoning no longer needs hand-authored controls when the catalog lists them.
+  const fresh = buildTinfoilModel(tinfoilModel({ supported_efforts: ["low", "medium", "high"] }), {
+    ...existingTinfoilGLM,
+    reasoning: false,
+    reasoning_options: undefined,
+  });
+  expect(fresh.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "high"] }]);
+});
+
 test("removes stale Tinfoil cache pricing when the public catalog omits it", () => {
   const model = buildTinfoilModel(tinfoilModel({
     pricing: {
@@ -1560,6 +1578,20 @@ test("tracks new token-priced Tinfoil models but ignores per-request services", 
       inputTokenPricePer1M: 0,
       outputTokenPricePer1M: 0,
       requestPrice: 0.05,
+    },
+  }))).toBeUndefined();
+});
+
+test("ignores Tinfoil models served only outside the chat and embedding APIs", () => {
+  expect(tinfoil.sourceID(tinfoilModel({
+    id: "pii-filter",
+    context_window: 80_000,
+    type: "safety",
+    endpoints: ["/redact"],
+    pricing: {
+      inputTokenPricePer1M: 0.8,
+      outputTokenPricePer1M: 0,
+      requestPrice: 0.0002,
     },
   }))).toBeUndefined();
 });
@@ -1922,6 +1954,11 @@ test("lists DigitalOcean Responses and Messages APIs from catalog capabilities",
     responses,
     messages,
   });
+  // Hand-authored per-API capabilities survive the rewrite.
+  const freeform = { tools: { freeform: ["text", "lark", "regex"] } };
+  expect(applyV2Set(digitalOceanV2Set(digitalOceanModel({ creator: "OpenAI" })), {
+    api: { "chat-completions": {}, responses: { ...responses, capabilities: freeform }, messages },
+  }).api).toEqual({ "chat-completions": {}, responses: { ...responses, capabilities: freeform }, messages });
   // Neither flagged nor hosted: Chat Completions only, so no table is written.
   expect(applyV2Set(digitalOceanV2Set(digitalOceanModel())).api).toBeUndefined();
   // Image models get no chat APIs.
@@ -3626,6 +3663,22 @@ test("omits Eden AI reasoning options for non-reasoning models", () => {
   expect(built).not.toHaveProperty("reasoning_options");
 });
 
+test("keeps image input and output on Eden AI image models listed as text only", () => {
+  const model = edenAIModel({
+    id: "vertex/gemini-nano-banana-2.1",
+    model_name: "gemini-nano-banana-2.1",
+    owned_by: "vertex",
+    context_length: null,
+    capabilities: { input_modalities: ["text"], output_modalities: ["text"] },
+  });
+
+  // The output matches the lab's, so it is factored out.
+  expect(buildEdenAIModel(model, undefined, new Set())).toMatchObject({
+    base_model: "google/gemini-nano-banana-2.1",
+    modalities: { input: ["text", "image"] },
+  });
+});
+
 test("skips Eden AI models without lab metadata", () => {
   expect(
     buildEdenAIModel(
@@ -3985,6 +4038,42 @@ test("DeepInfra price updates keep v2 data and restore the synced v2 values", as
   }
 });
 
+test("DeepInfra keeps hand-authored embedding files and skips embedding models without one", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-deepinfra-embeddings-"));
+  const modelsDir = path.join(root, "providers", "deepinfra", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const id = "BAAI/bge-base-en-v1.5";
+  const base = "baai/bge-base-en-v1.5";
+  const source = (model_name: string): DeepInfraModel => ({
+    model_name,
+    type: "embeddings",
+    tags: ["openai"],
+    pricing: { type: "input_tokens", cents_per_input_token: 5e-7 },
+    max_tokens: 512,
+    deprecated: null,
+    private: 0,
+  });
+
+  try {
+    await mkdir(path.dirname(path.join(modelsDir, `${id}.toml`)), { recursive: true });
+    await mkdir(path.dirname(path.join(root, "models", `${base}.toml`)), { recursive: true });
+    await copyFile(path.join(repo, "models", `${base}.toml`), path.join(root, "models", `${base}.toml`));
+    const shipped = await readFile(path.join(repo, "providers", "deepinfra", "models", `${id}.toml`), "utf8");
+    await writeFile(path.join(modelsDir, `${id}.toml`), shipped);
+
+    const result = await syncProvider({
+      ...deepinfra,
+      modelsDir,
+      fetchModels: async () => [source(id), source("example/new-embedding")],
+    });
+    expect(result).toMatchObject({ created: 0, updated: 0, deleted: 0 });
+    expect(result.notices.join("\n")).toContain("`example/new-embedding`");
+    expect(await readFile(path.join(modelsDir, `${id}.toml`), "utf8")).toBe(shipped);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("DeepInfra clears stale caching and retention data when the catalog drops it", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "sync-deepinfra-v2-clear-"));
   const modelsDir = path.join(root, "providers", "deepinfra", "models");
@@ -4139,6 +4228,29 @@ test("base_model files from W&B, Hyper and Chutes leave model facts to the lab",
   }
 });
 
+test("Chutes rounds float noise out of prices without losing small prices", () => {
+  const model = buildChutesModel({
+    id: "Qwen/Qwen3.8-27B-TEE",
+    created: 0,
+    pricing: { prompt: 0.039, completion: 1.25, input_cache_read: 0.003899999999999999 },
+  }, undefined);
+  expect(model.cost).toEqual({ input: 0.039, output: 1.25, cache_read: 0.0039 });
+
+  const noisy = buildChutesModel({
+    id: "Qwen/Qwen3.6-27B-TEE",
+    created: 0,
+    pricing: { prompt: 0.25, completion: 2, input_cache_read: 0.024999999999999994 },
+  }, undefined);
+  expect(noisy.cost).toEqual({ input: 0.25, output: 2, cache_read: 0.025 });
+
+  const tiny = buildChutesModel({
+    id: "example/tiny-TEE",
+    created: 0,
+    pricing: { prompt: 0.0000015, completion: 0.000002 },
+  }, undefined);
+  expect(tiny.cost).toEqual({ input: 0.0000015, output: 0.000002, cache_read: undefined });
+});
+
 test("Hyper writes effort levels from lowest to highest", () => {
   const model = hyperModel({
     id: "glm-5.2",
@@ -4290,6 +4402,15 @@ test("syncs OpenRouter reasoning efforts from model metadata", () => {
       { type: "effort", values: ["low", "medium", "high", "xhigh", "max"] },
     ],
   });
+});
+
+test("overrides OpenRouter reasoning metadata that the upstream API rejects", () => {
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "mistralai/mistral-large-4-0",
+    reasoning: { mandatory: false, supported_efforts: ["high", "none"] },
+  }), undefined);
+
+  expect(model.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "high"] }]);
 });
 
 test("syncs OpenRouter toggles without an effort selector", () => {
@@ -4503,6 +4624,10 @@ test("Venice sync lists Responses after the first API and prices web search", ()
   const once = withResponsesApi(first);
   expect(Object.keys(once)).toEqual(["chat-completions", "responses"]);
   expect(withResponsesApi(once)).toEqual(once);
+  // Hand-authored per-API capabilities on Responses survive the rewrite.
+  const freeform = { tools: { freeform: ["text", "lark", "regex"] } };
+  expect(withResponsesApi({ ...first, responses: { ...responses, capabilities: freeform } }))
+    .toEqual({ ...first, responses: { ...responses, capabilities: freeform } });
 
   const capabilities = veniceModel().model_spec.capabilities;
   expect(veniceV2Set(veniceModel({ capabilities: { ...capabilities, supportsWebSearch: true } }))["cost.web_search"])
@@ -4642,6 +4767,21 @@ test("factors new LLM Gateway models against the canonical base metadata", () =>
   });
   expect("name" in model).toBe(false);
   expect("modalities" in model).toBe(false);
+});
+
+test("authors the served context as output on new LLM Gateway models whose base declares no output", () => {
+  // models/moonshotai/kimi-k2.8-preview.toml declares only limit.context.
+  const model = buildLLMGatewayModel(llmGatewayModel({
+    id: "kimi-k2.8-preview",
+    name: "Kimi K2.8 Preview",
+    family: "moonshot",
+    context_length: 1_000_000,
+  }), undefined);
+
+  expect(model).toMatchObject({
+    base_model: "moonshotai/kimi-k2.8-preview",
+    limit: { context: 1_000_000, output: 1_000_000 },
+  });
 });
 
 test("syncs explicitly advertised LLM Gateway reasoning efforts", () => {
@@ -5984,6 +6124,12 @@ test("translates Vercel pricing tiers with an implicit zero minimum", () => {
       }],
     },
   });
+});
+
+test("skips Vercel models that are listed but retired upstream", () => {
+  const row = (id: string) => ({ id, name: id, created: 1_755_815_280, context_window: 512, max_tokens: 0, type: "image" });
+  expect(vercel.parseModels({ data: [row("prodia/flux-fast-schnell"), row("bfl/flux-2-pro")] }).map((model) => model.id))
+    .toEqual(["bfl/flux-2-pro"]);
 });
 
 test("maps Vercel language models tagged video-generation to video output", () => {
@@ -8475,4 +8621,16 @@ test("Vercel cache support comes from tags, else from a cache read price", () =>
   expect(cache([], "mistral/codestral", { input_cache_read: "0.03" })!(undefined)).toEqual({ implicit: true });
   expect(cache([], "anthropic/claude-x", { input_cache_read: "0.3" })!(undefined)).toEqual({ explicit: true });
   expect(cache([], "perplexity/sonar", { input_cache_write: "0.0625" })).toBeUndefined();
+});
+
+test("OpenRouter media models resolve to their lab files", () => {
+  // OpenRouter lists Voyage AI models under mongodb/ ("VoyageAI by MongoDB: voyage-4").
+  expect(resolveMediaBaseModel("mongodb/voyage-4")).toBe("voyageai/voyage-4");
+  expect(resolveMediaBaseModel("mongodb/voyage-multimodal-3.5")).toBe("voyageai/voyage-multimodal-3.5");
+  expect(resolveMediaBaseModel("mongodb/rerank-2.5-lite")).toBe("voyageai/rerank-2.5-lite");
+  // Cohere's lab IDs spell the version as v5.0.
+  expect(resolveMediaBaseModel("cohere/embed-5-fast")).toBe("cohere/embed-v5.0-fast");
+  expect(resolveMediaBaseModel("cohere/embed-5-pro")).toBe("cohere/embed-v5.0-pro");
+  expect(resolveMediaBaseModel("cohere/rerank-5-fast")).toBe("cohere/rerank-v5.0-fast");
+  expect(resolveMediaBaseModel("cohere/rerank-5-pro")).toBe("cohere/rerank-v5.0-pro");
 });

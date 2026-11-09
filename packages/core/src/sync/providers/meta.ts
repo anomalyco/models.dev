@@ -2,10 +2,11 @@ import { z } from "zod";
 
 import type { SyncProvider, SyncedModel } from "../index.js";
 
-const MODELS_ENDPOINT = "https://dev.meta.ai/docs/models.md";
-const PRICING_ENDPOINT = "https://dev.meta.ai/docs/pricing-rate-limits.md";
 
-const MetaResponse = z.object({ models: z.string(), pricing: z.string() });
+const DOCS = "https://dev.meta.ai/docs";
+
+// `families` holds each model family's own docs page (e.g. muse-spark.md), which now carries its availability table.
+const MetaResponse = z.object({ models: z.string(), pricing: z.string(), families: z.array(z.string()).default([]) });
 const MetaModel = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9.-]*$/),
   context: z.number().int().positive().safe(),
@@ -18,10 +19,13 @@ const MetaModel = z.object({
 
 export type MetaModel = z.infer<typeof MetaModel>;
 
-const AVAILABILITY = ["Model API (pay-as-you-go)", "Muse Code"];
-const PRICES = ["Usage", "Standard mode (per 1M tokens)", "Contributor mode (per 1M tokens)"];
-
 type Mode = "standard" | "contributor";
+
+const AVAILABILITY = ["Model API (pay-as-you-go)", "Muse Code"];
+const PRICE_COLUMNS: Record<Mode, string> = {
+  standard: "Standard mode (per 1M tokens)",
+  contributor: "Contributor mode (per 1M tokens)",
+};
 
 // The "Model API (pay-as-you-go)" column's values for available models.
 const API_MODES = new Map<string, Mode>([
@@ -37,7 +41,7 @@ function cells(line: string) {
 // Returns the rows of every table whose header satisfies `matches`.
 function tables(markdown: string, matches: (header: string[]) => boolean) {
   const lines = markdown.split("\n");
-  const found: string[][][] = [];
+  const found: { header: string[]; rows: string[][] }[] = [];
   for (const [index, line] of lines.entries()) {
     const header = cells(line);
     if (!line.trim().startsWith("|") || !matches(header)) continue;
@@ -53,7 +57,7 @@ function tables(markdown: string, matches: (header: string[]) => boolean) {
       rows.push(values);
     }
     if (rows.length === 0) throw new Error("Meta docs table is empty");
-    found.push(rows);
+    found.push({ header, rows });
   }
   return found;
 }
@@ -78,7 +82,7 @@ function sectionID(section: string) {
 function familyModels(section: string) {
   const found = tables(section, (header) => header.length === 3 && same(header.slice(1), AVAILABILITY));
   if (found.length > 1) throw new Error(`Meta docs have multiple ${sectionID(section)} availability tables`);
-  return (found[0] ?? []).flatMap(([variant, api]) => {
+  return (found[0]?.rows ?? []).flatMap(([variant, api]) => {
     if (api === "Not available") return [];
     const id = variant!.match(/\(`([^`]+)`\)$/)?.[1];
     const mode = API_MODES.get(api!);
@@ -89,10 +93,13 @@ function familyModels(section: string) {
   });
 }
 
+// Prose ("a 1,048,576-token context window") or a family page's at-a-glance row ("| **Context window** | 1,048,576 tokens |").
 function familyContext(section: string) {
   const windows = new Set(
-    [...section.matchAll(/(?<![\d,])(\d{1,3}(?:,\d{3})+|\d+)-token context window/g)]
-      .map((match) => Number(match[1]!.replaceAll(",", ""))),
+    [
+      ...section.matchAll(/(?<![\d,])(\d{1,3}(?:,\d{3})+|\d+)-token context window/g),
+      ...section.matchAll(/^\|\s*\*\*Context window\*\*\s*\|\s*(\d{1,3}(?:,\d{3})+|\d+) tokens\s*\|/gm),
+    ].map((match) => Number(match[1]!.replaceAll(",", ""))),
   );
   if (windows.size !== 1) throw new Error(`Meta docs need exactly one ${sectionID(section)} context window`);
   return [...windows][0]!;
@@ -101,11 +108,13 @@ function familyContext(section: string) {
 function familyCost(pricing: string, family: string, mode: Mode) {
   const matches = sections(pricing, "###").filter((section) => sectionID(section) === family);
   if (matches.length !== 1) throw new Error(`Meta docs need exactly one pricing section for ${family}`);
-  const found = tables(matches[0]!, (header) => same(header, PRICES));
+  // Meta has reordered the mode columns before, so match them by name.
+  const columns = Object.values(PRICE_COLUMNS).sort();
+  const found = tables(matches[0]!, ([usage, ...modes]) => usage === "Usage" && same(modes.sort(), columns));
   if (found.length !== 1) throw new Error(`Meta docs need exactly one ${family} token price table`);
-  const column = mode === "standard" ? 1 : 2;
+  const column = found[0]!.header.indexOf(PRICE_COLUMNS[mode]);
   const prices = new Map<string, number>();
-  for (const row of found[0]!) {
+  for (const row of found[0]!.rows) {
     const usage = row[0]!;
     const price = row[column]!;
     if (!/^\$\d+(?:\.\d+)?$/.test(price) || prices.has(usage)) {
@@ -123,7 +132,9 @@ function familyCost(pricing: string, family: string, mode: Mode) {
 export function parseMetaModels(raw: unknown): MetaModel[] {
   const response = MetaResponse.parse(raw);
   const ids = new Set<string>();
-  const models = sections(response.models, "##").flatMap((section) => {
+  // A family page is one section titled by its "# " heading.
+  const families = response.families.map((page) => page.replace(/^\s*# /, ""));
+  const models = [...sections(response.models, "##"), ...families].flatMap((section) => {
     const documented = familyModels(section);
     if (documented.length === 0) return [];
     const family = sectionID(section);
@@ -143,13 +154,20 @@ export function parseMetaModels(raw: unknown): MetaModel[] {
   return models;
 }
 
+// Model families whose overview section in models.md links to their own page (`## Muse Spark` → docs/muse-spark).
+export function familyPages(models: string) {
+  return sections(models, "##").map(sectionID).filter((id) => models.includes(`${DOCS}/${id})`));
+}
+
 export async function fetchMetaModels(fetcher: typeof fetch = fetch) {
-  const [models, pricing] = await Promise.all([MODELS_ENDPOINT, PRICING_ENDPOINT].map(async (url) => {
-    const response = await fetcher(url);
+  const get = async (page: string) => {
+    const response = await fetcher(`${DOCS}/${page}.md`);
     if (!response.ok) throw new Error(`Meta docs request failed: ${response.status} ${response.statusText}`);
     return response.text();
-  }));
-  return { models, pricing };
+  };
+  const [models, pricing] = await Promise.all([get("models"), get("pricing-rate-limits")]);
+  const families = await Promise.all(familyPages(models).map(get));
+  return { models, pricing, families };
 }
 
 export const meta = {

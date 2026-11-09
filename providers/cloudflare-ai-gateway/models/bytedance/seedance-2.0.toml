@@ -17,6 +17,10 @@ unit = "second"
 price = 0.15
 
 [[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "480p" } }, { input_video = { equals = false } }] }
+price = 0.07
+
+[[cost.video.output.overrides]]
 when = { all = [{ resolution = { equals = "480p" } }, { input_video = { equals = true } }] }
 price = 0.172
 
@@ -25,21 +29,17 @@ when = { all = [{ resolution = { equals = "720p" } }, { input_video = { equals =
 price = 0.372
 
 [[cost.video.output.overrides]]
-when = { all = [{ resolution = { equals = "1080p" } }, { input_video = { equals = true } }] }
-price = 0.914
-
-[[cost.video.output.overrides]]
-when = { all = [{ resolution = { equals = "4k" } }, { input_video = { equals = true } }] }
-price = 1.866
-
-[[cost.video.output.overrides]]
-when = { all = [{ resolution = { equals = "480p" } }, { input_video = { equals = false } }] }
-price = 0.07
-
-[[cost.video.output.overrides]]
 when = { all = [{ resolution = { equals = "1080p" } }, { input_video = { equals = false } }] }
 price = 0.37
 
 [[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "1080p" } }, { input_video = { equals = true } }] }
+price = 0.914
+
+[[cost.video.output.overrides]]
 when = { all = [{ resolution = { equals = "4k" } }, { input_video = { equals = false } }] }
 price = 0.78
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "4k" } }, { input_video = { equals = true } }] }
+price = 1.866

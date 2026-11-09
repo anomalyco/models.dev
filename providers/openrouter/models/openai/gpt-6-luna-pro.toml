@@ -3,6 +3,7 @@
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Cache: automatic from 1,024 tokens; GPT-5.6+ explicit prompt_cache_breakpoint, 30m TTL (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
+# tools.freeform on [api.responses] only: /api/v1/responses accepted text, lark and regex custom tools and enforced the grammars (regex ZZ[0-9]{3} and the equivalent lark grammar both returned ZZ plus three digits, live 2026-10-28 on this model). /api/v1/chat/completions rejects custom tools (400 "Missing required parameter: 'tools[0].name'", live 2026-10-28).
 schema = 2
 name = "GPT-6 Luna Pro"
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
@@ -30,6 +31,7 @@ output = 128_000
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

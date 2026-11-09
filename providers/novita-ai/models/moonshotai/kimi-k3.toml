@@ -1,6 +1,10 @@
 # https://novita.ai/models/model-detail/moonshotai-kimi-k3
 # Effort: reasoning_effort = none|low|high|max; none suppresses reasoning on Novita, unlike the native Kimi API.
-# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20; again 2026-10-27,
+#   obeyed [cached/prompt tokens, control -> test: 8192/8228 -> 8192/8247]).
+# tools.updates = true (add only, live 2026-10-27): Kimi's tool-carrying system message ({role: "system", tools: [...]},
+#   no content) after the last user turn was answered with a call to the added tool and kept the cache [8192/8228 -> 8192/8338].
+# Per API: both flags sit on [api.chat-completions] only, where they were tested; Messages and Responses are untested.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -9,13 +13,13 @@ tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }
 structured_output = true
-system_updates = true
 
 [limit]
 output = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true, tools = { updates = true } }
 
 [api.messages]
 base_url = "https://api.novita.ai/anthropic/v1"

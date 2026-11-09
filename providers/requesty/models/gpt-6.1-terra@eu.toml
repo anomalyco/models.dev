@@ -8,7 +8,16 @@ structured_output = true
 
 [cost.text.input]
 price = 1.2
-cache = { read = 0.06, write = 3 }
+cache = { read = 0.06, write = 1.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2.4
+cache = { read = 0.12, write = 3 }
 
 [cost.text.output]
 price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 9

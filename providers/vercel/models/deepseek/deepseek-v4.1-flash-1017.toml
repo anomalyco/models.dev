@@ -11,7 +11,7 @@ cache = { implicit = true }
 
 [limit]
 context = 1_048_576
-output = 1_048_576
+output = 262_144
 
 [api.chat-completions]
 
@@ -24,8 +24,8 @@ base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
-price = 0.075
-cache = { read = 0.0015 }
+price = 0.3
+cache = { read = 0.007 }
 
 [cost.text.output]
-price = 0.3
+price = 1.2

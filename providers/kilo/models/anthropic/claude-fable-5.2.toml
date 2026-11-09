@@ -1,0 +1,18 @@
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+name = "Anthropic: Claude Fable 5.2"
+description = "Claude Fable 5.2 is Anthropic's most capable model for the most demanding technical work, with gains over Fable 5.1 in coding, reasoning, and vision. In prerelease testing it completed otherwise-infeasible..."
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = 10 }
+
+[cost.text.output]
+price = 40
+
+[cost.web_search]
+price = 10

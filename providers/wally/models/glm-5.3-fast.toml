@@ -1,0 +1,25 @@
+# Effort: reasoning_effort = low|high|max. Thinking cannot be turned off; none is rejected.
+# Cache: automatic; a repeated prompt returns usage.prompt_tokens_details.cached_tokens.
+# Pricing: https://www.runwally.com/pricing
+# Limits and modalities: GET https://inference.runanywhere.ai/v1/models
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 Fast"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.1
+cache = { read = 0.39 }
+
+[cost.text.output]
+price = 6.6

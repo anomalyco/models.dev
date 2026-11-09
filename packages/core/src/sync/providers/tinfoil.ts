@@ -5,6 +5,9 @@ import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://inference.tinfoil.sh/v1/models";
 
+// Models served only on other routes (e.g. pii-filter on /redact) have no catalog API to list.
+const MODEL_APIS = new Set(["/v1/chat/completions", "/v1/responses", "/v1/embeddings"]);
+
 const TinfoilPricing = z.object({
   inputTokenPricePer1M: z.number().nonnegative(),
   outputTokenPricePer1M: z.number().nonnegative(),
@@ -21,9 +24,11 @@ export const TinfoilModel = z.object({
   context_window: z.number().int().positive().optional(),
   pricing: TinfoilPricing,
   reasoning: z.boolean(),
+  supported_efforts: z.array(z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"])).optional(),
   tool_calling: z.boolean(),
   multimodal: z.boolean(),
   type: z.string().min(1),
+  endpoints: z.array(z.string()),
 }).passthrough();
 
 export const TinfoilResponse = z.object({
@@ -75,10 +80,25 @@ export async function fetchTinfoilModels(fetcher: typeof fetch = fetch) {
 function isRepresentableTokenModel(model: TinfoilModel) {
   return model.context_window !== undefined
     && ["chat", "embedding", "safety"].includes(model.type)
+    && model.endpoints.some((endpoint) => MODEL_APIS.has(endpoint))
     && (
       model.pricing.inputTokenPricePer1M > 0
       || model.pricing.outputTokenPricePer1M > 0
     );
+}
+
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
+
+// The catalog's supported_efforts are the reasoning_effort values Tinfoil accepts; they replace the authored effort
+// list and keep any other authored control. Without them, the authored controls stay as they are.
+function tinfoilReasoningOptions(model: TinfoilModel, existing: ExistingModel) {
+  const efforts = model.supported_efforts ?? [];
+  if (efforts.length === 0) return existing.reasoning_options;
+  const values = EFFORT_ORDER.filter((value) => efforts.includes(value));
+  return [
+    ...(existing.reasoning_options ?? []).filter((option) => option.type !== "effort"),
+    { type: "effort" as const, values },
+  ];
 }
 
 export function buildTinfoilModel(
@@ -88,7 +108,8 @@ export function buildTinfoilModel(
   if (existing.cost === undefined || existing.limit?.context === undefined) {
     throw new Error(`Tinfoil model ${model.id} has incomplete local pricing or limits required for sync`);
   }
-  if (model.reasoning && existing.reasoning_options === undefined) {
+  const reasoningOptions = tinfoilReasoningOptions(model, existing);
+  if (model.reasoning && reasoningOptions === undefined) {
     throw new Error(`Tinfoil model ${model.id} requires hand-authored reasoning_options; the catalog exposes no reasoning controls`);
   }
 
@@ -106,7 +127,7 @@ export function buildTinfoilModel(
   const values = {
     ...current,
     reasoning: model.reasoning,
-    reasoning_options: model.reasoning ? existing.reasoning_options : undefined,
+    reasoning_options: model.reasoning ? reasoningOptions : undefined,
     cost,
     limit,
   } as SyncedFullModel;

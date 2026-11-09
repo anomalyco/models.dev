@@ -3,7 +3,11 @@
 # CNY→USD rate: 6.693661, 2026-10-20, source: https://open.er-api.com/v6/latest/USD
 # Capabilities match the global platform (same docs at https://platform.kimi.com/docs); see
 # providers/moonshotai/models/kimi-k2.7-code.toml for the live checks.
-# Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was checked in place on Chat Completions (live 2026-10-23); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
+# Mid-conversation flags (2026-10-27): not tested live on api.moonshot.cn (our key returns 401 there). They mirror
+#   providers/moonshotai/models/kimi-k2.7-code.toml, where they were checked live on all three APIs, because the CN docs are the
+#   same: a `developer` message on Responses is handled as a system instruction (https://platform.kimi.com/docs/api/responses).
+#   system_updates holds on every API. No tools.updates: dynamic tool loading is K3 family only
+#   (https://platform.kimi.com/docs/guide/use-dynamic-tool-loading); on the global platform both forms return 400 for this model.
 # Tools (live 2026-10-26; https://platform.kimi.ai/docs/guide/use-tool-choice): Chat Completions and Messages take auto and
 #   none. required (Messages `any`) and a named tool return 400 "incompatible with thinking enabled", and thinking can't
 #   be turned off (https://platform.kimi.ai/docs/api/models-overview).
@@ -18,13 +22,13 @@ base_model = "moonshotai/kimi-k2.7-code"
 tools = { supported = true, strict = true, choice = ["auto", "none"] }
 reasoning = { supported = true }
 structured_output = true
+system_updates = true
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }

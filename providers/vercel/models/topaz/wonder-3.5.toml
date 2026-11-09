@@ -1,3 +1,4 @@
+# Image input: POST https://ai-gateway.vercel.sh/v1/images/edits uses the input image (verified live 2026-10-28)
 # Modalities: Topaz Image API output_format jpeg, png, tiff, https://developer.topazlabs.com/reference/image/enhance
 schema = 2
 type = "image"
@@ -7,7 +8,7 @@ open_weights = false
 release_date = "2026-10-06"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["image/jpeg", "image/png", "image/tiff"]
 
 [capabilities]

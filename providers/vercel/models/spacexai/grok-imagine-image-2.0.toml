@@ -1,11 +1,8 @@
+# Image input: POST https://ai-gateway.vercel.sh/v1/images/edits uses the input image (verified live 2026-10-28)
 # Synced from https://ai-gateway.vercel.sh/v1/models (type image)
 # https://vercel.com/docs/ai-gateway/modalities/image-generation
 schema = 2
 base_model = "xai/grok-imagine-image-2.0"
-
-[modalities]
-input = ["text"]
-output = ["image/jpeg", "image/png"]
 
 [api.images]
 base_url = "https://ai-gateway.vercel.sh/v1"

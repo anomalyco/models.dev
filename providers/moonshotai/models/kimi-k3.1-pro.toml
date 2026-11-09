@@ -4,7 +4,15 @@
 # - Protocols: https://platform.kimi.ai/docs/api/overview
 # - Request capabilities: https://platform.kimi.ai/docs/api/chat (stream_options.include_usage, prompt_cache_key)
 # Always thinks: reasoning_effort = "low" | "high" | "max" (default "max"); there is no off toggle.
-# Dynamic tool loading is add-only through a system message with `tools` on Chat Completions.
+# Mid-conversation flags (live 2026-10-27):
+#   system_updates holds on every API: a late system message (Chat Completions, Messages) or developer message
+#   (Responses) is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens,
+#   control -> test: Chat Completions 7936/7968 -> 7936/7987; Responses 7936/7968 -> 7936/7987; Messages 8192/8228 -> 8192/8247].
+#   Messages documents only user/assistant roles (https://platform.kimi.ai/docs/api/messages) but accepts role "system" inside messages.
+#   tools.updates (add only) is on Chat Completions and Responses. Chat Completions takes a system message with `tools`
+#   and no content (https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading). Responses takes an
+#   `additional_tools` input item (ResponsesAdditionalToolsItem in https://platform.kimi.ai/docs/openapi.json); the added tool was called
+#   [cached/prompt tokens, control -> test: 7936/7968 -> 7936/8074]. Messages documents no tool addition, so it is left out there.
 # Tools (live 2026-10-26; https://platform.kimi.ai/docs/api/models-overview): Chat Completions and Messages take auto, none
 #   and required (Messages `any`). A named tool returns 400 "incompatible with thinking enabled", and K3.x always thinks.
 #   Responses accepts only auto (none/required return 400; https://platform.kimi.ai/docs/api/responses), so [api.responses]
@@ -18,6 +26,7 @@ base_model = "moonshotai/kimi-k3.1-pro"
 tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
+system_updates = true
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = { ttl = ["5m", "1h"] } }
@@ -31,7 +40,7 @@ capabilities = { tools = { updates = true } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
-capabilities = { tools = { choice = ["auto"] } }
+capabilities = { tools = { choice = ["auto"], updates = true } }
 
 [api.messages]
 base_url = "https://api.moonshot.ai/anthropic/v1"

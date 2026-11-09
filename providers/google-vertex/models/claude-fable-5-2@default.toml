@@ -1,0 +1,50 @@
+# Availability: claude-fable-5-2, GA, us and eu multi-region and global endpoints, 1M input / 128K output, text, image and PDF input: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/fable-5-2
+# Prices: Google's partner-model price list (https://cloud.google.com/model-garden/partner-models/pricing, linked from https://cloud.google.com/vertex-ai/generative-ai/pricing; checked 2026-11-09):
+#   global $8 input / $40 output, $10 5m and $16 1h cache write, $0.20 cache hit; US and EU multi-region $8.80 / $44 / $11 / $17.60 / $0.22 (1.1x).
+#   Same as Anthropic's list price (https://platform.claude.com/docs/en/about-claude/pricing#model-pricing), as for every prior Claude model on Vertex here.
+# Fast mode: 2x the standard rates for every token type (input, output, 5m and 1h cache write, cache hit), web search at the standard rate: Google's model page below.
+# Cache: 5m and 1h TTLs, 4 breakpoints, 512-token minimum on Google Cloud (Google managed): https://platform.claude.com/docs/en/build-with-claude/prompt-caching#cache-limitations, https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/prompt-caching
+# Mid-conversation updates follow the per-model, per-platform lists in Anthropic's docs, which cover Claude Models on Google Cloud (Google managed):
+# - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference with mid-conversation-tool-changes-2026-07-01)
+# - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort lists Fable 5.2 on Google managed)
+# Effort: output_config.effort = low|medium|high|xhigh|max: https://platform.claude.com/docs/en/build-with-claude/effort
+# Web search: $10 per 1,000 searches, one price for every endpoint, so the token multipliers use the object form and leave it unscaled (https://cloud.google.com/model-garden/partner-models/pricing).
+# tools.strict: strict tool use on Claude 4.5 and later: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/structured-outputs
+# tools.choice: Messages tool_choice auto/any/tool/none; Fable 5.2 rejects any/tool: https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
+# tools.search: left out, as on the other Claude models here. Claude on Google Cloud supports client tools, not server tools (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/use-claude), and Google's Fable 5.2 page doesn't list tool search.
+# Fast mode: "speed": "fast" in online prediction requests to claude-fable-5-2 (Google's model page above; https://platform.claude.com/docs/en/build-with-claude/fast-mode#feature-availability).
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none"], updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+service_tier = ["fast"]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/google-vertex/anthropic", opencodeai = "@opencode/ai/providers/google-vertex/messages" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = { "5m" = 10, "1h" = 16 } }
+
+[cost.text.output]
+price = 40
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = { text = 1.1 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = { text = 2 }
+
+[experimental.modes.fast]
+body = { speed = "fast" }

@@ -1,0 +1,29 @@
+# Prices: China pricing page https://www.siliconflow.cn/pricing (SKU billing rows, CNY per 1M tokens, accessed 2026-10-31),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.669566, 2026-10-31,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 3, output 12 (no cache price listed)
+# Catalog (same page, model row, 2026-10-31): contextLen 262144, vlm, functionCallSupport, jsonModeSupport. The description
+# says thinking is on by default and reasoning_effort adjusts its depth, without listing levels.
+# Modalities: image input only; the catalog flags vision without naming video, and the siliconflow Qwen3.6-27B peer is
+# image-only. Image formats are the lab's.
+# Toggle: enable_thinking = true|false (top-level request field), as on the siliconflow-cn Qwen3.5 peers.
+# Effort: reasoning_effort = low|medium|xhigh, the lab's levels (providers/alibaba/models/qwen3.8-27b.toml).
+# Budget: thinking_budget = 128..32768 (top-level request field); the China reasoning guide says the Qwen3 series enforces it.
+# https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions
+# https://docs.siliconflow.cn/docs/userguide/capabilities/reasoning
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 128, max = 32_768 } }
+structured_output = true
+
+[cost.text.input]
+price = 0.44980438
+
+[cost.text.output]
+price = 1.79921752

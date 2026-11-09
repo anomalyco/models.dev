@@ -15,6 +15,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
+cache = { implicit = true }
 
 [limit]
 context = 1_050_000
@@ -24,3 +25,19 @@ output = 0
 [api.decisions]
 base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_001 } }
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[cost.text.output]
+price = 0
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_001 } }
+price = 0

@@ -11,7 +11,15 @@
 # Live 2026-10-19: switching reasoning_effort max -> low re-wrote the whole prefix (no cache read); a mid-conversation
 # system message and a dynamic tool message were accepted, and the tool was called; tool_choice "required" works but a
 # named function returns 400 ("incompatible with thinking enabled"); temperature/top_p other than 1/0.95 return 400.
-# Per-API flags: system_updates and tools.updates sit on [api.chat-completions] only. The dynamic tool loading guide documents the tool-carrying system message on /v1/chat/completions, and the late system message was checked in place there (live 2026-10-23); the Responses and Anthropic-compatible Messages endpoints document neither.
+# Mid-conversation flags (live 2026-10-27):
+#   system_updates holds on every API: a late system message (Chat Completions, Messages) or developer message
+#   (Responses) is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens,
+#   control -> test: Chat Completions 8192/8228 -> 8192/8247; Responses 7936/7968 -> 7936/7987; Messages 8192/8228 -> 8192/8247].
+#   Messages documents only user/assistant roles (https://platform.kimi.ai/docs/api/messages) but accepts role "system" inside messages.
+#   tools.updates (add only) is on Chat Completions and Responses. Chat Completions takes a system message with `tools`
+#   and no content (https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading), and the tool was called (live 2026-10-19). Responses takes an
+#   `additional_tools` input item (ResponsesAdditionalToolsItem in https://platform.kimi.ai/docs/openapi.json); the added tool was called
+#   [cached/prompt tokens, control -> test: 7936/7968 -> 7936/8074]. Messages documents no tool addition, so it is left out there.
 # Tools (live 2026-10-26; https://platform.kimi.ai/docs/api/models-overview): Chat Completions and Messages take auto, none
 #   and required (Messages `any`). A named tool returns 400 "incompatible with thinking enabled", and K3.x always thinks.
 #   Responses accepts only auto (none/required return 400; https://platform.kimi.ai/docs/api/responses), so [api.responses]
@@ -25,6 +33,7 @@ base_model = "moonshotai/kimi-k3"
 tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
+system_updates = true
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = { ttl = ["5m", "1h"] } }
@@ -34,11 +43,11 @@ output = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-capabilities = { system_updates = true, tools = { updates = true } }
+capabilities = { tools = { updates = true } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
-capabilities = { tools = { choice = ["auto"] } }
+capabilities = { tools = { choice = ["auto"], updates = true } }
 
 [api.messages]
 base_url = "https://api.moonshot.ai/anthropic/v1"

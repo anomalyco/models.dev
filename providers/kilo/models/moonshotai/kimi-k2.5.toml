@@ -16,7 +16,8 @@ structured_output = true
 temperature = true
 
 [limit]
-output = 235_929
+context = 256_000
+output = 65_536
 
 [cost.text.input]
 price = 0.6

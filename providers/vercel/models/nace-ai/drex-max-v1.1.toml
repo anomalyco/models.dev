@@ -1,0 +1,28 @@
+schema = 2
+type = "decision"
+name = "Drex Max v1.1"
+description = "Drex Max v1.1 is Nace AI's multimodal evaluation model for boolean, choice, and score questions over text and images. It returns structured answers and probability distributions. Its 262,144-token limit applies to the whole packed request, including shared state, images, all questions, formatting, and decision markers."
+open_weights = false
+release_date = "2026-11-09"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 262_144
+output = 0
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.03
+
+[cost.text.output]
+price = 0

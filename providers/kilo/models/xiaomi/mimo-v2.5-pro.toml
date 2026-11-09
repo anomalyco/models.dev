@@ -20,7 +20,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.435
-cache = { read = 0.004 }
+cache = { read = 0.0036 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }

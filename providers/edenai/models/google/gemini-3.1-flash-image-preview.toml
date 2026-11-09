@@ -9,7 +9,7 @@ input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "t
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["minimal", "high"] }
+reasoning = { supported = true, effort = ["none", "minimal", "high"] }
 structured_output = true
 
 [api.images]

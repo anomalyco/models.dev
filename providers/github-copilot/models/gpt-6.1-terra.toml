@@ -4,10 +4,12 @@
 #   The docs pricing table doesn't list it yet (accessed 2026-10-26), so token prices are OpenAI's list price:
 #   https://developers.openai.com/api/docs/models/gpt-6.1-terra
 # Effort: GPT-6.1 Terra's native none|low|medium|high|xhigh|max (as on the OpenAI provider entry).
+# tools.freeform (Responses, the only API this model lists): custom tools accepted with text, lark and regex formats and the grammars enforced (tool_choice required; regex ZZ[0-9]{3} and the equivalent lark grammar returned ZZ plus three digits) on this model, live 2026-10-28 via api.individual.githubcopilot.com/responses. Also probed: gpt-5.3-codex, gpt-5.6-luna, gpt-5.6-terra, gpt-6-luna.
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 
 [capabilities]
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 

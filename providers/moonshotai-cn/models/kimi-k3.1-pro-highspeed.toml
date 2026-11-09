@@ -5,7 +5,12 @@
 # - Request capabilities: https://platform.kimi.ai/docs/api/chat (stream_options.include_usage, prompt_cache_key)
 # Highspeed serves the same model intelligence at 2-3x the output speed.
 # Always thinks: reasoning_effort = "low" | "high" | "max" (default "max"); there is no off toggle.
-# Dynamic tool loading is add-only through a system message with `tools` on Chat Completions.
+# Mid-conversation flags (2026-10-27): not tested live on api.moonshot.cn (our key returns 401 there). They mirror
+#   providers/moonshotai/models/kimi-k3.1-pro-highspeed.toml, where they were checked live on all three APIs, because the CN docs are the
+#   same: a `developer` message on Responses is handled as a system instruction (https://platform.kimi.com/docs/api/responses);
+#   tools are added (add only) through a system message with `tools` on Chat Completions (https://platform.kimi.com/docs/guide/use-dynamic-tool-loading)
+#   and through the `additional_tools` input item on Responses (ResponsesAdditionalToolsItem in https://platform.kimi.com/docs/openapi.json).
+#   system_updates holds on every API; tools.updates is not set on Messages (no documented tool addition).
 # Tools (live 2026-10-26; https://platform.kimi.ai/docs/api/models-overview): Chat Completions and Messages take auto, none
 #   and required (Messages `any`). A named tool returns 400 "incompatible with thinking enabled", and K3.x always thinks.
 #   Responses accepts only auto (none/required return 400; https://platform.kimi.ai/docs/api/responses), so [api.responses]
@@ -20,6 +25,7 @@ name = "Kimi K3.1 Pro Highspeed"
 tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
+system_updates = true
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = { ttl = ["5m", "1h"] } }
@@ -33,7 +39,7 @@ capabilities = { tools = { updates = true } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
-capabilities = { tools = { choice = ["auto"] } }
+capabilities = { tools = { choice = ["auto"], updates = true } }
 
 [api.messages]
 base_url = "https://api.moonshot.cn/anthropic/v1"

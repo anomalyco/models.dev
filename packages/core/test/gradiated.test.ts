@@ -224,11 +224,14 @@ test("sync updates prices, preserves controls, removes retired routes, and is id
 
   try {
     expect(await syncProvider(provider)).toMatchObject({ updated: 1, deleted: 0 });
-    const written = Bun.TOML.parse(await Bun.file(file).text()) as ExistingModel;
-    expect(written.cost?.input).toBe(0.4);
-    expect(written.base_model).toBe(authored.base_model);
-    expect(written.reasoning_options).toEqual(authored.reasoning_options);
-    expect(written.interleaved).toEqual(authored.interleaved);
+    const written = Bun.TOML.parse(await Bun.file(file).text());
+    expect(written).toMatchObject({
+      schema: 2,
+      base_model: authored.base_model,
+      cost: { text: { input: { price: 0.4 } } },
+      capabilities: { reasoning: { supported: true, effort: authored.reasoning_options?.find((option) => option.type === "effort")?.values } },
+      api: { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } },
+    });
     expect(await syncProvider(provider)).toMatchObject({ updated: 0, deleted: 0, unchanged: 1 });
     const content = await Bun.file(file).text();
     await expect(syncProvider({

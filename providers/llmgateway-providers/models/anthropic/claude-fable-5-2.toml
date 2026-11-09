@@ -1,0 +1,14 @@
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+name = "Claude Fable 5.2 (Anthropic)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = 10 }
+
+[cost.text.output]
+price = 40
