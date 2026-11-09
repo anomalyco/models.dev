@@ -19,10 +19,13 @@ const MetaModel = z.object({
 
 export type MetaModel = z.infer<typeof MetaModel>;
 
-const AVAILABILITY = ["Model API (pay-as-you-go)", "Muse Code"];
-const PRICES = ["Usage", "Standard mode (per 1M tokens)", "Contributor mode (per 1M tokens)"];
-
 type Mode = "standard" | "contributor";
+
+const AVAILABILITY = ["Model API (pay-as-you-go)", "Muse Code"];
+const PRICE_COLUMNS: Record<Mode, string> = {
+  standard: "Standard mode (per 1M tokens)",
+  contributor: "Contributor mode (per 1M tokens)",
+};
 
 // The "Model API (pay-as-you-go)" column's values for available models.
 const API_MODES = new Map<string, Mode>([
@@ -38,7 +41,7 @@ function cells(line: string) {
 // Returns the rows of every table whose header satisfies `matches`.
 function tables(markdown: string, matches: (header: string[]) => boolean) {
   const lines = markdown.split("\n");
-  const found: string[][][] = [];
+  const found: { header: string[]; rows: string[][] }[] = [];
   for (const [index, line] of lines.entries()) {
     const header = cells(line);
     if (!line.trim().startsWith("|") || !matches(header)) continue;
@@ -54,7 +57,7 @@ function tables(markdown: string, matches: (header: string[]) => boolean) {
       rows.push(values);
     }
     if (rows.length === 0) throw new Error("Meta docs table is empty");
-    found.push(rows);
+    found.push({ header, rows });
   }
   return found;
 }
@@ -79,7 +82,7 @@ function sectionID(section: string) {
 function familyModels(section: string) {
   const found = tables(section, (header) => header.length === 3 && same(header.slice(1), AVAILABILITY));
   if (found.length > 1) throw new Error(`Meta docs have multiple ${sectionID(section)} availability tables`);
-  return (found[0] ?? []).flatMap(([variant, api]) => {
+  return (found[0]?.rows ?? []).flatMap(([variant, api]) => {
     if (api === "Not available") return [];
     const id = variant!.match(/\(`([^`]+)`\)$/)?.[1];
     const mode = API_MODES.get(api!);
@@ -105,11 +108,13 @@ function familyContext(section: string) {
 function familyCost(pricing: string, family: string, mode: Mode) {
   const matches = sections(pricing, "###").filter((section) => sectionID(section) === family);
   if (matches.length !== 1) throw new Error(`Meta docs need exactly one pricing section for ${family}`);
-  const found = tables(matches[0]!, (header) => same(header, PRICES));
+  // Meta has reordered the mode columns before, so match them by name.
+  const columns = Object.values(PRICE_COLUMNS).sort();
+  const found = tables(matches[0]!, ([usage, ...modes]) => usage === "Usage" && same(modes.sort(), columns));
   if (found.length !== 1) throw new Error(`Meta docs need exactly one ${family} token price table`);
-  const column = mode === "standard" ? 1 : 2;
+  const column = found[0]!.header.indexOf(PRICE_COLUMNS[mode]);
   const prices = new Map<string, number>();
-  for (const row of found[0]!) {
+  for (const row of found[0]!.rows) {
     const usage = row[0]!;
     const price = row[column]!;
     if (!/^\$\d+(?:\.\d+)?$/.test(price) || prices.has(usage)) {
