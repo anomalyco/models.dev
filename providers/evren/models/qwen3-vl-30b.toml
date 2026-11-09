@@ -3,8 +3,8 @@
 # https://api.ssyz.org.tr/api/v1/public/llm-stats
 # https://evren-llmapi.ssyz.org.tr/openapi.json
 # Authenticated GET /v1/models and live stream probes confirmed the controls below.
-# Output allowance comes from the public portal's max_output_tokens, not the
-# authenticated API's default_max_output_tokens (which is only a request default).
+# Output limit inherits lab metadata; EVREN accepted that max_tokens value in a
+# short-response probe. Portal/default output values are not treated as hard caps.
 # EVREN bills in CR credits; no verified USD conversion is published, so cost is omitted.
 # The public inventory identifies this as non-thinking vision_chat.
 schema = 2
@@ -18,9 +18,6 @@ output = ["text"]
 [capabilities]
 structured_output = true
 cache = { implicit = true }
-
-[limit]
-output = 16_384
 
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }
