@@ -1,6 +1,7 @@
 # Served as `zenifra/qwen3.6-plus` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
 # (public, no auth, accessed 2026-11-09): name "Qwen3.6 Plus", context_length 991808, max_output_tokens 65536.
-# No caller reasoning control: the catalog entry publishes no supported_parameters, effort_levels, on/off or thinking-budget field, so none is listed.
+# Toggle: enable_thinking = true|false on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: enable_thinking=false -> 0 reasoning tokens, default -> 367 reasoning tokens).
+# Budget: thinking_budget on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: thinking_budget=20 -> exactly 20 reasoning tokens).
 # structured_output = true: capabilities.response_schema = true.
 # Cache: capabilities.prompt_caching = true, billed as cache_read_input.
 # Limits differ from the lab (1_000_000/65_536): Zenifra serves context 991_808 and output 65_536.
@@ -12,7 +13,7 @@ schema = 2
 base_model = "alibaba/qwen3.6-plus"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
 cache = { implicit = true }
 

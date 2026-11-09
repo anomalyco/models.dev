@@ -1,7 +1,7 @@
 # Served as `zenifra/glm-5.2` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
 # (public, no auth, accessed 2026-11-09): name "GLM-5.2", context_length 1048576, max_output_tokens 131072.
+# Toggle: enable_thinking = true|false on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: enable_thinking=false -> 0 reasoning tokens, default -> 195 reasoning tokens).
 # Effort: reasoning_effort = high|max (default high), from capabilities.reasoning.effort_levels.
-# No toggle or budget: supported_parameters has no on/off or thinking-budget field (only reasoning_effort).
 # structured_output = false: capabilities.response_schema = false, structured_outputs = false.
 # Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
 # Limits differ from the lab (1_000_000/131_072): Zenifra serves context 1_048_576 and output 131_072.
@@ -12,7 +12,7 @@ schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["high", "max"] }
 structured_output = false
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }

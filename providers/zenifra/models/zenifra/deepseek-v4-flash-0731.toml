@@ -1,7 +1,7 @@
 # Served as `zenifra/deepseek-v4-flash-0731` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
 # (public, no auth, accessed 2026-11-09): name "DeepSeek V4 Flash 0731", context_length 1000000, max_output_tokens 393216.
+# Toggle: enable_thinking = true|false on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: enable_thinking=false -> 0 reasoning tokens, default -> 16 reasoning tokens).
 # Effort: reasoning_effort = low|high|max, from capabilities.reasoning.effort_levels.
-# No toggle or budget: supported_parameters has no on/off or thinking-budget field (only reasoning_effort).
 # structured_output = false: capabilities.response_schema = false, structured_outputs = false.
 # Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
 # top_k = false: not in supported_parameters, and the lab's own API doesn't take it.
@@ -14,7 +14,7 @@ schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = false
 top_k = false
 stream_usage = true

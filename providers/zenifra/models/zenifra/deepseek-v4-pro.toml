@@ -1,7 +1,7 @@
 # Served as `zenifra/deepseek-v4-pro` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
 # (public, no auth, accessed 2026-11-09): name "DeepSeek V4 Pro", context_length 1000000, max_output_tokens 393216.
-# Effort: reasoning_effort = high|max (default high), from capabilities.reasoning.effort_levels.
-# No toggle or budget: supported_parameters has no on/off or thinking-budget field (only reasoning_effort).
+# Toggle: enable_thinking = true|false on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: enable_thinking=false -> 0 reasoning tokens, default -> 39 reasoning tokens).
+# Effort: reasoning_effort = low|high|max (default high). The catalog lists high|max; low is accepted live (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call) and matches the lab.
 # structured_output = false: capabilities.response_schema = false, structured_outputs = false.
 # Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
 # top_k = false: not in supported_parameters, and the lab's own API doesn't take it.
@@ -15,7 +15,7 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = false
 top_k = false
 stream_usage = true

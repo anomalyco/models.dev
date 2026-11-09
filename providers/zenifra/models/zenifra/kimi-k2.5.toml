@@ -1,6 +1,6 @@
 # Served as `zenifra/kimi-k2.5` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
 # (public, no auth, accessed 2026-11-09): name "Kimi K2.5", context_length 229376, max_output_tokens 16384.
-# No caller reasoning control (always_on = false, but no field turns it off): supported_parameters lists no reasoning_effort, on/off or thinking-budget field, so none is listed.
+# Toggle: thinking is off by default and enable_thinking = true (or reasoning_effort) turns it on, on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: default -> 0 reasoning tokens, enable_thinking=true -> 117, reasoning_effort=high -> 160). The catalog publishes no effort levels, so none are listed.
 # structured_output = false: capabilities.response_schema = false, structured_outputs = false.
 # Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
 # Limits differ from the lab (262_144/262_144): Zenifra serves context 229_376 and output 16_384.
@@ -11,7 +11,7 @@ schema = 2
 base_model = "moonshotai/kimi-k2.5"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = false
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
