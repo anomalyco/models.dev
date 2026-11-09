@@ -10,6 +10,11 @@
 # Messages: output_config.effort, thinking.type = enabled|adaptive|disabled, thinking.budget_tokens (>= 1024).
 # Each model takes only its own controls and levels: supported_parameters and
 # capabilities.generation_controls in GET /v1/models, with the options on each model's page.
+# These are request fields, not a promise that every model has every control. An effort a model does not
+# declare is moved to the nearest declared one, upward first, and the response names the change in the
+# x-wiro-adjusted-parameters header. Turning reasoning off works only where the model has an off control
+# (reasoning_enabled in generation_controls, or a declared none effort); elsewhere it returns HTTP 400.
+# Each model file's header lists its controls and the live checks behind them.
 # Sources:
 # https://wiro.ai/docs/completions-api
 # https://llm.wiro.ai/v1/models

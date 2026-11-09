@@ -2,9 +2,13 @@
 # and https://wiro.ai/docs/completions-api
 # Upstream: x_wiro.pricing_source.source_model = "google/gemini-2.5-flash".
 # Prices: catalog pricing (USD per token) x 1,000,000.
-# Budget: reasoning.max_tokens (Chat Completions, accepted live 2026-11-08) or thinking.budget_tokens
-# (Messages) becomes Gemini's thinkingBudget, the model page's thinking budget control. The model page
-# lists a budget control only, so neither a toggle nor an effort list is set. Bounds are left open.
+# Budget: reasoning.max_tokens (Chat Completions) or thinking.budget_tokens (Messages) becomes
+# Gemini's thinkingBudget, the model's only reasoning control on its model page. The value is passed
+# through unchanged, so the maximum is the lab's 24,576. Live 2026-11-08 on this model, reasoning.max_tokens
+# = 1024 was accepted and reasoning.max_tokens = 0 returned HTTP 400 "reasoning.max_tokens must be a
+# positive integer", so the minimum is 1.
+# No toggle: this host has no off switch for this model. Live 2026-11-08, reasoning.enabled = false returned
+# HTTP 400, and the zero budget that turns thinking off on the first-party API is rejected.
 # Structured output: json_schema with strict (catalog structured_output_modes, strict_json_schema).
 # Modalities: text, image and document input (catalog capabilities.input_modalities). Images are the
 # gateway's JPEG, PNG, GIF and WebP within the lab's list, documents are PDF.
@@ -18,7 +22,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, budget = {} }
+reasoning = { supported = true, budget = { min = 1, max = 24_576 } }
 structured_output = true
 top_k = false
 

@@ -2,13 +2,18 @@
 # and https://wiro.ai/docs/completions-api
 # Upstream: x_wiro.pricing_source.source_model = "bytedance/glm-5-2-260617".
 # Prices: catalog pricing (USD per token) x 1,000,000.
-# Toggle: reasoning.enabled = true|false (Chat Completions) or thinking.type = enabled|disabled (Messages);
-# the model page offers enabled, disabled and auto. Live 2026-11-08 on bytedance/seed-v2-mini, which takes
-# the same switch: reasoning.enabled = false gave an answer with 0 reasoning tokens.
-# On Responses, reasoning.effort is the reasoning control.
+# Toggle: reasoning.enabled = true|false (Chat Completions) or thinking.type = enabled|disabled (Messages),
+# the model's thinking switch (enabled, disabled and auto on its model page). On Responses, reasoning.effort
+# is the reasoning control.
 # Effort: reasoning_effort = minimal|high (Chat Completions). reasoning.effort (Responses)
 # and output_config.effort (Messages) take the same levels.
-# These are the model page's options.
+# These are the model's declared levels (the reasoning effort options on its model page). The gateway
+# moves an effort a model does not declare to the nearest declared one, upward first, and names the change
+# in the x-wiro-adjusted-parameters response header; none is rejected unless declared.
+# Live 2026-11-08 on this model: reasoning.enabled = false and reasoning_effort = minimal each gave
+# an answer with 0 reasoning tokens, and reasoning_effort = low answered with
+# x-wiro-adjusted-parameters: reasoning.effort=high. So low and medium are served as high and max as
+# high here, which leaves minimal and high as the distinct levels.
 # Structured output: not listed for this model (catalog structured_outputs = false).
 # Limits: context_length 1,048,576 and max_tokens 128,000 (catalog).
 # Sampling: top_k is not in the catalog's supported_parameters.

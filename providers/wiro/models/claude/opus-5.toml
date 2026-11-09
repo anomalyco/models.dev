@@ -4,8 +4,11 @@
 # Prices: catalog pricing (USD per token) x 1,000,000.
 # Effort: reasoning_effort = low|medium|high|xhigh|max (Chat Completions). reasoning.effort (Responses)
 # and output_config.effort (Messages) take the same levels.
-# These are the model page's effort options, as on Anthropic's API. The model page lists an effort
-# control only, so no toggle is set.
+# These are the model's declared levels (the effort options on its model page), the same set as
+# Anthropic's API.
+# No toggle: this host has no off switch for Claude models. Live 2026-11-08, reasoning.enabled = false
+# returned HTTP 400 "cannot turn reasoning off" on each of claude/fable-5, fable-5-1, opus-5, opus-5-5
+# and sonnet-5.
 # Structured output: json_schema with strict (catalog structured_output_modes, strict_json_schema).
 # APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
 schema = 2
