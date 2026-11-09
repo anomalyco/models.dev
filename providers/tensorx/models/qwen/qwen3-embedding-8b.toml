@@ -1,0 +1,15 @@
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-embedding-8b"
+
+[limit]
+context = 40_960
+
+[api.embeddings]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0

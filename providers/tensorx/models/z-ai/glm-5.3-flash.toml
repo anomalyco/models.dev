@@ -1,11 +1,15 @@
-# GLM-5.3-Flash reasons by default; toggle enable_thinking, effort low|high|max (default max).
-# Unlike first-party Z.AI, TensorX allows thinking to be disabled (enable_thinking).
+# GLM-5.3-Flash reasons by default. Effort: low|high|max (default max); also reasoning_effort = none disables.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (off switch; on default).
 # https://docs.tensorx.ai/api-reference/reasoning
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
 [limit]
