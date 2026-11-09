@@ -1,0 +1,46 @@
+# Sources: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3-1-highspeed.html (accessed 2026-11-09)
+# https://aws.amazon.com/about-aws/whats-new/2026/11/moonshot-ai-kimi-k3-1-pro-on-amazon-bedrock/
+# Bedrock serves Kimi K3.1 Pro as "Kimi K3.1 Pro - Highspeed" (moonshotai.kimi-k3.1), like the Moonshot provider's kimi-k3.1-pro-highspeed.
+# Global CRIS standard pricing from the model card; cache_write is the 30-minute rate. The AmazonBedrock price list (2026-11-06) has no Kimi K3.1 SKUs yet.
+# Effort: additionalModelRequestFields.reasoning_effort = none|low|medium|high|xhigh|max (Converse); the model uses max when it is unset.
+# Live Converse 2026-11-09 (us-east-1, flex tier): "none" returned no reasoningContent; low and max were accepted; "not-a-level" was
+# rejected by the model ("Supported values are: 'none', 'low', 'medium', 'high', 'xhigh', and 'max'"). No per-turn effort on Converse.
+# Live Converse 2026-11-09: the bare model ID was rejected; an inference profile is required. maxTokens=1048577 was rejected with
+# "exceeds the model limit of 1048576"; 1048000 was accepted with a 92-token prompt and 1048576 was "rejected by the target", so input plus maxTokens seems capped by the 1M context.
+# v2 cache: implicit per the model card; a repeated 2.5K-token system prompt read 2496 cached tokens live on Converse 2026-11-09.
+# Explicit caching is Responses, Chat Completions and InvokeModel only; Converse rejected cachePoint ("This model doesn't support the cachePoint field").
+# Service tiers: priority|flex (Converse serviceTier.type) per the model card (1.75x/0.5x of Standard); flex answered live 2026-11-09.
+# Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card lists text and image input only (no video).
+# Structured outputs: Converse outputConfig.textFormat json_schema and toolSpec.strict both worked live 2026-11-09 (https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro Highspeed (Global)"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+service_tier = ["flex", "priority"]
+
+[limit]
+output = 1_048_576
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = { "30m" = 5 } }
+
+[cost.text.output]
+price = 20
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
