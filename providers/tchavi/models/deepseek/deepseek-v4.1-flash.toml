@@ -1,0 +1,27 @@
+# Source: GET https://tchavi.com/api/v1/models (accessed 2026-11-09), the same
+# endpoint a buyer reads. Converted from Tchavi's credit price: 1 credit =
+# 0.3333 XOF, 600 XOF per USD.
+# EFFECTIVE price: a dated promotion of 6% runs until 2026-12-31. The list
+# price is $0.1833/$0.7316 per 1M; when the promotion ends the price
+# returns to it. Re-read the endpoint rather than trusting this file after that date.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+# Reasoning: Tchavi refuses no effort value on this model (model-compat.ts, from
+# the 2026-10-20 and 2026-10-21 probes of both routes). It does refuse a forced
+# tool_choice, a json_schema response_format, n greater than 1, logprobs,
+# parallel_tool_calls and verbosity.
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[cost.text.input]
+price = 0.1722
+cache = { read = 0.0209 }
+
+[cost.text.output]
+price = 0.6877
+
+[limit]
+context = 1_048_576
+output = 393_216
