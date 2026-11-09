@@ -1,0 +1,51 @@
+# Prices: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing ($8 input, $10 5m write, $16 1h write, $0.20 cache hit, $40 output)
+# Fast mode: $16 input / $80 output, Messages API on the Claude API: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing, https://platform.claude.com/docs/en/build-with-claude/fast-mode
+# Effort: all five levels: https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2#feature-support
+# tools.strict/search: strict tool use (models: https://platform.claude.com/docs/en/build-with-claude/structured-outputs) and the tool search tool on the Messages API: https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility
+# tools.choice: auto/any/tool/none; Fable 5.2 rejects forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
+# tools.updates: tool_addition/tool_removal blocks (inline-tools-2026-09-15) keep the cache: https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2#feature-support
+# system_updates: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages; effort_updates: https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (Claude API lists Fable 5.2)
+# Cache: 512-token minimum: https://platform.claude.com/docs/en/build-with-claude/prompt-caching
+# Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
+# Token-only multipliers (object factor, so cost.web_search is unscaled): fast mode (https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing); US data residency (https://platform.claude.com/docs/en/manage-claude/data-residency#pricing).
+# APIs: Messages, and Chat Completions through the OpenAI SDK compatibility layer (https://platform.claude.com/docs/en/api/openai-sdk)
+# Per-API flags: mid-conversation system messages, per-message output_config and tool_addition/tool_removal are Messages API features, so they sit on [api.messages]. The OpenAI SDK compatibility endpoint hoists system messages to the top (https://platform.claude.com/docs/en/api/openai-sdk) and has no per-message effort or tool changes.
+# Per-API tools: the OpenAI SDK compatibility layer ignores `strict` and takes only function tools, so strict and search sit on [api.messages] only; tool_choice works on both APIs and stays top-level (https://platform.claude.com/docs/en/api/openai-sdk).
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+service_tier = ["fast"]
+
+[api.messages]
+capabilities = { system_updates = true, effort_updates = true, tools = { updates = true, strict = true, search = true } }
+
+[api.chat-completions]
+base_url = "https://api.anthropic.com/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = { "5m" = 10, "1h" = 16 } }
+
+[cost.text.output]
+price = 40
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = { text = 2 }
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = { text = 1.1 }
+
+[experimental.modes.fast]
+body = { speed = "fast" }
+headers = { anthropic-beta = "fast-mode-2026-02-01" }
