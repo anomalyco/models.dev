@@ -3,7 +3,9 @@
 # Prices: Foundry bills Claude in CCUs at Anthropic's standard per-model, per-feature rates: https://platform.claude.com/docs/en/about-claude/pricing#claude-in-microsoft-foundry-pricing; rates: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
 # The US Data Zone 1.1x multiplier applies only to deployments hosted on Azure, which this model doesn't have.
 # Cache: 1h TTL and the 512-token minimum on Foundry: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#1-hour-cache-duration, https://platform.claude.com/docs/en/build-with-claude/prompt-caching#cache-limitations
-# Effort: output_config.effort = low|medium|high|xhigh|max. Anthropic lists effort on all supported platforms and all five levels for Fable 5.2: https://platform.claude.com/docs/en/build-with-claude/effort, https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2#feature-support
+# Effort: output_config.effort = low|medium|high|xhigh. Anthropic lists all five levels for Fable 5.2 (https://platform.claude.com/docs/en/build-with-claude/effort), but Microsoft's Foundry effort table lists max as "No" for claude-fable-5-1 and claude-fable-5
+#   (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models#thinking-and-effort) and doesn't cover 5.2 yet, and I couldn't test Foundry, so max is left out to match those peers.
+# Cache writes: Anthropic lists the 1h TTL on Microsoft Foundry (https://platform.claude.com/docs/en/build-with-claude/prompt-caching#1-hour-cache-duration), and Foundry bills at Anthropic's standard per-feature rates, so the 1h write is $16.
 # tools.strict/search: structured outputs and the tool search tool list Microsoft Foundry and claude-fable-5-2: https://platform.claude.com/docs/en/build-with-claude/structured-outputs, https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool
 # tools.choice: auto/any/tool/none; Fable 5.2 rejects forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
 # Mid-conversation flags left out: Anthropic lists mid-conversation system messages, tool changes and per-message effort for the Claude API, Claude Platform on AWS, Bedrock and Google Cloud, not Foundry: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages
@@ -14,7 +16,7 @@ base_model = "anthropic/claude-fable-5-2"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none"], search = true }
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
