@@ -1,0 +1,11 @@
+# API base, endpoints and model ids: https://abliteratedllm.dev/llms.txt (accessed 2026-11-09)
+# OpenAI-compatible Chat Completions (default), Responses and Anthropic Messages share https://api.abliteratedllm.dev/v1:
+# https://abliteratedllm.dev/docs/chat-completions, https://abliteratedllm.dev/docs/responses, https://abliteratedllm.dev/docs/messages
+# Authentication: Authorization: Bearer <key> or x-api-key: https://abliteratedllm.dev/docs/authentication
+# Logo: the AbliteratedLLM mark, same path data as the site logo, filled with currentColor.
+name = "AbliteratedLLM"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["ABLITERATEDLLM_API_KEY"]
+api = "https://api.abliteratedllm.dev/v1"
+doc = "https://abliteratedllm.dev/docs/models"

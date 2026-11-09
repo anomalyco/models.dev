@@ -1,0 +1,52 @@
+# Sources (accessed 2026-11-09):
+# - https://api.abliteratedllm.dev/v1/models (fields: https://abliteratedllm.dev/docs/models) for this ID:
+#   context_length 1048576, max_output_tokens 1048576 (larger output budgets are lowered to it),
+#   input_modalities text, USD per 1M tokens input 1.26 / cached input 0.234 / output 3.96.
+#   "service_tier": "priority" bills 1.575 / 0.2925 / 4.95 (1.25x) on Chat Completions and Messages;
+#   Responses ignores service_tier and bills the standard tier. No charge for cache writes.
+# - https://abliteratedllm.dev/docs/chat-completions: reasoning_effort and unlisted fields are passed through unchanged;
+#   reasoning arrives in reasoning_content; JPEG, PNG, GIF and WebP images work; audio and file/PDF parts, and image or video
+#   parts for a model that doesn't list them, fail with 400 unsupported_content; response_format json_schema works except on
+#   Official DeepSeek API models; prompt caching is automatic; every stream ends with a usage chunk.
+# - Same base URL also serves https://abliteratedllm.dev/docs/responses and https://abliteratedllm.dev/docs/messages.
+# Stock model: Z.ai's original weights, not abliterated,
+#   on shared GPUs at our infrastructure provider, Fireworks (accounts/fireworks/models/glm-5p3).
+# Input: text only, as in the lab file.
+# Reasoning controls copied from the same upstream's entry: providers/fireworks-ai/models/accounts/fireworks/models/glm-5p3.toml
+# Thinking-only (reasoning can't be turned off), no toggle
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.26
+cache = { read = 0.234 }
+
+[cost.text.output]
+price = 3.96
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }

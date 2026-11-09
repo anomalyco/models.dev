@@ -1,0 +1,56 @@
+# Sources (accessed 2026-11-09):
+# - https://api.abliteratedllm.dev/v1/models (fields: https://abliteratedllm.dev/docs/models) for this ID:
+#   context_length 1048576, max_output_tokens 1048576 (larger output budgets are lowered to it),
+#   input_modalities text|image, USD per 1M tokens input 1.80 / cached input 0.18 / output 9.00.
+#   "service_tier": "priority" bills 2.70 / 0.27 / 13.50 (1.5x) on Chat Completions and Messages;
+#   Responses ignores service_tier and bills the standard tier. No charge for cache writes.
+# - https://abliteratedllm.dev/docs/chat-completions: reasoning_effort and unlisted fields are passed through unchanged;
+#   reasoning arrives in reasoning_content; JPEG, PNG, GIF and WebP images work; audio and file/PDF parts, and image or video
+#   parts for a model that doesn't list them, fail with 400 unsupported_content; response_format json_schema works except on
+#   Official DeepSeek API models; prompt caching is automatic; every stream ends with a usage chunk.
+# - Same base URL also serves https://abliteratedllm.dev/docs/responses and https://abliteratedllm.dev/docs/messages.
+# Stock model: Moonshot AI's original weights, not abliterated,
+#   on shared GPUs at our infrastructure provider, Fireworks (accounts/fireworks/models/kimi-k3p1-pro).
+# Input: text and images. Image types are the same upstream's: the lab's JPEG, PNG, GIF, WebP and BMP (HEIC failed in its
+#   live test). The lab's video types are left out: the catalog lists no video for this ID.
+# Image types and reasoning controls follow the same upstream's entry: providers/fireworks-ai/models/accounts/fireworks/models/kimi-k3p1-pro.toml
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables)
+# Effort: reasoning_effort = low|medium|high|max
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 9
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }
