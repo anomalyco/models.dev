@@ -3,15 +3,17 @@
 # Price: Free plan CAD 3.45 in / 8.05 out per 1M tokens (https://carouter.ai/llms-full.txt,
 #   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
 #   (Bank of Canada, 2026-11-04).
-# Effort: always-on. The default route is Augure, where reasoning_effort is accepted but "no setting
-#   shortens the thinking as served today" and max is refused with a 400
-#   (https://augureai.ca/docs/models). Scaleway, used only if the account enables it and Augure is
-#   off, takes low|high|max. Output cap is Augure's 49,152; Scaleway caps at 16,384.
+# Effort: reasoning_effort = none|low|high|max. Verified live 2026-11-09 (served by Scaleway, tier fast):
+#   none returned 0 reasoning tokens; low < high < max in reasoning tokens on the same prompt.
+#   medium is accepted but did not land between low and high, so it is left out. Matches Scaleway's
+#   low|high|max (providers/scaleway/models/glm-5.3.toml). On the Augure route reasoning_effort is
+#   accepted but "no setting shortens the thinking as served today" (https://augureai.ca/docs/models).
+#   Output cap is Augure's 49,152; Scaleway caps at 16,384.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
 [limit]
