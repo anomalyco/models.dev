@@ -1,3 +1,6 @@
+# Sampling: temperature and top_p work on this deployment; top_k is not
+# a documented host capability, so support is not advertised here.
+# https://ai.topxea.com/docs/deepseek-flash-abliterated (checked 2026-11-09).
 # DeepSeek V4.1 Flash 1017 with its refusal alignment removed (abliterated), served from
 # TopxAI's private deployment, not DeepSeek's official API. Defined inline because this
 # variant does not have the official model's weights/benchmarks.
@@ -22,6 +25,9 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
+temperature = true
+top_p = true
+top_k = false
 tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }

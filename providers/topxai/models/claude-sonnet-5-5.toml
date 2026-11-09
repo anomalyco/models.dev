@@ -1,3 +1,5 @@
+# Native Messages preserves cache_control; the host supports 5m and 1h writes.
+# https://ai.topxea.com/docs/api-reference (checked 2026-11-09).
 # Sonnet 5.5 replaced Sonnet 5 on TopxAI on 2026-10-02; claude-sonnet-5 is retired (403).
 # Thinking follows Anthropic's Sonnet 5.5 contract: adaptive by default, effort via
 # $.output_config.effort on /v1/messages (relayed byte for byte) or $.reasoning_effort on
@@ -11,6 +13,7 @@ schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
+cache = { explicit = { ttl = ["5m", "1h"] } }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 

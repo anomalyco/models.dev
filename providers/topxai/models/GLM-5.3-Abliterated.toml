@@ -1,3 +1,5 @@
+# Automatic prompt caching; no explicit cache-control API or TTL is claimed.
+# https://ai.topxea.com/docs/glm-5-3-abliterated (checked 2026-11-09).
 # A commercially fine-tuned GLM-5.3 with its refusal alignment removed, served from
 # TopxAI's own private deployment rather than Z.ai's API; text only. Unique to this
 # host, so defined inline. https://ai.topxea.com/docs/glm-5-3-abliterated (accessed 2026-09-19)
@@ -19,6 +21,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
+cache = { implicit = true }
 tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "high", "max"] }
 structured_output = true

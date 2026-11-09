@@ -1,3 +1,5 @@
+# Automatic prompt caching; no explicit cache-control API or TTL is claimed.
+# https://ai.topxea.com/docs/kimi-k3-1-pro (checked 2026-11-09).
 # Kimi K3.1 Pro replaced kimi-k3 on this host; the old ID has no forwarding alias.
 # TopxAI serves it from a private deployment, not Moonshot's API, with text and image
 # input (base64 data URIs only), a 1,048,576-token context and 131,072 output tokens.
@@ -17,6 +19,7 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "high", "max"] }
 
 [api.chat-completions]

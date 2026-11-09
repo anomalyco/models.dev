@@ -1,3 +1,5 @@
+# Automatic prompt caching; no explicit cache-control API or TTL is claimed.
+# https://ai.topxea.com/changelog#grok-4-7 (checked 2026-11-09).
 # Effort: $.reasoning.effort on /v1/responses, $.reasoning_effort on /v1/chat/completions,
 # forwarded unchanged (default high). Shared-pool price, 50% of xAI's list; no
 # cache-write lane is sold. Requests whose input reaches 200,000 tokens bill the whole
@@ -9,6 +11,7 @@ schema = 2
 base_model = "xai/grok-4.7"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 

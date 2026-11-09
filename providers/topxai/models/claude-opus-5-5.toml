@@ -1,3 +1,5 @@
+# Native Messages preserves cache_control; the host supports 5m and 1h writes.
+# https://ai.topxea.com/docs/api-reference (checked 2026-11-09).
 # Effort only, as the lab and peers author this model: $.output_config.effort on
 # /v1/messages, $.reasoning_effort on /v1/chat/completions, both forwarded unchanged.
 # https://ai.topxea.com/docs/api-reference (accessed 2026-10-23)
@@ -8,6 +10,7 @@ schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
+cache = { explicit = { ttl = ["5m", "1h"] } }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 

@@ -1,3 +1,6 @@
+# Default prompt caching is implicit. Explicit breakpoints are not claimed:
+# forwarding a cache option or listing a write price does not establish support.
+# https://ai.topxea.com/changelog#gpt-6-sol (checked 2026-11-09).
 # Effort: $.reasoning.effort on /v1/responses, $.reasoning_effort on /v1/chat/completions,
 # forwarded unchanged; the lab's level set for this model. Reasoning cannot be turned
 # off: the host maps a legacy "none" or "minimal" to "low".
@@ -10,6 +13,7 @@ schema = 2
 base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
