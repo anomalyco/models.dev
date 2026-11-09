@@ -1,0 +1,25 @@
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+name = "Claude Fable 5.2 (Fast)"
+description = "Claude model for creative writing, analysis, and controlled agent workflows"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 16
+cache = { read = 0.4, write = 20 }
+
+[cost.text.output]
+price = 80
