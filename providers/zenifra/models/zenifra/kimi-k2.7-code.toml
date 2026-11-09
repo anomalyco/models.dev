@@ -1,0 +1,22 @@
+# Served as `zenifra/kimi-k2.7-code` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
+# (public, no auth, accessed 2026-11-09): name "Kimi K2.7 Code", context_length 229376, max_output_tokens 16384.
+# Reasoning is always on (capabilities.reasoning.always_on = true); the catalog lists no effort, toggle or budget field.
+# structured_output = true: capabilities.response_schema = true.
+# Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
+# Limits differ from the lab (262_144/262_144): Zenifra serves context 229_376 and output 16_384.
+# No cost: Zenifra bills in BRL; USD prices are left out of this file.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[limit]
+context = 229_376
+output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

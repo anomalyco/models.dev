@@ -1,0 +1,18 @@
+# Served as `zenifra/qwen3.8-flash` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
+# (public, no auth, accessed 2026-11-09): name "Qwen3.8 Flash", context_length 1000000, max_output_tokens 131072.
+# Effort: reasoning_effort = low|medium|xhigh (default xhigh), from capabilities.reasoning.effort_levels.
+# No toggle or budget: supported_parameters has no on/off or thinking-budget field (only reasoning_effort).
+# structured_output = true: capabilities.response_schema = true, structured_outputs = true.
+# Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
+# No cost: Zenifra bills in BRL; USD prices are left out of this file.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

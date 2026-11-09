@@ -1,0 +1,25 @@
+# Served as `zenifra/deepseek-v4-pro` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
+# (public, no auth, accessed 2026-11-09): name "DeepSeek V4 Pro", context_length 1000000, max_output_tokens 393216.
+# Effort: reasoning_effort = high|max (default high), from capabilities.reasoning.effort_levels.
+# No toggle or budget: supported_parameters has no on/off or thinking-budget field (only reasoning_effort).
+# structured_output = false: capabilities.response_schema = false, structured_outputs = false.
+# Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
+# top_k = false: not in supported_parameters, and the lab's own API doesn't take it.
+# Limits differ from the lab (1_000_000/384_000): Zenifra serves context 1_000_000 and output 393_216.
+# No cost: Zenifra bills in BRL; USD prices are left out of this file.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["high", "max"] }
+structured_output = false
+top_k = false
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[limit]
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
