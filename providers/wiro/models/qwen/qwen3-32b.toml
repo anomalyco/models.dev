@@ -4,7 +4,8 @@
 # so there is no per-token price to publish.
 # Always on: this host has no reasoning control for this model (no reasoning_enabled or
 # reasoning_effort in capabilities.generation_controls).
-# Live 2026-11-08 on this model: a plain request returned reasoning text.
+# Live 2026-11-08 on this model: a plain request returned reasoning text, and reasoning.enabled = false,
+# reasoning.max_tokens and reasoning_effort each returned HTTP 400 (no reasoning control is declared for it).
 # Limits: context_length 17,408 and max_tokens 4,096 (catalog), below the lab's.
 # APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
 schema = 2

@@ -22,7 +22,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 
 [api.chat-completions]
 capabilities = { tools = { freeform = ["text", "lark", "regex"] } }

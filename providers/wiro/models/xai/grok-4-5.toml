@@ -23,7 +23,7 @@ input = ["text", "image/jpeg", "image/png", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 top_k = false
 

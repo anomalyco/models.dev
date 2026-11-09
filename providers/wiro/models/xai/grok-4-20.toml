@@ -8,7 +8,8 @@
 # Toggle: reasoning.enabled = true|false (Chat Completions) or thinking.type = enabled|disabled (Messages),
 # the model's thinking switch on its model page (off by default). On Responses, reasoning.effort = none
 # turns it off and any other effort turns it on.
-# Live 2026-11-08 on this model: reasoning.enabled = true returned 445 reasoning tokens and false returned none.
+# Live 2026-11-08 on this model: reasoning.enabled = true returned 445 reasoning tokens, false returned none,
+# and a request without a reasoning field returned none (off by default).
 # Structured output: json_schema (catalog structured_output_modes).
 # Cache: the model page prices cached input, and the provider caches without a request field, so
 # cache = { implicit = true }.
