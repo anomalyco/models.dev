@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-09):
+# - Pricing (CNY per MTok): https://support.huaweicloud.com/price-maas/price-maas-0002.html (updated 2026-11-06)
+# - OpenAI-compatible API: https://support.huaweicloud.com/model-call-maas/model-call-021.html
+# - Live probe 2026-11-09 on api.modelarts-maas.com: GET /v1/models 200; chat baseline/stream 200
+# CNY->USD rate: 6.67, 2026-11-09 (market range USD/CNY 6.6648-6.6755 that day)
+# List price: CNY 2/0.2/8 (input/cache-read/output per MTok, peak 08:00-20:59 Beijing)
+# Off-peak 21:00-07:59 Beijing (13:00-23:59 UTC) is 50% off
+# Toggle: thinking.type = enabled|disabled (probed on this host: disabled removes
+# reasoning_content, reasoning_tokens 0)
+# Effort: reasoning_effort = low|high|max (probed on this host: low accepted, reasoning_content present)
+# tool_choice "auto" per Huawei docs tool-calling example; other values untested on this host
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.29985
+cache = { read = 0.02999 }
+
+[cost.text.output]
+price = 1.1994
+
+# Off-peak 21:00-07:59 Beijing = 13:00-23:59 UTC, 50% off
+[[cost.multipliers]]
+when = { utc_hours = { gte = "13:00" } }
+factor = 0.5
