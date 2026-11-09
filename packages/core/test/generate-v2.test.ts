@@ -200,5 +200,25 @@ describe("v2 catalog generation", () => {
     expect(CacheSupportV2.safeParse({}).success).toBe(false);
     expect(CacheSupportV2.safeParse({ implicit: true, explicit: false }).success).toBe(false);
     expect(CacheSupportV2.safeParse({ supported: true, implicit: true }).success).toBe(false);
+
+    const observed = {
+      date: "2026-11-07",
+      source: "https://github.com/ngvoicu/cache-ttl-probe/blob/main/results/harness-2026-11-07/H1.jsonl",
+      checks: [
+        { age: "2h", warm: 3, total: 3 },
+        { age: "12h", warm: 0, total: 3 },
+      ],
+    };
+    expect(CacheSupportV2.safeParse({ implicit: true, observed }).success).toBe(true);
+    // observed alone isn't a cache kind
+    expect(CacheSupportV2.safeParse({ observed }).success).toBe(false);
+    expect(
+      CacheSupportV2.safeParse({ implicit: true, observed: { ...observed, checks: [{ age: "1h", warm: 4, total: 3 }] } }).success,
+    ).toBe(false);
+    expect(CacheSupportV2.safeParse({ implicit: true, observed: { ...observed, checks: [] } }).success).toBe(false);
+    expect(CacheSupportV2.safeParse({ implicit: true, observed: { ...observed, source: "results/H1.jsonl" } }).success).toBe(false);
+    expect(
+      CacheSupportV2.safeParse({ implicit: true, observed: { ...observed, checks: [{ age: "1 hour", warm: 1, total: 1 }] } }).success,
+    ).toBe(false);
   });
 });
