@@ -36,7 +36,7 @@ export type BoostRailModel = z.infer<typeof BoostRailModel>;
  * the same data as https://www.boostrail.com/models/ (USD per 1M tokens).
  * The file carries prices only, so this sync updates existing TOMLs
  * (`skipCreates`) and treats it as authoritative for `cost` alone. Everything
- * else — `base_model` inheritance, `reasoning_options` and modalities — stays
+ * else — `base_model` inheritance, reasoning controls and modalities — stays
  * hand-authored. Listed models without a local file are reported in the sync
  * notices rather than opened as issues, since the list has no metadata.
  */
@@ -84,14 +84,16 @@ export const boostrail = {
 export function buildBoostRailModel(model: BoostRailModel, authored: ExistingModel): SyncedModel {
   const { id: _authoredID, ...preserved } = authored;
   const { input, output, cache_read, cache_write } = model.pricing;
+  // The price list may omit cache prices; keep the authored ones rather than
+  // letting an undefined value delete them.
   return {
     ...preserved,
     cost: {
       ...authored.cost,
       input,
       output,
-      cache_read,
-      cache_write,
+      cache_read: cache_read ?? authored.cost?.cache_read,
+      cache_write: cache_write ?? authored.cost?.cache_write,
     },
   } as SyncedModel;
 }

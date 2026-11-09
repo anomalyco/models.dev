@@ -1,22 +1,26 @@
-# Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
+# Pricing: https://www.boostrail.com/models/ (accessed 2026-11-10), also
 # published as https://www.boostrail.com/models.json. USD per 1M tokens;
 # cache writes are billed at the input price.
-# Budget: thinking.budget_tokens (passed through on /v1/chat/completions).
-# Live requests 2026-10-19, 3 trials each, one-number arithmetic prompt:
-# without a thinking budget (default, reasoning_effort=high,
-# reasoning.enabled=true) answers took 5-238 completion tokens, either direct
-# or with the working written into the answer; thinking {type: enabled,
-# budget_tokens: 2048} gave 362-376 with a correct number-only answer.
-# A PDF sent as a file content part was not seen by the model (22 prompt
-# tokens), so input is text and image; an image_url part was answered.
+# BoostRail forwards reasoning_effort and thinking unchanged to the route
+# serving the model, so the controls below follow the lab entry.
+# Budget: thinking.budget_tokens. Live 2026-10-19: thinking {type: enabled,
+# budget_tokens: 2048} gave 362-376 completion tokens with a number-only
+# answer, against 5-238 without a budget.
+# A PDF file content part was not seen by the model (22 prompt tokens), so
+# PDF is left out of input; an image_url part was answered.
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
-reasoning_options = [{ type = "budget_tokens", min = 1_024 }]
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
 
-[cost]
-input = 0.95
-output = 4.75
-cache_read = 0.095
-cache_write = 0.95
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.095, write = 0.95 }
+
+[cost.text.output]
+price = 4.75

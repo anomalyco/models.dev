@@ -1,16 +1,21 @@
-# Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
+# Pricing: https://www.boostrail.com/models/ (accessed 2026-11-10), also
 # published as https://www.boostrail.com/models.json. USD per 1M tokens;
 # cache writes are billed at the input price.
-# Live requests 2026-10-19, 3 trials each, one-number prompt:
-# reasoning_effort none 2 completion tokens in 2 of 3 trials (no thinking;
-# the third wrote its working into the answer), low 240-324, high 256-343,
-# max 190-317. low is served as high upstream; xhigh and max are accepted
-# and served as high.
+# BoostRail forwards reasoning_effort and thinking unchanged to the route
+# serving the model, so the controls below follow the lab entry.
+# Effort: reasoning_effort = none|high|max. high|max are GLM's own levels
+# (providers/zhipuai: low|medium map to high, xhigh to max). none turns
+# thinking off: live 2026-11-10, 3 trials, 13-14 completion tokens, no
+# reasoning content, correct answer.
+schema = 2
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
-[cost]
-input = 1.045
-output = 3.284286
-cache_read = 0.1045
-cache_write = 1.045
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+
+[cost.text.input]
+price = 1.045
+cache = { read = 0.1045, write = 1.045 }
+
+[cost.text.output]
+price = 3.284286

@@ -1,18 +1,23 @@
-# Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
+# Pricing: https://www.boostrail.com/models/ (accessed 2026-11-10), also
 # published as https://www.boostrail.com/models.json. USD per 1M tokens;
 # cache writes are billed at the input price.
-# Live requests to https://api.boostrail.com/v1/chat/completions (2026-10-19):
-# reasoning_effort none|high gave 95|144 completion tokens for a one-number
-# answer (always thinks, no caller control); image input answered; content
-# parts are text and image_url only (no video).
+# Always thinks, no caller control: live 2026-10-19, reasoning_effort none
+# and high gave 95 and 144 completion tokens for a one-number answer.
+# Content parts are text and image_url only on this API, so video is left
+# out of input; an image_url part was answered.
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = []
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
 
-[cost]
-input = 0.9025
-output = 3.8
-cache_read = 0.1805
-cache_write = 0.9025
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.9025
+cache = { read = 0.1805, write = 0.9025 }
+
+[cost.text.output]
+price = 3.8

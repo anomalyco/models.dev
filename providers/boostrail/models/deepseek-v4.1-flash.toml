@@ -1,15 +1,20 @@
-# Pricing: https://www.boostrail.com/models/ (accessed 2026-10-19), also
+# Pricing: https://www.boostrail.com/models/ (accessed 2026-11-10), also
 # published as https://www.boostrail.com/models.json. USD per 1M tokens;
 # cache writes are billed at the input price.
-# Live requests 2026-10-19 (3 trials each unless noted), one-number prompts:
-# reasoning_effort none 2 completion tokens (no thinking; wrong answers),
-# low 62 (1 trial), high 70-107, xhigh 80-100, max 82-94. xhigh and max are
-# accepted and served as high. An image_url part was answered.
+# BoostRail forwards reasoning_effort and thinking unchanged to the route
+# serving the model, so the controls below follow the lab entry.
+# Effort: reasoning_effort = none|low|high|max. low|high|max are DeepSeek's
+# own levels (providers/deepseek); none turns thinking off (live 2026-10-19,
+# 3 trials: 2 completion tokens, no reasoning). An image_url part was answered.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-reasoning_options = [{ type = "effort", values = ["none", "low", "high"] }]
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.018
-cache_write = 0.15
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.018, write = 0.15 }
+
+[cost.text.output]
+price = 0.6
