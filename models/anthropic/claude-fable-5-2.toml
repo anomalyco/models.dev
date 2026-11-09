@@ -1,0 +1,27 @@
+# Context, max output, knowledge cutoff and description: https://platform.claude.com/docs/en/about-claude/models/overview and https://platform.claude.com/docs/en/models/fable-5-2/overview
+# Release date: https://www.anthropic.com/claude-fable-and-mythos-5-2
+# Image and PDF input: https://platform.claude.com/docs/en/build-with-claude/vision and https://platform.claude.com/docs/en/build-with-claude/pdf-support list claude-fable-5-2.
+# Adaptive thinking is always on; thinking.type enabled/disabled returns a 400: https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2#thinking-and-tool-choice
+# tools.choice: forced tool use (any/tool) returns a 400 on every host: https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
+schema = 2
+name = "Claude Fable 5.2"
+description = "Claude model for demanding reasoning and long-horizon agentic work"
+family = "claude-fable"
+open_weights = false
+knowledge = "2026-06"
+release_date = "2026-11-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 128_000

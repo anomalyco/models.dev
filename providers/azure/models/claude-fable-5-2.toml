@@ -1,0 +1,31 @@
+# Availability: Claude in Microsoft Foundry as claude-fable-5-2, on Anthropic infrastructure: https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2#availability
+# Prices: Foundry bills Claude in CCUs at Anthropic's standard per-model, per-feature rates: https://platform.claude.com/docs/en/about-claude/pricing#claude-in-microsoft-foundry-pricing; rates: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+# tools.strict/search: structured outputs (strict tool use) and the tool search tool list Microsoft Foundry and claude-fable-5-2: https://platform.claude.com/docs/en/build-with-claude/structured-outputs, https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility
+# tools.choice: auto/any/tool/none; Fable 5.2 rejects forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
+# Effort: Anthropic documents all five levels for Fable 5.2 and effort on all supported platforms: https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2#feature-support, https://platform.claude.com/docs/en/build-with-claude/effort
+# Microsoft's Foundry Claude page (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models) doesn't list claude-fable-5-2 yet.
+# Mid-conversation: Anthropic lists mid-conversation system messages and per-message effort for the Claude API, Claude Platform on AWS, Bedrock and Google Cloud, not Foundry: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages
+# Fast mode is a separate Foundry model, claude-fable-5-2-fast, not added here: https://platform.claude.com/docs/en/build-with-claude/fast-mode
+# Web search: $10 per 1,000 searches; Foundry bills Claude in CCUs at Anthropic's standard per-feature rates: https://platform.claude.com/docs/en/about-claude/pricing#claude-in-microsoft-foundry-pricing
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none"], search = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = 10 }
+
+[cost.text.output]
+price = 40
+
+[cost.web_search]
+price = 10
