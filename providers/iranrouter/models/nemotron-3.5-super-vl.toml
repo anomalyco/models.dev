@@ -1,19 +1,15 @@
-# Toggle: chat_template_kwargs.enable_thinking = true|false (NVIDIA peer)
 # Sources:
 # - https://iranrouter.net/docs
 # - https://iranrouter.net/models
-# - GET https://iranrouter.net/api/v1/models (pricing_per_million + per-model context_length)
-# IranRouter is an OpenAI-compatible multi-model relay; reasoning controls follow lab / same-surface peers.
-# Freeform custom tools not probed on this host; omitted (Chat Completions path only).
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million + context_length)
+# Same-surface peers (Venice / DigitalOcean) keep always-on reasoning with no toggle; IranRouter only
+# advertises reasoning_effort generically and has no documented enable_thinking forward, so no toggle.
 schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 structured_output = true
-
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.15

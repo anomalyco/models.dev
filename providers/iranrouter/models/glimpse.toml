@@ -1,14 +1,15 @@
+# Toggle: reasoning.enabled = true|false
+# Same-surface peer: providers/openrouter/models/elorian/glimpse.toml (reasoning.enabled).
+# IranRouter GET /api/v1/models lists reasoning_effort for this id; peer toggle is restored on the relay.
 # Sources:
 # - https://iranrouter.net/docs
 # - https://iranrouter.net/models
-# - GET https://iranrouter.net/api/v1/models (pricing_per_million + per-model context_length)
-# IranRouter is an OpenAI-compatible multi-model relay; reasoning controls follow lab / same-surface peers.
-# Freeform custom tools not probed on this host; omitted (Chat Completions path only).
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million + context_length)
 schema = 2
 base_model = "elorian/glimpse"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
 [cost.text.input]

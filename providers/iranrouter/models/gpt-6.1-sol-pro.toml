@@ -1,9 +1,12 @@
 # Sources:
 # - https://iranrouter.net/docs
 # - https://iranrouter.net/models
-# - GET https://iranrouter.net/api/v1/models (pricing_per_million + per-model context_length)
-# IranRouter is an OpenAI-compatible multi-model relay; reasoning controls follow lab / same-surface peers.
-# Freeform custom tools not probed on this host; omitted (Chat Completions path only).
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million + context_length)
+# IranRouter lists distinct context_length for the two Sol IDs on this host (live GET /api/v1/models):
+#   gpt-6.1-sol = 128_000, gpt-6.1-sol-pro = 1_050_000. Pro inherits the lab 1_050_000 window;
+#   the non-Pro file keeps an explicit [limit] override for the truncated host value.
+# Freeform (live 2026-11-09): POST /api/v1/chat/completions rejects type=custom tools (400 invalid_request / "Provider returned error"; gpt-6.1-sol: "Reasoning is mandatory..."). POST /api/v1/responses accepts custom tools with text|lark|regex formats (HTTP 200) but did not return custom_tool_call / enforce ZZ[0-9]{3} as a tool input (model replied in output_text or empty), so freeform is left unset. Regex probe definition: ZZ[0-9]{3}.
+# Pro is a host model id for Sol with Pro reasoning, not a separate lab release (base openai/gpt-6.1-sol).
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 name = "GPT-6.1 Sol Pro"
@@ -12,6 +15,11 @@ description = "GPT-6.1 Sol served with Pro reasoning mode for higher-quality res
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 2
