@@ -1,0 +1,55 @@
+# Facts: https://huggingface.co/openpangu/openPangu-2.0-Flash (README: 512K context, params, release; benchmarks table)
+schema = 2
+name = "openPangu 2.0 Flash"
+description = "Huawei's 92B MoE lightweight (6B active) for fast agents and 512K context work, Ascend-native with slow/fast thinking"
+family = "pangu"
+open_weights = true
+release_date = "2026-06-30"
+knowledge = "2026-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 524_288
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/openpangu/openPangu-2.0-Flash"
+
+[[benchmarks]]
+name = "AIME 2026"
+score = 93.3
+metric = "Avg@16"
+variant = "thinking"
+source = "https://huggingface.co/openpangu/openPangu-2.0-Flash"
+
+[[benchmarks]]
+name = "SWE-bench Verified"
+score = 63.1
+metric = "Avg@3"
+variant = "thinking"
+source = "https://huggingface.co/openpangu/openPangu-2.0-Flash"
+
+[[benchmarks]]
+name = "LiveCodeBench V6"
+score = 85.1
+metric = "Avg@3"
+variant = "thinking"
+source = "https://huggingface.co/openpangu/openPangu-2.0-Flash"
+
+[[benchmarks]]
+name = "GPQA-Diamond"
+score = 83.7
+metric = "Avg@4"
+variant = "thinking"
+source = "https://huggingface.co/openpangu/openPangu-2.0-Flash"
