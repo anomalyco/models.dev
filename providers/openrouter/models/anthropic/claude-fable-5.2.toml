@@ -1,23 +1,11 @@
 schema = 2
-name = "Claude Fable 5.2"
+base_model = "anthropic/claude-fable-5-2"
 description = "Claude model for creative writing, analysis, and controlled agent workflows"
-family = "claude-fable"
-open_weights = false
-release_date = "2026-11-07"
-
-[modalities]
-input = ["text", "image", "application/pdf"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-temperature = false
-
-[limit]
-context = 1_000_000
-output = 128_000
 
 [api.chat-completions]
 
