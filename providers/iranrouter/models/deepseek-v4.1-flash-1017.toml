@@ -3,10 +3,11 @@
 # Sources:
 # - https://iranrouter.net/docs
 # - https://iranrouter.net/models
-# - GET https://iranrouter.net/api/v1/models (pricing_per_million, context_length)
-# IranRouter is a multi-model OpenAI-compatible relay; reasoning controls follow the underlying lab / same-surface peers.
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million + per-model context_length)
+# IranRouter is an OpenAI-compatible multi-model relay; reasoning controls follow lab / same-surface peers.
+# Freeform custom tools not probed on this host; omitted (Chat Completions path only).
+# Host context_length from GET /api/v1/models for `deepseek-v4.1-flash-1017` = 1_048_576 (lab deepseek/deepseek-v4.1-flash-1017 = 1_000_000).
 schema = 2
-v2_only = true
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
@@ -20,7 +21,7 @@ context = 1_048_576
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.15
+price = 0.006
 
 [cost.text.output]
-price = 0.6
+price = 0.5

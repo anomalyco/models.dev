@@ -1,18 +1,15 @@
 # Sources:
 # - https://iranrouter.net/docs
 # - https://iranrouter.net/models
-# - GET https://iranrouter.net/api/v1/models (pricing_per_million, context_length)
-# IranRouter is a multi-model OpenAI-compatible relay; reasoning controls follow the underlying lab / same-surface peers.
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million + per-model context_length)
+# IranRouter is an OpenAI-compatible multi-model relay; reasoning controls follow lab / same-surface peers.
+# Freeform custom tools not probed on this host; omitted (Chat Completions path only).
 schema = 2
-v2_only = true
 base_model = "inception/mercury-3"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-
-[limit]
-context = 1_000_000
 
 [cost.text.input]
 price = 0.1

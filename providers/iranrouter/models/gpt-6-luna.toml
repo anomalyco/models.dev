@@ -1,14 +1,15 @@
 # Sources:
 # - https://iranrouter.net/docs
 # - https://iranrouter.net/models
-# - GET https://iranrouter.net/api/v1/models (pricing_per_million, context_length)
-# IranRouter is a multi-model OpenAI-compatible relay; reasoning controls follow the underlying lab / same-surface peers.
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million + per-model context_length)
+# IranRouter is an OpenAI-compatible multi-model relay; reasoning controls follow lab / same-surface peers.
+# Freeform custom tools not probed on this host; omitted (Chat Completions path only).
+# Host context_length from GET /api/v1/models for `gpt-6-luna` = 128_000 (lab openai/gpt-6-luna = 1_050_000).
 schema = 2
-v2_only = true
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
 [limit]
@@ -18,4 +19,4 @@ context = 128_000
 price = 0.1
 
 [cost.text.output]
-price = 0.6
+price = 0.5
