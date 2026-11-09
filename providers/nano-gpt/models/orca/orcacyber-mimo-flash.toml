@@ -1,0 +1,27 @@
+schema = 2
+name = "OrcaCyber MiMo V2.6 Flash"
+description = "An OrcaCyber model built on MiMo V2.6 Flash for authorized security research, coding, and tool use. Accepts text input, with reasoning enabled by default and an option to turn it off. Supports a 1M-token context window, up to 131K output tokens, tool calling, and structured output. Offensive work is permitted only within an authorized security engagement."
+family = "mimo"
+open_weights = false
+release_date = "2026-11-09"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_064
+input = 1_048_064
+output = 131_072
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 1.6
