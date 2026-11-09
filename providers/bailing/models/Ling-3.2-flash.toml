@@ -5,14 +5,15 @@
 #   documented output cap (the Anthropic API defaults max_tokens to 32000).
 # - Thinking (3.2 series): thinking.type = enabled|disabled, default enabled.
 # - No cost: free for the first two weeks after the 2026-11-05 launch and no list price
-#   published yet (https://developer.ant-ling.com/zh-CN/docs/models/price/).
+#   published yet (https://developer.ant-ling.com/zh-CN/docs/models/price/); no cache
+#   claim either (the pricing page is the only cache evidence on this platform, and it
+#   lists cache reads for the priced Ling models only).
 schema = 2
 base_model = "inclusionai/ling-3.2-flash"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
 structured_output = true
-cache = { implicit = true }
 
 [api.chat-completions]
 

@@ -3,7 +3,9 @@
 #   Request surface: temperature [0,1], top_p, tools, response_format; no top_k, no
 #   documented output cap (the Anthropic API defaults max_tokens to 32000).
 # - Thinking (3.0 series): thinking.type = enabled|disabled, default enabled.
-# - No published price (absent from https://developer.ant-ling.com/zh-CN/docs/models/price/).
+# - No published price (absent from https://developer.ant-ling.com/zh-CN/docs/models/price/),
+#   so no cost and no cache claim either (the pricing page is the only cache evidence on
+#   this platform, and it lists cache reads for the priced Ling models only).
 schema = 2
 base_model = "inclusionai/ling-3.0-tiny"
 
@@ -11,7 +13,6 @@ base_model = "inclusionai/ling-3.0-tiny"
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
 structured_output = true
 top_k = false
-cache = { implicit = true }
 
 [api.chat-completions]
 
