@@ -1,4 +1,5 @@
 # Pricing and endpoint (Gemini generateContent): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Intro pricing matches Google's list price ($0.75/$3.75/$0.075) through December 31, 2026; the multiplier applies the $1.50/$7.50/$0.15 list price from 2027-01-01 (https://ai.google.dev/gemini-api/docs/pricing).
 # Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/google/models/gemini-3.8-flash.toml (Zen passes requests through).
@@ -18,11 +19,15 @@ base_url = "https://opencode.ai/inference/google/v1beta"
 sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
 
 [cost.text.input]
-price = 1.5
-cache = { read = 0.15 }
+price = 0.75
+cache = { read = 0.075 }
 
 [cost.text.output]
-price = 7.5
+price = 3.75
 
 [cost.audio.input]
-price = 1.5
+price = 0.75
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = 2
