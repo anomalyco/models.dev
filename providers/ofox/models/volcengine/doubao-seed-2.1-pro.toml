@@ -1,3 +1,5 @@
+# Preserve this host's previously published limits when refreshing the shared lab model.
+# These overrides retain the existing catalog values for this serving surface.
 # Source: https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
 # Toggle: thinking.type = enabled|disabled (Volcengine Ark chat path)
 # Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
@@ -9,6 +11,10 @@ base_model = "bytedance-seed/seed-2.1-pro"
 tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
+
+[limit]
+context = 256_000
+output = 256_000
 
 [cost.text.input]
 price = 0.7072

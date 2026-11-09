@@ -1,0 +1,41 @@
+# Implicit cache: the doubao-seed-2-1-lite-260915 row lists Chat API support:
+# https://ark.volcengine.com/region:cn-beijing/docs/model-list#ed095742
+# Model-specific audio support (primary version 260915):
+# https://ark.volcengine.com/models/doubao-seed-2-1-lite.md
+# https://ark.volcengine.com/region:cn-beijing/docs/model-list#9619c0ba
+# Public Ark Docs MCP for doubao-seed-2-1-lite-260915 lists audio input,
+# AudioPrompt=0.012 and AudioCacheHit=0.0024 CNY per thousand tokens;
+# model-pricing lists the same 12.00/2.40 CNY per million token audio rates.
+# Sources (accessed 2026-11-07):
+# - Models, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list
+# - CNY list prices: https://ark.volcengine.com/region:cn-beijing/docs/model-pricing
+# - Host reasoning controls: https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking
+# CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
+# Reuse this provider's fixed conversion rate; all prices are USD per million tokens.
+# Exact limits: public Ark Docs MCP ark_get_model("doubao-seed-2-1-lite-260915").
+# Effort: reasoning_effort = minimal|low|medium|high; minimal disables thinking.
+# Accepted aliases: none->minimal, xhigh/max->high. Do not repeat equivalent levels.
+schema = 2
+base_model = "bytedance-seed/seed-2.1-lite"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+input = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.11875
+cache = { read = 0.02375 }
+
+[cost.text.output]
+price = 0.40077
+
+[cost.audio.input]
+price = 1.78121
+cache = { read = 0.35624 }
