@@ -1,0 +1,33 @@
+# The OpenAI model (base_model) on a ChatGPT plan through Codex. Only what differs or is route-specific is set here.
+# Limits: same as the API. 920,870 input tokens accepted, 921,875 rejected with context_too_large (2026-11-08,
+#   ChatGPT plan): https://github.com/ngvoicu/cache-ttl-probe/blob/main/results/limits-2026-11-08/limits.jsonl
+# Reasoning: supported_reasoning_levels in the Codex model catalog (GET https://chatgpt.com/backend-api/codex/models,
+#   authenticated, 2026-11-08): low, medium, high, xhigh, max and ultra; the API has none instead of ultra. "ultra" is
+#   left out until the effort enum has it.
+# Cost: 0, as the other subscription providers publish it: usage counts against the ChatGPT plan, with no per-token
+#   price. "Usage drawn from your subscription has no long-context surcharge"
+#   (https://developers.openai.com/api/docs/models/gpt-6.1-terra).
+# Cache: Codex sends a prompt_cache_key per conversation; no lifetime is documented for this route, so only
+#   `implicit = true` is set. Observed with Codex CLI 0.166 on a ChatGPT plan (2026-11-07; warm checks per age, each a
+#   new session with a unique ~7k-token block, resumed once after the age):
+#   5m 3/3, 15m 3/3, 30m 3/3, 1h 2/3, 2h 2/3, 4h 0/3, 6h 0/3, 8h 0/3, 10h 0/3, 12h 0/3.
+#   Raw data: https://github.com/ngvoicu/cache-ttl-probe/blob/main/results/harness-2026-11-07/H3.jsonl
+schema = 2
+v2_only = true
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+prompt_cache_key = true
+
+[capabilities.cache]
+implicit = true
+
+[api.responses]
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,11 @@
+# ChatGPT plans (Plus, Pro, Business, ...) through Codex: the OpenAI models that Codex clients reach after signing in
+# with a ChatGPT account (OAuth), billed to the plan instead of per token. Requested in #3183.
+# Endpoint: POST https://chatgpt.com/backend-api/codex/responses (Responses API, streamed; what Codex CLI sends), model
+# catalog GET https://chatgpt.com/backend-api/codex/models (authenticated).
+# env: there is no API key; the client holds the ChatGPT OAuth token. The name below is a placeholder because a
+# provider needs at least one entry (#3754 proposed allowing an empty list instead).
+name = "OpenAI Codex (ChatGPT plan)"
+env = ["CHATGPT_ACCESS_TOKEN"]
+npm = "@ai-sdk/openai"
+doc = "https://developers.openai.com/codex"
+api = "https://chatgpt.com/backend-api/codex"
