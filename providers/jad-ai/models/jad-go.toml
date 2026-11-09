@@ -1,3 +1,9 @@
+# Sources (reviewed 2026-11-09): https://jadai.freesrv.com/docs
+#   Limits 256,000 context / 16,384 output — /docs#limits; src/ai/context.ts
+#   Pricing 0 — /docs#pricing; free-tier catalog in src/ai/models.ts
+#   Tools + image input — /docs#tools, /docs#images; src/routes/openai.ts
+#   temperature = false — /docs#temperature; the /v1 route never reads temperature
+#   Reasoning toggle/default/field — /docs#reasoning; src/routes/openai.ts
 # Jad Go is a host-unique routing alias, not an upstream model: each request is
 # scored and sent to one model in a small low-latency pool, so no single
 # base_model applies. release_date is the date this alias was added to the catalog.
