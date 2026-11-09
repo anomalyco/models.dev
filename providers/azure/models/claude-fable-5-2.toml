@@ -1,0 +1,33 @@
+# Availability: Claude in Microsoft Foundry, default deployment name claude-fable-5-2, hosted on Anthropic only: https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry#api-model-ids-and-deployments
+# Microsoft's Foundry Claude page (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models, updated 2026-09-22) doesn't list claude-fable-5-2 yet, so this file follows Anthropic's Foundry docs.
+# Prices: Foundry bills Claude in CCUs at Anthropic's standard per-model, per-feature rates: https://platform.claude.com/docs/en/about-claude/pricing#claude-in-microsoft-foundry-pricing; rates: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+# The US Data Zone 1.1x multiplier applies only to deployments hosted on Azure, which this model doesn't have.
+# Cache: 1h TTL and the 512-token minimum on Foundry: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#1-hour-cache-duration, https://platform.claude.com/docs/en/build-with-claude/prompt-caching#cache-limitations
+# Effort: output_config.effort = low|medium|high|xhigh|max. Anthropic lists effort on all supported platforms and all five levels for Fable 5.2: https://platform.claude.com/docs/en/build-with-claude/effort, https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2#feature-support
+# tools.strict/search: structured outputs and the tool search tool list Microsoft Foundry and claude-fable-5-2: https://platform.claude.com/docs/en/build-with-claude/structured-outputs, https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool
+# tools.choice: auto/any/tool/none; Fable 5.2 rejects forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
+# Mid-conversation flags left out: Anthropic lists mid-conversation system messages, tool changes and per-message effort for the Claude API, Claude Platform on AWS, Bedrock and Google Cloud, not Foundry: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages
+# Fast mode is a separate Foundry model, claude-fable-5-2-fast, not added here: https://platform.claude.com/docs/en/build-with-claude/fast-mode
+# Web search: $10 per 1,000 searches (basic web_search_20250305 tool on Foundry): https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool, https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none"], search = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.messages]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = { "5m" = 10, "1h" = 16 } }
+
+[cost.text.output]
+price = 40
+
+[cost.web_search]
+price = 10
