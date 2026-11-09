@@ -3,13 +3,18 @@
 #   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
 #   (Bank of Canada, 2026-11-04).
 # POST /v1/decisions takes TypeSafe's System One body ({state, questions}); billed on input tokens
-#   only.
+#   only. Verified live 2026-11-09: POST https://carouter.ai/v1/decisions with kev-0.8b returned a
+#   System One answer (200, object "decision"); POST /v1/systemone returns 404. So path = "/decisions".
+# SDK: @openrouter/ai-sdk-provider evaluationModel posts to `${decisionsBaseURL}/decisions`, which is
+#   https://carouter.ai/v1/decisions here. opencodeai = "none", as for Inception's /v1/decisions
+#   (providers/inception/models/mercury-decide.toml), since System One clients post to
+#   {base_url}/systemone by default.
 schema = 2
 base_model = "jaredpalmer/kev-0.8b"
 
 [api.systemone]
 path = "/decisions"
-sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.017

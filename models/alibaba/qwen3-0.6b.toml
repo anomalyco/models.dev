@@ -1,6 +1,7 @@
 # Sources (accessed 2026-11-04): https://huggingface.co/Qwen/Qwen3-0.6B (Apache-2.0; Qwen3 release
 #   2025-04-29, https://qwenlm.github.io/blog/qwen3/). Dense 0.6B; thinking and non-thinking modes
-#   (enable_thinking); tool calling; context 32,768.
+#   (enable_thinking); tool calling; context 32,768. Output 32,768 from the same model card: "We
+#   recommend using an output length of 32,768 tokens for most queries" (matches models/alibaba/qwen3-8b.toml).
 # Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
 schema = 2
 name = "Qwen3 0.6B"

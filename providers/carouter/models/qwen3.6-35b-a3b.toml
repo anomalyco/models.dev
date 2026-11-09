@@ -3,7 +3,15 @@
 # Price: Free plan CAD 0.2755 in / 0.1193 cached input / 1.9987 out per 1M tokens (https://carouter.ai/llms-full.txt,
 #   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
 #   (Bank of Canada, 2026-11-04).
-# Toggle: chat_template_kwargs.enable_thinking = true|false (vLLM, CARouter Cloud's engine; CARouter documents "a switchable thinking mode" without naming the field; not tested live)
+# Toggle: chat_template_kwargs.enable_thinking = true|false; reasoning_effort = "none" also turns it off.
+#   Verified live 2026-11-09 on POST /v1/chat/completions (X-CArouter-Provider: CArouter Cloud), two
+#   runs per case: enable_thinking=false and reasoning_effort=none each returned 0 reasoning characters;
+#   unset and enable_thinking=true returned 3,400-10,800. reasoning_effort low|medium|high are accepted
+#   but not graded (reasoning 3,900-7,800 characters with no ordering), and thinking_budget, top-level
+#   enable_thinking and /no_think are ignored, so this is an on/off switch with no effort or budget.
+#   CARouter Cloud serves on vLLM (https://carouter.ai/blog/lfm2-5-24b-a2b-vs-qwen3-6-35b-a3b-on-a-gb10.md).
+#   Scaleway's effort list (providers/scaleway/models/qwen3.6-35b-a3b.toml) applies to its own route,
+#   which is off unless the account enables it; Alibaba's thinking_budget is DashScope-only.
 # CARouter Cloud serves it on vLLM with a per-workspace prefix cache (cached input billed lower,
 #   cache_salt accepted). CARouter documents image input, not video.
 schema = 2
