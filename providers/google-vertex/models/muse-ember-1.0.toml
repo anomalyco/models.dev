@@ -15,8 +15,11 @@
 # Mid-conversation updates: false. Vertex documents no in-place system message, per-turn effort or tool-change mechanism
 # for Meta models; the Meta API's Responses system_updates was checked only on api.meta.ai.
 # Not verified live (no working Vertex credentials when added, 2026-11-09).
+# v2_only: Vertex serves Muse only on the Responses API, so the v1 entry would be @ai-sdk/openai, which older clients
+# reading v1 call without a key (Vertex uses OAuth) and fail. v2 clients route it to google-vertex/responses.
 # Inputs: Text, Image (Vertex model page). Image MIME types are Meta's (https://dev.meta.ai/docs/media-understanding).
 schema = 2
+v2_only = true
 base_model = "meta/muse-ember-1.0"
 status = "beta"
 
