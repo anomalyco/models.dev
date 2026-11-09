@@ -10,8 +10,8 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = false }
-structured_output = false
+reasoning = { supported = true, toggle = true }
+structured_output = true
 temperature = true
 
 [limit]
