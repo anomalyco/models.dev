@@ -1,0 +1,18 @@
+# Qwen3 Embedding 8B on Fireworks Serverless: accounts/fireworks/models/qwen3-embedding-8b
+# Serverless feed https://api.fireworks.ai/v1/serverless/models: output "embeddings", "Embedding input tokens" $0.10/MTok,
+#   context_length 40960; List Models kind EMBEDDING_MODEL, supportsServerless (accessed 2026-11-08).
+# Docs (40k context, serverless, $0.10/MTok): https://docs.fireworks.ai/guides/querying-embeddings-models
+# Pricing: https://docs.fireworks.ai/serverless/pricing#embeddings. Live POST /inference/v1/embeddings returned 4096-dim vectors (2026-11-08).
+# Context inherits the lab's 32,768 (the model's documented maximum), not the catalog's 40,960.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-embedding-8b"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0

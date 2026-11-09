@@ -1,0 +1,17 @@
+# https://developers.cloudflare.com/workers-ai/models/bge-m3/ (task "Text Embeddings"; the page's 60,000-token context
+#   window covers the whole contexts[] batch, not one input, so the lab's 8,192 is kept)
+# Price: https://developers.cloudflare.com/workers-ai/platform/pricing/ and the model page's unit pricing (accessed 2026-11-08).
+# API: POST /accounts/{ACCOUNT_ID}/ai/v1/embeddings returns OpenAI-shaped vectors (live check 2026-11-08); the native
+#   /ai/run/<model> route also works. Workers AI search's OpenRouter format omits embeddings, so the sync never touches this file.
+schema = 2
+v2_only = true
+base_model = "baai/bge-m3"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.0118
+
+[cost.text.output]
+price = 0

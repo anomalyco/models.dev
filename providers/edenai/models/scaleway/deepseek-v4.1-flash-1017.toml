@@ -2,18 +2,16 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash 1017 (Scaleway)"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = false
 
+[limit]
+context = 256_000
+
 [cost.text.input]
-price = 0.67602
-cache = { read = 0.135204 }
+price = 0.6699
+cache = { read = 0.13398 }
 
 [cost.text.output]
-price = 2.028059
+price = 2.0097

@@ -1534,6 +1534,22 @@ test("requires authored Tinfoil controls instead of inventing an empty set", () 
   expect(model.reasoning_options).toEqual([]);
 });
 
+test("takes Tinfoil effort levels from supported_efforts and keeps other authored controls", () => {
+  const model = buildTinfoilModel(tinfoilModel({ supported_efforts: ["max", "low", "high"] }), {
+    ...existingTinfoilGLM,
+    reasoning_options: [{ type: "toggle" }, { type: "effort", values: ["low", "medium", "high"] }],
+  });
+  expect(model.reasoning_options).toEqual([{ type: "toggle" }, { type: "effort", values: ["low", "high", "max"] }]);
+
+  // A model that newly reports reasoning no longer needs hand-authored controls when the catalog lists them.
+  const fresh = buildTinfoilModel(tinfoilModel({ supported_efforts: ["low", "medium", "high"] }), {
+    ...existingTinfoilGLM,
+    reasoning: false,
+    reasoning_options: undefined,
+  });
+  expect(fresh.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "high"] }]);
+});
+
 test("removes stale Tinfoil cache pricing when the public catalog omits it", () => {
   const model = buildTinfoilModel(tinfoilModel({
     pricing: {
@@ -4016,6 +4032,42 @@ test("DeepInfra price updates keep v2 data and restore the synced v2 values", as
 
     const result = await syncProvider(provider);
     expect(result).toMatchObject({ created: 0, updated: 1, deleted: 0 });
+    expect(await readFile(path.join(modelsDir, `${id}.toml`), "utf8")).toBe(shipped);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("DeepInfra keeps hand-authored embedding files and skips embedding models without one", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-deepinfra-embeddings-"));
+  const modelsDir = path.join(root, "providers", "deepinfra", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const id = "BAAI/bge-base-en-v1.5";
+  const base = "baai/bge-base-en-v1.5";
+  const source = (model_name: string): DeepInfraModel => ({
+    model_name,
+    type: "embeddings",
+    tags: ["openai"],
+    pricing: { type: "input_tokens", cents_per_input_token: 5e-7 },
+    max_tokens: 512,
+    deprecated: null,
+    private: 0,
+  });
+
+  try {
+    await mkdir(path.dirname(path.join(modelsDir, `${id}.toml`)), { recursive: true });
+    await mkdir(path.dirname(path.join(root, "models", `${base}.toml`)), { recursive: true });
+    await copyFile(path.join(repo, "models", `${base}.toml`), path.join(root, "models", `${base}.toml`));
+    const shipped = await readFile(path.join(repo, "providers", "deepinfra", "models", `${id}.toml`), "utf8");
+    await writeFile(path.join(modelsDir, `${id}.toml`), shipped);
+
+    const result = await syncProvider({
+      ...deepinfra,
+      modelsDir,
+      fetchModels: async () => [source(id), source("example/new-embedding")],
+    });
+    expect(result).toMatchObject({ created: 0, updated: 0, deleted: 0 });
+    expect(result.notices.join("\n")).toContain("`example/new-embedding`");
     expect(await readFile(path.join(modelsDir, `${id}.toml`), "utf8")).toBe(shipped);
   } finally {
     await rm(root, { recursive: true, force: true });

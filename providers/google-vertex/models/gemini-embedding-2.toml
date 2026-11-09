@@ -1,0 +1,29 @@
+# Sources (checked 2026-11-08):
+# - Model card: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/embedding-2
+#   (GA April 22, 2026; 8,192 input tokens; up to 3,072 dims; regions: global, us, eu only)
+# - API: POST https://aiplatform.{LOCATION}.rep.googleapis.com/v1/projects/{PROJECT}/locations/{LOCATION}/publishers/google/models/gemini-embedding-2:embedContent
+#   https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/embeddings/get-multimodal-embeddings
+#   (@ai-sdk/google-vertex routes gemini-embedding-2 to :embedContent)
+# - Pricing: https://cloud.google.com/vertex-ai/generative-ai/pricing (online, per 1M tokens:
+#   text $0.20, image $0.45, video $12.00, audio $6.50; no output charge)
+schema = 2
+v2_only = true
+base_model = "google/gemini-embedding-2"
+
+[api.embed-content]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0
+
+[cost.audio.input]
+price = 6.5
+
+[cost.image.input]
+price = 0.45
+
+[cost.video.input]
+price = 12

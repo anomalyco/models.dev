@@ -1,0 +1,39 @@
+# Sources (accessed 2026-11-07):
+# - Launch: https://levanto.ai/blog/introducing-sage2 (Levanto Labs, "Introducing Sage2", November 2, 2026)
+# - Model catalog: https://sage.levanto.ai/models (id levanto-sage-2, "Levanto: Sage 2.0", max_context_length 32,768,
+#   output decisions, passthrough reasoning off|auto|on, off by default)
+# - API version: https://sage.levanto.ai/openapi.json (Sage 2, 2.0.0)
+# - Docs: https://docs.levanto.ai/systemone.md (model levanto-sage-2 or sage-latest),
+#   https://docs.levanto.ai/decision-model/reasoning.md
+# - Images (beta, /decide only; PNG, JPEG or WebP data URIs): https://docs.levanto.ai/decision-model/images.md
+# Context: about 32K tokens on standard plans, 128K with extended context
+#   (https://docs.levanto.ai/decision-model/limits.md); the catalog lists 32,768.
+# Output: typed decision probabilities and extracted values, no generated text, so there is nothing to sample
+#   (temperature/top_p/top_k false). Optional reasoning tokens are billed as output but never returned as text.
+schema = 2
+v2_only = true
+type = "decision"
+name = "Sage 2"
+description = "Decision model that answers typed yes/no, choice, scale, sort and tag questions with calibrated probabilities, with streaming decisions and extraction"
+open_weights = false
+release_date = "2026-11-02"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0
+
+[[links]]
+label = "Documentation"
+url = "https://docs.levanto.ai/"
+type = "docs"
