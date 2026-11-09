@@ -4,6 +4,11 @@
 # Reasoning: $.reasoning_effort passthrough on /v1/chat/completions, same as the upstream OpenAI API.
 # Ratios from https://teapotrouter.com/api/pricing (retrieved 2026-11-08): model_ratio=5, completion_ratio=5 —
 # the standard-group list price now follows the official 5x output ratio (previously billed at a 2x ratio).
+# Freeform probe (2026-11-09, operator, live): chat-completions accepts requests carrying
+# freeform custom tools without erroring but does not execute them — a regex-grammar probe
+# (syntax "regex", definition ZZ[0-9]{3}) came back as plain content "ZZ000" with
+# finish_reason "stop" (no tool_calls object), and a text-format probe had the model state
+# it had no such tool. No format is enforced or callable, so freeform is omitted.
 schema = 2
 base_model = "openai/gpt-6-astra"
 
