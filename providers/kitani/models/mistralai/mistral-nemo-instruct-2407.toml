@@ -1,9 +1,7 @@
+# Source: GET https://api.kitani.ai/v1/models (accessed 2026-11-08): context_length, contract.max_output_tokens,
+# modalities, capabilities, and providers[].input/output_price_per_million and cache_pricing.read_per_million (USD per 1M tokens).
 schema = 2
 base_model = "mistral/mistral-nemo"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [limit]
 context = 8_192
