@@ -1,0 +1,45 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/xai/grok-4-1-fast
+# and https://wiro.ai/docs/completions-api
+# Upstream: x_wiro.pricing_source.source_model = "xai/grok-4-1-fast".
+# One model ID covers both of xAI's modes, switched by the toggle, so it takes the reasoning lab file and
+# its plain name.
+# Prices: the model page's flat rates per million tokens: input $0.20, cached input $0.05, output
+# $0.50. Reasoning tokens bill as output, and the reasoning and non-reasoning modes share these rates.
+# Toggle: reasoning.enabled = true|false (Chat Completions) or thinking.type = enabled|disabled (Messages),
+# the model's thinking switch on its model page (off by default). On Responses, reasoning.effort = none
+# turns it off and any other effort turns it on.
+# Live 2026-11-08 on this model: reasoning.enabled = true returned 146 reasoning tokens and false returned none.
+# Structured output: json_schema (catalog structured_output_modes).
+# Cache: the model page prices cached input, and the provider caches without a request field, so
+# cache = { implicit = true }.
+# Modalities: the catalog lists document, image, text input for this model, within the lab's formats.
+# Sampling: top_k is not in the catalog's supported_parameters.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "xai/grok-4.1-fast-reasoning"
+name = "Grok 4.1 Fast"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.5

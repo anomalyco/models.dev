@@ -1,0 +1,20 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/meta-llama/llama-3-2-3b-instruct
+# and https://wiro.ai/docs/completions-api
+# No [cost]: Wiro bills this model by GPU time, $0.0006 per second on its model page, not per token,
+# so there is no per-token price to publish.
+# Limits: context_length 51,200 and max_tokens 2,048 (catalog), below the lab's.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "meta/llama-3.2-3b-instruct"
+
+[limit]
+context = 51_200
+output = 2048
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

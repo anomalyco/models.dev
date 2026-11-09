@@ -1,0 +1,41 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/openai/gpt-6-1-terra
+# and https://wiro.ai/docs/completions-api
+# Prices: the model page's token rates per million tokens: input $1.00, output $5.00.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (Chat Completions). reasoning.effort (Responses)
+# and output_config.effort (Messages) take the same levels.
+# These are the model's declared levels (the reasoning effort options on its model page). The gateway
+# moves an effort a model does not declare to the nearest declared one, upward first, and names the change
+# in the x-wiro-adjusted-parameters response header; none is rejected unless declared.
+# The same levels as providers/openai/models/gpt-6.1-terra.toml.
+# Custom tools (catalog custom_tools = true): Chat Completions and Responses reach the same upstream call,
+# so both list the same formats. Live 2026-11-08 at the default reasoning effort, with a prompt asking for
+# "hello", a regex grammar (ZZ[0-9]{3}) and the same Lark grammar each returned a matching value 2 times out
+# of 2 on both APIs.
+# Messages takes function tools only (Anthropic's custom type is a function tool).
+# Modalities: the catalog lists text input for this model, within the lab's formats.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 5

@@ -1,0 +1,26 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/qwen/qwen3-32b
+# and https://wiro.ai/docs/completions-api
+# No [cost]: Wiro bills this model by GPU time, $0.0006 per second on its model page, not per token,
+# so there is no per-token price to publish.
+# Always on: this host has no reasoning control for this model (no reasoning_enabled or
+# reasoning_effort in capabilities.generation_controls).
+# Live 2026-11-08 on this model: a plain request returned reasoning text.
+# Limits: context_length 17,408 and max_tokens 4,096 (catalog), below the lab's.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "alibaba/qwen3-32b"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 17_408
+output = 4096
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

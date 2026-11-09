@@ -1,0 +1,32 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/qwen/qwen3-5-9b
+# and https://wiro.ai/docs/completions-api
+# No [cost]: Wiro bills this model by GPU time, $0.0006 per second on its model page, not per token,
+# so there is no per-token price to publish.
+# Toggle: reasoning.enabled = true|false (Chat Completions) or thinking.type = enabled|disabled (Messages),
+# the model's thinking switch on its model page (on by default). On Responses, reasoning.effort = none
+# turns it off and any other effort turns it on.
+# Live 2026-11-08 on this model: reasoning.enabled = false returned no reasoning text.
+# Modalities: the catalog lists text input for this model, within the lab's formats.
+# Limits: context_length 25,600 and max_tokens 16,384 (catalog), below the lab's.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "alibaba/qwen3.5-9b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+
+[limit]
+context = 25_600
+output = 16_384
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

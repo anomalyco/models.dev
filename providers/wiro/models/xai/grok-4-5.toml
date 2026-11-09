@@ -1,0 +1,45 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/xai/grok-4-5
+# and https://wiro.ai/docs/completions-api
+# Upstream: x_wiro.pricing_source.source_model = "xai/grok-4.5".
+# Prices: the model page's flat rates per million tokens: input $2.00, output $6.00. Reasoning tokens
+# bill as output.
+# Effort: reasoning_effort = low|medium|high (Chat Completions). reasoning.effort (Responses)
+# and output_config.effort (Messages) take the same levels.
+# These are the model's declared levels (the reasoning effort options on its model page). The gateway
+# moves an effort a model does not declare to the nearest declared one, upward first, and names the change
+# in the x-wiro-adjusted-parameters response header; none is rejected unless declared.
+# Live 2026-11-08 on this model: reasoning_effort = xhigh answered with x-wiro-adjusted-parameters:
+# reasoning.effort=high.
+# Structured output: json_schema (catalog structured_output_modes).
+# Modalities: the catalog lists document, image, text input for this model, within the lab's formats.
+# Limits: max_tokens 65,536 (catalog), below the lab's.
+# Sampling: top_k is not in the catalog's supported_parameters.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "xai/grok-4.5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "medium", "high"] }
+structured_output = true
+top_k = false
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 6
