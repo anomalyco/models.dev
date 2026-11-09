@@ -1,0 +1,16 @@
+# Source: GET https://api.kitani.ai/v1/models (accessed 2026-11-08): prices (providers[].input/output_price_per_million,
+# cache_pricing.read_per_million, USD per 1M tokens). Reasoning: https://kitani.ai/docs/reasoning (accessed 2026-11-09).
+# Effort: reasoning_effort on Chat Completions; reasoning text is returned in reasoning_content.
+# Separate thinking ID; none is rejected and medium is mapped to high.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "high" } }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.1

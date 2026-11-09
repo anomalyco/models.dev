@@ -1,0 +1,16 @@
+# Source: GET https://api.kitani.ai/v1/models (accessed 2026-11-08): prices (providers[].input/output_price_per_million,
+# cache_pricing.read_per_million, USD per 1M tokens). Reasoning: https://kitani.ai/docs/reasoning (accessed 2026-11-09).
+# Effort: reasoning_effort on Chat Completions; reasoning text is returned in reasoning_content.
+# none and medium are mapped to max (always thinks).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5
