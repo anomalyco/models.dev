@@ -1,14 +1,14 @@
 # Kimi K3.1 Pro replaced kimi-k3 on this host; the old ID has no forwarding alias.
-# TopxAI exposes text and image input, a 1,048,576-token context and 131,072 output
-# tokens. Its supported input set is narrower than the lab's, which also lists video.
-# Effort: reasoning_effort = low|high|max on Chat Completions (default max).
+# TopxAI serves it from a private deployment, not Moonshot's API, with text and image
+# input (base64 data URIs only), a 1,048,576-token context and 131,072 output tokens.
+# Its supported input set is narrower than the lab's, which also lists video.
+# Effort: reasoning_effort = low|high|max on Chat Completions (default low).
 # Reasoning is always on; no separate toggle. Host contract and current prices:
-# https://ai.topxea.com/pricing/kimi-k3.1-pro and https://ai.topxea.com/api/pricing
-# (accessed 2026-10-25). Retained retail prices are 120% of Moonshot's list;
-# the default cache-write rate equals input. No 1h cache TTL is claimed here.
-# Chat reasoning_content and structured output follow the native Chat contract:
-# https://platform.kimi.ai/docs/api/chat and https://ai.topxea.com/docs/api-reference.
-# These successor capabilities were not re-tested with paid calls for this update.
+# https://ai.topxea.com/docs/kimi-k3-1-pro, https://ai.topxea.com/pricing/kimi-k3.1-pro
+# and https://ai.topxea.com/api/pricing (accessed 2026-11-08). Fixed prices; caching is
+# automatic and no cache-write price is published.
+# The deployment ignores a json_schema response format (json_object works), so
+# structured output is not claimed. These capabilities were not re-tested with paid calls.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -17,8 +17,7 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
-structured_output = true
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "high", "max"] }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -30,8 +29,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 2.4
-cache = { read = 0.24, write = 2.4 }
+price = 0.5
+cache = { read = 0.3 }
 
 [cost.text.output]
-price = 12
+price = 5

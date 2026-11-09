@@ -1,0 +1,39 @@
+# DeepSeek V4.1 Flash 1017 on its standard weights (not abliterated), served from TopxAI's
+# private deployment rather than DeepSeek's API. Launched 2026-11-08.
+# https://ai.topxea.com/docs/deepseek-flash-abliterated and
+# https://ai.topxea.com/pricing/deepseek-flash-fast (accessed 2026-11-08)
+# Effort: reasoning_effort = none|low|high|max on Chat Completions (default low).
+# none disables reasoning, so there is no additional toggle.
+# Images: base64 data URLs only; http(s) image URLs are not fetched.
+# The deployment ignores stop, a json_schema response format (json_object works),
+# tool_choice none/required and parallel_tool_calls: false, so structured output is
+# not claimed. Limits on this host: 1,048,576-token context, 262,144 output tokens.
+# Fixed prices at every hour and context length; automatic cache reads, no separate
+# cache-write charge. Official DeepSeek comparison prices and peak hours do not apply.
+# Responses is stateless; send the full conversation. Messages converts to Chat.
+# https://ai.topxea.com/api/pricing (accessed 2026-11-08)
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.02
+cache = { read = 0.004 }
+
+[cost.text.output]
+price = 0.16

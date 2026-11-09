@@ -1,0 +1,51 @@
+# Z.ai's GLM-5.3-Flash with its refusal alignment removed (abliterated), served from
+# TopxAI's own private deployment rather than Z.ai's API. Unique to this host, so
+# defined inline. Text and image input (base64 data URLs only; http(s) image URLs are
+# not fetched). Launched 2026-11-08.
+# https://ai.topxea.com/docs/glm-5-3-abliterated (accessed 2026-11-08)
+# Effort: reasoning_effort = low|high|max on /v1/chat/completions, reasoning.effort on
+# /v1/responses (default low); it always reasons.
+# Honours stop, json_object and json_schema response formats, tool_choice and
+# parallel_tool_calls: false, per the guide above. Responses is stateless; send the full
+# conversation. Messages converts to Chat. Fixed prices, no long-context tier and no
+# cache-write price; cached prompt tokens bill at the cache-read price.
+# https://ai.topxea.com/pricing/glm-5.3-flash-abliterated and
+# https://ai.topxea.com/api/pricing (accessed 2026-11-08)
+schema = 2
+name = "GLM-5.3-Flash-Abliterated"
+description = "GLM-5.3-Flash with refusal alignment removed, on TopxAI's private deployment; text and image input"
+family = "glm-flash"
+open_weights = false
+release_date = "2026-11-08"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.24
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 1
