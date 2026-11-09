@@ -18,9 +18,11 @@
 # inherit from the lab entry unchanged.
 # Prefix caching was verified on this deployment: a repeated identical chat prompt reported 9,600
 # cached tokens on the repeat.
-# context is this deployment's window, prompt plus output, 1,048,576 tokens. output is 32,768, the
-# output length our provider feed advertises for this model, the same rule as the GLM-5.3-Flash
-# entry.
+# context is this deployment's window, prompt plus output, 1,048,576 tokens. output is 65,536, the
+# output length our provider feed advertises for this model (max_completion_tokens in the feed
+# above), reasoning tokens included. Measured on the public API on 2026-11-06: a request with
+# max_tokens 65536 returned 65,536 completion tokens with finish_reason "length" in 557 s, inside
+# the 740-second response limit.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
@@ -30,7 +32,7 @@ structured_output = true
 
 [limit]
 context = 1_048_576
-output = 32_768
+output = 65_536
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
