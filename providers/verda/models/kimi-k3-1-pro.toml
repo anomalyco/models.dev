@@ -4,13 +4,18 @@
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
-[modalities]
-input = ["text", "image"]
+# Verda enables Text and Image and does not currently support video.
+[modalities] 
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["none", "low", "high", "max"] }
+# Verda supports reasoning_effort = low, high, max (default: max).
+# https://docs.verda.com/inference/models/kimi-k3-1-pro/#reasoning
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 
+# Verda returns reasoning_content; streaming uses delta.reasoning_content.
+# https://docs.verda.com/inference/openai-compatibility/#reasoning
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
