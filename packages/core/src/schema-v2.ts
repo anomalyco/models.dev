@@ -447,6 +447,8 @@ export const ApiProtocolV2Values = [
   "transcriptions",
   "embeddings",
   "embed-content",
+  // Vertex AI `publishers/google/models/{model}:predict` (`instances` in, `predictions` out).
+  "predict",
   "contextualized-embeddings",
   "fim",
   "moderations",
