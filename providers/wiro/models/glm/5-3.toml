@@ -11,8 +11,8 @@
 # in the x-wiro-adjusted-parameters response header; none is rejected unless declared.
 # Live 2026-11-08 on this model: reasoning_effort = minimal and medium were accepted unchanged, and max
 # answered with x-wiro-adjusted-parameters: reasoning.effort=high.
-# No toggle: GLM-5.3-Flash always reasons (its own API takes thinking.type = enabled only), and a live
-# request here with reasoning.enabled = false still returned reasoning tokens.
+# No toggle: GLM-5.3-Flash always reasons (its own API takes thinking.type = enabled only), and this
+# host answers reasoning.enabled = false with HTTP 400 "cannot turn reasoning off" (checked 2026-11-08).
 # Structured output: json_object and json_schema with strict (catalog structured_output_modes, strict_json_schema).
 # Cache: the catalog prices cached input (input_cache_read) and no request field controls caching,
 # so cache = { implicit = true }. Cached tokens are billed at these catalog rates (checked live
