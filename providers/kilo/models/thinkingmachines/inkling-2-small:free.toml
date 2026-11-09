@@ -1,0 +1,14 @@
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+name = "Thinking Machines: Inkling 2 Small (free)"
+description = "Inkling 2 Small is a multimodal mixture-of-experts reasoning model from Thinking Machines Lab, with 17B active parameters out of 594B total. It is the first model in the second Inkling..."
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "max"] }
+structured_output = false
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
