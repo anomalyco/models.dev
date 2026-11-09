@@ -1,0 +1,14 @@
+# Effort: reasoning_effort (/v1/chat/completions).
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.144, write = 1.62 }
+
+[cost.text.output]
+price = 6

@@ -1,0 +1,13 @@
+# Effort: reasoning_effort (/v1/chat/completions).
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1.08
+cache = { read = 0.029, write = 1.08 }
+
+[cost.text.output]
+price = 5.4

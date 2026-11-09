@@ -1,0 +1,14 @@
+# Effort: reasoning_effort (/v1/chat/completions).
+schema = 2
+base_model = "openai/gpt-5.6-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.237
+cache = { read = 0.0237, write = 0.243 }
+
+[cost.text.output]
+price = 1.41
