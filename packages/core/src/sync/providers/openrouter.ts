@@ -419,7 +419,8 @@ const BASE_URL = "https://openrouter.ai/api/v1";
 // SDK provider implements embeddings. Rerank takes and returns Cohere's rerank
 // shape, so @ai-sdk/cohere works against it. Images also answer OpenAI's
 // /images/generations, so OpenCode uses its OpenAI media protocols for images,
-// speech and transcription; it has none for video, embeddings or rerank.
+// speech and transcription, and its OpenRouter provider for embeddings; it has
+// none for video or rerank.
 // https://openrouter.ai/docs/api/api-reference/tts/create-speech (POST /audio/speech)
 // https://openrouter.ai/docs/api/api-reference/stt/create-transcription (POST /audio/transcriptions)
 // https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request (POST /embeddings)
@@ -435,7 +436,7 @@ const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk: string; opencodea
     aisdk: "@ai-sdk/openai",
     opencodeai: "@opencode/ai/protocols/openai-transcription",
   },
-  embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
+  embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/embeddings" },
   reranking: { protocol: "rerank", aisdk: "@ai-sdk/cohere", opencodeai: "none" },
   image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/images" },
   video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },

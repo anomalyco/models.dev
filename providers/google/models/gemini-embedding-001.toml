@@ -30,7 +30,7 @@ sdk = { opencodeai = "none" }
 
 [api.embeddings]
 base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
-sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "none" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.15
