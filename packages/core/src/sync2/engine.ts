@@ -321,16 +321,16 @@ function mergeKinds(current: unknown[], observed: unknown[], only?: string[]) {
   });
 }
 
-// The source's tables replace or join the file's; the file's other tables stay
-// in order. A file with none was served on the provider's default API, which
-// stays first.
+// The source's tables join the file's: a source key replaces the file's value
+// for that key, and the file's other keys and tables stay, in order. A file
+// with no API tables was served on the provider's default API, which stays first.
 function mergeTables(current: unknown, observed: Doc, defaultApi: string | undefined) {
   const tables: Doc = isTable(current) && Object.keys(current).length > 0
     ? structuredClone(current)
     : defaultApi === undefined ? {} : { [defaultApi]: {} };
   for (const [key, value] of Object.entries(observed)) {
     if (value === null) delete tables[key];
-    else tables[key] = structuredClone(value);
+    else tables[key] = isTable(value) && isTable(tables[key]) ? { ...tables[key], ...structuredClone(value) } : structuredClone(value);
   }
   return tables;
 }

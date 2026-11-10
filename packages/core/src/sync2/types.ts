@@ -40,9 +40,9 @@ export type Observation = Observed<ModelFields> & {
  *   `only`, the source speaks for just those kinds and the file's others stay.
  * - `deprecated`: `status`. The source says "deprecated" or null; null only
  *   clears a "deprecated" status, never another one.
- * - `tables`: a table of tables (`api`). The source's tables replace or join the
- *   file's, null removes one, and the file's others stay. A file with none gets
- *   the provider's default API first.
+ * - `tables`: a table of tables (`api`). Each source table joins the file's
+ *   (its keys win, the file's other keys stay), null removes one, and the
+ *   file's other tables stay. A file with no `api` gets the provider's default first.
  * - `report`: never written. When the source disagrees with the file, the model
  *   is an update gap and its file is left alone.
  * `standalone: true` limits a field to files without a base_model.

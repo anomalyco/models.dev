@@ -17,6 +17,7 @@ import { modular as oldModular } from "../src/sync/providers/modular.js";
 import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
 import { openai as oldOpenai } from "../src/sync/providers/openai.js";
 import { tinfoil as oldTinfoil } from "../src/sync/providers/tinfoil.js";
+import { venice as oldVenice } from "../src/sync/providers/venice.js";
 import { xai as oldXai } from "../src/sync/providers/xai.js";
 import { REPO_ROOT } from "../src/sync2/catalog.js";
 import { plan } from "../src/sync2/engine.js";
@@ -24,7 +25,7 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, openai: oldOpenai, tinfoil: oldTinfoil, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
@@ -186,6 +187,34 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
         });
       const template = raw.data.find((model: Raw) => model.id === "glm-5-3");
       data.push({ ...structuredClone(template), id: "glm-6" });
+      return { ...raw, data };
+    },
+  },
+  venice: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "qwen3-next-80b")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const spec = next.model_spec;
+          const caps = spec.capabilities;
+          if (model.id === "gemini-4-argon") spec.pricing.input.usd = 3;
+          if (model.id === "grok-4-3") spec.pricing.extended.input.usd = 9;
+          if (model.id === "qwen-3-7-plus") delete spec.pricing.cache_input;
+          if (model.id === "zai-org-glm-4.6") spec.deprecation = { date: "2026-12-01" };
+          if (model.id === "qwen3-vl-235b-a22b") caps.supportsVision = false;
+          if (model.id === "zai-org-glm-5-1") caps.reasoningEffortOptions = ["high", "low"];
+          if (model.id === "qwen3-235b-a22b-thinking-2507") caps.supportsReasoning = false;
+          if (model.id === "grok-4-5") caps.supportsWebSearch = !caps.supportsWebSearch;
+          if (model.id === "venice-uncensored-1-2") spec.name = "Venice Uncensored 1.2 Renamed";
+          if (model.id === "mistral-small-3-2-24b-instruct") delete spec.maxCompletionTokens;
+          if (model.id === "google-gemma-3-27b-it") caps.supportsFunctionCalling = !caps.supportsFunctionCalling;
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "mistral-small-3-2-24b-instruct");
+      data.push({ ...structuredClone(template), id: "mistral-large-2512", model_spec: { ...structuredClone(template.model_spec), name: "Mistral Large 3" } });
+      data.push({ ...structuredClone(template), id: "venice-brand-new", model_spec: { ...structuredClone(template.model_spec), name: "Venice Brand New" } });
       return { ...raw, data };
     },
   },

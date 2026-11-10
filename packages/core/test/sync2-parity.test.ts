@@ -20,6 +20,9 @@ const EXPECTED: Record<string, string[]> = {
   // Google turns thinking on for a TTS model. The old sync wrote reasoning = { supported = true }
   // with no controls; the new engine reports a gap instead, as AGENTS.md asks.
   "google/perturbed": ["providers/google/models/gemini-2.5-flash-preview-tts.toml"],
+  // A new Venice model with no lab file. The old sync wrote a standalone file with a generated
+  // description and today's date; the new engine reports a gap (no create-only fields yet).
+  "venice/perturbed": ["providers/venice/models/venice-brand-new.toml"],
 };
 
 for (const [provider, scenarios] of Object.entries(SCENARIOS)) {
