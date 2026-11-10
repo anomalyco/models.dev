@@ -1,9 +1,12 @@
 # Availability, exact wire ID, host capabilities, limit and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Moneo's public catalog explicitly reports has_reasoning=false for this route.
+# Live probe (2026-11-11): base and reasoning_effort=high both return HTTP 200 with no reasoning output, confirming has_reasoning=false.
+# tool_choice: live probe of the shared gateway confirms auto / none / required / named (specific) function are all accepted (HTTP 200).
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 
 [limit]
