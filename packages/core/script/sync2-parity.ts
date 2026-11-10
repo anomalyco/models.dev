@@ -1,0 +1,164 @@
+#!/usr/bin/env bun
+// Runs the old sync (packages/core/src/sync) and the new engine (packages/core/src/sync2)
+// on the same recorded source data and the current catalog, and compares the files each would write.
+//
+//   bun packages/core/script/sync2-parity.ts [provider...]
+
+import path from "node:path";
+import { cp, mkdtemp, readdir, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+
+import { syncProvider, type SyncProvider } from "../src/sync/index.js";
+import { meta as oldMeta } from "../src/sync/providers/meta.js";
+import { modular as oldModular } from "../src/sync/providers/modular.js";
+import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
+import { REPO_ROOT } from "../src/sync2/catalog.js";
+import { plan } from "../src/sync2/engine.js";
+import { modules } from "../src/sync2/index.js";
+
+const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
+
+const OLD: Record<string, SyncProvider<any>> = { meta: oldMeta, modular: oldModular, nearai: oldNearai };
+
+type Raw = any;
+
+// Each provider runs on the recorded data as is, and on a perturbed copy that
+// exercises price changes, a new model and a model leaving the source.
+export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  nearai: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "openai/gpt-4.1")
+        .map((model: Raw, index: number) => {
+          const next = structuredClone(model);
+          if (index % 4 === 0) {
+            next.pricing.input = model.pricing.input * 1.5;
+            next.pricing.output = model.pricing.output + 1;
+          }
+          if (model.id === "Qwen/Qwen3.8-27B") next.context_length = 100_000;
+          if (model.id === "black-forest-labs/FLUX.2-klein-4B") next.pricing.image = "0.02";
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "openai/gpt-4.1-mini");
+      data.push({ ...structuredClone(template), id: "openai/gpt-4.1-nano", pricing: { ...template.pricing, input: 0.1, output: 0.4 } });
+      return { ...raw, data };
+    },
+  },
+  modular: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      let retired = false;
+      const models = raw.models.map((model: Raw) => {
+        const next = structuredClone(model);
+        const priced = model.shared_endpoint && Number(model.pricing.input ?? 0) > 0;
+        if (priced && !retired && model.gateway_model_id.startsWith("MiniMaxAI/")) {
+          retired = true;
+          next.shared_endpoint = false;
+        } else if (priced) {
+          next.pricing.input = double(model.pricing.input);
+          next.pricing.output = double(model.pricing.output);
+          if (model.gateway_model_id === "google/gemma-4-31b-it") next.pricing.cached_input = "0";
+        }
+        return next;
+      });
+      models.push({ gateway_model_id: "example/new-model", shared_endpoint: true, billing_type: "token", pricing: { input: "0.000001", output: "0.000002" } });
+      return { ...raw, models };
+    },
+  },
+  meta: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => ({
+      ...raw,
+      pricing: raw.pricing.replaceAll("$1.25", "$1.30").replaceAll("$0.15", "$0.10").replaceAll("| $0.30", "| $0.35"),
+      families: raw.families.map((page: string, index: number) => (index === 0 ? page.replaceAll("1,048,576", "524,288") : page)),
+    }),
+  },
+};
+
+// Per-token price strings stay decimal ("0.0000003", not "3e-7"), as the source sends them.
+function double(price: string) {
+  return (Number(price) * 2).toFixed(12).replace(/0+$/, "");
+}
+
+export interface Parity {
+  provider: string;
+  scenario: string;
+  old: Record<string, string | null>;
+  new: Record<string, string | null>;
+  /** Paths where the two disagree. */
+  differences: string[];
+}
+
+export async function parity(provider: string, scenario: string): Promise<Parity> {
+  const raw = SCENARIOS[provider]![scenario]!(await Bun.file(path.join(FIXTURES, `${provider}.json`)).json());
+  const old = await runOld(OLD[provider]!, raw);
+  const { writes } = await plan(modules[provider]!, { raw });
+  const next = Object.fromEntries(writes);
+  const differences = [...new Set([...Object.keys(old), ...Object.keys(next)])]
+    .filter((file) => old[file] !== next[file])
+    .sort();
+  return { provider, scenario, old, new: next, differences };
+}
+
+// The old sync works on paths relative to the working directory, so it runs in
+// a copy of models/ and the provider's folder.
+async function runOld(provider: SyncProvider<any>, raw: Raw) {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync2-parity-"));
+  const relative = path.join("providers", provider.id);
+  const cwd = process.cwd();
+  const quiet = { log: console.log, warn: console.warn };
+  try {
+    await cp(path.join(REPO_ROOT, "models"), path.join(dir, "models"), { recursive: true });
+    await cp(path.join(REPO_ROOT, relative), path.join(dir, relative), { recursive: true });
+    process.chdir(dir);
+    console.log = () => {};
+    console.warn = () => {};
+    await syncProvider({ ...provider, fetchModels: async () => raw }, {});
+  } finally {
+    console.log = quiet.log;
+    console.warn = quiet.warn;
+    process.chdir(cwd);
+  }
+  try {
+    const before = await snapshot(path.join(REPO_ROOT, relative, "models"));
+    const after = await snapshot(path.join(dir, relative, "models"));
+    const changed: Record<string, string | null> = {};
+    for (const file of new Set([...before.keys(), ...after.keys()])) {
+      if (before.get(file) !== after.get(file)) changed[`${relative}/models/${file}`] = after.get(file) ?? null;
+    }
+    return changed;
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+}
+
+async function snapshot(dir: string) {
+  const files = new Map<string, string>();
+  for (const entry of await readdir(dir, { recursive: true, withFileTypes: true })) {
+    if (!entry.isFile() || !entry.name.endsWith(".toml")) continue;
+    const file = path.join(entry.parentPath, entry.name);
+    files.set(path.relative(dir, file).split(path.sep).join("/"), await Bun.file(file).text());
+  }
+  return files;
+}
+
+if (import.meta.main) {
+  const providers = process.argv.slice(2).filter((arg) => !arg.startsWith("-"));
+  for (const provider of providers.length > 0 ? providers : Object.keys(SCENARIOS)) {
+    for (const scenario of Object.keys(SCENARIOS[provider]!)) {
+      const result = await parity(provider, scenario);
+      const files = (writes: Record<string, string | null>) =>
+        Object.entries(writes).map(([file, content]) => `${content === null ? "-" : "~"} ${file}`);
+      console.log(`\n${provider} / ${scenario}: old ${Object.keys(result.old).length} files, new ${Object.keys(result.new).length} files, ${result.differences.length} differ`);
+      for (const line of files(result.old)) console.log(`  old ${line}`);
+      for (const line of files(result.new)) console.log(`  new ${line}`);
+      for (const file of result.differences) {
+        console.log(`  DIFF ${file}`);
+        const show = (content: string | null | undefined) => JSON.stringify(content === null ? "(deleted)" : content ?? "(unchanged)");
+        console.log(`    old: ${show(result.old[file])}`);
+        console.log(`    new: ${show(result.new[file])}`);
+      }
+    }
+  }
+}
