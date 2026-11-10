@@ -1,0 +1,25 @@
+# Pricing: https://ai.klavo.ru/models/deepseek-v4.1-flash lists 25 / 5 / 100 RUB per 1M input / cached input /
+# output tokens (checked 2026-11-10); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4 decimals.
+# Klavo AI routes each request to one of several providers of the model (see the page); limits are the
+# smallest across them.
+# Effort: reasoning_effort = none|low|high|max; none turns reasoning off (no separate toggle); other levels map to the nearest.
+# Live check 2026-11-10 through https://api.klavo.ru/v1: none -> 0.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[cost.text.input]
+price = 0.3029
+cache = { read = 0.0606 }
+
+[cost.text.output]
+price = 1.2114
