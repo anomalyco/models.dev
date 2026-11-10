@@ -19,6 +19,7 @@ import { fireworksAi as oldFireworks } from "../src/sync/providers/fireworks-ai.
 import { githubCopilot as oldGithubCopilot } from "../src/sync/providers/github-copilot.js";
 import { google as oldGoogle } from "../src/sync/providers/google.js";
 import { huggingface as oldHuggingface } from "../src/sync/providers/huggingface.js";
+import { kilo as oldKilo } from "../src/sync/providers/kilo.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
@@ -37,13 +38,46 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, baseten: oldBaseten, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, huggingface: oldHuggingface, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, requesty: oldRequesty, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, baseten: oldBaseten, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, huggingface: oldHuggingface, kilo: oldKilo, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, requesty: oldRequesty, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  kilo: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "tencent/hy-mt2-7b")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const params = (add: string[], remove: string[] = []) => {
+            next.supported_parameters = [...next.supported_parameters.filter((param: string) => !remove.includes(param)), ...add];
+          };
+          switch (model.id) {
+            case "openai/gpt-6-luna": next.pricing.prompt = "0.0000003"; next.pricing.web_search = "0"; break;
+            case "x-ai/grok-4.5": next.pricing.web_search = "0.01"; delete next.pricing.input_cache_read; break;
+            case "google/gemini-omni-1.1-flash": next.name = "Gemini Omni 1.1 Flash Renamed"; break;
+            case "openai/gpt-6-astra": next.name = "GPT-6 Astra Renamed"; break;
+            case "moonshotai/kimi-k3": next.opencode = { variants: { thinking: { reasoning: { enabled: true, effort: "high" } } } }; break;
+            case "tencent/hy3": delete next.opencode; break;
+            case "z-ai/glm-5.1": params([], ["reasoning", "include_reasoning"]); break;
+            case "mistralai/devstral-2512": params(["structured_outputs"], ["temperature"]); break;
+            case "writer/palmyra-x5": next.architecture.input_modalities = ["text", "image"]; break;
+            case "stepfun/step-3.7-flash": next.top_provider = { ...next.top_provider, context_length: 65_536, max_completion_tokens: 8_192 }; break;
+            case "unbiased/pareto-26.10": Object.assign(next, { created: 1_800_000_000, knowledge_cutoff: "2026-01-01", hugging_face_id: "unbiased/pareto" }); break;
+            case "tencent/hy4-preview": next.pricing.prompt = "-1"; break;
+            case "qwen/qwen3.5-27b": next.supported_parameters = []; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "mistralai/devstral-2512");
+      data.push({ ...structuredClone(template), id: "meta-llama/llama-3.2-11b-vision-instruct", name: "Llama 3.2 11B Vision", description: "  A   new\nmodel " });
+      data.push({ ...structuredClone(template), id: "acme/brand-new", name: "Brand New" });
+      return { ...raw, data };
+    },
+  },
   requesty: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

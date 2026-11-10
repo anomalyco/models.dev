@@ -243,6 +243,7 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     const observed = getPath(observation, path);
     if (observed === undefined) continue;
     if (merge === "seed" && (observed === null || statesCapability(original, path))) continue;
+    if (merge === "refresh" && !options.creating && getPath(original, path) === undefined) continue;
     const own = getPath(doc, path);
     const fromBase = getPath(base, path);
     const current = own ?? fromBase;
@@ -277,8 +278,17 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
   changes.push(...switchedOff(doc, observation, owns));
   keepSupported(doc, base);
   bothModalities(doc, base);
+  orderLimit(doc);
   if (options.omitLabInput) changes.push(...omitLabInput(doc, base));
   return changes;
+}
+
+// [limit] keys are written context, input, output, wherever a patch added them.
+function orderLimit(doc: Doc) {
+  const limit = doc.limit;
+  if (!isTable(limit)) return;
+  const order = ["context", "input", "output"];
+  doc.limit = Object.fromEntries(Object.entries(limit).sort(([a], [b]) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99)));
 }
 
 // Whether the file itself states the capability a `seed` path belongs to.

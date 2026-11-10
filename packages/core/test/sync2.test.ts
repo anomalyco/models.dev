@@ -442,3 +442,15 @@ test("createOnly fields are written into new files only", async () => {
   expect(writes.get("providers/host/models/lab/a.toml")).not.toContain("name =");
   expect(writes.get("providers/host/models/lab/b.toml")).toContain('name = "Host B"');
 });
+
+test("merge: refresh updates a value the file sets and never adds one", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/own.toml": file("lab/a", 1, 'name = "Old"\n'),
+    "providers/host/models/lab/inherits.toml": file("lab/a", 1),
+  });
+  const owns = [{ path: "name", merge: "refresh" as const }];
+  const { writes } = await plan(provider([{ id: "lab/own", name: "New" }, { id: "lab/inherits", name: "New" }, { id: "lab/new", base: ["lab/a"], name: "New", cost: { text: { input: { price: 1 }, output: { price: 4 } } } }], { owns: [...owns, "cost.text.input.price", "cost.text.output.price"] }), { root });
+  expect([...writes.keys()].sort()).toEqual(["providers/host/models/lab/new.toml", "providers/host/models/lab/own.toml"]);
+  expect(writes.get("providers/host/models/lab/new.toml")).toContain('name = "New"');
+});

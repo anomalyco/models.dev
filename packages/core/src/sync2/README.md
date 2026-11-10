@@ -57,6 +57,7 @@ The engine takes the first hint with a lab file, ignoring case. A test checks th
   - `{ path: "api", merge: "tables" }`: each source table joins the file's (its values win key by key, at any depth, and the file's other keys stay), `null` removes one, and the file's other tables stay. The file's first table stays first, then the source's tables in its order, then the rest. A file with no `[api.*]` tables gets the provider's default API first, so it keeps being served on it; a lone empty default table isn't written.
   - `{ path, merge: "seed" }` is for a capability detail such as `capabilities.reasoning.toggle`. It's only written while the file doesn't state that capability itself (its own table is missing or says `supported = false`), so controls a person wrote are kept (Deep Infra's `can-disable-reasoning` tag).
   - `{ path, merge: "kinds", addOnly: true }`: the source only adds kinds, never removes one (Deep Infra's tags).
+  - `{ path, merge: "refresh" }` only updates a value the file itself sets, or writes it into a new file; a file that inherits the field keeps inheriting it (Kilo's display names).
   - `{ path, merge: "report" }` is never written. If the source disagrees with the file, the model becomes an update gap and its file is left alone (Mistral's probed reasoning efforts).
   - `standalone: true` (with any rule) only patches files without a `base_model`; with one, the lab's value stands (Anthropic's release dates).
   - `createOnly: true` (with any rule) only writes the field into a new file; an existing file keeps its own (Chutes' generated name and description).
@@ -115,6 +116,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | github-copilot | same | same | None in the data. A public preview row updates both `<slug>` and `<slug>-preview` when both files exist; the old sync updated only `<slug>`. No such pair exists. |
 | google | same | 1 file | Turning thinking on for a file with no reasoning controls is a gap; the old sync wrote `reasoning = { supported = true }` with no controls. The fetch sends the key in the `x-goog-api-key` header instead of the URL. |
 | huggingface | same | 2 files | A new file doesn't restate `tools = { supported = true }` when its lab already says so; the old sync always wrote it. Existing files only get their API tables kept current. A Responses table's own keys stay (the old sync replaced the table whole); no file has any. |
+| kilo | same | same | |
 | meta | same | same | |
 | mistral | same | same | None in the data. A non-chat model (OCR, moderation) whose file has no `[api.*]` tables would get the provider's default API before its own; the old sync gave it only its own. Every such file already lists its API. |
 | modular | same | same | |

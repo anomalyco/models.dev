@@ -51,12 +51,14 @@ export type Observation = Observed<ModelFields> & {
  * - `seed`: a capability detail (`capabilities.reasoning.toggle`) only written
  *   while the file doesn't state that capability itself: its own table is
  *   missing or says `supported = false`. Controls a file states are kept.
+ * - `refresh`: only updates a value the file itself sets (or writes it into a
+ *   new file); a file that inherits the field keeps inheriting it.
  * `standalone: true` limits a field to files without a base_model, and
  * `createOnly: true` to new files.
  */
 export type Owned =
   | string
-  | (OwnedRule & { merge?: "min" | "nonzero" | "deprecated" | "tables" | "report" | "seed" })
+  | (OwnedRule & { merge?: "min" | "nonzero" | "deprecated" | "tables" | "report" | "seed" | "refresh" })
   | (OwnedRule & { merge: "kinds"; only?: string[]; addOnly?: boolean });
 
 interface OwnedRule {
