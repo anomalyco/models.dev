@@ -152,6 +152,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | ofox | same | 1 file | When the catalog lists 5m and 1h cache write prices, both are written; the old sync ignored the 1h price and scaled the file's by the change to the 5m one. A context band keeps the file's cache write TTLs, updating the first; the old sync scaled every TTL. Non-chat models and new models are reported, not written. |
 | ollama-cloud | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
 | openai | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
+| openrouter | same | 1 file | A new model that reasons with no listed controls is a gap; the old sync wrote `reasoning = { supported = true }` (a standalone file with no lab in the perturbed copy). Media files are rebuilt with `rebuild` from the old module's builder. Price overrides use the bands merge with `replaces: ["utc_days", "utc_hours"]` and `optional`; a band at a file band's threshold keeps the file's operator (the old sync wrote `gt`; every file uses `gt`). The media builders, `catalogCost` and the API helpers are still the old module's. |
 | ovhcloud | same | 1 file | A model that starts reasoning with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. |
 | pioneer | same | same | | |
 | prime | same | 1 file | A kind a new file differs from its lab in is written in the lab's formats (and the header says so); the old sync wrote bare kinds. A new model with no lab file is a gap; the old sync skipped it. Each file's header is generated, and the MIME line follows the file as written; the old sync looked at the file before the patch, so it caught up a run later. Effort `default` keeps the file as it is. | |
@@ -161,13 +162,9 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | wandb | same | 2 files | A model whose only control was a toggle and now lists none is written as `reasoning = { supported = true }`; the old sync could not write that ("does not reproduce the synced fields") and left the file. A new model that reasons with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. | |
 | xai | same | same | A long-context band is written as `gte` (the docs bill prompts of at least the threshold). The old sync kept a file's operator but wrote `gt` for a band the file didn't have. |
 
-`meta`, `modular`, `nearai` and `cloudflare-ai-gateway` still import fetch and parsing code (zod schemas, Meta's docs parser, the gateway's catalog mapping) from the old modules. Other ports carry their own.
+`meta`, `modular`, `nearai`, `cloudflare-ai-gateway` and `openrouter` still import fetch and parsing code (zod schemas, Meta's docs parser, the gateway's catalog mapping, OpenRouter's media builders and price mapping) from the old modules. Other ports carry their own.
 
 
 Not ported yet (still on the old sync):
 
-- `openrouter`, `vercel`: skipped. The rules they need, as the smallest additions to what's here:
-  - Media models (speech, transcription, embedding, rerank, image, video) are rebuilt from the file each run: the old sync keeps `status`, hand-written capabilities, `experimental` and `metadata` (and `description`, `family`, `knowledge` without a lab) and drops the rest. That's an observation flag, `rebuild: { keep: [...] }`, where the engine starts the file from `schema`, `base_model` and the kept fields, then patches.
-  - Chat price overrides merge by condition: time-of-day overrides are always the catalog's, context bands only when the catalog lists some, and others stay. The `bands` merge now has both options (`replaces: ["utc_days", "utc_hours"]`, `optional: true`).
-  - The 1h cache write price is keyed by the TTLs the file's cache capability lists; Vercel copies a new chat model's reasoning controls from another file in the provider (its `-free` route's base, or the file named after its lab ID); OpenRouter's tool choice depends on the file's own tool support. All three fit `refine(observation, file, files)`, which now exists.
-  - What's missing is the time to port 3,000 lines with parity on recorded and perturbed data.
+- `vercel`: next; it uses the same `rebuild` flag, bands options and `refine` as OpenRouter.

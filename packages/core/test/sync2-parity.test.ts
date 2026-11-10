@@ -15,6 +15,9 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // OpenRouter: a new model with no lab file that reasons with no listed controls
+  // is a gap; the old sync wrote a standalone file with reasoning = { supported = true }.
+  "openrouter/perturbed": ["providers/openrouter/models/acme/brand-new.toml"],
   // Cloudflare AI Gateway: a context window equal to the lab's is inherited (the
   // old sync wrote it into the file: qwen3-max, gpt-5.4, the new o3-pro), a
   // rewritten file keeps its tools table's key order (the old sync reordered it:

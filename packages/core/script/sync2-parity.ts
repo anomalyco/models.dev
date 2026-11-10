@@ -125,6 +125,41 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
       return { ...raw, result };
     },
   },
+  openrouter: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => !["z-ai/glm-4.5-air", "amazon/titan-embed-text-v1"].includes(model.id))
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const pricing = next.pricing;
+          const params = (remove: string[]) => (next.supported_parameters = next.supported_parameters.filter((param: string) => !remove.includes(param)));
+          switch (model.id) {
+            case "z-ai/glm-5.3": pricing.prompt = "0.0000015"; delete pricing.input_cache_read; next.reasoning = { mandatory: true, supported_efforts: ["high", "low"] }; break;
+            case "anthropic/claude-haiku-5.5": pricing.input_cache_write_1h = "0.0000011"; pricing.overrides[0].prompt = "0.0000006"; break;
+            case "openai/gpt-6-luna": pricing.overrides = [...pricing.overrides, { prompt: "0.0000001", utc_start: 2200, utc_end: 600 }]; pricing.web_search = "0.02"; break;
+            case "openai/gpt-6-sol": delete pricing.overrides; break;
+            case "minimax/minimax-m3.1-flash": pricing.overrides = pricing.overrides.slice(0, 1); break;
+            case "z-ai/glm-5.2": next.reasoning = { mandatory: false, supported_efforts: null }; next.context_length = 65_536; break;
+            case "z-ai/glm-4.7": params(["tool_choice"]); next.top_provider.max_completion_tokens = 8_192; break;
+            case "z-ai/glm-4.6": next.architecture.input_modalities = ["text", "image"]; params(["structured_outputs"]); break;
+            case "qwen/qwen3.8-flash": pricing.prompt = "-1"; break;
+            case "cloudflare/clef": next.architecture.input_modalities = ["text"]; break;
+            case "mistralai/mistral-large-2512": next.reasoning = { mandatory: false, supported_efforts: ["high", "low"] }; params(["temperature"]); break;
+            case "cohere/embed-5-fast": pricing.prompt = "0.0000001"; break;
+            case "assemblyai/assemblyai-tts-1": pricing.prompt = "0.00002"; next.name = "AssemblyAI TTS 1 Renamed"; break;
+            case "openai/gpt-image-2.6-flare": next.image_endpoints = next.image_endpoints?.map((endpoint: Raw) => ({ ...endpoint, pricing: endpoint.pricing.map((line: Raw) => ({ ...line, cost_usd: line.cost_usd * 2 })) })); break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "z-ai/glm-5.3");
+      data.push({ ...structuredClone(template), id: "z-ai/glm-4.5-airx", name: "Z.ai: GLM 4.5 AirX" });
+      data.push({ ...structuredClone(template), id: "acme/brand-new", name: "Acme: Brand New", reasoning: undefined });
+      const embed = raw.data.find((model: Raw) => model.id === "amazon/titan-embed-text-v2");
+      data.push({ ...structuredClone(embed), id: "baai/bge-small-en-v1.5", name: "BAAI: bge-small-en-v1.5" });
+      return { ...raw, data };
+    },
+  },
   digitalocean: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
