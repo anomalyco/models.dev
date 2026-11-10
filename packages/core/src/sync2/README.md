@@ -94,13 +94,13 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 
 | Provider | Recorded | Perturbed | Differences |
 | --- | --- | --- | --- |
+| anthropic | same | same | The 1h cache write price is read from the pricing page instead of scaled from the 5m price (same result while Anthropic keeps the 1.25x and 2x ratios). A new alias (an undated ID whose dated model has a file) is built from the source alone; the old sync copied its dated sibling's hand-written fields. Not in the data. |
 | fireworks-ai | same | 2 files | When Priority goes away, the new engine removes its price multiplier along with the mode; the old sync left the multiplier behind. The multiplier list is owned whole, so a non-Priority multiplier would be dropped too (none exist). |
 | google | same | 1 file | Turning thinking on for a file with no reasoning controls is a gap; the old sync wrote `reasoning = { supported = true }` with no controls. The fetch sends the key in the `x-goog-api-key` header instead of the URL. |
 | meta | same | same | |
+| mistral | same | same | None in the data. A non-chat model (OCR, moderation) whose file has no `[api.*]` tables would get the provider's default API before its own; the old sync gave it only its own. Every such file already lists its API. |
 | modular | same | same | |
 | nearai | same | same | On case-insensitive filesystems the new engine matches `qwen/x` to `Qwen/x`; the old one deletes the file. |
-| anthropic | same | same | The 1h cache write price is read from the pricing page instead of scaled from the 5m price (same result while Anthropic keeps the 1.25x and 2x ratios). A new alias (an undated ID whose dated model has a file) is built from the source alone; the old sync copied its dated sibling's hand-written fields. Not in the data. |
-| mistral | same | same | None in the data. A non-chat model (OCR, moderation) whose file has no `[api.*]` tables would get the provider's default API before its own; the old sync gave it only its own. Every such file already lists its API. |
 | novita-ai | same | same | A route that drops Chat Completions loses that table even when it's the file's first; the old sync kept the first table. Every route lists Chat Completions today. A long-context band's cache price of 0 is left out instead of written as 0. |
 | openai | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
 | tinfoil | same | same | A model that starts reasoning with no controls in its file is a gap; the old sync stopped with an error. |
@@ -108,3 +108,5 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | xai | same | same | A long-context band is written as `gte` (the docs bill prompts of at least the threshold). The old sync kept a file's operator but wrote `gt` for a band the file didn't have. |
 
 `meta`, `modular` and `nearai` still import fetch and parsing code (zod schemas, Meta's docs parser) from the old modules. Ports after those carry their own.
+
+Not ported: `deepinfra`. Its tags only ever turn capabilities and input kinds on, its `can-disable-reasoning` toggle is only added to a file that doesn't reason yet (a rule that depends on the file, like the create-only fields we haven't added), and new models find their lab through OpenRouter's canonical resolver, which hasn't moved here.
