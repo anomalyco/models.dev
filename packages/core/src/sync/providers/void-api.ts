@@ -50,14 +50,28 @@ function modelFields(remote: VoidModel, base: Record<string, unknown>): ModelFie
   return { ...fields, ...Object.fromEntries(labFields.map((key) => [key, base[key]])), cost };
 }
 
-function reasoningHeader(baseID: string, controls: ModelFields["reasoning_options"] = []) {
+const regexProbes = new Map([
+  ["gpt-5.6-luna", "none"],
+  ["gpt-5.6-sol", "none"],
+  ["gpt-5.6-terra", "none"],
+  ["gpt-6-astra", "low"],
+  ["gpt-6-luna", "none"],
+  ["gpt-6-sol", "none"],
+  ["gpt-6.1-sol", "low"],
+]);
+
+function reasoningHeader(id: string, baseID: string, controls: ModelFields["reasoning_options"] = []) {
   const has = (type: NonNullable<ModelFields["reasoning_options"]>[number]["type"]) =>
     controls.some((option) => option.type === type);
   const anthropic = baseID.startsWith("anthropic/");
+  const probeEffort = baseID === `openai/${id}` ? regexProbes.get(id) : undefined;
   return [
     has("effort") && "# Effort: reasoning_effort (/v1/chat/completions).",
     anthropic && has("toggle") && "# Toggle: thinking.type = enabled|disabled (chat only; enabled is translated to adaptive when required).",
     anthropic && has("budget_tokens") && "# Budget: thinking.type = enabled, thinking.budget_tokens (chat only); max_tokens must exceed the budget.",
+    probeEffort && `# Freeform probe 2026-11-09: /v1/chat/completions, custom regex ZZ[0-9]{3}, reasoning_effort=${probeEffort}: HTTP 200.`,
+    probeEffort && '# Despite a conflicting prompt, returned ZZ000 in tool_calls[].function.arguments (type=function), not custom.input.',
+    probeEffort && '# Freeform omitted: grammar enforced, but custom-tool response shape incompatible; text/lark untested.',
   ].filter(Boolean).join("\n");
 }
 
@@ -142,7 +156,7 @@ export const voidApi = {
     return {
       id: remote.id,
       model,
-      header: reasoningHeader(baseID, fields.reasoning_options),
+      header: reasoningHeader(remote.id, baseID, fields.reasoning_options),
     };
   },
 } satisfies SyncProvider<VoidModel>;

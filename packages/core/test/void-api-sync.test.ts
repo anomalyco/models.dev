@@ -80,6 +80,23 @@ test("same-base references, omissions, curated description and host-only extras 
   }
 });
 
+test("dated regex evidence is scoped to the seven probed invocation/canonical pairs", () => {
+  const ids = ["gpt-5.6-luna", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-6-astra", "gpt-6-luna", "gpt-6-sol", "gpt-6.1-sol"];
+  for (const id of ids) {
+    const remote = parsed({ ...row(id), base_model: `openai/${id}` });
+    const translated = voidApi.translateModel(remote, context())!;
+    expect(translated.header).toContain("Freeform probe 2026-11-09");
+    expect(translated.header).toContain("custom regex ZZ[0-9]{3}");
+    expect(translated.header).toContain(`reasoning_effort=${["gpt-6-astra", "gpt-6.1-sol"].includes(id) ? "low" : "none"}: HTTP 200`);
+    expect(translated.header).toContain("tool_calls[].function.arguments (type=function), not custom.input");
+    expect(translated.header).toContain("text/lark untested");
+    expect(formatToml({ id, ...translated.model })).not.toContain("freeform");
+  }
+  for (const remote of [row("future-gpt"), { ...row("gpt-6-astra"), base_model: "openai/gpt-6-sol" }]) {
+    expect(voidApi.translateModel(parsed(remote), context())!.header).not.toContain("Freeform probe");
+  }
+});
+
 test("enriched metadata emits genuine deltas, not duplicated lab facts", () => {
   const remote = { ...row(), name: "Served alias", attachment: false,
     modalities: { input: ["text"], output: ["text"] }, limit: { context: 200000, output: base.limit.output } };
