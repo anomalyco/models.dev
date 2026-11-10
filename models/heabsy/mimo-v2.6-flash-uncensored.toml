@@ -1,0 +1,25 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# taken from the existing curated entry providers/nano-gpt/models/xiaomi/mimo-v2.6-flash-uncensored.toml; provider fields stripped.
+# Source: Heabsy's fine-tune, as named by NanoGPT's entry
+schema = 2
+name = "MiMo V2.6 Flash Uncensored"
+description = "A lower-refusal MiMo V2.6 Flash finetune served by Heabsy with a 1M-token context window, separate reasoning output, and tool calling."
+family = "mimo"
+open_weights = true
+release_date = "2026-09-25"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 65_536

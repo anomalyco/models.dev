@@ -3,13 +3,9 @@
 # Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
 # measure it on: providers/nano-gpt/models/xiaomi/mimo-v2.6-flash-uncensored:thinking.toml
 # Input is text only: the router replaces image parts with a note for text models.
-# Standalone (no base_model): the hosts serving this model do not say whose weights it is, and
-# several unrelated Hugging Face repos share the name, so there is no lab identity to point to.
 schema = 2
+base_model = "heabsy/mimo-v2.6-flash-uncensored"
 name = "MiMo V2.6 Flash Uncensored Thinking"
-description = "MiMo V2.6 Flash Uncensored with maximum thinking enabled. Supports a 1M-token context window and tool calling."
-family = "mimo"
-open_weights = true
 release_date = "2026-09-26"
 
 [modalities]
@@ -17,14 +13,8 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["max"] }
 structured_output = false
-
-[limit]
-context = 1_048_576
-input = 1_048_576
-output = 65_536
 
 [cost.text.input]
 price = 0.5

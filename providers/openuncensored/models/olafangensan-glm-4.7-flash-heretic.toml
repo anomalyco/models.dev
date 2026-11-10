@@ -3,29 +3,13 @@
 # Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
 # measure it on: providers/venice/models/olafangensan-glm-4.7-flash-heretic.toml
 # Input is text only: the router replaces image parts with a note for text models.
-# Standalone (no base_model): the hosts serving this model do not say whose weights it is, and
-# several unrelated Hugging Face repos share the name, so there is no lab identity to point to.
 schema = 2
-name = "GLM 4.7 Flash Heretic"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-family = "glm"
-open_weights = true
-release_date = "2026-02-04"
-last_updated = "2026-06-11"
-
-[modalities]
-input = ["text"]
-output = ["text"]
+base_model = "olafangensan/glm-4.7-flash-heretic"
 
 [capabilities]
 cache = { implicit = true }
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-
-[limit]
-context = 200_000
-output = 24_000
 
 [cost.text.input]
 price = 0.07
