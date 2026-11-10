@@ -1,15 +1,20 @@
-# Source: GET https://api.isoquant.ai/v1/models (accessed 2026-11-11).
+# Source: GET https://api.isoquant.ai/v1/models (accessed 2026-11-10).
 # Pricing (nano-USD per token -> USD per million): 70/25/150 = $0.07/$0.025/$0.15
 # input/cached input/output. Prompt caching is automatic with no write price.
-# Reasoning: `reasoning_effort = low|high|max` on Chat Completions and `reasoning.effort`
-# on Responses, default max; Messages uses `output_config.effort`. No off switch.
+# Reasoning: the host publishes exactly `low|high|max` (default max) on all three APIs:
+# chat `reasoning_effort`, messages `output_config.effort`, responses `reasoning.effort`.
+# It exposes no off switch.
 # Chat Completions returns the trace in `reasoning_content`.
+# Tools: the host reports `strict_tools: true` and tool_choice auto/none/required/tool on all
+# three APIs (named maps to tool).
 # Output is capped by the remaining context, so the lab's 131,072 output limit stands.
+# Modalities: the host advertises text+image only; the lab's video and PDF inputs are not
+# advertised, so only the lab's JPEG/PNG image formats remain.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
