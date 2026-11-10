@@ -1,15 +1,18 @@
 # Source: https://nan.builders/docs/models (accessed 2026-11-10)
-# Relayed from an external provider. Vision, 1M context, 64K max answer.
-# "Larger model" tier, the lowest-priced one. A small max_tokens (~2K) can
-# return empty content on code tasks.
+# Relayed from an external provider. Vision, 1M context, "Max answer 64K tokens"
+# in NaN's model card. "Larger model" tier, the lowest-priced one. A small
+# max_tokens (~2K) can return empty content on code tasks.
 # Pricing: credits per 1M tokens from https://cloud.nan.builders/tokens (behind
 # login, accessed 2026-11-10): 41.70 input / 2.10 cached / 125.05 output.
 # Converted at the 1,000-credit pack list price (26 EUR) x 1.08, the EUR->USD
 # factor the page itself uses: 0.02808 USD per credit. Larger packs and the
 # subscriber discount are cheaper.
-# Effort: reasoning_effort = none|low|high; none turns reasoning off (the
-# thinking/enable_thinking aliases map to it), and a request naming no level
-# gets low.
+# Cache: the price page lists a Cached input rate for this model, so prompt
+# caching is implicit; NaN documents no cache_control markers. Cached reads are
+# billed at 2.10 credits per 1M.
+# Reasoning: reasoning_effort = none|low|high; none turns reasoning off (the
+# thinking/enable_thinking aliases are mapped here and mean none too), and a
+# request naming no level gets low.
 # https://nan.builders/docs/models#controlling-reasoning
 schema = 2
 base_model = "tencent/hy4"

@@ -1,17 +1,22 @@
 # Source: https://nan.builders/docs/models (accessed 2026-11-10)
-# 125B-6B MoE with vision, 1M context (1,048,576 tokens), max answer 131K.
-# max_tokens bounds only the visible answer; max_completion_tokens caps
-# reasoning plus answer.
+# 125B-6B MoE with vision, 1M context (1,048,576 tokens), "Max answer 131K" in
+# NaN's model card. max_tokens bounds only the visible answer;
+# max_completion_tokens caps reasoning plus answer.
 # Pricing: credits per 1M tokens from https://cloud.nan.builders/tokens (behind
 # login, accessed 2026-11-10): 7.50 input / 0.80 cached / 23.50 output. Converted
 # at the 1,000-credit pack list price (26 EUR) x 1.08, the EUR->USD factor the
 # page itself uses: 0.02808 USD per credit. Larger packs and the subscriber
 # discount are cheaper.
-# NaN reasoning table (checked 2026-11-10): on by default, none turns it off,
-# minimal..max steer its depth (hints, not caps).
-# Budget: thinking_budget or thinking_token_budget, 1..32768 hard cap on Chat
-# Completions, 0 turns reasoning off, larger values are lowered to 32768; send
-# either a budget or reasoning_effort, not both.
+# Cache: the price page lists a Cached input rate for this model, so prompt
+# caching is implicit; NaN documents no cache_control markers. Cached reads are
+# billed at 0.80 credits per 1M.
+# Reasoning: NaN's table says reasoning is on by default, "none turns it off,
+# minimal to max steer its depth (hints, not caps)", so those levels are kept;
+# off is effort=none, so no toggle.
+# Budget: thinking_budget or thinking_token_budget, "an integer from 1 to 32768
+# caps reasoning at that many tokens... 0 turns reasoning off... On NaN, a larger
+# value (or one that is not an integer) is lowered to 32768". Send either a budget
+# or reasoning_effort, not both.
 # https://nan.builders/docs/models#capping-reasoning-with-a-token-budget
 schema = 2
 base_model = "alibaba/qwen3.8-flash"

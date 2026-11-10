@@ -9,8 +9,12 @@
 # 1,000-credit pack list price (26 EUR) x 1.08, the EUR->USD factor the page
 # itself uses: 0.02808 USD per credit. Larger packs and the subscriber discount
 # are cheaper.
-# NaN reasoning table (checked 2026-11-10): none turns reasoning off; low,
-# medium, high, max (minimal is applied as low, xhigh as max).
+# Cache: the price page lists a Cached input rate for this model, so prompt
+# caching is implicit; NaN documents no cache_control markers. Cached reads are
+# billed at 0.14 credits per 1M.
+# Reasoning: NaN's table for mimo-v2.6-flash says none is off and "low, medium,
+# high, max. minimal is applied as low and xhigh as max", so those are the levels
+# exposed here; off is effort=none, so no toggle.
 # https://nan.builders/docs/models#controlling-reasoning
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"

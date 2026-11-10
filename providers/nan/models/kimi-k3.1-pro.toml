@@ -1,14 +1,18 @@
 # Source: https://nan.builders/docs/models (accessed 2026-11-10)
 # Relayed from an external provider. Text + image input on this host (no video
-# listed), 1M context and 1M max answer. "Larger model" tier.
+# listed), 1M context and "Max answer 1M tokens" in NaN's model card, which is why
+# the output ceiling is raised over the lab's 131,072 default; Moonshot documents
+# max_completion_tokens up to the 1,048,576 context window. "Larger model" tier.
 # Pricing: credits per 1M tokens from https://cloud.nan.builders/tokens (behind
 # login, accessed 2026-11-10): 100 input / 10 cached / 100 cache write / 500
 # output. Converted at the 1,000-credit pack list price (26 EUR) x 1.08, the
 # EUR->USD factor the page itself uses: 0.02808 USD per credit. Larger packs and
 # the subscriber discount are cheaper.
+# Cache: the price page lists Cached input and Cache write rates for this model,
+# so caching is implicit; NaN documents no cache_control markers.
 # Effort: reasoning_effort only. NaN does not map the thinking/enable_thinking
 # aliases on this model and leaves the levels out of its contract, so the lab's
-# low|high|max are recorded (K3.1 Pro always reasons).
+# low|high|max are recorded (K3.1 Pro always reasons, so there is no off).
 # https://nan.builders/docs/models#controlling-reasoning
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"

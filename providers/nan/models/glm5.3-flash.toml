@@ -7,8 +7,13 @@
 # at the 1,000-credit pack list price (26 EUR) x 1.08, the EUR->USD factor the
 # page itself uses: 0.02808 USD per credit. Larger packs and the subscriber
 # discount are cheaper.
-# NaN reasoning table (checked 2026-11-10): GLM always reasons; none is applied
-# as minimal, its shortest level, so no toggle.
+# Cache: the price page lists a Cached input rate for this model, so prompt
+# caching is implicit; NaN documents no cache_control markers. Cached reads are
+# billed at 1.05 credits per 1M.
+# Reasoning: NaN's table for glm5.3-flash says "Not possible: GLM always reasons.
+# none is applied as minimal, its shortest reasoning (a few tokens). minimal to
+# max; higher values reason longer before answering." So no toggle, and the
+# documented levels are kept over the lab's narrower set.
 # https://nan.builders/docs/models#controlling-reasoning
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"

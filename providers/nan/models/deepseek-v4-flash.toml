@@ -1,7 +1,7 @@
 # Source: https://nan.builders/docs/models (accessed 2026-11-10)
 # NaN keeps the deepseek-v4-flash id but serves DeepSeek V4.1 Flash: the
-# 2026-09-11 live check self-identified it as V4.1 Flash, and NaN's portal now
-# names the model "DeepSeek V4-Flash (4.1-1017 version)"
+# 2026-09-11 live check self-identified it as V4.1 Flash, and NaN's own portal
+# lists this id as "DeepSeek V4-Flash (4.1-1017 version)"
 # (https://cloud.nan.builders/tokens, accessed 2026-11-10), so it points at the
 # 1017 update. Text + image input, 1M context; output budgets above 393216 are
 # lowered to 393216.
@@ -10,8 +10,13 @@
 # the 1,000-credit pack list price (26 EUR) x 1.08, the EUR->USD factor the page
 # itself uses: 0.02808 USD per credit. Larger packs and the subscriber discount
 # are cheaper.
-# NaN reasoning table (checked 2026-11-10): none turns reasoning off and
-# minimal..max steer its depth (hints, not caps);
+# Cache: the price page lists a Cached input rate for this model, so prompt
+# caching is implicit; NaN documents no cache_control markers. Cached reads are
+# billed at 0.21 credits per 1M.
+# Reasoning: NaN's table for this model (accessed 2026-11-10) says none is off,
+# and "minimal to max steer how much it reasons. They are hints the model
+# follows, not hard caps", so the documented levels are kept rather than the
+# lab's narrower set; off is effort=none, so no toggle.
 # https://nan.builders/docs/models#controlling-reasoning
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"

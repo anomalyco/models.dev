@@ -2,14 +2,15 @@
 # 26B-A4B MoE, FP8, 262K token context, multimodal with vision, XML tool
 # calling, 1.5M tpm. Sampling defaults temp=0.6, top_p=0.95.
 # "No counter": draws no credits, so no per-token price.
-# Effort: reasoning_effort = none|low|medium|high|xhigh|max. NaN's reasoning
-# table (checked 2026-11-10): none (and its alias minimal) skips reasoning; on
-# Chat Completions low/medium/high/xhigh/max cap it at 2,048 / 8,192 / 16,384 /
-# 32,768 / 32,768 tokens. Default is on with a 16,384-token budget. Off is
-# effort=none, so no toggle.
-# Budget: thinking_budget or thinking_token_budget, 1..32768 hard cap on Chat
-# Completions, 0 turns reasoning off, larger values are lowered to 32768; send
-# either a budget or reasoning_effort, not both.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max. NaN's table says
+# none (and its alias minimal) turns it off, and "On Chat Completions they cap
+# the reasoning phase: low 2,048, medium 8,192, high 16,384, xhigh and max 32,768
+# tokens." Default is on with a 16,384-token budget. Off is effort=none, so no
+# toggle.
+# Budget: thinking_budget or thinking_token_budget, "an integer from 1 to 32768
+# caps reasoning at that many tokens... 0 turns reasoning off... On NaN, a larger
+# value (or one that is not an integer) is lowered to 32768"; send either a budget
+# or reasoning_effort, not both.
 # https://nan.builders/docs/models#capping-reasoning-with-a-token-budget
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
