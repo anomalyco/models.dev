@@ -111,6 +111,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | meta | same | same | |
 | mistral | same | same | None in the data. A non-chat model (OCR, moderation) whose file has no `[api.*]` tables would get the provider's default API before its own; the old sync gave it only its own. Every such file already lists its API. |
 | modular | same | same | |
+| morph | same | same | |
 | nearai | same | same | On case-insensitive filesystems the new engine matches `qwen/x` to `Qwen/x`; the old one deletes the file. |
 | novita-ai | same | same | A route that drops Chat Completions loses that table even when it's the file's first; the old sync kept the first table. Every route lists Chat Completions today. A long-context band's cache price of 0 is left out instead of written as 0. |
 | openai | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |

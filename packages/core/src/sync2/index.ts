@@ -8,6 +8,7 @@ import { google } from "./providers/google.js";
 import { meta } from "./providers/meta.js";
 import { mistral } from "./providers/mistral.js";
 import { modular } from "./providers/modular.js";
+import { morph } from "./providers/morph.js";
 import { nearai } from "./providers/nearai.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { openai } from "./providers/openai.js";
@@ -16,7 +17,7 @@ import { venice } from "./providers/venice.js";
 import { xai } from "./providers/xai.js";
 import type { SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { anthropic, deepinfra, "fireworks-ai": fireworksAi, google, meta, mistral, modular, nearai, "novita-ai": novitaAi, openai, tinfoil, venice, xai };
+export const modules: Record<string, SyncModule<any>> = { anthropic, deepinfra, "fireworks-ai": fireworksAi, google, meta, mistral, modular, morph, nearai, "novita-ai": novitaAi, openai, tinfoil, venice, xai };
 
 export { plan, sync };
 export type * from "./types.js";

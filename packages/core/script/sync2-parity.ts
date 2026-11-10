@@ -16,6 +16,7 @@ import { google as oldGoogle } from "../src/sync/providers/google.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
+import { morph as oldMorph } from "../src/sync/providers/morph.js";
 import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
 import { novitaAi as oldNovita } from "../src/sync/providers/novita-ai.js";
 import { openai as oldOpenai } from "../src/sync/providers/openai.js";
@@ -28,13 +29,36 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, deepinfra: oldDeepinfra, "fireworks-ai": oldFireworks, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, "novita-ai": oldNovita, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, deepinfra: oldDeepinfra, "fireworks-ai": oldFireworks, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  morph: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const price = (list: Raw[], type: string, cost: string | undefined) =>
+        cost === undefined ? list.filter((item) => item.type !== type) : list.map((item) => (item.type === type ? { ...item, cost_usd: cost } : item));
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "morph-glm52-744b")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const text = next.input_modalities.find((modality: Raw) => modality.type === "text");
+          const output = next.output_modalities.find((modality: Raw) => modality.type === "text");
+          if (model.id === "morph-kimik3") text.pricing = price(text.pricing, "prompt", "0.000001");
+          if (model.id === "morph-glm53-744b") text.pricing = price(text.pricing, "cached_prompt", undefined);
+          if (model.id === "morph-v3-fast") output.max_length.value = 8_192;
+          if (model.id === "morph-dsv4flash") text.supported_inputs.max_context_length.value = 65_536;
+          if (model.id === "reflex") text.pricing = price(text.pricing, "prompt", "0.0000002");
+          if (model.id === "morph-dsv41flash-1017") next.is_ready = false;
+          return next;
+        });
+      data.push({ ...structuredClone(raw.data.find((model: Raw) => model.id === "morph-kimik3")), id: "morph-kimik4" });
+      return { ...raw, data };
+    },
+  },
   nearai: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
