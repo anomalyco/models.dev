@@ -9,7 +9,7 @@ base_model = "minimax/MiniMax-H3-Image"
 
 [api.images]
 base_url = "https://api.minimax.io/v1"
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/minimax/images" }
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.text.input]
 price = 2.3
