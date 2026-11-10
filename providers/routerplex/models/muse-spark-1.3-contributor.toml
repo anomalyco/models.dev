@@ -1,8 +1,10 @@
-# Source: https://routerplex.com/api/models (accessed 2026-10-20).
+# Source: https://routerplex.com/api/models (accessed 2026-11-10).
 # Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
 # cache_read is listed only where cached prompt tokens bill below the input rate.
 # Contributor edition: Meta may train on prompts and completions sent to this id.
-# On this host it is text-only and does not accept tools.
+# On this host it is text-only and does not accept tools: the RouterPlex catalog
+# (https://routerplex.com/api/models) lists muse-spark-1.3-contributor with "vision": false and
+# "tool_call": false, and its pricing_note says "Tool calling is not supported on RouterPlex".
 base_model = "meta/muse-spark-1.3"
 name = "Muse Spark 1.3 Contributor"
 tool_call = false

@@ -1,12 +1,14 @@
-# Source: https://routerplex.com/api/models (accessed 2026-10-20).
+# Source: https://routerplex.com/api/models (accessed 2026-11-10).
 # Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
 # cache_read is listed only where cached prompt tokens bill below the input rate.
+# Effort: `reasoning_effort` is passed through to the upstream; the set copies the relay peer
+# providers/requesty/models/seed-2.0-pro.toml (none|low|medium|high|max).
 base_model = "bytedance-seed/seed-2.0-pro"
 name = "Doubao Seed 2.0 Pro"
 
 [[reasoning_options]]
 type = "effort"
-values = ["none", "low", "medium", "high"]
+values = ["none", "low", "medium", "high", "max"]
 
 [cost]
 input = 0.67

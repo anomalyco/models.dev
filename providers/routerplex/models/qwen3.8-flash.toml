@@ -1,8 +1,9 @@
-# Source: https://routerplex.com/api/models (accessed 2026-10-20).
+# Source: https://routerplex.com/api/models (accessed 2026-11-10).
 # Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
 # cache_read is listed only where cached prompt tokens bill below the input rate.
 # Toggle: `enable_thinking` true|false. Effort: `reasoning_effort` = low|medium|xhigh. Budget: `thinking_budget` up to 262144.
-# Text-only on this host (image input is rejected upstream).
+# Text-only on this host: the RouterPlex catalog (https://routerplex.com/api/models) lists
+# qwen3.8-flash with "vision": false, and image input is rejected upstream.
 base_model = "alibaba/qwen3.8-flash"
 attachment = false
 
