@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 
 import { syncProvider, type SyncProvider } from "../src/sync/index.js";
 import { anthropic as oldAnthropic } from "../src/sync/providers/anthropic.js";
+import { baseten as oldBaseten } from "../src/sync/providers/baseten.js";
 import { chutes as oldChutes } from "../src/sync/providers/chutes.js";
 import { cortecs as oldCortecs } from "../src/sync/providers/cortecs.js";
 import { deepinfra as oldDeepinfra } from "../src/sync/providers/deepinfra.js";
@@ -35,13 +36,38 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, huggingface: oldHuggingface, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, baseten: oldBaseten, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, huggingface: oldHuggingface, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  baseten: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "zai-org/GLM-5.3-Fast")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.id === "zai-org/GLM-5.2") next.pricing.prompt = "0.0000015";
+          if (model.id === "moonshotai/Kimi-K3") delete next.pricing.input_cache_read;
+          if (model.id === "openai/gpt-oss-120b") next.name = "GPT OSS 120B";
+          if (model.id === "deepseek-ai/DeepSeek-V4.1-Flash-Fast") next.supported_features = ["tools", "reasoning", "structured_outputs"];
+          if (model.id === "zai-org/GLM-5.3") Object.assign(next, { context_length: 524_288, max_completion_tokens: 65_536 });
+          if (model.id === "deepseek-ai/DeepSeek-V4-Pro-0813") next.input_modalities = ["text", "image"];
+          if (model.id === "deepseek-ai/DeepSeek-V4.1-Flash") next.supported_sampling_parameters = [];
+          if (model.id === "decision-models/baseten-mammoth-27b-latest") Object.assign(next, { context_length: 32_768, pricing: { ...next.pricing, prompt: "0.0000002" } });
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "zai-org/GLM-5.2");
+      data.push({ ...structuredClone(template), id: "meta-llama/Llama-3.3-70B-Instruct", name: "Llama 3.3 70B", supported_features: ["tools"], max_completion_tokens: 32_768 });
+      data.push({ ...structuredClone(template), id: "zai-org/GLM-5.1", name: "GLM 5.1" });
+      const decision = raw.data.find((model: Raw) => model.id === "decision-models/baseten-elephant-9b-latest");
+      data.push({ ...structuredClone(decision), id: "decision-models/baseten-elephant-9b-v2" });
+      return { ...raw, data };
+    },
+  },
   huggingface: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

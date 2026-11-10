@@ -37,6 +37,8 @@ const EXPECTED: Record<string, string[]> = {
     "providers/deepinfra/models/google/gemma-3-4b-it.toml",
     "providers/deepinfra/models/moonshotai/Kimi-K3.toml",
   ],
+  // Baseten: a new model that reasons with no controls is a gap.
+  "baseten/perturbed": ["providers/baseten/models/zai-org/GLM-5.1.toml"],
   // Chutes: a kind the source changes is written in the lab's formats (the old
   // sync wrote bare kinds), and a new model that reasons with no controls is a gap.
   "chutes/perturbed": [

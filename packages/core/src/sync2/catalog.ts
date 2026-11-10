@@ -112,7 +112,8 @@ export function inherited(doc: Doc, labs: Labs): Doc | undefined {
   if (typeof doc.base_model !== "string") return undefined;
   const lab = labs.get(doc.base_model);
   if (lab === undefined) throw new Error(`base_model ${doc.base_model} has no file under models/`);
-  const { schema: _schema, ...fields } = structuredClone(lab);
+  // `v2_only` is read from each file itself, never inherited.
+  const { schema: _schema, v2_only: _v2Only, ...fields } = structuredClone(lab);
   for (const omit of (doc.base_model_omit as string[] | undefined) ?? []) unsetPath(fields, omit);
   return fields;
 }
