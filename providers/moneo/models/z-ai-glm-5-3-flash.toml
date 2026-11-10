@@ -1,0 +1,22 @@
+# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.50
