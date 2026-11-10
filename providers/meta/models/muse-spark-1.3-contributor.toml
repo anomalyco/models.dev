@@ -11,6 +11,12 @@
 # Tools: tool_choice accepts only "auto" (https://dev.meta.ai/docs/tool-calling#guidelines; "required" returns 400 live 2026-10-24).
 # strict only validates the schema and doesn't constrain arguments (https://dev.meta.ai/docs/tool-calling#strict), so it is left out.
 # Tool search (tool_search + defer_loading) on Responses and Messages, not Chat Completions (https://dev.meta.ai/docs/tool-search); worked live on muse-spark-1.1 and muse-wonder-1.0 (2026-10-24), so search sits on [api.responses] and [api.messages] only.
+# Cache: automatic prefix caching on every API (https://dev.meta.ai/docs/prompt-caching). prompt_cache_retention "24h"
+# keeps the cached prefix up to 24 hours (default "in_memory": evicted under memory pressure or inactivity): documented
+# for Responses (https://dev.meta.ai/docs/prompt-caching#cache-retention) and Chat Completions
+# (https://dev.meta.ai/docs/api-reference/chat-completions/schemas); accepted live on Responses for every Muse text model,
+# and "bogus" is rejected with "expected `in_memory` or `24h`" (2026-11-10). Messages takes cache_control markers with
+# ttl "5m" only (https://dev.meta.ai/docs/api-reference/messages/create-message).
 schema = 2
 base_model = "meta/muse-spark-1.3"
 name = "Muse Spark 1.3 Contributor"
@@ -22,7 +28,7 @@ structured_output = true
 store = true
 stream_usage = true
 prompt_cache_key = true
-cache = { implicit = true }
+cache = { implicit = { ttl = ["24h"] } }
 
 [api.responses]
 capabilities = { system_updates = true, tools = { search = true } }
