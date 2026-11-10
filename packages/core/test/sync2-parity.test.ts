@@ -15,6 +15,18 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // Cloudflare AI Gateway: a context window equal to the lab's is inherited (the
+  // old sync wrote it into the file: qwen3-max, gpt-5.4, the new o3-pro), a
+  // rewritten file keeps its tools table's key order (the old sync reordered it:
+  // gpt-4o, gpt-5.4, claude-opus-4.8), and a new 5m write price keeps the file's
+  // 1h price (the old sync scaled it by the 5m change: claude-opus-4.8).
+  "cloudflare-ai-gateway/perturbed": [
+    "providers/cloudflare-ai-gateway/models/alibaba/qwen3-max.toml",
+    "providers/cloudflare-ai-gateway/models/anthropic/claude-opus-4.8.toml",
+    "providers/cloudflare-ai-gateway/models/openai/gpt-4o.toml",
+    "providers/cloudflare-ai-gateway/models/openai/gpt-5.4.toml",
+    "providers/cloudflare-ai-gateway/models/openai/o3-pro.toml",
+  ],
   // DigitalOcean: a new file's kinds take the lab's formats (the old sync wrote
   // bare kinds), a new model that reasons with no listed efforts is a gap (the
   // old sync wrote reasoning = { supported = true }), and so is a new model

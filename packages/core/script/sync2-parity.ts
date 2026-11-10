@@ -58,6 +58,37 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
       return { ...raw, data, deprecations };
     },
   },
+  "cloudflare-ai-gateway": {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const sources = raw
+        .filter((source: Raw) => !["xai/grok-4.20-0309-non-reasoning", "runwayml/aleph-2"].includes(source.catalog.model_id))
+        .map((source: Raw) => {
+          const next = structuredClone(source);
+          const catalog = next.catalog;
+          const pricing = catalog.provider_details?.[0]?.pricing;
+          const properties = next.schemaInput?.properties;
+          switch (catalog.model_id) {
+            case "openai/gpt-5.4": pricing.input_tokens = 3; catalog.context_length = 1_050_000; break;
+            case "anthropic/claude-opus-4.8": delete pricing.input_cached_tokens; pricing.input_cache_creation_tokens = 7; break;
+            case "xai/grok-4.3": catalog.provider_details[0].pricing = { long_context_threshold_tokens: 200_000, short_context_input_tokens: pricing.input_tokens, short_context_output_tokens: pricing.output_tokens, long_context_input_tokens: pricing.input_tokens * 2, long_context_output_tokens: pricing.output_tokens * 2 }; break;
+            case "xai/grok-4.5": catalog.provider_details[0].pricing = { input_tokens: 2, output_tokens: 6 }; break;
+            case "alibaba/qwen3-max": catalog.context_length = 262_144; break;
+            case "deepseek/deepseek-v4-pro": catalog.request_formats = ["chat-completions", "responses"]; properties.reasoning_effort.enum = ["low", "high"]; break;
+            case "minimax/m3.1-flash": catalog.request_formats = ["chat-completions"]; properties.tool_choice = { type: "string", enum: ["auto", "none"] }; break;
+            case "openai/gpt-4o": catalog.request_formats = ["responses"]; break;
+            case "google/gemini-2.5-pro": properties.reasoning_effort.enum = ["low", "high"]; break;
+            case "runwayml/gen-4.5": pricing.default = 0.15; break;
+            case "openai/gpt-image-1.5": catalog.name = "GPT Image 1.5 Renamed"; break;
+          }
+          return next;
+        });
+      const text = raw.find((source: Raw) => source.catalog.model_id === "openai/o3");
+      sources.push({ ...structuredClone(text), catalog: { ...structuredClone(text.catalog), model_id: "openai/o3-pro" } });
+      sources.push({ ...structuredClone(text), catalog: { ...structuredClone(text.catalog), model_id: "acme/brand-new" } });
+      return sources;
+    },
+  },
   "cloudflare-workers-ai": {
     recorded: (raw) => raw,
     perturbed: (raw) => {
