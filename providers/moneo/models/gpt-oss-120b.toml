@@ -1,0 +1,19 @@
+# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+context = 128_000
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.28
