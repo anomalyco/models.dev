@@ -4,10 +4,10 @@
 # - GET https://iranrouter.net/api/v1/models (pricing_per_million + per-model context_length)
 # IranRouter is an OpenAI-compatible multi-model relay; reasoning controls follow lab / same-surface peers.
 # Freeform (live 2026-11-09): POST /api/v1/chat/completions rejects type=custom tools (400 invalid_request / "Provider returned error"; gpt-6.1-sol: "Reasoning is mandatory..."). POST /api/v1/responses accepts custom tools with text|lark|regex formats (HTTP 200) but did not return custom_tool_call / enforce ZZ[0-9]{3} as a tool input (model replied in output_text or empty), so freeform is left unset. Regex probe definition: ZZ[0-9]{3}.
-# Host context_length from GET /api/v1/models for `gpt-5-nano` = 128_000 (lab openai/gpt-5-nano = 400_000).
+# Host dump 2026-11-10 GET /api/v1/models id=`gpt-5-nano`: context_length=128_000; pricing_per_million prompt=0.05 completion=0.4 (USD/MTok).
+# Truncated host context=128_000 vs lab 400_000; base_model_omit=["limit.input"] so inherited lab input cannot exceed context.
 schema = 2
 base_model = "openai/gpt-5-nano"
-# Truncated host context inherits lab limit.input which would exceed context; omit it (GET /api/v1/models context_length).
 base_model_omit = ["limit.input"]
 
 [capabilities]

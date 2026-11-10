@@ -1,15 +1,20 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Baseline: providers/nvidia/models/nvidia/nemotron-3.5-super-vl-120b-a12b.toml and
+# providers/openrouter/models/nvidia/nemotron-3.5-super-vl.toml (toggle = true).
 # Sources:
 # - https://iranrouter.net/docs
 # - https://iranrouter.net/models
 # - GET https://iranrouter.net/api/v1/models (pricing_per_million + context_length)
-# Same-surface peers (Venice / DigitalOcean) keep always-on reasoning with no toggle; IranRouter only
-# advertises reasoning_effort generically and has no documented enable_thinking forward, so no toggle.
+# Host dump 2026-11-10 GET /api/v1/models id=`nemotron-3.5-super-vl`: context_length=1_048_576; pricing_per_million prompt=0.15 completion=0.5 (USD/MTok).
 schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.15

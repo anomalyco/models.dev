@@ -7,6 +7,7 @@
 #   the non-Pro file keeps an explicit [limit] override for the truncated host value.
 # Freeform (live 2026-11-09): POST /api/v1/chat/completions rejects type=custom tools (400 invalid_request / "Provider returned error"; gpt-6.1-sol: "Reasoning is mandatory..."). POST /api/v1/responses accepts custom tools with text|lark|regex formats (HTTP 200) but did not return custom_tool_call / enforce ZZ[0-9]{3} as a tool input (model replied in output_text or empty), so freeform is left unset. Regex probe definition: ZZ[0-9]{3}.
 # Pro is a host model id for Sol with Pro reasoning, not a separate lab release (base openai/gpt-6.1-sol).
+# Host dump 2026-11-10 GET /api/v1/models id=`gpt-6.1-sol-pro`: context_length=1_050_000; pricing_per_million prompt=2 completion=10 (USD/MTok).
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 name = "GPT-6.1 Sol Pro"
