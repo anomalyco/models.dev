@@ -1,10 +1,12 @@
-# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Availability, exact wire ID, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Reasoning is supported, but Moneo's Chat Completions gateway does not expose a documented toggle, effort enum or budget control.
+# `deepseek-v4-1-flash-1017-uncensored` is Moneo's exact public wire ID.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash 1017 Uncensored"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 
