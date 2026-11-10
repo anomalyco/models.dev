@@ -11,6 +11,9 @@
 # Tools: tool_choice accepts only "auto" (https://dev.meta.ai/docs/tool-calling#guidelines; "required" returns 400 live 2026-10-24).
 # strict only validates the schema and doesn't constrain arguments (https://dev.meta.ai/docs/tool-calling#strict), so it is left out.
 # Tool search (tool_search + defer_loading) on Responses and Messages, not Chat Completions (https://dev.meta.ai/docs/tool-search); worked live on muse-spark-1.1 and muse-wonder-1.0 (2026-10-24), so search sits on [api.responses] and [api.messages] only.
+# Observed cache (cache.observed): pi -> CLIProxyAPI -> https://api.meta.ai/v1/responses with a Muse Code subscription key,
+#   default retention (no prompt_cache_retention sent). Each sample is a new session with a unique ~7k-token block,
+#   resumed after the age; warm = the reported cached tokens cover the harness prompt and at least half the block.
 schema = 2
 base_model = "meta/muse-wonder-1.0"
 
@@ -21,7 +24,22 @@ structured_output = true
 store = true
 stream_usage = true
 prompt_cache_key = true
-cache = { implicit = true }
+
+[capabilities.cache]
+implicit = true
+
+[capabilities.cache.observed]
+date = "2026-11-07"
+source = "https://github.com/ngvoicu/cache-ttl-probe/blob/main/results/harness-2026-11-07/H6.jsonl"
+checks = [
+  { age = "150s", warm = 3, total = 3 },
+  { age = "5m", warm = 3, total = 3 },
+  { age = "10m", warm = 3, total = 3 },
+  { age = "15m", warm = 3, total = 3 },
+  { age = "30m", warm = 3, total = 3 },
+  { age = "1h", warm = 3, total = 3 },
+  { age = "2h", warm = 3, total = 3 },
+]
 
 [api.responses]
 capabilities = { system_updates = true, tools = { search = true } }
