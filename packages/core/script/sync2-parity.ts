@@ -58,6 +58,42 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
       return { ...raw, data, deprecations };
     },
   },
+  "cloudflare-workers-ai": {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const id = (model: Raw) => model.id.replace(/^workers-ai\//, "");
+      const params = (model: Raw, remove: string[], add: string[] = []) => {
+        model.supported_parameters = [...model.supported_parameters.filter((param: string) => !remove.includes(param)), ...add];
+      };
+      const result = raw.result
+        .filter((model: Raw) => id(model) !== "@cf/meta/llama-guard-3-8b")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          switch (id(model)) {
+            case "@cf/zai-org/glm-5.3": next.pricing.prompt = "0.0000015"; next.context_length = 1_310_720; break;
+            case "@cf/zai-org/glm-5.3-flash": delete next.pricing.input_cache_read; next.reasoning.supported_efforts = ["high", "low"]; break;
+            case "@cf/openai/gpt-oss-120b": next.responses_api = false; next.reasoning = { mandatory: true, supported_efforts: ["high", "low"] }; break;
+            case "@cf/openai/gpt-oss-20b": next.reasoning = { mandatory: true, supported_efforts: ["high"] }; break;
+            case "@cf/qwen/qwen3.8-27b": next.reasoning = { mandatory: false, supported_efforts: ["high", "low"] }; break;
+            case "@cf/nvidia/nemotron-3-120b-a12b": next.reasoning = { mandatory: false, supported_efforts: ["high", "medium", "low"] }; break;
+            case "@cf/deepseek-ai/deepseek-v4-pro-0813": next.reasoning = { mandatory: false, supported_efforts: ["max", "high"] }; break;
+            case "@cf/moonshotai/kimi-k2.6": next.tool_choice = ["auto", "none"]; next.pricing.overrides = [{ min_prompt_tokens: 128_000, prompt: "0.000002", completion: "0.000008" }]; break;
+            case "@cf/meta/llama-3.3-70b-instruct-fp8-fast": params(next, ["tools", "tool_choice"]); next.context_length = 16_000; break;
+            case "@cf/meta/llama-3.2-3b-instruct": next.architecture.input_modalities = ["text", "image"]; params(next, ["temperature"], ["structured_outputs"]); break;
+            case "@cf/qwen/qwen2.5-coder-32b-instruct": next.responses_api = true; next.knowledge_cutoff = "2025-01-01"; break;
+            case "@cf/cloudflare/clef-flash": next.pricing.prompt = "0.0000003"; break;
+            case "@cf/mistralai/mistral-small-3.1-24b-instruct": next.top_provider.max_completion_tokens = 4_096; next.name = "Renamed"; break;
+          }
+          return next;
+        });
+      const template = raw.result.find((model: Raw) => id(model) === "@cf/meta/llama-3.1-8b-instruct-fp8");
+      result.push({ ...structuredClone(template), id: "workers-ai/@cf/meta/llama-3.1-70b-instruct", name: "Llama 3.1 70B Instruct" });
+      result.push({ ...structuredClone(template), id: "workers-ai/@cf/acme/brand-new", name: "Brand New", hugging_face_id: "acme/brand-new" });
+      const reasoner = raw.result.find((model: Raw) => id(model) === "@cf/qwen/qwq-32b");
+      result.push({ ...structuredClone(reasoner), id: "workers-ai/@cf/qwen/qwen3-32b", name: "Qwen3 32B" });
+      return { ...raw, result };
+    },
+  },
   digitalocean: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
