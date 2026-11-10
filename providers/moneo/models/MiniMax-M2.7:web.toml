@@ -1,0 +1,20 @@
+# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
+name = "MiniMax M2.7 (Web)"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+context = 198_000
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.35
+
+[cost.text.output]
+price = 1.50
