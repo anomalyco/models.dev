@@ -50,7 +50,7 @@ An observation uses the same field names as a v2 provider file (`cost`, `limit`,
   - `{ path: "api", merge: "tables" }`: each source table joins the file's (its keys win, the file's other keys stay), `null` removes one, and the file's other tables stay. The file's first table stays first, then the source's tables in its order, then the rest. A file with no `[api.*]` tables gets the provider's default API first, so it keeps being served on it; a lone empty default table isn't written.
   - `{ path, merge: "report" }` is never written. If the source disagrees with the file, the model becomes an update gap and its file is left alone (Mistral's probed reasoning efforts).
   - `standalone: true` (with any rule) only patches files without a `base_model`; with one, the lab's value stands (Anthropic's release dates).
-- Turning `capabilities.tools.supported` or `capabilities.reasoning.supported` off drops that capability's details (`strict`, `choice`, effort, toggle, ...). A capability table the file sets always names `supported`, even when it matches the lab.
+- Turning `capabilities.tools.supported` or `capabilities.reasoning.supported` off drops that capability's details (`strict`, `choice`, effort, toggle, ...). A capability table the file sets always names `supported`, even when it matches the lab, and a `[modalities]` table it sets lists both sides. A `tables` merge that removes every table removes the field.
 - `creates` decides what happens to a model the catalog doesn't have: create it, report it as a gap, or skip it with a notice.
 - `removals` decides what happens to a file the source no longer lists: delete it, set `status = "deprecated"`, or keep it and report a gap.
 
@@ -94,6 +94,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 
 | Provider | Recorded | Perturbed | Differences |
 | --- | --- | --- | --- |
+| fireworks-ai | same | 2 files | When Priority goes away, the new engine removes its price multiplier along with the mode; the old sync left the multiplier behind. The multiplier list is owned whole, so a non-Priority multiplier would be dropped too (none exist). |
 | google | same | 1 file | Turning thinking on for a file with no reasoning controls is a gap; the old sync wrote `reasoning = { supported = true }` with no controls. The fetch sends the key in the `x-goog-api-key` header instead of the URL. |
 | meta | same | same | |
 | modular | same | same | |

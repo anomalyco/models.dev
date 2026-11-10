@@ -20,6 +20,12 @@ const EXPECTED: Record<string, string[]> = {
   // Google turns thinking on for a TTS model. The old sync wrote reasoning = { supported = true }
   // with no controls; the new engine reports a gap instead, as AGENTS.md asks.
   "google/perturbed": ["providers/google/models/gemini-2.5-flash-preview-tts.toml"],
+  // Fireworks drops Priority for GLM 5.3 Flash (and its alias). Both engines remove the mode;
+  // the old sync left its price multiplier behind, the new one removes it too.
+  "fireworks-ai/perturbed": [
+    "providers/fireworks-ai/models/accounts/fireworks/models/glm-5p3-flash.toml",
+    "providers/fireworks-ai/models/accounts/fireworks/routers/glm-flash-latest.toml",
+  ],
   // A new Venice model with no lab file. The old sync wrote a standalone file with a generated
   // description and today's date; the new engine reports a gap (no create-only fields yet).
   "venice/perturbed": ["providers/venice/models/venice-brand-new.toml"],

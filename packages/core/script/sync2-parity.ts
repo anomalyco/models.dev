@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 
 import { syncProvider, type SyncProvider } from "../src/sync/index.js";
 import { anthropic as oldAnthropic } from "../src/sync/providers/anthropic.js";
+import { fireworksAi as oldFireworks } from "../src/sync/providers/fireworks-ai.js";
 import { google as oldGoogle } from "../src/sync/providers/google.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
@@ -26,7 +27,7 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, "novita-ai": oldNovita, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, "fireworks-ai": oldFireworks, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, "novita-ai": oldNovita, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
@@ -110,6 +111,35 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
         .replace("$6.25 / MTok", "$7.50 / MTok").replace("$10 / MTok", "$12 / MTok").replace("$0.50 / MTok", "$0.60 / MTok");
       lines[row("Claude Opus 4.6")] = lines[row("Claude Opus 4.6")].replace("Claude Opus 4.6", "Claude Opus 4.6 (deprecated)");
       return { ...raw, models, pricing: lines.join("\n") };
+    },
+  },
+  "fireworks-ai": {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const sku = (model: Raw, name: string, amount: string) => {
+        model.pricing = model.pricing.map((price: Raw) => (price.sku === name ? { ...price, amount } : price));
+      };
+      const data = raw.serverless.data
+        .filter((model: Raw) => !(model.id === "accounts/fireworks/models/glm-5p3-flash" && model.serverless_mode === "priority"))
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.id === "accounts/fireworks/models/minimax-m3" && model.serverless_mode === "priority") sku(next, "LLM input tokens (uncached)", "0.6");
+          if (model.id === "accounts/fireworks/models/kimi-k3" && model.serverless_mode === "standard") next.context_length = 500_000;
+          if (model.id === "accounts/fireworks/models/ember-1") {
+            sku(next, "LLM output tokens", "9.99");
+            next.input_modalities = ["text"];
+          }
+          return next;
+        });
+      const ember = data.find((model: Raw) => model.id === "accounts/fireworks/models/ember-1");
+      const standard = (id: string) => data.find((model: Raw) => model.id === id && model.serverless_mode === "standard");
+      data.push({ ...structuredClone(standard("accounts/fireworks/models/ember-1")), serverless_mode: "priority", service_tier: "priority", pricing: ember.pricing.map((price: Raw) => ({ ...price, amount: String(Number(price.amount) * 2) })) });
+      data.push({ ...structuredClone(standard("accounts/fireworks/models/rune")), id: "accounts/fireworks/models/brand-new", usage_identifier: undefined });
+      const inventory = raw.inventory
+        .filter((model: Raw) => model.name !== "accounts/fireworks/models/qwen3p8-2p4t-a95b")
+        .map((model: Raw) => (model.name === "accounts/fireworks/models/muse-spark-open" ? { ...model, deprecationDate: { year: 2099, month: 1, day: 1 } } : model));
+      inventory.push({ name: "accounts/fireworks/models/brand-new", kind: "HF_BASE_MODEL", supportsServerless: true });
+      return { serverless: { ...raw.serverless, data }, inventory };
     },
   },
   google: {

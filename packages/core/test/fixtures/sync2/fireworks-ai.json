@@ -1,0 +1,3339 @@
+{
+  "serverless": {
+    "object": "list",
+    "data": [
+      {
+        "id": "accounts/fireworks/models/glm-5p2",
+        "object": "model",
+        "serverless_mode": "fast",
+        "usage_identifier": "accounts/fireworks/routers/glm-5p2-fast",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.21",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "2.1",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "6.6",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "GLM 5.2",
+        "description": "GLM-5.2 introduces a robust 1M-token context and advanced, multi-effort coding capabilities to significantly enhance performance on long-horizon tasks. Its new IndexShare architecture and improved MTP layer simultaneously boost efficiency by reducing per-token FLOPs and increasing speculative decoding lengths.",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1781630293
+      },
+      {
+        "id": "accounts/fireworks/models/minimax-m3",
+        "object": "model",
+        "serverless_mode": "standard",
+        "aliases": [
+          "accounts/fireworks/routers/minimax-latest"
+        ],
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.06",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.3",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "1.2",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Minimax M3",
+        "description": "MiniMax-M3 is a native multimodal model with 1M context running ~428B parameters and ~23B activated parameters. It brings native multimodality. enabling deeper semantic fusion across text, image, and video. M3 also introduces MiniMax Sparse Attention (MSA) to improve long context efficiency, achieving frontier-level performance across long-horizon agentic benchmarks, excelling in both coding and cowork.",
+        "context_length": 512000,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1781214748
+      },
+      {
+        "id": "accounts/fireworks/models/minimax-m3",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.09",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.45",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "1.8",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Minimax M3",
+        "description": "MiniMax-M3 is a native multimodal model with 1M context running ~428B parameters and ~23B activated parameters. It brings native multimodality. enabling deeper semantic fusion across text, image, and video. M3 also introduces MiniMax Sparse Attention (MSA) to improve long context efficiency, achieving frontier-level performance across long-horizon agentic benchmarks, excelling in both coding and cowork.",
+        "context_length": 512000,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1781214748
+      },
+      {
+        "id": "accounts/fireworks/models/gpt-oss-120b",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.015",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.15",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.6",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "OpenAI gpt-oss-120b",
+        "description": "Welcome to the gpt-oss series, OpenAI's open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases. gpt-oss-120b is used for production, general purpose, high reasoning use-cases that fits into a single H100 GPU.",
+        "context_length": 131072,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1754345600
+      },
+      {
+        "id": "accounts/fireworks/models/gpt-oss-120b",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.018",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.18",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.72",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "OpenAI gpt-oss-120b",
+        "description": "Welcome to the gpt-oss series, OpenAI's open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases. gpt-oss-120b is used for production, general purpose, high reasoning use-cases that fits into a single H100 GPU.",
+        "context_length": 131072,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1754345600
+      },
+      {
+        "id": "accounts/fireworks/models/deepseek-v4-flash",
+        "object": "model",
+        "serverless_mode": "spot",
+        "usage_identifier": "accounts/fireworks/routers/spot-deepseek-v4-flash",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.021",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.105",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.21",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "DeepSeek-V4-Flash",
+        "description": "DeepSeek-V4-Flash is a streamlined open-source Mixture-of-Experts model optimized for fast, cost-efficient inference while preserving strong reasoning and coding performance at 1M token context scale. It leverages the same hybrid attention innovations as Pro but is tuned for lower latency and higher throughput in real-time applications. It delivers near-Pro reasoning quality under sufficient compute budget, making it ideal for interactive agents and high-volume production workloads.",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1777003747
+      },
+      {
+        "id": "accounts/fireworks/models/nemotron-3-ultra-nvfp4",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.12",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.6",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "2.4",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "NVIDIA Nemotron 3 Ultra NVFP4",
+        "description": "Nemotron-3-Ultra-550B-A55B-NVFP4 is a frontier-scale large language model (LLM) trained by NVIDIA, designed to deliver strong agentic, reasoning, and conversational capabilities. It is optimized for the most demanding workloads, including complex multi-step agents, long-context analysis, and high-accuracy reasoning over code, math, and science. The model employs a hybrid Latent Mixture-of-Experts (LatentMoE) architecture, utilizing interleaved Mamba-2 and MoE layers, along with select Attention layers. Like the Super model, the Ultra model incorporates Multi-Token Prediction (MTP) layers for faster text generation and improved quality, and it is trained using an NVFP4 pre-training recipe to maximize compute efficiency. The model has 55B active parameters and 550B parameters in total.",
+        "context_length": 262144,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1780415326
+      },
+      {
+        "id": "accounts/fireworks/models/qwen3-reranker-8b",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "Embedding input tokens",
+            "amount": "0.2",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Qwen3 Reranker 8B",
+        "description": "significant advancements in multiple text embedding and ranking tasks, including text retrieval, code retrieval, text classification, text clustering, and bitext mining",
+        "context_length": 40960,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "embeddings"
+        ],
+        "created": 1759865045
+      },
+      {
+        "id": "accounts/fireworks/models/qwen3-embedding-8b",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "Embedding input tokens",
+            "amount": "0.1",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Qwen3 Embedding 8B",
+        "description": "The Qwen3 Embedding 8B model is the latest proprietary model of the Qwen family, specifically designed for text embedding tasks. This model inherits the exceptional multilingual capabilities, long-text understanding, and reasoning skills building upon the dense foundational models of the Qwen3 series. The model represents significant advancements in multiple text embedding tasks including text retrieval, code retrieval, text classification, text clustering.",
+        "context_length": 40960,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "embeddings"
+        ],
+        "created": 1755707090
+      },
+      {
+        "id": "accounts/fireworks/models/kimi-k3",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.375",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "3.75",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "18.75",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Kimi K3",
+        "description": "Kimi K3 is Kimi’s most capable flagship model to date, with 2.8 trillion parameters. It is built on Kimi Delta Attention (KDA), a hybrid linear attention mechanism, and Attention Residuals, with native visual understanding and a 1M-token context window. It is the world’s first open-source model in the 3-trillion-parameter class, designed for frontier intelligence scenarios including long-horizon coding, knowledge work, and reasoning.",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1784483409
+      },
+      {
+        "id": "accounts/fireworks/models/kimi-k3",
+        "object": "model",
+        "serverless_mode": "standard",
+        "aliases": [
+          "accounts/fireworks/routers/kimi-latest"
+        ],
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.3",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "3",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "15",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Kimi K3",
+        "description": "Kimi K3 is Kimi’s most capable flagship model to date, with 2.8 trillion parameters. It is built on Kimi Delta Attention (KDA), a hybrid linear attention mechanism, and Attention Residuals, with native visual understanding and a 1M-token context window. It is the world’s first open-source model in the 3-trillion-parameter class, designed for frontier intelligence scenarios including long-horizon coding, knowledge work, and reasoning.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1784483409
+      },
+      {
+        "id": "accounts/fireworks/models/kimi-k3",
+        "object": "model",
+        "serverless_mode": "fast",
+        "usage_identifier": "accounts/fireworks/routers/kimi-k3-fast",
+        "aliases": [
+          "accounts/fireworks/routers/kimi-fast-latest"
+        ],
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.45",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "4.5",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "22.5",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Kimi K3",
+        "description": "Kimi K3 is Kimi’s most capable flagship model to date, with 2.8 trillion parameters. It is built on Kimi Delta Attention (KDA), a hybrid linear attention mechanism, and Attention Residuals, with native visual understanding and a 1M-token context window. It is the world’s first open-source model in the 3-trillion-parameter class, designed for frontier intelligence scenarios including long-horizon coding, knowledge work, and reasoning.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1784483409
+      },
+      {
+        "id": "accounts/fireworks/models/kimi-k3",
+        "object": "model",
+        "serverless_mode": "spot",
+        "usage_identifier": "accounts/fireworks/routers/kimi-k3-spot",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.21",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "2.1",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "10.5",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Kimi K3",
+        "description": "Kimi K3 is Kimi’s most capable flagship model to date, with 2.8 trillion parameters. It is built on Kimi Delta Attention (KDA), a hybrid linear attention mechanism, and Attention Residuals, with native visual understanding and a 1M-token context window. It is the world’s first open-source model in the 3-trillion-parameter class, designed for frontier intelligence scenarios including long-horizon coding, knowledge work, and reasoning.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1784483409
+      },
+      {
+        "id": "accounts/fireworks/models/qwen3p8-max",
+        "object": "model",
+        "serverless_mode": "standard",
+        "aliases": [
+          "accounts/fireworks/routers/qwen-max-latest"
+        ],
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.25",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "2",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "6",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Qwen 3.8 Max",
+        "description": "Built on the architectural foundation of Qwen3.5, Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks. Beyond answering harder questions, Qwen3.8 is designed to carry complex, multi-step tasks through to completion with greater reliability.",
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1785949040
+      },
+      {
+        "id": "accounts/fireworks/models/qwen3p8-max",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.375",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "3",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "9",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Qwen 3.8 Max",
+        "description": "Built on the architectural foundation of Qwen3.5, Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks. Beyond answering harder questions, Qwen3.8 is designed to carry complex, multi-step tasks through to completion with greater reliability.",
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1785949040
+      },
+      {
+        "id": "accounts/fireworks/models/glm-5p3",
+        "object": "model",
+        "serverless_mode": "standard",
+        "aliases": [
+          "accounts/fireworks/routers/glm-latest"
+        ],
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.26",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "1.4",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "4.4",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "GLM-5.3",
+        "description": "GLM-5.3 uses the same base model as GLM-5.2 — every gain comes from post-training. Compared with GLM-5.2, it is much better at complex coding and long-horizon tasks",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1787895551
+      },
+      {
+        "id": "accounts/fireworks/models/glm-5p3",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.325",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "1.75",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "5.5",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "GLM-5.3",
+        "description": "GLM-5.3 uses the same base model as GLM-5.2 — every gain comes from post-training. Compared with GLM-5.2, it is much better at complex coding and long-horizon tasks",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1787895551
+      },
+      {
+        "id": "accounts/fireworks/models/glm-5p3",
+        "object": "model",
+        "serverless_mode": "fast",
+        "usage_identifier": "accounts/fireworks/routers/glm-5p3-fast",
+        "aliases": [
+          "accounts/fireworks/routers/glm-fast-latest"
+        ],
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.39",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "2.1",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "6.6",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "GLM-5.3",
+        "description": "GLM-5.3 uses the same base model as GLM-5.2 — every gain comes from post-training. Compared with GLM-5.2, it is much better at complex coding and long-horizon tasks",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1787895551
+      },
+      {
+        "id": "accounts/fireworks/models/glm-5p3",
+        "object": "model",
+        "serverless_mode": "spot",
+        "usage_identifier": "accounts/fireworks/routers/glm-5p3-spot",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.182",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.98",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "3.08",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "GLM-5.3",
+        "description": "GLM-5.3 uses the same base model as GLM-5.2 — every gain comes from post-training. Compared with GLM-5.2, it is much better at complex coding and long-horizon tasks",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1787895551
+      },
+      {
+        "id": "accounts/fireworks/models/glm-5p3-flash",
+        "object": "model",
+        "serverless_mode": "standard",
+        "aliases": [
+          "accounts/fireworks/routers/glm-flash-latest"
+        ],
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.03",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.15",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.5",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "GLM 5.3 Flash",
+        "description": "GLM-5.3-Flash is the first natively multimodal model in the GLM-5 series with 320B total parameters and 18B active parameters. It incorporates several architectural improvements over GLM-5.2 including a hybrid architecture, sharply reducing long-context serving costs while preserving precise long-context and Manifold-Constrained Hyper-Connections (mHC) to further improve scaling efficiency.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1787754936
+      },
+      {
+        "id": "accounts/fireworks/models/glm-5p3-flash",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.0375",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.1875",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.625",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "GLM 5.3 Flash",
+        "description": "GLM-5.3-Flash is the first natively multimodal model in the GLM-5 series with 320B total parameters and 18B active parameters. It incorporates several architectural improvements over GLM-5.2 including a hybrid architecture, sharply reducing long-context serving costs while preserving precise long-context and Manifold-Constrained Hyper-Connections (mHC) to further improve scaling efficiency.",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1787754936
+      },
+      {
+        "id": "accounts/fireworks/models/deepseek-v4p1-flash",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.006",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.3",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "1.2",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "DeepSeek V4.1 Flash",
+        "description": "DeepSeek-V4.1-Flash is a multimodal Mixture-of-Experts model with 552B backbone parameters that natively processes images and text at up to 1M token context. Its Causal Encoder-Decoder architecture activates only 8B parameters during prefill and 16B during decode, cutting the KV cache footprint to roughly a quarter of DeepSeek-V4-Flash for cost-efficient agentic workloads.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1789019014
+      },
+      {
+        "id": "accounts/fireworks/models/deepseek-v4p1-flash",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.0075",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.375",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "1.5",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "DeepSeek V4.1 Flash",
+        "description": "DeepSeek-V4.1-Flash is a multimodal Mixture-of-Experts model with 552B backbone parameters that natively processes images and text at up to 1M token context. Its Causal Encoder-Decoder architecture activates only 8B parameters during prefill and 16B during decode, cutting the KV cache footprint to roughly a quarter of DeepSeek-V4-Flash for cost-efficient agentic workloads.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1789019014
+      },
+      {
+        "id": "accounts/fireworks/models/deepseek-v4p1-flash",
+        "object": "model",
+        "serverless_mode": "spot",
+        "usage_identifier": "accounts/fireworks/routers/deepseek-v4p1-flash-spot",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.0042",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.21",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.84",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "DeepSeek V4.1 Flash",
+        "description": "DeepSeek-V4.1-Flash is a multimodal Mixture-of-Experts model with 552B backbone parameters that natively processes images and text at up to 1M token context. Its Causal Encoder-Decoder architecture activates only 8B parameters during prefill and 16B during decode, cutting the KV cache footprint to roughly a quarter of DeepSeek-V4-Flash for cost-efficient agentic workloads.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1789019014
+      },
+      {
+        "id": "accounts/fireworks/models/ember-1",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.3",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "3",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "15",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Ember-1",
+        "description": "Ember-1 is a specialized model from Fireworks. Built on Kimi K3, it produces shorter reasoning traces, using approximately 40% fewer tokens while maintaining comparable quality across our evaluations",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1790110339
+      },
+      {
+        "id": "accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.01",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.05",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.2",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Nemotron Lightning 3.5 30B A3B",
+        "description": "Nemotron-Lightning-3.5-30B-A3B is a 30B-parameter Mixture-of-Experts language model (3B active) from NVIDIA's Nemotron-H family, built on a hybrid Mamba-Transformer architecture for efficient long-context inference. Like other models in the family, it responds to queries by first generating a reasoning trace and then concluding with a final response, with reasoning behavior configurable through a flag in the chat template. It includes a multi-token prediction (MTP) speculative decoding head for low-latency serving.",
+        "context_length": 262144,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1786139705
+      },
+      {
+        "id": "accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.0125",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.0625",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.25",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Nemotron Lightning 3.5 30B A3B",
+        "description": "Nemotron-Lightning-3.5-30B-A3B is a 30B-parameter Mixture-of-Experts language model (3B active) from NVIDIA's Nemotron-H family, built on a hybrid Mamba-Transformer architecture for efficient long-context inference. Like other models in the family, it responds to queries by first generating a reasoning trace and then concluding with a final response, with reasoning behavior configurable through a flag in the chat template. It includes a multi-token prediction (MTP) speculative decoding head for low-latency serving.",
+        "context_length": 262144,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1786139705
+      },
+      {
+        "id": "accounts/fireworks/models/inkling",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.17",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "1",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "4.05",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Inkling",
+        "description": "Inkling - Thinking Machines multimodal (audio+vision) MoE. Inkling is the first open-weights model released by Thinking Machines Lab. It is a 975B Mixture-of-Experts with 41B active parameters, trained natively across text, image, and audio. Built as a broad generalist foundation for fine-tuning, with controllable thinking effort.",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1784058124
+      },
+      {
+        "id": "accounts/fireworks/models/muse-spark-open",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.15",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "1.25",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "4.25",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Muse Spark Open",
+        "description": "Muse Spark Open is an open weights reasoning model from Meta for coding and agentic workflows. It supports tool calling and native image understanding in a single checkpoint. It uses a sparse Mixture-of-Experts architecture with 816B total / 42B active parameters, routing each token to 8 of 256 experts, and hybrid attention that repeats three sliding-window layers (2,048-token window) for every full-attention layer. Inputs: text and images. Output: text.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1791995050
+      },
+      {
+        "id": "accounts/fireworks/models/muse-spark-open",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.225",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "1.875",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "6.375",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Muse Spark Open",
+        "description": "Muse Spark Open is an open weights reasoning model from Meta for coding and agentic workflows. It supports tool calling and native image understanding in a single checkpoint. It uses a sparse Mixture-of-Experts architecture with 816B total / 42B active parameters, routing each token to 8 of 256 experts, and hybrid attention that repeats three sliding-window layers (2,048-token window) for every full-attention layer. Inputs: text and images. Output: text.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1791995050
+      },
+      {
+        "id": "accounts/fireworks/models/deepseek-v4p1-flash-1017",
+        "object": "model",
+        "serverless_mode": "standard",
+        "aliases": [
+          "accounts/fireworks/routers/deepseek-flash-latest"
+        ],
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.006",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.3",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "1.2",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "DeepSeek V4.1 Flash 1017",
+        "description": "DeepSeek-V4.1-Flash-1017 is a minor update to DeepSeek-V4.1-Flash, delivering substantial improvements across reasoning, coding, agentic tasks, and visual benchmarks. Alongside these gains, the model reduces task execution time and output length, enabling users to complete tasks faster and at lower cost and advancing the performance–cost Pareto frontier across multiple agent harnesses.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1792249307
+      },
+      {
+        "id": "accounts/fireworks/models/deepseek-v4p1-flash-1017",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.0075",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.375",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "1.5",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "DeepSeek V4.1 Flash 1017",
+        "description": "DeepSeek-V4.1-Flash-1017 is a minor update to DeepSeek-V4.1-Flash, delivering substantial improvements across reasoning, coding, agentic tasks, and visual benchmarks. Alongside these gains, the model reduces task execution time and output length, enabling users to complete tasks faster and at lower cost and advancing the performance–cost Pareto frontier across multiple agent harnesses.",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1792249307
+      },
+      {
+        "id": "accounts/fireworks/models/deepseek-v4p1-flash-1017",
+        "object": "model",
+        "serverless_mode": "spot",
+        "usage_identifier": "accounts/fireworks/routers/deepseek-v4p1-flash-1017-spot",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.0042",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.21",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.84",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "DeepSeek V4.1 Flash 1017",
+        "description": "DeepSeek-V4.1-Flash-1017 is a minor update to DeepSeek-V4.1-Flash, delivering substantial improvements across reasoning, coding, agentic tasks, and visual benchmarks. Alongside these gains, the model reduces task execution time and output length, enabling users to complete tasks faster and at lower cost and advancing the performance–cost Pareto frontier across multiple agent harnesses.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1792249307
+      },
+      {
+        "id": "accounts/fireworks/models/deepseek-v4p1-flash-1017",
+        "object": "model",
+        "serverless_mode": "ultrafast",
+        "usage_identifier": "accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.048",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "2.4",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "9.6",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "DeepSeek V4.1 Flash 1017",
+        "description": "DeepSeek-V4.1-Flash-1017 is a minor update to DeepSeek-V4.1-Flash, delivering substantial improvements across reasoning, coding, agentic tasks, and visual benchmarks. Alongside these gains, the model reduces task execution time and output length, enabling users to complete tasks faster and at lower cost and advancing the performance–cost Pareto frontier across multiple agent harnesses.",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1792249307
+      },
+      {
+        "id": "accounts/fireworks/models/minimax-m3p1-flash",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.0225",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.225",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.9",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "MiniMax M3.1 Flash",
+        "description": "MiniMax-M3.1-Flash is a native multimodal model with 1M context running ~428B parameters and ~23B activated parameters. Built for agentic reasoning, tool use, coding, and long-context tasks, it keeps reasoning always on with adjustable effort from low to max. M3.1 Flash ranks among the top performers on long-horizon agentic benchmarks, scoring 62.8 on AutomationBench-AA and 73.7% on DeepSWE v1.1.",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1792262209
+      },
+      {
+        "id": "accounts/fireworks/models/minimax-m3p1-flash",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.015",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.15",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0.6",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "MiniMax M3.1 Flash",
+        "description": "MiniMax-M3.1-Flash is a native multimodal model with 1M context running ~428B parameters and ~23B activated parameters. Built for agentic reasoning, tool use, coding, and long-context tasks, it keeps reasoning always on with adjustable effort from low to max. M3.1 Flash ranks among the top performers on long-horizon agentic benchmarks, scoring 62.8 on AutomationBench-AA and 73.7% on DeepSWE v1.1.",
+        "context_length": 1048576,
+        "use_cases": [
+          "coding"
+        ],
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1792262209
+      },
+      {
+        "id": "accounts/fireworks/models/rune",
+        "object": "model",
+        "serverless_mode": "standard",
+        "usage_identifier": "accounts/fireworks/routers/rune",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.0084",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "0.042",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "0",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Rune 26B-A4B",
+        "description": "Rune 26B-A4B is a System One decision model: it does not reason and does not generate text. It reads a document once and answers up to 256 typed questions about it - multiple choice, true/false probability, or graded scale - returning calibrated probabilities in that single pass. Output tokens are always zero, so you pay for input only. 262K context, text only.",
+        "context_length": 262144,
+        "input_modalities": [
+          "text"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1792518104
+      },
+      {
+        "id": "accounts/fireworks/models/kimi-k3p1-pro",
+        "object": "model",
+        "serverless_mode": "priority",
+        "service_tier": "priority",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.3",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "3",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "15",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Kimi K3.1 Pro",
+        "description": "Kimi K3.1 Pro is an open-weight, natively multimodal agentic model from Moonshot AI. Post-trained from Kimi K3 with large-scale joint reinforcement learning across hundreds of downstream domains, it is the first model in the K3.1 series. With a 1-million-token context window, it delivers substantial improvements in coding, 3D creation, financial research, factual accuracy, and other agentic capabilities. Its Mixture-of-Experts architecture has 2.8T total parameters, 104B activated parameters and 93 layers. It supports text and image inputs and uses MXFP4 weights with MXFP8 activations through quantization-aware training.",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1793662116
+      },
+      {
+        "id": "accounts/fireworks/models/kimi-k3p1-pro",
+        "object": "model",
+        "serverless_mode": "standard",
+        "pricing": [
+          {
+            "sku": "LLM input tokens (cached)",
+            "amount": "0.2",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM input tokens (uncached)",
+            "amount": "2",
+            "unit": "1M tokens"
+          },
+          {
+            "sku": "LLM output tokens",
+            "amount": "10",
+            "unit": "1M tokens"
+          }
+        ],
+        "display_name": "Kimi K3.1 Pro",
+        "description": "Kimi K3.1 Pro is an open-weight, natively multimodal agentic model from Moonshot AI. Post-trained from Kimi K3 with large-scale joint reinforcement learning across hundreds of downstream domains, it is the first model in the K3.1 series. With a 1-million-token context window, it delivers substantial improvements in coding, 3D creation, financial research, factual accuracy, and other agentic capabilities. Its Mixture-of-Experts architecture has 2.8T total parameters, 104B activated parameters and 93 layers. It supports text and image inputs and uses MXFP4 weights with MXFP8 activations through quantization-aware training.",
+        "context_length": 1048576,
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ],
+        "created": 1793662116
+      }
+    ]
+  },
+  "inventory": [
+    {
+      "name": "accounts/fireworks/models/deepseek-v4p1-flash",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [
+          ".gitattributes",
+          "LICENSE",
+          "README.md",
+          "config.json",
+          "model-00001-of-00048.safetensors",
+          "model-00002-of-00048.safetensors",
+          "model-00003-of-00048.safetensors",
+          "model-00004-of-00048.safetensors",
+          "model-00005-of-00048.safetensors",
+          "model-00006-of-00048.safetensors",
+          "model-00007-of-00048.safetensors",
+          "model-00008-of-00048.safetensors",
+          "model-00009-of-00048.safetensors",
+          "model-00010-of-00048.safetensors",
+          "model-00011-of-00048.safetensors",
+          "model-00012-of-00048.safetensors",
+          "model-00013-of-00048.safetensors",
+          "model-00014-of-00048.safetensors",
+          "model-00015-of-00048.safetensors",
+          "model-00016-of-00048.safetensors",
+          "model-00017-of-00048.safetensors",
+          "model-00018-of-00048.safetensors",
+          "model-00019-of-00048.safetensors",
+          "model-00020-of-00048.safetensors",
+          "model-00021-of-00048.safetensors",
+          "model-00022-of-00048.safetensors",
+          "model-00023-of-00048.safetensors",
+          "model-00024-of-00048.safetensors",
+          "model-00025-of-00048.safetensors",
+          "model-00026-of-00048.safetensors",
+          "model-00027-of-00048.safetensors",
+          "model-00028-of-00048.safetensors",
+          "model-00029-of-00048.safetensors",
+          "model-00030-of-00048.safetensors",
+          "model-00031-of-00048.safetensors",
+          "model-00032-of-00048.safetensors",
+          "model-00033-of-00048.safetensors",
+          "model-00034-of-00048.safetensors",
+          "model-00035-of-00048.safetensors",
+          "model-00036-of-00048.safetensors",
+          "model-00037-of-00048.safetensors",
+          "model-00038-of-00048.safetensors",
+          "model-00039-of-00048.safetensors",
+          "model-00040-of-00048.safetensors",
+          "model-00041-of-00048.safetensors",
+          "model-00042-of-00048.safetensors",
+          "model-00043-of-00048.safetensors",
+          "model-00044-of-00048.safetensors",
+          "model-00045-of-00048.safetensors",
+          "model-00046-of-00048.safetensors",
+          "model-00047-of-00048.safetensors",
+          "model-00048-of-00048.safetensors",
+          "model.safetensors.index.json",
+          "tokenizer.json",
+          "tokenizer_config.json"
+        ],
+        "modelType": "deepseek_v41",
+        "moe": true,
+        "parameterCount": "552000000000",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 1048576,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-09-10T05:43:34.484755Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "DeepSeek-V4.1-Flash is a multimodal Mixture-of-Experts model with 552B backbone parameters that natively processes images and text at up to 1M token context. Its Causal Encoder-Decoder architecture activates only 8B parameters during prefill and 16B during decode, cutting the KV cache footprint to roughly a quarter of DeepSeek-V4-Flash for cost-efficient agentic workloads.",
+      "displayName": "DeepSeek V4.1 Flash",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": true,
+      "supportsImageInput": true,
+      "supportsLora": true,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-10-14T06:57:01.607710Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/deepseek-v4p1-flash-1017",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "FP8",
+        "huggingfaceFiles": [
+          ".gitattributes",
+          "LICENSE",
+          "README.md",
+          "config.json",
+          "download.log",
+          "model-00001-of-00048.safetensors",
+          "model-00002-of-00048.safetensors",
+          "model-00003-of-00048.safetensors",
+          "model-00004-of-00048.safetensors",
+          "model-00005-of-00048.safetensors",
+          "model-00006-of-00048.safetensors",
+          "model-00007-of-00048.safetensors",
+          "model-00008-of-00048.safetensors",
+          "model-00009-of-00048.safetensors",
+          "model-00010-of-00048.safetensors",
+          "model-00011-of-00048.safetensors",
+          "model-00012-of-00048.safetensors",
+          "model-00013-of-00048.safetensors",
+          "model-00014-of-00048.safetensors",
+          "model-00015-of-00048.safetensors",
+          "model-00016-of-00048.safetensors",
+          "model-00017-of-00048.safetensors",
+          "model-00018-of-00048.safetensors",
+          "model-00019-of-00048.safetensors",
+          "model-00020-of-00048.safetensors",
+          "model-00021-of-00048.safetensors",
+          "model-00022-of-00048.safetensors",
+          "model-00023-of-00048.safetensors",
+          "model-00024-of-00048.safetensors",
+          "model-00025-of-00048.safetensors",
+          "model-00026-of-00048.safetensors",
+          "model-00027-of-00048.safetensors",
+          "model-00028-of-00048.safetensors",
+          "model-00029-of-00048.safetensors",
+          "model-00030-of-00048.safetensors",
+          "model-00031-of-00048.safetensors",
+          "model-00032-of-00048.safetensors",
+          "model-00033-of-00048.safetensors",
+          "model-00034-of-00048.safetensors",
+          "model-00035-of-00048.safetensors",
+          "model-00036-of-00048.safetensors",
+          "model-00037-of-00048.safetensors",
+          "model-00038-of-00048.safetensors",
+          "model-00039-of-00048.safetensors",
+          "model-00040-of-00048.safetensors",
+          "model-00041-of-00048.safetensors",
+          "model-00042-of-00048.safetensors",
+          "model-00043-of-00048.safetensors",
+          "model-00044-of-00048.safetensors",
+          "model-00045-of-00048.safetensors",
+          "model-00046-of-00048.safetensors",
+          "model-00047-of-00048.safetensors",
+          "model-00048-of-00048.safetensors",
+          "model.safetensors.index.json",
+          "tokenizer.json",
+          "tokenizer_config.json"
+        ],
+        "modelType": "deepseek_v41",
+        "moe": true,
+        "parameterCount": "755124265449",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 1048576,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-10-17T15:01:47.733715Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "DeepSeek-V4.1-Flash-1017 is a minor update to DeepSeek-V4.1-Flash, delivering substantial improvements across reasoning, coding, agentic tasks, and visual benchmarks. Alongside these gains, the model reduces task execution time and output length, enabling users to complete tasks faster and at lower cost and advancing the performance–cost Pareto frontier across multiple agent harnesses.",
+      "displayName": "DeepSeek V4.1 Flash 1017",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": true,
+      "supportsImageInput": true,
+      "supportsLora": true,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": true,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-10-23T08:22:03.066470Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/ember-1",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "FP8",
+        "huggingfaceFiles": [],
+        "modelType": "kimi_k3",
+        "moe": true,
+        "parameterCount": "2780913302112",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 1048576,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-09-22T20:52:19.824310Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Ember-1 is a specialized model from Fireworks. Built on Kimi K3, it produces shorter reasoning traces, using approximately 40% fewer tokens while maintaining comparable quality across our evaluations",
+      "displayName": "Ember-1",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": true,
+      "supportsLora": true,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-09-23T21:09:10.467491Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/glm-5p3",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [
+          ".gitattributes",
+          "LICENSE",
+          "README.md",
+          "chat_template.jinja",
+          "config.json",
+          "generation_config.json",
+          "model-00001-of-00141.safetensors",
+          "model-00002-of-00141.safetensors",
+          "model-00003-of-00141.safetensors",
+          "model-00004-of-00141.safetensors",
+          "model-00005-of-00141.safetensors",
+          "model-00006-of-00141.safetensors",
+          "model-00007-of-00141.safetensors",
+          "model-00008-of-00141.safetensors",
+          "model-00009-of-00141.safetensors",
+          "model-00010-of-00141.safetensors",
+          "model-00011-of-00141.safetensors",
+          "model-00012-of-00141.safetensors",
+          "model-00013-of-00141.safetensors",
+          "model-00014-of-00141.safetensors",
+          "model-00015-of-00141.safetensors",
+          "model-00016-of-00141.safetensors",
+          "model-00017-of-00141.safetensors",
+          "model-00018-of-00141.safetensors",
+          "model-00019-of-00141.safetensors",
+          "model-00020-of-00141.safetensors",
+          "model-00021-of-00141.safetensors",
+          "model-00022-of-00141.safetensors",
+          "model-00023-of-00141.safetensors",
+          "model-00024-of-00141.safetensors",
+          "model-00025-of-00141.safetensors",
+          "model-00026-of-00141.safetensors",
+          "model-00027-of-00141.safetensors",
+          "model-00028-of-00141.safetensors",
+          "model-00029-of-00141.safetensors",
+          "model-00030-of-00141.safetensors",
+          "model-00031-of-00141.safetensors",
+          "model-00032-of-00141.safetensors",
+          "model-00033-of-00141.safetensors",
+          "model-00034-of-00141.safetensors",
+          "model-00035-of-00141.safetensors",
+          "model-00036-of-00141.safetensors",
+          "model-00037-of-00141.safetensors",
+          "model-00038-of-00141.safetensors",
+          "model-00039-of-00141.safetensors",
+          "model-00040-of-00141.safetensors",
+          "model-00041-of-00141.safetensors",
+          "model-00042-of-00141.safetensors",
+          "model-00043-of-00141.safetensors",
+          "model-00044-of-00141.safetensors",
+          "model-00045-of-00141.safetensors",
+          "model-00046-of-00141.safetensors",
+          "model-00047-of-00141.safetensors",
+          "model-00048-of-00141.safetensors",
+          "model-00049-of-00141.safetensors",
+          "model-00050-of-00141.safetensors",
+          "model-00051-of-00141.safetensors",
+          "model-00052-of-00141.safetensors",
+          "model-00053-of-00141.safetensors",
+          "model-00054-of-00141.safetensors",
+          "model-00055-of-00141.safetensors",
+          "model-00056-of-00141.safetensors",
+          "model-00057-of-00141.safetensors",
+          "model-00058-of-00141.safetensors",
+          "model-00059-of-00141.safetensors",
+          "model-00060-of-00141.safetensors",
+          "model-00061-of-00141.safetensors",
+          "model-00062-of-00141.safetensors",
+          "model-00063-of-00141.safetensors",
+          "model-00064-of-00141.safetensors",
+          "model-00065-of-00141.safetensors",
+          "model-00066-of-00141.safetensors",
+          "model-00067-of-00141.safetensors",
+          "model-00068-of-00141.safetensors",
+          "model-00069-of-00141.safetensors",
+          "model-00070-of-00141.safetensors",
+          "model-00071-of-00141.safetensors",
+          "model-00072-of-00141.safetensors",
+          "model-00073-of-00141.safetensors",
+          "model-00074-of-00141.safetensors",
+          "model-00075-of-00141.safetensors",
+          "model-00076-of-00141.safetensors",
+          "model-00077-of-00141.safetensors",
+          "model-00078-of-00141.safetensors",
+          "model-00079-of-00141.safetensors",
+          "model-00080-of-00141.safetensors",
+          "model-00081-of-00141.safetensors",
+          "model-00082-of-00141.safetensors",
+          "model-00083-of-00141.safetensors",
+          "model-00084-of-00141.safetensors",
+          "model-00085-of-00141.safetensors",
+          "model-00086-of-00141.safetensors",
+          "model-00087-of-00141.safetensors",
+          "model-00088-of-00141.safetensors",
+          "model-00089-of-00141.safetensors",
+          "model-00090-of-00141.safetensors",
+          "model-00091-of-00141.safetensors",
+          "model-00092-of-00141.safetensors",
+          "model-00093-of-00141.safetensors",
+          "model-00094-of-00141.safetensors",
+          "model-00095-of-00141.safetensors",
+          "model-00096-of-00141.safetensors",
+          "model-00097-of-00141.safetensors",
+          "model-00098-of-00141.safetensors",
+          "model-00099-of-00141.safetensors",
+          "model-00100-of-00141.safetensors",
+          "model-00101-of-00141.safetensors",
+          "model-00102-of-00141.safetensors",
+          "model-00103-of-00141.safetensors",
+          "model-00104-of-00141.safetensors",
+          "model-00105-of-00141.safetensors",
+          "model-00106-of-00141.safetensors",
+          "model-00107-of-00141.safetensors",
+          "model-00108-of-00141.safetensors",
+          "model-00109-of-00141.safetensors",
+          "model-00110-of-00141.safetensors",
+          "model-00111-of-00141.safetensors",
+          "model-00112-of-00141.safetensors",
+          "model-00113-of-00141.safetensors",
+          "model-00114-of-00141.safetensors",
+          "model-00115-of-00141.safetensors",
+          "model-00116-of-00141.safetensors",
+          "model-00117-of-00141.safetensors",
+          "model-00118-of-00141.safetensors",
+          "model-00119-of-00141.safetensors",
+          "model-00120-of-00141.safetensors",
+          "model-00121-of-00141.safetensors",
+          "model-00122-of-00141.safetensors",
+          "model-00123-of-00141.safetensors",
+          "model-00124-of-00141.safetensors",
+          "model-00125-of-00141.safetensors",
+          "model-00126-of-00141.safetensors",
+          "model-00127-of-00141.safetensors",
+          "model-00128-of-00141.safetensors",
+          "model-00129-of-00141.safetensors",
+          "model-00130-of-00141.safetensors",
+          "model-00131-of-00141.safetensors",
+          "model-00132-of-00141.safetensors",
+          "model-00133-of-00141.safetensors",
+          "model-00134-of-00141.safetensors",
+          "model-00135-of-00141.safetensors",
+          "model-00136-of-00141.safetensors",
+          "model-00137-of-00141.safetensors",
+          "model-00138-of-00141.safetensors",
+          "model-00139-of-00141.safetensors",
+          "model-00140-of-00141.safetensors",
+          "model-00141-of-00141.safetensors",
+          "model.safetensors.index.json",
+          "tokenizer.json",
+          "tokenizer_config.json"
+        ],
+        "modelType": "glm_moe_dsa",
+        "moe": true,
+        "parameterCount": "743377019904",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 1048576,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-08-28T05:39:11.035039Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "GLM-5.3 uses the same base model as GLM-5.2 — every gain comes from post-training. Compared with GLM-5.2, it is much better at complex coding and long-horizon tasks",
+      "displayName": "GLM-5.3",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/zai-org/GLM-5.3",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": true,
+      "supportsImageInput": false,
+      "supportsLora": true,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": true,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-10-02T00:47:06.238698Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/glm-5p3-flash",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [
+          "config.json"
+        ],
+        "modelType": "glm5_next_text",
+        "moe": true,
+        "parameterCount": "320000000000",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 1048576,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-08-26T14:35:36.753772Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "GLM-5.3-Flash is the first natively multimodal model in the GLM-5 series with 320B total parameters and 18B active parameters. It incorporates several architectural improvements over GLM-5.2 including a hybrid architecture, sharply reducing long-context serving costs while preserving precise long-context and Manifold-Constrained Hyper-Connections (mHC) to further improve scaling efficiency.",
+      "displayName": "GLM 5.3 Flash",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/zai-org/GLM-5.3-Flash",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": true,
+      "supportsImageInput": true,
+      "supportsLora": true,
+      "supportsServerlessLora": true,
+      "supportsServerlessTraining": true,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-09-19T17:07:34.961548Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/gpt-oss-120b",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": {
+        "year": 2026,
+        "month": 11,
+        "day": 7
+      },
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "FP4",
+        "huggingfaceFiles": [],
+        "modelType": "gpt_oss",
+        "moe": true,
+        "parameterCount": "116829156672",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 131072,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2025-08-04T22:13:20.599550Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Welcome to the gpt-oss series, OpenAI's open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases. gpt-oss-120b is used for production, general purpose, high reasoning use-cases that fits into a single H100 GPU.",
+      "displayName": "OpenAI gpt-oss-120b",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_UNSPECIFIED",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/openai/gpt-oss-120b",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": true,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": false,
+      "supportsLora": false,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-10-20T07:03:58.698229Z",
+      "useHfApplyChatTemplate": true,
+      "useTrainingV2": false
+    },
+    {
+      "name": "accounts/fireworks/models/inkling",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": {
+        "year": 2026,
+        "month": 11,
+        "day": 7
+      },
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [
+          ".gitattributes",
+          "config.json",
+          "hf_quant_config.json",
+          "model-00001-of-00033.safetensors",
+          "model-00002-of-00033.safetensors",
+          "model-00003-of-00033.safetensors",
+          "model-00004-of-00033.safetensors",
+          "model-00005-of-00033.safetensors",
+          "model-00006-of-00033.safetensors",
+          "model-00007-of-00033.safetensors",
+          "model-00008-of-00033.safetensors",
+          "model-00009-of-00033.safetensors",
+          "model-00010-of-00033.safetensors",
+          "model-00011-of-00033.safetensors",
+          "model-00012-of-00033.safetensors",
+          "model-00013-of-00033.safetensors",
+          "model-00014-of-00033.safetensors",
+          "model-00015-of-00033.safetensors",
+          "model-00016-of-00033.safetensors",
+          "model-00017-of-00033.safetensors",
+          "model-00018-of-00033.safetensors",
+          "model-00019-of-00033.safetensors",
+          "model-00020-of-00033.safetensors",
+          "model-00021-of-00033.safetensors",
+          "model-00022-of-00033.safetensors",
+          "model-00023-of-00033.safetensors",
+          "model-00024-of-00033.safetensors",
+          "model-00025-of-00033.safetensors",
+          "model-00026-of-00033.safetensors",
+          "model-00027-of-00033.safetensors",
+          "model-00028-of-00033.safetensors",
+          "model-00029-of-00033.safetensors",
+          "model-00030-of-00033.safetensors",
+          "model-00031-of-00033.safetensors",
+          "model-00032-of-00033.safetensors",
+          "model-00033-of-00033.safetensors",
+          "model.safetensors.index.json",
+          "mtp.safetensors",
+          "special_tokens_map.json",
+          "tokenizer.json",
+          "tokenizer_config.json"
+        ],
+        "modelType": "inkling_mm_model",
+        "moe": true,
+        "parameterCount": "975000000000",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 1048576,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-07-14T19:42:04.112716Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Inkling - Thinking Machines multimodal (audio+vision) MoE. Inkling is the first open-weights model released by Thinking Machines Lab. It is a 975B Mixture-of-Experts with 41B active parameters, trained natively across text, image, and audio. Built as a broad generalist foundation for fine-tuning, with controllable thinking effort.",
+      "displayName": "Inkling",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/thinkingmachines/Inkling",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": true,
+      "supportsLora": false,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-10-20T07:03:59.935113Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/kimi-k3",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "FP8",
+        "huggingfaceFiles": [],
+        "modelType": "kimi_linear",
+        "moe": true,
+        "parameterCount": "2780913302112",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 1048576,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-07-19T17:50:09.542588Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Kimi K3 is Kimi’s most capable flagship model to date, with 2.8 trillion parameters. It is built on Kimi Delta Attention (KDA), a hybrid linear attention mechanism, and Attention Residuals, with native visual understanding and a 1M-token context window. It is the world’s first open-source model in the 3-trillion-parameter class, designed for frontier intelligence scenarios including long-horizon coding, knowledge work, and reasoning.",
+      "displayName": "Kimi K3",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/moonshotai/Kimi-K3",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": true,
+      "supportsImageInput": true,
+      "supportsLora": true,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": true,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-08-28T22:31:48.375402Z",
+      "useHfApplyChatTemplate": true,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/kimi-k3p1-pro",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [],
+        "modelType": "kimi_k31",
+        "moe": true,
+        "parameterCount": "2780110363392",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 1048576,
+      "conversationConfig": null,
+      "createTime": "2026-11-02T23:28:36.960708Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Kimi K3.1 Pro is an open-weight, natively multimodal agentic model from Moonshot AI. Post-trained from Kimi K3 with large-scale joint reinforcement learning across hundreds of downstream domains, it is the first model in the K3.1 series. With a 1-million-token context window, it delivers substantial improvements in coding, 3D creation, financial research, factual accuracy, and other agentic capabilities. Its Mixture-of-Experts architecture has 2.8T total parameters, 104B activated parameters and 93 layers. It supports text and image inputs and uses MXFP4 weights with MXFP8 activations through quantization-aware training.",
+      "displayName": "Kimi K3.1 Pro",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
+      "importedFrom": "",
+      "peftDetails": null,
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": true,
+      "supportsImageInput": true,
+      "supportsLora": true,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": true,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 0,
+      "updateTime": "2026-11-06T08:26:27.325865Z",
+      "useHfApplyChatTemplate": true,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/minimax-m3",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [
+          "added_tokens.json",
+          "chat_template.jinja",
+          "config.json",
+          "configuration_minimax_m3_vl.py",
+          "image_processor.py",
+          "merges.txt",
+          "model-00001-of-00031.safetensors",
+          "model-00002-of-00031.safetensors",
+          "model-00003-of-00031.safetensors",
+          "model-00004-of-00031.safetensors",
+          "model-00005-of-00031.safetensors",
+          "model-00006-of-00031.safetensors",
+          "model-00007-of-00031.safetensors",
+          "model-00008-of-00031.safetensors",
+          "model-00009-of-00031.safetensors",
+          "model-00010-of-00031.safetensors",
+          "model-00011-of-00031.safetensors",
+          "model-00012-of-00031.safetensors",
+          "model-00013-of-00031.safetensors",
+          "model-00014-of-00031.safetensors",
+          "model-00015-of-00031.safetensors",
+          "model-00016-of-00031.safetensors",
+          "model-00017-of-00031.safetensors",
+          "model-00018-of-00031.safetensors",
+          "model-00019-of-00031.safetensors",
+          "model-00020-of-00031.safetensors",
+          "model-00021-of-00031.safetensors",
+          "model-00022-of-00031.safetensors",
+          "model-00023-of-00031.safetensors",
+          "model-00024-of-00031.safetensors",
+          "model-00025-of-00031.safetensors",
+          "model-00026-of-00031.safetensors",
+          "model-00027-of-00031.safetensors",
+          "model-00028-of-00031.safetensors",
+          "model-00029-of-00031.safetensors",
+          "model-00030-of-00031.safetensors",
+          "model-00031-of-00031.safetensors",
+          "preprocessor_config.json",
+          "processing_minimax.py",
+          "special_tokens_map.json",
+          "tokenizer.json",
+          "tokenizer_config.json",
+          "video_processor.py",
+          "vocab.json"
+        ],
+        "modelType": "minimax_m3_vl",
+        "moe": true,
+        "parameterCount": "428000000000",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 512000,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-06-11T21:52:28.589913Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "MiniMax-M3 is a native multimodal model with 1M context running ~428B parameters and ~23B activated parameters. It brings native multimodality. enabling deeper semantic fusion across text, image, and video. M3 also introduces MiniMax Sparse Attention (MSA) to improve long context efficiency, achieving frontier-level performance across long-horizon agentic benchmarks, excelling in both coding and cowork.",
+      "displayName": "Minimax M3",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_UNSPECIFIED",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/MiniMaxAI/MiniMax-M3",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": false,
+      "supportsLora": false,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-11-05T18:33:10.051060Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/minimax-m3p1-flash",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [
+          ".gitattributes",
+          "added_tokens.json",
+          "chat_template.jinja",
+          "config.json",
+          "configuration_minimax_m3_vl.py",
+          "generation_config.json",
+          "image_processor.py",
+          "merges.txt",
+          "model-00001-of-00048.safetensors",
+          "model-00002-of-00048.safetensors",
+          "model-00003-of-00048.safetensors",
+          "model-00004-of-00048.safetensors",
+          "model-00005-of-00048.safetensors",
+          "model-00006-of-00048.safetensors",
+          "model-00007-of-00048.safetensors",
+          "model-00008-of-00048.safetensors",
+          "model-00009-of-00048.safetensors",
+          "model-00010-of-00048.safetensors",
+          "model-00011-of-00048.safetensors",
+          "model-00012-of-00048.safetensors",
+          "model-00013-of-00048.safetensors",
+          "model-00014-of-00048.safetensors",
+          "model-00015-of-00048.safetensors",
+          "model-00016-of-00048.safetensors",
+          "model-00017-of-00048.safetensors",
+          "model-00018-of-00048.safetensors",
+          "model-00019-of-00048.safetensors",
+          "model-00020-of-00048.safetensors",
+          "model-00021-of-00048.safetensors",
+          "model-00022-of-00048.safetensors",
+          "model-00023-of-00048.safetensors",
+          "model-00024-of-00048.safetensors",
+          "model-00025-of-00048.safetensors",
+          "model-00026-of-00048.safetensors",
+          "model-00027-of-00048.safetensors",
+          "model-00028-of-00048.safetensors",
+          "model-00029-of-00048.safetensors",
+          "model-00030-of-00048.safetensors",
+          "model-00031-of-00048.safetensors",
+          "model-00032-of-00048.safetensors",
+          "model-00033-of-00048.safetensors",
+          "model-00034-of-00048.safetensors",
+          "model-00035-of-00048.safetensors",
+          "model-00036-of-00048.safetensors",
+          "model-00037-of-00048.safetensors",
+          "model-00038-of-00048.safetensors",
+          "model-00039-of-00048.safetensors",
+          "model-00040-of-00048.safetensors",
+          "model-00041-of-00048.safetensors",
+          "model-00042-of-00048.safetensors",
+          "model-00043-of-00048.safetensors",
+          "model-00044-of-00048.safetensors",
+          "model-00045-of-00048.safetensors",
+          "model-00046-of-00048.safetensors",
+          "model-00047-of-00048.safetensors",
+          "model-00048-of-00048.safetensors",
+          "model.safetensors.index.json",
+          "preprocessor_config.json",
+          "processing_minimax.py",
+          "special_tokens_map.json",
+          "tokenizer.json",
+          "tokenizer_config.json",
+          "video_processor.py",
+          "vocab.json"
+        ],
+        "modelType": "minimax_m3_vl",
+        "moe": true,
+        "parameterCount": "428000000000",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 1048576,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-10-17T18:36:49.489293Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "MiniMax-M3.1-Flash is a native multimodal model with 1M context running ~428B parameters and ~23B activated parameters. Built for agentic reasoning, tool use, coding, and long-context tasks, it keeps reasoning always on with adjustable effort from low to max. M3.1 Flash ranks among the top performers on long-horizon agentic benchmarks, scoring 62.8 on AutomationBench-AA and 73.7% on DeepSWE v1.1.",
+      "displayName": "MiniMax M3.1 Flash",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": true,
+      "supportsLora": false,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-10-23T01:54:12.624631Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/muse-spark-open",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [],
+        "modelType": "musespark1x_omni",
+        "moe": true,
+        "parameterCount": "816000000000",
+        "supportsFireattention": false,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 1048576,
+      "conversationConfig": null,
+      "createTime": "2026-10-14T16:24:10.974129Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Muse Spark Open is an open weights reasoning model from Meta for coding and agentic workflows. It supports tool calling and native image understanding in a single checkpoint. It uses a sparse Mixture-of-Experts architecture with 816B total / 42B active parameters, routing each token to 8 of 256 experts, and hybrid attention that repeats three sliding-window layers (2,048-token window) for every full-attention layer. Inputs: text and images. Output: text.",
+      "displayName": "Muse Spark Open",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/meta-models/Muse-Spark-Open-816B-A42B",
+      "importedFrom": "",
+      "peftDetails": null,
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": true,
+      "supportsLora": false,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 0,
+      "updateTime": "2026-10-15T17:51:49.472599Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/nemotron-3-ultra-nvfp4",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": {
+        "year": 2026,
+        "month": 11,
+        "day": 7
+      },
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [
+          ".gitattributes",
+          "chat_template.jinja",
+          "config.json",
+          "generation_config.json",
+          "hf_quant_config.json",
+          "model-00001-of-00113.json",
+          "model-00001-of-00113.safetensors",
+          "model-00002-of-00113.json",
+          "model-00002-of-00113.safetensors",
+          "model-00003-of-00113.json",
+          "model-00003-of-00113.safetensors",
+          "model-00004-of-00113.json",
+          "model-00004-of-00113.safetensors",
+          "model-00005-of-00113.json",
+          "model-00005-of-00113.safetensors",
+          "model-00006-of-00113.json",
+          "model-00006-of-00113.safetensors",
+          "model-00007-of-00113.json",
+          "model-00007-of-00113.safetensors",
+          "model-00008-of-00113.json",
+          "model-00008-of-00113.safetensors",
+          "model-00009-of-00113.json",
+          "model-00009-of-00113.safetensors",
+          "model-00010-of-00113.json",
+          "model-00010-of-00113.safetensors",
+          "model-00011-of-00113.json",
+          "model-00011-of-00113.safetensors",
+          "model-00012-of-00113.json",
+          "model-00012-of-00113.safetensors",
+          "model-00013-of-00113.json",
+          "model-00013-of-00113.safetensors",
+          "model-00014-of-00113.json",
+          "model-00014-of-00113.safetensors",
+          "model-00015-of-00113.json",
+          "model-00015-of-00113.safetensors",
+          "model-00016-of-00113.json",
+          "model-00016-of-00113.safetensors",
+          "model-00017-of-00113.json",
+          "model-00017-of-00113.safetensors",
+          "model-00018-of-00113.json",
+          "model-00018-of-00113.safetensors",
+          "model-00019-of-00113.json",
+          "model-00019-of-00113.safetensors",
+          "model-00020-of-00113.json",
+          "model-00020-of-00113.safetensors",
+          "model-00021-of-00113.json",
+          "model-00021-of-00113.safetensors",
+          "model-00022-of-00113.json",
+          "model-00022-of-00113.safetensors",
+          "model-00023-of-00113.json",
+          "model-00023-of-00113.safetensors",
+          "model-00024-of-00113.json",
+          "model-00024-of-00113.safetensors",
+          "model-00025-of-00113.json",
+          "model-00025-of-00113.safetensors",
+          "model-00026-of-00113.json",
+          "model-00026-of-00113.safetensors",
+          "model-00027-of-00113.json",
+          "model-00027-of-00113.safetensors",
+          "model-00028-of-00113.json",
+          "model-00028-of-00113.safetensors",
+          "model-00029-of-00113.json",
+          "model-00029-of-00113.safetensors",
+          "model-00030-of-00113.json",
+          "model-00030-of-00113.safetensors",
+          "model-00031-of-00113.json",
+          "model-00031-of-00113.safetensors",
+          "model-00032-of-00113.json",
+          "model-00032-of-00113.safetensors",
+          "model-00033-of-00113.json",
+          "model-00033-of-00113.safetensors",
+          "model-00034-of-00113.json",
+          "model-00034-of-00113.safetensors",
+          "model-00035-of-00113.json",
+          "model-00035-of-00113.safetensors",
+          "model-00036-of-00113.json",
+          "model-00036-of-00113.safetensors",
+          "model-00037-of-00113.json",
+          "model-00037-of-00113.safetensors",
+          "model-00038-of-00113.json",
+          "model-00038-of-00113.safetensors",
+          "model-00039-of-00113.json",
+          "model-00039-of-00113.safetensors",
+          "model-00040-of-00113.json",
+          "model-00040-of-00113.safetensors",
+          "model-00041-of-00113.json",
+          "model-00041-of-00113.safetensors",
+          "model-00042-of-00113.json",
+          "model-00042-of-00113.safetensors",
+          "model-00043-of-00113.json",
+          "model-00043-of-00113.safetensors",
+          "model-00044-of-00113.json",
+          "model-00044-of-00113.safetensors",
+          "model-00045-of-00113.json",
+          "model-00045-of-00113.safetensors",
+          "model-00046-of-00113.json",
+          "model-00046-of-00113.safetensors",
+          "model-00047-of-00113.json",
+          "model-00047-of-00113.safetensors",
+          "model-00048-of-00113.json",
+          "model-00048-of-00113.safetensors",
+          "model-00049-of-00113.json",
+          "model-00049-of-00113.safetensors",
+          "model-00050-of-00113.json",
+          "model-00050-of-00113.safetensors",
+          "model-00051-of-00113.json",
+          "model-00051-of-00113.safetensors",
+          "model-00052-of-00113.json",
+          "model-00052-of-00113.safetensors",
+          "model-00053-of-00113.json",
+          "model-00053-of-00113.safetensors",
+          "model-00054-of-00113.json",
+          "model-00054-of-00113.safetensors",
+          "model-00055-of-00113.json",
+          "model-00055-of-00113.safetensors",
+          "model-00056-of-00113.json",
+          "model-00056-of-00113.safetensors",
+          "model-00057-of-00113.json",
+          "model-00057-of-00113.safetensors",
+          "model-00058-of-00113.json",
+          "model-00058-of-00113.safetensors",
+          "model-00059-of-00113.json",
+          "model-00059-of-00113.safetensors",
+          "model-00060-of-00113.json",
+          "model-00060-of-00113.safetensors",
+          "model-00061-of-00113.json",
+          "model-00061-of-00113.safetensors",
+          "model-00062-of-00113.json",
+          "model-00062-of-00113.safetensors",
+          "model-00063-of-00113.json",
+          "model-00063-of-00113.safetensors",
+          "model-00064-of-00113.json",
+          "model-00064-of-00113.safetensors",
+          "model-00065-of-00113.json",
+          "model-00065-of-00113.safetensors",
+          "model-00066-of-00113.json",
+          "model-00066-of-00113.safetensors",
+          "model-00067-of-00113.json",
+          "model-00067-of-00113.safetensors",
+          "model-00068-of-00113.json",
+          "model-00068-of-00113.safetensors",
+          "model-00069-of-00113.json",
+          "model-00069-of-00113.safetensors",
+          "model-00070-of-00113.json",
+          "model-00070-of-00113.safetensors",
+          "model-00071-of-00113.json",
+          "model-00071-of-00113.safetensors",
+          "model-00072-of-00113.json",
+          "model-00072-of-00113.safetensors",
+          "model-00073-of-00113.json",
+          "model-00073-of-00113.safetensors",
+          "model-00074-of-00113.json",
+          "model-00074-of-00113.safetensors",
+          "model-00075-of-00113.json",
+          "model-00075-of-00113.safetensors",
+          "model-00076-of-00113.json",
+          "model-00076-of-00113.safetensors",
+          "model-00077-of-00113.json",
+          "model-00077-of-00113.safetensors",
+          "model-00078-of-00113.json",
+          "model-00078-of-00113.safetensors",
+          "model-00079-of-00113.json",
+          "model-00079-of-00113.safetensors",
+          "model-00080-of-00113.json",
+          "model-00080-of-00113.safetensors",
+          "model-00081-of-00113.json",
+          "model-00081-of-00113.safetensors",
+          "model-00082-of-00113.json",
+          "model-00082-of-00113.safetensors",
+          "model-00083-of-00113.json",
+          "model-00083-of-00113.safetensors",
+          "model-00084-of-00113.json",
+          "model-00084-of-00113.safetensors",
+          "model-00085-of-00113.json",
+          "model-00085-of-00113.safetensors",
+          "model-00086-of-00113.json",
+          "model-00086-of-00113.safetensors",
+          "model-00087-of-00113.json",
+          "model-00087-of-00113.safetensors",
+          "model-00088-of-00113.json",
+          "model-00088-of-00113.safetensors",
+          "model-00089-of-00113.json",
+          "model-00089-of-00113.safetensors",
+          "model-00090-of-00113.json",
+          "model-00090-of-00113.safetensors",
+          "model-00091-of-00113.json",
+          "model-00091-of-00113.safetensors",
+          "model-00092-of-00113.json",
+          "model-00092-of-00113.safetensors",
+          "model-00093-of-00113.json",
+          "model-00093-of-00113.safetensors",
+          "model-00094-of-00113.json",
+          "model-00094-of-00113.safetensors",
+          "model-00095-of-00113.json",
+          "model-00095-of-00113.safetensors",
+          "model-00096-of-00113.json",
+          "model-00096-of-00113.safetensors",
+          "model-00097-of-00113.json",
+          "model-00097-of-00113.safetensors",
+          "model-00098-of-00113.json",
+          "model-00098-of-00113.safetensors",
+          "model-00099-of-00113.json",
+          "model-00099-of-00113.safetensors",
+          "model-00100-of-00113.json",
+          "model-00100-of-00113.safetensors",
+          "model-00101-of-00113.json",
+          "model-00101-of-00113.safetensors",
+          "model-00102-of-00113.json",
+          "model-00102-of-00113.safetensors",
+          "model-00103-of-00113.json",
+          "model-00103-of-00113.safetensors",
+          "model-00104-of-00113.json",
+          "model-00104-of-00113.safetensors",
+          "model-00105-of-00113.json",
+          "model-00105-of-00113.safetensors",
+          "model-00106-of-00113.json",
+          "model-00106-of-00113.safetensors",
+          "model-00107-of-00113.json",
+          "model-00107-of-00113.safetensors",
+          "model-00108-of-00113.json",
+          "model-00108-of-00113.safetensors",
+          "model-00109-of-00113.json",
+          "model-00109-of-00113.safetensors",
+          "model-00110-of-00113.json",
+          "model-00110-of-00113.safetensors",
+          "model-00111-of-00113.json",
+          "model-00111-of-00113.safetensors",
+          "model-00112-of-00113.json",
+          "model-00112-of-00113.safetensors",
+          "model-00113-of-00113.json",
+          "model-00113-of-00113.safetensors",
+          "model.safetensors.index.json",
+          "special_tokens_map.json",
+          "tokenizer.json",
+          "tokenizer_config.json",
+          "ultra_v3_reasoning_parser.py"
+        ],
+        "modelType": "nemotron_h",
+        "moe": true,
+        "parameterCount": "549308993536",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 262144,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-06-02T15:48:46.182132Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Nemotron-3-Ultra-550B-A55B-NVFP4 is a frontier-scale large language model (LLM) trained by NVIDIA, designed to deliver strong agentic, reasoning, and conversational capabilities. It is optimized for the most demanding workloads, including complex multi-step agents, long-context analysis, and high-accuracy reasoning over code, math, and science. The model employs a hybrid Latent Mixture-of-Experts (LatentMoE) architecture, utilizing interleaved Mamba-2 and MoE layers, along with select Attention layers. Like the Super model, the Ultra model incorporates Multi-Token Prediction (MTP) layers for faster text generation and improved quality, and it is trained using an NVFP4 pre-training recipe to maximize compute efficiency. The model has 55B active parameters and 550B parameters in total.",
+      "displayName": "NVIDIA Nemotron 3 Ultra NVFP4",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_UNSPECIFIED",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-NVFP4",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": false,
+      "supportsLora": true,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-10-20T07:04:01.136612Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": false
+    },
+    {
+      "name": "accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": {
+        "year": 2026,
+        "month": 11,
+        "day": 7
+      },
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "BF16",
+        "huggingfaceFiles": [],
+        "modelType": "nemotron_h",
+        "moe": true,
+        "parameterCount": "31577940288",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 262144,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-08-07T21:55:05.929687Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Nemotron-Lightning-3.5-30B-A3B is a 30B-parameter Mixture-of-Experts language model (3B active) from NVIDIA's Nemotron-H family, built on a hybrid Mamba-Transformer architecture for efficient long-context inference. Like other models in the family, it responds to queries by first generating a reasoning trace and then concluding with a final response, with reasoning behavior configurable through a flag in the chat template. It includes a multi-token prediction (MTP) speculative decoding head for low-latency serving.",
+      "displayName": "Nemotron Lightning 3.5 30B A3B",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": true,
+      "supportsImageInput": false,
+      "supportsLora": true,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 131072,
+      "updateTime": "2026-10-20T07:04:02.531261Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/qwen3-embedding-8b",
+      "kind": "EMBEDDING_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "BF16",
+        "huggingfaceFiles": [
+          ".gitattributes",
+          "LICENSE",
+          "README.md",
+          "config.json",
+          "config_sentence_transformers.json",
+          "generation_config.json",
+          "merges.txt",
+          "model-00001-of-00004.safetensors",
+          "model-00002-of-00004.safetensors",
+          "model-00003-of-00004.safetensors",
+          "model-00004-of-00004.safetensors",
+          "model.safetensors.index.json",
+          "modules.json",
+          "tokenizer.json",
+          "tokenizer_config.json",
+          "vocab.json"
+        ],
+        "modelType": "qwen3",
+        "moe": false,
+        "parameterCount": "8188515328",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 40960,
+      "conversationConfig": {
+        "style": "jinja",
+        "system": "",
+        "template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- messages[0]['content'] }}\n    {%- else %}\n        {{- 'You are a helpful assistant.' }}\n    {%- endif %}\n    {{- \"\\n\\n# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0]['role'] == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0]['content'] + '<|im_end|>\\n' }}\n    {%- else %}\n        {{- '<|im_start|>system\\nYou are a helpful assistant.<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- for message in messages %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) or (message.role == \"assistant\" and not message.tool_calls) %}\n        {{- '<|im_start|>' + message.role + '\\n' + message.content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {{- '<|im_start|>' + message.role }}\n        {%- if message.content %}\n            {{- '\\n' + message.content }}\n        {%- endif %}\n        {%- for tool_call in message.tool_calls %}\n            {%- if tool_call.function is defined %}\n                {%- set tool_call = tool_call.function %}\n            {%- endif %}\n            {{- '\\n<tool_call>\\n{\"name\": \"' }}\n            {{- tool_call.name }}\n            {{- '\", \"arguments\": ' }}\n            {{- tool_call.arguments | tojson }}\n            {{- '}\\n</tool_call>' }}\n        {%- endfor %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if (loop.index0 == 0) or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- message.content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n{%- endif %}\n"
+      },
+      "createTime": "2025-08-20T16:24:50.233084Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "The Qwen3 Embedding 8B model is the latest proprietary model of the Qwen family, specifically designed for text embedding tasks. This model inherits the exceptional multilingual capabilities, long-text understanding, and reasoning skills building upon the dense foundational models of the Qwen3 series. The model represents significant advancements in multiple text embedding tasks including text retrieval, code retrieval, text classification, text clustering.",
+      "displayName": "Qwen3 Embedding 8B",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_UNSPECIFIED",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/Qwen/Qwen3-Embedding-8B",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": false,
+      "supportsLora": false,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": false,
+      "teftDetails": null,
+      "trainingContextLength": 131072,
+      "updateTime": "2026-08-28T22:31:48.375402Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": false
+    },
+    {
+      "name": "accounts/fireworks/models/qwen3p8-2p4t-a95b",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "FP8",
+        "huggingfaceFiles": [],
+        "modelType": "qwen3_5_moe_text",
+        "moe": true,
+        "parameterCount": "2419804697984",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 262144,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-08-12T16:55:34.791169Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Qwen3.8-2.4T-A95B is Alibaba's most capable Qwen model to date, a 2.4T-parameter sparse MoE with ~95B active parameters. It is built for autonomous, long-horizon work: multi-day coding runs, research-paper reproduction and self-improvement.",
+      "displayName": "Qwen3.8-2.4T-A95B",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": false,
+      "supportsLora": true,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-08-28T22:31:48.375402Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/qwen3p8-max",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [],
+        "modelType": "",
+        "moe": true,
+        "parameterCount": "0",
+        "supportsFireattention": true,
+        "supportsMtp": true,
+        "tunable": false,
+        "worldSize": 0
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 0,
+      "conversationConfig": {
+        "style": "",
+        "system": "",
+        "template": ""
+      },
+      "createTime": "2026-08-05T16:57:20.949089Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Built on the architectural foundation of Qwen3.5, Qwen3.8 delivers substantial gains across coding, professional work, research, and long-horizon agentic tasks. Beyond answering harder questions, Qwen3.8 is designed to carry complex, multi-step tasks through to completion with greater reliability.",
+      "displayName": "Qwen 3.8 Max",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": true,
+      "supportsLora": false,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": true,
+      "teftDetails": null,
+      "trainingContextLength": 65536,
+      "updateTime": "2026-08-28T22:31:48.375402Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    },
+    {
+      "name": "accounts/fireworks/models/qwen3-reranker-8b",
+      "kind": "EMBEDDING_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "BF16",
+        "huggingfaceFiles": [
+          ".gitattributes",
+          "README.md",
+          "config.json",
+          "generation_config.json",
+          "merges.txt",
+          "model-00001-of-00005.safetensors",
+          "model-00002-of-00005.safetensors",
+          "model-00003-of-00005.safetensors",
+          "model-00004-of-00005.safetensors",
+          "model-00005-of-00005.safetensors",
+          "model.safetensors.index.json",
+          "tokenizer.json",
+          "tokenizer_config.json",
+          "vocab.json"
+        ],
+        "modelType": "qwen3",
+        "moe": false,
+        "parameterCount": "8188548096",
+        "supportsFireattention": true,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 40960,
+      "conversationConfig": {
+        "style": "jinja",
+        "system": "",
+        "template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0].role == 'system' %}\n        {{- messages[0].content + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0].role == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0].content + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" and not(message.content.startswith('<tool_response>') and message.content.endswith('</tool_response>')) %}\n        {%- set ns.multi_step_tool = false %}\n        {%- set ns.last_query_index = index %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) %}\n        {{- '<|im_start|>' + message.role + '\\n' + message.content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set content = message.content %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is defined and message.reasoning_content is not none %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- else %}\n            {%- if '</think>' in message.content %}\n                {%- set content = message.content.split('</think>')[-1].lstrip('\\n') %}\n                {%- set reasoning_content = message.content.split('</think>')[0].rstrip('\\n').split('<think>')[-1].lstrip('\\n') %}\n            {%- endif %}\n        {%- endif %}\n        {%- if loop.index0 > ns.last_query_index %}\n            {%- if loop.last or (not loop.last and reasoning_content) %}\n                {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content.strip('\\n') + '\\n</think>\\n\\n' + content.lstrip('\\n') }}\n            {%- else %}\n                {{- '<|im_start|>' + message.role + '\\n' + content }}\n            {%- endif %}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if (loop.first and content) or (not loop.first) %}\n                    {{- '\\n' }}\n                {%- endif %}\n                {%- if tool_call.function %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {{- '<tool_call>\\n{\"name\": \"' }}\n                {{- tool_call.name }}\n                {{- '\", \"arguments\": ' }}\n                {%- if tool_call.arguments is string %}\n                    {{- tool_call.arguments }}\n                {%- else %}\n                    {{- tool_call.arguments | tojson }}\n                {%- endif %}\n                {{- '}\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.first or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- message.content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- endif %}\n{%- endif %}"
+      },
+      "createTime": "2025-10-07T19:24:05.905021Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "significant advancements in multiple text embedding and ranking tasks, including text retrieval, code retrieval, text classification, text clustering, and bitext mining",
+      "displayName": "Qwen3 Reranker 8B",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_UNSPECIFIED",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "",
+      "importedFrom": "",
+      "peftDetails": {
+        "baseModel": "",
+        "baseModelType": "",
+        "mergeAddonModelName": "",
+        "r": 0,
+        "targetModules": []
+      },
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": false,
+      "supportsLora": false,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": false,
+      "teftDetails": null,
+      "trainingContextLength": 131072,
+      "updateTime": "2026-08-28T22:31:48.375402Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": false
+    },
+    {
+      "name": "accounts/fireworks/models/rune",
+      "kind": "HF_BASE_MODEL",
+      "supportsServerless": true,
+      "deprecationDate": null,
+      "baseModelDetails": {
+        "checkpointFormat": "HUGGINGFACE",
+        "defaultPrecision": "PRECISION_UNSPECIFIED",
+        "huggingfaceFiles": [],
+        "modelType": "gemma4",
+        "moe": true,
+        "parameterCount": "26558551630",
+        "supportsFireattention": false,
+        "supportsMtp": false,
+        "tunable": false,
+        "worldSize": 1
+      },
+      "calibrated": false,
+      "cluster": "",
+      "contextLength": 262144,
+      "conversationConfig": null,
+      "createTime": "2026-10-20T17:41:44.999458Z",
+      "createdBy": "",
+      "defaultDraftModel": "",
+      "defaultDraftTokenCount": 0,
+      "defaultSamplingParams": {},
+      "deployedModelRefs": [],
+      "description": "Rune 26B-A4B is a System One decision model: it does not reason and does not generate text. It reads a document once and answers up to 256 typed questions about it - multiple choice, true/false probability, or graded scale - returning calibrated probabilities in that single pass. Output tokens are always zero, so you pay for input only. 262K context, text only.",
+      "displayName": "Rune 26B-A4B",
+      "enableVisionEncoderTuning": false,
+      "encryptionState": "ENCRYPTION_STATE_PLAINTEXT",
+      "fineTuningJob": "",
+      "githubUrl": "",
+      "huggingFaceUrl": "https://huggingface.co/surogate/rune-26b-a4b-GGUF",
+      "importedFrom": "",
+      "peftDetails": null,
+      "public": true,
+      "rewardModelDetails": null,
+      "rlLoraTunable": false,
+      "rlTunable": false,
+      "serverlessModes": [],
+      "snapshotType": "FULL_SNAPSHOT",
+      "state": "READY",
+      "status": {
+        "code": "OK",
+        "message": ""
+      },
+      "supervisedLoraTunable": false,
+      "supportsImageInput": false,
+      "supportsLora": false,
+      "supportsServerlessLora": false,
+      "supportsServerlessTraining": false,
+      "supportsTools": false,
+      "teftDetails": null,
+      "trainingContextLength": 0,
+      "updateTime": "2026-10-27T02:31:53.981158Z",
+      "useHfApplyChatTemplate": false,
+      "useTrainingV2": true
+    }
+  ]
+}

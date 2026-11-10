@@ -248,13 +248,32 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, only);
     if (merge === "tables" && isTable(next)) next = mergeTables(current, next, path === "api" ? options.defaultApi : undefined);
     if (equal(current, next) || next === undefined) continue;
+    // Removing every table leaves none (an observed `{}` such as `budget = {}` is a value).
+    if (merge === "tables" && isTable(next) && Object.keys(next).length === 0 && Object.keys(observed).length > 0) {
+      if (own === undefined) continue;
+      unsetPath(doc, path);
+      changes.push({ path, before: own, after: undefined });
+      continue;
+    }
     if (fromBase !== undefined && equal(fromBase, next)) unsetPath(doc, path);
     else setPath(doc, path, structuredClone(next));
     changes.push({ path, before: current, after: next });
   }
   changes.push(...switchedOff(doc, observation, owns));
   keepSupported(doc, base);
+  bothModalities(doc, base);
   return changes;
+}
+
+// A provider file's [modalities] lists both sides; the side equal to the lab's is copied from it.
+function bothModalities(doc: Doc, base: Doc | undefined) {
+  const modalities = doc.modalities;
+  if (!isTable(modalities)) return;
+  for (const side of ["input", "output"]) {
+    const inherited = getPath(base, `modalities.${side}`);
+    if (modalities[side] === undefined && inherited !== undefined) modalities[side] = structuredClone(inherited);
+  }
+  if (modalities.input !== undefined && modalities.output !== undefined) doc.modalities = { input: modalities.input, output: modalities.output, ...modalities };
 }
 
 // A capability table a provider file sets always names `supported`, even when
