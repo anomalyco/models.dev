@@ -25,6 +25,13 @@ opencodeai = "@opencode/ai/providers/openai-compatible"
 #   minimax-m3                                  -> toggle only
 #       (tolerates none but still spends reasoning tokens on it, so it is not an
 #        off switch there; thinking.type is)
+# 2026-11-10 additions (doubao-seed-2.1-pro, -2.1-lite, -2.0-mini, kimi-k3.1-pro,
+# kimi-k2.8-preview, deepseek-v4.1-flash, deepseek-v4.1-flash-economy) copy the
+# controls of their measured same-surface peers above per relay convention and
+# were not re-measured on this endpoint; see each file. The Model Name list in
+# the doc (accessed 2026-11-10) is the 2026-08 set plus those additions;
+# kimi-k2.7-code is still shown in the console as 即将下线 (being retired) but is
+# no longer a configurable Model Name.
 # Plaintext reasoning is in `choices[].message.reasoning_content`
 # and the encrypted block in `choices[].message.encrypted_content`.
 # Anthropic: base https://ark.cn-beijing.volces.com/api/coding, POST /v1/messages

@@ -1,0 +1,24 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-11-10). Subscription tier: no per-token price.
+# Toggle: thinking.type = enabled|disabled, POST /api/coding/v3/chat/completions.
+# Copied per relay convention from the measured deepseek-v4-flash / -pro peers
+# on this endpoint (see provider.toml for the n=5 measurements: graded values
+# fully overlap); not re-measured here. The pay-as-you-go host
+# (providers/volcengine, deepseek-v4-flash-ga-260731) exposes toggle plus
+# minimal|low|medium|high on /api/v3.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
