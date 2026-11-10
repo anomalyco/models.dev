@@ -22,6 +22,27 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  inceptron: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "zai-org/GLM-5.2")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          switch (model.id) {
+            case "zai-org/GLM-5.3": next.pricing.prompt = "0.0000012"; next.models_dev.reasoning_options[0].values = ["max", "high"]; break;
+            case "moonshotai/Kimi-K2.6": delete next.pricing.input_cache_reads; next.models_dev.status = "deprecated"; break;
+            case "moonshotai/Kimi-K2.7-Code": next.input_modalities = ["text"]; next.supported_sampling_parameters = []; break;
+            case "deepseek-ai/DeepSeek-V4-Flash-0731": next.context_length = 65_536; delete next.models_dev.interleaved; break;
+            case "zai-org/GLM-5.3-Flash": next.is_ready = false; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "zai-org/GLM-5.2");
+      data.push({ ...structuredClone(template), id: "zai-org/GLM-5.1", name: "GLM-5.1", models_dev: { ...structuredClone(template.models_dev), base_model: "zhipuai/glm-5.1" } });
+      return { ...raw, data };
+    },
+  },
   hyper: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
