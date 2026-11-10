@@ -1,0 +1,13 @@
+# Docs, pricing and limits: https://isoquant.ai/docs and GET https://api.isoquant.ai/v1/models
+# (public, no key; accessed 2026-11-11).
+# Chat Completions and Responses are OpenAI-compatible at https://api.isoquant.ai/v1;
+# Messages is Anthropic-compatible at https://api.isoquant.ai/v1/messages and requires
+# `anthropic-version: 2023-06-01`. Explicit `cache_control` is unsupported; repeated
+# prompt prefixes use an automatic cache. Zero data retention is opt-in per request
+# with `Isoquant-ZDR: required`.
+name = "Isoquant"
+env = ["ISOQUANT_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.isoquant.ai/v1"
+doc = "https://isoquant.ai/docs"

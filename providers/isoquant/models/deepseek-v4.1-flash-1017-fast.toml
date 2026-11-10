@@ -1,0 +1,40 @@
+# Source: GET https://api.isoquant.ai/v1/models (accessed 2026-11-11).
+# Same weights as the lab model on a higher-throughput serve; the host names it "... Fast".
+# Pricing (nano-USD per token -> USD per million): 35/5/370 = $0.035/$0.005/$0.37
+# input/cached input/output. Prompt caching is automatic with no write price.
+# Reasoning: `reasoning_effort = none|low|high` on Chat Completions and `reasoning.effort`
+# on Responses, default high; Messages uses `output_config.effort`.
+# Chat Completions returns the trace in `reasoning_content`.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Fast"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.035
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.37

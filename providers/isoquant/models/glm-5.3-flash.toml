@@ -1,0 +1,38 @@
+# Source: GET https://api.isoquant.ai/v1/models (accessed 2026-11-11).
+# Pricing (nano-USD per token -> USD per million): 70/25/150 = $0.07/$0.025/$0.15
+# input/cached input/output. Prompt caching is automatic with no write price.
+# Reasoning: `reasoning_effort = low|high|max` on Chat Completions and `reasoning.effort`
+# on Responses, default max; Messages uses `output_config.effort`. No off switch.
+# Chat Completions returns the trace in `reasoning_content`.
+# Output is capped by the remaining context, so the lab's 131,072 output limit stands.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.15
