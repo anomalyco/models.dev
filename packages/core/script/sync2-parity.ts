@@ -22,6 +22,53 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  llmgateway: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const ids = raw.data.filter((model: Raw) => model.architecture.output_modalities.join() === "text" && (model.context_length ?? 0) > 0 && Number(model.pricing.prompt) > 0).map((model: Raw) => model.id);
+      const [a, b, c, d, e, f] = ids;
+      const data = raw.data
+        .filter((model: Raw) => model.id !== f)
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.id === a) next.pricing.prompt = String(Number(next.pricing.prompt) * 2);
+          if (model.id === b) next.pricing.input_cache_read = "0.0000001";
+          if (model.id === c) next.context_length = 65_536;
+          if (model.id === d) next.providers = [{ ...next.providers?.[0], reasoning_efforts: ["low", "high"] }];
+          if (model.id === e) next.pricing.internal_reasoning = "0.00001";
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === a);
+      data.push({ ...structuredClone(template), id: "glm-4.6", name: "GLM-4.6", family: "zai" });
+      data.push({ ...structuredClone(template), id: "brand-new-model", name: "Brand New", family: "acme" });
+      return { ...raw, data };
+    },
+  },
+  "llmgateway-providers": {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const ids = raw.data.filter((model: Raw) => !model.id.startsWith("llmgateway/") && model.architecture.output_modalities.join() === "text" && (model.context_length ?? 0) > 0 && Number(model.pricing.prompt) > 0).map((model: Raw) => model.id);
+      const [a, b, c, d, e, f, g, h] = ids;
+      const data = raw.data
+        .filter((model: Raw) => model.id !== h)
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const mapping = next.providers?.[0];
+          if (model.id === a) next.pricing.prompt = String(Number(next.pricing.prompt) * 2);
+          if (model.id === b) mapping.vision = false;
+          if (model.id === c) mapping.vision = true;
+          if (model.id === d) mapping.reasoning_efforts = ["none"];
+          if (model.id === e) mapping.reasoning_efforts = ["high", "low"];
+          if (model.id === f) { mapping.tools = !mapping.tools; next.structured_outputs = !next.structured_outputs; }
+          if (model.id === g) { next.max_output = 4_096; next.context_length = 32_768; }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === a);
+      data.push({ ...structuredClone(template), id: `${a.split("/")[0]}/glm-4.6`, name: "GLM-4.6", family: "zai" });
+      data.push({ ...structuredClone(template), id: "acme/brand-new-model", name: "Brand New", family: "acme" });
+      return { ...raw, data };
+    },
+  },
   edenai: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

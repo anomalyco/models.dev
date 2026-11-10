@@ -133,6 +133,8 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | hyper | same | same | A standalone file whose ID later matches a lab file stays standalone; the old sync turned it into a base_model file (none would today). Old-sync behavior kept: a lab-based model that stops listing a reasoning object loses its efforts and keeps `reasoning = { supported = true }`. | |
 | inceptron | same | same | A file keeps its base_model; the old sync switched it to the lab model the source names when they differed (none do). | |
 | kilo | same | same | |
+| llmgateway | same | 1 file | A new reasoning price on a model whose parameters don't list `reasoning` is written; the old sync could not write it ("does not reproduce the synced fields") and left the file (o3 in the perturbed copy). A new model with no controls or no lab file is a gap; the old sync wrote `reasoning = { supported = true }` or a standalone file. | |
+| llmgateway-providers | same | same | The module reads the matching DevPass file for controls, the reasoning field and bands, as the old one did. | |
 | merge-gateway | same | same | No key locally: the fixture is built from the catalog's own Merge Gateway files in the API's shape (per-second routes as `per_second`). A new model with no lab file is a gap; the old sync skipped it. | |
 | meta | same | same | |
 | mistral | same | same | None in the data. A non-chat model (OCR, moderation) whose file has no `[api.*]` tables would get the provider's default API before its own; the old sync gave it only its own. Every such file already lists its API. |

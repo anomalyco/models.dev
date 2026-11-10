@@ -15,6 +15,9 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // DevPass: a new reasoning price on a model whose parameters don't list
+  // reasoning is written; the old sync couldn't write it and left the file.
+  "llmgateway/perturbed": ["providers/llmgateway/models/o3.toml"],
   // Eden AI: a new file's kinds take the lab's formats (the old sync wrote bare kinds).
   "edenai/perturbed": ["providers/edenai/models/openai/gpt-4.1-nano.toml"],
   // EmpirioLabs: a model that starts reasoning with no controls is a gap.
