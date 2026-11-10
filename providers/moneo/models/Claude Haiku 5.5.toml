@@ -1,4 +1,6 @@
-# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Availability, exact wire ID, host modality override, limit and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# `Claude Haiku 5.5` (including spaces) is the exact Moneo wire ID returned in both `id` and `model`.
+# Reasoning is supported, but Moneo's Chat Completions gateway does not expose a documented toggle, effort enum or budget control.
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
@@ -7,7 +9,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 
