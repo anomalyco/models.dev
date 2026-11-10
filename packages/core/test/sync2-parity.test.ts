@@ -62,6 +62,8 @@ const EXPECTED: Record<string, string[]> = {
     "providers/cortecs/models/minicpm-v-4.5.toml",
     "providers/cortecs/models/qwen3-235b-a22b-instruct-2507-fp8.toml",
   ],
+  // Requesty: a new model with no lab file is a gap; the old sync wrote a standalone file.
+  "requesty/perturbed": ["providers/requesty/models/acme-brand-new.toml"],
   // A new Venice model with no lab file. The old sync wrote a standalone file with a generated
   // description and today's date; the new engine reports a gap (no create-only fields yet).
   "venice/perturbed": ["providers/venice/models/venice-brand-new.toml"],

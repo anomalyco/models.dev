@@ -19,12 +19,13 @@ import { nearai } from "./providers/nearai.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
+import { requesty } from "./providers/requesty.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { venice } from "./providers/venice.js";
 import { xai } from "./providers/xai.js";
 import type { SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { anthropic, baseten, chutes, cortecs, deepinfra, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, meta, mistral, modular, morph, nearai, "novita-ai": novitaAi, "ollama-cloud": ollamaCloud, openai, tinfoil, venice, xai };
+export const modules: Record<string, SyncModule<any>> = { anthropic, baseten, chutes, cortecs, deepinfra, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, meta, mistral, modular, morph, nearai, "novita-ai": novitaAi, "ollama-cloud": ollamaCloud, openai, requesty, tinfoil, venice, xai };
 
 export { plan, sync };
 export type * from "./types.js";

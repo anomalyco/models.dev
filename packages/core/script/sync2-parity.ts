@@ -27,6 +27,7 @@ import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
 import { novitaAi as oldNovita } from "../src/sync/providers/novita-ai.js";
 import { ollamaCloud as oldOllamaCloud } from "../src/sync/providers/ollama-cloud.js";
 import { openai as oldOpenai } from "../src/sync/providers/openai.js";
+import { requesty as oldRequesty } from "../src/sync/providers/requesty.js";
 import { tinfoil as oldTinfoil } from "../src/sync/providers/tinfoil.js";
 import { venice as oldVenice } from "../src/sync/providers/venice.js";
 import { xai as oldXai } from "../src/sync/providers/xai.js";
@@ -36,13 +37,38 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, baseten: oldBaseten, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, huggingface: oldHuggingface, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, baseten: oldBaseten, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, huggingface: oldHuggingface, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, requesty: oldRequesty, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  requesty: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "gpt-6-luna@eu")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.id === "gpt-6.1-terra") next.pricing[1].input_price *= 2;
+          if (model.id === "gpt-6-sol") next.pricing = next.pricing.slice(0, 1);
+          if (model.id === "claude-sonnet-5-5@eu") next.pricing.push({ ...next.pricing[0], prompt_tokens_threshold: 200_000, input_price: next.pricing[0].input_price * 2 });
+          if (model.id === "glm-5.3@eu") next.pricing[0].cached_price = 0;
+          if (model.id === "deepseek-v4.1-flash@eu") next.supports_reasoning = false;
+          if (model.id === "gemini-3.8-flash@eu") next.max_output_tokens = 0;
+          if (model.id === "mistral-large-4@eu") next.context_window = 32_768;
+          if (model.id === "kimi-k3.1-pro@eu") Object.assign(next, { supports_vision: false, description: "Changed description" });
+          if (model.id === "nemotron-lightning-3.5-30b-a3b") next.supports_tool_calling = !next.supports_tool_calling;
+          if (model.id === "glm-5.3-flash@eu") next.supports_output_json_schema = !next.supports_output_json_schema;
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "glm-5.3@eu");
+      data.push({ ...structuredClone(template), id: "glm-5.2@us", supports_reasoning: false });
+      data.push({ ...structuredClone(template), id: "acme-brand-new" });
+      return { ...raw, data };
+    },
+  },
   baseten: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
