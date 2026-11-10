@@ -3,11 +3,14 @@ base_model = "deepseek/deepseek-v4-flash-0731"
 name = "deepseek-v4-flash-0731"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+context = 1_050_000
 
 [cost.text.input]
-price = 0.44
-cache = { read = 0.04 }
+price = 0.08
+cache = { read = 0.016 }
 
 [cost.text.output]
-price = 1.32
+price = 0.18
