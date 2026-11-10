@@ -30,7 +30,8 @@ for (const [provider, scenarios] of Object.entries(SCENARIOS)) {
     test(`old and new sync write the same files: ${provider} / ${scenario}`, async () => {
       const result = await parity(provider, scenario);
       expect(result.differences).toEqual(EXPECTED[`${provider}/${scenario}`] ?? []);
-      if (scenario === "perturbed") expect(Object.keys(result.new).length).toBeGreaterThan(0);
+      // OpenAI owns no fields, so it never writes a file.
+      if (scenario === "perturbed" && provider !== "openai") expect(Object.keys(result.new).length).toBeGreaterThan(0);
     }, 30_000);
   }
 }
