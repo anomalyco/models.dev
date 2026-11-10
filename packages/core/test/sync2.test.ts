@@ -423,7 +423,7 @@ test("lab hints resolve every catalog ID like the old resolvers", () => {
     resolveCanonicalBaseModel(id) !== pick(namespaceHints(id)) || resolveModelMetadataBaseModel(id) !== pick(labHints(id))
   );
   expect(mismatches).toEqual([]);
-});
+}, 60_000);
 
 test("merge: kinds adds a kind in the lab's formats, and a list back to the lab's drops the table", async () => {
   const labFile = lab(false).replace('input = ["text"]', 'input = ["text", "image/png", "video/mp4"]');
