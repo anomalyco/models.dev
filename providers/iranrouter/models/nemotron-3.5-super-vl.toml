@@ -1,6 +1,11 @@
-# Toggle: chat_template_kwargs.enable_thinking = true|false
-# Baseline: providers/nvidia/models/nvidia/nemotron-3.5-super-vl-120b-a12b.toml and
-# providers/openrouter/models/nvidia/nemotron-3.5-super-vl.toml (toggle = true).
+# Toggle: reasoning.enabled = true|false
+# Same-surface relay peer: providers/openrouter/models/nvidia/nemotron-3.5-super-vl.toml
+# (NVIDIA-direct uses chat_template_kwargs.enable_thinking; not this host).
+# Live 2026-11-10 IranRouter Chat Completions: response is OpenRouter-shaped
+# (message.reasoning + reasoning_details). chat_template_kwargs and reasoning.enabled
+# both accepted (HTTP 200); wire comment matches the OpenRouter peer for this relay
+# surface. reasoning_field left unset like OpenRouter (v1 interleaved only allows
+# reasoning_content|reasoning_details).
 # Sources:
 # - https://iranrouter.net/docs
 # - https://iranrouter.net/models
@@ -14,7 +19,6 @@ reasoning = { supported = true, toggle = true }
 structured_output = true
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.15
