@@ -42,13 +42,15 @@ const EXPECTED: Record<string, string[]> = {
   "venice/perturbed": ["providers/venice/models/venice-brand-new.toml"],
 };
 
+const OWNS_NOTHING = new Set(["ollama-cloud", "openai"]);
+
 for (const [provider, scenarios] of Object.entries(SCENARIOS)) {
   for (const scenario of Object.keys(scenarios)) {
     test(`old and new sync write the same files: ${provider} / ${scenario}`, async () => {
       const result = await parity(provider, scenario);
       expect(result.differences).toEqual(EXPECTED[`${provider}/${scenario}`] ?? []);
-      // OpenAI owns no fields, so it never writes a file.
-      if (scenario === "perturbed" && provider !== "openai") expect(Object.keys(result.new).length).toBeGreaterThan(0);
+      // OpenAI and Ollama Cloud own no fields, so they never write a file.
+      if (scenario === "perturbed" && !OWNS_NOTHING.has(provider)) expect(Object.keys(result.new).length).toBeGreaterThan(0);
     }, 30_000);
   }
 }

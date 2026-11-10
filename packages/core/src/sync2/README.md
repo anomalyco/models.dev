@@ -114,6 +114,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | morph | same | same | |
 | nearai | same | same | On case-insensitive filesystems the new engine matches `qwen/x` to `Qwen/x`; the old one deletes the file. |
 | novita-ai | same | same | A route that drops Chat Completions loses that table even when it's the file's first; the old sync kept the first table. Every route lists Chat Completions today. A long-context band's cache price of 0 is left out instead of written as 0. |
+| ollama-cloud | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
 | openai | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
 | tinfoil | same | same | A model that starts reasoning with no controls in its file is a gap; the old sync stopped with an error. |
 | venice | same | 1 file | A new model with no lab file is a gap; the old sync wrote a standalone file with a generated description and today's date. Lab matching (ID or name, ignoring case and punctuation) is the old one, in the module. An API table the source sets keeps the file's other keys (the old sync kept only `capabilities`). |

@@ -19,6 +19,7 @@ import { modular as oldModular } from "../src/sync/providers/modular.js";
 import { morph as oldMorph } from "../src/sync/providers/morph.js";
 import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
 import { novitaAi as oldNovita } from "../src/sync/providers/novita-ai.js";
+import { ollamaCloud as oldOllamaCloud } from "../src/sync/providers/ollama-cloud.js";
 import { openai as oldOpenai } from "../src/sync/providers/openai.js";
 import { tinfoil as oldTinfoil } from "../src/sync/providers/tinfoil.js";
 import { venice as oldVenice } from "../src/sync/providers/venice.js";
@@ -29,13 +30,20 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, deepinfra: oldDeepinfra, "fireworks-ai": oldFireworks, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, deepinfra: oldDeepinfra, "fireworks-ai": oldFireworks, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  "ollama-cloud": {
+    recorded: (raw) => raw,
+    perturbed: (raw) => ({
+      ...raw,
+      data: [...raw.data.filter((model: Raw) => model.id !== "glm-5.2"), { id: "glm-6", object: "model", created: 1, owned_by: "ollama" }],
+    }),
+  },
   morph: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
