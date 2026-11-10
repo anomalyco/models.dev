@@ -1,22 +1,27 @@
-# Source: https://nan.builders/docs/models (accessed 2026-09-11)
-# ~753B MoE, sparse attention. The 2026-10-21 docs list NVFP4 and text, image, audio and video
-# input; modalities stay text-only like the lab until the host confirms them.
-# Premium tier: callable only with a key on the GLM 5.3 premium membership.
-# 1M token context, 3,000M token quota per billing period, capped at 400M tokens
-# per rolling 4h window, 5 concurrent requests. Included in the tier, so no
-# per-token price.
-# NaN reasoning table (checked 2026-10-21): reasoning_effort values none, minimal, low, medium,
-# high, xhigh, max; https://nan.builders/docs/models#controlling-reasoning
-# Update: GLM always reasons; none is applied as minimal, its shortest level, so no toggle.
+# Source: https://nan.builders/docs/models (accessed 2026-11-10)
+# ~753B MoE, NVFP4, sparse attention. The docs list text, image, audio and video
+# input; modalities stay text-only like the lab until the host documents the
+# formats. 1M token context. "Larger model" tier, also capped at 400M tokens per
+# rolling 4h window.
+# Pricing: credits per 1M tokens from https://cloud.nan.builders/tokens (behind
+# login, accessed 2026-11-10): 49 input / 1.05 cached / 154 output. Converted at
+# the 1,000-credit pack list price (26 EUR) x 1.08, the EUR->USD factor the page
+# itself uses: 0.02808 USD per credit. Larger packs and the subscriber discount
+# are cheaper.
+# NaN reasoning table (checked 2026-11-10): GLM always reasons; none is applied
+# as minimal, its shortest level, so no toggle.
+# https://nan.builders/docs/models#controlling-reasoning
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
-price = 0
+price = 1.37592
+cache = { read = 0.029484 }
 
 [cost.text.output]
-price = 0
+price = 4.32432

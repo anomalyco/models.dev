@@ -1,10 +1,15 @@
-# Source: https://nan.builders/docs/models (accessed 2026-09-11)
-# 320B-18B MoE, FP8, natively multimodal. 1M token context. 2B token monthly
-# quota per member. MIT license. Input is text and image on this host: no video
-# or PDF. Included in the membership, so no per-token price.
-# NaN reasoning table (checked 2026-10-21): reasoning_effort values none, minimal, low, medium,
-# high, xhigh, max; https://nan.builders/docs/models#controlling-reasoning
-# Update: GLM always reasons; none is applied as minimal, its shortest level, so no toggle.
+# Source: https://nan.builders/docs/models (accessed 2026-11-10)
+# 320B-18B MoE, FP8, natively multimodal. 1M token context; output budgets above
+# 131072 are lowered to 131072. MIT license. Input is text and image on this
+# host: no video or PDF.
+# Pricing: credits per 1M tokens from https://cloud.nan.builders/tokens (behind
+# login, accessed 2026-11-10): 5.25 input / 1.05 cached / 17.50 output. Converted
+# at the 1,000-credit pack list price (26 EUR) x 1.08, the EUR->USD factor the
+# page itself uses: 0.02808 USD per credit. Larger packs and the subscriber
+# discount are cheaper.
+# NaN reasoning table (checked 2026-11-10): GLM always reasons; none is applied
+# as minimal, its shortest level, so no toggle.
+# https://nan.builders/docs/models#controlling-reasoning
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -15,9 +20,11 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
-price = 0
+price = 0.14742
+cache = { read = 0.029484 }
 
 [cost.text.output]
-price = 0
+price = 0.4914

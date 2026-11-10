@@ -1,13 +1,18 @@
-# Source: https://nan.builders/docs/models (accessed 2026-09-11)
-# Flagship model. 35B total MoE, 3B active per token, FP8, 256K token context,
-# multimodal with vision, XML tool calling, MTP speculative decoding
-# (~2x throughput), 1.5M tpm. Sampling defaults temp=0.6, top_p=0.95.
-# Included in the membership, so no per-token price.
-# Effort: reasoning_effort = none|low|medium|high|max. NaN's reasoning table
-# ("the table is the contract", accessed 2026-09-28): none (and its alias
-# minimal) skips reasoning; low/medium/high/max cap it at 2,048 / 8,192 /
-# 16,384 / 32,768 tokens. Default is on with a 16,384-token budget. Off is
+# Source: https://nan.builders/docs/models (accessed 2026-11-10)
+# Previous generation, kept so configurations naming it keep working. 35B total
+# MoE, 3B active per token, FP8, 262K token context, multimodal with vision, XML
+# tool calling, MTP speculative decoding (~2x throughput), 1.5M tpm. Sampling
+# defaults temp=0.6, top_p=0.95.
+# "No counter": draws no credits, so no per-token price.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max. NaN's reasoning
+# table (checked 2026-11-10): none (and its alias minimal) skips reasoning; on
+# Chat Completions low/medium/high/xhigh/max cap it at 2,048 / 8,192 / 16,384 /
+# 32,768 / 32,768 tokens. Default is on with a 16,384-token budget. Off is
 # effort=none, so no toggle.
+# Budget: thinking_budget or thinking_token_budget, 1..32768 hard cap on Chat
+# Completions, 0 turns reasoning off, larger values are lowered to 32768; send
+# either a budget or reasoning_effort, not both.
+# https://nan.builders/docs/models#capping-reasoning-with-a-token-budget
 schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 
@@ -16,7 +21,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"], budget = { min = 0, max = 32_768 } }
 structured_output = true
 
 [cost.text.input]

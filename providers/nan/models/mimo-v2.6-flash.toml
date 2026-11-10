@@ -1,16 +1,17 @@
-# Source: https://nan.builders/docs/models (accessed 2026-09-26)
-# The newest Xiaomi MiMo, natively omnimodal with dedicated vision and audio
-# encoders. 1M context. Same limits as mimo-v2.5: 1.0B token monthly quota per
-# member, 1.5M tpm and 5 concurrent requests. No video input on this host.
-# Included in the membership, so no per-token price.
-# Context is inherited: NaN publishes "1M tokens", the same wording it uses for
-# deepseek-v4-flash and glm5.3-flash, with no documented trim of the model's
-# native 1_048_576 window. The docs/examples opencode.json snippet caps
-# contextWindow at 500000, but that snippet also trims maxTokens to a
-# per-request value rather than the ceiling.
-# NaN reasoning table (checked 2026-10-21): reasoning_effort values none, minimal, low, medium,
-# high, xhigh, max; https://nan.builders/docs/models#controlling-reasoning
-# Update: none turns reasoning off; low, medium, high, max (minimal is applied as low, xhigh as max).
+# Source: https://nan.builders/docs/models (accessed 2026-11-10)
+# The newest Xiaomi MiMo, natively omnimodal with vision and audio input; relayed
+# from an external provider. 1M context. No video input on this host. Reasoning
+# counts inside max_tokens.
+# Context is inherited: NaN publishes "1M tokens" with no documented trim of the
+# model's native 1_048_576 window.
+# Pricing: credits per 1M tokens from https://cloud.nan.builders/tokens (behind
+# login, accessed 2026-11-10): 7 input / 0.14 cached / 14 output. Converted at the
+# 1,000-credit pack list price (26 EUR) x 1.08, the EUR->USD factor the page
+# itself uses: 0.02808 USD per credit. Larger packs and the subscriber discount
+# are cheaper.
+# NaN reasoning table (checked 2026-11-10): none turns reasoning off; low,
+# medium, high, max (minimal is applied as low, xhigh as max).
+# https://nan.builders/docs/models#controlling-reasoning
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 
@@ -20,9 +21,11 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+cache = { implicit = true }
 
 [cost.text.input]
-price = 0
+price = 0.19656
+cache = { read = 0.0039312 }
 
 [cost.text.output]
-price = 0
+price = 0.39312

@@ -1,0 +1,30 @@
+# Source: https://nan.builders/docs/models (accessed 2026-11-10)
+# Relayed from an external provider. Text + image input on this host, 1M context,
+# 131K max answer. "Larger model" tier. max_tokens bounds only the visible
+# answer; max_completion_tokens caps reasoning plus answer.
+# Pricing: credits per 1M tokens from https://cloud.nan.builders/tokens (behind
+# login, accessed 2026-11-10): 100 input / 12.50 cached / 300 output. Converted at
+# the 1,000-credit pack list price (26 EUR) x 1.08, the EUR->USD factor the page
+# itself uses: 0.02808 USD per credit. Larger packs and the subscriber discount
+# are cheaper.
+# Effort: reasoning_effort; none turns reasoning off. NaN leaves the graded levels
+# out of its contract on this model, so the lab's low|medium|xhigh are recorded.
+# thinking_budget / thinking_token_budget are not honoured here.
+# https://nan.builders/docs/models#controlling-reasoning
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2.808
+cache = { read = 0.351 }
+
+[cost.text.output]
+price = 8.424
