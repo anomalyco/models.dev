@@ -2,15 +2,18 @@
 # Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
 # cache_read is listed only where cached prompt tokens bill below the input rate.
 # Toggle: `thinking.type` = enabled|disabled.
+schema = 2
 base_model = "minimax/MiniMax-M3"
 
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 1_000_000
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

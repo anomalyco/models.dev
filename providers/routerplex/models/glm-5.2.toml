@@ -1,16 +1,18 @@
 # Source: https://routerplex.com/api/models (accessed 2026-11-10).
 # Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
 # cache_read is listed only where cached prompt tokens bill below the input rate.
+schema = 2
 base_model = "zhipuai/glm-5.2"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.225
+[cost.text.input]
+price = 1.4
+cache = { read = 0.225 }
+
+[cost.text.output]
+price = 4.4

@@ -3,17 +3,19 @@
 # cache_read is listed only where cached prompt tokens bill below the input rate.
 # Effort: `reasoning_effort` is passed through to the upstream; the set copies the relay peer
 # providers/requesty/models/seed-2.0-pro.toml (none|low|medium|high|max).
+schema = 2
 base_model = "bytedance-seed/seed-2.0-pro"
 name = "Doubao Seed 2.0 Pro"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
-
-[cost]
-input = 0.67
-output = 3.36
-cache_read = 0.085
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 
 [limit]
 context = 128_000
+
+[cost.text.input]
+price = 0.67
+cache = { read = 0.085 }
+
+[cost.text.output]
+price = 3.36
