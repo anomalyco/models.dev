@@ -1,6 +1,7 @@
 // `bun models:sync2 <provider> [--dry-run] [--json] [--raw=<file>]`
 
 import { plan, sync } from "./engine.js";
+import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
@@ -27,7 +28,7 @@ import { venice } from "./providers/venice.js";
 import { xai } from "./providers/xai.js";
 import type { SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { anthropic, baseten, chutes, cortecs, deepinfra, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, kilo, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, "ollama-cloud": ollamaCloud, openai, requesty, tinfoil, venice, xai };
+export const modules: Record<string, SyncModule<any>> = { ambient, anthropic, baseten, chutes, cortecs, deepinfra, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, kilo, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, "ollama-cloud": ollamaCloud, openai, requesty, tinfoil, venice, xai };
 
 export { plan, sync };
 export type * from "./types.js";

@@ -15,6 +15,9 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // Ambient: a new model that reasons with no controls is a gap; the old sync
+  // wrote reasoning = { supported = true }.
+  "ambient/perturbed": ["providers/ambient/models/qwen/qwen3-235b-a22b-thinking-2507.toml"],
   "nearai/recorded": nearaiCase,
   "nearai/perturbed": nearaiCase,
   // Google turns thinking on for a TTS model. The old sync wrote reasoning = { supported = true }

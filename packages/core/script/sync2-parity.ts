@@ -8,44 +8,44 @@ import path from "node:path";
 import { cp, mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 
-import { syncProvider, type SyncProvider } from "../src/sync/index.js";
-import { anthropic as oldAnthropic } from "../src/sync/providers/anthropic.js";
-import { baseten as oldBaseten } from "../src/sync/providers/baseten.js";
-import { chutes as oldChutes } from "../src/sync/providers/chutes.js";
-import { cortecs as oldCortecs } from "../src/sync/providers/cortecs.js";
-import { deepinfra as oldDeepinfra } from "../src/sync/providers/deepinfra.js";
-import { engy as oldEngy } from "../src/sync/providers/engy.js";
-import { fireworksAi as oldFireworks } from "../src/sync/providers/fireworks-ai.js";
-import { githubCopilot as oldGithubCopilot } from "../src/sync/providers/github-copilot.js";
-import { google as oldGoogle } from "../src/sync/providers/google.js";
-import { huggingface as oldHuggingface } from "../src/sync/providers/huggingface.js";
-import { kilo as oldKilo } from "../src/sync/providers/kilo.js";
-import { meta as oldMeta } from "../src/sync/providers/meta.js";
-import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
-import { modular as oldModular } from "../src/sync/providers/modular.js";
-import { morph as oldMorph } from "../src/sync/providers/morph.js";
-import { nanoGpt as oldNanoGpt } from "../src/sync/providers/nano-gpt.js";
-import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
-import { novitaAi as oldNovita } from "../src/sync/providers/novita-ai.js";
-import { ollamaCloud as oldOllamaCloud } from "../src/sync/providers/ollama-cloud.js";
-import { openai as oldOpenai } from "../src/sync/providers/openai.js";
-import { requesty as oldRequesty } from "../src/sync/providers/requesty.js";
-import { tinfoil as oldTinfoil } from "../src/sync/providers/tinfoil.js";
-import { venice as oldVenice } from "../src/sync/providers/venice.js";
-import { xai as oldXai } from "../src/sync/providers/xai.js";
+import { providers, syncProvider, type SyncProvider } from "../src/sync/index.js";
 import { REPO_ROOT } from "../src/sync2/catalog.js";
 import { plan } from "../src/sync2/engine.js";
 import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, baseten: oldBaseten, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, huggingface: oldHuggingface, kilo: oldKilo, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, "nano-gpt": oldNanoGpt, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, requesty: oldRequesty, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = providers;
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  ambient: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "qwen/qwen3-30b-a3b-instruct-2507")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.id === "z-ai/glm-5.2") next.pricing.prompt = "0.0000007";
+          if (model.id === "qwen/qwen3.6-27b") delete next.pricing.input_cache_read;
+          if (model.id === "qwen/qwen3.6-35b-a3b") next.max_output_length = 65_536;
+          if (model.id === "qwen/qwen3.8-27b") next.input_modalities = ["text"];
+          if (model.id === "minimax/minimax-m3") next.supported_features = ["tools"];
+          if (model.id === "ambient/small") next.supported_sampling_parameters = [];
+          if (model.id === "unsloth/qwen3.8-27b-gguf") next.is_ready = false;
+          if (model.id === "ambient/large") next.context_length = 131_072;
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "qwen/qwen3-30b-a3b-instruct-2507");
+      data.push({ ...structuredClone(template), id: "qwen/qwen3-32b", name: "Qwen3 32B", openrouter: { slug: "qwen/qwen3-32b" } });
+      data.push({ ...structuredClone(template), id: "qwen/qwen3-235b-a22b-thinking-2507", name: "Qwen3 235B Thinking", openrouter: { slug: "qwen/qwen3-235b-a22b-thinking-2507" }, supported_features: ["tools", "reasoning"] });
+      data.push({ ...structuredClone(template), id: "acme/brand-new", name: "Brand New", openrouter: null });
+      return { ...raw, data };
+    },
+  },
   "nano-gpt": {
     recorded: (raw) => raw,
     perturbed: (raw) => {

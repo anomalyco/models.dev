@@ -47,6 +47,8 @@ An observation uses the same field names as a v2 provider file (`cost`, `limit`,
 - `namespaceHints("z-ai/glm-5:free")` maps the namespace to its lab (`z-ai` → `zhipuai`, `meta-llama` → `meta`, `qwen` → `alibaba`) and tries the lab's other spellings (`claude-opus-4.6` → `claude-opus-4-6`, `llama-3-3` → `llama-3.3`, no `:free` or `-fast`). Known renames come first. Unknown namespaces and `~` routers give none.
 - `labHints(id)` adds the ID itself as a lab path and, for an ID with no namespace, `*/<id>`: the one lab file with that name in any lab.
 
+`openrouter-shape.ts` observes a model in OpenRouter's catalog shape the way the old `buildOpenRouterModel` did, for hosts that map their lists onto it (Ambient).
+
 The engine takes the first hint with a lab file, ignoring case. A test checks that on every ID in the catalog these pick the same lab as the old functions.
 
 ## Policy
@@ -108,6 +110,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 
 | Provider | Recorded | Perturbed | Differences |
 | --- | --- | --- | --- |
+| ambient | same | 1 file | A new model that reasons with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. A model listed as not ready keeps its file and isn't reported as dropped. |
 | anthropic | same | same | The 1h cache write price is read from the pricing page instead of scaled from the 5m price (same result while Anthropic keeps the 1.25x and 2x ratios). A new alias (an undated ID whose dated model has a file) is built from the source alone; the old sync copied its dated sibling's hand-written fields. Not in the data. |
 | baseten | same | 1 file | A new model that reasons with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. A file's output limit is createOnly; the old sync also filled it into an existing file without one (none exists). Without a listed cache price, a file's cache capability stays; the old sync removed it when the file had no cache price either. A decision model's file keeps fields the engine doesn't own; the old sync rebuilt it from scratch. |
 | chutes | same | 3 files | A changed input kind is written in the lab's formats (`image/png`, ...); the old sync wrote bare kinds (`image`). A new model that reasons with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. The old sync re-resolved every file's base_model on each run; the new engine keeps a file's base_model (no file's would change today). |
