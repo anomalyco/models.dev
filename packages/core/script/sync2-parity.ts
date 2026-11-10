@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 
 import { syncProvider, type SyncProvider } from "../src/sync/index.js";
 import { anthropic as oldAnthropic } from "../src/sync/providers/anthropic.js";
+import { google as oldGoogle } from "../src/sync/providers/google.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
@@ -21,7 +22,7 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, xai: oldXai };
 
 type Raw = any;
 
@@ -105,6 +106,26 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
         .replace("$6.25 / MTok", "$7.50 / MTok").replace("$10 / MTok", "$12 / MTok").replace("$0.50 / MTok", "$0.60 / MTok");
       lines[row("Claude Opus 4.6")] = lines[row("Claude Opus 4.6")].replace("Claude Opus 4.6", "Claude Opus 4.6 (deprecated)");
       return { ...raw, models, pricing: lines.join("\n") };
+    },
+  },
+  google: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const models = raw.models
+        .filter((model: Raw) => model.name !== "models/gemini-3.6-flash")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.name === "models/gemini-2.5-flash") next.inputTokenLimit = 524_288;
+          if (model.name === "models/gemini-2.5-pro") next.displayName = "Gemini 2.5 Pro Renamed";
+          if (model.name === "models/gemini-3.5-flash") next.thinking = false;
+          if (model.name === "models/gemini-3-pro-image") next.outputTokenLimit = 1;
+          if (model.name === "models/gemini-embedding-001") next.temperature = 1;
+          if (model.name === "models/gemini-2.5-flash-preview-tts") next.thinking = true;
+          return next;
+        });
+      const template = raw.models.find((model: Raw) => model.name === "models/gemini-3.8-flash");
+      models.push({ ...structuredClone(template), name: "models/gemini-3.9-flash", displayName: "Gemini 3.9 Flash" });
+      return { ...raw, models };
     },
   },
   mistral: {

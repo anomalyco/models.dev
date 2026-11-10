@@ -93,6 +93,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 
 | Provider | Recorded | Perturbed | Differences |
 | --- | --- | --- | --- |
+| google | same | 1 file | Turning thinking on for a file with no reasoning controls is a gap; the old sync wrote `reasoning = { supported = true }` with no controls. The fetch sends the key in the `x-goog-api-key` header instead of the URL. |
 | meta | same | same | |
 | modular | same | same | |
 | nearai | same | same | On case-insensitive filesystems the new engine matches `qwen/x` to `Qwen/x`; the old one deletes the file. |

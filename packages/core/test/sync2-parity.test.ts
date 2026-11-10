@@ -17,6 +17,9 @@ const nearaiCase = caseInsensitive
 const EXPECTED: Record<string, string[]> = {
   "nearai/recorded": nearaiCase,
   "nearai/perturbed": nearaiCase,
+  // Google turns thinking on for a TTS model. The old sync wrote reasoning = { supported = true }
+  // with no controls; the new engine reports a gap instead, as AGENTS.md asks.
+  "google/perturbed": ["providers/google/models/gemini-2.5-flash-preview-tts.toml"],
 };
 
 for (const [provider, scenarios] of Object.entries(SCENARIOS)) {
