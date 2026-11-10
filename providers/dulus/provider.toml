@@ -1,0 +1,13 @@
+name = "Dulus"
+env = ["DULUS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# Dulus (https://dulus.ai) is a provider-independent agent platform that also
+# serves hosted models behind an OpenAI-compatible Chat Completions endpoint.
+# Billing is metered in Fuel on the tokens each call actually uses (relative
+# 1x/2x/4x tiers for the hosted dulus-* models); there is no public per-model
+# USD list price, so the model files below intentionally carry no cost fields
+# rather than invented ones. Model list: GET https://control.dulus.ai/v1/models
+# (accessed 2026-11-10).
+api = "https://control.dulus.ai/v1"
+doc = "https://dulus.ai"
