@@ -1,0 +1,21 @@
+# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b"
+name = "Qwen3 235B (Web)"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.40
+
+[cost.text.output]
+price = 3.00
