@@ -8,9 +8,10 @@
 # Preview without thinking, so no separate thinking.type toggle is authored.
 # Not re-measured on this endpoint; adjust if wire probing shows the levels
 # collapsing as they do on kimi-k2.7-code (see that file).
-# Output limit: the docs only specify context (1M); 32_768 is the value kept
-# by the K2.8-backed kimi-code-plan-cn entry on Kimi's own coding relay.
-# Overridden below.
+# Output limit: the Kimi Code docs only specify context (1M); 32_768 is the
+# value kept by the K2.8-backed kimi-for-coding entries on Kimi's own coding
+# relays (kimi-code-plan-cn / -global). The v1 catalog requires limit.output,
+# so it is overridden here rather than left unset.
 schema = 2
 base_model = "moonshotai/kimi-k2.8-preview"
 

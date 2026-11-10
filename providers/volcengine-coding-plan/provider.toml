@@ -26,9 +26,12 @@ opencodeai = "@opencode/ai/providers/openai-compatible"
 #       (tolerates none but still spends reasoning tokens on it, so it is not an
 #        off switch there; thinking.type is)
 # 2026-11-10 additions (doubao-seed-2.1-pro, -2.1-lite, -2.0-mini, kimi-k3.1-pro,
-# kimi-k2.8-preview, deepseek-v4.1-flash, deepseek-v4.1-flash-economy) copy the
-# controls of their measured same-surface peers above per relay convention and
-# were not re-measured on this endpoint; see each file. The Model Name list in
+# kimi-k2.8-preview) copy the controls of their measured same-surface peers
+# above per relay convention and were not re-measured on this endpoint; see
+# each file. deepseek-v4.1-flash / -economy instead copy the first-party V4
+# lab baseline (toggle + low|high|max) plus same-model V4.1 plan-relay peers:
+# the graded-effort collapse measured on this endpoint was on the older V4
+# generation and has never been shown for V4.1. The Model Name list in
 # the doc (accessed 2026-11-10) is the 2026-08 set plus those additions;
 # kimi-k2.7-code is still shown in the console as 即将下线 (being retired) but is
 # no longer a configurable Model Name.

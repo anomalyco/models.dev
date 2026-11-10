@@ -1,16 +1,20 @@
 # Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
 # (accessed 2026-11-10). Subscription tier: no per-token price.
 # Toggle: thinking.type = enabled|disabled, POST /api/coding/v3/chat/completions.
-# Copied per relay convention from the measured deepseek-v4-flash / -pro peers
-# on this endpoint (see provider.toml for the n=5 measurements: graded values
-# fully overlap); not re-measured here. The pay-as-you-go host
-# (providers/volcengine, deepseek-v4-flash-ga-260731) exposes toggle plus
-# minimal|low|medium|high on /api/v3.
+# Effort: reasoning_effort = low|high|max.
+# Baseline per relay convention: the first-party DeepSeek V4 lab entries
+# (providers/deepseek/models/deepseek-v4-flash.toml / -pro.toml: toggle +
+# low|high|max) agree with same-model V4.1 plan-relay peers
+# (alibaba-token-plan toggle + low|high|max, scnet-token-plan toggle +
+# high|max, openrouter effort none|low|high|max). Not re-measured on this
+# endpoint: the graded-effort collapse measured here was on the older V4
+# generation (deepseek-v4-flash / -pro, see provider.toml) and has never been
+# shown for V4.1.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]

@@ -6,14 +6,16 @@
 # slower generation; it is a distinct Model Name only on this host, so the
 # file points at the same lab model.
 # Toggle: thinking.type = enabled|disabled, POST /api/coding/v3/chat/completions.
-# Copied per relay convention from the measured deepseek-v4-flash / -pro peers
-# on this endpoint (see provider.toml for the n=5 measurements: graded values
-# fully overlap); not re-measured here.
+# Effort: reasoning_effort = low|high|max.
+# Same baseline as deepseek-v4.1-flash: first-party DeepSeek V4 lab entries
+# (toggle + low|high|max) and same-model V4.1 plan-relay peers; the weights
+# are identical, and the graded-effort collapse measured on this endpoint was
+# only ever shown for the older V4 generation.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]
