@@ -1,0 +1,25 @@
+# Pricing: https://ai.klavo.ru/models/qwen3.8-27b lists 42 / 8 / 250 RUB per 1M input / cached input /
+# output tokens (checked 2026-11-10); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4 decimals.
+# Klavo AI routes each request to one of several providers of the model (see the page); limits are the
+# smallest across them.
+# Effort: reasoning_effort = none|low|medium|xhigh; none turns reasoning off (no separate toggle); other levels map to the nearest.
+# Live check 2026-11-10 through https://api.klavo.ru/v1: none -> 0; low 46, medium 66, high 82, max 103 reasoning tokens.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+
+[limit]
+context = 1_001_536
+output = 65_536
+
+[cost.text.input]
+price = 0.5088
+cache = { read = 0.0969 }
+
+[cost.text.output]
+price = 3.0285
