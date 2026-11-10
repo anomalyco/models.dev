@@ -222,6 +222,29 @@ test("matches a source ID that differs from the file only in case", async () => 
   expect(result.notices[0]).toContain("filed as `Lab/a`");
 });
 
+test("updateOnly observations never create or report a gap", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/a.toml": file("lab/a", 1),
+  });
+  const { result, writes } = await plan(provider([priced("lab/a", 2, { updateOnly: true }), priced("lab/alias", 2, { updateOnly: true })]), { root });
+  expect(result.gaps).toEqual([]);
+  expect([...writes.keys()]).toEqual(["providers/host/models/lab/a.toml"]);
+});
+
+test("merge: kinds keeps the file's formats and only changes the kinds", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/a.toml": file("lab/a", 1, '\n[modalities]\ninput = ["text", "image/png", "image/jpeg"]\noutput = ["text"]\n'),
+  });
+  const module = (input: string[]) => provider([{ id: "lab/a", modalities: { input } }], { owns: [{ path: "modalities.input", merge: "kinds" }] });
+  expect((await plan(module(["text", "image"]), { root })).writes.size).toBe(0);
+  const added = await plan(module(["text", "image", "application/pdf"]), { root });
+  expect(added.result.changes[0]!.fields).toEqual([
+    { path: "modalities.input", before: ["text", "image/png", "image/jpeg"], after: ["text", "image/png", "image/jpeg", "application/pdf"] },
+  ]);
+});
+
 const change = (kind: Change["kind"], extra: Partial<Change> = {}): Change => ({ kind, model: "m", path: "providers/p/models/m.toml", fields: [], ...extra });
 
 test("risk keeps today's auto-merge limits", () => {

@@ -23,10 +23,20 @@ export type Observation = Observed<ModelFields> & {
   base?: string[];
   /** Leading comment for a newly created file. */
   header?: string;
+  /**
+   * Only update a file that already exists: never create it or report it as a
+   * gap (e.g. an alias the source lists next to its canonical ID).
+   */
+  updateOnly?: boolean;
 };
 
-/** A v2 field path the source is authoritative for, e.g. `cost.text.input.price`. */
-export type Owned = string | { path: string; merge: "min" };
+/**
+ * A v2 field path the source is authoritative for, e.g. `cost.text.input.price`.
+ * `merge: "min"` only lets the source lower a number. `merge: "kinds"` is for
+ * modality lists: the source speaks for which kinds (text, image, pdf, ...) a
+ * model takes, and the file keeps its exact formats (`image/png`) for each kind it has.
+ */
+export type Owned = string | { path: string; merge: "min" | "kinds" };
 
 export interface Policy {
   /** Fields the engine patches. Everything else in a file is left alone. */

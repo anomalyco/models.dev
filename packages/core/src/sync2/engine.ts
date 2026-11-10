@@ -3,7 +3,7 @@
 import { ZodError } from "zod";
 
 import { formatModelV2 } from "../model-file-v2.js";
-import { modelV2ToV1 } from "../translate.js";
+import { modelV2ToV1, toV1Modality } from "../translate.js";
 import { applyWrites, inherited, Labs, type ModelFile, readProviderFiles, relativeModelPath, REPO_ROOT, resolved } from "./catalog.js";
 import { equal, getPath, leafPaths, setPath, unsetPath } from "./fields.js";
 import { classifyRisk } from "./risk.js";
@@ -68,6 +68,7 @@ export async function plan<Raw>(module: SyncModule<Raw>, options: PlanOptions = 
       context.notices.push(`${module.name} lists \`${observation.id}\`, filed as \`${file.id}\`; matched to that file.`);
     }
     if (file !== undefined) update(context, observation, file);
+    else if (observation.updateOnly) continue;
     else if (module.policy.creates === "never") skipped.push(observation.id);
     else create(context, observation);
   }
@@ -220,12 +221,26 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     if (typeof owned !== "string" && owned.merge === "min" && typeof next === "number" && typeof current === "number") {
       next = Math.min(next, current);
     }
+    if (typeof owned !== "string" && owned.merge === "kinds" && Array.isArray(next) && Array.isArray(current)) {
+      next = mergeKinds(current, next);
+    }
     if (equal(current, next)) continue;
     if (fromBase !== undefined && equal(fromBase, next)) unsetPath(doc, path);
     else setPath(doc, path, structuredClone(next));
     changes.push({ path, before: current, after: next });
   }
   return changes;
+}
+
+// The source's modality kinds, in its order, keeping the file's exact formats
+// for each kind the file already has. Same kinds: the file's list as is.
+function mergeKinds(current: unknown[], observed: unknown[]) {
+  const kinds = (list: unknown[]) => [...new Set(list.map((item) => toV1Modality(String(item))))].sort();
+  if (equal(kinds(current), kinds(observed))) return current;
+  return observed.flatMap((value) => {
+    const own = current.filter((item) => toV1Modality(String(item)) === toV1Modality(String(value)));
+    return own.length > 0 ? own : [value];
+  });
 }
 
 /** The lab model a new file inherits from: the first hint with a file under models/. */

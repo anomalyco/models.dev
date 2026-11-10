@@ -12,13 +12,14 @@ import { syncProvider, type SyncProvider } from "../src/sync/index.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
 import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
+import { xai as oldXai } from "../src/sync/providers/xai.js";
 import { REPO_ROOT } from "../src/sync2/catalog.js";
 import { plan } from "../src/sync2/engine.js";
 import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { meta: oldMeta, modular: oldModular, nearai: oldNearai };
+const OLD: Record<string, SyncProvider<any>> = { meta: oldMeta, modular: oldModular, nearai: oldNearai, xai: oldXai };
 
 type Raw = any;
 
@@ -73,6 +74,32 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
       pricing: raw.pricing.replaceAll("$1.25", "$1.30").replaceAll("$0.15", "$0.10").replaceAll("| $0.30", "| $0.35"),
       families: raw.families.map((page: string, index: number) => (index === 0 ? page.replaceAll("1,048,576", "524,288") : page)),
     }),
+  },
+  xai: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const models = raw.models
+        .filter((model: Raw) => model.id !== "grok-4.6")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.id === "grok-4.3") {
+            next.prompt_text_token_price = 15000;
+            next.cached_prompt_text_token_price_long_context = 0;
+          }
+          if (model.id === "grok-4.5") next.completion_text_token_price_long_context = 0;
+          if (model.id === "grok-4.7") next.long_context_threshold = 0;
+          if (model.id === "grok-build-0.1") {
+            next.input_modalities = ["text"];
+            delete next.cached_prompt_text_token_price;
+          }
+          if (model.id === "grok-imagine-image") next.max_prompt_length = 8000;
+          if (model.id === "grok-imagine-video") next.input_modalities = ["text", "image"];
+          return next;
+        });
+      const template = raw.models.find((model: Raw) => model.id === "grok-4.7");
+      models.push({ ...structuredClone(template), id: "grok-4.8", aliases: ["grok-4.8-latest"] });
+      return { ...raw, models };
+    },
   },
 };
 

@@ -31,7 +31,7 @@ export const meta: SyncModule<unknown> = {
 function observe(model: MetaModel): Observation {
   // Requests over a tier's size are billed at its rates in full.
   const tier = model.cost.tiers?.[0];
-  const when = tier && { context: { gt: tier.tier.size } };
+  const when = { context: { gt: tier?.tier.size ?? 0 } };
   return {
     id: model.id,
     base: [`meta/${model.id}`],

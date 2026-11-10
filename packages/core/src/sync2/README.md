@@ -1,6 +1,6 @@
 # sync2
 
-A second model sync engine, built next to the old one in `../sync`. Three providers run on it so far: `meta`, `modular` and `nearai`. The old sync still runs everything in CI.
+A second model sync engine, built next to the old one in `../sync`. The providers in the parity table below run on it so far. The old sync still runs everything in CI.
 
 ```sh
 bun models:sync2 <provider> [--dry-run] [--json] [--raw=<file>]
@@ -34,11 +34,15 @@ export const example: SyncModule<Raw> = {
 
 An observation uses the same field names as a v2 provider file (`cost`, `limit`, `modalities`, `capabilities.reasoning`, `status`, `api`, ...). Leave out what the source doesn't say. Use `null` when the source says there is none, for example `overrides: null` for a flat price.
 
+`updateOnly: true` marks an observation that may only update a file that exists, such as an alias the source lists next to its canonical ID. It never creates a file or a gap.
+
+`http.ts` has `fetchJSON`, `fetchText` and `requireEnv` for the fetch side.
+
 `units.ts` has the conversions modules keep rewriting: `perMillion`, `round`, `reasoningControls` (sorts effort, drops a toggle when effort has `none`) and `labCandidates`.
 
 ## Policy
 
-- `owns` lists the fields the source is authoritative for. The engine only ever changes these. Everything else in a file, including its leading comment, stays as it is. `{ path, merge: "min" }` only lets the source lower a value.
+- `owns` lists the fields the source is authoritative for. The engine only ever changes these. Everything else in a file, including its leading comment, stays as it is. An owned list (an override list, say) is replaced whole. `{ path, merge: "min" }` only lets the source lower a value. `{ path, merge: "kinds" }` is for modality lists: the source decides the kinds (text, image, pdf, ...) and the file keeps its own formats (`image/png`) for the kinds it already has.
 - `creates` decides what happens to a model the catalog doesn't have: create it, report it as a gap, or skip it with a notice.
 - `removals` decides what happens to a file the source no longer lists: delete it, set `status = "deprecated"`, or keep it and report a gap.
 
@@ -78,6 +82,13 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 
 ## Parity with the old sync
 
-`bun packages/core/script/sync2-parity.ts` runs both engines on the recorded sources in `test/fixtures/sync2/` against the current catalog, as recorded and with changed prices, a new model and a dropped model. `test/sync2-parity.test.ts` checks the files they write match. The one known difference is on case-insensitive filesystems, where the new engine matches `qwen/x` to `Qwen/x` and the old one deletes the file.
+`bun packages/core/script/sync2-parity.ts` runs both engines on the recorded sources in `test/fixtures/sync2/` against the current catalog, as recorded and with changed prices, a new model and a dropped model. `test/sync2-parity.test.ts` checks the files they write match.
 
-The three ports still import fetch and parsing code (zod schemas, Meta's docs parser) from the old modules. That code moves here when the old modules go away.
+| Provider | Recorded | Perturbed | Differences |
+| --- | --- | --- | --- |
+| meta | same | same | |
+| modular | same | same | |
+| nearai | same | same | On case-insensitive filesystems the new engine matches `qwen/x` to `Qwen/x`; the old one deletes the file. |
+| xai | same | same | A long-context band is written as `gte` (the docs bill prompts of at least the threshold). The old sync kept a file's operator but wrote `gt` for a band the file didn't have. |
+
+`meta`, `modular` and `nearai` still import fetch and parsing code (zod schemas, Meta's docs parser) from the old modules. Ports after those carry their own.
