@@ -145,6 +145,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | requesty | same | 1 file | A new model with no lab file is a gap; the old sync wrote a standalone file. The old sync re-resolved every file's base_model on each run; the new engine keeps a file's base_model (no file's would change today). The module reads lab files to name regional routes after their lab. |
 | tinfoil | same | same | A model that starts reasoning with no controls in its file is a gap; the old sync stopped with an error. |
 | venice | same | 1 file | A new model with no lab file is a gap; the old sync wrote a standalone file with a generated description and today's date. Lab matching (ID or name, ignoring case and punctuation) is the old one, in the module. An API table the source sets keeps the file's other keys (the old sync kept only `capabilities`). |
+| wandb | same | 2 files | A model whose only control was a toggle and now lists none is written as `reasoning = { supported = true }`; the old sync could not write that ("does not reproduce the synced fields") and left the file. A new model that reasons with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. | |
 | xai | same | same | A long-context band is written as `gte` (the docs bill prompts of at least the threshold). The old sync kept a file's operator but wrote `gt` for a band the file didn't have. |
 
 `meta`, `modular` and `nearai` still import fetch and parsing code (zod schemas, Meta's docs parser) from the old modules. Ports after those carry their own.

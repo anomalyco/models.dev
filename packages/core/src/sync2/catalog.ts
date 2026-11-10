@@ -95,6 +95,11 @@ export class Labs {
     return ids.get(id.toLowerCase()) === id ? id : ids.get(id.toLowerCase());
   }
 
+  /** Every lab model ID, as filed. */
+  all(): string[] {
+    return [...this.index().values()];
+  }
+
   get(id: string): Doc | undefined {
     const found = this.find(id);
     if (found === undefined) return undefined;

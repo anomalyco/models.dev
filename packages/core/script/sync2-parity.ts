@@ -22,6 +22,26 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  wandb: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const models = structuredClone(raw.coreweave.models);
+      delete models["meta-llama/Llama-3.1-8B-Instruct"];
+      const edit = (id: string, change: (model: Raw) => void) => change(Object.values(models).find((model: Raw) => model.id === id));
+      edit("openai/gpt-oss-120b", (model) => { model.cost.input = 0.2; model.reasoning_options = [{ type: "toggle" }]; });
+      edit("google/gemma-4-31B-it", (model) => { model.reasoning_options = []; model.interleaved = { field: "reasoning_content" }; });
+      edit("zai-org/GLM-5.3", (model) => { model.cost.cache_read = 0; model.limit.output = 32_768; });
+      edit("MiniMaxAI/MiniMax-M3", (model) => { model.modalities.input = ["text"]; model.status = "beta"; });
+      edit("moonshotai/Kimi-K2.6", (model) => { model.description = "Changed description"; model.structured_output = false; });
+      edit("deepseek-ai/DeepSeek-V3.1", (model) => { model.reasoning = true; model.reasoning_options = [{ type: "toggle" }]; });
+      edit("reflection/Beam-1.0-501B-A23B", (model) => { model.name = "Beam 1.0 Renamed"; model.knowledge = "2026-01"; });
+      edit("Qwen/Qwen3.8-27B", (model) => { model.temperature = false; model.cost.input_audio = 1; });
+      const template = Object.values(models).find((model: Raw) => model.id === "zai-org/GLM-5.3") as Raw;
+      models["zai-org/GLM-5.1"] = { ...structuredClone(template), id: "zai-org/GLM-5.1", name: "GLM 5.1" };
+      models["acme/brand-new"] = { ...structuredClone(template), id: "acme/brand-new", name: "Acme: Brand New", reasoning: false, reasoning_options: undefined };
+      return { coreweave: { ...raw.coreweave, models } };
+    },
+  },
   pioneer: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
