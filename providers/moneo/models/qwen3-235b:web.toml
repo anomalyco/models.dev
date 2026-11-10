@@ -1,10 +1,12 @@
-# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Availability, exact wire ID, capabilities, limit and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Reasoning is supported, but Moneo's Chat Completions gateway does not expose a documented toggle, effort enum or budget control.
+# The `:web` suffix is part of the exact Moneo wire ID; web search is bundled into token pricing and has no separate fee.
 schema = 2
 base_model = "alibaba/qwen3-235b-a22b"
 name = "Qwen3 235B (Web)"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 
