@@ -12,6 +12,7 @@ import { fireworksAi } from "./providers/fireworks-ai.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
 import { huggingface } from "./providers/huggingface.js";
+import { hyper } from "./providers/hyper.js";
 import { kilo } from "./providers/kilo.js";
 import { meta } from "./providers/meta.js";
 import { mistral } from "./providers/mistral.js";
@@ -31,7 +32,7 @@ import { venice } from "./providers/venice.js";
 import { xai } from "./providers/xai.js";
 import type { SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { ambient, anthropic, baseten, chutes, cortecs, deepinfra, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, kilo, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, ovhcloud, prime, requesty, tinfoil, venice, xai };
+export const modules: Record<string, SyncModule<any>> = { ambient, anthropic, baseten, chutes, cortecs, deepinfra, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, hyper, kilo, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, ovhcloud, prime, requesty, tinfoil, venice, xai };
 
 export { plan, sync };
 export type * from "./types.js";

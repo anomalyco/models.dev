@@ -22,6 +22,32 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  hyper: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "gemma-4-26b-a4b-it")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          switch (model.id) {
+            case "prism": next.pricing.input = 3.5; next.capabilities.vision = false; break;
+            case "kimi-k3": next.pricing.cache_hit = 0; break;
+            case "glm-5.3": delete next.pricing.cache_hit; next.context_window = 524_288; break;
+            case "minimax-m3": next.reasoning.effort_levels = [{ value: "high" }, { value: "low" }]; break;
+            case "gpt-oss-120b": delete next.reasoning; break;
+            case "qwen3.8-27b": next.reasoning.effort_levels = [{ value: "turbo" }]; break;
+            case "inkling": next.capabilities.vision = false; next.max_output_tokens = 16_384; break;
+            case "prism-core": next.reasoning = { effort_levels: [{ value: "low" }, { value: "high" }] }; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "glm-5.3");
+      data.push({ ...structuredClone(template), id: "glm-5.2", display_name: "GLM 5.2" });
+      const prism = raw.data.find((model: Raw) => model.id === "prism-flash");
+      data.push({ ...structuredClone(prism), id: "prism-max", display_name: "Prism Max" });
+      return { ...raw, data };
+    },
+  },
   prime: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

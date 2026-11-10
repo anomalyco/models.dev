@@ -123,6 +123,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | github-copilot | same | same | None in the data. A public preview row updates both `<slug>` and `<slug>-preview` when both files exist; the old sync updated only `<slug>`. No such pair exists. |
 | google | same | 1 file | Turning thinking on for a file with no reasoning controls is a gap; the old sync wrote `reasoning = { supported = true }` with no controls. The fetch sends the key in the `x-goog-api-key` header instead of the URL. |
 | huggingface | same | 2 files | A new file doesn't restate `tools = { supported = true }` when its lab already says so; the old sync always wrote it. Existing files only get their API tables kept current. A Responses table's own keys stay (the old sync replaced the table whole); no file has any. |
+| hyper | same | same | A standalone file whose ID later matches a lab file stays standalone; the old sync turned it into a base_model file (none would today). Old-sync behavior kept: a lab-based model that stops listing a reasoning object loses its efforts and keeps `reasoning = { supported = true }`. | |
 | kilo | same | same | |
 | meta | same | same | |
 | mistral | same | same | None in the data. A non-chat model (OCR, moderation) whose file has no `[api.*]` tables would get the provider's default API before its own; the old sync gave it only its own. Every such file already lists its API. |
