@@ -25,6 +25,7 @@ reasoning = { supported = true, default = { type = "effort", value = "medium" },
 structured_output = true
 cache = { implicit = { min_tokens = 4_096 } }
 service_tier = ["flex", "priority"]
+temperature = true
 
 [limit]
 output = 32_768
