@@ -1,0 +1,31 @@
+# Verified live 2026-11-10 against POST https://api.hop-base.com/v1/messages (Anthropic Messages,
+# x-api-key auth) with this exact model ID and a regular customer API key. HopBase serves Claude
+# models over Messages only, so this file overrides the provider's Chat Completions endpoint.
+# Streaming returned message_delta usage and message_stop. tool_choice auto returned a well-formed
+# tool_use; a strict tool returned tool_use; tool_choice any returns HTTP 400 "tool_choice: type
+# \"tool\" and \"any\" are not supported for this model", as on Anthropic.
+# Effort: output_config.effort = low|medium|high|xhigh|max all accepted.
+# Images: a red 64x64 PNG returned "Red".
+# Cache: cache_control on the system block wrote 6,026 tokens and the repeat read 6,026. The gateway
+# also cached a fresh 14,441-token prefix sent without cache_control (written, then read on repeat).
+# Pricing: price any registered account pays in the public "Claude Max (ccmax)" group, USD
+# (official $8 / $40, $0.20 cache read, $10 5m cache write, https://platform.claude.com/docs/en/about-claude/pricing,
+# times the group rate, rounded up). Model page: https://hop-base.com/en/docs/models/claude-fable-5-2
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
+
+[api.messages]
+base_url = "https://api.hop-base.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
+
+[cost.text.input]
+price = 2.24
+cache = { read = 0.056, write = 2.8 }
+
+[cost.text.output]
+price = 11.18
