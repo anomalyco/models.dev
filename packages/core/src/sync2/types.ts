@@ -35,6 +35,7 @@ export type Observation = Observed<ModelFields> & {
  * A plain path replaces the file's value (a list or table whole). A merge rule
  * changes that:
  * - `min`: only lowers a number.
+ * - `nonzero`: a 0 updates a value the file has but never adds one (a placeholder price).
  * - `kinds`: a modality list. The source decides the kinds (text, image, pdf, ...)
  *   and the file keeps its own formats (`image/png`) for kinds it has. With
  *   `only`, the source speaks for just those kinds and the file's others stay.
@@ -42,14 +43,15 @@ export type Observation = Observed<ModelFields> & {
  *   clears a "deprecated" status, never another one.
  * - `tables`: a table of tables (`api`). Each source table joins the file's
  *   (its keys win, the file's other keys stay), null removes one, and the
- *   file's other tables stay. A file with no `api` gets the provider's default first.
+ *   file's other tables stay. Order: the file's first table, the source's, then
+ *   the file's others. A file with no `api` gets the provider's default first.
  * - `report`: never written. When the source disagrees with the file, the model
  *   is an update gap and its file is left alone.
  * `standalone: true` limits a field to files without a base_model.
  */
 export type Owned =
   | string
-  | (OwnedRule & { merge?: "min" | "deprecated" | "tables" | "report" })
+  | (OwnedRule & { merge?: "min" | "nonzero" | "deprecated" | "tables" | "report" })
   | (OwnedRule & { merge: "kinds"; only?: string[] });
 
 interface OwnedRule {

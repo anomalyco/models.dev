@@ -15,6 +15,7 @@ import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
 import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
+import { novitaAi as oldNovita } from "../src/sync/providers/novita-ai.js";
 import { openai as oldOpenai } from "../src/sync/providers/openai.js";
 import { tinfoil as oldTinfoil } from "../src/sync/providers/tinfoil.js";
 import { venice as oldVenice } from "../src/sync/providers/venice.js";
@@ -25,7 +26,7 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, "novita-ai": oldNovita, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
@@ -157,6 +158,33 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
       // mistral-large-4 accepts fewer efforts than its file lists; that model is reported, not written.
       const efforts = { ...raw.reasoning_efforts, "mistral-large-4": ["low", "high"], "mistral-large-5": ["low", "high"], "mistral-medium-latest": [] };
       return { ...raw, data, reasoning_efforts: efforts };
+    },
+  },
+  "novita-ai": {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const decimal = (value: string) => ({ price_per_m_decimal: value });
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "tencent/hy4-preview")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.id === "tencent/hy4") next.pricing = { ...next.pricing, prompt: decimal("0.5") };
+          if (model.id === "zai-org/glm-5.3") next.pricing = { ...next.pricing, input_cache_read: decimal("0") };
+          if (model.id === "apodex/apodex-1.1-mini") next.pricing = { ...next.pricing, input_cache_read: decimal("0") };
+          if (model.id === "nvidia/nemotron-3-nano-30b-a3b") next.pricing = { ...next.pricing, input_cache_read: decimal("0.01") };
+          if (model.id === "qwen/qwen3.8-flash") next.pricing = { ...next.pricing, input_cache_write: decimal("0.3") };
+          if (model.id === "zai-org/glm-5.2") next.endpoints = ["chat/completions", "responses", "anthropic"];
+          if (model.id === "tencent/hy3") next.endpoints = ["chat/completions", "anthropic"];
+          if (model.id === "deepseek/deepseek-v4.1-flash") next.endpoints = ["chat/completions"];
+          if (model.id === "stepfun/step-3.7-flash") next.context_size = 65_536;
+          if (model.id === "inclusionai/ling-3.0-flash") next.max_output_tokens = 4_096;
+          if (model.id === "minimax/minimax-m3") next.tiered_billing_configs[1].pricing.prompt = decimal("0.7");
+          if (model.id === "baidu/cobuddy") next.pricing.multimodal_input = [{ modals: ["image"], input_token_base_price: 5_000 }];
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "zai-org/glm-5.3");
+      data.push({ ...structuredClone(template), id: "zai-org/glm-6" });
+      return { ...raw, data };
     },
   },
   openai: {

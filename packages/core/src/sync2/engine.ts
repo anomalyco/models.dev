@@ -241,11 +241,13 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
       changes.push({ path, before: own, after: fromBase });
       continue;
     }
-    let next = observed;
+    let next: unknown = observed;
     if (merge === "min" && typeof next === "number" && typeof current === "number") next = Math.min(next, current);
+    // A 0 is often a placeholder: it updates a price the file has but never adds one.
+    if (merge === "nonzero" && next === 0 && current === undefined) continue;
     if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, only);
     if (merge === "tables" && isTable(next)) next = mergeTables(current, next, path === "api" ? options.defaultApi : undefined);
-    if (equal(current, next)) continue;
+    if (equal(current, next) || next === undefined) continue;
     if (fromBase !== undefined && equal(fromBase, next)) unsetPath(doc, path);
     else setPath(doc, path, structuredClone(next));
     changes.push({ path, before: current, after: next });
@@ -324,14 +326,24 @@ function mergeKinds(current: unknown[], observed: unknown[], only?: string[]) {
 // The source's tables join the file's: a source key replaces the file's value
 // for that key, and the file's other keys and tables stay, in order. A file
 // with no API tables was served on the provider's default API, which stays first.
-function mergeTables(current: unknown, observed: Doc, defaultApi: string | undefined) {
-  const tables: Doc = isTable(current) && Object.keys(current).length > 0
-    ? structuredClone(current)
-    : defaultApi === undefined ? {} : { [defaultApi]: {} };
+function mergeTables(current: unknown, observed: Doc, defaultApi: string | undefined): unknown {
+  const own = isTable(current) && Object.keys(current).length > 0;
+  const file: Doc = own ? structuredClone(current) : defaultApi === undefined ? {} : { [defaultApi]: {} };
+  const [first] = Object.keys(file);
+  const joined: Doc = {};
   for (const [key, value] of Object.entries(observed)) {
-    if (value === null) delete tables[key];
-    else tables[key] = isTable(value) && isTable(tables[key]) ? { ...tables[key], ...structuredClone(value) } : structuredClone(value);
+    if (value !== null) joined[key] = isTable(value) && isTable(file[key]) ? { ...file[key], ...structuredClone(value) } : structuredClone(value);
   }
+  // The file's first table stays first, then the source's tables in its order, then the file's others.
+  const tables: Doc = {};
+  for (const key of [first, ...Object.keys(joined), ...Object.keys(file)]) {
+    if (key === undefined || key in tables || observed[key] === null) continue;
+    tables[key] = joined[key] ?? file[key];
+  }
+  // A lone empty default table says nothing a file without tables doesn't.
+  const keys = Object.keys(tables);
+  const lone = keys.length === 1 ? tables[keys[0]!] : undefined;
+  if (!own && keys[0] === defaultApi && isTable(lone) && Object.keys(lone).length === 0) return current;
   return tables;
 }
 
