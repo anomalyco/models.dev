@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 
 import { syncProvider, type SyncProvider } from "../src/sync/index.js";
 import { anthropic as oldAnthropic } from "../src/sync/providers/anthropic.js";
+import { deepinfra as oldDeepinfra } from "../src/sync/providers/deepinfra.js";
 import { fireworksAi as oldFireworks } from "../src/sync/providers/fireworks-ai.js";
 import { google as oldGoogle } from "../src/sync/providers/google.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
@@ -27,7 +28,7 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, "fireworks-ai": oldFireworks, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, "novita-ai": oldNovita, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, deepinfra: oldDeepinfra, "fireworks-ai": oldFireworks, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, "novita-ai": oldNovita, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
@@ -111,6 +112,46 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
         .replace("$6.25 / MTok", "$7.50 / MTok").replace("$10 / MTok", "$12 / MTok").replace("$0.50 / MTok", "$0.60 / MTok");
       lines[row("Claude Opus 4.6")] = lines[row("Claude Opus 4.6")].replace("Claude Opus 4.6", "Claude Opus 4.6 (deprecated)");
       return { ...raw, models, pricing: lines.join("\n") };
+    },
+  },
+  deepinfra: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const tags = (model: Raw, add: string[], remove: string[] = []) => {
+        model.tags = [...(model.tags ?? []).filter((tag: string) => !remove.includes(tag)), ...add];
+      };
+      const models = raw
+        .filter((model: Raw) => model.model_name !== "openai/gpt-oss-20b")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const pricing = next.pricing;
+          switch (model.model_name) {
+            case "Qwen/Qwen3.5-9B": tags(next, ["can-disable-reasoning"]); pricing.cents_per_input_token *= 2; break;
+            case "Qwen/Qwen3-235B-A22B-Instruct-2507": tags(next, ["reasoning", "can-disable-reasoning"]); break;
+            case "Qwen/Qwen3.8-Flash": tags(next, ["can-disable-reasoning"], ["non-reasoning"]); break;
+            case "google/gemma-3-4b-it": tags(next, ["input-audio"]); break;
+            case "Qwen/Qwen3-VL-30B-A3B-Instruct": tags(next, ["input-video"]); break;
+            case "meta-llama/Llama-Guard-4-12B": tags(next, ["tools"]); break;
+            case "google/gemma-4-31B-it": tags(next, [], ["input-video"]); break;
+            case "ByteDance/Seed-2.0-code": pricing.full = "$0.60 in $3.5 out $0.12 cached <= 128K, $1.2 in $7 out cached"; break;
+            case "Qwen/Qwen3-Max": next.max_tokens = 128_000; break;
+            case "tencent/Hy3": pricing.cents_per_output_token = 0.00006; break;
+            case "Qwen/Qwen3.6-27B": pricing.rate_per_input_token_cached = null; break;
+            case "zai-org/GLM-5.3": pricing.rate_per_service_tier_priority = 1.5; break;
+            case "moonshotai/Kimi-K3.1-Pro": pricing.rate_per_service_tier_flex = null; break;
+            case "moonshotai/Kimi-K3": pricing.rate_per_explicit_cache_write_token = { "5m": 1.25 }; break;
+            case "zai-org/GLM-4.6": next.deprecated = 1_700_000_000; break;
+            case "MiniMaxAI/MiniMax-M2.5": next.deprecated = null; break;
+            case "Qwen/Qwen3.5-4B": next.deprecated = null; tags(next, ["non-reasoning"], ["reasoning"]); break;
+          }
+          return next;
+        });
+      const template = raw.find((model: Raw) => model.model_name === "Qwen/Qwen3.5-27B");
+      const add = (name: string, extra: Raw) => models.push({ ...structuredClone(template), model_name: name, ...extra });
+      add("Qwen/Qwen3-8B", { tags: ["tools", "reasoning", "can-disable-reasoning"] });
+      add("acme/brand-new", {});
+      add("zai-org/GLM-4.5V", { pricing: { ...template.pricing, cents_per_input_token: null } });
+      return models;
     },
   },
   "fireworks-ai": {

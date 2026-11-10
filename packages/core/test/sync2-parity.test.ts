@@ -26,6 +26,17 @@ const EXPECTED: Record<string, string[]> = {
     "providers/fireworks-ai/models/accounts/fireworks/models/glm-5p3-flash.toml",
     "providers/fireworks-ai/models/accounts/fireworks/routers/glm-flash-latest.toml",
   ],
+  // Deep Infra: the old sync can't write a file with retention write prices
+  // (cost.text.input.cache.explicit) at all ("does not reproduce the synced
+  // fields"), so Kimi K3's changed retention never lands; the new one writes it.
+  // An input kind a tag adds takes the lab's formats and keeps the file's; the
+  // old sync wrote bare kinds (gemma-3-4b-it) or dropped the file's narrowed
+  // image list for the lab's (Qwen3-VL-30B-A3B-Instruct).
+  "deepinfra/perturbed": [
+    "providers/deepinfra/models/Qwen/Qwen3-VL-30B-A3B-Instruct.toml",
+    "providers/deepinfra/models/google/gemma-3-4b-it.toml",
+    "providers/deepinfra/models/moonshotai/Kimi-K3.toml",
+  ],
   // A new Venice model with no lab file. The old sync wrote a standalone file with a generated
   // description and today's date; the new engine reports a gap (no create-only fields yet).
   "venice/perturbed": ["providers/venice/models/venice-brand-new.toml"],

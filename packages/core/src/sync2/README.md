@@ -105,6 +105,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | Provider | Recorded | Perturbed | Differences |
 | --- | --- | --- | --- |
 | anthropic | same | same | The 1h cache write price is read from the pricing page instead of scaled from the 5m price (same result while Anthropic keeps the 1.25x and 2x ratios). A new alias (an undated ID whose dated model has a file) is built from the source alone; the old sync copied its dated sibling's hand-written fields. Not in the data. |
+| deepinfra | same | 3 files | The old sync can't write any file with retention write prices (`cost.text.input.cache.explicit`): it reports "the v2 file does not reproduce the synced fields" and leaves Kimi K3, Kimi K2.7 Code, DeepSeek V4 Flash and GLM 5.2 as they are. The new engine updates them. An input kind a tag adds takes the lab's formats and the file keeps its own; the old sync wrote bare kinds (`audio`) or swapped a file's narrowed image list for the lab's. A new model with no lab file or no reasoning controls is a gap; the old sync skipped it or wrote `reasoning = { supported = true }`. |
 | fireworks-ai | same | 2 files | When Priority goes away, the new engine removes its price multiplier along with the mode; the old sync left the multiplier behind. The multiplier list is owned whole, so a non-Priority multiplier would be dropped too (none exist). |
 | google | same | 1 file | Turning thinking on for a file with no reasoning controls is a gap; the old sync wrote `reasoning = { supported = true }` with no controls. The fetch sends the key in the `x-goog-api-key` header instead of the URL. |
 | meta | same | same | |
@@ -119,4 +120,3 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 
 `meta`, `modular` and `nearai` still import fetch and parsing code (zod schemas, Meta's docs parser) from the old modules. Ports after those carry their own.
 
-Not ported: `deepinfra`. Its tags only ever turn capabilities and input kinds on, its `can-disable-reasoning` toggle is only added to a file that doesn't reason yet (a rule that depends on the file, like the create-only fields we haven't added), and new models find their lab through OpenRouter's canonical resolver, which hasn't moved here.
