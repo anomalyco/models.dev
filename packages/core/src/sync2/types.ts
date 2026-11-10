@@ -109,6 +109,14 @@ export interface SyncModule<Raw = unknown> {
   fetch(): Promise<Raw>;
   /** Pure: raw source data to observations. Throw when the data looks wrong. */
   observe(raw: Raw): Observation[];
+  /**
+   * Finishes an observation with what only the catalog knows: `file` is the
+   * file it will update (undefined for a new model), `files` every file of
+   * the provider by ID. For values that depend on a file, such as a price
+   * kept only while the file has none, or a price keyed by the file's cache
+   * TTLs. Pure; never writes.
+   */
+  refine?(observation: Observation, file: Doc | undefined, files: ReadonlyMap<string, Doc>): Observation;
   /** Local files this source speaks for. Others are never removed. Default: all. */
   manages?(id: string, file: Doc): boolean;
 }

@@ -22,6 +22,30 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  pioneer: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "fastino/gliner2-base-v1")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          switch (model.id) {
+            case "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4": next.max_tokens = 8_192; next.input_price_per_million = 0.1; break;
+            case "fastino/gliner2-large-v1": next.deprecated = true; next.capabilities.image_input = { supported: true }; break;
+            case "fastino/gliner2-multi-v1": next.capabilities.structured_outputs = { supported: true }; next.max_input_tokens = 4_096; break;
+          }
+          return next;
+        });
+      const models = raw.models.map((model: Raw) => {
+        const next = structuredClone(model);
+        if (model.slug === "nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16") next.supported_reasoning_levels = [{ effort: "high" }, { effort: "low" }];
+        return next;
+      });
+      const template = raw.data.find((model: Raw) => model.id === "fastino/gliner2-large-v1");
+      data.push({ ...structuredClone(template), id: "fastino/gliner3-large" });
+      return { ...raw, data, models };
+    },
+  },
   crossmodel: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

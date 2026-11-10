@@ -512,3 +512,20 @@ test("headers: replace writes the source's header, a function of the written fil
   expect(writes.get("providers/host/models/lab/b.toml")).toStartWith("# Generated\n# price 2\nschema = 2");
   expect(result.changes.map((change) => change.fields.map((field) => field.path))).toEqual([["header"], ["header"]]);
 });
+
+test("refine finishes an observation with the file it updates and the provider's files", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/a.toml": file("lab/a", 1),
+    "providers/host/models/lab/b.toml": file("lab/a", 2),
+  });
+  const module = provider([priced("lab/a", 5), priced("lab/b", 5), priced("lab/c", 5, { base: ["lab/a"] })]);
+  const seen: Array<[string, boolean, number]> = [];
+  module.refine = (observation, file, files) => {
+    seen.push([observation.id, file !== undefined, files.size]);
+    return observation.id === "lab/a" ? { ...observation, cost: undefined } : observation;
+  };
+  const { result } = await plan(module, { root });
+  expect(seen).toEqual([["lab/a", true, 2], ["lab/b", true, 2], ["lab/c", false, 2]]);
+  expect(result.changes.map((change) => [change.kind, change.model])).toEqual([["update", "lab/b"], ["create", "lab/c"]]);
+});

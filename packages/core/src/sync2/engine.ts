@@ -62,6 +62,7 @@ export async function plan<Raw>(module: SyncModule<Raw>, options: PlanOptions = 
     throw new Error(`${module.name} returned no models; refusing to treat every file as removed`);
   }
   const byLowerID = new Map([...files.values()].map((file) => [file.id.toLowerCase(), file]));
+  const docs: ReadonlyMap<string, Doc> = new Map([...files.values()].map((file) => [file.id, file.doc]));
   const seen = new Map<string, string>();
   const skipped: string[] = [];
 
@@ -73,10 +74,11 @@ export async function plan<Raw>(module: SyncModule<Raw>, options: PlanOptions = 
     if (file !== undefined && file.id !== observation.id) {
       context.notices.push(`${module.name} lists \`${observation.id}\`, filed as \`${file.id}\`; matched to that file.`);
     }
-    if (file !== undefined) update(context, observation, file);
-    else if (observation.updateOnly) continue;
-    else if (module.policy.creates === "never") skipped.push(observation.id);
-    else create(context, observation);
+    const refined = module.refine === undefined ? observation : module.refine(observation, file?.doc, docs);
+    if (file !== undefined) update(context, refined, file);
+    else if (refined.updateOnly) continue;
+    else if (module.policy.creates === "never") skipped.push(refined.id);
+    else create(context, refined);
   }
   if (skipped.length > 0) {
     context.notices.push(`${skipped.length} models not in the catalog were skipped (creates: never): ${skipped.map((id) => `\`${id}\``).join(", ")}`);

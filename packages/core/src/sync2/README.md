@@ -38,6 +38,8 @@ An observation uses the same field names as a v2 provider file (`cost`, `limit`,
 
 `updateOnly: true` marks an observation that may only update a file that exists, such as an alias the source lists next to its canonical ID. It never creates a file or a gap.
 
+`refine(observation, file, files)` is optional: it finishes an observation with what only the catalog knows, given the file it will update (undefined for a new model) and every file of the provider by ID. Pioneer uses it to keep a file's own cost and to read whether a standalone file reasons; it never writes.
+
 `http.ts` has `fetchJSON`, `fetchText` and `requireEnv` for the fetch side.
 
 `units.ts` has the conversions modules keep rewriting: `perMillion`, `round`, `reasoningControls` (sorts effort, drops a toggle when effort has `none`) and `labCandidates`.
@@ -138,6 +140,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | ollama-cloud | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
 | openai | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
 | ovhcloud | same | 1 file | A model that starts reasoning with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. |
+| pioneer | same | same | | |
 | prime | same | 1 file | A kind a new file differs from its lab in is written in the lab's formats (and the header says so); the old sync wrote bare kinds. A new model with no lab file is a gap; the old sync skipped it. Each file's header is generated, and the MIME line follows the file as written; the old sync looked at the file before the patch, so it caught up a run later. Effort `default` keeps the file as it is. | |
 | requesty | same | 1 file | A new model with no lab file is a gap; the old sync wrote a standalone file. The old sync re-resolved every file's base_model on each run; the new engine keeps a file's base_model (no file's would change today). The module reads lab files to name regional routes after their lab. |
 | tinfoil | same | same | A model that starts reasoning with no controls in its file is a gap; the old sync stopped with an error. |
