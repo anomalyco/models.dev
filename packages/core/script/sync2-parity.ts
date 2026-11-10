@@ -22,6 +22,33 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  edenai: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const ids = new Set(raw.data.map((model: Raw) => model.id));
+      const pick = (prefix: string) => raw.data.find((model: Raw) => model.id.startsWith(prefix) && model.list_pricing?.input_cost_per_token != null)?.id;
+      const targets = ["openai/", "anthropic/", "google/", "together_ai/", "mistral/", "groq/", "deepseek/", "xai/"].map(pick).filter(Boolean);
+      const [a, b, c, d, e, f, g, h] = targets;
+      const data = raw.data
+        .filter((model: Raw) => model.id !== h)
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const pricing = next.list_pricing ?? next.pricing;
+          if (model.id === a) pricing.input_cost_per_token *= 2;
+          if (model.id === b) pricing.cache_read_input_token_cost = null;
+          if (model.id === c) pricing.input_cost_per_token_above_200k_tokens = pricing.input_cost_per_token * 2, pricing.output_cost_per_token_above_200k_tokens = pricing.output_cost_per_token * 2;
+          if (model.id === d) next.context_length = 65_536;
+          if (model.id === e) next.capabilities.input_modalities = ["text"];
+          if (model.id === f) next.capabilities.supports_function_calling = !next.capabilities.supports_function_calling;
+          if (model.id === g) next.capabilities.supports_response_schema = !next.capabilities.supports_response_schema;
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === a);
+      if (!ids.has("openai/gpt-4.1-nano")) data.push({ ...structuredClone(template), id: "openai/gpt-4.1-nano", model_name: "gpt-4.1-nano" });
+      data.push({ ...structuredClone(template), id: "acme/brand-new", owned_by: "acme", model_name: "brand-new" });
+      return { ...raw, data };
+    },
+  },
   friendli: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

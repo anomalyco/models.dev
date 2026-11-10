@@ -15,6 +15,8 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // Eden AI: a new file's kinds take the lab's formats (the old sync wrote bare kinds).
+  "edenai/perturbed": ["providers/edenai/models/openai/gpt-4.1-nano.toml"],
   // EmpirioLabs: a model that starts reasoning with no controls is a gap.
   "empiriolabs/perturbed": ["providers/empiriolabs/models/gemma-3-27b.toml"],
   // CoreWeave: a model that drops its only control (a toggle) is written without
