@@ -1,17 +1,21 @@
 # Availability, exact wire ID, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
-# Reasoning is supported, but Moneo's Chat Completions gateway does not expose a documented toggle, effort enum or budget control.
 # `deepseek-v4-1-flash-1017-uncensored` is Moneo's exact public wire ID.
+# Reasoning: the model reasons internally (public catalog has_reasoning=true), but Moneo's Chat Completions gateway
+# strips all reasoning output before replying and silently accepts/ignores every reasoning control.
+# This route was temporarily overloaded (HTTP 429 model_overloaded) during the 2026-11-11 live probe, but it is served
+# through the same gateway code path as the other Moneo routes, which strip reasoning output from every response
+# regardless of model; therefore no toggle, effort enum or budget control is exposed and no reasoning field is surfaced.
+# tool_choice: live probe of the shared gateway confirms auto / none / required / named (specific) function are all accepted (HTTP 200).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash 1017 Uncensored"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 structured_output = true
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.33
