@@ -135,3 +135,8 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 
 `meta`, `modular` and `nearai` still import fetch and parsing code (zod schemas, Meta's docs parser) from the old modules. Ports after those carry their own.
 
+
+Not ported yet:
+
+- `openrouter`: media models (speech, transcription, embedding, rerank, image, video) are rebuilt from the file each run, keeping some of its fields and dropping the rest. Chat price overrides merge by condition (time-of-day ones are always replaced, context bands only when the catalog lists some, others stay), and the 1h cache write price is keyed by the TTLs the file's cache capability lists. The engine has no rules for these yet.
+- `vercel`: the same media rebuild, and a chat model's cost keeps the file's context bands unless the catalog lists some while a media model's cost is replaced whole. A new chat model copies its reasoning controls from another file in the provider (its `-free` route's base, or the file named after its lab ID), and tool choice depends on the file's own tool support. Modules can't read provider files.
