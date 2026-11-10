@@ -11,6 +11,9 @@ name = "GLM 5.3"
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
+[limit]
+context = 1_048_576
+
 [cost.text.input]
 price = 1.4
 cache = { read = 1.4 }

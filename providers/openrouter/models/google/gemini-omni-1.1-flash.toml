@@ -1,0 +1,25 @@
+schema = 2
+base_model = "google/gemini-omni-1.1-flash"
+description = "Omni-modal model for text, vision, audio, and multimodal agent tasks"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text", "video"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = false
+temperature = true
+
+[limit]
+context = 131_072
+output = 65_536
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 9
+
+[cost.web_search]
+price = 14

@@ -12,17 +12,21 @@ description = "DeepSeek chat model for instruction following, coding, and analys
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 
 [limit]
 context = 160_000
 output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.33
@@ -30,3 +34,6 @@ cache = { read = 0.16 }
 
 [cost.text.output]
 price = 0.48
+
+[cost.web_search]
+price = 10

@@ -11,10 +11,8 @@ base_model = "google/gemini-2.5-computer-use-preview-10-2025"
 name = "Gemini 2.5 Computer Use Preview 10-2025"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-system_updates = false
-effort_updates = false
 
 [cost.text.input]
 price = 1.25

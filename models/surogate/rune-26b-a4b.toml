@@ -1,0 +1,34 @@
+# Sources (accessed 2026-10-28):
+# - https://huggingface.co/surogate/rune-26b-a4b-GGUF (gated; Apache-2.0; created 2026-09-21; fine-tuned from
+#   google/gemma-4-26B-A4B-it; tagged decision-model, mixture-of-experts)
+# - https://app.fireworks.ai/models/fireworks/rune (System One decision model: no reasoning and no generated text, up to
+#   256 typed questions per request, output tokens always zero; 262K context, text only; 26.5B parameters, MoE)
+# Modalities: the Hugging Face repo is tagged vision (Gemma 4 base), but the only host serves it text only.
+# Output: typed decision probabilities, no generated text, so there is nothing to sample (temperature/top_p/top_k false).
+schema = 2
+v2_only = true
+type = "decision"
+name = "Rune 26B-A4B"
+description = "Open-weight System One decision model on Gemma 4 26B-A4B that answers up to 256 typed questions about a document with calibrated probabilities in one pass"
+open_weights = true
+release_date = "2026-09-21"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/surogate/rune-26b-a4b-GGUF"

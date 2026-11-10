@@ -4,11 +4,13 @@ base_model = "minimax/MiniMax-M3.1-Flash"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
-effort_updates = false
+
+[limit]
+context = 1_048_576
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.015 }
+price = 0.075
+cache = { read = 0.0075 }
 
 [cost.text.output]
-price = 0.6
+price = 0.3

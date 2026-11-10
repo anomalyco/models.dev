@@ -11,8 +11,8 @@
 #   a base64 PDF was read correctly live.
 # - Sampling: temperature and top_p; no top_k (live 400 "top_k sampling is not enabled for this model").
 # - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
-#   keeps the cached prefix and is obeyed. Adding or removing tools between requests keeps the cached
-#   prefix (Mistral renders tools after it).
+#   keeps the cached prefix and is obeyed. Adding or removing tools between requests
+#   drops the cache after the system prompt (live 2026-10-22).
 schema = 2
 name = "Mistral Large 3"
 description = "Mistral's largest general model for enterprise agents, coding, and multilingual reasoning"
@@ -27,17 +27,16 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
 top_p = true
 top_k = false
 system_updates = true
-effort_updates = false
 stream_usage = true
 prompt_cache_key = true
-cache = { supported = true, implicit = { min_tokens = 64 }, explicit = false }
+cache = { implicit = { min_tokens = 64 } }
 
 [limit]
 context = 262_144

@@ -3,10 +3,9 @@ base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Cloudflare)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 128_000

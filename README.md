@@ -165,7 +165,7 @@ base_model = "openai/gpt-5"
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [cost.text.input]
 price = 1.25              # USD per million input tokens

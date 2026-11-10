@@ -1,0 +1,16 @@
+# Catalog: https://build.nvidia.com/models.md lists nemotron-3-embed-1b (accessed 2026-11-08).
+# Live 2026-11-08: POST https://integrate.api.nvidia.com/v1/embeddings returns 2048-dimensional vectors.
+# Card: "Max Sequence Length: 32768" (https://build.nvidia.com/nvidia/nemotron-3-embed-1b/modelcard).
+# Price: 0, NVIDIA's hosted API is a free trial with no per-token rate (see provider.toml).
+schema = 2
+v2_only = true
+base_model = "nvidia/nemotron-3-embed-1b"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

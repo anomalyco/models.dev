@@ -1,0 +1,27 @@
+schema = 2
+name = "GPT 6.1 Terra Pro"
+description = "GPT-6.1 Terra Pro uses the same underlying model as GPT-6.1 Terra with Pro reasoning mode enabled for higher-quality responses on complex tasks."
+family = "gpt"
+open_weights = false
+release_date = "2026-10-27"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_050_000
+input = 1_050_000
+output = 128_000
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[cost.text.output]
+price = 5

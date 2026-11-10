@@ -19,13 +19,11 @@ output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
 reasoning = { supported = true }
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = { min_tokens = 4_096 } }
+cache = { implicit = { min_tokens = 4_096 } }
 service_tier = ["flex", "priority"]
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+sdk = { opencodeai = "@opencode/ai/providers/google-vertex/images" }
 
 [api.generate-content]
 

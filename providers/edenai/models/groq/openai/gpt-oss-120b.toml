@@ -3,10 +3,9 @@ base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Groq)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.15

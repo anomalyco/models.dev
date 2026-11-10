@@ -7,6 +7,7 @@ import { syncProvider, type ExistingModel } from "../src/sync/index.js";
 import * as missingIssues from "../src/sync/missing-issues.js";
 import {
   buildFireworksModel,
+  chatApis,
   expandFireworksModels,
   fetchFireworksInventory,
   fetchFireworksModels,
@@ -240,6 +241,25 @@ test("refuses destructive sync when either Fireworks source is empty", () => {
   ])).toThrow("empty active serverless inventory");
 });
 
+test("keeps hand-authored embedding files, including legacy models absent from both sources", () => {
+  const embedding = "accounts/fireworks/models/embed";
+  const sources = fireworksAi.parseModels({
+    serverless: {
+      object: "list",
+      data: [fireworksModel(), fireworksModel({ id: embedding, output_modalities: ["embeddings"] })],
+    },
+    inventory: [inventoryModel(), inventoryModel({ name: embedding, kind: "EMBEDDING_MODEL" })],
+  });
+  const v2 = { schema: 2, v2_only: true, base_model: "baai/bge-small-en-v1.5" };
+
+  for (const id of [embedding, "BAAI/bge-small-en-v1.5"]) {
+    const model = sources.find((source) => source.catalogId === id)!;
+    const context = { existing: () => undefined, authored: () => undefined };
+    expect(fireworksAi.translateModel(model, { ...context, v2: () => v2 })).toEqual({ id, v2 });
+    expect(fireworksAi.translateModel(model, { ...context, v2: () => undefined })).toBeUndefined();
+  }
+});
+
 test("preserves inventory-only models while enabling deletion for models absent from both sources", () => {
   const authored = {
     base_model: "example/example",
@@ -444,7 +464,7 @@ reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = true
 system_updates = true
 tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 1
@@ -476,7 +496,7 @@ price = 2
     expect(text).toContain('name = "Example Host"');
     expect(text).toContain("# Host evidence stays in the header.");
     expect(text).toContain("system_updates = true");
-    expect(text).toContain("cache = { supported = true, implicit = true }");
+    expect(text).toContain("cache = { implicit = true }");
     expect(text).not.toContain("[modalities]");
 
     await syncProvider(provider);
@@ -550,3 +570,17 @@ function existingModel(): ExistingModel {
     modalities: { input: ["text"], output: ["text"] },
   };
 }
+
+test("lists the Responses and Messages APIs after a Fireworks model's first table", () => {
+  const extra = {
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } },
+    messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } },
+  };
+  // No table: the provider's Chat Completions API comes first.
+  expect(chatApis(undefined)).toEqual({ "chat-completions": {}, ...extra });
+  const first = { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } };
+  const once = chatApis(first);
+  expect(Object.keys(once)).toEqual(["chat-completions", "responses", "messages"]);
+  expect(once).toEqual({ ...first, ...extra });
+  expect(chatApis(once)).toEqual(once);
+});

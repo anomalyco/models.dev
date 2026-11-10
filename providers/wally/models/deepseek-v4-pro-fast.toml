@@ -1,0 +1,27 @@
+# Effort: reasoning_effort = none|high|max; thinking is off unless reasoning_effort asks for it.
+# minimal, low and medium render the same prompt as high (same usage.prompt_tokens); xhigh maps to max.
+# Cache: automatic; a repeated prompt returns usage.prompt_tokens_details.cached_tokens.
+# Pricing: https://www.runwally.com/pricing
+# Limits and modalities: GET https://inference.runanywhere.ai/v1/models
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro Fast"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.91
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 3.83

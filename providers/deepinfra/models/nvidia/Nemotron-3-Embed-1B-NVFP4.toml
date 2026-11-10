@@ -1,0 +1,15 @@
+# Catalog (accessed 2026-11-08): https://api.deepinfra.com/models/list (type "embeddings", not deprecated); model page https://deepinfra.com/nvidia/Nemotron-3-Embed-1B-NVFP4
+#   price $0.01/MTok input, max_tokens 32768.
+# API: OpenAI-compatible POST https://api.deepinfra.com/v1/openai/embeddings, "supports the OpenAI embeddings API for all embedding models" (https://docs.deepinfra.com/apis/embeddings.md).
+schema = 2
+v2_only = true
+base_model = "nvidia/nemotron-3-embed-1b"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

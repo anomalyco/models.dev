@@ -1,7 +1,9 @@
+# API: POST .../publishers/google/models/gemini-embedding-001:predict; Vertex has no OpenAI-shaped embeddings route.
+#   https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/text-embeddings-api
 schema = 2
 base_model = "google/gemini-embedding-001"
 
-[api.embeddings]
+[api.predict]
 sdk = { opencodeai = "none" }
 
 [cost.text.input]

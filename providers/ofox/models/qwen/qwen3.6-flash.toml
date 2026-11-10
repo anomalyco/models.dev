@@ -10,11 +10,10 @@ schema = 2
 base_model = "alibaba/qwen3.6-flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 output = 64_000

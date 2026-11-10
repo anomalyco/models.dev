@@ -1,0 +1,19 @@
+schema = 2
+name = "Qwen3.8 2.4T A95B"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+open_weights = true
+release_date = "2026-10-26"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 0
+output = 0

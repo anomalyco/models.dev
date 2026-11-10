@@ -11,7 +11,13 @@ bun run v1:check
 
 Run both after every catalog change. `bun validate` must pass before a PR is mergeable; it rejects any model file without `schema = 2`.
 
-`bun run v1:check` (or `bun run v1:check <ref>`) protects the published v1 API (`api.json`, etc.), which is still generated from these files. It compares the v1 output with the merge-base of `origin/dev`, lists every changed field, every model added to or removed from v1, and changed files that still use generic modalities, and exits 1 if v1 changed. Keep v1 changes to additive or clearly sourced fixes, and list them in the PR.
+`bun run v1:check` (or `bun run v1:check <ref>`) protects the published v1 API (`api.json`, etc.), which is still generated from these files. It compares the v1 output with the merge-base of `origin/dev`, lists every changed field, every model added to or removed from v1, and changed files that still use generic modalities, and exits 1 if v1 changed.
+
+**Never break v1.** The published v1 API (`api.json` and its views) must stay backward compatible:
+
+- **No new modalities in v1.** v1 only allows `text`, `audio`, `image`, `video` and `pdf` (`packages/core/src/schema.ts`). v2-only values (MIME types, `embedding`, `decision`, `reranking`) must translate to one of these or stay out of v1.
+- **No v1 schema changes.** Don't add, remove, rename or retype v1 fields, and don't add allowed values to existing v1 enums. Those changes go in v2.
+- **Data changes inside the v1 schema** (e.g. a corrected price or URL) must be clearly sourced fixes, listed in the PR, and approved by a maintainer. Run the full `bun run v1:check` and read its output.
 
 ## Two concepts: lab models vs providers
 
@@ -55,7 +61,7 @@ context = 1_000_000
 output = 128_000
 ```
 
-Required: `name`, `description`, `open_weights`, `release_date`, `[modalities]`, `[capabilities]` (`tools`, `reasoning = { supported = … }`, and explicit `temperature`, `top_p`, `top_k`), and `[limit]`. Recommended: `family`, `knowledge`, `type` (defaults to `"chat"`; set it on `image`, `video`, `embedding`, `reranking`, `decision`, `transcription`, `speech`, `realtime` models), `license`, `links`, `weights`, `benchmarks`.
+Required: `name`, `description`, `open_weights`, `release_date`, `[modalities]`, `[capabilities]` (`tools`, `reasoning = { supported = … }`, and explicit `temperature`, `top_p`, `top_k`), and `[limit]`. Recommended: `family`, `knowledge`, `type` (defaults to `"chat"`; set it on `image`, `video`, `embedding`, `reranking`, `decision`, `transcription`, `speech`, `realtime`, and `audio` (music and sound effect generation, not speech) models), `license`, `links`, `weights`, `benchmarks`.
 
 - There is no `attachment` field. It is derived from whether `modalities.input` has anything besides text.
 - Use MIME types where the lab documents them (`image/png`, `application/pdf`) instead of generic `image` / `pdf`.
@@ -72,7 +78,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max
 structured_output = true
 system_updates = true
 effort_updates = true
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 service_tier = ["fast"]
 
 [cost.text.input]
@@ -90,7 +96,25 @@ factor = 2
 body = { speed = "fast" }
 ```
 
-- Mid-conversation flags record what the API accepts (per its docs, confirmed live), not whether the model obeys: `system_updates` (system/developer messages after the conversation starts, sent in place), `effort_updates` (a per-turn effort change that keeps the cache, e.g. OpenAI `configuration_update`, Anthropic per-message `output_config`), `tools.updates` (adding/removing tools mid-conversation while keeping the cache, e.g. Anthropic `tool_addition`/`tool_removal`, OpenAI Responses `additional_tools`). Tool search is `tools.search`.
+- `cache = false` means the host doesn't cache prompts. Otherwise list the kinds it supports, `implicit` and/or `explicit`, each `true` or a details table. A kind that isn't listed isn't supported. If a host caches but doesn't say how, use `{ implicit = true }`; Anthropic-style caching that needs `cache_control` markers is `explicit`.
+- Mid-conversation flags record what the API accepts, not whether the model obeys. Each one needs a message sent inside the conversation history; changing a top-level request parameter between turns never counts, even if the cache happens to survive.
+  - `system_updates`: the API accepts a system/developer message after the conversation starts and keeps it in place (the cache before it survives; moved to the top or rejected = false).
+  - `effort_updates`: a message in the history changes effort for the next turn and keeps the cache: OpenAI Responses `configuration_update`, Anthropic per-message `output_config`. Changing `reasoning_effort`, a thinking toggle or a budget on the next request doesn't count.
+  - `tools.updates`: a message in the history adds (or removes) tools and keeps the cache: Anthropic `tool_addition`/`tool_removal`, OpenAI Responses `additional_tools`, Kimi K3's tool-carrying system message. Add-only counts; note "add only" in the file comment. Changing the top-level `tools` list doesn't count. Tool search is `tools.search`.
+- These three flags default to false. Be conservative: set one to `true` only when the host has an explicit, documented way to do it (or passes requests through to a lab that documents it) and you're sure it works there; confirm live when you can. A server that happens to keep the cache isn't enough. Otherwise leave it out (don't write `= false`; `bun validate` rejects it). The v2 API always publishes them as `true` or `false`, with a left-out flag published as `false`.
+- Put a flag at the top level only when it holds on every API the model lists. When it holds on some of them only, leave the top level out and set it on those APIs instead, e.g. `[api.messages]` with `capabilities = { effort_updates = true }` (`system_updates`, `effort_updates` and `tools = { updates = true }` are allowed there).
+- Tool details (`strict`, `choice`, `search`, `freeform`, `updates`) depend on the API: OpenAI's tool search only works on Responses, Anthropic's OpenAI-compatible Chat Completions ignores `strict`, Moonshot's Responses only takes `tool_choice: "auto"`. Top-level `[capabilities] tools` values hold on every API the model lists; an API's `capabilities = { tools = { … } }` replaces any of them for that API. A value that differs by API is set only on the APIs that have it, never cancelled with `false`. The v2 API publishes the resolved values on each API (`api.<protocol>.capabilities.tools`, `updates` always stated) and keeps only `supported` on the model. `freeform` lists the formats an API accepts for custom tools, whose input is plain text instead of JSON: `"text"` (unconstrained), `"lark"` and `"regex"` (grammar-constrained). Leave it out when the API has no custom tools.
+- When you add or update an OpenAI GPT-5+ model on any host, check which `freeform` formats each of its APIs accepts. Use the host's docs or a live probe with a restrictive grammar (e.g. regex `ZZ[0-9]{3}`) whose output proves the grammar is enforced, not just accepted. Set the formats that work on the APIs where they work, leave `freeform` out where custom tools are rejected, and note the evidence in the file's header comment.
+
+```toml
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+
+[api.responses]
+capabilities = { tools = { choice = ["auto"], search = true } }
+
+[api.chat-completions]
+```
 - A mode without a cost takes the base prices times the multiplier for its service tier: the mode's `service_tier`, or its name when unset (OpenAI's `fast` mode sets `service_tier = "priority"`).
 - Web search fees go in `[cost.web_search]`: `price` is USD per 1,000 searches (or search requests, as the host bills them). Prices by search depth are `[[cost.web_search.overrides]]` with `when = { search_context_size = { equals = "high" } }`. v1 has no web search price.
 - A plain-number multiplier `factor` (`factor = 1.1`) multiplies every price, `web_search` included; the object form (`factor = { text = 1.1, audio = 1.1 }`) multiplies only the prices it names, so use it when the host's multiplier covers token prices only.
@@ -98,16 +122,24 @@ body = { speed = "fast" }
 
 ### APIs (`[api.<protocol>]`)
 
-A model's `[api.<protocol>]` tables (`chat-completions`, `responses`, `messages`, …) are its complete list of APIs, in order, and replace the provider's default API. Each table can set `base_url`, `sdk = { aisdk, opencodeai }` and `compatibility.reasoning_field` / `replay_reasoning`; anything left out comes from the provider (`base_url` from `api` or the SDK's default URL, `sdk.aisdk` from `npm`, `sdk.opencodeai` from the provider's `opencodeai`, but only when the table takes the provider's `npm`: a table naming another `aisdk` must name its own `opencodeai` or gets none). v1 only reads the first table, as its `provider` and `interleaved` fields.
+A model's `[api.<protocol>]` tables (`chat-completions`, `responses`, `messages`, …) are its complete list of APIs, in order, and replace the provider's default API. Each table can set `base_url`, `path`, `sdk = { aisdk, opencodeai }` and `compatibility.reasoning_field`; anything left out comes from the provider (`base_url` from `api` or the SDK's default URL, `sdk.aisdk` from `npm`, `sdk.opencodeai` from the provider's `opencodeai`, but only when the table takes the provider's `npm`: a table naming another `aisdk` must name its own `opencodeai` or gets none). v1 only reads the first table, as its `provider` and `interleaved` fields.
 
 ```toml
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 ```
 
-- `opencodeai` (provider.toml's top-level field, or `sdk.opencodeai`) is an `@opencode/ai` entry point: `@opencode/ai/providers/<path>` (e.g. `@opencode/ai/providers/openai/chat`), or `@opencode/ai/protocols/<name>` for APIs with no provider entry point (`openai-images`, `openai-speech`, `openai-transcription`). v1 never publishes it.
+- `opencodeai` (provider.toml's top-level field, or `sdk.opencodeai`) is an `@opencode/ai` entry point: `@opencode/ai/providers/<path>` (e.g. `@opencode/ai/providers/openai/chat`) or `@opencode/ai/protocols/<name>` (`openai-speech`, `openai-transcription`). v1 never publishes it.
+- An `[api.*]` table's `sdk.opencodeai` names the most specific entry point for that API: the provider's per-API path (`@opencode/ai/providers/vercel-ai-gateway/responses`) rather than its root (`@opencode/ai/providers/vercel-ai-gateway`), which belongs in provider.toml.
+- Image and decision models (not their chat APIs, such as `chat-completions`, `responses` or Google's `generate-content`) use `@opencode/ai/providers/<P>/images` or `@opencode/ai/providers/<P>/decisions`, where `<P>` is the package root the provider's chat models use (`google`, `openrouter`, `openai-compatible`, …, without a `/chat`, `/responses` or `/messages` suffix). A provider with no chat models uses its own `@opencode/ai/providers/<id>` package if one exists, else `openai-compatible`. Don't name a `protocols/*` module here: it doesn't know the host or auth.
+- Decision APIs differ in wire format (OpenAI Decisions, System One, Cloudflare `/ai/run`), and there is no `openai-compatible/decisions`. A `systemone` table on a host without its own package uses `@opencode/ai/providers/typesafe-ai/decisions` and keeps the host's `base_url`. OpenCode Zen uses `@opencode/ai/providers/opencode/decisions`.
 - `"none"` in `sdk.aisdk`, `sdk.opencodeai` or the provider's `opencodeai` says no package supports that API: nothing is filled in (e.g. `sdk = { aisdk = "none" }` on a decision model's `[api.systemone]`).
+- `path` is the request path appended to `base_url`, set only when a host departs from its protocol's usual path. `systemone` normally posts to `{base_url}/systemone`; Inception serves the same body at `/v1/decisions`, so its `[api.systemone]` sets `base_url = "https://api.inceptionlabs.ai/v1"` and `path = "/decisions"`. v1 never publishes it.
+- `compatibility.media_input` (v2 only, `systemone` tables only) says where a System One host wants media (images, audio, video), named after where it goes in the request body: `"assets"` (the default: TypeSafe's `assets` map, referenced by name from `state`, plus the `TypeSafe-Danger-Zone-Images: true` header), `"state"` (media items such as `image_url`, `input_audio` and `video_url` inside a `state` list) or `"root"` (one top-level list per media kind: `images`, `audio`, `videos`, as Cloudflare Clef, Ollama, llama.cpp and AMD take). Set it on media models whose host isn't the default. `compatibility.reasoning_field` is only allowed on `chat-completions` tables.
+- `compatibility.max_tokens_field` (v2 only, `chat-completions` tables only) names the output-token cap field. Leave it out for hosts that take OpenAI's current `max_completion_tokens`; set `"max_tokens"` where the host only takes the older field (documented, or rejects/ignores `max_completion_tokens`).
+- Name the protocol by its wire format, not the model type, nor the host's path. `decisions` is only OpenAI's Decisions format; every host that takes System One's `{model, state, questions}` body is `systemone`, whatever its path. `realtime` is OpenAI's Realtime API; Google's Live API is `bidi-generate-content` and Lyria RealTime is `bidi-generate-music` (after their `BidiGenerateContent` / `BidiGenerateMusic` WebSocket methods).
 - `legacy_shape = "responses" | "completions"` is v1-only: it keeps a v1 `provider.shape` that repeats the SDK's default. Sync writes and keeps it; don't add it by hand.
+- `legacy_interleaved = true` is v1-only: it keeps v1's bare `interleaved: true` (replaying reasoning is the default in v2). Sync writes and keeps it; don't add it by hand.
 
 ## When to use `base_model` (blocker)
 
@@ -148,6 +180,10 @@ base_model_omit = ["limit.input"]  # drop inherited keys after merge
 - `base_model` / `base_model_omit` are parse-time only; they do not appear in generated JSON
 - Missing `base_model` target → validation error
 
+## Restricted models
+
+Don't add provider entries for models that most of the host's users can't call: gated research previews and allowlist-only models (for example Claude Mythos on Anthropic's API). Clients show every provider model in their model lists, so people pick it and get an access error. Add them once the host makes them generally available.
+
 ## Adding a provider
 
 ```
@@ -177,6 +213,7 @@ A v1-only alias provider (for example `azure-cognitive-services`) has a `provide
 - Path: `providers/<provider-id>/logo.svg`
 - Use `currentColor` for fills/strokes; no hardcoded colors, no fixed width/height
 - Prefer square `viewBox` (e.g. `0 0 24 24`)
+- Plain drawing markup only: no scripts, event handlers, `foreignObject`, animation or links to other files (`bun validate` checks this against the allowlist in `packages/core/src/logo.ts`)
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -187,6 +224,19 @@ A v1-only alias provider (for example `azure-cognitive-services`) has a `provide
 ### Sync modules (recommended, not a blocker)
 
 If the provider has a rich catalog API that can populate model data or authoritatively remove models it no longer serves, add a sync module (see `sync.md`). Thin endpoints stay hand-authored. Sync patches files in place: it updates the fields it owns and keeps everything else (cache, overrides, multipliers, cache TTLs). If a patch can't reproduce the synced fields, sync leaves the file and reports a notice.
+
+## Lab pages (`labs/<lab-id>/`)
+
+A lab's `logo.svg` (same rules as provider logos) and optional `lab.toml` feed the website's lab pages only; neither is in the v1 or v2 API. `lab.toml` is v2 and holds the lab's display name and description (each optional, at least one required):
+
+```toml
+schema = 2
+name = "Voyage AI"
+description = "One or two sentences on what the lab builds."
+```
+
+- `name` is the lab's official name and capitalization, from its own site or Hugging Face org. Without it, the site uses the name of the provider with the same id, else title-cases the id (`voyageai` → "Voyageai"), so set it whenever that comes out wrong. Note the source in a header comment when it isn't obvious.
+- Don't write a `description` you can't source; a name-only `lab.toml` is fine.
 
 ## Cost (always USD)
 
@@ -316,7 +366,8 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 - [ ] Provider `base_model` files are override-only (no duplicated identical fields; no provider-only keys like reasoning controls, cache or cost in `models/`)
 - [ ] Reasoning models have host-specific `capabilities.reasoning` controls per policy above
 - [ ] Costs are USD
-- [ ] `bun validate` passes; `bun run v1:check` changes are intended and listed
+- [ ] `bun validate` passes
+- [ ] v1 is not broken: no new v1 modalities, fields or enum values; every `bun run v1:check` change is a sourced fix, listed in the PR and maintainer-approved
 
 ### Strongly recommended
 

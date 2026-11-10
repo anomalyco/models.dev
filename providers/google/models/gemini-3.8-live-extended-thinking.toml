@@ -10,14 +10,12 @@ v2_only = true
 base_model = "google/gemini-3.8-live-extended-thinking"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-cache = { supported = false }
-system_updates = false
-effort_updates = false
+cache = false
 
-[api.realtime]
+[api.bidi-generate-content]
 sdk = { opencodeai = "none" }
 
 [cost.text.input]

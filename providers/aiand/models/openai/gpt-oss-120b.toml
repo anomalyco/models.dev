@@ -9,11 +9,10 @@ schema = 2
 base_model = "openai/gpt-oss-120b"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

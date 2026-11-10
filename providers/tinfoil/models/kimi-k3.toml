@@ -8,18 +8,17 @@ schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 262_144
 
 [cost.text.input]
 price = 4
-cache = { read = 0.8 }
+cache = { read = 0.6 }
 
 [cost.text.output]
 price = 20

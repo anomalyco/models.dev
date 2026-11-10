@@ -6,10 +6,9 @@ base_model = "xai/grok-build-0.1"
 description = "Grok coding model for agentic engineering, edits, and codebase workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 230_400

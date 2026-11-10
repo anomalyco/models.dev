@@ -10,6 +10,7 @@
 # Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
 # Deprecated: listed in the beta launch post (as DeepSeek-V4-Pro (Preview)) but no longer on the pricing page that
 #   lists every Arcee Platform model; the page lists deepseek/deepseek-v4-pro-0813 instead.
+# max_tokens_field: Arcee's Chat Completions API reference lists max_tokens and not max_completion_tokens (https://docs.arcee.ai/api-reference/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 status = "deprecated"
@@ -22,7 +23,7 @@ structured_output = true
 context = 512_000
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 1.74

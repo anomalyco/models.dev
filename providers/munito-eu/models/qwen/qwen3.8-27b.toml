@@ -1,0 +1,31 @@
+# Sources (accessed 2026-10-24):
+# Prices, context and maximum output: https://docs.munito.ai/models/qwen-qwen3-8-27b
+# Input formats: https://docs.munito.ai/vision
+# Reasoning: https://docs.munito.ai/reasoning. The reasoning is in message.reasoning and delta.reasoning,
+# and the API reads reasoning_content (or reasoning) in the history.
+# Cache: automatic prefix cache, no cache_control markers, no cache-write fee (https://docs.munito.ai/prompt-caching).
+# Off is reasoning_effort = none (or chat_template_kwargs.enable_thinking = false). Graded levels, no toggle.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif", "image/bmp", "image/tiff", "image/avif", "video/mp4", "video/webm", "video/quicktime", "video/x-matroska", "video/x-msvideo"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 235_929
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.11 }
+
+[cost.text.output]
+price = 2.7

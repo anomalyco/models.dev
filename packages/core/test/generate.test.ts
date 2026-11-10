@@ -45,6 +45,19 @@ describe("catalog generation", () => {
     });
   });
 
+  test("leaves a provider whose models are all v2_only out of v1", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/v2/provider.toml", providerToml("V2"));
+      await write(root, "models/lab/model.toml", modelMetadataToml());
+      await write(root, "providers/v2/models/model.toml", 'schema = 2\nv2_only = true\nbase_model = "lab/model"\n\n[capabilities]\nreasoning = { supported = true }\n');
+
+      const catalog = await generateCatalog(root);
+      expect(catalog.providers.v2).toBeUndefined();
+      const v2 = await generateV2(path.join(root, "providers"));
+      expect(Object.keys(v2.v2?.models ?? {})).toEqual(["model"]);
+    });
+  });
+
   test("base_model publishes canonical identity with the provider model", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));
@@ -398,7 +411,7 @@ env = { TARGET_RESOURCE = "LEGACY_RESOURCE", TARGET_KEY = "LEGACY_KEY" }
     expect(qualifiedNames).toEqual([]);
   });
 
-  test("legacy_shape is published in v1 and never in v2", async () => {
+  test("legacy_shape and legacy_interleaved are published in v1 and never in v2", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/provider/provider.toml", providerToml("Provider"));
       await write(
@@ -426,6 +439,7 @@ output = 128_000
 base_url = "https://example.com/v1"
 sdk = { aisdk = "@ai-sdk/openai" }
 legacy_shape = "responses"
+legacy_interleaved = true
 
 [cost.text.input]
 price = 1
@@ -441,12 +455,18 @@ price = 2
         api: "https://example.com/v1",
         shape: "responses",
       });
+      expect(providers.provider?.models.model?.interleaved).toBe(true);
 
       const providersV2 = await generateV2(path.join(root, "providers"));
       expect(providersV2.provider?.models.model?.api).toEqual({
-        responses: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
+        responses: {
+          base_url: "https://example.com/v1",
+          sdk: { aisdk: "@ai-sdk/openai" },
+          capabilities: { tools: { updates: false } },
+        },
       });
       expect(JSON.stringify(providersV2)).not.toContain("legacy_shape");
+      expect(JSON.stringify(providersV2)).not.toContain("legacy_interleaved");
     });
   });
 
@@ -502,7 +522,7 @@ price = 25
 });
 
 describe("model API tables", () => {
-  const model = (api = "") => `schema = 2
+  const model = (api = "", tools = "{ supported = false }") => `schema = 2
 name = "Lab Model"
 description = "Example model for catalog generation and inheritance tests"
 open_weights = true
@@ -513,7 +533,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = ${tools}
 reasoning = { supported = false }
 
 [limit]
@@ -685,7 +705,7 @@ opencodeai = "@opencode/ai/providers/cohere"
         model(`
 [api.chat-completions]
 
-[api.completions]
+[api.fim]
 sdk = { aisdk = "@ai-sdk/openai-compatible" }
 
 [api.messages]
@@ -703,7 +723,7 @@ sdk = { aisdk = "none" }
       const inherited = { aisdk: "@ai-sdk/openai-compatible", opencodeai: "@opencode/ai/providers/openai-compatible" };
       expect(models?.tables?.api).toEqual({
         "chat-completions": { base_url: "https://example.com/v1", sdk: inherited },
-        completions: { base_url: "https://example.com/v1", sdk: inherited },
+        fim: { base_url: "https://example.com/v1", sdk: inherited },
         messages: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/anthropic" } },
         responses: {
           base_url: "https://example.com/v1",
@@ -712,6 +732,90 @@ sdk = { aisdk = "none" }
         // `aisdk = "none"` names the table's own (absent) package, so nothing is inherited.
         systemone: { base_url: "https://example.com/v1", sdk: {} },
       });
+    });
+  });
+
+  test("a table's path is published in v2 and never in v1", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider());
+      await write(
+        root,
+        "providers/gateway/models/model.toml",
+        model(`
+[api.systemone]
+base_url = "https://decide.example.com/v1"
+path = "/decisions"
+`),
+      );
+
+      const v1 = await generate(path.join(root, "providers"));
+      expect(v1.gateway?.models.model?.provider).toEqual({ api: "https://decide.example.com/v1" });
+      expect(JSON.stringify(v1)).not.toContain("/decisions");
+
+      const v2 = await generateV2(path.join(root, "providers"));
+      expect(v2.gateway?.models.model?.api).toEqual({
+        systemone: {
+          base_url: "https://decide.example.com/v1",
+          path: "/decisions",
+          sdk: { aisdk: "@ai-sdk/openai-compatible" },
+        },
+      });
+    });
+  });
+
+  test("tool details are published on each API, a table's values replacing the model's", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider());
+      await write(
+        root,
+        "providers/gateway/models/model.toml",
+        model(
+          `
+[api.chat-completions]
+
+[api.responses]
+capabilities = { tools = { choice = ["auto"], search = true, updates = true } }
+
+[api.messages]
+capabilities = { tools = { strict = false } }
+`,
+          '{ supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }',
+        ),
+      );
+      await write(root, "providers/gateway/models/plain.toml", model("", "{ supported = true, search = true }"));
+
+      const models = (await generateV2(path.join(root, "providers"))).gateway?.models;
+      expect(models?.model?.capabilities.tools).toEqual({ supported: true });
+      const tools = Object.fromEntries(
+        Object.entries(models?.model?.api ?? {}).map(([protocol, entry]) => [protocol, entry.capabilities?.tools]),
+      );
+      expect(tools).toEqual({
+        "chat-completions": { strict: true, choice: ["auto", "none", "required", "tool"], updates: false },
+        responses: { strict: true, choice: ["auto"], search: true, updates: true },
+        messages: { strict: false, choice: ["auto", "none", "required", "tool"], updates: false },
+      });
+      // Without tables, the provider's default API takes the model's values.
+      expect(models?.plain?.api["chat-completions"]?.capabilities).toEqual({ tools: { search: true, updates: false } });
+    });
+  });
+
+  test("rejects API tool details on a model without tools", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider());
+      await write(
+        root,
+        "providers/gateway/models/model.toml",
+        model(`\n[api.responses]\ncapabilities = { tools = { search = true } }\n`),
+      );
+      await expect(generateV2(path.join(root, "providers"))).rejects.toThrow("doesn't support tools");
+    });
+  });
+
+  test("rejects a path that doesn't start with /", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/gateway/provider.toml", provider());
+      await write(root, "providers/gateway/models/model.toml", model(`\n[api.systemone]\npath = "decisions"\n`));
+      await expect(generateV2(path.join(root, "providers"))).rejects.toThrow("Must start with /");
     });
   });
 

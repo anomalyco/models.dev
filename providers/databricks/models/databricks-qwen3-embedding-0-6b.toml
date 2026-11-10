@@ -1,0 +1,16 @@
+# Models, inputs and lifecycle (accessed 2026-11-08): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models ("Qwen3-Embedding-0.6B", Public Preview, endpoint databricks-qwen3-embedding-0-6b, model https://huggingface.co/Qwen/Qwen3-Embedding-0.6B, up to ~32K tokens, dimensions 32-1024), https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# API: POST /ai-gateway/mlflow/v1/embeddings ("MLflow Embeddings API", https://docs.databricks.com/aws/en/ai-gateway/query-model-services). Not live-tested (no Databricks key).
+# Pricing (accessed 2026-11-08): 0.286 DBU per 1M input tokens (https://www.databricks.com/product/pricing/foundation-model-serving) x USD 0.070/DBU (`foundation_model_apis` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json, AWS US East (N. Virginia); other regions are USD 0.070-0.112/DBU, not modeled).
+# The databricks:generate script skips `databricks-qwen` endpoints and non-chat endpoints; it reports this file as orphaned but doesn't delete it.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-embedding-0.6b"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0

@@ -7,6 +7,7 @@ description = "Image model for prompt-driven generation, editing, and visual des
 tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = false
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.25

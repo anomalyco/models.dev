@@ -3,16 +3,15 @@ base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (IONOS)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 128_000
 
 [cost.text.input]
-price = 0.168075
+price = 0.167895
 
 [cost.text.output]
-price = 0.728325
+price = 0.727545

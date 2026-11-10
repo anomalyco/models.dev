@@ -8,8 +8,7 @@ name = "GPT 5 Nano"
 tools = { supported = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = false
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 input = 400_000

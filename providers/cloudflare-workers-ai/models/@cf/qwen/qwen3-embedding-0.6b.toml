@@ -1,0 +1,19 @@
+# https://developers.cloudflare.com/workers-ai/models/qwen3-embedding-0.6b/ (task "Text Embeddings"; Context Window 8,192 tokens)
+# Price: https://developers.cloudflare.com/workers-ai/platform/pricing/ and the model page's unit pricing (accessed 2026-11-08).
+# API: POST /accounts/{ACCOUNT_ID}/ai/v1/embeddings returns OpenAI-shaped vectors (live check 2026-11-08); the native
+#   /ai/run/<model> route also works. Workers AI search's OpenRouter format omits embeddings, so the sync never touches this file.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-embedding-0.6b"
+
+[limit]
+context = 8_192
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.0118
+
+[cost.text.output]
+price = 0

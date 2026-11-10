@@ -8,6 +8,8 @@ import {
   buildNovitaModel,
   fetchNovitaModels,
   novitaAi,
+  novitaApis,
+  novitaMediaCost,
   parseNovitaModels,
   type NovitaModel,
 } from "../src/sync/providers/novita-ai.js";
@@ -239,6 +241,74 @@ test("runner patches prices in a v2 file in place and keeps v2-only data", async
   await Bun.write(file, shipped.replace("[cost.text.output]\nprice = 6", "[cost.text.output]\nprice = 7"));
   const catalog = row({
     context_size: 1_000_000,
+    pricing: {
+      prompt: { price_per_m_decimal: "2" },
+      completion: { price_per_m_decimal: "6" },
+      input_cache_read: { price_per_m_decimal: "0.25" },
+    },
+  });
+  const provider = { ...novitaAi, modelsDir, fetchModels: async () => ({ data: [catalog] }) };
+  expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 1, unchanged: 0 });
+  expect(await Bun.file(file).text()).toBe(shipped);
+  expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, unchanged: 1 });
+});
+
+const messagesApi = {
+  base_url: "https://api.novita.ai/anthropic/v1",
+  sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" },
+};
+const responsesApi = {
+  base_url: "https://api.novita.ai/openai/v1",
+  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+};
+
+test("lists the APIs from the route's endpoints after the existing first table", () => {
+  const chat = { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } };
+  const all = novitaApis(["chat/completions", "anthropic", "responses", "completions", "batch-api"]);
+  const once = all(chat);
+  expect(once).toEqual({ ...chat, messages: messagesApi, responses: responsesApi });
+  expect(all(once)).toEqual(once);
+  // A file with no table gets the provider's Chat Completions API first.
+  expect(Object.keys(all(undefined) as object)).toEqual(["chat-completions", "messages", "responses"]);
+  // APIs the route no longer lists are dropped; a chat-only route without tables keeps none.
+  expect(novitaApis(["chat/completions"])(once)).toEqual(chat);
+  expect(novitaApis(["chat/completions", "completions"])(undefined)).toBeUndefined();
+});
+
+test("syncs per-modality input prices", () => {
+  const omni = row({ pricing: {
+    prompt: { price_per_m_decimal: "0.25" },
+    completion: { price_per_m_decimal: "0.97" },
+    multimodal_input: [
+      { modals: ["text"], input_token_base_price: 2_500 },
+      { modals: ["audio"], input_token_base_price: 22_000, input_token_discount_price: 22_000 },
+      { modals: ["image"], input_token_base_price: 4_600 },
+      { modals: ["video"], input_token_base_price: 4_600 },
+      { modals: ["image", "video"], input_token_base_price: 4_600 },
+    ],
+  } });
+  expect(buildNovitaModel(omni, existing, authored).cost).toMatchObject({ input: 0.25, output: 0.97, input_audio: 2.2 });
+  const set = novitaMediaCost(omni);
+  expect(Object.keys(set)).toEqual(["cost.image.input", "cost.video.input"]);
+  expect((set["cost.image.input"] as (current: unknown) => unknown)(undefined)).toEqual({ price: 0.46 });
+  expect(novitaMediaCost(row())).toEqual({});
+});
+
+test("runner writes the API tables from the endpoints and is idempotent", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "novita-sync-api-test-"));
+  roots.push(root);
+  const modelsDir = path.join(root, "providers/novita-ai/models");
+  await mkdir(path.join(modelsDir, "qwen"), { recursive: true });
+  await mkdir(path.join(root, "models/alibaba"), { recursive: true });
+  await Bun.write(path.join(root, "models/alibaba/qwen3.8-max.toml"), await Bun.file("models/alibaba/qwen3.8-max.toml").text());
+  await Bun.write(path.join(root, "providers/novita-ai/provider.toml"), await Bun.file("providers/novita-ai/provider.toml").text());
+  const shipped = await Bun.file("providers/novita-ai/models/qwen/qwen3.8-max.toml").text();
+  const file = path.join(modelsDir, "qwen/qwen3.8-max.toml");
+  const withoutExtra = shipped.replace(/\n\[api\.messages\][\s\S]*?(?=\n\[cost)/, "");
+  expect(withoutExtra).not.toContain("[api.messages]");
+  await Bun.write(file, withoutExtra);
+  const catalog = row({
+    endpoints: ["chat/completions", "anthropic", "responses"],
     pricing: {
       prompt: { price_per_m_decimal: "2" },
       completion: { price_per_m_decimal: "6" },

@@ -14,6 +14,7 @@
 # mechanism (configuration_update/additional_tools return 422), checked live 2026-10-19.
 # Web search: $5 per 1,000 web_search tool calls: https://docs.x.ai/developers/pricing#tools-pricing
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Priority (https://docs.x.ai/developers/pricing).
+# APIs: Responses only; Chat Completions rejects multi-agent requests (confirmed live 2026-10-22).
 schema = 2
 name = "Grok 4.20 Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -33,15 +34,16 @@ temperature = true
 top_p = true
 top_k = true
 system_updates = true
-effort_updates = false
 store = true
 prompt_cache_key = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 service_tier = ["priority"]
 
 [limit]
 context = 1_000_000
 output = 30_000
+
+[api.responses]
 
 [cost.text.input]
 price = 1.25

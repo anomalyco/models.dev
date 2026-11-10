@@ -6,7 +6,7 @@ base_model = "minimax/MiniMax-M3"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-cache = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 1_000_000

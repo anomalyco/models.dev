@@ -13,6 +13,7 @@
 #   claude_sonnet_4_5_20250929 (https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/commit/48f009f5); Anthropic retires the model on 2026-11-30
 #   (https://platform.claude.com/docs/en/about-claude/model-deprecations).
 # Mid-conversation flags unset: GitLab documents none, and no live test (no GitLab token).
+# APIs: gitlab-ai-provider sends Claude to the AI gateway's /ai/v1/proxy/anthropic/v1/messages and OpenAI models to /ai/v1/proxy/openai/v1/chat/completions or /responses (sources in provider.toml).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5-20250929"
 name = "Agentic Chat (Claude Sonnet 4.5)"
@@ -20,6 +21,8 @@ status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, budget = { min = 1_024 } }
+
+[api.messages]
 
 [cost.text.input]
 price = 0

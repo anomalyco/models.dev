@@ -9,10 +9,9 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
 price = 0.111

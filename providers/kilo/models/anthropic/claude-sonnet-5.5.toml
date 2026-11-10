@@ -7,11 +7,10 @@ base_model = "anthropic/claude-sonnet-5-5"
 description = "Claude Sonnet 5.5 is Anthropic's Sonnet-class model for well-scoped everyday work, succeeding Claude Sonnet 5 as a direct upgrade. It is especially strong at building features, fixing bugs, and producing..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 2

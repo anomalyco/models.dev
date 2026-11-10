@@ -5,14 +5,14 @@
 schema = 2
 base_model = "google/gemma-3-27b-it"
 name = "Gemma 3 27B"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = false }
 structured_output = false
 
 [limit]
-context = 128_000
-output = 8_192
+output = 16_384
 
 [cost.text.input]
 price = 0

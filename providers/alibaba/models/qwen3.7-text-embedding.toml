@@ -1,0 +1,16 @@
+# Served: GET https://dashscope-intl.aliyuncs.com/compatible-mode/v1/models lists it; live POST /embeddings returned 200 (2026-11-08).
+# Models and limits: https://www.alibabacloud.com/help/en/model-studio/embedding
+# Pricing (Singapore, USD per 1M input tokens): https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-11-08).
+# API: POST /compatible-mode/v1/embeddings (https://www.alibabacloud.com/help/en/model-studio/text-embedding-synchronous-api).
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.7-text-embedding"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0

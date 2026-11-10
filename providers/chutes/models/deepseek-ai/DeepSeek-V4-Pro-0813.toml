@@ -1,0 +1,20 @@
+schema = 2
+name = "DeepSeek V4 Pro 0813"
+description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
+family = "deepseek"
+open_weights = true
+release_date = "2026-10-20"
+last_updated = "2026-10-25"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 0
+output = 0

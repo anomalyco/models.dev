@@ -9,15 +9,14 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [cost.text.input]
-price = 0.71
-cache = { read = 0.15 }
+price = 0.6
+cache = { read = 0.12 }
 
 [cost.text.output]
-price = 3.5
+price = 3

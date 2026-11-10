@@ -1,18 +1,27 @@
-# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded to Claude in place (live: cache prefix kept)
-# effort_updates: configuration_update accepted, cache kept (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
-# tools.updates = false: tool_addition/tool_removal system blocks are accepted but have no effect on Chat Completions (live)
+# Mid-conversation: system_updates = true: forwarded to Claude in place (live 2026-10-23 on claude-haiku-5.5 pinned to Anthropic: cache kept and followed on Chat Completions, Messages with the system message after the last user turn, and Responses with top-level cache_control)
+# effort_updates = true: per-message output_config on Messages (beta mid-conversation-output-config-2026-07-01), and configuration_update on Chat Completions, keep the cache, as on Anthropic's own API (Chat live 2026-10-19 on Opus 5.5, Fable 5.1) (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort) Top level: OpenRouter documents the in-history update on Chat Completions, Responses and Messages and converts between them, so it holds on every listed API.
+# tools.updates = true on [api.messages] only (/api/v1/messages): tool_addition/tool_removal system blocks with anthropic-beta inline-tools-2026-09-15 keep the cache (live 2026-10-23, beta header sent on every turn). Add works by tool_reference only (by value is rejected), and the block can't sit right before a user message. Chat Completions drops the blocks. https://openrouter.ai/docs/api/api-reference/anthropic-messages/create-messages
 # Cache: cache_control (top-level or per block), 4 breakpoints, 5m/1h TTL, 1h write = 2x input; min tokens per model (https://openrouter.ai/docs/guides/best-practices/prompt-caching#anthropic-claude)
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
 effort_updates = true
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+capabilities = { tools = { updates = true } }
 
 [cost.text.input]
 price = 4

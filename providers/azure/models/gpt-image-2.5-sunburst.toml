@@ -2,7 +2,7 @@ schema = 2
 base_model = "openai/gpt-image-2.5-sunburst"
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/azure/images" }
 
 [cost.text.input]
 price = 5

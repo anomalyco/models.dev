@@ -1,20 +1,18 @@
-# Cost: Melious list price for the default `balanced` route -- EUR 0.70 in / EUR 3.00
-# out / EUR 0.25 cache read per 1M tokens -- converted at 1.1215 USD/EUR (ECB euro
-# reference rate, 2026-10-20). Prices from https://melious.ai/hub/models/kimi-k2.6
-# (accessed 2026-10-21).
+# Cost: Melious list price for the default `balanced` route -- EUR 0.60 in / EUR 3.60
+# out / EUR 0.15 cache read per 1M tokens -- converted at 1.1150 USD/EUR (ECB euro
+# reference rate, 2026-10-27; prices re-checked against
+# GET /v1/models?include_meta=true on 2026-10-28).
 # Sources: GET https://api.melious.ai/v1/models?include_meta=true and
-# https://melious.ai/hub/models/kimi-k2.6 (both accessed 2026-09-14)
+# https://melious.ai/hub/models/kimi-k2.6 (both accessed 2026-10-28)
 # FX: https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html
-# Effort: reasoning_effort is the only reasoning control this host exposes, and it
-# forwards no lab-native thinking field and no reasoning budget, so no toggle or
-# budget_tokens. Measured against this deployment on 2026-09-14:
-# reasoning_effort="none" is a real off state (usage.reasoning_tokens = 0 and no
-# reasoning_content), while low/medium/high all return reasoning with no ordered
-# difference in depth, so they are not published as separate grades. The host also
-# accepts undocumented values without a 4xx, so acceptance is not evidence. Because
-# off is reachable through the effort field this is an effort list containing none,
-# not a toggle.
-# https://melious.ai/docs/reference/chat-completions (accessed 2026-09-14)
+# Toggle: reasoning_effort = "none" turns reasoning off, any other value turns it on;
+# chat_template_kwargs = { enable_thinking = false } does the same, and reasoning_effort
+# wins when both are sent.
+# No graded effort: the lab's control is the on/off Thinking / Instant pair, and the
+# graded values do not order on this deployment (low 336-460, medium 238-261,
+# high 192-388 reasoning tokens, overlapping both ways, same result on 2026-09-14).
+# https://huggingface.co/moonshotai/Kimi-K2.6 (Thinking and Instant modes)
+# https://melious.ai/docs/reference/chat-completions#reasoning (accessed 2026-10-28)
 # Reasoning text is returned in choices[].message.reasoning_content. cache_read:
 # usage.cached_tokens are billed at Melious's discounted prefix-cache rate.
 # limit.context: the catalog reports 256_000 for this deployment, not the lab's
@@ -24,7 +22,7 @@ schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "high"] }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 
 [limit]
@@ -35,8 +33,8 @@ output = 256_000
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.78505
-cache = { read = 0.280375 }
+price = 0.669
+cache = { read = 0.16725 }
 
 [cost.text.output]
-price = 3.3645
+price = 4.014

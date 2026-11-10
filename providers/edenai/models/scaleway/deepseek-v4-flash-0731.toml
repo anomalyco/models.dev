@@ -3,17 +3,16 @@ base_model = "deepseek/deepseek-v4-flash-0731"
 name = "DeepSeek V4 Flash 0731 (Scaleway)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 256_000
 
 [cost.text.input]
-price = 0.4482
-cache = { read = 0.08964 }
+price = 0.44772
+cache = { read = 0.089544 }
 
 [cost.text.output]
-price = 0.8964
+price = 0.89544

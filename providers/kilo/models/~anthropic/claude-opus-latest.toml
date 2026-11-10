@@ -15,12 +15,11 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = false
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 1_000_000

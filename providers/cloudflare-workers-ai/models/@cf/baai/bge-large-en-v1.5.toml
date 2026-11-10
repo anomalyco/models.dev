@@ -1,0 +1,16 @@
+# https://developers.cloudflare.com/workers-ai/models/bge-large-en-v1.5/ (task "Text Embeddings"; Maximum Input Tokens 512)
+# Price: https://developers.cloudflare.com/workers-ai/platform/pricing/ and the model page's unit pricing (accessed 2026-11-08).
+# API: POST /accounts/{ACCOUNT_ID}/ai/v1/embeddings returns OpenAI-shaped vectors (live check 2026-11-08); the native
+#   /ai/run/<model> route also works. Workers AI search's OpenRouter format omits embeddings, so the sync never touches this file.
+schema = 2
+v2_only = true
+base_model = "baai/bge-large-en-v1.5"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.204
+
+[cost.text.output]
+price = 0

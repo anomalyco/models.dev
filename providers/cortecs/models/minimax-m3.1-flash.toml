@@ -1,0 +1,25 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max, the lab's levels; thinking is always on
+# (https://platform.minimax.io/docs/api-reference/text-openai-api, providers/minimax/models/MiniMax-M3.1-Flash.toml).
+# Cortecs forwards reasoning_effort and maps an unavailable level to the next lower one
+# (https://docs.cortecs.ai/routing/reasoning, "How Cortecs maps effort").
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 64_000
+
+[cost.text.input]
+price = 0.304
+cache = { read = 0.076 }
+
+[cost.text.output]
+price = 1.219

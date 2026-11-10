@@ -15,7 +15,7 @@ base_model = "moonshotai/kimi-k3"
 reasoning = { supported = true, toggle = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
 structured_output = true
 temperature = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 output = 65_536

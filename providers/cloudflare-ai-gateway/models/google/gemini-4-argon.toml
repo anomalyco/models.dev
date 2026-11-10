@@ -6,12 +6,10 @@ schema = 2
 base_model = "google/gemini-4-argon"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 1_048_576

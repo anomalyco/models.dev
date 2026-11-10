@@ -7,11 +7,10 @@ base_model = "anthropic/claude-opus-4-1"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 15

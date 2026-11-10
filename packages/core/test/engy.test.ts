@@ -355,7 +355,7 @@ test("a repricing changes the price line and nothing else", async () => {
   // base. An exact match proves the header, reasoning_options, the authored
   // limit split, the overrides and the modality order all survive the rewrite.
   const glm52 = GLM52.text
-    .replace("tools = { supported = true, updates = false }", "tools = { supported = false }")
+    .replace(/tools = { supported = true(, updates = false)? }/, "tools = { supported = false }")
     .replace("\nstructured_output = true\n", "\nstructured_output = true\ntemperature = false\n");
   expect(glm52).not.toBe(GLM52.text);
   await inRoot({ "glm-5.2.toml": glm52, "kimi-k3.toml": KIMI_K3.text }, async (modelsDir) => {

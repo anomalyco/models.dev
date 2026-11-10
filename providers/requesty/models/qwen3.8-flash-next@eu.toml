@@ -5,18 +5,16 @@ base_model = "alibaba/qwen3.8-flash-next"
 name = "Qwen3.8 Flash Next (EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 output = 262_144
 
 [cost.text.input]
 price = 0.2
-cache = { read = 0.05 }
+cache = { read = 0.05, write = 0.2 }
 
 [cost.text.output]
 price = 0.5
