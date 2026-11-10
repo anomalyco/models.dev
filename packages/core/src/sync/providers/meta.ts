@@ -7,13 +7,15 @@ const DOCS = "https://dev.meta.ai/docs";
 
 // `families` holds each model family's own docs page (e.g. muse-spark.md), which now carries its availability table.
 const MetaResponse = z.object({ models: z.string(), pricing: z.string(), families: z.array(z.string()).default([]) });
+const Price = z.number().finite().nonnegative();
+const TokenCost = z.object({ input: Price, output: Price, cache_read: Price });
 const MetaModel = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9.-]*$/),
   context: z.number().int().positive().safe(),
-  cost: z.object({
-    input: z.number().finite().nonnegative(),
-    output: z.number().finite().nonnegative(),
-    cache_read: z.number().finite().nonnegative(),
+  cost: TokenCost.extend({
+    tiers: z.array(TokenCost.extend({
+      tier: z.object({ type: z.literal("context"), size: z.number().int().positive().safe() }),
+    })).length(1).optional(),
   }),
 });
 
@@ -105,20 +107,26 @@ function familyContext(section: string) {
   return [...windows][0]!;
 }
 
-function familyCost(pricing: string, family: string, mode: Mode) {
-  const matches = sections(pricing, "###").filter((section) => sectionID(section) === family);
-  if (matches.length !== 1) throw new Error(`Meta docs need exactly one pricing section for ${family}`);
-  // Meta has reordered the mode columns before, so match them by name.
-  const columns = Object.values(PRICE_COLUMNS).sort();
-  const found = tables(matches[0]!, ([usage, ...modes]) => usage === "Usage" && same(modes.sort(), columns));
-  if (found.length !== 1) throw new Error(`Meta docs need exactly one ${family} token price table`);
-  const column = found[0]!.header.indexOf(PRICE_COLUMNS[mode]);
+// Muse Ember's table has one column per input-size tier instead of one per mode:
+// `| Usage | Up to 200K input tokens (per 1M tokens) | Over 200K input tokens (per 1M tokens) |`.
+const TIER_COLUMN = /^(Up to|Over) (\d+)K input tokens \(per 1M tokens\)$/;
+
+function tierColumns(header: string[]) {
+  const [usage, short, long, ...rest] = header;
+  const below = short?.match(TIER_COLUMN);
+  const above = long?.match(TIER_COLUMN);
+  if (usage !== "Usage" || rest.length > 0 || below?.[1] !== "Up to" || above?.[1] !== "Over") return undefined;
+  if (below[2] !== above[2]) throw new Error("Meta docs have mismatched long-context price tiers");
+  return Number(below[2]) * 1_000;
+}
+
+function tableCost(table: { header: string[]; rows: string[][] }, column: number, label: string) {
   const prices = new Map<string, number>();
-  for (const row of found[0]!.rows) {
+  for (const row of table.rows) {
     const usage = row[0]!;
     const price = row[column]!;
     if (!/^\$\d+(?:\.\d+)?$/.test(price) || prices.has(usage)) {
-      throw new Error(`Meta docs have invalid or duplicate ${family} ${mode} mode pricing`);
+      throw new Error(`Meta docs have invalid or duplicate ${label} pricing`);
     }
     prices.set(usage, Number(price.slice(1)));
   }
@@ -126,6 +134,28 @@ function familyCost(pricing: string, family: string, mode: Mode) {
     input: prices.get("Input"),
     output: prices.get("Output"),
     cache_read: prices.get("Cached input"),
+  };
+}
+
+function familyCost(pricing: string, family: string, mode: Mode) {
+  const matches = sections(pricing, "###").filter((section) => sectionID(section) === family);
+  if (matches.length !== 1) throw new Error(`Meta docs need exactly one pricing section for ${family}`);
+  // Meta has reordered the mode columns before, so match them by name.
+  const columns = Object.values(PRICE_COLUMNS).sort();
+  const found = tables(
+    matches[0]!,
+    (header) => tierColumns(header) !== undefined || (header[0] === "Usage" && same(header.slice(1).sort(), columns)),
+  );
+  if (found.length !== 1) throw new Error(`Meta docs need exactly one ${family} token price table`);
+  const table = found[0]!;
+  const size = tierColumns(table.header);
+  if (size === undefined) return tableCost(table, table.header.indexOf(PRICE_COLUMNS[mode]), `${family} ${mode} mode`);
+  // A tiered table has no mode columns; Meta documents it for Standard-mode models only.
+  if (mode !== "standard") throw new Error(`Meta docs have tiered pricing for ${family} ${mode} mode`);
+  // Requests over the threshold are billed at the long-context rates in full.
+  return {
+    ...tableCost(table, 1, family),
+    tiers: [{ ...tableCost(table, 2, `${family} long-context`), tier: { type: "context", size } }],
   };
 }
 
@@ -196,7 +226,8 @@ export const meta = {
       : { ...authored.limit, context: model.context };
     return {
       id: model.id,
-      model: { ...authored, limit, cost: { ...authored.cost, ...model.cost } } as SyncedModel,
+      // Tiers are part of the documented price, so flat-priced families clear stale ones.
+      model: { ...authored, limit, cost: { ...authored.cost, ...model.cost, tiers: model.cost.tiers } } as SyncedModel,
     };
   },
 } satisfies SyncProvider<MetaModel>;
