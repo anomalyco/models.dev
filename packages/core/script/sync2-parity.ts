@@ -13,6 +13,7 @@ import { anthropic as oldAnthropic } from "../src/sync/providers/anthropic.js";
 import { deepinfra as oldDeepinfra } from "../src/sync/providers/deepinfra.js";
 import { engy as oldEngy } from "../src/sync/providers/engy.js";
 import { fireworksAi as oldFireworks } from "../src/sync/providers/fireworks-ai.js";
+import { githubCopilot as oldGithubCopilot } from "../src/sync/providers/github-copilot.js";
 import { google as oldGoogle } from "../src/sync/providers/google.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
@@ -31,13 +32,33 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  "github-copilot": {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const rows = raw
+        .filter((row: Raw) => row.model !== "Kimi K3" && !(row.model === "Grok 4.5" && row.tier === "Long context"))
+        .map((row: Raw) => {
+          const next = structuredClone(row);
+          if (row.model === "Claude Opus 5") next.input = "$6.00";
+          if (row.model === "GPT-6 Sol" && row.tier === "Long context") next.threshold = "> 400K";
+          if (row.model === "GPT-5.4 nano") next.cache_write = "$0.25";
+          if (row.model === "Claude Sonnet 5") delete next.cache_write;
+          if (row.model === "Grok 4.7" && row.tier === "Long context") next.cached_input = "$0.75";
+          return next;
+        });
+      rows.push({ ...structuredClone(raw[0]), model: "MAI-Code-1.1-Flash", tier: "Long context", threshold: "> 128K", input: "$0.40" });
+      const plain = raw.find((row: Raw) => row.model === "Kimi K3");
+      rows.push({ ...structuredClone(plain), model: "Kimi K4" });
+      return rows;
+    },
+  },
   engy: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
