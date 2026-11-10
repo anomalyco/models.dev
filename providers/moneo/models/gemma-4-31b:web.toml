@@ -1,4 +1,6 @@
-# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Availability, exact wire ID, host capability/modalities, limit and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Moneo's public catalog explicitly reports has_reasoning=false for this route.
+# The `:web` suffix is part of the exact Moneo wire ID; web search is bundled into token pricing and has no separate fee.
 schema = 2
 base_model = "google/gemma-4-31b-it"
 name = "Gemma 4 31B (Web)"
@@ -8,7 +10,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 
