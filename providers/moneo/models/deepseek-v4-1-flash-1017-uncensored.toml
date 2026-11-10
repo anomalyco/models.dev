@@ -1,0 +1,18 @@
+# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Uncensored"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.33
+
+[cost.text.output]
+price = 1.32
