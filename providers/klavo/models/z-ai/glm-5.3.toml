@@ -1,0 +1,21 @@
+# Pricing: https://ai.klavo.ru/models/glm-5.3 lists 140 / 25 / 440 RUB per 1M input / cached input /
+# output tokens (checked 2026-11-10); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4 decimals.
+# Klavo AI routes each request to one of several providers of the model (see the page); limits are the
+# smallest across them.
+# Effort: reasoning_effort = low|high|max; other levels map to the nearest.
+# Live check 2026-11-10 through https://api.klavo.ru/v1: none keeps reasoning (45 tokens); low 8, high 10, max 67.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 1.696
+cache = { read = 0.3029 }
+
+[cost.text.output]
+price = 5.3302
