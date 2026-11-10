@@ -6,7 +6,9 @@
 # The model page lists Thinking as not supported, so reasoning is off here even though the lab file has it on.
 # Pay-as-you-go runs in us-central1 and the us and eu multi-regions, not global; the WebSocket host is
 # {location}-aiplatform.googleapis.com. No @opencode/ai entry point speaks the Live API, so opencodeai = "none".
-# Prices are the same in every listed location. Video output is Live Avatar output ($1.00 per 1M tokens).
+# Video output (Live Avatar) is Vertex-only: the model page lists Video "Input and output" and the pricing page has an "Output: video (avatar)" row.
+# [modalities] restates input because the schema requires both arrays when the table is present.
+# Prices are the same in every listed location.
 # Context caching, structured output, Chat Completions and Count Tokens are listed as not supported.
 schema = 2
 v2_only = true
@@ -17,7 +19,6 @@ input = ["text", "image/jpeg", "image/png", "video", "audio/pcm"]
 output = ["text", "audio/pcm", "video"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
 cache = false
