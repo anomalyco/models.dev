@@ -43,8 +43,8 @@ export type Observation = Observed<ModelFields> & {
  * - `deprecated`: `status`. The source says "deprecated" or null; null only
  *   clears a "deprecated" status, never another one.
  * - `tables`: a table of tables (`api`). Each source table joins the file's
- *   (its keys win, the file's other keys stay), null removes one, and the
- *   file's other tables stay. Order: the file's first table, the source's, then
+ *   (its values win key by key at any depth, the file's other keys stay),
+ *   null removes one, and the file's other tables stay. Order: the file's first table, the source's, then
  *   the file's others. A file with no `api` gets the provider's default first.
  * - `report`: never written. When the source disagrees with the file, the model
  *   is an update gap and its file is left alone.

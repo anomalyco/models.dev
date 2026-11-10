@@ -11,7 +11,7 @@ import type { Model, Provider } from "../schema.js";
 import { formatModelV2 } from "../model-file-v2.js";
 import { modelV2ToV1, toV1Modality } from "../translate.js";
 import { applyWrites, inherited, Labs, type ModelFile, readProviderFiles, relativeModelPath, REPO_ROOT, resolved } from "./catalog.js";
-import { equal, getPath, isTable, leafPaths, pruneEmpty, setPath, unsetPath, unsetPath as unsetFieldPath } from "./fields.js";
+import { equal, getPath, isTable, leafPaths, mergeDeep, pruneEmpty, setPath, unsetPath, unsetPath as unsetFieldPath } from "./fields.js";
 import { classifyRisk } from "./risk.js";
 import type { Change, Doc, FieldChange, Gap, Observation, Owned, SyncModule, SyncResult } from "./types.js";
 
@@ -403,7 +403,7 @@ function mergeTables(current: unknown, observed: Doc, defaultApi: string | undef
   const [first] = Object.keys(file);
   const joined: Doc = {};
   for (const [key, value] of Object.entries(observed)) {
-    if (value !== null) joined[key] = isTable(value) && isTable(file[key]) ? { ...file[key], ...structuredClone(value) } : structuredClone(value);
+    if (value !== null) joined[key] = isTable(value) && isTable(file[key]) ? mergeDeep(file[key], value) : structuredClone(value);
   }
   // The file's first table stays first, then the source's tables in its order, then the file's others.
   const tables: Doc = {};

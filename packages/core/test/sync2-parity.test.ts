@@ -44,6 +44,12 @@ const EXPECTED: Record<string, string[]> = {
     "providers/chutes/models/acme/Thinker-9B.toml",
     "providers/chutes/models/moonshotai/Kimi-K2.6-TEE.toml",
   ],
+  // Hugging Face: a new file doesn't restate tools = { supported = true } when
+  // the lab already says so; the old sync always wrote it.
+  "huggingface/perturbed": [
+    "providers/huggingface/models/meta-llama/Llama-3.2-11B-Vision-Instruct.toml",
+    "providers/huggingface/models/meta-llama/Llama-3.2-3B-Instruct.toml",
+  ],
   // Cortecs: a new model with no lab file is a gap (the old sync wrote a
   // standalone file), and so is a new or standalone model that starts reasoning
   // with no controls (the old sync wrote reasoning = { supported = true }).

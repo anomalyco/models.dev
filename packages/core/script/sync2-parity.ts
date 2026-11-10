@@ -17,6 +17,7 @@ import { engy as oldEngy } from "../src/sync/providers/engy.js";
 import { fireworksAi as oldFireworks } from "../src/sync/providers/fireworks-ai.js";
 import { githubCopilot as oldGithubCopilot } from "../src/sync/providers/github-copilot.js";
 import { google as oldGoogle } from "../src/sync/providers/google.js";
+import { huggingface as oldHuggingface } from "../src/sync/providers/huggingface.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
@@ -34,13 +35,35 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, huggingface: oldHuggingface, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  huggingface: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "google/gemma-3-27b-it")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          // Existing files keep their curated prices.
+          if (model.id === "meta-llama/Llama-3.3-70B-Instruct") next.providers[0].pricing = { input: 9, output: 9 };
+          if (model.id === "google/gemma-3-4b-it") next.providers = next.providers.map((provider: Raw) => ({ ...provider, status: "offline" }));
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "meta-llama/Llama-3.1-8B-Instruct");
+      const add = (id: string, extra: Raw = {}) => data.push({ ...structuredClone(template), id, ...extra });
+      add("meta-llama/Llama-3.2-3B-Instruct", { providers: template.providers.map((provider: Raw) => ({ ...provider, supports_structured_output: true })) });
+      add("meta-llama/Llama-3.2-11B-Vision-Instruct", { architecture: { input_modalities: ["text", "image"], output_modalities: ["text"] } });
+      add("meta-llama/Llama-3.2-1B-Instruct", { providers: template.providers.map(({ pricing: _pricing, ...provider }: Raw) => provider) });
+      add("Qwen/Qwen3.5-4B");
+      add("acme/Brand-New-9B");
+      return { ...raw, data };
+    },
+  },
   chutes: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
