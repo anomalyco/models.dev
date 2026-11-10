@@ -1,4 +1,6 @@
 # Context and prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
+# Context: this host serves a 524,288-token window, below the lab's 1,048,576. GET https://api.you.com/v1/models reports
+# context_size = max_input_tokens = 524288 for minimax-m3 (checked 2026-11-09), and the models page lists 512K.
 # Reasoning: always on with no caller control on this endpoint. reasoning_effort is accepted
 # but doesn't change reasoning length, and none doesn't disable it (tested live).
 # Controls: reasoning_effort is the only documented reasoning parameter (https://you.com/docs/api-reference/inference-router/create-chat-completion);
