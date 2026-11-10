@@ -350,11 +350,20 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
   }
   for (const path of unset) pruneEmpty(doc, path);
   changes.push(...switchedOff(doc, observation, owns));
+  if (changes.some((change) => change.path.startsWith("capabilities.reasoning."))) orderControls(doc);
   keepSupported(doc, base);
   bothModalities(doc, base);
   orderLimit(doc);
   if (options.omitLabInput) changes.push(...omitLabInput(doc, base));
   return changes;
+}
+
+// Reasoning controls a patch changed are written supported, toggle, effort, budget.
+function orderControls(doc: Doc) {
+  const reasoning = getPath(doc, "capabilities.reasoning");
+  if (!isTable(reasoning)) return;
+  const order = ["supported", "toggle", "effort", "budget"];
+  setPath(doc, "capabilities.reasoning", Object.fromEntries(Object.entries(reasoning).sort(([a], [b]) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99))));
 }
 
 // [limit] keys are written context, input, output, wherever a patch added them.

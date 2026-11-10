@@ -15,6 +15,9 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // Vercel: a new standalone file lists its reasoning capability before tools;
+  // the old sync wrote tools first (base_model files put reasoning first in both).
+  "vercel/perturbed": ["providers/vercel/models/acme/brand-new.toml"],
   // OpenRouter: a new model with no lab file that reasons with no listed controls
   // is a gap; the old sync wrote a standalone file with reasoning = { supported = true }.
   "openrouter/perturbed": ["providers/openrouter/models/acme/brand-new.toml"],

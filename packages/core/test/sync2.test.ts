@@ -565,6 +565,16 @@ test("rebuild writes the observation's body on the file's base_model and kept pa
   expect(Bun.TOML.parse(created.writes.get("providers/host/models/lab/b.toml")!)).toEqual({ schema: 2, v2_only: true, base_model: "lab/a", cost: { text: { input: { price: 3 } } } });
 });
 
+test("reasoning controls a patch changes are written supported, toggle, effort, budget", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(true),
+    "providers/host/models/lab/a.toml": file("lab/a", 1, '\n[capabilities]\nreasoning = { supported = true, effort = ["low", "high"] }\n'),
+  });
+  const owns = ["capabilities.reasoning.toggle", "capabilities.reasoning.effort"];
+  const { writes } = await plan(provider([{ id: "lab/a", capabilities: { reasoning: { toggle: true, effort: ["low"] } } }], { owns }), { root });
+  expect(writes.get("providers/host/models/lab/a.toml")).toContain('reasoning = { supported = true, toggle = true, effort = ["low"] }');
+});
+
 test("headers: replace writes the source's header, a function of the written file", async () => {
   const root = await catalog({
     "models/lab/a.toml": lab(false),

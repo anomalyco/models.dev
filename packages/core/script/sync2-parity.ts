@@ -160,6 +160,43 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
       return { ...raw, data };
     },
   },
+  vercel: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => !["alibaba/qwen-3-235b", "reflection/beam-free"].includes(model.id))
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const pricing = next.pricing;
+          const params = (remove: string[]) => (next.supported_parameters = next.supported_parameters.filter((param: string) => !remove.includes(param)));
+          switch (model.id) {
+            case "alibaba/qwen3.8-max": pricing.input = String(Number(pricing.input) * 2); delete pricing.input_cache_read; next.reasoning_options = [{ type: "effort", values: ["low", "high"] }]; break;
+            case "alibaba/qwen3.7-max": pricing.input_tiers = [{ cost: pricing.input, min: 0, max: 256_000 }, { cost: String(Number(pricing.input) * 2), min: 256_000 }]; break;
+            case "alibaba/qwen3.5-plus": delete pricing.input_tiers; delete pricing.output_tiers; break;
+            case "alibaba/qwen-3-32b": next.reasoning_options = []; next.context_window = 65_536; break;
+            case "alibaba/qwen3-coder": next.tags = next.tags.filter((tag: string) => tag !== "implicit-caching"); params(["tool_choice"]); break;
+            case "alibaba/qwen3-vl-instruct": next.tags = [...next.tags, "file-input"]; next.max_tokens = 4_096; break;
+            case "amazon/nova-2-lite": next.reasoning_options = [{ type: "toggle" }, { type: "effort", values: ["low", "high"] }]; break;
+            case "anthropic/claude-fable-5": next.name = "Claude Fable 5 Renamed"; next.tags = [...next.tags, "implicit-caching"]; break;
+            case "amazon/nova-pro": pricing.input = String(Number(pricing.input) * 2); break;
+          }
+          return next;
+        });
+      const mutate = (type: string, change: (model: Raw) => void) => {
+        const model = data.find((item: Raw) => item.type === type);
+        if (model !== undefined) change(model);
+      };
+      mutate("embedding", (model) => { model.pricing.input = String(Number(model.pricing.input) * 2); });
+      mutate("image", (model) => { model.name = `${model.name} Renamed`; });
+      mutate("video", (model) => { model.context_window = 4_096; });
+      const template = raw.data.find((model: Raw) => model.id === "alibaba/qwen3-coder");
+      data.push({ ...structuredClone(template), id: "alibaba/qwen3-coder-plus", name: "Qwen3 Coder Plus" });
+      data.push({ ...structuredClone(template), id: "acme/brand-new", name: "Brand New" });
+      const free = raw.data.find((model: Raw) => model.id === "nvidia/nemotron-3.5-lightning-free");
+      data.push({ ...structuredClone(free), id: "alibaba/qwen3.8-max-free", name: "Qwen3.8 Max Free", reasoning_options: undefined, tags: ["reasoning", "tool-use"] });
+      return { ...raw, data };
+    },
+  },
   digitalocean: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
