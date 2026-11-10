@@ -22,6 +22,35 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  crossmodel: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "z-ai/glm-5.1")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const tier = next.pricing?.tiers?.[0];
+          switch (model.id) {
+            case "openai/gpt-6.1-sol": next.pricing.tiers[1].input_micro_per_1m *= 2; break;
+            case "x-ai/grok-4.7": next.pricing.tiers = next.pricing.tiers.slice(0, 1); break;
+            case "z-ai/glm-5.3": next.pricing.tiers.push({ ...structuredClone(tier), threshold: 128_000, input_micro_per_1m: tier.input_micro_per_1m * 2 }); break;
+            case "deepseek/deepseek-v4.1-flash": tier.cache_read_micro_per_1m = tier.input_micro_per_1m; break;
+            case "moonshot/kimi-k3": next.capabilities.reasoning.effort = ["high", "low"]; break;
+            case "moonshot/kimi-k2.6": next.capabilities.reasoning = { supported: true }; break;
+            case "qwen/qwen3.7-max": delete next.capabilities.reasoning; break;
+            case "gemini/gemini-3.8-flash": next.modalities.input = ["text"]; next.max_output_tokens = 8_192; break;
+            case "anthropic/claude-opus-5": next.identity.release_stage = "deprecated"; break;
+            case "tencent/hy3": next.capabilities.context = { caching: true }; next.capabilities.json = false; break;
+            case "qwen/qwen3.8-flash": next.status = "hidden"; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "z-ai/glm-5.3");
+      data.push({ ...structuredClone(template), id: "z-ai/glm-5.2-turbo" });
+      data.push({ ...structuredClone(template), id: "z-ai/glm-4.6" });
+      return { ...raw, data };
+    },
+  },
   inceptron: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

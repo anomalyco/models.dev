@@ -15,6 +15,11 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // CrossModel: a new model's lab ID is matched ignoring case and written as filed
+  // (MiniMax-M3.1-Flash). The old sync wrote the vendor's spelling, which only
+  // resolves on a case-insensitive filesystem, and skipped the model on Linux.
+  "crossmodel/recorded": ["providers/crossmodel/models/minimax/minimax-m3.1-flash.toml"],
+  "crossmodel/perturbed": ["providers/crossmodel/models/minimax/minimax-m3.1-flash.toml"],
   // Prime: a new file's kinds take the lab's formats (the old sync wrote bare kinds).
   "prime/perturbed": ["providers/prime/models/anthropic/claude-mythos-5.1.toml"],
   // OVHcloud: a model that starts reasoning with no controls is a gap.
