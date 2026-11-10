@@ -5,6 +5,12 @@ schema = 2
 v2_only = true
 base_model = "openai/gpt-transcribe"
 
+[api.transcriptions]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[api.realtime]
+sdk = { aisdk = "none", opencodeai = "none" }
+
 [cost.audio.input]
 unit = "minute"
 price = 0.0045

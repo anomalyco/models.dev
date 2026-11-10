@@ -1,32 +1,37 @@
-name = "Llama 3.3 70B Instruct"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 # POST .../endpoints/openapi/chat/completions with model, messages, max_tokens,
 # stream, and extra_body.google.model_safety_settings; no reasoning control documented.
 # https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/llama/use-llama (accessed 2026-06-25)
+# Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+schema = 2
+name = "Llama 3.3 70B Instruct"
+description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 family = "llama"
-release_date = "2025-04-29"
-last_updated = "2025-04-29"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2023-12"
 open_weights = true
+knowledge = "2023-12"
+release_date = "2025-04-29"
 status = "deprecated"
-
-[cost]
-input = 0.72
-output = 0.72
-
-[limit]
-context = 128_000
-output = 8_192
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
-[provider]
-npm = "@ai-sdk/openai-compatible"
-api = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 128_000
+output = 8_192
+
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/google-vertex/chat" }
+
+[cost.text.input]
+price = 0.72
+
+[cost.text.output]
+price = 0.72

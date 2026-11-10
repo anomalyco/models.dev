@@ -9,6 +9,7 @@
 # Meta has not published a knowledge cutoff.
 # Sampling (temperature, top_p; no top_k): https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/protocols/messages
 # Image MIME types: https://dev.meta.ai/docs/image-understanding
+# Video and audio MIME types: https://dev.meta.ai/docs/video-understanding#supported-formats (video/mp4, audio/mpeg, audio/wav)
 schema = 2
 name = "Muse Wonder"
 description = "Muse Wonder is a frontier multimodal reasoning model from Meta for personal and professional agents, long-horizon coding, and computer use. It combines Active Memory, which carries relevant context across conversations, with Active Focus, which keeps it working through blockers toward a goal."
@@ -17,7 +18,7 @@ open_weights = false
 release_date = "2026-10-12"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video", "application/pdf", "audio"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "application/pdf", "audio/mpeg", "audio/wav"]
 output = ["text"]
 
 [capabilities]

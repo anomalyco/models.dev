@@ -3,13 +3,17 @@
 # https://api.commandcode.ai/provider/v1/models
 # Reasoning baseline: providers/meta/models/muse-spark-1.3-contributor.toml
 # Live /chat/completions (2026-10-14): reasoning_effort = minimal -> HTTP 400 invalid option.
+schema = 2
 base_model = "meta/muse-spark-1.3"
-structured_output = true
 name = "Muse Spark 1.3 (Contributor)"
 
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
 
-[cost]
-input = 0.1
-output = 0.2
-cache_read = 0.002
+[cost.text.input]
+price = 0.1
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.2

@@ -1,0 +1,26 @@
+# Released 2026-07-23: https://microsoft.ai/news/introducing-mai-image-2-5-pro-and-mai-voice-2-flash/
+# Output formats: mp3 and pcm, as documented for OpenRouter's speech API (the lab lists none here):
+#   https://openrouter.ai/docs/guides/overview/multimodal/tts
+schema = 2
+v2_only = true
+type = "speech"
+name = "MAI-Voice-2-Flash"
+description = "Low-latency MAI-Voice-2 text-to-speech model for voice agents"
+family = "mai"
+open_weights = false
+release_date = "2026-07-23"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

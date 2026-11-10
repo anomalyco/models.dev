@@ -1,9 +1,23 @@
+# Prices and context tiers: https://api.orcarouter.ai/v1/models (accessed 2026-10-21).
+schema = 2
 base_model = "openai/gpt-5.6-terra"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
-cache_write = 2.5
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 18

@@ -1,15 +1,27 @@
+# No toggle: Cortecs documents a thinking on/off switch only for Anthropic and Entrim, not for this model's routes (nebius).
+# https://docs.cortecs.ai/routing/reasoning
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: not supported by the routed providers (nebius). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
 base_model = "zhipuai/glm-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.384
-output = 4.348
-cache_read = 0.346
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+cache = false
+structured_output = true
 
 [limit]
 context = 202_752
 output = 202_752
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.384
+cache = { read = 0.346 }
+
+[cost.text.output]
+price = 4.348

@@ -1,25 +1,40 @@
-# Baseten's Fast variants use the same weights as their base models; the
-# DeepSeek V4.1 Flash API exposes reasoning_effort = none | low | high | max
-# and returns reasoning in reasoning_content.
+# Baseten's Fast variants use the same weights as their base models. Baseten
+# accepts reasoning_effort = none | low | high (default) | max for DeepSeek V4.1
+# Flash Fast, but runs low at the default depth, so the distinct levels are
+# none | high | max. Reasoning is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/overview
 # https://www.baseten.co/library/deepseek-v41-flash/
 # https://docs.baseten.co/inference/model-apis/reasoning
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is kept in place (cached prefix survives, instruction followed) [cached/prompt tokens, control -> test: 15428/15445 -> 15438/15460; 15748/15765 -> 15758/15780]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 15390/15402 -> 0/15428 (reasoning tokens None -> None); 15390/15402 -> 0/15428 (reasoning tokens None -> None)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 15670/15688 -> 0/15739; 15670/15688 -> 0/15739]
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash Fast"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 temperature = false
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 0.6
-output = 2.4
+cache = { implicit = true }
+system_updates = true
 
 [limit]
 context = 1_048_576
 output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.014 }
+
+[cost.text.output]
+price = 2.4

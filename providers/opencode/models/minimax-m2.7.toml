@@ -1,31 +1,21 @@
-name = "MiniMax-M2.7"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/minimax/models/MiniMax-M2.7.toml (Zen passes requests through).
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
 knowledge = "2025-01"
-open_weights = true
+description = "MiniMax model for chat, coding, office work, and agentic tasks"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 204_800
-output = 131_072
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 1.2

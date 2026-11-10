@@ -1,24 +1,26 @@
 # https://huggingface.co/deepseek-ai/DeepSeek-R1-0528
+schema = 2
 name = "DeepSeek R1 0528"
 description = "May 2025 DeepSeek R1 update with improved mathematics, coding, and reasoning"
 family = "deepseek-thinking"
-release_date = "2025-05-28"
-last_updated = "2025-05-28"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
 open_weights = true
+release_date = "2025-05-28"
 license = "MIT"
-
-[limit]
-context = 163_840
-output = 32_768
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 163_840
+output = 32_768
 
 [[weights]]
 label = "Hugging Face"

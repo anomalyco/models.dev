@@ -7,6 +7,9 @@ v2_only = true
 base_model = "openai/gpt-4o-mini-tts"
 status = "deprecated"
 
+[api.speech]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-speech" }
+
 [cost.text.input]
 price = 0.6
 

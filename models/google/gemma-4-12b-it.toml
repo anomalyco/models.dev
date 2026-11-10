@@ -1,22 +1,27 @@
+# Input MIME types: Google serves this model on neither the Gemini API nor Vertex MaaS. The Gemma docs name JPEG and PNG
+# for images (https://ai.google.dev/gemma/docs/capabilities/vision) and MP3 and WAV for audio
+# (https://ai.google.dev/gemma/docs/capabilities/audio); other formats depend on the inference framework.
+schema = 2
 name = "Gemma 4 12B IT"
 description = "Compact Gemma 4 instruction model for open, self-hosted chat and reasoning"
 family = "gemma"
-release_date = "2026-06-09"
-last_updated = "2026-06-09"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-06-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 262_144
 output = 32_768
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

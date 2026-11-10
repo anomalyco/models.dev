@@ -1,18 +1,30 @@
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-07-07 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+# Modalities: image and video formats from the Model Studio vision guide, Image limits and Video limits (https://www.alibabacloud.com/help/en/model-studio/vision).
+schema = 2
 name = "Qwen3-Vl 30b A3b Thinking"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2026-02-09"
-last_updated = "2026-02-09"
-attachment = true
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
 open_weights = false
+release_date = "2026-02-09"
+status = "deprecated"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 128_000
 output = 32_000
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.10869565
+
+[cost.text.output]
+price = 1.08695652

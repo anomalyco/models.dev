@@ -1,0 +1,25 @@
+# Model IDs and release (2026-01-21, "Inworld TTS 1.5"): https://docs.inworld.ai/release-notes/tts
+# Output formats (audioConfig.audioEncoding LINEAR16/WAV, MP3, OGG_OPUS, ALAW, MULAW, FLAC, PCM) and
+# temperature: https://docs.inworld.ai/api-reference/ttsAPI/texttospeech/synthesize-speech
+schema = 2
+v2_only = true
+type = "speech"
+name = "TTS-1.5 Max"
+description = "Realtime text-to-speech model with expressive, stable delivery and voice cloning across 15 languages"
+open_weights = false
+release_date = "2026-01-21"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav", "audio/mpeg", "audio/ogg", "audio/alaw", "audio/basic", "audio/flac", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

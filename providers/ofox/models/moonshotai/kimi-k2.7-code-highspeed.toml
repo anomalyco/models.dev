@@ -2,10 +2,21 @@
 # - https://ofox.ai/en/models/moonshotai/kimi-k2.7-code-highspeed (accessed 2026-08-06)
 # - https://platform.moonshot.ai/docs (lab highspeed: always-on reasoning, no caller control)
 # Pricing: input $1.9/MTok, output $8/MTok, cache_read $0.38/MTok (USD)
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/kimi).
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
-reasoning_options = []
 
-[cost]
-input = 1.9
-output = 8
-cache_read = 0.38
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.9
+cache = { read = 0.38 }
+
+[cost.text.output]
+price = 8

@@ -1,26 +1,16 @@
-name = "Gemini 3.1 Flash Lite Preview"
-description = "Low-latency Gemini model for high-volume multimodal and agent workloads"
-family = "gemini-flash"
-release_date = "2026-03-01"
-last_updated = "2026-03-01"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+# Linked to models/google/gemini-3.1-flash-lite-preview.toml (same model).
+# Status: absent from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+schema = 2
+base_model = "google/gemini-3.1-flash-lite-preview"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-open_weights = false
 
-[cost]
-input = 0.25
-output = 1.50
-cache_read = 0.025
-cache_write = 1.00
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025, write = 1 }
 
-[limit]
-context = 1_048_576
-output = 65_536
-
-[modalities]
-input = ["text", "image", "audio", "video", "pdf"]
-output = ["text"]
+[cost.text.output]
+price = 1.5

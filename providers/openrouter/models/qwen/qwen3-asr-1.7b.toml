@@ -1,0 +1,15 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=transcription
+# Input: wav, mp3, flac, m4a, ogg, webm, aac ("varies by provider"). Priced per second of input
+# audio, or per token when pricing.completion is set.
+# https://openrouter.ai/docs/guides/overview/multimodal/stt
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-asr-1.7b"
+
+[api.transcriptions]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "second"
+price = 0.0000075

@@ -1,0 +1,20 @@
+# Hosted GPT-Live: POST https://opencode.ai/inference/openai/v1/live/sessions takes OpenAI's GPT-Live session request
+# with a Console credential and x-opencode-org-id, for OpenCode workspaces with access. WebRTC only: WebSocket transport
+# is refused, and no SDK has been verified against it.
+# Pricing: OpenAI's session-time price, billed per second without a markup, with OpenAI's 15-second WebRTC minimum.
+# Delegated Responses turns bill separately, at the backend model's price. https://developers.openai.com/api/docs/pricing
+# family: "gpt-live" (not the lab's "gpt"): the OpenCode app shows only the newest model per family by default, so a
+# voice model in "gpt" would hide OpenCode's newest GPT chat model.
+# v2_only, like other realtime models: it shouldn't appear in v1 model lists.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-live-1"
+family = "gpt-live"
+
+[api.live]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.05

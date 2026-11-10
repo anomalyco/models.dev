@@ -4,15 +4,18 @@
 # Reasoning controls follow the native/established-peer thinking-only baseline.
 # Baseline: providers/minimax/models/MiniMax-M2.7.toml and
 # providers/alibaba-token-plan/models/MiniMax-M2.7.toml
-
+schema = 2
 base_model = "minimax/MiniMax-M2.7"
 
-reasoning_options = []
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
-context = 200000
+context = 200_000
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.06
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

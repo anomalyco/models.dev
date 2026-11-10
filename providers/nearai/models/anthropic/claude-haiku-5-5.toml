@@ -5,22 +5,29 @@
 # Third-party passthrough: https://docs.near.ai/cloud/reasoning-models (third-party models use provider-native reasoning controls)
 # Toggle: thinking.type = adaptive|disabled (disabled only at low, medium, or high effort)
 # Effort: output_config.effort = low|medium|high|xhigh|max
+schema = 2
 base_model = "anthropic/claude-haiku-5-5"
-structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
-
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
-
-[[cost.tiers]]
-tier = { type = "context", size = 100_000 }
-input = 0.5
-output = 2.5
-cache_read = 0.05
-cache_write = 0.625
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

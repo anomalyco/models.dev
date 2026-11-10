@@ -1,0 +1,16 @@
+# see: https://www.scaleway.com/en/docs/generative-apis/reference-content/supported-models/#lightonocr-3-08b
+# last update: 2026-10-14
+# Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-14)
+# Billed in EUR: €2.20 input / €0.00 output per 1M tokens.
+# Converted at 1 EUR = 1.12 USD on 2026-10-14 (models.dev publishes USD).
+schema = 2
+base_model = "lightonai/lightonocr-3-0.8b"
+
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 2.464
+
+[cost.text.output]
+price = 0

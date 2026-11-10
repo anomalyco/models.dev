@@ -1,0 +1,31 @@
+# Model card: https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507 (created 2025-07-25, Apache 2.0).
+# Thinking mode only; 262,144-token native context.
+# Output 81,920: the model card's Best Practices suggest "setting the max output length to 81,920 tokens" for highly
+# complex problems (32,768 for most queries); 81,920 is the largest output the lab documents. https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507#best-practices
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+schema = 2
+name = "Qwen3 235B-A22B Thinking 2507"
+description = "Updated large open Qwen3 MoE thinking model for reasoning, math, coding, and tool use"
+family = "qwen"
+open_weights = true
+release_date = "2025-07-25"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 81_920
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507"

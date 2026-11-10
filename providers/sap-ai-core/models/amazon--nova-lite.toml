@@ -1,32 +1,26 @@
 # Deployed as version "2" (latest) on SAP AI Core; version "1" (context = 300_000, no reasoning) is also available and can be selected at deployment time.
 # Reasoning support: https://help.sap.com/docs/sap-ai-core/generative-ai/reasoning?locale=en-US (accessed 2026-07-14)
 # Nova 2 Lite: reasoning_effort = "low"|"medium"|"high" via additionalModelRequestFields.output_config.effort; toggle via additionalModelRequestFields.thinking.type = "enabled"|"disabled".
+# Cost: Amazon Bedrock list price, global cross-Region rate (https://aws.amazon.com/bedrock/pricing/, as in providers/amazon-bedrock/global.amazon.nova-2-lite-v1:0), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+# Input: text, image and video; the SAP AI Core calculator lists no document (PDF) input for this model.
+schema = 2
+base_model = "amazon/nova-2-lite"
 name = "amazon--nova-lite"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "nova-lite"
-release_date = "2025-12-02"
-last_updated = "2025-12-02"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-open_weights = false
-
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.30
-output = 2.37
-
-[limit]
-context = 1_000_000
-output = 64_000
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "video/mp4", "video/quicktime", "video/x-matroska", "video/webm", "video/x-flv", "video/mpeg", "video/x-ms-wmv", "video/3gpp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 2.5

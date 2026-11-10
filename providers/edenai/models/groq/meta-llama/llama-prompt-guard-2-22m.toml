@@ -1,0 +1,13 @@
+schema = 2
+base_model = "meta/llama-prompt-guard-2-22m"
+name = "Llama Prompt Guard 2 22M (Groq)"
+
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.03

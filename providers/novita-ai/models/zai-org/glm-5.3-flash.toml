@@ -1,18 +1,38 @@
 # https://novita.ai/models/model-detail/zai-org-glm-5.3-flash
 # Effort: reasoning_effort = low|high|max; thinking.type=disabled does not suppress reasoning on this route.
+# Modalities: Novita lists ["text","image","video"]; exact types are the lab's (zhipuai/glm-5.3-flash).
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.03
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
 
 [limit]
 context = 1_048_576
 
-[modalities]
-input = ["text", "image", "video"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

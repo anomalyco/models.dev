@@ -5,20 +5,38 @@
 # Effort: reasoning_effort = low|high|max; defaults to max.
 # https://modal.com/library/zai/glm-5-3-flash
 # https://huggingface.co/zai-org/GLM-5.3-Flash
+# Modal Shared Endpoints (https://modal.com/docs/guide/endpoints, accessed 2026-10-21): text models are served on the
+#   OpenAI Chat Completions and Responses APIs and the Anthropic Messages API, billed per token. Serving engines cache
+#   the KV state of a prompt prefix automatically; the Modal-Routing-Affinity-Key header keeps a conversation on one
+#   container so the cached prefix is reused, and cached prompt tokens have their own price.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+# Library page (accessed 2026-10-21): prompt $0.45, cached prompt $0.09, completion $1.50 per MTok; modalities
+#   "Text, image & video", so input is the lab's image and video types (no PDF).
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.45
-output = 1.5
-cache_read = 0.09
-
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.09 }
+
+[cost.text.output]
+price = 1.5

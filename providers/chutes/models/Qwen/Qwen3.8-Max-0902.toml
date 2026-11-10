@@ -1,0 +1,20 @@
+schema = 2
+name = "Qwen3.8 Max 0902"
+description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
+family = "qwen3.8-max"
+open_weights = true
+release_date = "2026-10-20"
+last_updated = "2026-10-25"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 0
+output = 0

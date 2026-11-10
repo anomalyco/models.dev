@@ -1,16 +1,21 @@
-# Pricing: https://bothub.ru/models (accessed 2026-09-10) — includes the
-# site's current -20% promo (list 184.04/578.41 RUB per 1M tokens).
-# RUB converted to USD at the CBR rate 85.4594 RUB/USD (2026-09-10).
+# Pricing: https://bothub.ru/models lists 118,06 / 371,05 RUB per 1M input / output tokens
+# (checked 2026-10-21; the page shows a -24% badge and this is the displayed price).
+# RUB converted to USD at the CBR rate 82.8879 RUB/USD (2026-10-21), rounded to 4 decimals.
+# The per-model page (https://bothub.ru/<id>) shows prices about 6% higher.
 # Controls mirrored from the lab entry: GLM-5.3 always reasons; effort
 # low|high|max with default max, no toggle.
+schema = 2
 base_model = "zhipuai/glm-5.3"
 
-interleaved = true
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[api.chat-completions]
+legacy_interleaved = true
 
-[cost]
-input = 1.72
-output = 5.41
+[cost.text.input]
+price = 1.4243
+
+[cost.text.output]
+price = 4.4765

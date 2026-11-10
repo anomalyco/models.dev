@@ -1,0 +1,29 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=video. Prices are the pricing_skus of
+# https://openrouter.ai/api/v1/videos/models: per second of output (cents_per_* / 100, duration_seconds_* in USD)
+# or per video token (video_tokens_*). SKU qualifiers are overrides on the plain or first SKU: resolution,
+# generate_audio (true by default for models with audio), mode (text-to-video, image-to-video, reference-to-video)
+# and input_video. No [cost] when a SKU has no CostV2 form (minimum charge per generation, per megapixel-second).
+# https://openrouter.ai/docs/guides/overview/multimodal/video-generation
+schema = 2
+v2_only = true
+base_model = "xai/grok-imagine-video-1.5"
+
+[api.videos]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
+
+[cost.image.input]
+unit = "image"
+price = 0.01
+
+[cost.video.output]
+unit = "second"
+price = 0.08
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" } }
+price = 0.14
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.25

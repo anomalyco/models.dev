@@ -1,24 +1,26 @@
+schema = 2
 name = "EVA-Qwen2.5-32B-v0.2"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-release_date = "2025-07-26"
-last_updated = "2025-07-26"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
+description = "A RP/storywriting specialist model, full-parameter finetune of Qwen2.5-32B on mixture of synthetic and natural data. It uses Celeste 70B 0.1 data mixture, greatly expanding it to improve versatility, creativity and flavor of the resulting model."
+family = "v0"
 open_weights = true
+release_date = "2025-07-26"
 
-[cost]
-input = 0.799
-output = 0.799
-cache_read = 0.3995
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 16_384
 input = 16_384
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.799
+
+[cost.text.output]
+price = 0.799

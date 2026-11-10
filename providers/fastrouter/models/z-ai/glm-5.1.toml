@@ -1,6 +1,16 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Reasoning: the catalog lists `reasoning` in supported_parameters; the control set is unchanged from v1 (not re-tested, no API key).
+# Toggle: thinking.type = enabled|disabled (lab wire field, as in providers/zhipuai; FastRouter documents no mapping)
+schema = 2
 base_model = "zhipuai/glm-5.1"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 1.05
-output = 3.50
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.05
+cache = { read = 0.205 }
+
+[cost.text.output]
+price = 3.5

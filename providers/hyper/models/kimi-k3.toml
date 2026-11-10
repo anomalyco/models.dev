@@ -1,18 +1,23 @@
+# Mid-conversation: Hyper serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://hyper.charm.land/v1/models
+# Input MIME types: the lab's image list; Hyper's catalog reports vision without formats (https://hyper.charm.land/v1/models).
+schema = 2
 base_model = "moonshotai/kimi-k3"
-release_date = "2026-07-27"
-last_updated = "2026-07-30"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
 
-[cost]
-input = 3.2664
-output = 16.332
-cache_read = 0.32664
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 output = 16_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 3.2664
+cache = { read = 0.32664 }
+
+[cost.text.output]
+price = 16.332

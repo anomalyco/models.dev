@@ -1,17 +1,37 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). No per-turn effort or tool-change mechanism reaches this model on this API.
+# Tool changes (live 2026-10-23): Kimi dynamic tools (providerOptions.moonshotai.tools on an empty system message) keep the cache only when pinned to the moonshotai route; the default route (baseten/fireworks) silently drops the tool and /v1/chat/completions rejects the message, so tools.updates stays false.
+# Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
+schema = 2
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true, explicit = true }
 
 [limit]
 context = 1_000_000
 
-[modalities]
-input = ["text", "image", "pdf"]
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

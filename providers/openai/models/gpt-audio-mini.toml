@@ -11,7 +11,9 @@ status = "deprecated"
 [capabilities]
 structured_output = false
 system_updates = true
-effort_updates = false
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 0.6

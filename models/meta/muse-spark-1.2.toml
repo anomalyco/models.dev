@@ -7,6 +7,7 @@
 # https://dev.meta.ai/docs/getting-started/models
 # Sampling (temperature, top_p; no top_k): https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/protocols/messages
 # Image MIME types: https://dev.meta.ai/docs/image-understanding
+# Video and audio MIME types: https://dev.meta.ai/docs/video-understanding#supported-formats (video/mp4, audio/mpeg, audio/wav)
 schema = 2
 name = "Muse Spark 1.2"
 description = "Muse Spark 1.2 is a coding-focused update to Muse Spark 1.1 with improvements in code generation, complex debugging, codebase understanding, and end-to-end developer workflows."
@@ -15,7 +16,7 @@ open_weights = false
 release_date = "2026-08-05"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video", "application/pdf", "audio"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "application/pdf", "audio/mpeg", "audio/wav"]
 output = ["text"]
 
 [capabilities]

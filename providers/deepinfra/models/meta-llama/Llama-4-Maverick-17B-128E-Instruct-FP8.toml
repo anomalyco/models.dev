@@ -1,23 +1,28 @@
+# Lab identity: https://deepinfra.com/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8 (Hugging Face repo meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8)
+schema = 2
+base_model = "meta/llama-4-maverick-17b-instruct"
 name = "Llama 4 Maverick 17B FP8"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
-family = "llama"
-release_date = "2025-04-05"
-last_updated = "2025-04-05"
-attachment = true
-reasoning = false
-tool_call = false
-structured_output = true
-open_weights = true
 status = "deprecated"
 
-[cost]
-input = 0.2
-output = 0.8
+[capabilities]
+tools = { supported = false }
+structured_output = true
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_048_576
-output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.8
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

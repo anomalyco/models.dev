@@ -1,31 +1,29 @@
-name = "GLM-5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
+# Docs: listed under Deprecated models (May 14, 2026); plain requests still succeed (live 200, 2026-10-21), but the ID is now served by GLM-5.3 (disabling thinking returns 400 naming GLM-5.3) (https://opencode.ai/v2/docs/console/models/#deprecated-models, accessed 2026-10-21).
+# status left unset: GET https://opencode.ai/inference/v1/models still lists this ID (2026-10-21), and OpenCode hides deprecated models, so marking it would drop a model Zen still serves.
+# Toggle: thinking.type = enabled|disabled (deprecated; not re-verified on Zen)
+# The deprecated glm-5 ID now answers as GLM-5.3, which rejects thinking.type = disabled (live 400 "GLM-5.3 is a thinking-only model").
+# Cache (live): implicit (cached tokens reported without cache markers).
+# knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/zhipuai/models/glm-5.toml (Zen passes requests through).
+# Tools follow Z.ai's API: https://docs.z.ai/api-reference/llm/chat-completion (tool_choice: only auto); Zen passes requests through.
+schema = 2
+base_model = "zhipuai/glm-5"
 knowledge = "2025-04"
-open_weights = true
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+system_updates = true
 
-[cost]
-input = 1.0
-output = 3.2
-cache_read = 0.2
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 204800
-output = 131072
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 3.2

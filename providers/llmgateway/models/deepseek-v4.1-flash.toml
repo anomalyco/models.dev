@@ -1,13 +1,24 @@
+# Toggle: $.reasoning_effort = "none" disables thinking; on the DeepSeek mapping the gateway sends thinking.type = "disabled"
+#   (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts L5190-5205, case "deepseek").
+# Effort: low|high|max, DeepSeek's native levels (providers/deepseek, https://api-docs.deepseek.com/guides/thinking_mode).
+#   The gateway forwards reasoning_effort as-is and does not map other tiers ("Effort tiers are forwarded to the provider
+#   as-is", prepare-request-body.ts L1740-1745; packages/models/src/models.ts L625-635), so /v1/models' union of
+#   per-mapping reasoning_efforts is not a set every route accepts.
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.135
-output = 0.54
-cache_read = 0.0027
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_050_000
+
+[cost.text.input]
+price = 0.135
+cache = { read = 0.0027 }
+
+[cost.text.output]
+price = 0.54

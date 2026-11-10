@@ -4,6 +4,7 @@
 # - https://docs.x.ai/docs/guides/image-generation
 # Facts moved here verbatim from providers/xai/models/grok-imagine-image.toml, which carried
 # them inline; that file is now override-only, as AGENTS.md requires.
+# Image MIME types: https://docs.x.ai/developers/rest-api-reference/inference/images (inputs JPEG, PNG or WebP; outputs image/jpeg unless the requested quality produces PNG)
 schema = 2
 type = "image"
 name = "Grok Imagine Image"
@@ -13,8 +14,8 @@ open_weights = false
 release_date = "2026-01-28"
 
 [modalities]
-input = ["text", "image"]
-output = ["image"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["image/jpeg", "image/png"]
 
 [capabilities]
 tools = { supported = false }

@@ -1,0 +1,17 @@
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
+name = "Qwen 3 235b A22B 2507 Thinking"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 131_072
+input = 131_072
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.5

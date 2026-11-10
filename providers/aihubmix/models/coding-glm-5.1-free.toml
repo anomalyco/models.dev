@@ -1,27 +1,19 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Toggle: see provider.toml (Chat `reasoning_effort = none`, Messages `thinking.type = disabled`).
+schema = 2
+base_model = "zhipuai/glm-5.1"
 name = "Coding GLM 5.1 (free)"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm-free"
-release_date = "2026-04-11"
-last_updated = "2026-04-11"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0
-output = 0
+[cost.text.input]
+price = 0
 
-[limit]
-context = 200_000
-output = 128_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0

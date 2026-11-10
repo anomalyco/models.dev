@@ -1,25 +1,29 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 12, output 24, cache read 1.0
+# Effort: reasoning_effort = "high"|"max" (default high; low|medium map to high, xhigh to max). The China
+# schema lists the field for "Pro/deepseek-ai/DeepSeek-V4", deepseek-ai/DeepSeek-V4-Flash and Pro/zai-org/GLM-5.2;
+# DeepSeek-V4-Pro is the only V4 Pro model in the catalog.
+# https://docs.siliconflow.cn/cn/api-reference/chat-completions/chat-completions (accessed 2026-10-21)
+# thinking_budget is not listed: the China reasoning guide says only the Qwen3 series enforces it and other
+# models may keep thinking past it (https://docs.siliconflow.cn/docs/userguide/capabilities/reasoning).
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
 name = "deepseek-ai/DeepSeek-V4-Pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
-family = "deepseek-thinking"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = true
 
-[cost]
-input = 1.74
-output = 3.48
-cache_read = 0.145
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = false
 
 [limit]
 context = 1_049_000
 output = 393_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.79336973
+cache = { read = 0.14944748 }
+
+[cost.text.output]
+price = 3.58673947

@@ -1,25 +1,26 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2025-02-28).
+# Toggle: thinking.type = enabled|disabled. Budget: thinking.budget_tokens >= 1024 (and below max_tokens; no fixed max).
+# Helicone translates reasoning_effort / reasoning_options.budget_tokens to these for Anthropic routes.
+# https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking
+# Cache writes: 5m and 1h prices from the Helicone registry's Anthropic endpoint (cacheMultipliers write5m, write1h).
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
 name = "Anthropic: Claude 4.5 Haiku"
-description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-family = "claude-haiku"
-release_date = "2025-10-01"
-last_updated = "2025-10-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 knowledge = "2025-10"
-open_weights = false
-
-[cost]
-input = 1
-output = 5
-cache_read = 0.09999999999999999
-cache_write = 1.25
-
-[limit]
-context = 200000
-output = 8192
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
+
+[limit]
+output = 8_192
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }
+
+[cost.text.output]
+price = 5

@@ -1,0 +1,26 @@
+# Released 2026-08-14 (model card release date): https://microsoft.ai/pdf/MAI-Image-2.6-Model-Card.pdf
+#   Edits take JPEG or PNG references; output is always PNG; prompt up to 32,000 tokens:
+#   https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-mai-image
+schema = 2
+v2_only = true
+type = "image"
+name = "MAI-Image-2.6"
+description = "Image generation and multi-reference editing model with web grounding"
+family = "mai"
+open_weights = false
+release_date = "2026-08-14"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_000
+output = 0

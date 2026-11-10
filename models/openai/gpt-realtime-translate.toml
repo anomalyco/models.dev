@@ -1,6 +1,7 @@
 # Sources:
 # https://developers.openai.com/api/docs/models/gpt-realtime-translate
 # https://developers.openai.com/api/docs/changelog
+# Audio MIME types: https://developers.openai.com/api/reference/resources/realtime (translation sessions take and return 24 kHz PCM16 audio)
 schema = 2
 v2_only = true
 type = "realtime"
@@ -12,8 +13,8 @@ knowledge = "2024-09-30"
 release_date = "2026-05-07"
 
 [modalities]
-input = ["audio"]
-output = ["text", "audio"]
+input = ["audio/pcm"]
+output = ["text", "audio/pcm"]
 
 [capabilities]
 tools = { supported = false }

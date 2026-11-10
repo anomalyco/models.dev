@@ -1,18 +1,41 @@
+# Sources (accessed 2026-10-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 262_144, type text2text)
+# - https://tokenfactory.nebius.com/model-catalog.md (cached input is priced only through the optional
+#   input_cached_price_per_million_tokens field, which this model doesn't have)
+# Modalities: text-only, following the catalog type text2text (its use_cases also list image; not probed,
+#   no key).
+# Reasoning: no host control verified, so reasoning_options stays empty. Reasoning text is returned on
+#   message.reasoning_content.
+# Cost: $0.95 in / $4 out. No discounted prompt-cache tier is published, so cache_read = input (same
+#   rationale as Kimi-K3 / GLM-5.3 on this host).
+# Limits: output 8_000 is carried over from the original entry; models_info publishes only max_model_len.
+# Responses: POST https://api.tokenfactory.nebius.com/v1/responses (https://docs.tokenfactory.nebius.com/api-reference/inference/create-a-response); the public catalog
+#   https://tokenfactory.nebius.com/api/public/models_info lists "responses_api" in this model's use_cases (accessed 2026-10-22).
+# Cache read (2026-10-22): https://tokenfactory.nebius.com/api/public/models_info now lists input_cached_price_per_million_tokens = 0.15
+#   for this model, which replaces the earlier cache_read = input rule described above.
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-attachment = false
-reasoning_options = []
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.95
-output = 4
-
-[limit]
-context = 262_144
-output = 8_000
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+output = 8_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4

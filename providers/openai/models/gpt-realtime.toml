@@ -10,6 +10,9 @@ status = "deprecated"
 [capabilities]
 structured_output = false
 
+[api.realtime]
+sdk = { opencodeai = "none" }
+
 [cost.text.input]
 price = 4
 cache = { read = 0.4 }

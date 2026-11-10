@@ -1,22 +1,36 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
 name = "Summarize"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2026-10-13"
-last_updated = "2026-10-13"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2026-10-13"
 
-[cost]
-input = 0.04
-output = 0
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
 
 [limit]
 context = 1_000_000
 output = 4_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0

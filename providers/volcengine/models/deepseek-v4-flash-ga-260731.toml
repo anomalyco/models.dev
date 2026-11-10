@@ -3,19 +3,19 @@
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = minimal|low|medium|high
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.4453
+cache = { read = 0.01484 }
 
-[cost]
-input = 0.4453
-output = 1.3359
-cache_read = 0.01484
+[cost.text.output]
+price = 1.3359

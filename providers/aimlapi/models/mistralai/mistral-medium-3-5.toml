@@ -1,10 +1,14 @@
+schema = 2
 base_model = "mistral/mistral-medium-3-5"
 name = "Medium 3.5"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+tools = { supported = true }
 
-[cost]
-input = 2.0631
-output = 10.3155
+[cost.text.input]
+price = 1.587
+
+[cost.text.output]
+price = 7.935

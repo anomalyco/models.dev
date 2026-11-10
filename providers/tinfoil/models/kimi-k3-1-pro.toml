@@ -1,0 +1,29 @@
+# Sources (accessed 2026-11-07):
+# - https://inference.tinfoil.sh/v1/models (price, cached input price, 262,144 context, supported_efforts)
+# - https://docs.tinfoil.sh/guides/reasoning.md and https://docs.tinfoil.sh/models/chat.md
+# - https://docs.tinfoil.sh/models/vision.md (text and image input; no video)
+# - https://docs.tinfoil.sh/guides/image-processing.md (documents JPEG, PNG and WebP)
+# Effort: reasoning_effort = low|high|max on Tinfoil; reasoning is always on and defaults to max.
+# Structured outputs: listed on https://docs.tinfoil.sh/models/chat.md
+# Cache: the inference router reuses matching prompt prefixes automatically, scoped by API identity and user_cache_secret (https://docs.tinfoil.sh/sdk/prompt-caching).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 20

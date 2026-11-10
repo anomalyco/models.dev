@@ -1,24 +1,27 @@
+# Lab identity: https://huggingface.co/deepseek-ai/DeepSeek-V3.2
+# Context 163,840: max_position_embeddings in https://huggingface.co/deepseek-ai/DeepSeek-V3.2/blob/main/config.json.
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
 name = "DeepSeek-V3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2024-07"
-open_weights = true
 
-[cost]
-input = 0.28
-output = 0.40
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 
 [limit]
 context = 163_840
 output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.28
+
+[cost.text.output]
+price = 0.4

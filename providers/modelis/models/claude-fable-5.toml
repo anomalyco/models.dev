@@ -1,11 +1,13 @@
 # Reasoning controls verified against https://modelishub.com/v1 on 2026-08-02.
 #   Effort:        {"reasoning_effort": "<value>"}
+schema = 2
 base_model = "anthropic/claude-fable-5"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
-[cost]
-input = 10
-output = 50
+[cost.text.input]
+price = 10
+
+[cost.text.output]
+price = 50

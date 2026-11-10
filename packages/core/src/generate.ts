@@ -10,7 +10,7 @@ import {
   AuthoredModelShape,
   ModelMetadata,
 } from "./schema.js";
-import { isSchemaV2, labModelV2ToV1, modelV2ToV1 } from "./translate.js";
+import { labModelV2ToV1, modelV2ToV1, providerTomlToV1, withoutV1ReasoningCost } from "./translate.js";
 
 const BaseModel = AuthoredModelShape
   .deepPartial()
@@ -20,6 +20,19 @@ const BaseModel = AuthoredModelShape
     base_model_omit: z.array(z.string()).optional(),
   })
   .strict();
+
+// `[v1_alias]` in provider.toml: a legacy v1 provider that serves another
+// provider's models under its own id, name, and env vars. It has no model files
+// and is left out of the v2 output.
+const V1Alias = z
+  .object({
+    provider: z.string().min(1),
+    // Env var renames applied to `${VAR}` templates in the models, e.g. `provider.api`.
+    env: z.record(z.string().min(1)).default({}),
+  })
+  .strict();
+
+type V1Alias = z.infer<typeof V1Alias>;
 
 export async function generateCatalog(directory: string) {
   const models = await generateModels(path.join(directory, "models"));
@@ -55,11 +68,9 @@ export async function generateModels(directory: string) {
       },
     }).then((mod) => mod.default);
     toml.id = modelID;
-    if (isSchemaV2(toml) && toml.v2_only === true) v2Only.add(modelID);
+    if (toml.v2_only === true) v2Only.add(modelID);
 
-    const model = ModelMetadata.safeParse(
-      isSchemaV2(toml) ? labModelV2ToV1(toml, { modelPath }) : toml,
-    );
+    const model = ModelMetadata.safeParse(labModelV2ToV1(toml, { modelPath }));
     if (!model.success) {
       model.error.cause = { modelPath, toml };
       throw model.error;
@@ -82,16 +93,18 @@ async function generateProviders(
   models: Record<string, ModelMetadata>,
 ) {
   const result: Record<string, Provider> = {};
+  const aliases: Array<{ provider: Provider; alias: V1Alias; providerPath: string }> = [];
   for await (const providerPath of new Bun.Glob("*/provider.toml").scan({
     cwd: directory,
     absolute: true,
   })) {
     const providerID = path.basename(path.dirname(providerPath));
-    const toml = await import(providerPath, {
+    const { v1_alias, ...raw } = await import(providerPath, {
       with: {
         type: "toml",
       },
     }).then((mod) => mod.default);
+    const toml = providerTomlToV1(raw);
     toml.id = providerID;
     toml.models = {};
     const provider = Provider.safeParse(toml);
@@ -100,12 +113,29 @@ async function generateProviders(
       throw provider.error;
     }
 
+    if (v1_alias !== undefined) {
+      const alias = V1Alias.safeParse(v1_alias);
+      if (!alias.success) {
+        alias.error.cause = { providerPath, toml: v1_alias };
+        throw alias.error;
+      }
+      if (existsSync(path.join(directory, providerID, "models"))) {
+        throw new Error(`Provider "${providerID}" is a v1_alias and can't have a models directory`, {
+          cause: { providerPath },
+        });
+      }
+      aliases.push({ provider: provider.data, alias: alias.data, providerPath });
+      result[providerID] = provider.data;
+      continue;
+    }
+
     const modelsPath = path.join(directory, providerID, "models");
     if (!existsSync(modelsPath)) {
       throw new Error(`Provider "${providerID}" has no models`, {
         cause: { providerPath },
       });
     }
+    let v2OnlyModelCount = 0;
     for await (const modelPath of new Bun.Glob("**/*.toml").scan({
       cwd: modelsPath,
       absolute: true,
@@ -119,8 +149,11 @@ async function generateProviders(
       }).then((mod) => mod.default);
       raw.id = modelID;
       // Models marked `v2_only = true` are only published in the v2 API.
-      if (isSchemaV2(raw) && raw.v2_only === true) continue;
-      const toml = isSchemaV2(raw) ? modelV2ToV1(raw, { modelPath }) : raw;
+      if (raw.v2_only === true) {
+        v2OnlyModelCount++;
+        continue;
+      }
+      const toml = modelV2ToV1(raw, { modelPath }, provider.data.npm);
       if (toml.base_model !== undefined) {
         const baseModel = BaseModel.safeParse(toml);
         if (!baseModel.success) {
@@ -148,11 +181,30 @@ async function generateProviders(
       provider.data.models[modelID] = normalizeModelCost(model.data);
     }
     if (Object.keys(provider.data.models).length === 0) {
+      // A provider whose models are all v2-only is left out of v1.
+      if (v2OnlyModelCount > 0) continue;
       throw new Error(`Provider "${providerID}" has no models`, {
         cause: { providerPath },
       });
     }
     result[providerID] = provider.data;
+  }
+
+  for (const { provider, alias, providerPath } of aliases) {
+    const target = result[alias.provider];
+    if (target === undefined || aliases.some((item) => item.provider.id === alias.provider)) {
+      throw new Error(`Provider "${provider.id}" aliases unknown provider "${alias.provider}"`, {
+        cause: { providerPath },
+      });
+    }
+    const rename = (value: string) =>
+      Object.entries(alias.env).reduce(
+        (text, [from, to]) => text.replaceAll(`\${${from}}`, `\${${to}}`),
+        value,
+      );
+    // The target's provider-level base URL applies to its models too.
+    if (provider.api === undefined && target.api !== undefined) provider.api = rename(target.api);
+    provider.models = JSON.parse(rename(JSON.stringify(target.models)));
   }
 
   const nameToProviderID = new Map<string, string>();
@@ -189,7 +241,7 @@ function mergeBaseModel(
   );
 
   applyOmit(merged, omit ?? []);
-  return merged;
+  return withoutV1ReasoningCost(merged);
 }
 
 function inheritableModelMetadata(model: ModelMetadata) {

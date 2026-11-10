@@ -1,5 +1,6 @@
 # Native model details: 16,000-token context and 2,000 max output tokens.
 # https://developers.openai.com/api/docs/models/gpt-realtime-whisper
+# Realtime audio MIME types: https://developers.openai.com/api/reference/resources/realtime (audio/pcm, audio/pcmu, audio/pcma)
 schema = 2
 type = "transcription"
 name = "GPT Realtime Whisper"
@@ -9,7 +10,7 @@ open_weights = false
 release_date = "2026-05-07"
 
 [modalities]
-input = ["audio"]
+input = ["audio/pcm", "audio/pcmu", "audio/pcma"]
 output = ["text"]
 
 [capabilities]

@@ -5,28 +5,30 @@
 # Source: NeoSmith's first-party rate card — the per-tier table shown to every
 # customer on their billing dashboard. There is no public pricing page yet; the
 # `doc` URL in provider.toml is product documentation, not a price list.
+schema = 2
 name = "NeoSmith Maestro"
 description = "Highest-accuracy coding tier. Hard, self-contained problems run NeoSmith's premium multi-model solver; everything else gets the strongest intelligence tier."
+open_weights = false
 release_date = "2026-08-03"
 last_updated = "2026-08-08"
-open_weights = false
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 structured_output = false
 temperature = true
-
-[cost]
-input = 2.4
-output = 12.0
-cache_read = 0.35
-cache_write = 0.0
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 2.4
+cache = { read = 0.35, write = 0 }
+
+[cost.text.output]
+price = 12

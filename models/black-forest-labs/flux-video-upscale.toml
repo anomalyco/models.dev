@@ -1,0 +1,26 @@
+# Released 2026-08-20: https://docs.bfl.ml/release-notes, https://docs.bfl.ml/flux_tools/flux_video_upscale
+# Inputs: images PNG, JPEG or WebP and MP4 video: https://docs.bfl.ml/llms-full.txt ("Images can be PNG, JPEG, or WebP"), https://docs.bfl.ml/flux_tools/flux_video_edit
+# Output: MP4.
+schema = 2
+v2_only = true
+type = "video"
+name = "FLUX Video Upscale"
+description = "FLUX 3 video super-resolution model that upscales clips 1.5x to 3x while keeping the audio track"
+family = "flux"
+open_weights = false
+release_date = "2026-08-20"
+
+[modalities]
+input = ["text", "video/mp4"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,25 +1,37 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: DigitalOcean-hosted, automatic prefix caching; prompt_cache_key scopes it. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
+base_model = "meta/llama-4-maverick-17b-instruct"
 name = "Llama 4 Maverick"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
-family = "llama"
-release_date = "2025-04-05"
-last_updated = "2026-04-30"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2024-08"
-open_weights = true
 
-[cost]
-input = 0.25
-output = 0.87
-cache_read = 0.05
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
 
 [limit]
 context = 128_000
-output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.87
+
+[cost.web_search]
+price = 10

@@ -1,19 +1,21 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+schema = 2
 name = "Deepseek/Deepseek-Math-V2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-release_date = "2025-12-04"
-last_updated = "2025-12-04"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = false
-temperature = true
-structured_output = false
 open_weights = false
-
-[limit]
-context = 160_000
-output = 160_000
+release_date = "2025-12-04"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
+temperature = true
+
+[limit]
+context = 160_000
+output = 160_000

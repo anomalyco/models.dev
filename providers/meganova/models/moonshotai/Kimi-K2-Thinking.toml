@@ -1,27 +1,15 @@
-name = "Kimi K2 Thinking"
+schema = 2
+base_model = "moonshotai/kimi-k2-thinking"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
-family = "kimi-thinking"
-release_date = "2025-11-06"
-last_updated = "2025-11-06"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2024-08"
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
 
-[cost]
-input = 0.60
-output = 2.60
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 262_144
-output = 262_144
+[cost.text.input]
+price = 0.6
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 2.6

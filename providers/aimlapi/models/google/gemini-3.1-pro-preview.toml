@@ -1,12 +1,19 @@
 # No caller control: reasoning_effort is not read (an invalid value returns 200),
 # and toggle/budget fields are dropped by the gateway (unknown top-level keys -> 200).
+schema = 2
 base_model = "google/gemini-3.1-pro-preview"
-reasoning_options = []
 
-[cost]
-input = 2.6
-output = 15.6
-cache_read = 0.65
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+tools = { supported = true }
 
 [limit]
 context = 1_000_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 12

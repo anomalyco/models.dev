@@ -7,6 +7,9 @@ v2_only = true
 base_model = "openai/tts-1"
 status = "deprecated"
 
+[api.speech]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-speech" }
+
 [cost.text.input]
 unit = "character"
 price = 15

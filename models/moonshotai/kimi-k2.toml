@@ -1,22 +1,24 @@
 # Lab metadata carried over from providers/openrouter/models/moonshotai/kimi-k2.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
 name = "Kimi K2 0711"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
 family = "kimi-k2"
-release_date = "2025-07-11"
-last_updated = "2025-07-11"
-knowledge = "2024-12-31"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = true
-
-[limit]
-context = 131072
-output = 98304
+knowledge = "2024-12-31"
+release_date = "2025-07-11"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 98_304

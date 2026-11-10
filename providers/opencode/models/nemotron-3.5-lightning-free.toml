@@ -1,15 +1,20 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Mid-conversation flags left out: nvidia has no provider file for nvidia/nemotron-3.5-lightning to follow (Zen passes requests through).
+schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
 name = "Nemotron 3.5 Lightning Free"
-family = "nemotron-free"
-reasoning_options = []
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

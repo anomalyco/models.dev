@@ -3,18 +3,27 @@
 # - https://ai.google.dev/gemini-api/docs/pricing#gemini-4-argon (intro $2 input / $10 output through 2026-11-30, then $4/$20; implicit caching only)
 # Reasoning: multi-model relay — copy lab effort set low/medium/high from providers/google/models/gemini-4-argon.toml and openrouter/vercel/kilo peers; Ofox page confirms same thinking levels.
 # Pricing uses the Ofox discounted (-50%) intro column, matching Ofox google peers (e.g. gemini-3.8-flash 0.75/3.75) and Google intro rates; FAQ/meta show list $4/$20.
+# Mid-conversation (Ofox Gemini native API, https://ofox.ai/docs/api/gemini/generate-content): systemInstruction, thinkingConfig and tools are request-level and content roles are user/model, so system_updates, effort_updates and tools.updates are false.
+# Cache: implicit, plus explicit cachedContents on the Gemini native API (https://ofox.ai/docs/develop/models/gemini#caching, https://ofox.ai/docs/develop/advanced/gemini-explicit-cache).
+schema = 2
 base_model = "google/gemini-4-argon"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true, explicit = true }
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.1
-input_audio = 2
+[api.generate-content]
+base_url = "https://api.ofox.ai/gemini/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
 
-[provider]
-npm = "@ai-sdk/google"
-api = "https://api.ofox.ai/gemini/v1beta"
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10
+
+[cost.audio.input]
+price = 2

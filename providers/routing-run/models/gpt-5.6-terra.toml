@@ -1,14 +1,18 @@
+schema = 2
 base_model = "openai/gpt-5.6-terra"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 1.50
-output = 9.00
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 1_000_000
-output = 128_000
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 9

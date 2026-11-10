@@ -1,21 +1,28 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 0, output 0
+schema = 2
 name = "PaddlePaddle/PaddleOCR-VL-1.5"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2026-01-29"
-last_updated = "2026-01-29"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
 open_weights = true
-
-[cost]
-input = 0
-output = 0
-
-[limit]
-context = 16384
-output = 16384
+release_date = "2026-01-29"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 16_384
+output = 16_384
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

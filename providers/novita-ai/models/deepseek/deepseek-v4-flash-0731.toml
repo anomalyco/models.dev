@@ -1,17 +1,33 @@
 # https://novita.ai/models/model-detail/deepseek-deepseek-v4-flash-0731
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max (current same-surface baseline; all three values verified on Novita).
+schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.44
-output = 1.32
-cache_read = 0.028
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.44
+cache = { read = 0.028 }
+
+[cost.text.output]
+price = 1.32

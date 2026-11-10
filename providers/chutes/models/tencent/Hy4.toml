@@ -1,0 +1,18 @@
+schema = 2
+name = "Hy4"
+description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
+open_weights = true
+release_date = "2026-11-04"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 0
+output = 0

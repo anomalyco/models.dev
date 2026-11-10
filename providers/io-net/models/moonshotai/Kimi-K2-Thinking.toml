@@ -1,26 +1,18 @@
-name = "Kimi K2 Thinking"
+# Prices: GET https://api.intelligence.io.solutions/api/v1/models input/output/cache_read_token_price (USD per token, 2026-10-21); io.net documents this endpoint as the pricing source and lists no cache-write price.
+schema = 2
+base_model = "moonshotai/kimi-k2-thinking"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
-family = "kimi-thinking"
-release_date = "2024-11-01"
-last_updated = "2024-11-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2024-08"
-open_weights = false
 
-[cost]
-input = 0.55
-output = 2.25
-cache_read = 0.275
-cache_write = 1.1
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
-context = 32768
-output = 4096
+context = 32_768
+output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.6
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 2.5

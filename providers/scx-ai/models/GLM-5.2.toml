@@ -14,13 +14,19 @@
 # listed as the off control; low/medium/high are indistinguishable (medians
 # 1515/969/1181), so the Z.AI effective set high/max is kept rather than
 # inventing extra levels.
+schema = 2
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "effort", values = ["none", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
-[cost]
-input = 0.55
-output = 1.784
-cache_read = 0.111
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.55
+cache = { read = 0.111 }
+
+[cost.text.output]
+price = 1.784

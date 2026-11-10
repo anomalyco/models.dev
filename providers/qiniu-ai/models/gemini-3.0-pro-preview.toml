@@ -1,19 +1,17 @@
+# Status: deprecated. Absent from Qiniu's model square and GET /v1/models on 2026-10-21.
+schema = 2
+base_model = "google/gemini-3-pro-preview"
 name = "Gemini 3.0 Pro Preview"
-description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-release_date = "2025-11-19"
-last_updated = "2025-11-19"
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
-temperature = true
+status = "deprecated"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "application/pdf", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = false
-open_weights = false
 
 [limit]
 context = 1_000_000
 output = 64_000
-
-[modalities]
-input = ["text", "image", "video", "pdf", "audio"]
-output = ["text"]

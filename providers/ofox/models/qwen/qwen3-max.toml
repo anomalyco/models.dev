@@ -4,15 +4,24 @@
 # https://www.alibabacloud.com/help/en/model-studio/deep-thinking
 # Toggle: enable_thinking true|false (hybrid; default off)
 # Budget: thinking_budget
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen).
+schema = 2
 base_model = "alibaba/qwen3-max"
-reasoning = true
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
-[cost]
-input = 0.36
-output = 1.43
-cache_read = 0.072
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, budget = {} }
+cache = { implicit = true }
 
 [limit]
 context = 256_000
 output = 64_000
+
+[cost.text.input]
+price = 0.36
+cache = { read = 0.072 }
+
+[cost.text.output]
+price = 1.43

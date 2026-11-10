@@ -1,9 +1,17 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Price: PAYG per token, micro-IDR per 1M / 1e6 / 17,500 IDR per USD (usd_idr_rate in /api/public/pricing), rounded to 8 decimals.
+# Reasoning: catalog reasoning_options ["none","low","medium"], reasoning_toggle true (https://kenari.id/en/docs/reasoning).
+# Effort: reasoning_effort (Chat completions), reasoning.effort (Responses), output_config.effort (Messages).
+# Off: reasoning_effort = none (listed level), so no separate toggle.
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium"] }
 
-[cost]
-input = 0
-output = 0
+[cost.text.input]
+price = 0.09714286
+cache = { read = 0.00971429 }
+
+[cost.text.output]
+price = 0.48

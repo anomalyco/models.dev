@@ -4,6 +4,7 @@
 # - https://cryptobriefing.com/grok-imagine-lite-venice-ai-video/ (first observed 2026-10-01; 15s clips up to 1080p with native audio)
 # Pricing: $0.020/sec output (not token-based; no [cost] authored)
 # Release: no official xAI release date published; using first-observed date 2026-10-01
+# Image and video MIME types: https://docs.x.ai/developers/rest-api-reference/inference/videos (image inputs JPEG, PNG or WebP; video inputs and generated videos are .mp4)
 schema = 2
 type = "video"
 name = "Grok Imagine Video 1.5 Lite"
@@ -13,8 +14,8 @@ open_weights = false
 release_date = "2026-10-01"
 
 [modalities]
-input = ["text", "image"]
-output = ["video"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
 
 [capabilities]
 tools = { supported = false }

@@ -1,6 +1,7 @@
 # Sources:
 # https://developers.openai.com/api/docs/models/gpt-realtime-2.1-mini
 # https://developers.openai.com/api/docs/changelog
+# Realtime audio MIME types: https://developers.openai.com/api/reference/resources/realtime (audio/pcm, audio/pcmu, audio/pcma)
 schema = 2
 v2_only = true
 type = "realtime"
@@ -12,8 +13,8 @@ knowledge = "2024-09-30"
 release_date = "2026-07-06"
 
 [modalities]
-input = ["text", "audio", "image/jpeg", "image/png", "image/gif", "image/webp"]
-output = ["text", "audio"]
+input = ["text", "audio/pcm", "audio/pcmu", "audio/pcma", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text", "audio/pcm", "audio/pcmu", "audio/pcma"]
 
 [capabilities]
 tools = { supported = true }

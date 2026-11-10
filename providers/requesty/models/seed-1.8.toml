@@ -1,27 +1,22 @@
-name = "seed-1.8"
-description = "Optimized specifically for multimodal agent scenarios. It features enhanced agent capabilities, upgraded multimodal comprehension, and more flexible context management."
-family = "seed"
-release_date = "2026-05-27"
-last_updated = "2026-05-27"
-attachment = true
-reasoning = true
-tool_call = true
+# Identity (https://router.requesty.ai/v1/models/managed (accessed 2026-10-20)): description "Optimized specifically for multimodal agent scenarios" matches ByteDance's Seed 1.8 (Doubao-Seed-1.8,
+#   https://www.volcengine.com/docs/82379/1330310); context_window 256,000 = lab; supports_vision true = lab image input.
+#   Requesty's created date (2026-05-27) is its listing date; Seed 1.8 shipped 2025-12-28 (lab).
+# Output: Requesty reports max_output_tokens = 0 (unknown), so the lab's 64,000 applies (ByteDance: 64K max output,
+#   https://www.volcengine.com/docs/82379/1330310). The earlier 256,000 was the sync's context-window fallback, not a Requesty value.
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
+base_model = "bytedance-seed/seed-1-8"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = false
-open_weights = false
+system_updates = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[cost.text.input]
+price = 0.25
+cache = { read = 0.05 }
 
-[cost]
-input = 0.25
-output = 2
-cache_read = 0.05
-
-[limit]
-context = 256_000
-output = 256_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 2

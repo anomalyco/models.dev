@@ -1,18 +1,29 @@
+# Status: https://poe.com/Sora-2 is titled "Sora-2_DEPRECATED" (2026-10-21).
+# Modalities (image reference: image/jpeg, image/png, image/webp; output: MP4; Poe lists none): https://platform.openai.com/docs/guides/video-generation
+# APIs: POST /v1/videos (https://creator.poe.com/api-reference/createVideo) and Chat Completions for media bots (https://creator.poe.com/docs/external-applications/openai-compatible-api)
+schema = 2
+type = "video"
 name = "Sora-2"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 family = "sora"
-release_date = "2025-10-06"
-last_updated = "2025-10-06"
-attachment = true
-reasoning = false
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2025-10-06"
+status = "deprecated"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["text", "image"]
-output = ["video"]
+[api.chat-completions]
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }

@@ -3,6 +3,8 @@
 # https://huggingface.co/meta-models/Muse-Glimmer-30B
 # https://developer.meta.com/ai/models/muse-glimmer/
 # Sampling (temperature 1.0, top_p 0.95, top_k 64): https://dev.meta.ai/docs/muse-glimmer/prompting
+# `image` stays generic: Muse Glimmer is self-hosted only, not on Model API (https://dev.meta.ai/docs/models), and its
+# deploy guide (https://dev.meta.ai/docs/muse-glimmer/deploy) takes a URL, data URI or local path without naming formats.
 schema = 2
 name = "Muse Glimmer 30B"
 description = "Muse Glimmer is a 30-billion-parameter open-weight multimodal model from Meta Superintelligence Labs, distilled from Muse Spark for always-on local agents, tool use, coding, and image understanding."

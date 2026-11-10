@@ -1,22 +1,14 @@
+# Status: https://poe.com/GPT-4-Turbo is titled "GPT-4-Turbo_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "openai/gpt-4-turbo"
 name = "GPT-4-Turbo"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt"
-release_date = "2023-09-13"
-last_updated = "2023-09-13"
-attachment = true
-reasoning = false
+status = "deprecated"
+
+[capabilities]
 temperature = false
-open_weights = false
-tool_call = true
 
-[cost]
-input = 9
-output = 27
+[cost.text.input]
+price = 9
 
-[limit]
-context = 128_000
-output = 4_096
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 27

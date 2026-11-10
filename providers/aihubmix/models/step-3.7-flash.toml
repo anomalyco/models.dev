@@ -3,16 +3,21 @@
 # https://platform.stepfun.com/docs/zh/guides/models/step-3.7-flash
 # Effort: reasoning_effort = low|medium|high on /v1/chat/completions.
 # https://docs.aihubmix.com/cn/api/unified-inference
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "stepfun/step-3.7-flash"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.22
-output = 1.32
-cache_read = 0.044
+[cost.text.input]
+price = 0.22
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 1.32

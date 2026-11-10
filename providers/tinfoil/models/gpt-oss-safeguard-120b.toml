@@ -1,9 +1,17 @@
+# Effort: reasoning_effort low|medium|high, from https://inference.tinfoil.sh/v1/models supported_efforts (2026-11-07).
+# Mid-conversation: Tinfoil serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.tinfoil.sh/models/chat
+schema = 2
 base_model = "openai/gpt-oss-safeguard-120b"
-structured_output = true
 name = "gpt-oss-safeguard-120b"
-reasoning = false
 knowledge = "2024-06"
 
-[cost]
-input = 0.15
-output = 0.6
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

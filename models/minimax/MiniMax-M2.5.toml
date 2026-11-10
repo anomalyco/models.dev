@@ -1,21 +1,26 @@
+# Sampling: top_p defaults to 0.9 on M2.x and top_k is ignored
+# (https://platform.minimax.io/docs/api-reference/text-anthropic-api).
+schema = 2
 name = "MiniMax-M2.5"
 description = "Prior MiniMax coding model for agent workflows, office edits, and automation"
 family = "minimax"
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
-
-[limit]
-context = 204_800
-output = 131_072
+release_date = "2026-02-12"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 204_800
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

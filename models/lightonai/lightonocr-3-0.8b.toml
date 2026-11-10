@@ -1,0 +1,42 @@
+# Sources (accessed 2026-10-16):
+# https://huggingface.co/lightonai/LightOnOCR-3-0.8B
+# https://huggingface.co/blog/lightonai/lightonocr-3
+# Paper: https://arxiv.org/abs/2601.14251
+schema = 2
+name = "LightOnOCR-3 0.8B"
+description = "LightOnOCR-3-0.8B is the lightest model of LightOn's LightOnOCR-3 family, with the same layout and visual understanding features as its larger siblings."
+open_weights = true
+release_date = "2026-10-08"
+last_updated = "2026-10-14"
+license = "apache-2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 16_384
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/lightonai/LightOnOCR-3-0.8B"
+
+[[benchmarks]]
+name = "olmOCR-bench"
+score = 85.5
+metric = "score"
+source = "https://huggingface.co/lightonai/LightOnOCR-3-0.8B"
+
+[[benchmarks]]
+name = "ParseBench"
+score = 74.6
+metric = "mean"
+source = "https://huggingface.co/lightonai/LightOnOCR-3-0.8B"

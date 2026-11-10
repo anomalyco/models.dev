@@ -3,18 +3,25 @@
 # RouteLLM output_modalities: ['text']
 # RouteLLM context_length: 1048576
 # RouteLLM max_completion_tokens: 65536
-# RouteLLM input_token_rate: 0.0000015
-# RouteLLM output_token_rate: 0.0000075
-# RouteLLM cached_input_token_rate: 0.00000015
+# RouteLLM input_token_rate: 0.00000075
+# RouteLLM output_token_rate: 0.00000375
+# RouteLLM cached_input_token_rate: 0.000000075
 # RouteLLM thinking: True
+# Prices refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+schema = 2
 base_model = "google/gemini-3.6-flash"
-reasoning_options = []
-
-[cost]
-input = 1.5
-output = 7.5
-cache_read = 0.15
 
 [modalities]
-input = ["text", "image", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75

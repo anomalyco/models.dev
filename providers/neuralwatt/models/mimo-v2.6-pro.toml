@@ -11,25 +11,26 @@
 # https://docs.neuralwatt.com/api/models#list-models
 # https://portal.neuralwatt.com/models/mimo-v2.6-pro
 # https://docs.neuralwatt.com/api/chat-completions#reasoning-effort
+schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
-interleaved = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "audio/mpeg", "audio/wav", "audio/flac", "audio/mp4", "audio/ogg"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.87
-output = 1.74
-cache_read = 0.036
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"], budget = {} }
 
 [limit]
 context = 1_048_560
 output = 393_216
 
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text"]
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.87
+cache = { read = 0.036 }
+
+[cost.text.output]
+price = 1.74

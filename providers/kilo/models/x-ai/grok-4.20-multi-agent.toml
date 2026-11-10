@@ -1,28 +1,34 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; assumed to relay xAI's Grok 4.20 Multi-Agent. xAI image inputs jpg/jpeg and png: https://docs.x.ai/docs/guides/image-understanding
+schema = 2
 name = "SpaceXAI: Grok 4.20 Multi-Agent"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
-release_date = "2026-03-31"
-last_updated = "2026-03-31"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = false
+release_date = "2026-03-31"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
 
-[cost]
-input = 1.25
-output = 2.5
-cache_read = 0.2
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 2_000_000
 output = 1_800_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2.5
+
+[cost.web_search]
+price = 5

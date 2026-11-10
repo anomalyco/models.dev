@@ -1,22 +1,29 @@
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host. The checkpoint's
+#   generation_config.json sets temperature 1.0 and top_p 0.95; the MiMo API pins both in thinking mode
+#   (https://mimo.mi.com/docs/en-US/api/chat/openai-api).
+schema = 2
 name = "MiMo-V2.5-Pro-UltraSpeed"
 description = "MiMo pro model for strong multimodal reasoning and agent execution"
 family = "mimo"
+open_weights = true
+knowledge = "2024-12"
 release_date = "2026-06-08"
 last_updated = "2026-06-09"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = true
-
-[limit]
-context = 1_048_576
-output = 131_072
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

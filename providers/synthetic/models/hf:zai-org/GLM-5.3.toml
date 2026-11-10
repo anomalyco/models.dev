@@ -1,16 +1,22 @@
 # Pricing, limits, and reasoning efforts from the live model surface:
 # GET https://api.synthetic.new/openai/v1/models  (hf:zai-org/GLM-5.3)
+schema = 2
 base_model = "zhipuai/glm-5.3"
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 524_288
 output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

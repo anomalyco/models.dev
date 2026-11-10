@@ -5,28 +5,30 @@
 # Source: NeoSmith's first-party rate card — the per-tier table shown to every
 # customer on their billing dashboard. There is no public pricing page yet; the
 # `doc` URL in provider.toml is product documentation, not a price list.
+schema = 2
 name = "NeoSmith Pro"
 description = "Default production tier. Intelligent NeoSmith routing with a Claude Opus ceiling on escalation."
+open_weights = false
 release_date = "2026-04-26"
 last_updated = "2026-07-18"
-open_weights = false
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 structured_output = false
 temperature = true
-
-[cost]
-input = 1.81
-output = 8.39
-cache_read = 0.3
-cache_write = 0.0
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.81
+cache = { read = 0.3, write = 0 }
+
+[cost.text.output]
+price = 8.39

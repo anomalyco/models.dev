@@ -10,19 +10,23 @@
 # misleading message for a rejected parameter value.
 # Text only, although /v1/models advertises image input: on 2026-09-10 a two-colour
 # test image was misread, while the same prompt without it said it could not see images.
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
-attachment = false
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 0.81
-output = 3.85
-cache_read = 0.41
 
 [modalities]
 input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.81
+cache = { read = 0.41 }
+
+[cost.text.output]
+price = 3.85

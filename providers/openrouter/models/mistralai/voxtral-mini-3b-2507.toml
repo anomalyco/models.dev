@@ -1,0 +1,33 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=transcription
+# Input: wav, mp3, flac, m4a, ogg, webm, aac ("varies by provider"). Priced per second of input
+# audio, or per token when pricing.completion is set.
+# https://openrouter.ai/docs/guides/overview/multimodal/stt
+# Route: the open-weight chat model served on OpenRouter's transcription endpoint (DeepInfra, bf16, per
+#   /api/v1/models/{id}/endpoints), so the overrides follow that endpoint: audio in, text out, no tools,
+#   temperature only (https://openrouter.ai/docs/api/api-reference/stt/create-transcription). Audio formats
+#   are the lab's; context 0 is what OpenRouter's catalog reports for the endpoint.
+schema = 2
+v2_only = true
+base_model = "mistral/voxtral-mini-3b-2507"
+type = "transcription"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[api.transcriptions]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "second"
+price = 0.0000166667

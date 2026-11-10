@@ -1,0 +1,31 @@
+# Toggle: thinking.type = disabled
+# Effort: output_config.effort = low|medium|high|xhigh|max
+# Tinker serverless.json https://tinker-docs.thinkingmachines.ai/tinker/serverless.json (accessed 2026-10-21): type Hybrid + Audio + Vision, context 256K.
+# Serverless inference (beta), NVFP4 sampling; "not recommend[ed] for intensive production use until it is out of beta".
+# Tinker Anthropic-compatible API (https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/, accessed
+#   2026-10-21) serves any Tinker model: thinking.type = disabled turns reasoning off; output_config.effort (low|medium|high|
+#   xhigh|max) is documented for Thinking Machines models and "Not all models support effort" (400), so it is listed only
+#   for those; images via base64 or URL; no audio blocks;
+#   cache_control is ignored, prefill tokens that hit the prompt cache bill at 80% off.
+schema = 2
+base_model = "thinkingmachines/inkling"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "required", "tool", "none"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 1
+cache = { read = 0.17 }
+
+[cost.text.output]
+price = 4.05

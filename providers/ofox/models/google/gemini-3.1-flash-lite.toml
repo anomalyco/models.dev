@@ -1,15 +1,25 @@
 # https://ofox.ai/models/google/gemini-3.1-flash-lite
 # https://ai.google.dev/gemini-api/docs/pricing
 # https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-lite
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: implicit (https://ofox.ai/docs/develop/models/gemini#caching); explicit cachedContents is on the Gemini native API only.
+# Effort: reasoning_effort = minimal|low|medium|high (https://ofox.ai/docs/develop/models/gemini/thinking)
+schema = 2
 base_model = "google/gemini-3.1-flash-lite"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
 
-[cost]
-input = 0.25
-output = 1.5
-cache_read = 0.025
-cache_write = 1
-input_audio = 0.5
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025, write = 1 }
+
+[cost.text.output]
+price = 1.5
+
+[cost.audio.input]
+price = 0.5

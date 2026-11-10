@@ -4,17 +4,25 @@
 # https://iteracompute.com/models/kimi-k3/ (retail USD/MTok prices, context, and vision)
 # Effort wire path: reasoning_effort = low|high|max; reasoning.effort is also accepted.
 # The host advertises mandatory = true and supports_enable_disable = false.
+# Prices updated 2026-10-21 from the public GET https://api.iteracompute.com/v1/models pricing object (USD per 1M tokens).
+schema = 2
 base_model = "moonshotai/kimi-k3"
-temperature = true
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
-[cost]
-input = 2.39
-output = 11.99
-cache_read = 0.24
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+temperature = true
 
 [limit]
 output = 999_999
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 2.35
+cache = { read = 0.23 }
+
+[cost.text.output]
+price = 11.76

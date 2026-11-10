@@ -1,6 +1,11 @@
+schema = 2
 base_model = "openai/gpt-5.3-chat-latest"
+
+[capabilities]
 structured_output = true
 
-[cost]
-input = 1.75
-output = 14.0
+[cost.text.input]
+price = 1.75
+
+[cost.text.output]
+price = 14

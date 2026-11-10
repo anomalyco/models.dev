@@ -1,12 +1,18 @@
+# Cache: on Chat Completions Eden AI marks the system prompt and trailing turn with
+# 5-minute ephemeral boundaries; your own cache_control markers replace them
+# (https://www.edenai.co/docs/v3/llms/prompt-caching).
+schema = 2
 base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = { ttl = ["5m"] }, explicit = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[cost.text.output]
+price = 50

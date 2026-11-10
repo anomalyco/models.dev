@@ -5,20 +5,17 @@
 # RouteLLM context_length: 200000
 # RouteLLM max_completion_tokens: 100000
 # RouteLLM input_token_rate: 0.00002
-# RouteLLM output_token_rate: 0.00004
+# RouteLLM output_token_rate: 0.00008
+# Prices refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+schema = 2
 base_model = "openai/o3-pro"
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 20.00
-output = 40.00
+[cost.text.input]
+price = 20
 
-[limit]
-context = 200_000
-output = 100_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 80

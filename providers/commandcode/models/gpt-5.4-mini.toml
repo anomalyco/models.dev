@@ -3,13 +3,16 @@
 # https://api.commandcode.ai/provider/v1/models
 # xhigh follows the native/peer baseline; live xhigh hit HTTP 403 MODEL_NOT_IN_PLAN.
 # Live /chat/completions (2026-10-14): reasoning_effort = none -> HTTP 400 invalid option.
+schema = 2
 base_model = "openai/gpt-5.4-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075, write = 0 }
 
-[cost]
-input = 0.75
-output = 4.5
-cache_read = 0.075
-cache_write = 0
+[cost.text.output]
+price = 4.5

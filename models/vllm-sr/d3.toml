@@ -1,0 +1,34 @@
+# Sources (accessed 2026-10-21): https://huggingface.co/vllm-sr/d3 (Apache-2.0; Hub createdAt 2026-10-10; base model Qwen3.8-27B):
+#   27B multimodal decision model of vLLM Semantic Router's Decision 3.0. Inputs are text or JSON plus images and videos;
+#   decision types choice, yes/no and score. The card lists no exact image or video formats.
+# Context: https://huggingface.co/vllm-sr/d3/raw/main/decision_config.json sets max_length = null, so the vLLM-SR
+#   runtime serves config.json max_position_embeddings, 262,144: https://github.com/vllm-project/semantic-router/blob/
+#   7b8009b5b57ad3bcce3a4758cdb995a3da4481e7/src/model-runtime/vllm_srun/families/decision3/package.py#L426-L428
+#   The card benchmarks inputs up to 32k tokens. Decision models generate no text.
+schema = 2
+v2_only = true
+type = "decision"
+name = "d3"
+description = "vLLM Semantic Router 27B decision model that answers typed choice, yes/no and score questions about text, images or video with probabilities"
+open_weights = true
+release_date = "2026-10-10"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/vllm-sr/d3"

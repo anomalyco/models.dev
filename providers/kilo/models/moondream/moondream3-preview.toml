@@ -1,26 +1,28 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 name = "Moondream: Moondream 3 Preview"
 description = "Moondream 3 Preview is a vision-language model from Moondream with 9B total parameters and 2B active (mixture-of-experts). It handles visual question answering, captioning, OCR, and visual reasoning over images, with..."
-release_date = "2026-10-15"
-last_updated = "2026-10-15"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2026-10-15"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["text", "image"]
+output = ["text"]
 
-[cost]
-input = 0.3
-output = 2.5
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+temperature = true
 
 [limit]
 context = 32_000
 output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 2.5

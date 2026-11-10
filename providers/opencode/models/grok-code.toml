@@ -1,29 +1,24 @@
+# Mid-conversation flags left out: xai has no provider file for xai/grok-code-fast-1 to follow (Zen passes requests through).
+# Tools follow xAI's API: https://docs.x.ai/developers/tools/function-calling#tool-choice; Zen passes requests through.
+schema = 2
+base_model = "xai/grok-code-fast-1"
 name = "Grok Code Fast 1"
 description = "Legacy model retained for compatibility with older integrations"
-family = "grok"
-release_date = "2025-08-20"
-last_updated = "2025-08-20"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = false
 status = "deprecated"
 
-[cost]
-input = 0.00
-output = 0.00
-cache_read = 0.0
-cache_write = 0.0
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
 
 [limit]
-context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

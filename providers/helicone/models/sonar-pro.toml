@@ -1,23 +1,18 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2025-09-01).
+schema = 2
+base_model = "perplexity/sonar-pro"
 name = "Perplexity Sonar Pro"
-description = "Advanced Sonar search model for deeper research and cited synthesis"
-family = "sonar-pro"
-release_date = "2025-01-27"
-last_updated = "2025-01-27"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
 knowledge = "2025-01"
-open_weights = false
-
-[cost]
-input = 3
-output = 15
-
-[limit]
-context = 200000
-output = 4096
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[limit]
+output = 4_096
+
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

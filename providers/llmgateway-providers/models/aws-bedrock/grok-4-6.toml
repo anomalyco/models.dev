@@ -1,12 +1,14 @@
+schema = 2
 base_model = "xai/grok-4.6"
-structured_output = true
 name = "Grok 4.6 (AWS Bedrock)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.5
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 6

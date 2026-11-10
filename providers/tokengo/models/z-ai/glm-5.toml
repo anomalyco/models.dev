@@ -3,12 +3,15 @@
 # - Public hub $0.89/$3.26: https://www.tokengo.com/models
 # - Exact console rates incl. cache $0.89/$3.2647/$0.2226 (TokenGo model table ratios)
 # TokenGo OpenAI-compatible extra_body; same on/off as typical GLM-5 openai-compat peers.
+schema = 2
 base_model = "zhipuai/glm-5"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0.89
-output = 3.2647
-cache_read = 0.2226
+[cost.text.input]
+price = 0.89
+cache = { read = 0.2226 }
+
+[cost.text.output]
+price = 3.2647

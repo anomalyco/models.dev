@@ -1,27 +1,29 @@
 # Sources:
 # https://www.deepseek.com/en/news/v4-preview/
 # https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash
+schema = 2
 name = "DeepSeek V4 Flash 0423"
 description = "Initial DeepSeek V4 Flash snapshot for economical reasoning, coding, and million-token agent workloads"
 family = "deepseek-flash"
-release_date = "2026-04-23"
-last_updated = "2026-04-23"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-05"
 open_weights = true
+knowledge = "2025-05"
+release_date = "2026-04-23"
 license = "MIT"
-
-[limit]
-context = 1_000_000
-output = 384_000
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 384_000
 
 [[weights]]
 label = "Hugging Face"

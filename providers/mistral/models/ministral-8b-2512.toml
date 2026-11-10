@@ -1,9 +1,38 @@
-# https://docs.mistral.ai/models/ministral-3-8b-25-12 (Ministral 3 8B API ID ministral-8b-2512, 256k context)
-# https://docs.mistral.ai/inference/pricing (Ministral 3 8B: $0.15 input, $0.015 cached input, $0.15 output per MTok)
-# https://mistral.ai/news/mistral-3 (Ministral 3 family released 2025-12-02, Apache 2.0)
+# Model: https://docs.mistral.ai/models/ministral-3-8b-25-12 (API ID ministral-8b-2512; $0.15 input / $0.15 output).
+# https://mistral.ai/news/mistral-3 (Ministral 3 family, 2025-12-02, Apache 2.0).
+# Mistral API (api.mistral.ai), docs and live checks 2026-10-19:
+# - Pricing: https://docs.mistral.ai/inference/pricing (cached input is billed at 10% of input).
+# - Prompt caching: https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic prefix
+#   cache in 64-token blocks, no write price, optional prompt_cache_key). Usage is reported when streaming.
+# - Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named
+#   function; function.strict). All five tool_choice forms worked live.
+# - Structured output: https://docs.mistral.ai/studio/conversations/structured-output (json_schema
+#   response_format returned schema-valid JSON live).
+# - PDF: chat takes document_url PDFs (https://docs.mistral.ai/studio/document-processing/document_qna);
+#   a base64 PDF was read correctly live.
+# - Sampling: temperature and top_p; no top_k (live 400 "top_k sampling is not enabled for this model").
+# - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
+#   keeps the cached prefix and is obeyed. Adding or removing tools between requests
+#   drops the cache after the system prompt (live 2026-10-22).
+schema = 2
 base_model = "mistral/ministral-3-8b-instruct-2512"
 
-[cost]
-input = 0.15
-cache_read = 0.015
-output = 0.15
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+structured_output = true
+top_k = false
+system_updates = true
+stream_usage = true
+prompt_cache_key = true
+cache = { implicit = { min_tokens = 64 } }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.15

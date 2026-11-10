@@ -1,10 +1,19 @@
 # Sources:
 # - https://ofox.ai/models/bailian/qwen3-coder-plus (Ofox model page: pricing, context 1M, output 64K)
 # - Lab metadata: models/alibaba/qwen3-coder-plus.toml
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen).
+schema = 2
 base_model = "alibaba/qwen3-coder-plus"
 
-[cost]
-input = 1.8
-output = 9
-cache_read = 0.2
-cache_write = 1
+[capabilities]
+tools = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.2, write = 1 }
+
+[cost.text.output]
+price = 9

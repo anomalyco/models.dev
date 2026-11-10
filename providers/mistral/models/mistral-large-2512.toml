@@ -1,25 +1,50 @@
-# Cached-input pricing: https://docs.mistral.ai/inference/pricing (2026-09-29)
+# Model: https://docs.mistral.ai/models/mistral-large-3-25-12 (API IDs mistral-large-2512, mistral-large-latest; $0.5 / $1.5).
+# Mistral API (api.mistral.ai), docs and live checks 2026-10-19:
+# - Pricing: https://docs.mistral.ai/inference/pricing (cached input is billed at 10% of input).
+# - Prompt caching: https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic prefix
+#   cache in 64-token blocks, no write price, optional prompt_cache_key). Usage is reported when streaming.
+# - Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named
+#   function; function.strict). All five tool_choice forms worked live.
+# - Structured output: https://docs.mistral.ai/studio/conversations/structured-output (json_schema
+#   response_format returned schema-valid JSON live).
+# - PDF: chat takes document_url PDFs (https://docs.mistral.ai/studio/document-processing/document_qna);
+#   a base64 PDF was read correctly live.
+# - Sampling: temperature and top_p; no top_k (live 400 "top_k sampling is not enabled for this model").
+# - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
+#   keeps the cached prefix and is obeyed. Adding or removing tools between requests
+#   drops the cache after the system prompt (live 2026-10-22).
+schema = 2
 name = "Mistral Large 3"
 description = "Mistral's largest general model for enterprise agents, coding, and multilingual reasoning"
 family = "mistral-large"
+open_weights = true
+knowledge = "2024-11"
 release_date = "2024-11-01"
 last_updated = "2025-12-02"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2024-11"
-tool_call = true
-open_weights = true
 
-[cost]
-input = 0.5
-cache_read = 0.05
-output = 1.5
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+top_p = true
+top_k = false
+system_updates = true
+stream_usage = true
+prompt_cache_key = true
+cache = { implicit = { min_tokens = 64 } }
 
 [limit]
 context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1.5

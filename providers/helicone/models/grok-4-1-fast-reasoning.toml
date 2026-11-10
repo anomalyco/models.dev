@@ -1,25 +1,18 @@
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: none).
+schema = 2
+base_model = "xai/grok-4.1-fast-reasoning"
 name = "xAI Grok 4.1 Fast Reasoning"
-description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-family = "grok"
-release_date = "2025-11-17"
-last_updated = "2025-11-17"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 knowledge = "2025-11"
-open_weights = false
 
-[cost]
-input = 0.19999999999999998
-output = 0.5
-cache_read = 0.049999999999999996
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
-context = 2000000
-output = 2000000
+output = 2_000_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.5

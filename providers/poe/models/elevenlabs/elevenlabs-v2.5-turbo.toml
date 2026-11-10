@@ -1,18 +1,9 @@
+schema = 2
+base_model = "elevenlabs/eleven_turbo_v2_5"
 name = "ElevenLabs-v2.5-Turbo"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "elevenlabs"
-release_date = "2024-10-28"
-last_updated = "2024-10-28"
-attachment = true
-reasoning = false
-temperature = false
-open_weights = false
-tool_call = true
+
+[capabilities]
+tools = { supported = true }
 
 [limit]
 context = 128_000
-output = 0
-
-[modalities]
-input = ["text"]
-output = ["audio"]

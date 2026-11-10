@@ -1,25 +1,28 @@
+# Modalities (image: Anthropic's vision formats; Poe lists none): https://docs.anthropic.com/en/docs/build-with-claude/vision
+schema = 2
 name = "Claude-Sonnet-3.5-June"
 description = "Legacy model retained for compatibility with older integrations"
 family = "claude-sonnet"
-release_date = "2024-11-18"
-last_updated = "2024-11-18"
-attachment = true
-reasoning = false
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2024-11-18"
 status = "deprecated"
 
-[cost]
-input = 2.6
-output = 13
-cache_read = 0.26
-cache_write = 3.2
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 189_096
 output = 8_192
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.6
+cache = { read = 0.26, write = 3.2 }
+
+[cost.text.output]
+price = 13
