@@ -1,0 +1,18 @@
+schema = 2
+base_model = "google/gemini-4-carbon"
+name = "Gemini 4 Carbon (Vertex AI, EU)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 0.375 }
+
+[cost.text.output]
+price = 20
+reasoning = 20
+
+[cost.audio.input]
+price = 4
