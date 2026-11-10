@@ -1,6 +1,11 @@
 # Availability, exact wire ID, host modality override, limit and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
 # `Claude Haiku 5.5` (including spaces) is the exact Moneo wire ID returned in both `id` and `model`.
-# Reasoning is supported, but Moneo's Chat Completions gateway does not expose a documented toggle, effort enum or budget control.
+# Reasoning: the model reasons internally (public catalog has_reasoning=true), but Moneo's Chat Completions gateway
+# strips all reasoning output before replying and silently accepts/ignores every reasoning control.
+# Live probe (2026-11-11, POST /v1/chat/completions): reasoning_effort, thinking.type=disabled and enable_thinking=false
+# each return HTTP 200, yet no reasoning_content / reasoning / reasoning_details field ever appears in the response.
+# Therefore no toggle, effort enum or budget control is exposed, and no reasoning field is ever surfaced to the caller.
+# tool_choice: live probe confirms auto / none / required / named (specific) function are all accepted (HTTP 200).
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
@@ -9,7 +14,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 structured_output = true
 
@@ -17,7 +22,6 @@ structured_output = true
 context = 200_000
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.10
