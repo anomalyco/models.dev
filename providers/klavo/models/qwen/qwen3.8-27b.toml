@@ -1,9 +1,19 @@
-# Pricing: https://ai.klavo.ru/models/qwen3.8-27b lists 42 / 8 / 250 RUB per 1M input / cached input /
-# output tokens (checked 2026-11-10); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4 decimals.
-# Klavo AI routes each request to one of several providers of the model (see the page); limits are the
-# smallest across them.
-# Effort: reasoning_effort = none|low|medium|xhigh; none turns reasoning off (no separate toggle); other levels map to the nearest.
-# Live check 2026-11-10 through https://api.klavo.ru/v1: none -> 0; low 46, medium 66, high 82, max 103 reasoning tokens.
+# Pricing: https://ai.klavo.ru/models/qwen3.8-27b lists 42 / 8 / 250 RUB per 1M input / cached input / output tokens
+# (checked 2026-11-10); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4 decimals.
+# Klavo AI is a relay: a request goes to one of the upstream providers of the model, and the limits are the smallest
+# across them.
+# Limits: GET https://api.klavo.ru/v1/models reports context_length 1_001_536 and meta.max_output 65_536 (checked
+# 2026-11-10); a request with max_tokens = 65_536 was accepted live on 2026-11-10.
+# Toggle: reasoning.enabled = false turns reasoning off (thinking.type = disabled is taken too); any reasoning_effort
+# level turns it on.
+# Effort: reasoning_effort = low|medium|xhigh; other levels map to the nearest.
+# Live check 2026-11-10 through https://api.klavo.ru/v1, 2 requests per variant, median reasoning tokens: off -> 0
+# reasoning tokens (sent as reasoning_effort = "none", which the API maps to the same switch).
+# high and max act as xhigh: the upstream deployment has three levels (low, medium, xhigh). The live check is too
+# small to separate levels (2 requests each: high 95 and 69, max 98 and 109 reasoning tokens), so it is cited for the
+# off switch only.
+# No budget: the API takes reasoning.max_tokens and thinking.budget_tokens, but turns them into an effort level (up to
+# 4096 low, up to 16384 medium, up to 32768 high, above that xhigh). No token budget reaches the model.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
@@ -11,7 +21,7 @@ base_model = "alibaba/qwen3.8-27b"
 input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
 
 [limit]
 context = 1_001_536
