@@ -468,3 +468,34 @@ test("defaults fill a new file only, and one write price speaks for the first ca
   expect(writes.get("providers/host/models/lab/a.toml")).toContain('write = { "5m" = 1.5, "1h" = 2 }');
   expect(writes.get("providers/host/models/lab/b.toml")).toContain("output = 1_000");
 });
+
+test("merge: bands replaces context bands, keeping a band's operator and cache TTLs and other overrides", async () => {
+  const bands = `
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 2
+cache = { read = 0.2, write = { "5m" = 2.5, "1h" = 4 } }
+
+[[cost.text.input.overrides]]
+when = { utc_hours = { gte = "16:00" } }
+price = 0.5
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 500_000 } }
+price = 3
+`;
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/a.toml": file("lab/a", 1).replace("[cost.text.output]", `${bands}\n[cost.text.output]`),
+  });
+  const owns = [{ path: "cost.text.input.overrides", merge: "bands" as const }];
+  const band = { when: { context: { gt: 200_000 } }, price: 2.2, cache: { read: 0.2, write: 3 } };
+  const { writes } = await plan(provider([{ id: "lab/a", cost: { text: { input: { overrides: [band] } } } }], { owns }), { root });
+  const overrides = (Bun.TOML.parse(writes.get("providers/host/models/lab/a.toml")!) as any).cost.text.input.overrides;
+  expect(overrides).toEqual([
+    { when: { context: { gte: 200_000 } }, price: 2.2, cache: { read: 0.2, write: { "5m": 3, "1h": 4 } } },
+    { when: { utc_hours: { gte: "16:00" } }, price: 0.5 },
+  ]);
+  const none = await plan(provider([{ id: "lab/a", cost: { text: { input: { overrides: null } } } }], { owns }), { root });
+  expect((Bun.TOML.parse(none.writes.get("providers/host/models/lab/a.toml")!) as any).cost.text.input.overrides).toEqual([{ when: { utc_hours: { gte: "16:00" } }, price: 0.5 }]);
+});

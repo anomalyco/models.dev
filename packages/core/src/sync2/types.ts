@@ -59,12 +59,16 @@ export type Observation = Observed<ModelFields> & {
  *   missing or says `supported = false`. Controls a file states are kept.
  * - `refresh`: only updates a value the file itself sets (or writes it into a
  *   new file); a file that inherits the field keeps inheriting it.
+ * - `bands`: a cost override list. The source's context bands replace the file's;
+ *   a band at a file band's threshold keeps the file's operator (`gt`/`gte`),
+ *   its other keys and its cache write TTLs (one write price updates the
+ *   first). Overrides with other conditions stay. null means no bands.
  * `standalone: true` limits a field to files without a base_model, and
  * `createOnly: true` to new files.
  */
 export type Owned =
   | string
-  | (OwnedRule & { merge?: "min" | "nonzero" | "deprecated" | "tables" | "report" | "seed" | "refresh" })
+  | (OwnedRule & { merge?: "min" | "nonzero" | "deprecated" | "tables" | "report" | "seed" | "refresh" | "bands" })
   | (OwnedRule & { merge: "kinds"; only?: string[]; addOnly?: boolean });
 
 interface OwnedRule {

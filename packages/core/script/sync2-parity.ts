@@ -22,6 +22,34 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  ofox: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const effective = (model: Raw) => (model.provider_price?.is_override ? model.provider_price.pricing : model.pricing);
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "z-ai/glm-5.2")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const pricing = effective(next);
+          switch (model.id) {
+            case "openai/gpt-6.1-terra": pricing.input = "0.0000011"; pricing.context_price_tiers[0].output = 8e-6; break;
+            case "openai/gpt-6.1-sol": delete pricing.context_price_tiers; break;
+            case "moonshotai/kimi-k3": pricing.context_price_tiers = [{ threshold_tokens: 128_000, input: 6e-6, output: 3e-5 }]; break;
+            case "deepseek/deepseek-v4.1-flash": delete pricing.input_cache_read; break;
+            case "x-ai/grok-4.7": next.provider_price.is_override = false; break;
+            case "qwen/qwen3.8-flash": pricing.input_cache_write = "0.0000002"; break;
+            case "anthropic/claude-opus-5": pricing.input_cache_write_5m = "0.000007"; break;
+            case "google/gemini-3.8-flash": pricing.audio = "0.000002"; break;
+            case "z-ai/glm-5.3": next.is_deprecated = true; break;
+            case "moonshotai/kimi-k3.1-pro": delete pricing.input; delete pricing.output; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "z-ai/glm-5.3");
+      data.push({ ...structuredClone(template), id: "z-ai/glm-6" });
+      return { ...raw, data };
+    },
+  },
   ambient: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

@@ -15,6 +15,9 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // Ofox: the 1h cache write price is read from the catalog; the old sync
+  // ignored it and scaled the file's 1h price by the change to the 5m one.
+  "ofox/perturbed": ["providers/ofox/models/anthropic/claude-opus-5.toml"],
   // Ambient: a new model that reasons with no controls is a gap; the old sync
   // wrote reasoning = { supported = true }.
   "ambient/perturbed": ["providers/ambient/models/qwen/qwen3-235b-a22b-thinking-2507.toml"],

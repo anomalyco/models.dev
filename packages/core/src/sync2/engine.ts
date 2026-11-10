@@ -252,13 +252,13 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
 
     // The source only says whether a model is deprecated, so it clears no other status.
     if (merge === "deprecated" && observed !== "deprecated" && current !== "deprecated") continue;
-    if (observed === null) {
+    if (observed === null && merge !== "bands") {
       if (own === undefined) continue;
       unsetPath(doc, path);
       changes.push({ path, before: own, after: fromBase });
       continue;
     }
-    let next: unknown = observed;
+    let next: unknown = observed ?? [];
     // One write price speaks for the first cache TTL a file prices.
     if (path.endsWith(".cache.write") && typeof next === "number" && isTable(current)) next = { ...current, [Object.keys(current)[0]!]: next };
     if (merge === "min" && typeof next === "number" && typeof current === "number") next = Math.min(next, current);
@@ -266,9 +266,18 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     if (merge === "nonzero" && next === 0 && current === undefined) continue;
     if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, fromBase, only, addOnly);
     if (merge === "tables" && isTable(next)) next = mergeTables(current, next, path === "api" ? options.defaultApi : undefined);
+    if (merge === "bands" && Array.isArray(next)) {
+      next = mergeBands(current, next);
+      if ((next as unknown[]).length === 0) {
+        if (own === undefined) continue;
+        unsetPath(doc, path);
+        changes.push({ path, before: own, after: undefined });
+        continue;
+      }
+    }
     if (equal(current, next) || next === undefined) continue;
     // Removing every table leaves none (an observed `{}` such as `budget = {}` is a value).
-    if (merge === "tables" && isTable(next) && Object.keys(next).length === 0 && Object.keys(observed).length > 0) {
+    if (merge === "tables" && isTable(next) && Object.keys(next).length === 0 && isTable(observed) && Object.keys(observed).length > 0) {
       if (own === undefined) continue;
       unsetPath(doc, path);
       changes.push({ path, before: own, after: undefined });
@@ -406,6 +415,34 @@ function mergeKinds(current: unknown[], observed: unknown[], lab: unknown, only?
   const kinds = (list: unknown[]) => [...new Set(list.map(kind))].sort();
   if (equal(kinds(current), kinds(observed))) return current;
   return [...new Set(observed.map(kind))].flatMap((value) => formats(observed.find((item) => kind(item) === value)));
+}
+
+// The source's context bands in place of the file's. A source band at the same
+// threshold as a file band (`gt` or `gte`) updates it: the file keeps its
+// operator and other keys, and one cache write price updates the first TTL a
+// band prices. File overrides with other conditions (time of day, service
+// tier) stay after the bands.
+function mergeBands(current: unknown, observed: unknown[]) {
+  const file = Array.isArray(current) ? current : [];
+  const threshold = (item: unknown) => {
+    const when = isTable(item) ? item.when : undefined;
+    if (!isTable(when) || Object.keys(when).length !== 1 || !isTable(when.context)) return undefined;
+    const context = when.context;
+    return Object.keys(context).length === 1 ? (context.gt ?? context.gte) as number | undefined : undefined;
+  };
+  const bands = observed.map((band) => {
+    const match = file.find((item) => threshold(item) !== undefined && threshold(item) === threshold(band));
+    if (!isTable(match) || !isTable(band)) return structuredClone(band);
+    const { price: _price, reasoning: _reasoning, unit: _unit, cache: fileCache, ...rest } = structuredClone(match);
+    const { when: _when, cache, ...prices } = structuredClone(band);
+    const write = isTable(cache) ? cache.write : undefined;
+    const fileWrite = isTable(fileCache) ? fileCache.write : undefined;
+    const merged = isTable(cache) && typeof write === "number" && isTable(fileWrite)
+      ? { ...cache, write: { ...fileWrite, [Object.keys(fileWrite)[0]!]: write } }
+      : cache;
+    return { ...rest, ...prices, ...(merged === undefined ? {} : { cache: merged }) };
+  });
+  return [...bands, ...file.filter((item) => threshold(item) === undefined)];
 }
 
 // The source's tables join the file's: a source key replaces the file's value
