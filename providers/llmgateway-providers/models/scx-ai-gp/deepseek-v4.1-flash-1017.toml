@@ -7,8 +7,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = false
 
 [limit]

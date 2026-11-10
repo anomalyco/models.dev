@@ -1,0 +1,32 @@
+# Released 2026-10-06 (Apache-2.0): https://blog.google/innovation-and-ai/technology/developers-tools/embeddinggemma-2/
+# Model card: https://ai.google.dev/gemma/docs/embeddinggemma/model_card_2 and https://huggingface.co/google/embeddinggemma-2
+# Text (incl. code), images, video and audio in one 768-dimensional space (Matryoshka 512/256/128); 8,192-token context.
+# No input file formats are documented, so modalities stay generic.
+schema = 2
+v2_only = true
+type = "embedding"
+name = "EmbeddingGemma 2"
+description = "Open multimodal embedding model for text, code, images, video and audio"
+family = "gemma"
+open_weights = true
+release_date = "2026-10-06"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/google/embeddinggemma-2"

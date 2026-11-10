@@ -4,6 +4,7 @@
 # https://developers.openai.com/api/docs/pricing
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
+# Cache writes: 30m (default) is 1.25x input; 12h (Responses API) is 2.5x. https://developers.openai.com/api/docs/guides/prompt-caching
 schema = 2
 base_model = "openai/gpt-5.6-sol"
 name = "Daybreak Blue"
@@ -16,18 +17,18 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 structured_output = true
 system_updates = true
 store = true
-cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
 
 [cost.text.input]
 price = 4
-cache = { read = 0.4, write = 5 }
+cache = { read = 0.4, write = { "30m" = 5, "12h" = 10 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 8
-cache = { read = 0.8, write = 10 }
+cache = { read = 0.8, write = { "30m" = 10, "12h" = 20 } }
 
 [cost.text.output]
 price = 20

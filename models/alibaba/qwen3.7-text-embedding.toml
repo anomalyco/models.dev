@@ -1,0 +1,27 @@
+# https://www.alibabacloud.com/help/en/model-studio/embedding (dimensions 256-2560, up to 128,000 tokens per input row)
+# https://www.alibabacloud.com/help/en/model-studio/qwen3-7-text-embedding (model info page)
+# Release: 2026-07-15, China (Beijing) listing on https://help.aliyun.com/zh/model-studio/newly-released-models
+#   (international deployment listed 2026-07-31). Accessed 2026-11-08.
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Qwen3.7 Text Embedding"
+description = "Multilingual Qwen3.7 text embedding model with 256 to 2,560 dimensions and 128K-token inputs"
+family = "qwen"
+open_weights = false
+release_date = "2026-07-15"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 128_000
+output = 0
