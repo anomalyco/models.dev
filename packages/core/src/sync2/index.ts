@@ -8,10 +8,11 @@ import { mistral } from "./providers/mistral.js";
 import { modular } from "./providers/modular.js";
 import { nearai } from "./providers/nearai.js";
 import { openai } from "./providers/openai.js";
+import { tinfoil } from "./providers/tinfoil.js";
 import { xai } from "./providers/xai.js";
 import type { SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { anthropic, google, meta, mistral, modular, nearai, openai, xai };
+export const modules: Record<string, SyncModule<any>> = { anthropic, google, meta, mistral, modular, nearai, openai, tinfoil, xai };
 
 export { plan, sync };
 export type * from "./types.js";

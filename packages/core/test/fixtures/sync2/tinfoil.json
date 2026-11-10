@@ -1,0 +1,624 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "deepseek-v4-1-flash",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "DeepSeek V4.1 Flash",
+      "created": 1789084800,
+      "context_window": 1048576,
+      "pricing": {
+        "inputTokenPricePer1M": 0.6,
+        "outputTokenPricePer1M": 1.45,
+        "cachedInputTokenPricePer1M": 0.01,
+        "requestPrice": 0
+      },
+      "reasoning": true,
+      "supported_efforts": [
+        "none",
+        "low",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "tool_calling": true,
+      "multimodal": true,
+      "type": "chat",
+      "endpoints": [
+        "/v1/chat/completions",
+        "/v1/responses"
+      ],
+      "description": "DeepSeek V4.1 Flash (1017), an efficient MoE model with a 1M-token context window, image input, Engram memory, built-in speculative decoding, and tool calling",
+      "intelligence": {
+        "high": 39,
+        "low": 31,
+        "medium": 36,
+        "off": 22
+      },
+      "reasoning_params": {
+        "effort_map": {
+          "high": "xhigh",
+          "low": "low",
+          "medium": "high"
+        },
+        "params": {
+          "/v1/chat/completions": {
+            "disable": {
+              "chat_template_kwargs": {
+                "thinking": false
+              }
+            },
+            "enable": {
+              "chat_template_kwargs": {
+                "reasoning_effort": "$EFFORT",
+                "thinking": true
+              }
+            }
+          },
+          "/v1/responses": {
+            "disable": {
+              "chat_template_kwargs": {
+                "thinking": false
+              }
+            },
+            "enable": {
+              "chat_template_kwargs": {
+                "reasoning_effort": "$EFFORT",
+                "thinking": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "glm-5-3",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "GLM-5.3",
+      "created": 1788391929,
+      "context_window": 1048576,
+      "pricing": {
+        "inputTokenPricePer1M": 1.8,
+        "outputTokenPricePer1M": 5.75,
+        "cachedInputTokenPricePer1M": 0.45,
+        "requestPrice": 0
+      },
+      "reasoning": true,
+      "supported_efforts": [
+        "low",
+        "high",
+        "max"
+      ],
+      "tool_calling": true,
+      "multimodal": false,
+      "type": "chat",
+      "endpoints": [
+        "/v1/chat/completions",
+        "/v1/responses"
+      ],
+      "description": "Z.ai's latest flagship for agentic coding and long-horizon tasks, with a 1M-token context window",
+      "intelligence": {
+        "high": 45,
+        "low": 39,
+        "medium": 42
+      },
+      "reasoning_params": {
+        "effort_map": {
+          "high": "max",
+          "low": "low",
+          "medium": "high"
+        },
+        "params": {
+          "/v1/chat/completions": {
+            "enable": {
+              "chat_template_kwargs": {
+                "reasoning_effort": "$EFFORT"
+              }
+            }
+          },
+          "/v1/responses": {
+            "enable": {
+              "chat_template_kwargs": {
+                "reasoning_effort": "$EFFORT"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "kimi-k3-1-pro",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Kimi K3.1 Pro",
+      "created": 1793923200,
+      "context_window": 262144,
+      "pricing": {
+        "inputTokenPricePer1M": 4,
+        "outputTokenPricePer1M": 20,
+        "cachedInputTokenPricePer1M": 0.4,
+        "requestPrice": 0
+      },
+      "reasoning": true,
+      "supported_efforts": [
+        "low",
+        "high",
+        "max"
+      ],
+      "tool_calling": true,
+      "multimodal": true,
+      "type": "chat",
+      "endpoints": [
+        "/v1/chat/completions",
+        "/v1/responses"
+      ],
+      "description": "Moonshot's flagship multimodal MoE model, post-trained from Kimi K3 for long-horizon coding, agentic workflows, and knowledge work",
+      "experimental": true,
+      "intelligence": {
+        "on": 46
+      }
+    },
+    {
+      "id": "kimi-k3",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Kimi K3",
+      "created": 1786147200,
+      "context_window": 262144,
+      "pricing": {
+        "inputTokenPricePer1M": 4,
+        "outputTokenPricePer1M": 20,
+        "cachedInputTokenPricePer1M": 0.6,
+        "requestPrice": 0
+      },
+      "reasoning": true,
+      "supported_efforts": [
+        "low",
+        "high",
+        "max"
+      ],
+      "tool_calling": true,
+      "multimodal": true,
+      "type": "chat",
+      "endpoints": [
+        "/v1/chat/completions",
+        "/v1/responses"
+      ],
+      "deprecated": true,
+      "deprecationDate": "2026-11-12",
+      "description": "Moonshot's flagship multimodal MoE model with hybrid attention for long-context reasoning, coding, and agentic workflows",
+      "intelligence": {
+        "on": 45
+      }
+    },
+    {
+      "id": "llama3-3-70b",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Llama 3.3 70B",
+      "created": 1721764788,
+      "context_window": 131072,
+      "pricing": {
+        "inputTokenPricePer1M": 1.75,
+        "outputTokenPricePer1M": 2.75,
+        "requestPrice": 0
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": true,
+      "multimodal": false,
+      "type": "chat",
+      "endpoints": [
+        "/v1/chat/completions"
+      ],
+      "description": "High-performance multilingual language model optimized for dialogue",
+      "intelligence": {
+        "off": 8
+      }
+    },
+    {
+      "id": "gemma4-31b",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Gemma 4 31B",
+      "created": 1775088000,
+      "context_window": 262144,
+      "pricing": {
+        "inputTokenPricePer1M": 0.4,
+        "outputTokenPricePer1M": 1,
+        "requestPrice": 0
+      },
+      "reasoning": true,
+      "supported_efforts": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "tool_calling": true,
+      "multimodal": true,
+      "type": "chat",
+      "endpoints": [
+        "/v1/chat/completions",
+        "/v1/responses"
+      ],
+      "description": "Google's most capable open model with image understanding and long-context support",
+      "intelligence": {
+        "off": 14,
+        "on": 15
+      },
+      "reasoning_params": {
+        "params": {
+          "/v1/chat/completions": {
+            "disable": {
+              "chat_template_kwargs": {
+                "enable_thinking": false
+              }
+            },
+            "enable": {
+              "chat_template_kwargs": {
+                "enable_thinking": true
+              }
+            }
+          },
+          "/v1/responses": {
+            "disable": {
+              "chat_template_kwargs": {
+                "enable_thinking": false
+              }
+            },
+            "enable": {
+              "chat_template_kwargs": {
+                "enable_thinking": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "gpt-oss-120b",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "GPT-OSS 120B",
+      "created": 1722888693,
+      "context_window": 131072,
+      "pricing": {
+        "inputTokenPricePer1M": 0.15,
+        "outputTokenPricePer1M": 0.6,
+        "requestPrice": 0
+      },
+      "reasoning": true,
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "tool_calling": true,
+      "multimodal": false,
+      "type": "chat",
+      "endpoints": [
+        "/v1/chat/completions",
+        "/v1/responses"
+      ],
+      "description": "Open-weight model designed for powerful reasoning, agentic tasks, and versatile developer use cases",
+      "intelligence": {
+        "high": 12,
+        "low": 10,
+        "medium": 11
+      },
+      "reasoning_params": {
+        "params": {
+          "/v1/chat/completions": {
+            "enable": {
+              "reasoning_effort": "$EFFORT"
+            }
+          },
+          "/v1/responses": {
+            "enable": {
+              "reasoning": {
+                "effort": "$EFFORT"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "gpt-oss-safeguard-120b",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "GPT-OSS Safeguard 120B",
+      "created": 1737676800,
+      "context_window": 131072,
+      "pricing": {
+        "inputTokenPricePer1M": 0.15,
+        "outputTokenPricePer1M": 0.6,
+        "requestPrice": 0
+      },
+      "reasoning": true,
+      "supported_efforts": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "tool_calling": true,
+      "multimodal": false,
+      "type": "safety",
+      "endpoints": [
+        "/v1/chat/completions",
+        "/v1/responses"
+      ],
+      "description": "Safety reasoning model for content classification and trust & safety applications"
+    },
+    {
+      "id": "pii-filter",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Privacy Filter",
+      "created": 1756512000,
+      "context_window": 80000,
+      "pricing": {
+        "inputTokenPricePer1M": 0.8,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0.0002
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "safety",
+      "endpoints": [
+        "/redact"
+      ],
+      "description": "PII span detection and redaction inside a secure enclave."
+    },
+    {
+      "id": "nomic-embed-text",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Nomic Embed Text",
+      "created": 1713509298,
+      "context_window": 8192,
+      "pricing": {
+        "inputTokenPricePer1M": 0.016,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "embedding",
+      "endpoints": [
+        "/v1/embeddings"
+      ],
+      "description": "Open-source text embedding model that outperforms OpenAI models on key benchmarks"
+    },
+    {
+      "id": "doc-upload",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Private Document Processing",
+      "created": 1716076551,
+      "pricing": {
+        "inputTokenPricePer1M": 0,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0.05
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": true,
+      "type": "document",
+      "endpoints": [
+        "/v1/convert/file"
+      ],
+      "description": "Private document processing and conversion service."
+    },
+    {
+      "id": "voxtral-small-24b",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Voxtral Small 24B",
+      "created": 1737590400,
+      "context_window": 32768,
+      "pricing": {
+        "inputTokenPricePer1M": 0.2,
+        "outputTokenPricePer1M": 0.6,
+        "requestPrice": 0
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "audio",
+      "endpoints": [
+        "/v1/audio/transcriptions",
+        "/v1/audio/translations",
+        "/v1/chat/completions"
+      ],
+      "description": "Audio-capable model built on Mistral Small 3.1 for transcription, translation, and spoken queries"
+    },
+    {
+      "id": "websearch",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Private Web Search",
+      "created": 1738454400,
+      "pricing": {
+        "inputTokenPricePer1M": 0,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0.05
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "tool",
+      "endpoints": [
+        "/v1/chat/completions",
+        "/v1/responses"
+      ],
+      "description": "Web search tool to augment chat models."
+    },
+    {
+      "id": "whisper-large-v3-turbo",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Whisper Large V3 Turbo",
+      "created": 1716699056,
+      "pricing": {
+        "inputTokenPricePer1M": 0,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0.01
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "audio",
+      "endpoints": [
+        "/v1/audio/transcriptions"
+      ],
+      "description": "High-performance speech recognition and transcription model"
+    },
+    {
+      "id": "qwen3-tts",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Qwen3-TTS 1.7B",
+      "created": 1740700800,
+      "pricing": {
+        "inputTokenPricePer1M": 0,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0.01
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "tts",
+      "endpoints": [
+        "/v1/audio/speech"
+      ],
+      "description": "Expressive text-to-speech model with instruction-controlled style and multilingual support"
+    },
+    {
+      "id": "voxtral-tts",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Voxtral TTS",
+      "created": 1781900473,
+      "pricing": {
+        "inputTokenPricePer1M": 0,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0.002
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "tts",
+      "endpoints": [
+        "/v1/audio/speech"
+      ],
+      "description": "Text-to-speech model from Mistral's Voxtral family."
+    },
+    {
+      "id": "voxtral-mini-4b-realtime",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Voxtral Mini 4B Realtime",
+      "created": 1781900473,
+      "pricing": {
+        "inputTokenPricePer1M": 0,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0.002
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "audio",
+      "endpoints": [
+        "/v1/realtime"
+      ],
+      "description": "Streaming realtime speech-to-text model from Mistral's Voxtral family."
+    },
+    {
+      "id": "decision-large",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Decision Large",
+      "created": 1792554331,
+      "context_window": 32768,
+      "pricing": {
+        "inputTokenPricePer1M": 0.4,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "decision",
+      "endpoints": [
+        "/v1/decisions"
+      ],
+      "description": "A decision model from vLLMs sr family",
+      "experimental": true
+    },
+    {
+      "id": "decision-medium",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Decision Medium",
+      "created": 1792554331,
+      "context_window": 32768,
+      "pricing": {
+        "inputTokenPricePer1M": 0.06,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "decision",
+      "endpoints": [
+        "/v1/decisions"
+      ],
+      "description": "A decision model from vLLMs sr family",
+      "experimental": true
+    },
+    {
+      "id": "decision-small",
+      "object": "model",
+      "owned_by": "tinfoil",
+      "name": "Decision Small",
+      "created": 1792554331,
+      "context_window": 32768,
+      "pricing": {
+        "inputTokenPricePer1M": 0.02,
+        "outputTokenPricePer1M": 0,
+        "requestPrice": 0
+      },
+      "reasoning": false,
+      "supported_efforts": [],
+      "tool_calling": false,
+      "multimodal": false,
+      "type": "decision",
+      "endpoints": [
+        "/v1/decisions"
+      ],
+      "description": "A decision model from vLLMs sr family",
+      "experimental": true
+    }
+  ]
+}

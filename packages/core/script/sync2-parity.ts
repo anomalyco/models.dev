@@ -16,6 +16,7 @@ import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
 import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
 import { openai as oldOpenai } from "../src/sync/providers/openai.js";
+import { tinfoil as oldTinfoil } from "../src/sync/providers/tinfoil.js";
 import { xai as oldXai } from "../src/sync/providers/xai.js";
 import { REPO_ROOT } from "../src/sync2/catalog.js";
 import { plan } from "../src/sync2/engine.js";
@@ -23,7 +24,7 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, openai: oldOpenai, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, openai: oldOpenai, tinfoil: oldTinfoil, xai: oldXai };
 
 type Raw = any;
 
@@ -167,6 +168,26 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
         { id: "ft:gpt-4o:me", object: "model", created: 1, owned_by: "user" },
       ],
     }),
+  },
+  tinfoil: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "kimi-k3")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.id === "glm-5-3") next.pricing = { ...next.pricing, inputTokenPricePer1M: 2, cachedInputTokenPricePer1M: 0.5 };
+          if (model.id === "deepseek-v4-1-flash") delete next.pricing.cachedInputTokenPricePer1M;
+          if (model.id === "llama3-3-70b") next.context_window = 65_536;
+          if (model.id === "gpt-oss-120b") next.supported_efforts = ["low", "high"];
+          if (model.id === "gemma4-31b") next.reasoning = false;
+          if (model.id === "kimi-k3-1-pro") next.supported_efforts = [];
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "glm-5-3");
+      data.push({ ...structuredClone(template), id: "glm-6" });
+      return { ...raw, data };
+    },
   },
   xai: {
     recorded: (raw) => raw,
