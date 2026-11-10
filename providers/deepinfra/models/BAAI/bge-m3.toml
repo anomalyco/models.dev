@@ -6,7 +6,7 @@ v2_only = true
 base_model = "baai/bge-m3"
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/deepinfra/embeddings" }
 
 [cost.text.input]
 price = 0.01

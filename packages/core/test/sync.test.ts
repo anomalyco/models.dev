@@ -6638,7 +6638,7 @@ test("Vercel sync maps every catalog type and lists the standard endpoint where 
   const base_url = "https://ai-gateway.vercel.sh/v1";
   const standard: Record<string, unknown> = {
     image: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
-    embedding: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
+    embedding: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/embeddings" } },
     reranking: { base_url, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
   };
   const vercelOnly = { base_url: "https://ai-gateway.vercel.sh/v4/ai", sdk: { opencodeai: "none" } };
@@ -7240,7 +7240,7 @@ test("OpenRouter rerank and embedding files name the packages that speak their e
     rerank: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
   });
   expect(media("examplelab/embed-1", "embeddings", "embedding")).toEqual({
-    embeddings: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" } },
+    embeddings: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/embeddings" } },
   });
 });
 
