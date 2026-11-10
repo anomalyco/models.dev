@@ -99,6 +99,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | nearai | same | same | On case-insensitive filesystems the new engine matches `qwen/x` to `Qwen/x`; the old one deletes the file. |
 | anthropic | same | same | The 1h cache write price is read from the pricing page instead of scaled from the 5m price (same result while Anthropic keeps the 1.25x and 2x ratios). A new alias (an undated ID whose dated model has a file) is built from the source alone; the old sync copied its dated sibling's hand-written fields. Not in the data. |
 | mistral | same | same | None in the data. A non-chat model (OCR, moderation) whose file has no `[api.*]` tables would get the provider's default API before its own; the old sync gave it only its own. Every such file already lists its API. |
+| openai | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
 | xai | same | same | A long-context band is written as `gte` (the docs bill prompts of at least the threshold). The old sync kept a file's operator but wrote `gt` for a band the file didn't have. |
 
 `meta`, `modular` and `nearai` still import fetch and parsing code (zod schemas, Meta's docs parser) from the old modules. Ports after those carry their own.

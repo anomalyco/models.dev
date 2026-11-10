@@ -15,6 +15,7 @@ import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
 import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
+import { openai as oldOpenai } from "../src/sync/providers/openai.js";
 import { xai as oldXai } from "../src/sync/providers/xai.js";
 import { REPO_ROOT } from "../src/sync2/catalog.js";
 import { plan } from "../src/sync2/engine.js";
@@ -22,7 +23,7 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, openai: oldOpenai, xai: oldXai };
 
 type Raw = any;
 
@@ -155,6 +156,17 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
       const efforts = { ...raw.reasoning_efforts, "mistral-large-4": ["low", "high"], "mistral-large-5": ["low", "high"], "mistral-medium-latest": [] };
       return { ...raw, data, reasoning_efforts: efforts };
     },
+  },
+  openai: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => ({
+      ...raw,
+      data: [
+        ...raw.data.filter((model: Raw) => model.id !== "gpt-4-turbo"),
+        { id: "gpt-9", object: "model", created: 1, owned_by: "system" },
+        { id: "ft:gpt-4o:me", object: "model", created: 1, owned_by: "user" },
+      ],
+    }),
   },
   xai: {
     recorded: (raw) => raw,
