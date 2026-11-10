@@ -11,6 +11,7 @@ import { tmpdir } from "node:os";
 import { syncProvider, type SyncProvider } from "../src/sync/index.js";
 import { anthropic as oldAnthropic } from "../src/sync/providers/anthropic.js";
 import { deepinfra as oldDeepinfra } from "../src/sync/providers/deepinfra.js";
+import { engy as oldEngy } from "../src/sync/providers/engy.js";
 import { fireworksAi as oldFireworks } from "../src/sync/providers/fireworks-ai.js";
 import { google as oldGoogle } from "../src/sync/providers/google.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
@@ -30,13 +31,33 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, deepinfra: oldDeepinfra, "fireworks-ai": oldFireworks, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  engy: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "glm-5.2")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.id === "glm-5.3") next.pricing.prompt = "0.000001";
+          if (model.id === "qwen3.6-35b-a3b") delete next.pricing.input_cache_read;
+          if (model.id === "deepseek-v4.1-flash") next.pricing.input_cache_read = "0.000000005";
+          if (model.id === "kimi-k3") next.context_length = 1_048_576;
+          if (model.id === "deepseek-v4-flash-0731") next.input_modalities = ["text", "image"];
+          if (model.id === "qwen3.8-27b") next.input_modalities = ["text"];
+          if (model.id === "glm-5.3-flash") next.input_modalities = [];
+          return next;
+        });
+      data.push({ ...structuredClone(raw.data[0]), id: "glm-6" }, { id: "" });
+      return { ...raw, data };
+    },
+  },
   "ollama-cloud": {
     recorded: (raw) => raw,
     perturbed: (raw) => ({
