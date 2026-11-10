@@ -149,7 +149,9 @@ function create(context: Context, observation: Observation) {
   const base = resolveBase(observation, labs);
   const doc: Doc = { schema: 2 };
   if (base !== undefined) doc.base_model = base;
-  patch(doc, observation, module.policy.owns, inherited(doc, labs), { defaultApi: context.defaultApi(resolved(doc, labs)), omitLabInput: module.policy.omitLabInput, creating: true });
+  const { defaults, ...stated } = observation;
+  const observed = defaults === undefined ? observation : { ...(mergeDeep(defaults as Doc, stated as Doc) as Observation), id: observation.id };
+  patch(doc, observed, module.policy.owns, inherited(doc, labs), { defaultApi: context.defaultApi(resolved(doc, labs)), omitLabInput: module.policy.omitLabInput, creating: true });
 
   const merged = resolved(doc, labs);
   const missing = REQUIRED.filter((path) => getPath(merged, path) === undefined);
@@ -257,6 +259,8 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
       continue;
     }
     let next: unknown = observed;
+    // One write price speaks for the first cache TTL a file prices.
+    if (path.endsWith(".cache.write") && typeof next === "number" && isTable(current)) next = { ...current, [Object.keys(current)[0]!]: next };
     if (merge === "min" && typeof next === "number" && typeof current === "number") next = Math.min(next, current);
     // A 0 is often a placeholder: it updates a price the file has but never adds one.
     if (merge === "nonzero" && next === 0 && current === undefined) continue;

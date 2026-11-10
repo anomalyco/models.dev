@@ -454,3 +454,17 @@ test("merge: refresh updates a value the file sets and never adds one", async ()
   expect([...writes.keys()].sort()).toEqual(["providers/host/models/lab/new.toml", "providers/host/models/lab/own.toml"]);
   expect(writes.get("providers/host/models/lab/new.toml")).toContain('name = "New"');
 });
+
+test("defaults fill a new file only, and one write price speaks for the first cache TTL", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/a.toml": file("lab/a", 1).replace("cache = { read = 0.1 }", 'cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }'),
+  });
+  const owns = ["cost.text.input.price", "cost.text.input.cache.write", "cost.text.output.price", "limit.output"];
+  const write = (value: number) => ({ text: { input: { price: 1, cache: { write: value } }, output: { price: 4 } } });
+  const same = await plan(provider([{ id: "lab/a", cost: write(1.25), defaults: { limit: { output: 1 } } }], { owns }), { root });
+  expect(same.writes.size).toBe(0);
+  const { writes } = await plan(provider([{ id: "lab/a", cost: write(1.5) }, { id: "lab/b", base: ["lab/a"], cost: write(1.5), defaults: { limit: { output: 1_000 } } }], { owns }), { root });
+  expect(writes.get("providers/host/models/lab/a.toml")).toContain('write = { "5m" = 1.5, "1h" = 2 }');
+  expect(writes.get("providers/host/models/lab/b.toml")).toContain("output = 1_000");
+});

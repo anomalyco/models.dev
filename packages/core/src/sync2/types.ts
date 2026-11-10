@@ -24,6 +24,12 @@ export type Observation = Observed<ModelFields> & {
   /** Leading comment for a newly created file. */
   header?: string;
   /**
+   * Values a new file takes for owned fields the observation leaves out (a
+   * fallback output limit, `tools.supported = false`). Existing files keep
+   * their own.
+   */
+  defaults?: Observed<ModelFields>;
+  /**
    * Only update a file that already exists: never create it or report it as a
    * gap (e.g. an alias the source lists next to its canonical ID).
    */

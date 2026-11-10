@@ -24,6 +24,7 @@ import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
 import { morph as oldMorph } from "../src/sync/providers/morph.js";
+import { nanoGpt as oldNanoGpt } from "../src/sync/providers/nano-gpt.js";
 import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
 import { novitaAi as oldNovita } from "../src/sync/providers/novita-ai.js";
 import { ollamaCloud as oldOllamaCloud } from "../src/sync/providers/ollama-cloud.js";
@@ -38,13 +39,45 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, baseten: oldBaseten, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, huggingface: oldHuggingface, kilo: oldKilo, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, requesty: oldRequesty, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, baseten: oldBaseten, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, huggingface: oldHuggingface, kilo: oldKilo, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, "nano-gpt": oldNanoGpt, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, requesty: oldRequesty, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  "nano-gpt": {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "openai/gpt-4.1")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const caps = (extra: Raw) => (next.capabilities = { ...next.capabilities, ...extra });
+          switch (model.id) {
+            case "openai/gpt-5.6-luna": next.pricing.prompt = 0.25; next.pricing.cacheWriteInputPer1kTokens = 0.0003; break;
+            case "anthropic/claude-opus-4.7": next.pricing.cacheWriteInputPer1kTokens = 0.007; break;
+            case "deepseek/deepseek-v3.2": delete next.pricing.cacheReadInputPer1kTokens; next.pricing.completion = 0.4; break;
+            case "z-ai/glm-5.3:thinking": next.reasoning_efforts = ["low", "high"]; break;
+            case "z-ai/glm-4.6:thinking": next.reasoning_efforts = []; break;
+            case "openai/gpt-5.1-codex": caps({ tool_calling: true, structured_output: true }); break;
+            case "qwen/qwen3.8-max": caps({ reasoning: true }); break;
+            case "minimax/minimax-m2.7": caps({ reasoning: false }); break;
+            case "deepseek/deepseek-v4-pro-0813": Object.assign(next, { context_length: 524_288, max_output_tokens: 131_072 }); break;
+            case "upstage/solar-pro-3": caps({ vision: true }); break;
+            case "Sao10K/L3-8B-Stheno-v3.2": Object.assign(next, { created: 1_800_000_000, open_weights: false }); break;
+            case "claw-high": next.pricing.note = "varies_by_modality"; next.pricing.prompt = 9; break;
+            case "Gemma-4-31B-Queen": next.architecture = { ...next.architecture, input_modalities: ["text", "images", "videos"] }; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "Sao10K/L3-8B-Stheno-v3.2");
+      data.push({ ...structuredClone(template), id: "meta-llama/llama-3.2-1b-instruct", name: "Llama 3.2 1B" });
+      data.push({ ...structuredClone(template), id: "acme/brand-new-70b", name: "Brand New 70B", capabilities: { tool_calling: undefined } });
+      data.push({ ...structuredClone(template), id: "nousresearch/hermes-new", name: null, description: null, max_output_tokens: null });
+      return { ...raw, data };
+    },
+  },
   kilo: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

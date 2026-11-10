@@ -34,6 +34,8 @@ export const example: SyncModule<Raw> = {
 
 An observation uses the same field names as a v2 provider file (`cost`, `limit`, `modalities`, `capabilities.reasoning`, `status`, `api`, ...). Leave out what the source doesn't say. Use `null` when the source says there is none, for example `overrides: null` for a flat price.
 
+`defaults` holds values a new file takes for owned fields the observation leaves out (`tools.supported = false`, an output limit of the context window). Existing files keep their own.
+
 `updateOnly: true` marks an observation that may only update a file that exists, such as an alias the source lists next to its canonical ID. It never creates a file or a gap.
 
 `http.ts` has `fetchJSON`, `fetchText` and `requireEnv` for the fetch side.
@@ -70,7 +72,7 @@ The engine takes the first hint with a lab file, ignoring case. A test checks th
 
 For each observation it finds the file (exact ID, then ignoring case) and:
 
-- Update: copies each owned field into the file. A value equal to what the lab file already gives is left to inheritance instead of written. If nothing changed, the file isn't touched.
+- Update: copies each owned field into the file. A value equal to what the lab file already gives is left to inheritance instead of written. One cache write price updates the first TTL of a file that prices several. If nothing changed, the file isn't touched.
 - Create: picks the base model (the first `base` hint with a file under `models/`, ignoring case), writes `schema`, `base_model` and the owned fields that differ from the lab.
 - Remove: applies the `removals` policy to files no observation matched, skipping files `manages` says no to.
 
@@ -121,6 +123,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | mistral | same | same | None in the data. A non-chat model (OCR, moderation) whose file has no `[api.*]` tables would get the provider's default API before its own; the old sync gave it only its own. Every such file already lists its API. |
 | modular | same | same | |
 | morph | same | same | |
+| nano-gpt | same | 1 file | A file that starts reasoning with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. A `systemone` table's `media_input` isn't synced (no file has one). An existing file whose lab has no output limit keeps its own instead of taking the context window. |
 | nearai | same | same | On case-insensitive filesystems the new engine matches `qwen/x` to `Qwen/x`; the old one deletes the file. |
 | novita-ai | same | same | A route that drops Chat Completions loses that table even when it's the file's first; the old sync kept the first table. Every route lists Chat Completions today. A long-context band's cache price of 0 is left out instead of written as 0. |
 | ollama-cloud | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
