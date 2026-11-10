@@ -149,7 +149,7 @@ function create(context: Context, observation: Observation) {
   const base = resolveBase(observation, labs);
   const doc: Doc = { schema: 2 };
   if (base !== undefined) doc.base_model = base;
-  patch(doc, observation, module.policy.owns, inherited(doc, labs), { defaultApi: context.defaultApi(resolved(doc, labs)), omitLabInput: module.policy.omitLabInput });
+  patch(doc, observation, module.policy.owns, inherited(doc, labs), { defaultApi: context.defaultApi(resolved(doc, labs)), omitLabInput: module.policy.omitLabInput, creating: true });
 
   const merged = resolved(doc, labs);
   const missing = REQUIRED.filter((path) => getPath(merged, path) === undefined);
@@ -215,6 +215,8 @@ export interface PatchOptions {
   defaultApi?: string;
   /** See `Policy.omitLabInput`. */
   omitLabInput?: boolean;
+  /** The file is new, so `createOnly` fields are written. */
+  creating?: boolean;
 }
 
 /**
@@ -234,9 +236,10 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     unset.push(path);
   };
   for (const owned of owns) {
-    const { path, merge, only, addOnly, standalone } = typeof owned === "string" ? { path: owned } : { only: undefined, addOnly: undefined, ...owned };
+    const { path, merge, only, addOnly, standalone, createOnly } = typeof owned === "string" ? { path: owned } : { only: undefined, addOnly: undefined, ...owned };
     if (merge === "report") continue;
     if (standalone && typeof doc.base_model === "string") continue;
+    if (createOnly && !options.creating) continue;
     const observed = getPath(observation, path);
     if (observed === undefined) continue;
     if (merge === "seed" && (observed === null || statesCapability(original, path))) continue;

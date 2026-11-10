@@ -1,5 +1,6 @@
 // Conversions every source needs, so modules don't each hand-roll them.
 
+import { inferKimiFamily, ModelFamilyValues } from "../family.js";
 import { ReasoningEffortV2Values, type ReasoningEffortV2 } from "../schema-v2.js";
 
 /** Rounds away float noise (1.4000000000000001) at six decimals. */
@@ -48,4 +49,18 @@ export function labCandidates(id: string, namespaces: Record<string, string> = {
   const namespace = lowered.slice(0, slash);
   const mapped = namespaces[namespace];
   return mapped === undefined ? [lowered] : [`${mapped}${lowered.slice(slash)}`, lowered];
+}
+
+/** The longest model family named in a host's ID or display name (Kimi by its own rules). */
+export function inferFamily(id: string, name: string) {
+  const kimi = inferKimiFamily(id, name);
+  if (kimi !== undefined) return kimi;
+  const target = `${id} ${name}`.toLowerCase();
+  return [...ModelFamilyValues]
+    .sort((a, b) => b.length - a.length)
+    .find((family) => {
+      const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+    });
 }

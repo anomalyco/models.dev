@@ -12,11 +12,10 @@ import path from "node:path";
 
 import { z } from "zod";
 
-import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import { REPO_ROOT } from "../catalog.js";
 import { bearer, fetchJSON } from "../http.js";
 import type { Observation, SyncModule } from "../types.js";
-import { reasoningControls } from "../units.js";
+import { inferFamily, reasoningControls } from "../units.js";
 
 const API_ENDPOINT = "https://api.venice.ai/api/v1/models?type=text";
 
@@ -207,16 +206,3 @@ function resolveBase(id: string, name: string) {
 }
 
 const normalize = (value: string) => value.toLowerCase().replaceAll(/[^a-z0-9]/g, "");
-
-function inferFamily(id: string, name: string) {
-  const kimi = inferKimiFamily(id, name);
-  if (kimi !== undefined) return kimi;
-  const target = `${id} ${name}`.toLowerCase();
-  return [...ModelFamilyValues]
-    .sort((a, b) => b.length - a.length)
-    .find((family) => {
-      const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
-    });
-}

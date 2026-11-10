@@ -37,6 +37,13 @@ const EXPECTED: Record<string, string[]> = {
     "providers/deepinfra/models/google/gemma-3-4b-it.toml",
     "providers/deepinfra/models/moonshotai/Kimi-K3.toml",
   ],
+  // Chutes: a kind the source changes is written in the lab's formats (the old
+  // sync wrote bare kinds), and a new model that reasons with no controls is a gap.
+  "chutes/perturbed": [
+    "providers/chutes/models/Qwen/Qwen3.5-9B-TEE.toml",
+    "providers/chutes/models/acme/Thinker-9B.toml",
+    "providers/chutes/models/moonshotai/Kimi-K2.6-TEE.toml",
+  ],
   // Cortecs: a new model with no lab file is a gap (the old sync wrote a
   // standalone file), and so is a new or standalone model that starts reasoning
   // with no controls (the old sync wrote reasoning = { supported = true }).

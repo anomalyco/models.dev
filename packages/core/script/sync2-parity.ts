@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 
 import { syncProvider, type SyncProvider } from "../src/sync/index.js";
 import { anthropic as oldAnthropic } from "../src/sync/providers/anthropic.js";
+import { chutes as oldChutes } from "../src/sync/providers/chutes.js";
 import { cortecs as oldCortecs } from "../src/sync/providers/cortecs.js";
 import { deepinfra as oldDeepinfra } from "../src/sync/providers/deepinfra.js";
 import { engy as oldEngy } from "../src/sync/providers/engy.js";
@@ -33,13 +34,36 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, chutes: oldChutes, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  chutes: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "zai-org/GLM-5.1-TEE")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (model.id === "zai-org/GLM-5.2-TEE") next.pricing.prompt = 1.3;
+          if (model.id === "Qwen/Qwen3.6-27B-TEE") delete next.pricing.input_cache_read;
+          if (model.id === "Qwen/Qwen3.5-27B-TEE") next.supported_features = ["json_mode", "reasoning"];
+          if (model.id === "deepseek-ai/DeepSeek-V3.2-TEE") next.supported_sampling_parameters = ["top_p"];
+          if (model.id === "moonshotai/Kimi-K2.6-TEE") next.input_modalities = ["text", "image"];
+          if (model.id === "google/gemma-4-31B-turbo-TEE") next.context_length = 65_536;
+          if (model.id === "tencent/Hy4") Object.assign(next, { context_length: 262_144, max_output_length: 32_768, supported_features: ["tools"] });
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "Qwen/Qwen3.6-27B-TEE");
+      data.push({ ...structuredClone(template), id: "Qwen/Qwen3.5-9B-TEE", supported_features: ["tools"] });
+      data.push({ ...structuredClone(template), id: "acme/Brand-New-9B", supported_features: ["tools", "structured_outputs"] });
+      data.push({ ...structuredClone(template), id: "acme/Thinker-9B", supported_features: ["reasoning"] });
+      return { ...raw, data };
+    },
+  },
   cortecs: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

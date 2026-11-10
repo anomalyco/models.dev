@@ -434,3 +434,11 @@ test("merge: kinds adds a kind in the lab's formats, and a list back to the lab'
   const { writes } = await plan(provider([{ id: "lab/a", modalities: { input: ["text", "image", "video"] } }], { owns: [{ path: "modalities.input", merge: "kinds" }] }), { root });
   expect(writes.get("providers/host/models/lab/a.toml")).not.toContain("[modalities]");
 });
+
+test("createOnly fields are written into new files only", async () => {
+  const root = await catalog({ "models/lab/a.toml": lab(false), "providers/host/models/lab/a.toml": file("lab/a", 1) });
+  const owns = ["cost.text.input.price", "cost.text.output.price", { path: "name", createOnly: true }];
+  const { writes } = await plan(provider([priced("lab/a", 2, { name: "Host A" }), priced("lab/b", 2, { base: ["lab/a"], name: "Host B" })], { owns }), { root });
+  expect(writes.get("providers/host/models/lab/a.toml")).not.toContain("name =");
+  expect(writes.get("providers/host/models/lab/b.toml")).toContain('name = "Host B"');
+});

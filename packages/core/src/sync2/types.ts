@@ -51,7 +51,8 @@ export type Observation = Observed<ModelFields> & {
  * - `seed`: a capability detail (`capabilities.reasoning.toggle`) only written
  *   while the file doesn't state that capability itself: its own table is
  *   missing or says `supported = false`. Controls a file states are kept.
- * `standalone: true` limits a field to files without a base_model.
+ * `standalone: true` limits a field to files without a base_model, and
+ * `createOnly: true` to new files.
  */
 export type Owned =
   | string
@@ -62,6 +63,8 @@ interface OwnedRule {
   path: string;
   /** Only patched on files without a base_model; with one, the lab's value stands. */
   standalone?: boolean;
+  /** Only written when the file is created; an existing file keeps its own value. */
+  createOnly?: boolean;
 }
 
 export interface Policy {
