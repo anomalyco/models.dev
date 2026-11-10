@@ -15,7 +15,7 @@ base_model = "google/gemini-embedding-2"
 output = 1
 
 [api.embed-content]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/google/embeddings" }
 
 [api.embeddings]
 base_url = "https://generativelanguage.googleapis.com/v1beta/openai"

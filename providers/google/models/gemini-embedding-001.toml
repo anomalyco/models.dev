@@ -26,7 +26,7 @@ context = 2_048
 output = 1
 
 [api.embed-content]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/google/embeddings" }
 
 [api.embeddings]
 base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
