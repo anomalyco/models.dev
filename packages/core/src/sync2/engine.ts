@@ -153,7 +153,7 @@ function create(context: Context, observation: Observation) {
   const base = resolveBase(observation, labs);
   const doc: Doc = { schema: 2 };
   if (base !== undefined) doc.base_model = base;
-  const { defaults, ...stated } = observation;
+  const { defaults, header: _header, ...stated } = observation;
   const observed = defaults === undefined ? observation : { ...(mergeDeep(defaults as Doc, stated as Doc) as Observation), id: observation.id };
   patch(doc, observed, module.policy.owns, inherited(doc, labs), { defaultApi: context.defaultApi(resolved(doc, labs)), omitLabInput: module.policy.omitLabInput, creating: true });
 

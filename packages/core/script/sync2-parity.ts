@@ -22,6 +22,33 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  "merge-gateway": {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.model !== "cohere/command-r-08-2024")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const vendor = next.vendors[next.provider];
+          switch (model.model) {
+            case "anthropic/claude-fable-5-1": vendor.pricing.input_per_million = 11; vendor.prompt_caching.cache_read_cost_per_million = 0.3; break;
+            case "openai/gpt-6.1-sol": vendor.pricing.long_context = null; break;
+            case "google/gemini-3.8-flash": vendor.prompt_caching = { mode: "none" }; vendor.max_output_tokens = 8_192; break;
+            case "qwen/qwen3.8-max": vendor.capabilities.supports_reasoning = false; next.display_name = "qwen3.8-max"; break;
+            case "deepseek/deepseek-v4-pro": next.availability_status = "deprecated"; break;
+            case "xai/grok-4.7": vendor.capabilities.input = ["text"]; vendor.capabilities.supports_structured_outputs = false; break;
+            case "mistral/devstral-medium-latest": next.availability_status = "available"; vendor.availability_status = "available"; break;
+            case "meta/muse-spark-1.1": vendor.capabilities.output = ["image"]; break;
+            case "zai/glm-5.3": vendor.pricing.long_context = { threshold_tokens: 200_000, input_per_million: vendor.pricing.input_per_million * 2 }; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.model === "zai/glm-5.3");
+      data.push({ ...structuredClone(template), model: "zai/glm-4.6v-flash", display_name: "GLM-4.6V-Flash" });
+      data.push({ ...structuredClone(template), model: "zai/glm-9-new", display_name: "GLM 9 New" });
+      return { ...raw, data };
+    },
+  },
   aiand: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
