@@ -1,0 +1,36 @@
+# Sources (accessed 2026-11-09):
+# - Price, USD per 1M tokens: $2 input, $0.20 cached input, $10 output.
+#   https://logits.com/pricing and the price list JSON at https://api.logits.com/models
+#   (prompt 0.000002, cached_prompt 0.0000002 per token; same rate for image tokens).
+# - Context window and max output (both 1048576): https://logits.com/pricing and
+#   GET https://api.logits.com/v1/models. Input and output share the context.
+# - Input: text and images only on Logits (PNG, JPEG, WebP, GIF, BMP, TIFF, PPM;
+#   https://api.logits.com/models). Video is not listed, so the lab's video
+#   inputs are dropped. PPM has no standard MIME type and is left out.
+# - Reasoning: /v1/models lists none, minimal, low, medium, high, xhigh, max;
+#   minimal and xhigh are aliases, so the distinct levels are none, low, medium,
+#   high and max. Default is low. Request field: "reasoning_effort".
+#   /v1/models describes "none" as "Disable reasoning." for this model.
+# - Tools: the parameter table at https://logits.com/docs lists tools as supported
+#   (tool_choice auto and none; required and named function are best effort).
+# - Structured output is not set: the same table says response_format is
+#   passed through to the model, not enforced, for this model.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "image/bmp", "image/tiff"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+
+[limit]
+output = 1_048_576
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

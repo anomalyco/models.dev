@@ -1,0 +1,36 @@
+# Sources (accessed 2026-11-09):
+# - Price, USD per 1M tokens: $0.15 input, $0.003 cached input, $0.60 output.
+#   https://logits.com/pricing and the price list JSON at https://api.logits.com/models
+#   (prompt 0.00000015, cached_prompt 0.000000003 per token; same rate for image tokens).
+# - Context window (1048576) and max output (393216): https://logits.com/pricing and
+#   GET https://api.logits.com/v1/models
+# - Image input: PNG, JPEG, WebP, GIF, BMP, TIFF and PPM, up to 120 images, URL or
+#   base64 (https://api.logits.com/models). PPM has no standard MIME type and is left out.
+# - Reasoning: /v1/models lists none, minimal, low, medium, high, xhigh, max.
+#   minimal is an alias for low and xhigh for high, so the distinct levels are
+#   none, low (50), medium (60), high (75) and max (100). Default is low.
+#   Request field: "reasoning_effort" on /v1/chat/completions.
+# - Tools and structured output: the parameter table at https://logits.com/docs lists
+#   tools as supported, tool_choice auto/none/required/named function, and
+#   response_format json_object and strict json_schema as supported.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "image/bmp", "image/tiff"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.60
