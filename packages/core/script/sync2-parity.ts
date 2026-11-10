@@ -22,6 +22,48 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  digitalocean: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const variants = (model: Raw, keep: (variant: Raw) => boolean) => {
+        model.pricing_detail.variants = model.pricing_detail.variants.filter(keep);
+      };
+      const catalog = raw.catalog.map((model: Raw) => {
+        const next = structuredClone(model);
+        switch (model.model_id) {
+          case "glm-5.3": next.pricing.input_price_per_million = 0.0000012; next.context_window = "524288"; break;
+          case "openai-gpt-5.4": variants(next, (variant: Raw) => !variant.label.startsWith("Flex Mode")); break;
+          case "openai-gpt-5.5": variants(next, (variant: Raw) => !variant.label.startsWith("Long form")); break;
+          case "anthropic-claude-opus-5": next.pricing_detail.variants.find((variant: Raw) => variant.label === "Standard").prices.cache_write_1h_input_price_per_million = 0.000012; break;
+          case "openai-gpt-image-2": next.pricing.image_input_price_per_million = 0.00001; break;
+          case "deepseek-3.2": delete next.pricing.cache_read_input_price_per_million; next.max_output_tokens = "16384"; break;
+          case "kimi-k2.6": next.modalities = { input: ["text"], output: ["text"] }; break;
+        }
+        return next;
+      });
+      const models = raw.models
+        .filter((model: Raw) => model.id !== "mimo-v2.5-pro")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          switch (model.id) {
+            case "glm-5.3": next.reasoning_efforts = ["high", "low"]; break;
+            case "minimax-m2.5": next.lifecycle_status = "deprecated"; break;
+            case "deepseek-v4-pro": next.lifecycle_status = "public_preview"; next.capabilities = next.capabilities.filter((flag: string) => flag !== "responses"); break;
+            case "arcee-trinity-large-thinking": next.thinking = false; break;
+            case "openai-gpt-5.4-nano": next.reasoning_efforts = ["none", "low", "x_high"]; break;
+          }
+          return next;
+        });
+      const template = raw.catalog.find((model: Raw) => model.model_id === "glm-5.3");
+      const add = (id: string) => {
+        catalog.push({ ...structuredClone(template), id: undefined, model_id: id, name: id });
+        models.push({ ...structuredClone(raw.models.find((model: Raw) => model.id === "glm-5.3")), id, name: id });
+      };
+      add("glm-4.6");
+      add("acme-brand-new");
+      return { models, catalog };
+    },
+  },
   llmgateway: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
