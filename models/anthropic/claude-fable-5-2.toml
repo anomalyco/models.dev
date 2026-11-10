@@ -1,0 +1,130 @@
+# Name, description, context (1M), max output (128K), knowledge cutoff (Jun 2026), release date (November 9, 2026): https://platform.claude.com/docs/en/models/fable-5-2/overview and https://platform.claude.com/docs/en/about-claude/models/overview
+# Image and PDF input: https://platform.claude.com/docs/en/build-with-claude/vision and https://platform.claude.com/docs/en/build-with-claude/pdf-support list claude-fable-5-2; GET /v1/models reports image_input and pdf_input (2026-11-09).
+# temperature/top_p/top_k: non-default values return a 400 (https://platform.claude.com/docs/en/build-with-claude/thinking#sampling-parameters); live 2026-11-09: temperature, top_p and top_k each returned 400 "is deprecated for this model".
+# tools.choice: forced tool use (any/tool) returns a 400 on every host: https://platform.claude.com/docs/en/models/fable-5-2/whats-new-fable-5-2#thinking-and-tool-choice
+# Benchmarks: launch post table. Scores are with safeguards on and at the highest available effort unless the post notes an effort level.
+schema = 2
+name = "Claude Fable 5.2"
+description = "Claude model for demanding reasoning and long-horizon agentic work"
+family = "claude-fable"
+open_weights = false
+knowledge = "2026-06"
+release_date = "2026-11-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[[benchmarks]]
+name = "FrontierCode"
+score = 49.1
+metric = "score"
+variant = "xhigh effort; safeguards on"
+version = "2.0"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "FrontierSWE"
+score = 69.9
+metric = "score"
+variant = "highest available effort; safeguards on"
+version = "2"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 51.4
+metric = "score"
+variant = "highest available effort; safeguards on"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "Terminal-Bench-Science"
+score = 74.6
+metric = "score"
+variant = "highest available effort; safeguards on"
+version = "0.1"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "WANDR"
+score = 82.1
+metric = "relaxed score"
+variant = "highest available effort; safeguards on"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 89.3
+metric = "partial score"
+variant = "highest available effort; safeguards on"
+version = "2.1"
+dataset = "offline set"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "RoboDojo Sim"
+score = 64.9
+metric = "average success rate"
+variant = "max effort; internal run"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "AA-Briefcase"
+score = 66.1
+metric = "rubric score"
+variant = "highest available effort; safeguards on"
+version = "1.1"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "AA-Briefcase"
+score = 1785
+metric = "Elo"
+variant = "highest available effort; safeguards on"
+version = "1.1"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "Remote Labor Index"
+score = 41.3
+metric = "score"
+variant = "high effort; safeguards on"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "Humanity's Last Exam"
+score = 74.2
+metric = "score"
+variant = "with tools; highest available effort; safeguards on"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "Chartography"
+score = 73.4
+metric = "score"
+variant = "no tools; highest available effort; safeguards on"
+source = "https://www.anthropic.com/claude-fable-and-mythos-5-2"
+date = "2026-11-09"

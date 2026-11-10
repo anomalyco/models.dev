@@ -10,7 +10,7 @@
 # conversation. Messages converts to Chat. Fixed prices, no long-context tier and no
 # cache-write price; cached prompt tokens bill at the cache-read price.
 # https://ai.topxea.com/pricing/glm-5.3-flash-abliterated and
-# https://ai.topxea.com/api/pricing (accessed 2026-11-08)
+# https://ai.topxea.com/api/pricing (accessed 2026-11-10)
 schema = 2
 name = "GLM-5.3-Flash-Abliterated"
 description = "GLM-5.3-Flash with refusal alignment removed, on TopxAI's private deployment; text and image input"
@@ -44,8 +44,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.24
-cache = { read = 0.08 }
+price = 0.36
+cache = { read = 0.075 }
 
 [cost.text.output]
-price = 1
+price = 1.5

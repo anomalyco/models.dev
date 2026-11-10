@@ -5,12 +5,12 @@
 # the GLM, Kimi and DeepSeek models, with no long-context tier and no cache-write price.
 # The public comparison prices are the original providers' list prices, not these tariffs.
 # Live table and JSON: https://ai.topxea.com/pricing and
-# https://ai.topxea.com/api/pricing (accessed 2026-11-08).
+# https://ai.topxea.com/api/pricing (accessed 2026-11-10).
 # Raw Chat (/v1/chat/completions): reasoning_effort selects the model's effort.
 # Responses (/v1/responses): reasoning.effort selects effort on supported models.
 # Raw Messages (/v1/messages, Claude): thinking and output_config.effort pass through.
 # Other Messages models use the conversion documented at
-# https://ai.topxea.com/docs/api-reference (accessed 2026-11-08).
+# https://ai.topxea.com/docs/api-reference (accessed 2026-11-10).
 name = "TopxAI"
 env = ["TOPXAI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -9,7 +9,7 @@
 # Effort: reasoning_effort = none|low|high|max on Chat Completions (default low).
 # none disables reasoning, so there is no additional toggle. Text/image input,
 # limits, protocols and prices: https://ai.topxea.com/docs/deepseek-flash-abliterated
-# and https://ai.topxea.com/api/pricing (accessed 2026-11-08).
+# and https://ai.topxea.com/api/pricing (accessed 2026-11-10).
 # Fixed prices at every hour and context length; automatic cache reads, no separate
 # cache-write charge. Official DeepSeek comparison prices and peak hours do not apply.
 # Responses is stateless; send the full conversation. Messages converts to Chat.
@@ -45,8 +45,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.28
-cache = { read = 0.07 }
+price = 0.42
+cache = { read = 0.105 }
 
 [cost.text.output]
-price = 1
+price = 1.5
