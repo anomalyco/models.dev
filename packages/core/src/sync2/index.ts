@@ -8,6 +8,7 @@ import { chutes } from "./providers/chutes.js";
 import { cortecs } from "./providers/cortecs.js";
 import { crossmodel } from "./providers/crossmodel.js";
 import { deepinfra } from "./providers/deepinfra.js";
+import { empiriolabs } from "./providers/empiriolabs.js";
 import { engy } from "./providers/engy.js";
 import { fireworksAi } from "./providers/fireworks-ai.js";
 import { githubCopilot } from "./providers/github-copilot.js";
@@ -36,7 +37,7 @@ import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 import type { SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { ambient, anthropic, baseten, chutes, cortecs, crossmodel, deepinfra, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, ovhcloud, pioneer, prime, requesty, tinfoil, venice, wandb, xai };
+export const modules: Record<string, SyncModule<any>> = { ambient, anthropic, baseten, chutes, cortecs, crossmodel, deepinfra, empiriolabs, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, ovhcloud, pioneer, prime, requesty, tinfoil, venice, wandb, xai };
 
 export { plan, sync };
 export type * from "./types.js";

@@ -15,6 +15,8 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // EmpirioLabs: a model that starts reasoning with no controls is a gap.
+  "empiriolabs/perturbed": ["providers/empiriolabs/models/gemma-3-27b.toml"],
   // CoreWeave: a model that drops its only control (a toggle) is written without
   // controls; the old sync couldn't write that and left the file. A new model
   // that reasons with no controls is a gap.

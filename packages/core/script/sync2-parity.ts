@@ -22,6 +22,33 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  empiriolabs: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "glm-5-1")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const first = Array.isArray(next.pricing) ? next.pricing[0] : next.pricing;
+          switch (model.id) {
+            case "glm-5-3": first.prompt = "0.0000015"; next.supported_parameters = next.supported_parameters.filter((p: Raw) => p.name !== "reasoning_effort"); break;
+            case "kimi-k3": delete first.input_cache_read; next.features = [...next.features, "cache"]; break;
+            case "qwen3-7-plus": next.pricing = next.pricing.slice(0, 1); break;
+            case "qwen3-8-max": next.pricing = [first, { ...first, min_context: 128_000, prompt: String(Number(first.prompt) * 2) }]; break;
+            case "gemma-3-27b": next.features = ["vision", "reasoning"]; break;
+            case "minimax-m3": next.structured_output = "json_schema"; next.deprecated = true; break;
+            case "step-3-5-flash": next.input_modalities = ["text", "image"]; next.context_length = 65_536; break;
+            case "seed-2-0-pro": next.supported_parameters = next.supported_parameters.filter((p: Raw) => p.name !== "enable_thinking"); break;
+            case "deepseek-v4-pro": next.features = []; next.max_output_tokens = 32_768; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "glm-5-1");
+      data.push({ ...structuredClone(template), id: "glm-4-6" });
+      data.push({ ...structuredClone(template), id: "acme-brand-new" });
+      return { ...raw, data };
+    },
+  },
   wandb: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
