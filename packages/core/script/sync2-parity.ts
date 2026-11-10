@@ -22,6 +22,42 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  aimlapi: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const unit = (model: Raw, origin: string, price: number | undefined) => {
+        const units = model.pricing.units;
+        model.pricing.units = price === undefined
+          ? units.filter((item: Raw) => item.origin !== origin)
+          : units.map((item: Raw) => (item.origin === origin && item.content === "text" ? { ...item, price, per: 1_000_000 } : item));
+      };
+      const chat = (model: Raw) => model.type === "openai/chat-completions";
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "amazon/nova-micro-v1")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          if (!chat(model)) return next;
+          switch (model.id) {
+            case "anthropic/claude-opus-4.8": unit(next, "provided", 6); unit(next, "cache_write_1h", 12); break;
+            case "openai/gpt-5-mini": unit(next, "cached", undefined); break;
+            case "openai/gpt-4.1": next.info.name = "GPT-4.1 Renamed"; unit(next, "cache_write", undefined); break;
+            case "google/gemma-3-27b-it": next.info.contextLength = 65_536; next.info.outputMax = 4_096; break;
+            case "moonshot/kimi-k3": next.reasoningEffort = ["low", "high"]; break;
+            case "meta/muse-spark-1.2": next.reasoningEffort = null; break;
+            case "deepseek/deepseek-chat": unit(next, "generated", 2); next.info.name = "Changed"; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "openai/gpt-4.1" && chat(model));
+      data.push({ ...structuredClone(template), id: "openai/gpt-4.1-nano-new" });
+      const deprecations = [
+        ...raw.deprecations,
+        { id: "mistralai/mistral-nemo", aliases: [], status: "deprecated", shutdown_at: "2099-01-01" },
+        { id: "cohere/command-r-08-2024", aliases: [], status: "withdrawn", shutdown_at: null },
+      ];
+      return { ...raw, data, deprecations };
+    },
+  },
   digitalocean: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

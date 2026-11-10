@@ -2,6 +2,7 @@
 
 import { plan, sync } from "./engine.js";
 import { aiand } from "./providers/aiand.js";
+import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
@@ -43,7 +44,7 @@ import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 import type { SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { aiand, ambient, anthropic, baseten, chutes, cortecs, crossmodel, deepinfra, digitalocean, edenai, empiriolabs, engy, "fireworks-ai": fireworksAi, friendli, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, llmgateway, "llmgateway-providers": llmgatewayProviders, "merge-gateway": mergeGateway, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, ovhcloud, pioneer, prime, requesty, tinfoil, venice, wandb, xai };
+export const modules: Record<string, SyncModule<any>> = { aiand, aimlapi, ambient, anthropic, baseten, chutes, cortecs, crossmodel, deepinfra, digitalocean, edenai, empiriolabs, engy, "fireworks-ai": fireworksAi, friendli, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, llmgateway, "llmgateway-providers": llmgatewayProviders, "merge-gateway": mergeGateway, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, ovhcloud, pioneer, prime, requesty, tinfoil, venice, wandb, xai };
 
 export { plan, sync };
 export type * from "./types.js";

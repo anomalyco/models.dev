@@ -115,6 +115,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | Provider | Recorded | Perturbed | Differences |
 | --- | --- | --- | --- |
 | aiand | same | same | A new model with no lab file is a gap; the old sync skipped it and opened an issue. Kept from the old sync: an empty effort list in the feed removes a file's controls. | |
+| aimlapi | same | same | None. The measured effort ladders, reasoning fields, aliases and blocklists are carried over as tables, and the docs schema is read at fetch time as before. New models are never created (`creates: never`), and a row sync can't state (a reasoning model with no stated effort, an unpriced row) keeps its file. |
 | ambient | same | 1 file | A new model that reasons with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. A model listed as not ready keeps its file and isn't reported as dropped. |
 | anthropic | same | same | The 1h cache write price is read from the pricing page instead of scaled from the 5m price (same result while Anthropic keeps the 1.25x and 2x ratios). A new alias (an undated ID whose dated model has a file) is built from the source alone; the old sync copied its dated sibling's hand-written fields. Not in the data. |
 | baseten | same | 1 file | A new model that reasons with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. A file's output limit is createOnly; the old sync also filled it into an existing file without one (none exists). Without a listed cache price, a file's cache capability stays; the old sync removed it when the file had no cache price either. A decision model's file keeps fields the engine doesn't own; the old sync rebuilt it from scratch. |
@@ -161,7 +162,6 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 
 Not ported yet (still on the old sync):
 
-- `aimlapi`: not ported for time. It's large (service tiers and their multipliers, image prices, extra API tables, web search prices, per-route reasoning), and needs its own pass.
 - `cloudflare-workers-ai`, `cloudflare-ai-gateway`: the local Cloudflare token gets a 403 on Workers AI search and AI Gateway, so there's no recorded data, and both modules read each file's header and schema endpoints. A fixture would have to be built from `test/cloudflare-*.test.ts` samples.
 - `openrouter`, `vercel`: skipped. The rules they need, as the smallest additions to what's here:
   - Media models (speech, transcription, embedding, rerank, image, video) are rebuilt from the file each run: the old sync keeps `status`, hand-written capabilities, `experimental` and `metadata` (and `description`, `family`, `knowledge` without a lab) and drops the rest. That's an observation flag, `rebuild: { keep: [...] }`, where the engine starts the file from `schema`, `base_model` and the kept fields, then patches.
