@@ -1,9 +1,10 @@
-# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Availability, exact wire ID, host capability override, limit and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Moneo's public catalog explicitly reports has_reasoning=false for this route.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 
