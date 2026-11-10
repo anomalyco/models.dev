@@ -22,6 +22,29 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  ovhcloud: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "Qwen3Guard-Gen-8B")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          switch (model.id) {
+            case "Meta-Llama-3_3-70B-Instruct": next.pricing.prompt = "0.0000008"; next.pricing.input_cache_reads = "0.0000004"; break;
+            case "gpt-oss-120b": next.supported_features = ["json_mode", "tools"]; next.max_output_length = 32_768; break;
+            case "Qwen2.5-VL-72B-Instruct": next.supported_features = ["tools"]; next.supported_sampling_parameters = []; break;
+            case "Qwen3.6-27B": next.input_modalities = ["text"]; next.context_length = 65_536; break;
+            case "Qwen3.5-9B": next.name = "Qwen3.5 9B Renamed"; break;
+            case "Qwen3Guard-Gen-0.6B": next.supported_features = ["reasoning"]; break;
+            case "Mistral-Small-3.2-24B-Instruct-2506": delete next.pricing.completion; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "Meta-Llama-3_3-70B-Instruct");
+      data.push({ ...structuredClone(template), id: "Brand-New-70B", name: "Brand-New-70B", hugging_face_id: "acme/brand-new" });
+      return { ...raw, data };
+    },
+  },
   ofox: {
     recorded: (raw) => raw,
     perturbed: (raw) => {

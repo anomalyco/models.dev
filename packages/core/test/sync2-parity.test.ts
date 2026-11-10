@@ -15,6 +15,8 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // OVHcloud: a model that starts reasoning with no controls is a gap.
+  "ovhcloud/perturbed": ["providers/ovhcloud/models/qwen3guard-gen-0.6b.toml"],
   // Ofox: the 1h cache write price is read from the catalog; the old sync
   // ignored it and scaled the file's 1h price by the change to the 5m one.
   "ofox/perturbed": ["providers/ofox/models/anthropic/claude-opus-5.toml"],
