@@ -242,7 +242,9 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     unset.push(path);
   };
   for (const owned of owns) {
-    const { path, merge, only, addOnly, standalone, createOnly } = typeof owned === "string" ? { path: owned } : { only: undefined, addOnly: undefined, ...owned };
+    const { path, merge, only, addOnly, replaces, optional, standalone, createOnly } = typeof owned === "string"
+      ? { path: owned }
+      : { only: undefined, addOnly: undefined, replaces: undefined, optional: undefined, ...owned };
     if (merge === "report") continue;
     if (standalone && typeof doc.base_model === "string") continue;
     if (createOnly && !options.creating) continue;
@@ -271,7 +273,7 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, fromBase, only, addOnly);
     if (merge === "tables" && isTable(next)) next = mergeTables(current, next, path === "api" ? options.defaultApi : undefined);
     if (merge === "bands" && Array.isArray(next)) {
-      next = mergeBands(current, next);
+      next = mergeBands(current, next, replaces, optional && observed !== null);
       if ((next as unknown[]).length === 0) {
         if (own === undefined) continue;
         unsetPath(doc, path);
@@ -425,9 +427,11 @@ function mergeKinds(current: unknown[], observed: unknown[], lab: unknown, only?
 // threshold as a file band (`gt` or `gte`) updates it: the file keeps its
 // operator and other keys, and one cache write price updates the first TTL a
 // band prices. File overrides with other conditions (time of day, service
-// tier) stay after the bands.
-function mergeBands(current: unknown, observed: unknown[]) {
+// tier) stay after the bands, unless they use a condition in `replaces`: those
+// are the source's. With `optional`, a source without bands keeps the file's.
+function mergeBands(current: unknown, observed: unknown[], replaces: string[] = [], optional = false) {
   const file = Array.isArray(current) ? current : [];
+  const replaced = (item: unknown) => isTable(item) && isTable(item.when) && Object.keys(item.when).some((key) => replaces.includes(key));
   const threshold = (item: unknown) => {
     const when = isTable(item) ? item.when : undefined;
     if (!isTable(when) || Object.keys(when).length !== 1 || !isTable(when.context)) return undefined;
@@ -446,7 +450,8 @@ function mergeBands(current: unknown, observed: unknown[]) {
       : cache;
     return { ...rest, ...prices, ...(merged === undefined ? {} : { cache: merged }) };
   });
-  return [...bands, ...file.filter((item) => threshold(item) === undefined)];
+  const kept = optional && !observed.some((item) => threshold(item) !== undefined) ? file.filter((item) => threshold(item) !== undefined) : [];
+  return [...kept, ...bands, ...file.filter((item) => threshold(item) === undefined && !replaced(item))];
 }
 
 // The source's tables join the file's: a source key replaces the file's value

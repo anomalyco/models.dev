@@ -500,6 +500,40 @@ price = 3
   expect((Bun.TOML.parse(none.writes.get("providers/host/models/lab/a.toml")!) as any).cost.text.input.overrides).toEqual([{ when: { utc_hours: { gte: "16:00" } }, price: 0.5 }]);
 });
 
+test("merge: bands with replaces owns overrides on those conditions, and optional keeps the file's bands", async () => {
+  const overrides = `
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "flex" } }
+price = 0.5
+
+[[cost.text.input.overrides]]
+when = { utc_hours = { gte = "16:00" } }
+price = 0.4
+`;
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/a.toml": file("lab/a", 1).replace("[cost.text.output]", `${overrides}\n[cost.text.output]`),
+  });
+  const owns = [{ path: "cost.text.input.overrides", merge: "bands" as const, replaces: ["service_tier"], optional: true }];
+  const read = (writes: Map<string, string | null>) => (Bun.TOML.parse(writes.get("providers/host/models/lab/a.toml")!) as any).cost.text.input.overrides;
+  const priority = { when: { service_tier: { equals: "priority" as const } }, price: 2 };
+  const tiers = await plan(provider([{ id: "lab/a", cost: { text: { input: { overrides: [priority] } } } }], { owns }), { root });
+  expect(read(tiers.writes)).toEqual([
+    { when: { context: { gt: 200_000 } }, price: 2 },
+    priority,
+    { when: { utc_hours: { gte: "16:00" } }, price: 0.4 },
+  ]);
+  const band = { when: { context: { gt: 272_000 } }, price: 3 };
+  const both = await plan(provider([{ id: "lab/a", cost: { text: { input: { overrides: [band] } } } }], { owns }), { root });
+  expect(read(both.writes)).toEqual([band, { when: { utc_hours: { gte: "16:00" } }, price: 0.4 }]);
+  const none = await plan(provider([{ id: "lab/a", cost: { text: { input: { overrides: null } } } }], { owns }), { root });
+  expect(read(none.writes)).toEqual([{ when: { utc_hours: { gte: "16:00" } }, price: 0.4 }]);
+});
+
 test("headers: replace writes the source's header, a function of the written file", async () => {
   const root = await catalog({
     "models/lab/a.toml": lab(false),

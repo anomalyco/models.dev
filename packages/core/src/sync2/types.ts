@@ -66,12 +66,16 @@ export type Observation = Observed<ModelFields> & {
  *   a band at a file band's threshold keeps the file's operator (`gt`/`gte`),
  *   its other keys and its cache write TTLs (one write price updates the
  *   first). Overrides with other conditions stay. null means no bands.
+ *   With `replaces`, overrides using those conditions (`service_tier`,
+ *   `utc_hours`) are the source's too. With `optional`, a source that lists
+ *   no bands keeps the file's.
  * `standalone: true` limits a field to files without a base_model, and
  * `createOnly: true` to new files.
  */
 export type Owned =
   | string
-  | (OwnedRule & { merge?: "min" | "nonzero" | "deprecated" | "tables" | "report" | "seed" | "refresh" | "bands" })
+  | (OwnedRule & { merge?: "min" | "nonzero" | "deprecated" | "tables" | "report" | "seed" | "refresh" })
+  | (OwnedRule & { merge: "bands"; replaces?: string[]; optional?: boolean })
   | (OwnedRule & { merge: "kinds"; only?: string[]; addOnly?: boolean });
 
 interface OwnedRule {
