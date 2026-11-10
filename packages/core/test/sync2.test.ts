@@ -3,9 +3,12 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
+import { resolveCanonicalBaseModel, resolveModelMetadataBaseModel } from "../src/sync/providers/openrouter.js";
+import { Labs, REPO_ROOT } from "../src/sync2/catalog.js";
 import { plan, sync } from "../src/sync2/engine.js";
 import { classifyRisk } from "../src/sync2/risk.js";
 import type { Change, Observation, Policy, SyncModule } from "../src/sync2/types.js";
+import { labHints, namespaceHints } from "../src/sync2/labs.js";
 import { labCandidates, perMillion, reasoningControls } from "../src/sync2/units.js";
 
 const roots: string[] = [];
@@ -343,4 +346,81 @@ test("shared conversions", () => {
   expect(reasoningControls({ effort: ["high", "low", "medium"], toggle: true })).toEqual({ supported: true, toggle: true, effort: ["low", "medium", "high"] });
   expect(reasoningControls({ effort: ["low", "none"], toggle: true })).toEqual({ supported: true, effort: ["none", "low"] });
   expect(labCandidates("Qwen/Qwen3-8B", { qwen: "alibaba" })).toEqual(["alibaba/qwen3-8b", "qwen/qwen3-8b"]);
+});
+
+test("lab hints: namespaces, spellings, overrides and bare names", () => {
+  expect(namespaceHints("z-ai/glm-5:free")).toEqual(["zhipuai/glm-5"]);
+  expect(namespaceHints("anthropic/claude-opus-4.6-fast")).toEqual([
+    "anthropic/claude-opus-4.6-fast",
+    "anthropic/claude-opus-4.6",
+    "anthropic/claude-opus-4-6-fast",
+    "anthropic/claude-opus-4-6",
+  ]);
+  expect(namespaceHints("meta-llama/llama-3-3-70b")).toEqual(["meta/llama-3-3-70b", "meta/llama-3.3-70b"]);
+  expect(namespaceHints("openai/gpt-5.6-sol-pro")).toEqual(["openai/gpt-5.6-sol"]);
+  expect(namespaceHints("acme/model")).toEqual([]);
+  expect(namespaceHints("~openai/gpt-latest")).toEqual([]);
+  expect(labHints("deepseek/deepseek-v4:free")).toEqual(["deepseek/deepseek-v4"]);
+  expect(labHints("glm-5")).toEqual(["glm-5", "*/glm-5"]);
+});
+
+test("a */name hint matches the one lab file with that name", async () => {
+  const root = await catalog({ "models/lab/Unique.toml": lab(false), "models/one/twin.toml": lab(false), "models/two/twin.toml": lab(false) });
+  const { result } = await plan(provider([priced("unique", 1, { base: ["*/unique"] }), priced("twin", 1, { base: ["*/twin"] })]), { root });
+  expect(result.changes.map((change) => [change.model, change.fields.find((field) => field.path === "base_model")?.after])).toEqual([["unique", "lab/Unique"]]);
+  expect(result.gaps.map((gap) => gap.model)).toEqual(["twin"]);
+});
+
+test("merge: seed fills a capability detail only while the file doesn't state the capability", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(true),
+    "providers/host/models/lab/none.toml": file("lab/a", 1),
+    "providers/host/models/lab/off.toml": file("lab/a", 1, '\n[capabilities]\ntools = { supported = true }\nreasoning = { supported = false }\nstructured_output = true\n'),
+    "providers/host/models/lab/on.toml": file("lab/a", 1, '\n[capabilities]\nreasoning = { supported = true }\n'),
+  });
+  const owns = ["capabilities.reasoning.supported", { path: "capabilities.reasoning.toggle", merge: "seed" as const }];
+  const observed = (id: string): Observation => ({ id, capabilities: { reasoning: { supported: true, toggle: true } } });
+  const { writes } = await plan(provider([observed("lab/none"), observed("lab/off"), observed("lab/on")], { owns }), { root });
+  expect([...writes.keys()].sort()).toEqual(["providers/host/models/lab/none.toml", "providers/host/models/lab/off.toml"]);
+  expect(writes.get("providers/host/models/lab/none.toml")).toContain("reasoning = { supported = true, toggle = true }");
+  // The table keeps its place when it's turned on and seeded in one patch.
+  expect(writes.get("providers/host/models/lab/off.toml")).toContain("tools = { supported = true }\nreasoning = { supported = true, toggle = true }\nstructured_output = true");
+});
+
+test("merge: kinds with addOnly adds kinds in the lab's formats and never removes one", async () => {
+  const labFile = lab(false).replace('input = ["text"]', 'input = ["text", "image/png", "video/mp4"]');
+  const root = await catalog({
+    "models/lab/a.toml": labFile,
+    "providers/host/models/lab/a.toml": file("lab/a", 1, '\n[modalities]\ninput = ["text", "image/jpeg"]\noutput = ["text"]\n'),
+  });
+  const module = (input: string[]) => provider([{ id: "lab/a", modalities: { input } }], { owns: [{ path: "modalities.input", merge: "kinds", addOnly: true }] });
+  expect((await plan(module(["text"]), { root })).writes.size).toBe(0);
+  const added = await plan(module(["text", "video", "audio"]), { root });
+  expect(added.result.changes[0]!.fields[0]!.after).toEqual(["text", "image/jpeg", "video/mp4", "audio"]);
+});
+
+test("omitLabInput: a new file with its own context window drops the lab's input limit", async () => {
+  const labFile = lab(false).replace("context = 128_000", "context = 128_000\ninput = 100_000");
+  const root = await catalog({ "models/lab/a.toml": labFile });
+  const observed = [priced("lab/a", 1, { limit: { context: 64_000 } }), priced("lab/same", 1, { base: ["lab/a"], limit: { context: 128_000 } })];
+  const { writes } = await plan(provider(observed, { owns: ["cost.text.input.price", "cost.text.output.price", "limit.context"], omitLabInput: true }), { root });
+  expect(writes.get("providers/host/models/lab/a.toml")).toContain('base_model_omit = ["limit.input"]');
+  expect(writes.get("providers/host/models/lab/same.toml")).not.toContain("base_model_omit");
+});
+
+// The hints replace the old sync's resolveCanonicalBaseModel and
+// resolveModelMetadataBaseModel; on every ID in the catalog they pick the same lab.
+test("lab hints resolve every catalog ID like the old resolvers", () => {
+  const labs = new Labs(REPO_ROOT);
+  const pick = (hints: string[]) => hints.map((hint) => labs.find(hint)).find((found) => found !== undefined);
+  const ids = new Set<string>();
+  for (const file of new Bun.Glob("providers/*/models/**/*.toml").scanSync({ cwd: REPO_ROOT })) ids.add(file.split("/models/")[1]!.slice(0, -".toml".length));
+  for (const file of new Bun.Glob("*/*.toml").scanSync({ cwd: path.join(REPO_ROOT, "models") })) {
+    ids.add(file.slice(0, -".toml".length));
+    ids.add(file.split("/")[1]!.slice(0, -".toml".length));
+  }
+  const mismatches = [...ids].flatMap((id) => [id, `${id}:free`, id.toUpperCase()]).filter((id) =>
+    resolveCanonicalBaseModel(id) !== pick(namespaceHints(id)) || resolveModelMetadataBaseModel(id) !== pick(labHints(id))
+  );
+  expect(mismatches).toEqual([]);
 });

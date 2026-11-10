@@ -39,6 +39,7 @@ export type Observation = Observed<ModelFields> & {
  * - `kinds`: a modality list. The source decides the kinds (text, image, pdf, ...)
  *   and the file keeps its own formats (`image/png`) for kinds it has. With
  *   `only`, the source speaks for just those kinds and the file's others stay.
+ *   With `addOnly`, the source only adds kinds and never removes one.
  * - `deprecated`: `status`. The source says "deprecated" or null; null only
  *   clears a "deprecated" status, never another one.
  * - `tables`: a table of tables (`api`). Each source table joins the file's
@@ -47,12 +48,15 @@ export type Observation = Observed<ModelFields> & {
  *   the file's others. A file with no `api` gets the provider's default first.
  * - `report`: never written. When the source disagrees with the file, the model
  *   is an update gap and its file is left alone.
+ * - `seed`: a capability detail (`capabilities.reasoning.toggle`) only written
+ *   while the file doesn't state that capability itself: its own table is
+ *   missing or says `supported = false`. Controls a file states are kept.
  * `standalone: true` limits a field to files without a base_model.
  */
 export type Owned =
   | string
-  | (OwnedRule & { merge?: "min" | "nonzero" | "deprecated" | "tables" | "report" })
-  | (OwnedRule & { merge: "kinds"; only?: string[] });
+  | (OwnedRule & { merge?: "min" | "nonzero" | "deprecated" | "tables" | "report" | "seed" })
+  | (OwnedRule & { merge: "kinds"; only?: string[]; addOnly?: boolean });
 
 interface OwnedRule {
   path: string;
@@ -67,6 +71,11 @@ export interface Policy {
   creates: "auto" | "gap" | "never";
   /** A file the source no longer lists: delete it, mark it deprecated, or keep it and report a gap. */
   removals: "delete" | "deprecate" | "keep";
+  /**
+   * A new file whose context window differs from its lab's doesn't inherit
+   * the lab's `limit.input`: it gets `base_model_omit = ["limit.input"]`.
+   */
+  omitLabInput?: boolean;
 }
 
 export interface SyncModule<Raw = unknown> {

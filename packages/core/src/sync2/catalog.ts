@@ -81,9 +81,17 @@ export class Labs {
     return this.ids;
   }
 
-  /** The lab ID as filed, matching exactly or else ignoring case. */
+  /**
+   * The lab ID as filed, matching exactly or else ignoring case. `*\/name`
+   * matches the one lab file called `name` in any lab, ignoring case.
+   */
   find(id: string): string | undefined {
     const ids = this.index();
+    if (id.startsWith("*/")) {
+      const name = id.slice(2).toLowerCase();
+      const matches = [...ids.values()].filter((lab) => lab.split("/").at(-1)!.toLowerCase() === name);
+      return matches.length === 1 ? matches[0] : undefined;
+    }
     return ids.get(id.toLowerCase()) === id ? id : ids.get(id.toLowerCase());
   }
 

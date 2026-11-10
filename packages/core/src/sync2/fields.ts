@@ -25,8 +25,8 @@ export function setPath(doc: Doc, path: string, value: unknown) {
   node[parts.at(-1)!] = value;
 }
 
-// Removes the value at `path`, then any tables it leaves empty.
-export function unsetPath(doc: Doc, path: string) {
+// Removes the value at `path`, then (unless `prune` is false) any tables it leaves empty.
+export function unsetPath(doc: Doc, path: string, prune = true) {
   const parts = path.split(".");
   const parents: Doc[] = [];
   let node: unknown = doc;
@@ -37,6 +37,19 @@ export function unsetPath(doc: Doc, path: string) {
   }
   if (!isTable(node)) return;
   delete node[parts.at(-1)!];
+  if (prune) pruneEmpty(doc, path);
+}
+
+// Removes the tables on `path` that are empty, innermost first.
+export function pruneEmpty(doc: Doc, path: string) {
+  const parts = path.split(".");
+  const parents: Doc[] = [];
+  let node: unknown = doc;
+  for (const part of parts.slice(0, -1)) {
+    if (!isTable(node)) break;
+    parents.push(node);
+    node = node[part];
+  }
   for (let index = parents.length - 1; index >= 0; index--) {
     const child = parents[index]![parts[index]!];
     if (!isTable(child) || Object.keys(child).length > 0) break;

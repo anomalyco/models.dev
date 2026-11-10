@@ -11,7 +11,7 @@ import type { Model, Provider } from "../schema.js";
 import { formatModelV2 } from "../model-file-v2.js";
 import { modelV2ToV1, toV1Modality } from "../translate.js";
 import { applyWrites, inherited, Labs, type ModelFile, readProviderFiles, relativeModelPath, REPO_ROOT, resolved } from "./catalog.js";
-import { equal, getPath, isTable, leafPaths, setPath, unsetPath } from "./fields.js";
+import { equal, getPath, isTable, leafPaths, pruneEmpty, setPath, unsetPath, unsetPath as unsetFieldPath } from "./fields.js";
 import { classifyRisk } from "./risk.js";
 import type { Change, Doc, FieldChange, Gap, Observation, Owned, SyncModule, SyncResult } from "./types.js";
 
@@ -149,7 +149,7 @@ function create(context: Context, observation: Observation) {
   const base = resolveBase(observation, labs);
   const doc: Doc = { schema: 2 };
   if (base !== undefined) doc.base_model = base;
-  patch(doc, observation, module.policy.owns, inherited(doc, labs), { defaultApi: context.defaultApi(resolved(doc, labs)) });
+  patch(doc, observation, module.policy.owns, inherited(doc, labs), { defaultApi: context.defaultApi(resolved(doc, labs)), omitLabInput: module.policy.omitLabInput });
 
   const merged = resolved(doc, labs);
   const missing = REQUIRED.filter((path) => getPath(merged, path) === undefined);
@@ -213,6 +213,8 @@ function remove(context: Context, file: ModelFile) {
 export interface PatchOptions {
   /** The API protocol a file without `[api.*]` tables is served on (from provider.toml). */
   defaultApi?: string;
+  /** See `Policy.omitLabInput`. */
+  omitLabInput?: boolean;
 }
 
 /**
@@ -223,12 +225,21 @@ export interface PatchOptions {
  */
 export function patch(doc: Doc, observation: Observation, owns: Owned[], base: Doc | undefined, options: PatchOptions = {}): FieldChange[] {
   const changes: FieldChange[] = [];
+  const original = structuredClone(doc);
+  // Tables a removal empties are dropped at the end, so a table emptied and
+  // filled again (reasoning turned on with a toggle) keeps its place.
+  const unset: string[] = [];
+  const unsetPath = (target: Doc, path: string) => {
+    unsetFieldPath(target, path, false);
+    unset.push(path);
+  };
   for (const owned of owns) {
-    const { path, merge, only, standalone } = typeof owned === "string" ? { path: owned } : { only: undefined, ...owned };
+    const { path, merge, only, addOnly, standalone } = typeof owned === "string" ? { path: owned } : { only: undefined, addOnly: undefined, ...owned };
     if (merge === "report") continue;
     if (standalone && typeof doc.base_model === "string") continue;
     const observed = getPath(observation, path);
     if (observed === undefined) continue;
+    if (merge === "seed" && (observed === null || statesCapability(original, path))) continue;
     const own = getPath(doc, path);
     const fromBase = getPath(base, path);
     const current = own ?? fromBase;
@@ -245,7 +256,7 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     if (merge === "min" && typeof next === "number" && typeof current === "number") next = Math.min(next, current);
     // A 0 is often a placeholder: it updates a price the file has but never adds one.
     if (merge === "nonzero" && next === 0 && current === undefined) continue;
-    if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, only);
+    if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, only, addOnly ? fromBase ?? [] : undefined);
     if (merge === "tables" && isTable(next)) next = mergeTables(current, next, path === "api" ? options.defaultApi : undefined);
     if (equal(current, next) || next === undefined) continue;
     // Removing every table leaves none (an observed `{}` such as `budget = {}` is a value).
@@ -259,10 +270,30 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     else setPath(doc, path, structuredClone(next));
     changes.push({ path, before: current, after: next });
   }
+  for (const path of unset) pruneEmpty(doc, path);
   changes.push(...switchedOff(doc, observation, owns));
   keepSupported(doc, base);
   bothModalities(doc, base);
+  if (options.omitLabInput) changes.push(...omitLabInput(doc, base));
   return changes;
+}
+
+// Whether the file itself states the capability a `seed` path belongs to.
+function statesCapability(doc: Doc, path: string) {
+  const table = getPath(doc, path.split(".").slice(0, -1).join("."));
+  return isTable(table) && Object.keys(table).length > 0 && table.supported !== false;
+}
+
+// A lab's input limit belongs to its context window. A file with its own,
+// different context doesn't inherit it (`base_model_omit = ["limit.input"]`).
+function omitLabInput(doc: Doc, base: Doc | undefined): FieldChange[] {
+  const context = getPath(doc, "limit.context");
+  if (base === undefined || context === undefined || getPath(doc, "limit.input") !== undefined) return [];
+  if (getPath(base, "limit.input") === undefined || equal(context, getPath(base, "limit.context"))) return [];
+  const before = doc.base_model_omit as string[] | undefined;
+  const after = [...(before ?? []), "limit.input"];
+  doc.base_model_omit = after;
+  return [{ path: "base_model_omit", before, after }];
 }
 
 // A provider file's [modalities] lists both sides; the side equal to the lab's is copied from it.
@@ -325,8 +356,19 @@ function switchedOff(doc: Doc, observation: Observation, owns: Owned[]): FieldCh
 // the file already has. Same kinds: the file's list as is. With `only`, the
 // source speaks for those kinds alone: the file's other kinds stay where they
 // are, and a new kind goes at the end.
-function mergeKinds(current: unknown[], observed: unknown[], only?: string[]) {
+// With `addOnly` (the lab's list), the source only adds kinds: the file's
+// stay, and an added kind takes the lab's formats for it when the lab has any.
+function mergeKinds(current: unknown[], observed: unknown[], only?: string[], addOnly?: unknown) {
   const kind = (item: unknown) => toV1Modality(String(item));
+  if (addOnly !== undefined) {
+    const lab = Array.isArray(addOnly) ? addOnly : [];
+    const kinds = [...new Set(observed.map(kind))].filter((value) => !current.some((own) => kind(own) === value));
+    const added = kinds.flatMap((value) => {
+      const formats = lab.filter((item) => kind(item) === value);
+      return formats.length > 0 ? formats : [value];
+    });
+    return added.length === 0 ? current : [...current, ...added];
+  }
   if (only !== undefined) {
     const spoken = new Set(only);
     const stated = new Set(observed.map(kind).filter((value) => spoken.has(value)));

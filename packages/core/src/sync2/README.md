@@ -40,6 +40,13 @@ An observation uses the same field names as a v2 provider file (`cost`, `limit`,
 
 `units.ts` has the conversions modules keep rewriting: `perMillion`, `round`, `reasoningControls` (sorts effort, drops a toggle when effort has `none`) and `labCandidates`.
 
+`labs.ts` is the lab resolver relays share, moved from the old OpenRouter module (`resolveCanonicalBaseModel` and `resolveModelMetadataBaseModel`, which about 37 old modules import). It turns a host ID into `base` hints:
+
+- `namespaceHints("z-ai/glm-5:free")` maps the namespace to its lab (`z-ai` → `zhipuai`, `meta-llama` → `meta`, `qwen` → `alibaba`) and tries the lab's other spellings (`claude-opus-4.6` → `claude-opus-4-6`, `llama-3-3` → `llama-3.3`, no `:free` or `-fast`). Known renames come first. Unknown namespaces and `~` routers give none.
+- `labHints(id)` adds the ID itself as a lab path and, for an ID with no namespace, `*/<id>`: the one lab file with that name in any lab.
+
+The engine takes the first hint with a lab file, ignoring case. A test checks that on every ID in the catalog these pick the same lab as the old functions.
+
 ## Policy
 
 - `owns` lists the fields the source is authoritative for. The engine only ever changes these. Everything else in a file, including its leading comment, stays as it is. An owned list or table (an override list, say) is replaced whole, unless a merge rule says otherwise:
@@ -48,11 +55,14 @@ An observation uses the same field names as a v2 provider file (`cost`, `limit`,
   - `{ path: "status", merge: "deprecated" }`: the source says `"deprecated"` or `null`, and `null` only clears a deprecated status, never `beta`.
   - `{ path, merge: "nonzero" }`: a 0 updates a price the file has but never adds one (Novita's placeholder cache prices).
   - `{ path: "api", merge: "tables" }`: each source table joins the file's (its keys win, the file's other keys stay), `null` removes one, and the file's other tables stay. The file's first table stays first, then the source's tables in its order, then the rest. A file with no `[api.*]` tables gets the provider's default API first, so it keeps being served on it; a lone empty default table isn't written.
+  - `{ path, merge: "seed" }` is for a capability detail such as `capabilities.reasoning.toggle`. It's only written while the file doesn't state that capability itself (its own table is missing or says `supported = false`), so controls a person wrote are kept (Deep Infra's `can-disable-reasoning` tag).
+  - `{ path, merge: "kinds", addOnly: true }`: the source only adds kinds, never removes one, and an added kind takes the lab's formats for it when the lab lists any (Deep Infra's tags).
   - `{ path, merge: "report" }` is never written. If the source disagrees with the file, the model becomes an update gap and its file is left alone (Mistral's probed reasoning efforts).
   - `standalone: true` (with any rule) only patches files without a `base_model`; with one, the lab's value stands (Anthropic's release dates).
 - Turning `capabilities.tools.supported` or `capabilities.reasoning.supported` off drops that capability's details (`strict`, `choice`, effort, toggle, ...). A capability table the file sets always names `supported`, even when it matches the lab, and a `[modalities]` table it sets lists both sides. A `tables` merge that removes every table removes the field.
 - `creates` decides what happens to a model the catalog doesn't have: create it, report it as a gap, or skip it with a notice.
 - `removals` decides what happens to a file the source no longer lists: delete it, set `status = "deprecated"`, or keep it and report a gap.
+- `omitLabInput: true`: a new file whose context window differs from its lab's gets `base_model_omit = ["limit.input"]`, since the lab's input limit belongs to the lab's window. Existing files aren't changed (the old sync only did this when it created a file).
 
 ## What the engine does
 
