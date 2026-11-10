@@ -22,6 +22,27 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  friendli: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "zai-org/GLM-5.1")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          switch (model.id) {
+            case "zai-org/GLM-5.3": next.pricing.input = "0.0000012"; next.reasoning_options = [{ type: "effort", values: ["max", "low"] }]; break;
+            case "zai-org/GLM-5.3-Flash": next.input_modalities = ["text"]; next.context_length = 65_536; break;
+            case "zai-org/GLM-5.2": delete next.reasoning_options; delete next.interleaved; break;
+            case "google/gemma-4-31B-it": next.deprecation_date = "2026-01-01T00:00:00Z"; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "zai-org/GLM-5.3");
+      data.push({ ...structuredClone(template), id: "zai-org/GLM-4.6", base_model: "zhipuai/glm-4.6", functionality: { ...template.functionality, structured_output: false } });
+      data.push({ ...structuredClone(template), id: "acme/Brand-New", base_model: "acme/brand-new" });
+      return { ...raw, data };
+    },
+  },
   "merge-gateway": {
     recorded: (raw) => raw,
     perturbed: (raw) => {

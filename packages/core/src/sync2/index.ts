@@ -12,6 +12,7 @@ import { deepinfra } from "./providers/deepinfra.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
 import { engy } from "./providers/engy.js";
 import { fireworksAi } from "./providers/fireworks-ai.js";
+import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
 import { huggingface } from "./providers/huggingface.js";
@@ -39,7 +40,7 @@ import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 import type { SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { aiand, ambient, anthropic, baseten, chutes, cortecs, crossmodel, deepinfra, empiriolabs, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, "merge-gateway": mergeGateway, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, ovhcloud, pioneer, prime, requesty, tinfoil, venice, wandb, xai };
+export const modules: Record<string, SyncModule<any>> = { aiand, ambient, anthropic, baseten, chutes, cortecs, crossmodel, deepinfra, empiriolabs, engy, "fireworks-ai": fireworksAi, friendli, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, "merge-gateway": mergeGateway, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, ovhcloud, pioneer, prime, requesty, tinfoil, venice, wandb, xai };
 
 export { plan, sync };
 export type * from "./types.js";
