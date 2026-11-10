@@ -1,0 +1,22 @@
+# Local checkpoint: https://huggingface.co/mlx-community/Qwen3.5-4B-MLX-4bit
+# Text and tool-call smoke: https://github.com/raullenchai/Rapid-MLX/blob/62f78a767/docs/engineering/community/pr-revival-2026-11-06.md
+schema = 2
+base_model = "alibaba/qwen3.5-4b"
+name = "Qwen3.5 4B MLX 4-bit"
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
+
+[capabilities]
+reasoning = { supported = true }
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 32768
+output = 1024
