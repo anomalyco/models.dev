@@ -37,6 +37,14 @@ export type Observation = Observed<ModelFields> & {
    * gap (e.g. an alias the source lists next to its canonical ID).
    */
   updateOnly?: boolean;
+  /**
+   * The observation is the whole file: the engine writes its body on the
+   * file's base_model (or the first `base` hint with a lab file) and the
+   * `keep` paths from the file, and nothing else of the file stays. Owns and
+   * merges don't apply; `null` leaves a field out. For media files a source
+   * generates whole.
+   */
+  rebuild?: { keep?: string[] };
 };
 
 /**

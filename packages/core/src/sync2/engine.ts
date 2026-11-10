@@ -75,7 +75,8 @@ export async function plan<Raw>(module: SyncModule<Raw>, options: PlanOptions = 
       context.notices.push(`${module.name} lists \`${observation.id}\`, filed as \`${file.id}\`; matched to that file.`);
     }
     const refined = module.refine === undefined ? observation : module.refine(observation, file?.doc, docs);
-    if (file !== undefined) update(context, refined, file);
+    if (refined.rebuild !== undefined && (file !== undefined || (!refined.updateOnly && module.policy.creates !== "never"))) rebuild(context, refined, file);
+    else if (file !== undefined) update(context, refined, file);
     else if (refined.updateOnly) continue;
     else if (module.policy.creates === "never") skipped.push(refined.id);
     else create(context, refined);
@@ -146,6 +147,60 @@ function update(context: Context, observation: Observation, file: ModelFile) {
     fields: header === file.header ? fields : [...fields, { path: "header", before: file.header, after: header }],
     ...(reasoningChanged(before, after) ? { reasoning: true as const } : {}),
   });
+}
+
+// A rebuilt file is the observation's body on the file's base_model (or the
+// first hint with a lab file) and the paths it keeps from the file. Nothing
+// else of the file stays, and owns don't apply.
+function rebuild(context: Context, observation: Observation, file: ModelFile | undefined) {
+  const { module, labs } = context;
+  const { id: _id, base: _base, header: _header, defaults: _defaults, updateOnly: _updateOnly, rebuild: options, ...body } = observation;
+  const doc: Doc = { schema: 2 };
+  const baseModel = typeof file?.doc.base_model === "string" ? file.doc.base_model : resolveBase(observation, labs);
+  if (baseModel !== undefined) doc.base_model = baseModel;
+  if (file?.doc.base_model_omit !== undefined && file.doc.base_model === baseModel) doc.base_model_omit = structuredClone(file.doc.base_model_omit);
+  const kept: Doc = {};
+  for (const path of options?.keep ?? []) {
+    const value = getPath(file?.doc, path);
+    if (value !== undefined) setPath(kept, path, structuredClone(value));
+  }
+  Object.assign(doc, withoutNulls(mergeDeep(kept, body as Doc)));
+  if (file === undefined) {
+    const merged = resolved(doc, labs);
+    const missing = REQUIRED.filter((path) => getPath(merged, path) === undefined);
+    if (baseModel === undefined && missing.length > 0) missing.unshift("base_model");
+    if (module.policy.creates === "gap" || missing.length > 0) {
+      context.gaps.push(gap(context, observation, "new", module.policy.creates === "gap" ? "new models are added by hand for this provider" : baseModel === undefined ? "no lab model to base it on" : "the source doesn't state every field a new file needs", missing));
+      return;
+    }
+    const content = render(context, observation.id, doc, comments(observation.header, doc), "new");
+    if (content === undefined) return;
+    const path = relativeModelPath(module.id, observation.id);
+    context.writes.set(path, content);
+    context.changes.push({ kind: "create", model: observation.id, path, fields: leafPaths(doc).filter((field) => field !== "schema").map((field) => ({ path: field, after: getPath(doc, field) })) });
+    return;
+  }
+  const header = module.policy.headers === "replace" && observation.header !== undefined ? comments(observation.header, doc) : file.header;
+  if (equal(doc, file.doc) && header === file.header) return;
+  const content = render(context, file.id, doc, header, "update");
+  if (content === undefined) return;
+  if (file.symlink) {
+    context.notices.push(`${file.path} is a symlink, so it was not updated.`);
+    return;
+  }
+  const paths = [...new Set([...leafPaths(file.doc), ...leafPaths(doc)])].filter((path) => !equal(getPath(file.doc, path), getPath(doc, path)));
+  context.writes.set(file.path, content);
+  context.changes.push({
+    kind: "update",
+    model: file.id,
+    path: file.path,
+    fields: [...paths.map((path) => ({ path, before: getPath(file.doc, path), after: getPath(doc, path) })), ...(header === file.header ? [] : [{ path: "header", before: file.header, after: header }])],
+    ...(reasoningChanged(resolved(file.doc, labs), resolved(doc, labs)) ? { reasoning: true as const } : {}),
+  });
+}
+
+function withoutNulls(doc: Doc): Doc {
+  return Object.fromEntries(Object.entries(doc).filter(([, value]) => value !== null && value !== undefined).map(([key, value]) => [key, isTable(value) ? withoutNulls(value) : value]));
 }
 
 function create(context: Context, observation: Observation) {
@@ -427,11 +482,12 @@ function mergeKinds(current: unknown[], observed: unknown[], lab: unknown, only?
 // threshold as a file band (`gt` or `gte`) updates it: the file keeps its
 // operator and other keys, and one cache write price updates the first TTL a
 // band prices. File overrides with other conditions (time of day, service
-// tier) stay after the bands, unless they use a condition in `replaces`: those
-// are the source's. With `optional`, a source without bands keeps the file's.
+// tier) stay after the bands. With `replaces` or `optional`, overrides using a
+// `replaces` condition (at any depth of `all`/`any`/`not`) are the source's,
+// the file's bands stay when `optional` and the source lists none, and the
+// file's overrides that stay come first, in their order, then the source's.
 function mergeBands(current: unknown, observed: unknown[], replaces: string[] = [], optional = false) {
   const file = Array.isArray(current) ? current : [];
-  const replaced = (item: unknown) => isTable(item) && isTable(item.when) && Object.keys(item.when).some((key) => replaces.includes(key));
   const threshold = (item: unknown) => {
     const when = isTable(item) ? item.when : undefined;
     if (!isTable(when) || Object.keys(when).length !== 1 || !isTable(when.context)) return undefined;
@@ -450,8 +506,16 @@ function mergeBands(current: unknown, observed: unknown[], replaces: string[] = 
       : cache;
     return { ...rest, ...prices, ...(merged === undefined ? {} : { cache: merged }) };
   });
-  const kept = optional && !observed.some((item) => threshold(item) !== undefined) ? file.filter((item) => threshold(item) !== undefined) : [];
-  return [...kept, ...bands, ...file.filter((item) => threshold(item) === undefined && !replaced(item))];
+  if (replaces.length === 0 && !optional) return [...bands, ...file.filter((item) => threshold(item) === undefined)];
+  const ownsBands = !optional || observed.some((item) => threshold(item) !== undefined);
+  const kept = file.filter((item) => threshold(item) !== undefined ? !ownsBands : !(isTable(item) && uses(item.when, replaces)));
+  return [...kept, ...bands];
+}
+
+function uses(when: unknown, keys: string[]): boolean {
+  if (Array.isArray(when)) return when.some((item) => uses(item, keys));
+  if (!isTable(when)) return false;
+  return Object.entries(when).some(([key, value]) => keys.includes(key) || (["all", "any", "not"].includes(key) && uses(value, keys)));
 }
 
 // The source's tables join the file's: a source key replaces the file's value

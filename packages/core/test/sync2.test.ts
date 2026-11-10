@@ -522,16 +522,47 @@ price = 0.4
   const read = (writes: Map<string, string | null>) => (Bun.TOML.parse(writes.get("providers/host/models/lab/a.toml")!) as any).cost.text.input.overrides;
   const priority = { when: { service_tier: { equals: "priority" as const } }, price: 2 };
   const tiers = await plan(provider([{ id: "lab/a", cost: { text: { input: { overrides: [priority] } } } }], { owns }), { root });
+  // The file's overrides that stay come first, then the source's.
   expect(read(tiers.writes)).toEqual([
     { when: { context: { gt: 200_000 } }, price: 2 },
-    priority,
     { when: { utc_hours: { gte: "16:00" } }, price: 0.4 },
+    priority,
   ]);
   const band = { when: { context: { gt: 272_000 } }, price: 3 };
   const both = await plan(provider([{ id: "lab/a", cost: { text: { input: { overrides: [band] } } } }], { owns }), { root });
-  expect(read(both.writes)).toEqual([band, { when: { utc_hours: { gte: "16:00" } }, price: 0.4 }]);
+  expect(read(both.writes)).toEqual([{ when: { utc_hours: { gte: "16:00" } }, price: 0.4 }, band]);
+  // A condition inside `all` counts too.
+  const nested = { when: { all: [{ service_tier: { equals: "flex" as const } }, { context: { gt: 1 } }] }, price: 9 };
+  const deep = await plan(provider([{ id: "lab/a", cost: { text: { input: { overrides: [nested] } } } }], { owns }), { root });
+  expect(read(deep.writes)).toEqual([{ when: { context: { gt: 200_000 } }, price: 2 }, { when: { utc_hours: { gte: "16:00" } }, price: 0.4 }, nested]);
   const none = await plan(provider([{ id: "lab/a", cost: { text: { input: { overrides: null } } } }], { owns }), { root });
   expect(read(none.writes)).toEqual([{ when: { utc_hours: { gte: "16:00" } }, price: 0.4 }]);
+});
+
+test("rebuild writes the observation's body on the file's base_model and kept paths, and nothing else", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/a.toml": file("lab/a", 1, '\nstatus = "beta"\n\n[capabilities]\nstructured_output = true\n\n[metadata]\nnote = "kept"\n'),
+  });
+  const body = (price: number): Observation => ({
+    id: "lab/a",
+    base: ["lab/a"],
+    rebuild: { keep: ["status", "metadata"] },
+    v2_only: true,
+    name: null,
+    cost: { text: { input: { price } } },
+  });
+  const { writes, result } = await plan(provider([body(2)], { owns: [] }), { root });
+  const written = Bun.TOML.parse(writes.get("providers/host/models/lab/a.toml")!) as Record<string, unknown>;
+  expect(written).toEqual({ schema: 2, v2_only: true, base_model: "lab/a", status: "beta", metadata: { note: "kept" }, cost: { text: { input: { price: 2 } } } });
+  expect(writes.get("providers/host/models/lab/a.toml")).toStartWith("# Source: example\n");
+  expect(result.changes[0]!.fields.map((field) => field.path)).toContain("capabilities.structured_output");
+  // The same body again changes nothing.
+  const rewritten = await catalog({ "models/lab/a.toml": lab(false), "providers/host/models/lab/a.toml": writes.get("providers/host/models/lab/a.toml")! });
+  expect((await plan(provider([body(2)], { owns: [] }), { root: rewritten })).writes.size).toBe(0);
+  // A new model takes its base from the hints.
+  const created = await plan(provider([{ ...body(3), id: "lab/b", base: ["lab/a"] }], { owns: [] }), { root });
+  expect(Bun.TOML.parse(created.writes.get("providers/host/models/lab/b.toml")!)).toEqual({ schema: 2, v2_only: true, base_model: "lab/a", cost: { text: { input: { price: 3 } } } });
 });
 
 test("headers: replace writes the source's header, a function of the written file", async () => {
