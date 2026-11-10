@@ -1,10 +1,12 @@
-# Availability, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Availability, exact wire ID, host capability overrides, limit and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
+# Moneo's public catalog explicitly reports has_reasoning=false for this route.
+# The `:web` suffix is part of the exact Moneo wire ID; web search is bundled into token pricing and has no separate fee.
 schema = 2
 base_model = "minimax/MiniMax-M2.7"
 name = "MiniMax M2.7 (Web)"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 
