@@ -13,7 +13,7 @@ import { modelV2ToV1, toV1Modality } from "../translate.js";
 import { applyWrites, inherited, Labs, type ModelFile, readProviderFiles, relativeModelPath, REPO_ROOT, resolved } from "./catalog.js";
 import { equal, getPath, isTable, leafPaths, mergeDeep, pruneEmpty, setPath, unsetPath, unsetPath as unsetFieldPath } from "./fields.js";
 import { classifyRisk } from "./risk.js";
-import type { Change, Doc, FieldChange, Gap, Observation, Owned, SyncModule, SyncResult } from "./types.js";
+import type { AgentModule, Change, Doc, FieldChange, Gap, Observation, ObservedBatch, Owned, SyncModule, SyncResult } from "./types.js";
 
 // What a published model needs. A lab file always has these, so only a model
 // without a base_model can be missing them.
@@ -35,6 +35,8 @@ export interface PlanOptions {
   root?: string;
   /** Source data to use instead of calling `fetch()`. */
   raw?: unknown;
+  /** Checked observations to apply instead of fetching. The only way to run an agent module. */
+  observed?: ObservedBatch;
 }
 
 export interface Plan {
@@ -43,17 +45,18 @@ export interface Plan {
   writes: Map<string, string | null>;
 }
 
-export async function sync<Raw>(module: SyncModule<Raw>, options: PlanOptions & { dryRun?: boolean } = {}) {
+export async function sync<Raw>(module: SyncModule<Raw> | AgentModule, options: PlanOptions & { dryRun?: boolean } = {}) {
   const root = options.root ?? REPO_ROOT;
   const { result, writes } = await plan(module, { ...options, root });
   if (!options.dryRun) await applyWrites(root, module.id, writes);
   return result;
 }
 
-export async function plan<Raw>(module: SyncModule<Raw>, options: PlanOptions = {}): Promise<Plan> {
+export async function plan<Raw>(module: SyncModule<Raw> | AgentModule, options: PlanOptions = {}): Promise<Plan> {
   const root = options.root ?? REPO_ROOT;
-  const raw = (options.raw ?? await module.fetch()) as Raw;
-  const observations = module.observe(raw);
+  const { observed } = options;
+  if (module.kind === "agent" && observed === undefined) throw new Error(`${module.name} is an agent provider; it only runs from an observation file`);
+  const observations = observed?.observations ?? (module as SyncModule<Raw>).observe((options.raw ?? await (module as SyncModule<Raw>).fetch()) as Raw);
   const files = await readProviderFiles(root, module.id);
   const labs = new Labs(root);
   const context: Context = { module, labs, defaultApi: defaultApi(root, module.id), changes: [], gaps: [], notices: [], writes: new Map() };
@@ -74,7 +77,7 @@ export async function plan<Raw>(module: SyncModule<Raw>, options: PlanOptions = 
     if (file !== undefined && file.id !== observation.id) {
       context.notices.push(`${module.name} lists \`${observation.id}\`, filed as \`${file.id}\`; matched to that file.`);
     }
-    const refined = module.refine === undefined ? observation : module.refine(observation, file?.doc, docs);
+    const refined = module.kind === "agent" || module.refine === undefined ? observation : module.refine(observation, file?.doc, docs);
     if (refined.rebuild !== undefined && (file !== undefined || (!refined.updateOnly && module.policy.creates !== "never"))) rebuild(context, refined, file);
     else if (file !== undefined) update(context, refined, file);
     else if (refined.updateOnly) continue;
@@ -85,24 +88,27 @@ export async function plan<Raw>(module: SyncModule<Raw>, options: PlanOptions = 
     context.notices.push(`${skipped.length} models not in the catalog were skipped (creates: never): ${skipped.map((id) => `\`${id}\``).join(", ")}`);
   }
 
-  for (const file of files.values()) {
+  // An observation file that doesn't list everything says nothing about the files it leaves out.
+  for (const file of observed?.complete === false ? [] : files.values()) {
     if (seen.has(file.id.toLowerCase())) continue;
-    if (module.manages?.(file.id, file.doc) === false) continue;
+    if (module.kind === "agent" ? module.scope?.(file.id, resolved(file.doc, labs)) === false : module.manages?.(file.id, file.doc) === false) continue;
     remove(context, file);
   }
 
   const byPath = (a: { path: string }, b: { path: string }) => a.path.localeCompare(b.path);
   const changes = context.changes.sort(byPath);
   const gaps = context.gaps.sort((a, b) => a.model.localeCompare(b.model));
-  const risk = classifyRisk({ provider: module.id, before: files.size, changes, gaps });
+  const risk = classifyRisk({ provider: module.id, before: files.size, changes, gaps, observedBy: observed?.by });
+  const touched = new Set([...changes, ...gaps].map((item) => item.model.toLowerCase()));
+  const evidence = observed?.evidence.filter((item) => touched.has(item.model.toLowerCase()));
   return {
-    result: { provider: module.id, changes, gaps, notices: context.notices, risk },
+    result: { provider: module.id, changes, gaps, notices: context.notices, risk, ...(evidence === undefined ? {} : { evidence }) },
     writes: context.writes,
   };
 }
 
 interface Context {
-  module: SyncModule<any>;
+  module: Pick<SyncModule, "id" | "name" | "policy">;
   labs: Labs;
   defaultApi(model: Doc): string | undefined;
   changes: Change[];

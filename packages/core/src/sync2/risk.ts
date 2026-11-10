@@ -32,6 +32,8 @@ export function classifyRisk(input: {
   before: number;
   changes: Change[];
   gaps: Gap[];
+  /** The observations came from a file: written by an agent, or by hand in place of the source. */
+  observedBy?: "agent" | "file";
 }): Risk {
   const count = (kind: Change["kind"]) => input.changes.filter((change) => change.kind === kind).length;
   const created = count("create");
@@ -48,6 +50,9 @@ export function classifyRisk(input: {
   };
 
   const reasons: string[] = [];
+  // An agent reads docs, so a person checks its evidence before anything merges.
+  if (input.observedBy === "agent") reasons.push("agent-observed");
+  if (input.observedBy === "file") reasons.push("observations from a file, not the source");
   if (created > LIMITS.created) reasons.push(`${created} models created (limit ${LIMITS.created})`);
   if (deleted > LIMITS.deleted) reasons.push(`${deleted} models deleted (limit ${LIMITS.deleted})`);
   if (created + deleted > LIMITS.churn) reasons.push(`${created + deleted} models created or deleted (limit ${LIMITS.churn})`);

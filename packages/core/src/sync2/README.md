@@ -3,10 +3,11 @@
 A second model sync engine, built next to the old one in `../sync`. The providers in the parity table below run on it so far. The old sync still runs everything in CI.
 
 ```sh
-bun models:sync2 <provider> [--dry-run] [--json] [--raw=<file>]
+bun models:sync2 <provider> [--dry-run] [--json] [--raw=<file> | --observations=<file>]
+bun models:sync2 <agent provider> --agent-brief --json
 ```
 
-`--json` prints one result object to stdout. `--raw` reads the source data from a file instead of fetching it. The CLI writes nothing but model files.
+`--json` prints one result object to stdout. `--raw` reads the source data from a file instead of fetching it. `--observations` applies an observation file instead (see [Agent providers](#agent-providers)). The CLI writes nothing but model files.
 
 ## A provider module
 
@@ -54,6 +55,45 @@ An observation uses the same field names as a v2 provider file (`cost`, `limit`,
 `openrouter-shape.ts` observes a model in OpenRouter's catalog shape the way the old `buildOpenRouterModel` did, for hosts that map their lists onto it (Ambient).
 
 The engine takes the first hint with a lab file, ignoring case. A test checks that on every ID in the catalog these pick the same lab as the old functions.
+
+## Agent providers
+
+Amazon Bedrock, Vertex and Azure have no API good enough to sync from. An agent running elsewhere reads their docs and pricing pages and writes an observation file; this repo defines what it reads and applies what it writes.
+
+An agent module has no fetch:
+
+```ts
+export const azure: AgentModule = {
+  id: "azure",
+  name: "Azure",
+  kind: "agent",
+  policy: AGENT_POLICY,                  // prices, limits, status; creates: "gap", removals: "keep"
+  sources: [{ url: "https://azure.microsoft.com/en-us/pricing/details/azure-openai/", what: "Azure OpenAI prices" }],
+  instructions: "IDs are the model names Foundry lists ...",
+  ids: /^[a-z0-9][a-z0-9.-]*$/,          // what a new ID on this host can look like
+  scope: chatModels,                     // optional: files the agent speaks for
+};
+```
+
+`bun models:sync2 azure --agent-brief --json` prints what the agent needs: the sources, the instructions, the owned fields, the observation file's JSON schema, the hosts evidence may cite and each file's ID with its current owned values.
+
+The agent writes:
+
+```json
+{
+  "provider": "azure",
+  "complete": false,
+  "observations": [{
+    "id": "gpt-5.4",
+    "fields": { "cost.text.output.price": 15 },
+    "evidence": [{ "url": "https://azure.microsoft.com/en-us/pricing/details/azure-openai/", "quote": "GPT-5.4 Global Output $15", "fields": ["cost.text.output.price"] }]
+  }]
+}
+```
+
+`fields` uses v2 paths, and only the ones the module owns (`AGENT_FIELDS` in `agent.ts` lists what an agent may state). Every field needs an evidence quote from a page on one of the sources' hosts. An ID must be a file the module covers, or look like an ID the host could have; a new one becomes a gap. `complete: true` says the file lists every model, so files it leaves out are reported as dropped. Any problem rejects the whole file.
+
+`bun models:sync2 azure --observations=<file>` applies it through the normal engine. An agent's result is never safe to merge on its own (risk reason `agent-observed`), and `result.evidence` carries the quotes for every model changed or reported, for the PR body. An API module takes the same file in place of its source for testing; evidence can cite any https page there.
 
 ## Policy
 

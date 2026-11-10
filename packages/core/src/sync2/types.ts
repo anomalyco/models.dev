@@ -117,6 +117,7 @@ export interface Policy {
 export interface SyncModule<Raw = unknown> {
   id: string;
   name: string;
+  kind?: "api";
   policy: Policy;
   fetch(): Promise<Raw>;
   /** Pure: raw source data to observations. Throw when the data looks wrong. */
@@ -131,6 +132,49 @@ export interface SyncModule<Raw = unknown> {
   refine?(observation: Observation, file: Doc | undefined, files: ReadonlyMap<string, Doc>): Observation;
   /** Local files this source speaks for. Others are never removed. Default: all. */
   manages?(id: string, file: Doc): boolean;
+}
+
+/**
+ * A host with no API good enough to sync from. An agent reads `sources` and
+ * writes an observation file (see `agent.ts`); the engine applies it like any
+ * other source.
+ */
+export interface AgentModule {
+  id: string;
+  name: string;
+  kind: "agent";
+  policy: Policy;
+  /** First-party pages the agent reads. Evidence URLs must be on these hosts. */
+  sources: AgentSource[];
+  /** A short brief for this host: ID conventions, what to skip. */
+  instructions: string;
+  /** IDs this host's files can have. A new ID that doesn't match rejects the batch. */
+  ids: RegExp;
+  /** Files the agent speaks for, given the published model (lab fields merged). Default: all. */
+  scope?(id: string, model: Doc): boolean;
+}
+
+export interface AgentSource {
+  url: string;
+  /** What the page is for: prices, IDs, limits, deprecations. */
+  what: string;
+}
+
+/** A checked observation file (`parseObservations` in `agent.ts`), ready for the engine. */
+export interface ObservedBatch {
+  observations: Observation[];
+  evidence: Evidence[];
+  /** The file lists every model the host serves, so files it leaves out count as dropped. */
+  complete: boolean;
+  by: "agent" | "file";
+}
+
+/** A quote from a page that backs some fields of one observation. */
+export interface Evidence {
+  model: string;
+  url: string;
+  quote: string;
+  fields: string[];
 }
 
 export interface FieldChange {
@@ -180,4 +224,6 @@ export interface SyncResult {
   gaps: Gap[];
   notices: string[];
   risk: Risk;
+  /** With an observation file: the evidence for every model changed or reported as a gap. */
+  evidence?: Evidence[];
 }
