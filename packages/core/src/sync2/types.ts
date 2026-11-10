@@ -21,8 +21,11 @@ export type Observation = Observed<ModelFields> & {
   id: string;
   /** Lab model IDs (`models/<lab>/<model>`) this model may be, best first. */
   base?: string[];
-  /** Leading comment for a newly created file. */
-  header?: string;
+  /**
+   * Leading comment for a newly created file (and every file, with `headers:
+   * "replace"`). A function gets the file as it will be written.
+   */
+  header?: string | ((doc: Doc) => string);
   /**
    * Values a new file takes for owned fields the observation leaves out (a
    * fallback output limit, `tools.supported = false`). Existing files keep
@@ -91,6 +94,12 @@ export interface Policy {
    * the lab's `limit.input`: it gets `base_model_omit = ["limit.input"]`.
    */
   omitLabInput?: boolean;
+  /**
+   * `"replace"`: the observation's `header` is each updated file's leading
+   * comment, so a changed header alone rewrites the file. By default a file
+   * keeps its own and `header` is only written into new files.
+   */
+  headers?: "replace";
 }
 
 export interface SyncModule<Raw = unknown> {

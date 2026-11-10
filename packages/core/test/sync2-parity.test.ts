@@ -15,6 +15,8 @@ const nearaiCase = caseInsensitive
   ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
+  // Prime: a new file's kinds take the lab's formats (the old sync wrote bare kinds).
+  "prime/perturbed": ["providers/prime/models/anthropic/claude-mythos-5.1.toml"],
   // OVHcloud: a model that starts reasoning with no controls is a gap.
   "ovhcloud/perturbed": ["providers/ovhcloud/models/qwen3guard-gen-0.6b.toml"],
   // Ofox: the 1h cache write price is read from the catalog; the old sync

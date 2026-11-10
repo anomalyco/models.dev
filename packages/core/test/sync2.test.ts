@@ -499,3 +499,16 @@ price = 3
   const none = await plan(provider([{ id: "lab/a", cost: { text: { input: { overrides: null } } } }], { owns }), { root });
   expect((Bun.TOML.parse(none.writes.get("providers/host/models/lab/a.toml")!) as any).cost.text.input.overrides).toEqual([{ when: { utc_hours: { gte: "16:00" } }, price: 0.5 }]);
 });
+
+test("headers: replace writes the source's header, a function of the written file", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/a.toml": file("lab/a", 1),
+    "providers/host/models/lab/b.toml": file("lab/a", 2).replace("# Source: example\n", "# Generated\n"),
+  });
+  const header = (doc: Record<string, unknown>) => `# Generated\n# price ${(doc.cost as any).text.input.price}\n`;
+  const { writes, result } = await plan(provider([priced("lab/a", 1, { header }), priced("lab/b", 2, { header })], { headers: "replace" }), { root });
+  expect(writes.get("providers/host/models/lab/a.toml")).toStartWith("# Generated\n# price 1\nschema = 2");
+  expect(writes.get("providers/host/models/lab/b.toml")).toStartWith("# Generated\n# price 2\nschema = 2");
+  expect(result.changes.map((change) => change.fields.map((field) => field.path))).toEqual([["header"], ["header"]]);
+});

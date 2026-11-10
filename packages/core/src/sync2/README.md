@@ -69,6 +69,7 @@ The engine takes the first hint with a lab file, ignoring case. A test checks th
 - Turning `capabilities.tools.supported` or `capabilities.reasoning.supported` off drops that capability's details (`strict`, `choice`, effort, toggle, ...). A capability table the file sets always names `supported`, even when it matches the lab, and a `[modalities]` table it sets lists both sides. A `tables` merge that removes every table removes the field.
 - `creates` decides what happens to a model the catalog doesn't have: create it, report it as a gap, or skip it with a notice.
 - `removals` decides what happens to a file the source no longer lists: delete it, set `status = "deprecated"`, or keep it and report a gap.
+- `headers: "replace"`: the observation's `header` becomes each updated file's leading comment, so a header change alone rewrites the file (Prime's generated headers). A `header` can be a function of the file as it will be written.
 - `omitLabInput: true`: a new file whose context window differs from its lab's gets `base_model_omit = ["limit.input"]`, since the lab's input limit belongs to the lab's window. Existing files aren't changed (the old sync only did this when it created a file).
 
 ## What the engine does
@@ -134,6 +135,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | ollama-cloud | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
 | openai | same | same | Owns no fields. The old sync re-read and rewrote each listed file through v1; the new one leaves them alone. |
 | ovhcloud | same | 1 file | A model that starts reasoning with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. |
+| prime | same | 1 file | A kind a new file differs from its lab in is written in the lab's formats (and the header says so); the old sync wrote bare kinds. A new model with no lab file is a gap; the old sync skipped it. Each file's header is generated, and the MIME line follows the file as written; the old sync looked at the file before the patch, so it caught up a run later. Effort `default` keeps the file as it is. | |
 | requesty | same | 1 file | A new model with no lab file is a gap; the old sync wrote a standalone file. The old sync re-resolved every file's base_model on each run; the new engine keeps a file's base_model (no file's would change today). The module reads lab files to name regional routes after their lab. |
 | tinfoil | same | same | A model that starts reasoning with no controls in its file is a gap; the old sync stopped with an error. |
 | venice | same | 1 file | A new model with no lab file is a gap; the old sync wrote a standalone file with a generated description and today's date. Lab matching (ID or name, ignoring case and punctuation) is the old one, in the module. An API table the source sets keeps the file's other keys (the old sync kept only `capabilities`). |

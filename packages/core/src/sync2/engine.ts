@@ -120,7 +120,9 @@ function update(context: Context, observation: Observation, file: ModelFile) {
     return;
   }
   const fields = patch(doc, observation, module.policy.owns, base, { defaultApi: context.defaultApi(resolved(file.doc, labs)) });
-  if (fields.length === 0) return;
+  // With `headers: "replace"`, the source writes each file's leading comment.
+  const header = module.policy.headers === "replace" && observation.header !== undefined ? comments(observation.header, doc) : file.header;
+  if (fields.length === 0 && header === file.header) return;
 
   const before = resolved(file.doc, labs);
   const after = resolved(doc, labs);
@@ -128,7 +130,7 @@ function update(context: Context, observation: Observation, file: ModelFile) {
     context.gaps.push(gap(context, observation, "update", "now reports reasoning, but the file has no reasoning controls", ["capabilities.reasoning"]));
     return;
   }
-  const content = render(context, file.id, doc, file.header, "update");
+  const content = render(context, file.id, doc, header, "update");
   if (content === undefined) return;
   if (file.symlink) {
     context.notices.push(`${file.path} is a symlink, so it was not updated.`);
@@ -139,7 +141,7 @@ function update(context: Context, observation: Observation, file: ModelFile) {
     kind: "update",
     model: file.id,
     path: file.path,
-    fields,
+    fields: header === file.header ? fields : [...fields, { path: "header", before: file.header, after: header }],
     ...(reasoningChanged(before, after) ? { reasoning: true as const } : {}),
   });
 }
@@ -171,7 +173,7 @@ function create(context: Context, observation: Observation) {
     context.gaps.push(gap(context, observation, "new", reason, missing));
     return;
   }
-  const content = render(context, observation.id, doc, comments(observation.header), "new");
+  const content = render(context, observation.id, doc, comments(observation.header, doc), "new");
   if (content === undefined) return;
   const path = relativeModelPath(module.id, observation.id);
   context.writes.set(path, content);
@@ -525,7 +527,8 @@ function reasoningChanged(before: Doc, after: Doc) {
   return !equal(getPath(before, "capabilities.reasoning"), getPath(after, "capabilities.reasoning"));
 }
 
-function comments(header: string | undefined) {
+function comments(source: Observation["header"], doc: Doc) {
+  const header = typeof source === "function" ? source(doc) : source;
   if (header === undefined || header.trim() === "") return "";
   return `${header.trim().split("\n").map((line) => (line.startsWith("#") ? line : `# ${line}`)).join("\n")}\n`;
 }

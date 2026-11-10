@@ -22,6 +22,31 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  prime: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "mistralai/mistral-nemo")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          switch (model.id) {
+            case "anthropic/claude-fable-5": next.pricing.input_usd_per_mtok = 12; next.pricing.cache_read_usd_per_mtok = 1.2; break;
+            case "deepseek/deepseek-v4.1-flash": next.reasoning.supported_efforts = ["low", "high"]; delete next.pricing.cache_read_usd_per_mtok; break;
+            case "google/gemini-3.8-flash": next.specs.modalities.input = ["text", "image"]; break;
+            case "google/gemma-3-27b-it": next.display_name = "Gemma 3 27B Renamed"; next.context_window = 65_536; break;
+            case "meta-llama/llama-3.3-70b-instruct": next.supported_parameters = next.supported_parameters.filter((param: string) => param !== "temperature"); break;
+            case "mistralai/mistral-small-2603": next.specs.supports_reasoning = false; break;
+            case "moonshotai/kimi-k2-0905": next.pricing.output_usd_per_mtok = null; break;
+            case "anthropic/claude-opus-4.6": next.reasoning.supported_efforts = ["low", "high", "default"]; break;
+          }
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "anthropic/claude-sonnet-5");
+      data.push({ ...structuredClone(template), id: "anthropic/claude-mythos-5.1", display_name: "Claude Mythos 5.1" });
+      data.push({ ...structuredClone(template), id: "acme/brand-new", display_name: "Brand New" });
+      return { ...raw, data };
+    },
+  },
   ovhcloud: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
