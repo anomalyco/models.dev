@@ -1,6 +1,7 @@
 // `bun models:sync2 <provider> [--dry-run] [--json] [--raw=<file>]`
 
 import { plan, sync } from "./engine.js";
+import { aiand } from "./providers/aiand.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
@@ -37,7 +38,7 @@ import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 import type { SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { ambient, anthropic, baseten, chutes, cortecs, crossmodel, deepinfra, empiriolabs, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, ovhcloud, pioneer, prime, requesty, tinfoil, venice, wandb, xai };
+export const modules: Record<string, SyncModule<any>> = { aiand, ambient, anthropic, baseten, chutes, cortecs, crossmodel, deepinfra, empiriolabs, engy, "fireworks-ai": fireworksAi, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, ovhcloud, pioneer, prime, requesty, tinfoil, venice, wandb, xai };
 
 export { plan, sync };
 export type * from "./types.js";

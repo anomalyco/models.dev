@@ -114,6 +114,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 
 | Provider | Recorded | Perturbed | Differences |
 | --- | --- | --- | --- |
+| aiand | same | same | A new model with no lab file is a gap; the old sync skipped it and opened an issue. Kept from the old sync: an empty effort list in the feed removes a file's controls. | |
 | ambient | same | 1 file | A new model that reasons with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. A model listed as not ready keeps its file and isn't reported as dropped. |
 | anthropic | same | same | The 1h cache write price is read from the pricing page instead of scaled from the 5m price (same result while Anthropic keeps the 1.25x and 2x ratios). A new alias (an undated ID whose dated model has a file) is built from the source alone; the old sync copied its dated sibling's hand-written fields. Not in the data. |
 | baseten | same | 1 file | A new model that reasons with no controls is a gap; the old sync wrote `reasoning = { supported = true }`. A file's output limit is createOnly; the old sync also filled it into an existing file without one (none exists). Without a listed cache price, a file's cache capability stays; the old sync removed it when the file had no cache price either. A decision model's file keeps fields the engine doesn't own; the old sync rebuilt it from scratch. |

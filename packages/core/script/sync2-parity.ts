@@ -22,6 +22,25 @@ type Raw = any;
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  aiand: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const models = structuredClone(raw.aiand.models);
+      const entries = Object.entries(models) as Array<[string, Raw]>;
+      const edit = (id: string, change: (model: Raw) => void) => change(entries.find(([, model]) => model.id === id)![1]);
+      delete models[entries.find(([, model]) => model.id === "openai/gpt-oss-120b")![0]];
+      edit("moonshotai/kimi-k3.1-pro", (model) => { model.cost.input = 2.5; model.reasoning_options = [{ type: "effort", values: ["max", "low"] }]; });
+      edit("zai-org/glm-5.3", (model) => { delete model.reasoning_options; model.cost.tiers = [{ tier: { size: 200_000 }, input: 2, output: 8 }]; });
+      edit("zai-org/glm-5.3-flash", (model) => { model.reasoning_options = []; model.status = "beta"; });
+      edit("qwen/qwen3.8-27b", (model) => { model.reasoning_options = [{ type: "effort", values: ["turbo"] }]; model.limit.output = 16_384; });
+      edit("google/gemma-4-31b-it", (model) => { model.reasoning = false; model.modalities.input = ["text"]; });
+      edit("moonshotai/kimi-k3", (model) => { model.interleaved = { field: "reasoning_details" }; model.structured_output = false; });
+      const template = entries.find(([, model]) => model.id === "zai-org/glm-5.3")![1];
+      models["zai-org/glm-5.1"] = { ...structuredClone(template), id: "zai-org/glm-5.1", name: "GLM-5.1" };
+      models["acme/brand-new"] = { ...structuredClone(template), id: "acme/brand-new", name: "Brand New" };
+      return { ...raw, aiand: { ...raw.aiand, models } };
+    },
+  },
   empiriolabs: {
     recorded: (raw) => raw,
     perturbed: (raw) => {
