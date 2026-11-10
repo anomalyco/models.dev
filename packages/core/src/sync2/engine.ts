@@ -224,8 +224,9 @@ export interface PatchOptions {
 export function patch(doc: Doc, observation: Observation, owns: Owned[], base: Doc | undefined, options: PatchOptions = {}): FieldChange[] {
   const changes: FieldChange[] = [];
   for (const owned of owns) {
-    const { path, merge, only } = typeof owned === "string" ? { path: owned, merge: undefined, only: undefined } : { only: undefined, ...owned };
+    const { path, merge, only, standalone } = typeof owned === "string" ? { path: owned } : { only: undefined, ...owned };
     if (merge === "report") continue;
+    if (standalone && typeof doc.base_model === "string") continue;
     const observed = getPath(observation, path);
     if (observed === undefined) continue;
     const own = getPath(doc, path);
@@ -243,14 +244,27 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     let next = observed;
     if (merge === "min" && typeof next === "number" && typeof current === "number") next = Math.min(next, current);
     if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, only);
-    if (merge === "tables" && isTable(next)) next = mergeTables(current, next, options.defaultApi);
+    if (merge === "tables" && isTable(next)) next = mergeTables(current, next, path === "api" ? options.defaultApi : undefined);
     if (equal(current, next)) continue;
     if (fromBase !== undefined && equal(fromBase, next)) unsetPath(doc, path);
     else setPath(doc, path, structuredClone(next));
     changes.push({ path, before: current, after: next });
   }
   changes.push(...switchedOff(doc, observation, owns));
+  keepSupported(doc, base);
   return changes;
+}
+
+// A capability table a provider file sets always names `supported`, even when
+// it equals the lab's: `reasoning = { supported = true, effort = [...] }`.
+function keepSupported(doc: Doc, base: Doc | undefined) {
+  for (const capability of ["capabilities.tools", "capabilities.reasoning"]) {
+    const table = getPath(doc, capability);
+    const supported = getPath(base, `${capability}.supported`);
+    if (isTable(table) && Object.keys(table).length > 0 && table.supported === undefined && supported !== undefined) {
+      setPath(doc, capability, { supported, ...table });
+    }
+  }
 }
 
 /** Owned `merge: "report"` fields where the source disagrees with the file. */
@@ -258,6 +272,7 @@ export function mismatches(doc: Doc, observation: Observation, owns: Owned[], ba
   const result: FieldChange[] = [];
   for (const owned of owns) {
     if (typeof owned === "string" || owned.merge !== "report") continue;
+    if (owned.standalone && typeof doc.base_model === "string") continue;
     const observed = getPath(observation, owned.path);
     if (observed === undefined) continue;
     const current = getPath(doc, owned.path) ?? getPath(base, owned.path);

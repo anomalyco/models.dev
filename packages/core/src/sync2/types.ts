@@ -45,11 +45,18 @@ export type Observation = Observed<ModelFields> & {
  *   the provider's default API first.
  * - `report`: never written. When the source disagrees with the file, the model
  *   is an update gap and its file is left alone.
+ * `standalone: true` limits a field to files without a base_model.
  */
 export type Owned =
   | string
-  | { path: string; merge: "min" | "deprecated" | "tables" | "report" }
-  | { path: string; merge: "kinds"; only?: string[] };
+  | (OwnedRule & { merge?: "min" | "deprecated" | "tables" | "report" })
+  | (OwnedRule & { merge: "kinds"; only?: string[] });
+
+interface OwnedRule {
+  path: string;
+  /** Only patched on files without a base_model; with one, the lab's value stands. */
+  standalone?: boolean;
+}
 
 export interface Policy {
   /** Fields the engine patches. Everything else in a file is left alone. */

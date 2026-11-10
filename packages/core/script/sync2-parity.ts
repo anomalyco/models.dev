@@ -9,6 +9,7 @@ import { cp, mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 
 import { syncProvider, type SyncProvider } from "../src/sync/index.js";
+import { anthropic as oldAnthropic } from "../src/sync/providers/anthropic.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
 import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
@@ -20,7 +21,7 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, xai: oldXai };
 
 type Raw = any;
 
@@ -75,6 +76,36 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
       pricing: raw.pricing.replaceAll("$1.25", "$1.30").replaceAll("$0.15", "$0.10").replaceAll("| $0.30", "| $0.35"),
       families: raw.families.map((page: string, index: number) => (index === 0 ? page.replaceAll("1,048,576", "524,288") : page)),
     }),
+  },
+  anthropic: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const models = raw.models
+        .filter((model: Raw) => model.id !== "claude-sonnet-4-5-20250929")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const caps = next.capabilities;
+          if (model.id === "claude-opus-5") next.max_tokens = 64_000;
+          if (model.id === "claude-sonnet-4-6") caps.thinking.types.enabled.supported = false;
+          if (model.id === "claude-opus-4-6") caps.effort.xhigh.supported = true;
+          if (model.id === "claude-opus-4-5-20251101") caps.effort.supported = false;
+          if (model.id === "claude-haiku-4-5-20251001") caps.pdf_input.supported = false;
+          if (model.id === "claude-fable-5") caps.structured_outputs.supported = false;
+          if (model.id === "claude-haiku-4-5") caps.thinking.supported = false;
+          if (model.id === "claude-opus-4-7") next.display_name = "Claude Opus 4.7 Renamed";
+          return next;
+        });
+      const template = raw.models.find((model: Raw) => model.id === "claude-opus-4-5-20251101");
+      models.push({ ...structuredClone(template), id: "claude-opus-4-1-20250805", display_name: "Claude Opus 4.1", created_at: "2025-08-05T00:00:00Z" });
+      models.push({ ...structuredClone(template), id: "claude-zeta-9", display_name: "Claude Zeta 9" });
+      const lines = raw.pricing.split("\n");
+      const row = (name: string) => lines.findIndex((line: string) => line.startsWith(`| ${name} `));
+      const opus = row("Claude Opus 4.7");
+      lines[opus] = lines[opus].replace("Claude Opus 4.7", "Claude Opus 4.7 Renamed").replace("$5 / MTok", "$6 / MTok")
+        .replace("$6.25 / MTok", "$7.50 / MTok").replace("$10 / MTok", "$12 / MTok").replace("$0.50 / MTok", "$0.60 / MTok");
+      lines[row("Claude Opus 4.6")] = lines[row("Claude Opus 4.6")].replace("Claude Opus 4.6", "Claude Opus 4.6 (deprecated)");
+      return { ...raw, models, pricing: lines.join("\n") };
+    },
   },
   mistral: {
     recorded: (raw) => raw,

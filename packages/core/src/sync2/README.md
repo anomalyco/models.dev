@@ -48,7 +48,8 @@ An observation uses the same field names as a v2 provider file (`cost`, `limit`,
   - `{ path: "status", merge: "deprecated" }`: the source says `"deprecated"` or `null`, and `null` only clears a deprecated status, never `beta`.
   - `{ path: "api", merge: "tables" }`: the source's API tables replace or join the file's and the rest stay. A file with no `[api.*]` tables gets the provider's default API first, so it keeps being served on it.
   - `{ path, merge: "report" }` is never written. If the source disagrees with the file, the model becomes an update gap and its file is left alone (Mistral's probed reasoning efforts).
-- Turning `capabilities.tools.supported` or `capabilities.reasoning.supported` off drops that capability's details (`strict`, `choice`, effort, toggle, ...).
+  - `standalone: true` (with any rule) only patches files without a `base_model`; with one, the lab's value stands (Anthropic's release dates).
+- Turning `capabilities.tools.supported` or `capabilities.reasoning.supported` off drops that capability's details (`strict`, `choice`, effort, toggle, ...). A capability table the file sets always names `supported`, even when it matches the lab.
 - `creates` decides what happens to a model the catalog doesn't have: create it, report it as a gap, or skip it with a notice.
 - `removals` decides what happens to a file the source no longer lists: delete it, set `status = "deprecated"`, or keep it and report a gap.
 
@@ -95,6 +96,7 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 | meta | same | same | |
 | modular | same | same | |
 | nearai | same | same | On case-insensitive filesystems the new engine matches `qwen/x` to `Qwen/x`; the old one deletes the file. |
+| anthropic | same | same | The 1h cache write price is read from the pricing page instead of scaled from the 5m price (same result while Anthropic keeps the 1.25x and 2x ratios). A new alias (an undated ID whose dated model has a file) is built from the source alone; the old sync copied its dated sibling's hand-written fields. Not in the data. |
 | mistral | same | same | None in the data. A non-chat model (OCR, moderation) whose file has no `[api.*]` tables would get the provider's default API before its own; the old sync gave it only its own. Every such file already lists its API. |
 | xai | same | same | A long-context band is written as `gte` (the docs bill prompts of at least the threshold). The old sync kept a file's operator but wrote `gt` for a band the file didn't have. |
 

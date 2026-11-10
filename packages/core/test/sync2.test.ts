@@ -296,6 +296,18 @@ test("merge: report turns a disagreement into a gap and leaves the file alone", 
   expect(disagree.result.gaps.map(({ kind, missing }) => ({ kind, missing }))).toEqual([{ kind: "update", missing: ["capabilities.reasoning.effort"] }]);
 });
 
+test("standalone fields leave base_model files to the lab; capability tables keep supported", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(true),
+    "providers/host/models/lab/a.toml": file("lab/a", 1),
+  });
+  const owns = [{ path: "release_date", standalone: true }, "capabilities.reasoning.supported", "capabilities.reasoning.effort"];
+  const { writes } = await plan(provider([{ id: "lab/a", release_date: "2027-01-01", capabilities: { reasoning: { supported: true, effort: ["low"] } } }], { owns }), { root });
+  const content = writes.get("providers/host/models/lab/a.toml")!;
+  expect(content).not.toContain("release_date");
+  expect(content).toContain('reasoning = { supported = true, effort = ["low"] }');
+});
+
 test("turning a capability off drops its details", async () => {
   const root = await catalog({
     "models/lab/a.toml": lab(true),
