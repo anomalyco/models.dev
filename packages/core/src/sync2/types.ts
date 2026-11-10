@@ -32,11 +32,24 @@ export type Observation = Observed<ModelFields> & {
 
 /**
  * A v2 field path the source is authoritative for, e.g. `cost.text.input.price`.
- * `merge: "min"` only lets the source lower a number. `merge: "kinds"` is for
- * modality lists: the source speaks for which kinds (text, image, pdf, ...) a
- * model takes, and the file keeps its exact formats (`image/png`) for each kind it has.
+ * A plain path replaces the file's value (a list or table whole). A merge rule
+ * changes that:
+ * - `min`: only lowers a number.
+ * - `kinds`: a modality list. The source decides the kinds (text, image, pdf, ...)
+ *   and the file keeps its own formats (`image/png`) for kinds it has. With
+ *   `only`, the source speaks for just those kinds and the file's others stay.
+ * - `deprecated`: `status`. The source says "deprecated" or null; null only
+ *   clears a "deprecated" status, never another one.
+ * - `tables`: a table of tables (`api`). The source's tables replace or join the
+ *   file's, null removes one, and the file's others stay. A file with none gets
+ *   the provider's default API first.
+ * - `report`: never written. When the source disagrees with the file, the model
+ *   is an update gap and its file is left alone.
  */
-export type Owned = string | { path: string; merge: "min" | "kinds" };
+export type Owned =
+  | string
+  | { path: string; merge: "min" | "deprecated" | "tables" | "report" }
+  | { path: string; merge: "kinds"; only?: string[] };
 
 export interface Policy {
   /** Fields the engine patches. Everything else in a file is left alone. */

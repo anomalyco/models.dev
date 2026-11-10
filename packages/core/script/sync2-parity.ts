@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 
 import { syncProvider, type SyncProvider } from "../src/sync/index.js";
 import { meta as oldMeta } from "../src/sync/providers/meta.js";
+import { mistral as oldMistral } from "../src/sync/providers/mistral.js";
 import { modular as oldModular } from "../src/sync/providers/modular.js";
 import { nearai as oldNearai } from "../src/sync/providers/nearai.js";
 import { xai as oldXai } from "../src/sync/providers/xai.js";
@@ -19,7 +20,7 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { meta: oldMeta, modular: oldModular, nearai: oldNearai, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { meta: oldMeta, mistral: oldMistral, modular: oldModular, nearai: oldNearai, xai: oldXai };
 
 type Raw = any;
 
@@ -74,6 +75,34 @@ export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
       pricing: raw.pricing.replaceAll("$1.25", "$1.30").replaceAll("$0.15", "$0.10").replaceAll("| $0.30", "| $0.35"),
       families: raw.families.map((page: string, index: number) => (index === 0 ? page.replaceAll("1,048,576", "524,288") : page)),
     }),
+  },
+  mistral: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "pixtral-12b" && model.id !== "mistral-embed")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const caps = next.capabilities;
+          if (model.id === "codestral-2508") next.max_context_length = 128_000;
+          if (model.id === "ministral-3b-2512") caps.function_calling = false;
+          if (model.id === "ministral-8b-2512") caps.vision = false;
+          if (model.id === "ministral-14b-2512") caps.audio = true;
+          if (model.id === "mistral-large-2512") caps.completion_fim = true;
+          if (model.id === "mistral-large-latest") caps.reasoning = true;
+          if (model.id === "mistral-small-2603") caps.reasoning = false;
+          if (model.id === "zai-glm-5-3") next.deprecation = "2026-12-01";
+          if (model.id === "mistral-ocr-2512") caps.moderation = true;
+          if (model.id === "voxtral-small-2507") caps.audio = false;
+          return next;
+        });
+      const template = raw.data.find((model: Raw) => model.id === "mistral-large-4");
+      data.push({ ...structuredClone(template), id: "mistral-large-5", name: "mistral-large-5" });
+      data.push({ ...structuredClone(template), id: "mistral-large-5-latest", name: "mistral-large-5" });
+      // mistral-large-4 accepts fewer efforts than its file lists; that model is reported, not written.
+      const efforts = { ...raw.reasoning_efforts, "mistral-large-4": ["low", "high"], "mistral-large-5": ["low", "high"], "mistral-medium-latest": [] };
+      return { ...raw, data, reasoning_efforts: efforts };
+    },
   },
   xai: {
     recorded: (raw) => raw,

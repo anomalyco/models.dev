@@ -245,6 +245,68 @@ test("merge: kinds keeps the file's formats and only changes the kinds", async (
   ]);
 });
 
+test("merge: kinds with only leaves the file's other kinds alone", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/a.toml": file("lab/a", 1, '\n[modalities]\ninput = ["text", "image/png", "application/pdf"]\noutput = ["text"]\n'),
+  });
+  const module = (input: string[]) => provider([{ id: "lab/a", modalities: { input } }], { owns: [{ path: "modalities.input", merge: "kinds", only: ["image", "audio"] }] });
+  expect((await plan(module(["text", "image"]), { root })).writes.size).toBe(0);
+  const swapped = await plan(module(["text", "audio"]), { root });
+  expect(swapped.result.changes[0]!.fields[0]!.after).toEqual(["text", "application/pdf", "audio"]);
+});
+
+test("merge: deprecated sets and clears only a deprecated status", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/models/lab/beta.toml": file("lab/a", 1, 'status = "beta"\n'),
+    "providers/host/models/lab/old.toml": file("lab/a", 1, 'status = "deprecated"\n'),
+  });
+  const owns = [{ path: "status", merge: "deprecated" as const }];
+  const { result } = await plan(provider([{ id: "lab/beta", status: null }, { id: "lab/old", status: null }], { owns }), { root });
+  expect(result.changes.map((change) => [change.model, change.fields])).toEqual([["lab/old", [{ path: "status", before: "deprecated", after: undefined }]]]);
+  const deprecated = await plan(provider([{ id: "lab/beta", status: "deprecated" }, { id: "lab/old", status: "deprecated" }], { owns }), { root });
+  expect(deprecated.result.changes.map((change) => change.model)).toEqual(["lab/beta"]);
+});
+
+test("merge: tables adds to the file's tables, after the provider's default API when it has none", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/provider.toml": 'name = "Host"\nnpm = "@ai-sdk/openai-compatible"\n',
+    "providers/host/models/lab/a.toml": file("lab/a", 1),
+    "providers/host/models/lab/b.toml": file("lab/a", 1, "\n[api.responses]\n"),
+  });
+  const api = { fim: { sdk: { aisdk: "none" } } };
+  const { writes } = await plan(provider([{ id: "lab/a", api }, { id: "lab/b", api }], { owns: [{ path: "api", merge: "tables" }] }), { root });
+  const tables = (id: string) => Object.keys((Bun.TOML.parse(writes.get(`providers/host/models/${id}.toml`)!) as { api: object }).api);
+  expect(tables("lab/a")).toEqual(["chat-completions", "fim"]);
+  expect(tables("lab/b")).toEqual(["responses", "fim"]);
+});
+
+test("merge: report turns a disagreement into a gap and leaves the file alone", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(true),
+    "providers/host/models/lab/a.toml": file("lab/a", 1, '\n[capabilities]\nreasoning = { supported = true, effort = ["low", "high"] }\n'),
+  });
+  const owns = ["cost.text.input.price", { path: "capabilities.reasoning.effort", merge: "report" as const }];
+  const agree = await plan(provider([{ id: "lab/a", cost: { text: { input: { price: 2 } } }, capabilities: { reasoning: { effort: ["low", "high"] } } }], { owns }), { root });
+  expect(agree.result.changes.map((change) => change.fields.map((field) => field.path))).toEqual([["cost.text.input.price"]]);
+  const disagree = await plan(provider([{ id: "lab/a", cost: { text: { input: { price: 2 } } }, capabilities: { reasoning: { effort: ["high"] } } }], { owns }), { root });
+  expect(disagree.writes.size).toBe(0);
+  expect(disagree.result.gaps.map(({ kind, missing }) => ({ kind, missing }))).toEqual([{ kind: "update", missing: ["capabilities.reasoning.effort"] }]);
+});
+
+test("turning a capability off drops its details", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(true),
+    "providers/host/models/lab/a.toml": file("lab/a", 1, '\n[capabilities]\ntools = { supported = true, strict = true }\nreasoning = { supported = true, effort = ["low", "high"] }\n'),
+  });
+  const owns = ["capabilities.tools.supported", "capabilities.reasoning.supported"];
+  const { writes } = await plan(provider([{ id: "lab/a", capabilities: { tools: { supported: false }, reasoning: { supported: false } } }], { owns }), { root });
+  const doc = Bun.TOML.parse(writes.get("providers/host/models/lab/a.toml")!) as { capabilities: unknown };
+  expect(doc.capabilities).toEqual({ tools: { supported: false }, reasoning: { supported: false } });
+});
+
 const change = (kind: Change["kind"], extra: Partial<Change> = {}): Change => ({ kind, model: "m", path: "providers/p/models/m.toml", fields: [], ...extra });
 
 test("risk keeps today's auto-merge limits", () => {

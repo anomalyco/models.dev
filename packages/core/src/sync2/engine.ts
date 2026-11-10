@@ -1,11 +1,17 @@
 // The sync engine: turns a module's observations into file changes and gaps.
 
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+
 import { ZodError } from "zod";
+
+import { resolveProtocol } from "../generate-v2.js";
+import type { Model, Provider } from "../schema.js";
 
 import { formatModelV2 } from "../model-file-v2.js";
 import { modelV2ToV1, toV1Modality } from "../translate.js";
 import { applyWrites, inherited, Labs, type ModelFile, readProviderFiles, relativeModelPath, REPO_ROOT, resolved } from "./catalog.js";
-import { equal, getPath, leafPaths, setPath, unsetPath } from "./fields.js";
+import { equal, getPath, isTable, leafPaths, setPath, unsetPath } from "./fields.js";
 import { classifyRisk } from "./risk.js";
 import type { Change, Doc, FieldChange, Gap, Observation, Owned, SyncModule, SyncResult } from "./types.js";
 
@@ -50,7 +56,7 @@ export async function plan<Raw>(module: SyncModule<Raw>, options: PlanOptions = 
   const observations = module.observe(raw);
   const files = await readProviderFiles(root, module.id);
   const labs = new Labs(root);
-  const context: Context = { module, labs, changes: [], gaps: [], notices: [], writes: new Map() };
+  const context: Context = { module, labs, defaultApi: defaultApi(root, module.id), changes: [], gaps: [], notices: [], writes: new Map() };
 
   if (observations.length === 0 && module.policy.removals !== "keep") {
     throw new Error(`${module.name} returned no models; refusing to treat every file as removed`);
@@ -95,6 +101,7 @@ export async function plan<Raw>(module: SyncModule<Raw>, options: PlanOptions = 
 interface Context {
   module: SyncModule<any>;
   labs: Labs;
+  defaultApi(model: Doc): string | undefined;
   changes: Change[];
   gaps: Gap[];
   notices: string[];
@@ -104,13 +111,20 @@ interface Context {
 function update(context: Context, observation: Observation, file: ModelFile) {
   const { module, labs } = context;
   const doc = structuredClone(file.doc);
-  const fields = patch(doc, observation, module.policy.owns, inherited(doc, labs));
+  const base = inherited(doc, labs);
+  const disagree = mismatches(doc, observation, module.policy.owns, base);
+  if (disagree.length > 0) {
+    const show = (value: unknown) => (value === undefined ? "unset" : JSON.stringify(value));
+    const detail = disagree.map((field) => `${field.path} is ${show(field.after)} at the source but ${show(field.before)} in the file`).join("; ");
+    context.gaps.push(gap(context, observation, "update", `${detail}; check it by hand`, disagree.map((field) => field.path)));
+    return;
+  }
+  const fields = patch(doc, observation, module.policy.owns, base, { defaultApi: context.defaultApi(resolved(file.doc, labs)) });
   if (fields.length === 0) return;
 
   const before = resolved(file.doc, labs);
   const after = resolved(doc, labs);
-  const authored = getPath(file.doc, "capabilities.reasoning") !== undefined;
-  if (supportsReasoning(after) && !supportsReasoning(before) && !authored && !hasControls(doc)) {
+  if (supportsReasoning(after) && !supportsReasoning(before) && !hasControls(doc)) {
     context.gaps.push(gap(context, observation, "update", "now reports reasoning, but the file has no reasoning controls", ["capabilities.reasoning"]));
     return;
   }
@@ -135,7 +149,7 @@ function create(context: Context, observation: Observation) {
   const base = resolveBase(observation, labs);
   const doc: Doc = { schema: 2 };
   if (base !== undefined) doc.base_model = base;
-  patch(doc, observation, module.policy.owns, inherited(doc, labs));
+  patch(doc, observation, module.policy.owns, inherited(doc, labs), { defaultApi: context.defaultApi(resolved(doc, labs)) });
 
   const merged = resolved(doc, labs);
   const missing = REQUIRED.filter((path) => getPath(merged, path) === undefined);
@@ -196,21 +210,30 @@ function remove(context: Context, file: ModelFile) {
   });
 }
 
+export interface PatchOptions {
+  /** The API protocol a file without `[api.*]` tables is served on (from provider.toml). */
+  defaultApi?: string;
+}
+
 /**
  * Copies each owned field the observation states into `doc`. A value equal to
  * the inherited lab value is left to inheritance. `null` removes the file's own
- * value. Returns what changed.
+ * value. Fields owned with `merge: "report"` are only compared (see
+ * `mismatches`). Returns what changed.
  */
-export function patch(doc: Doc, observation: Observation, owns: Owned[], base: Doc | undefined): FieldChange[] {
+export function patch(doc: Doc, observation: Observation, owns: Owned[], base: Doc | undefined, options: PatchOptions = {}): FieldChange[] {
   const changes: FieldChange[] = [];
   for (const owned of owns) {
-    const path = typeof owned === "string" ? owned : owned.path;
+    const { path, merge, only } = typeof owned === "string" ? { path: owned, merge: undefined, only: undefined } : { only: undefined, ...owned };
+    if (merge === "report") continue;
     const observed = getPath(observation, path);
     if (observed === undefined) continue;
     const own = getPath(doc, path);
     const fromBase = getPath(base, path);
     const current = own ?? fromBase;
 
+    // The source only says whether a model is deprecated, so it clears no other status.
+    if (merge === "deprecated" && observed !== "deprecated" && current !== "deprecated") continue;
     if (observed === null) {
       if (own === undefined) continue;
       unsetPath(doc, path);
@@ -218,29 +241,91 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
       continue;
     }
     let next = observed;
-    if (typeof owned !== "string" && owned.merge === "min" && typeof next === "number" && typeof current === "number") {
-      next = Math.min(next, current);
-    }
-    if (typeof owned !== "string" && owned.merge === "kinds" && Array.isArray(next) && Array.isArray(current)) {
-      next = mergeKinds(current, next);
-    }
+    if (merge === "min" && typeof next === "number" && typeof current === "number") next = Math.min(next, current);
+    if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, only);
+    if (merge === "tables" && isTable(next)) next = mergeTables(current, next, options.defaultApi);
     if (equal(current, next)) continue;
     if (fromBase !== undefined && equal(fromBase, next)) unsetPath(doc, path);
     else setPath(doc, path, structuredClone(next));
     changes.push({ path, before: current, after: next });
   }
+  changes.push(...switchedOff(doc, observation, owns));
   return changes;
 }
 
-// The source's modality kinds, in its order, keeping the file's exact formats
-// for each kind the file already has. Same kinds: the file's list as is.
-function mergeKinds(current: unknown[], observed: unknown[]) {
-  const kinds = (list: unknown[]) => [...new Set(list.map((item) => toV1Modality(String(item))))].sort();
+/** Owned `merge: "report"` fields where the source disagrees with the file. */
+export function mismatches(doc: Doc, observation: Observation, owns: Owned[], base: Doc | undefined): FieldChange[] {
+  const result: FieldChange[] = [];
+  for (const owned of owns) {
+    if (typeof owned === "string" || owned.merge !== "report") continue;
+    const observed = getPath(observation, owned.path);
+    if (observed === undefined) continue;
+    const current = getPath(doc, owned.path) ?? getPath(base, owned.path);
+    if (observed === null ? current === undefined : equal(current, observed)) continue;
+    result.push({ path: owned.path, before: current, after: observed ?? undefined });
+  }
+  return result;
+}
+
+// A capability the source turns off keeps no details: `tools` without
+// `strict` or `choice`, `reasoning` without controls.
+function switchedOff(doc: Doc, observation: Observation, owns: Owned[]): FieldChange[] {
+  const changes: FieldChange[] = [];
+  for (const capability of ["capabilities.tools", "capabilities.reasoning"]) {
+    const owned = owns.some((item) => (typeof item === "string" ? item : item.path) === `${capability}.supported`);
+    if (!owned || getPath(observation, `${capability}.supported`) !== false) continue;
+    const table = getPath(doc, capability);
+    if (!isTable(table)) continue;
+    for (const key of Object.keys(table)) {
+      if (key === "supported") continue;
+      changes.push({ path: `${capability}.${key}`, before: table[key], after: undefined });
+      unsetPath(doc, `${capability}.${key}`);
+    }
+  }
+  return changes;
+}
+
+// The source's modality kinds, keeping the file's exact formats for each kind
+// the file already has. Same kinds: the file's list as is. With `only`, the
+// source speaks for those kinds alone: the file's other kinds stay where they
+// are, and a new kind goes at the end.
+function mergeKinds(current: unknown[], observed: unknown[], only?: string[]) {
+  const kind = (item: unknown) => toV1Modality(String(item));
+  if (only !== undefined) {
+    const spoken = new Set(only);
+    const stated = new Set(observed.map(kind).filter((value) => spoken.has(value)));
+    const kept = current.filter((item) => !spoken.has(kind(item)) || stated.has(kind(item)));
+    const added = observed.filter((item) => stated.has(kind(item)) && !kept.some((own) => kind(own) === kind(item)));
+    return kept.length === current.length && added.length === 0 ? current : [...kept, ...added];
+  }
+  const kinds = (list: unknown[]) => [...new Set(list.map(kind))].sort();
   if (equal(kinds(current), kinds(observed))) return current;
   return observed.flatMap((value) => {
-    const own = current.filter((item) => toV1Modality(String(item)) === toV1Modality(String(value)));
+    const own = current.filter((item) => kind(item) === kind(value));
     return own.length > 0 ? own : [value];
   });
+}
+
+// The source's tables replace or join the file's; the file's other tables stay
+// in order. A file with none was served on the provider's default API, which
+// stays first.
+function mergeTables(current: unknown, observed: Doc, defaultApi: string | undefined) {
+  const tables: Doc = isTable(current) && Object.keys(current).length > 0
+    ? structuredClone(current)
+    : defaultApi === undefined ? {} : { [defaultApi]: {} };
+  for (const [key, value] of Object.entries(observed)) {
+    if (value === null) delete tables[key];
+    else tables[key] = structuredClone(value);
+  }
+  return tables;
+}
+
+// The API a model without `[api.*]` tables is served on, as the generator resolves it.
+function defaultApi(root: string, provider: string) {
+  const file = path.join(root, "providers", provider, "provider.toml");
+  if (!existsSync(file)) return () => undefined;
+  const toml = { ...(Bun.TOML.parse(readFileSync(file, "utf8")) as Doc), id: provider } as unknown as Provider;
+  return (model: Doc) => (typeof toml.npm === "string" ? resolveProtocol({ ...model, id: "" } as unknown as Model, toml, toml.npm, undefined) : undefined);
 }
 
 /** The lab model a new file inherits from: the first hint with a file under models/. */
