@@ -158,7 +158,12 @@ The engine opens no issues. Whatever runs it decides what to do with gaps.
 `meta`, `modular` and `nearai` still import fetch and parsing code (zod schemas, Meta's docs parser) from the old modules. Ports after those carry their own.
 
 
-Not ported yet:
+Not ported yet (still on the old sync):
 
-- `openrouter`: media models (speech, transcription, embedding, rerank, image, video) are rebuilt from the file each run, keeping some of its fields and dropping the rest. Chat price overrides merge by condition (time-of-day ones are always replaced, context bands only when the catalog lists some, others stay), and the 1h cache write price is keyed by the TTLs the file's cache capability lists. The engine has no rules for these yet.
-- `vercel`: the same media rebuild, and a chat model's cost keeps the file's context bands unless the catalog lists some while a media model's cost is replaced whole. A new chat model copies its reasoning controls from another file in the provider (its `-free` route's base, or the file named after its lab ID), and tool choice depends on the file's own tool support. Modules can't read provider files.
+- `aimlapi`, `digitalocean`: not ported for time. Both are large (service tiers and their multipliers, image prices, extra API tables, web search prices, per-route reasoning), and need their own pass. DigitalOcean's key works locally, so its fixture can be recorded.
+- `cloudflare-workers-ai`, `cloudflare-ai-gateway`: the local Cloudflare token gets a 403 on Workers AI search and AI Gateway, so there's no recorded data, and both modules read each file's header and schema endpoints. A fixture would have to be built from `test/cloudflare-*.test.ts` samples.
+- `openrouter`, `vercel`: skipped. The rules they need, as the smallest additions to what's here:
+  - Media models (speech, transcription, embedding, rerank, image, video) are rebuilt from the file each run: the old sync keeps `status`, hand-written capabilities, `experimental` and `metadata` (and `description`, `family`, `knowledge` without a lab) and drops the rest. That's an observation flag, `rebuild: { keep: [...] }`, where the engine starts the file from `schema`, `base_model` and the kept fields, then patches.
+  - Chat price overrides merge by condition: time-of-day overrides are always the catalog's, context bands only when the catalog lists some, and others stay. That's two options on the `bands` merge: `replaces: ["utc_days", "utc_hours"]` (overrides using these conditions are owned too) and `optional: true` (no listed bands keeps the file's).
+  - The 1h cache write price is keyed by the TTLs the file's cache capability lists; Vercel copies a new chat model's reasoning controls from another file in the provider (its `-free` route's base, or the file named after its lab ID); OpenRouter's tool choice depends on the file's own tool support. All three fit `refine(observation, file, files)`, which now exists.
+  - What's missing is the time to port 3,000 lines with parity on recorded and perturbed data.
