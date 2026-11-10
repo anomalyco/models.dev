@@ -3,13 +3,12 @@
 # Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
 # measure it on: providers/abliteration-ai/models/abliterated-model-large-v2.toml
 # Input is text only: the router replaces image parts with a note for text models.
-# Reasoning: off is reasoning_effort=none; graded levels, no toggle (probed live through
-# https://openuncensored.com/api/v1 on 2026-11-08: none returns no reasoning, low/high do).
+# Reasoning cannot be disabled (as on abliteration.ai); graded levels low/high/max.
 schema = 2
 base_model = "abliteration-ai/abliterated-model-large-v2"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [cost.text.input]

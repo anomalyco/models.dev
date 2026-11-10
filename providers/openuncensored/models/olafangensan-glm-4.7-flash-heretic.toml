@@ -18,6 +18,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
+cache = { implicit = true }
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true

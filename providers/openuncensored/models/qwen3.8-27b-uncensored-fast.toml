@@ -6,6 +6,10 @@
 schema = 2
 base_model = "heabsy/qwen3.8-27b-uncensored-fast"
 
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false

@@ -6,6 +6,10 @@
 schema = 2
 base_model = "venice/venice-uncensored-1.2"
 
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [capabilities]
 structured_output = true
 
