@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 
 import { syncProvider, type SyncProvider } from "../src/sync/index.js";
 import { anthropic as oldAnthropic } from "../src/sync/providers/anthropic.js";
+import { cortecs as oldCortecs } from "../src/sync/providers/cortecs.js";
 import { deepinfra as oldDeepinfra } from "../src/sync/providers/deepinfra.js";
 import { engy as oldEngy } from "../src/sync/providers/engy.js";
 import { fireworksAi as oldFireworks } from "../src/sync/providers/fireworks-ai.js";
@@ -32,13 +33,40 @@ import { modules } from "../src/sync2/index.js";
 
 const FIXTURES = path.join(import.meta.dirname, "..", "test", "fixtures", "sync2");
 
-const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
+const OLD: Record<string, SyncProvider<any>> = { anthropic: oldAnthropic, cortecs: oldCortecs, deepinfra: oldDeepinfra, engy: oldEngy, "fireworks-ai": oldFireworks, "github-copilot": oldGithubCopilot, google: oldGoogle, meta: oldMeta, mistral: oldMistral, modular: oldModular, morph: oldMorph, nearai: oldNearai, "novita-ai": oldNovita, "ollama-cloud": oldOllamaCloud, openai: oldOpenai, tinfoil: oldTinfoil, venice: oldVenice, xai: oldXai };
 
 type Raw = any;
 
 // Each provider runs on the recorded data as is, and on a perturbed copy that
 // exercises price changes, a new model and a model leaving the source.
 export const SCENARIOS: Record<string, Record<string, (raw: Raw) => Raw>> = {
+  cortecs: {
+    recorded: (raw) => raw,
+    perturbed: (raw) => {
+      const data = raw.data
+        .filter((model: Raw) => model.id !== "glm-5.1")
+        .map((model: Raw) => {
+          const next = structuredClone(model);
+          const features = (list: string[]) => (next.supported_features = list);
+          if (model.id === "glm-5.3") next.pricing.input_token = 0.95;
+          if (model.id === "kimi-k3") delete next.pricing.cache_read_cost;
+          if (model.id === "gpt-5.4") next.pricing.cache_write_cost = 3;
+          if (model.id === "qwen3-32b") features(["tools"]);
+          if (model.id === "codestral-2508") features(["json_mode"]);
+          if (model.id === "minicpm-v-4.5") features(["json_mode", "tools", "reasoning"]);
+          if (model.id === "mistral-large-2402") features(["json_mode", "tools"]);
+          if (model.id === "qwen3.6-27b") next.input_modalities = ["text", "image", "video"];
+          if (model.id === "ministral-8b-2512") next.input_modalities = ["text"];
+          if (model.id === "deepseek-v3.2") next.context_size = 131_072;
+          if (model.id === "minimax-m2") next.max_output_tokens = 32_768;
+          return next;
+        });
+      const template = data.find((model: Raw) => model.id === "qwen3-32b");
+      data.push({ ...structuredClone(template), id: "qwen3-235b-a22b-instruct-2507-fp8", supported_features: ["json_mode", "tools"] });
+      data.push({ ...structuredClone(template), id: "brand-new-model" });
+      return { ...raw, data };
+    },
+  },
   "github-copilot": {
     recorded: (raw) => raw,
     perturbed: (raw) => {

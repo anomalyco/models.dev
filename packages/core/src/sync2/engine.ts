@@ -256,7 +256,7 @@ export function patch(doc: Doc, observation: Observation, owns: Owned[], base: D
     if (merge === "min" && typeof next === "number" && typeof current === "number") next = Math.min(next, current);
     // A 0 is often a placeholder: it updates a price the file has but never adds one.
     if (merge === "nonzero" && next === 0 && current === undefined) continue;
-    if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, only, addOnly ? fromBase ?? [] : undefined);
+    if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, fromBase, only, addOnly);
     if (merge === "tables" && isTable(next)) next = mergeTables(current, next, path === "api" ? options.defaultApi : undefined);
     if (equal(current, next) || next === undefined) continue;
     // Removing every table leaves none (an observed `{}` such as `budget = {}` is a value).
@@ -297,9 +297,15 @@ function omitLabInput(doc: Doc, base: Doc | undefined): FieldChange[] {
 }
 
 // A provider file's [modalities] lists both sides; the side equal to the lab's is copied from it.
+// When a patch leaves one side and that side is the lab's too, the table goes.
 function bothModalities(doc: Doc, base: Doc | undefined) {
   const modalities = doc.modalities;
   if (!isTable(modalities)) return;
+  const sides = ["input", "output"].filter((side) => modalities[side] !== undefined);
+  if (sides.length === 1 && Object.keys(modalities).length === 1 && equal(modalities[sides[0]!], getPath(base, `modalities.${sides[0]}`))) {
+    delete doc.modalities;
+    return;
+  }
   for (const side of ["input", "output"]) {
     const inherited = getPath(base, `modalities.${side}`);
     if (modalities[side] === undefined && inherited !== undefined) modalities[side] = structuredClone(inherited);
@@ -353,35 +359,36 @@ function switchedOff(doc: Doc, observation: Observation, owns: Owned[]): FieldCh
 }
 
 // The source's modality kinds, keeping the file's exact formats for each kind
-// the file already has. Same kinds: the file's list as is. With `only`, the
-// source speaks for those kinds alone: the file's other kinds stay where they
-// are, and a new kind goes at the end.
-// With `addOnly` (the lab's list), the source only adds kinds: the file's
-// stay, and an added kind takes the lab's formats for it when the lab has any.
-function mergeKinds(current: unknown[], observed: unknown[], only?: string[], addOnly?: unknown) {
+// the file already has. A kind the file doesn't have takes the lab's formats
+// for it when the lab lists any. Same kinds: the file's list as is. With
+// `only`, the source speaks for those kinds alone: the file's other kinds stay
+// where they are, and a new kind goes at the end. With `addOnly`, the source
+// only adds kinds.
+function mergeKinds(current: unknown[], observed: unknown[], lab: unknown, only?: string[], addOnly?: boolean) {
   const kind = (item: unknown) => toV1Modality(String(item));
-  if (addOnly !== undefined) {
-    const lab = Array.isArray(addOnly) ? addOnly : [];
-    const kinds = [...new Set(observed.map(kind))].filter((value) => !current.some((own) => kind(own) === value));
-    const added = kinds.flatMap((value) => {
-      const formats = lab.filter((item) => kind(item) === value);
-      return formats.length > 0 ? formats : [value];
-    });
-    return added.length === 0 ? current : [...current, ...added];
+  const formats = (value: unknown) => {
+    const own = current.filter((item) => kind(item) === kind(value));
+    if (own.length > 0) return own;
+    const inherited = Array.isArray(lab) ? lab.filter((item) => kind(item) === kind(value)) : [];
+    return inherited.length > 0 ? inherited : [value];
+  };
+  const added = (kinds: unknown[]) => [...new Set(kinds.map(kind))]
+    .filter((value) => !current.some((own) => kind(own) === value))
+    .flatMap((value) => formats(observed.find((item) => kind(item) === value)));
+  if (addOnly) {
+    const extra = added(observed);
+    return extra.length === 0 ? current : [...current, ...extra];
   }
   if (only !== undefined) {
     const spoken = new Set(only);
     const stated = new Set(observed.map(kind).filter((value) => spoken.has(value)));
     const kept = current.filter((item) => !spoken.has(kind(item)) || stated.has(kind(item)));
-    const added = observed.filter((item) => stated.has(kind(item)) && !kept.some((own) => kind(own) === kind(item)));
-    return kept.length === current.length && added.length === 0 ? current : [...kept, ...added];
+    const extra = added(observed.filter((item) => stated.has(kind(item))));
+    return kept.length === current.length && extra.length === 0 ? current : [...kept, ...extra];
   }
   const kinds = (list: unknown[]) => [...new Set(list.map(kind))].sort();
   if (equal(kinds(current), kinds(observed))) return current;
-  return observed.flatMap((value) => {
-    const own = current.filter((item) => kind(item) === kind(value));
-    return own.length > 0 ? own : [value];
-  });
+  return [...new Set(observed.map(kind))].flatMap((value) => formats(observed.find((item) => kind(item) === value)));
 }
 
 // The source's tables join the file's: a source key replaces the file's value

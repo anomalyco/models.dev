@@ -424,3 +424,13 @@ test("lab hints resolve every catalog ID like the old resolvers", () => {
   );
   expect(mismatches).toEqual([]);
 });
+
+test("merge: kinds adds a kind in the lab's formats, and a list back to the lab's drops the table", async () => {
+  const labFile = lab(false).replace('input = ["text"]', 'input = ["text", "image/png", "video/mp4"]');
+  const root = await catalog({
+    "models/lab/a.toml": labFile,
+    "providers/host/models/lab/a.toml": file("lab/a", 1, '\n[modalities]\ninput = ["text", "image/png"]\noutput = ["text"]\n'),
+  });
+  const { writes } = await plan(provider([{ id: "lab/a", modalities: { input: ["text", "image", "video"] } }], { owns: [{ path: "modalities.input", merge: "kinds" }] }), { root });
+  expect(writes.get("providers/host/models/lab/a.toml")).not.toContain("[modalities]");
+});

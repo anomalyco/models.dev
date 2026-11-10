@@ -37,6 +37,16 @@ const EXPECTED: Record<string, string[]> = {
     "providers/deepinfra/models/google/gemma-3-4b-it.toml",
     "providers/deepinfra/models/moonshotai/Kimi-K3.toml",
   ],
+  // Cortecs: a new model with no lab file is a gap (the old sync wrote a
+  // standalone file), and so is a new or standalone model that starts reasoning
+  // with no controls (the old sync wrote reasoning = { supported = true }).
+  "cortecs/recorded": ["providers/cortecs/models/kimi-k3.1-pro.toml"],
+  "cortecs/perturbed": [
+    "providers/cortecs/models/brand-new-model.toml",
+    "providers/cortecs/models/kimi-k3.1-pro.toml",
+    "providers/cortecs/models/minicpm-v-4.5.toml",
+    "providers/cortecs/models/qwen3-235b-a22b-instruct-2507-fp8.toml",
+  ],
   // A new Venice model with no lab file. The old sync wrote a standalone file with a generated
   // description and today's date; the new engine reports a gap (no create-only fields yet).
   "venice/perturbed": ["providers/venice/models/venice-brand-new.toml"],
