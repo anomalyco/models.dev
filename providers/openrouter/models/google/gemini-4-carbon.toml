@@ -1,0 +1,46 @@
+schema = 2
+name = "Gemini 4 Carbon"
+description = "Gemini multimodal model for text, image, audio, video, and document tasks"
+family = "gemini"
+open_weights = false
+release_date = "2026-11-10"
+
+[modalities]
+input = ["audio", "application/pdf", "image", "text", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 0.1875 }
+
+[cost.text.output]
+price = 10
+reasoning = 10
+
+[cost.audio.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.image.input]
+price = 2
+
+[cost.web_search]
+price = 14
