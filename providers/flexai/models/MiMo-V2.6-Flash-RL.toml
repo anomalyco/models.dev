@@ -1,12 +1,22 @@
 # Served checkpoint: XiaomiMiMo/MiMo-V2.6-Flash-RL, the open weights the lab entry
-# links to. FlexAI's catalog lists it as hybrid_thinking, but the switch has not
-# yet been measured on this host, so no toggle or effort levels are declared.
+# links to.
+# Toggle: chat_template_kwargs.enable_thinking = true | false, or
+# thinking.type = "enabled" | "disabled" (default: off).
+# Measured on FlexAI 2026-11-11 (length of reasoning_content, 3 prompts, no max_tokens,
+# every reply finish_reason stop):
+#   default 0/0/0 · enable_thinking=false 0/0/0 · enable_thinking=true 43/124/744
+#   thinking.disabled 0/0/0 · thinking.enabled 43/177/1406
+# No effort levels are declared. Top-level reasoning_effort turns thinking on but the
+# levels are not ordered: low 43/21/2555 · high 37/139/885.
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.13
