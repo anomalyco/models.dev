@@ -21,7 +21,7 @@ cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "s
 
 [api.messages]
 base_url = "https://api.hop-base.com/v1"
-sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 2.24
