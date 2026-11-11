@@ -52,6 +52,7 @@ import { nearai } from "./providers/nearai.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
+import { opencheap } from "./providers/opencheap.js";
 import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
@@ -219,6 +220,7 @@ export const providers: {
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
+  opencheap: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
@@ -266,6 +268,7 @@ export const providers: {
   ofox,
   "ollama-cloud": ollamaCloud,
   openai,
+  opencheap,
   openrouter,
   ovhcloud,
   pioneer,
@@ -294,6 +297,7 @@ export const groups = {
     "nano-gpt",
     "novita-ai",
     "ofox",
+    "opencheap",
     "requesty",
     "openrouter",
     "prime",
