@@ -1,6 +1,9 @@
-import { expect, test } from "bun:test";
+import { expect, test, setSystemTime } from "bun:test";
 import { existsSync } from "node:fs";
 import path from "node:path";
+
+// Fixtures were recorded on 2026-11-10; the old sync dates new files from the clock, so pin it.
+setSystemTime(new Date("2026-11-10T12:00:00Z"));
 
 import { parity, SCENARIOS } from "../script/sync2-parity.js";
 import { REPO_ROOT } from "../src/sync2/catalog.js";
