@@ -1,0 +1,12 @@
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.0
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 5.0

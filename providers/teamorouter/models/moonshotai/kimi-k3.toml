@@ -1,0 +1,12 @@
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 3.0
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15.0

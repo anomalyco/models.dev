@@ -1,0 +1,12 @@
+schema = 2
+base_model = "openai/gpt-5.4"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 15.0

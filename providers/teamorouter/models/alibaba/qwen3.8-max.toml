@@ -1,0 +1,12 @@
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.7143
+cache = { read = 0.2143 }
+
+[cost.text.output]
+price = 5.1429
