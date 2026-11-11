@@ -4038,6 +4038,42 @@ test("DeepInfra price updates keep v2 data and restore the synced v2 values", as
   }
 });
 
+test("DeepInfra keeps hand-authored embedding files and skips embedding models without one", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-deepinfra-embeddings-"));
+  const modelsDir = path.join(root, "providers", "deepinfra", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const id = "BAAI/bge-base-en-v1.5";
+  const base = "baai/bge-base-en-v1.5";
+  const source = (model_name: string): DeepInfraModel => ({
+    model_name,
+    type: "embeddings",
+    tags: ["openai"],
+    pricing: { type: "input_tokens", cents_per_input_token: 5e-7 },
+    max_tokens: 512,
+    deprecated: null,
+    private: 0,
+  });
+
+  try {
+    await mkdir(path.dirname(path.join(modelsDir, `${id}.toml`)), { recursive: true });
+    await mkdir(path.dirname(path.join(root, "models", `${base}.toml`)), { recursive: true });
+    await copyFile(path.join(repo, "models", `${base}.toml`), path.join(root, "models", `${base}.toml`));
+    const shipped = await readFile(path.join(repo, "providers", "deepinfra", "models", `${id}.toml`), "utf8");
+    await writeFile(path.join(modelsDir, `${id}.toml`), shipped);
+
+    const result = await syncProvider({
+      ...deepinfra,
+      modelsDir,
+      fetchModels: async () => [source(id), source("example/new-embedding")],
+    });
+    expect(result).toMatchObject({ created: 0, updated: 0, deleted: 0 });
+    expect(result.notices.join("\n")).toContain("`example/new-embedding`");
+    expect(await readFile(path.join(modelsDir, `${id}.toml`), "utf8")).toBe(shipped);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("DeepInfra clears stale caching and retention data when the catalog drops it", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "sync-deepinfra-v2-clear-"));
   const modelsDir = path.join(root, "providers", "deepinfra", "models");
@@ -4190,6 +4226,29 @@ test("base_model files from W&B, Hyper and Chutes leave model facts to the lab",
     expect(model).toMatchObject({ base_model: "zhipuai/glm-5.2" });
     for (const key of facts) expect(model).not.toHaveProperty(key);
   }
+});
+
+test("Chutes rounds float noise out of prices without losing small prices", () => {
+  const model = buildChutesModel({
+    id: "Qwen/Qwen3.8-27B-TEE",
+    created: 0,
+    pricing: { prompt: 0.039, completion: 1.25, input_cache_read: 0.003899999999999999 },
+  }, undefined);
+  expect(model.cost).toEqual({ input: 0.039, output: 1.25, cache_read: 0.0039 });
+
+  const noisy = buildChutesModel({
+    id: "Qwen/Qwen3.6-27B-TEE",
+    created: 0,
+    pricing: { prompt: 0.25, completion: 2, input_cache_read: 0.024999999999999994 },
+  }, undefined);
+  expect(noisy.cost).toEqual({ input: 0.25, output: 2, cache_read: 0.025 });
+
+  const tiny = buildChutesModel({
+    id: "example/tiny-TEE",
+    created: 0,
+    pricing: { prompt: 0.0000015, completion: 0.000002 },
+  }, undefined);
+  expect(tiny.cost).toEqual({ input: 0.0000015, output: 0.000002, cache_read: undefined });
 });
 
 test("Hyper writes effort levels from lowest to highest", () => {
@@ -6579,7 +6638,7 @@ test("Vercel sync maps every catalog type and lists the standard endpoint where 
   const base_url = "https://ai-gateway.vercel.sh/v1";
   const standard: Record<string, unknown> = {
     image: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
-    embedding: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
+    embedding: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/embeddings" } },
     reranking: { base_url, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
   };
   const vercelOnly = { base_url: "https://ai-gateway.vercel.sh/v4/ai", sdk: { opencodeai: "none" } };
@@ -7181,7 +7240,7 @@ test("OpenRouter rerank and embedding files name the packages that speak their e
     rerank: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
   });
   expect(media("examplelab/embed-1", "embeddings", "embedding")).toEqual({
-    embeddings: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" } },
+    embeddings: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/embeddings" } },
   });
 });
 

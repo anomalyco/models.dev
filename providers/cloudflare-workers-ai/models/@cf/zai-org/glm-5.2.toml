@@ -5,9 +5,12 @@
 # Cache: implicit prefix caching; cached-input price on the model page (https://developers.cloudflare.com/workers-ai/features/prompt-caching/).
 # Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message keeps the cached prefix and is honored;
 # changing reasoning_effort reads 0 cached tokens on the first request after the switch; adding or removing a tool drops the cached history (tools render ahead of it).
+# Deprecated: Workers AI retires this model on 2026-11-20; requests then return HTTP 410 Gone.
+# https://developers.cloudflare.com/changelog/post/2026-11-05-planned-model-deprecations/
 schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "Glm 5.2"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }

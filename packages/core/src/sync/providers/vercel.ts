@@ -515,7 +515,7 @@ const MEDIA_SDK = { opencodeai: "none" };
 const STANDARD_BASE_URL = "https://ai-gateway.vercel.sh/v1";
 const STANDARD_MEDIA_APIS: Partial<Record<MediaType, Doc>> = {
   image: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
-  embedding: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
+  embedding: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/embeddings" } },
   reranking: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
 };
 // Decision models: POST /v1/decisions, OpenAI's Decisions format, which

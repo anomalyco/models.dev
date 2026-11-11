@@ -1,9 +1,6 @@
 schema = 2
-name = "Gemini Omni 1.2 Flash"
+base_model = "google/gemini-omni-1.2-flash"
 description = "Omni-modal model for text, vision, audio, and multimodal agent tasks"
-family = "gemini"
-open_weights = false
-release_date = "2026-11-05"
 
 [modalities]
 input = ["text", "image", "video"]
@@ -14,10 +11,6 @@ tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = false
 temperature = true
-
-[limit]
-context = 131_072
-output = 65_536
 
 [cost.text.input]
 price = 1.5

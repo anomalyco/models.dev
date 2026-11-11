@@ -9,6 +9,7 @@
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Ultrafast (https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast); Flex (https://developers.openai.com/api/docs/guides/flex-processing).
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6-astra
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# Cache writes: 30m (default) is 1.25x input; 12h (Responses API) is 2.5x. https://developers.openai.com/api/docs/guides/prompt-caching
 schema = 2
 base_model = "openai/gpt-6-astra"
 
@@ -18,7 +19,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max
 structured_output = true
 system_updates = true
 store = true
-cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
 prompt_cache_key = true
 service_tier = ["flex", "priority", "ultrafast"]
 
@@ -30,12 +31,12 @@ sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 10
-cache = { read = 1, write = 12.5 }
+cache = { read = 1, write = { "30m" = 12.5, "12h" = 25 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 20
-cache = { read = 2, write = 25 }
+cache = { read = 2, write = { "30m" = 25, "12h" = 50 } }
 
 [cost.text.output]
 price = 50
