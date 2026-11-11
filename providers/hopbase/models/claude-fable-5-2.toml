@@ -6,8 +6,9 @@
 # \"tool\" and \"any\" are not supported for this model", as on Anthropic.
 # Effort: output_config.effort = low|medium|high|xhigh|max all accepted.
 # Images: a red 64x64 PNG returned "Red".
-# Cache: cache_control on the system block wrote 6,026 tokens and the repeat read 6,026. The gateway
-# also cached a fresh 14,441-token prefix sent without cache_control (written, then read on repeat).
+# Cache: cache_control on the system block wrote 6,026 tokens and the repeat read 6,026. Only explicit
+# caching is declared: HopBase documents cache_control markers and makes no promise for prompts sent
+# without them (one unmarked 14,441-token prefix was cached in a single test; treated as incidental).
 # Pricing: price any registered account pays in the public "Claude Max (ccmax)" group, USD
 # (official $8 / $40, $0.20 cache read, $10 5m cache write, https://platform.claude.com/docs/en/about-claude/pricing,
 # times the group rate, rounded up). Model page: https://hop-base.com/en/docs/models/claude-fable-5-2
