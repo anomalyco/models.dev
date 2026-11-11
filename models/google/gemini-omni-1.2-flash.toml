@@ -1,0 +1,48 @@
+# Sources (accessed 2026-11-10):
+# - https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash (gemini-omni-1.2-flash: input
+#   Text/Image/Video, output Video with native audio and text, 131,072 input and 65,536 output
+#   tokens, output video 3s-15s at 360p/720p/1080p/4K)
+# - https://ai.google.dev/gemini-api/docs/changelog ("Gemini Omni 1.2 Flash generally available", 2026-11-05)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/omni-1-2-flash
+#   (Thinking supported; Vertex lists 260,640 max output tokens, the Gemini API 65,536)
+# - temperature/top_p/top_k = false, reasoning, MIME types and output format as for gemini-omni-1.1-flash
+#   (https://ai.google.dev/gemini-api/docs/omni).
+schema = 2
+type = "video"
+v2_only = true
+name = "Gemini Omni 1.2 Flash"
+description = "Video generation and editing model with native audio, up to 15-second clips, extension, frame interpolation, and reference-guided multimodal control"
+family = "gemini"
+open_weights = false
+release_date = "2026-11-05"
+
+[modalities]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 131_072
+output = 65_536

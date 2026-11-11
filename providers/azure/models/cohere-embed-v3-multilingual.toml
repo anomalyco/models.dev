@@ -25,7 +25,7 @@ output = 1_024
 
 [api.embeddings]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
-sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "none" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.1

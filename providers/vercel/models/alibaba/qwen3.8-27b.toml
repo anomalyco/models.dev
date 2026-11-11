@@ -17,8 +17,7 @@ structured_output = true
 cache = { implicit = true, explicit = true }
 
 [limit]
-context = 1_000_000
-output = 131_072
+output = 262_144
 
 [api.chat-completions]
 capabilities = { system_updates = true }
@@ -32,8 +31,8 @@ base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
-price = 0.5
-cache = { read = 0.1, write = 0.625 }
+price = 0.06
+cache = { read = 0.059 }
 
 [cost.text.output]
-price = 3
+price = 2.3

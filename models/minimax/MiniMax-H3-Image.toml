@@ -1,0 +1,34 @@
+# Sources:
+# - https://minimax-cac98058-feat-h3image-release.mintlify.site/guides/image-generation
+#   (text-to-image POST /v1/images/generations; image edit POST /v1/images/edits)
+# - https://minimax-cac98058-feat-h3image-release.mintlify.site/api-reference/image-generation-h3-generations
+# - https://minimax-cac98058-feat-h3image-release.mintlify.site/api-reference/image-generation-h3-edits
+#   (reference images: JPG, JPEG, PNG, WEBP, HEIC, HEIF; 1–16)
+# Output MIME types: jpg (default, equivalent to jpeg), png, webp.
+# Note: served on the OpenAI-compatible image endpoints (/v1/images/generations and
+# /v1/images/edits), not the Anthropic-compatible /anthropic/v1 base or the older
+# /v1/image_generation image-01 route, so provider entries set their own [api.images] base_url.
+# Distinct from models/minimax/MiniMax-H3.toml, which is the video model.
+schema = 2
+v2_only = true
+type = "image"
+name = "MiniMax H3 Image"
+description = "MiniMax text-to-image and image-editing model"
+family = "minimax"
+open_weights = false
+release_date = "2026-11-10"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"]
+output = ["image/jpeg", "image/png", "image/webp"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
