@@ -3,6 +3,8 @@
 # API: Chat Completions is this model's native protocol on OhMyGPT and Zhipu AI (chatglm) is its only serving provider, so the request body reaches the vendor as sent and vendor fields work as the vendor documents them (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models). Reasoning controls follow providers/zhipuai/models/glm-4.5v.toml.
 # Toggle: thinking.type = enabled|disabled (default enabled)
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: none overridden. The catalog's figures for this model (context 64,000, output 16,384) are the lab file's.
+# Prices: the catalog's lower band ends below 32,000 input tokens (tier bound 32,000, exclusive), so the band above it uses gte.
 schema = 2
 base_model = "zhipuai/glm-4.5v"
 

@@ -3,6 +3,7 @@
 # API: Chat Completions is this model's native protocol on OhMyGPT and Moonshot AI (moonshot) is its only serving provider, so the request body reaches the vendor as sent and vendor fields work as the vendor documents them (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models). Reasoning controls follow providers/moonshotai/models/kimi-k2.6.toml.
 # Toggle: thinking.type = "enabled" (default) | "disabled"; reasoning returned in reasoning_content.
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: none overridden. The catalog's figures for this model (context 262,144, output 262,144) are the lab file's.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 

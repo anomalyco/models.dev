@@ -1,6 +1,7 @@
 # Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/cohere/command-r-plus-08-2024 (snapshot 2026-11-11): prices, limits and the serving provider (cohere).
 # Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
 # API: Chat Completions is this model's native protocol on OhMyGPT and Cohere (cohere) is its only serving provider (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
+# Limits: none overridden. The catalog's figures for this model (context 128,000, output 4,000) are the lab file's.
 schema = 2
 base_model = "cohere/command-r-plus-08-2024"
 

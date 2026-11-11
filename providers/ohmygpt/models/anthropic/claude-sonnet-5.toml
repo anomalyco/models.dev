@@ -5,6 +5,7 @@
 # Toggle: thinking.type = adaptive|disabled
 # Checked live 2026-11-11 on POST /v1/messages with x-api-key: output_config.effort accepts exactly the listed levels (Anthropic returns 400 for the others), and thinking.budget_tokens is accepted only where a budget is listed.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) are left out: not checked on this host.
+# Limits: none overridden. The catalog's figures for this model (context 1,000,000, output 128,000) are the lab file's.
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 

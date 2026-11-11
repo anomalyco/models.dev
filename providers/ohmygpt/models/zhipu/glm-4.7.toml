@@ -5,6 +5,7 @@
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
 # Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
 # Prices: the vendor also splits the lowest input band by output length; the catalog publishes both rates and the general (longer output) one is used, as in the vendor's own entry.
+# Prices: the catalog's lower band ends below 32,000 input tokens (tier bound 32,000, exclusive), so the band above it uses gte.
 schema = 2
 base_model = "zhipuai/glm-4.7"
 
