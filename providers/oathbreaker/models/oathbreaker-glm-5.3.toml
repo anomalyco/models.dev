@@ -1,0 +1,46 @@
+# Sources (checked 2026-11-11):
+# - Public alias, limits, supported request fields, reasoning and billing:
+#   https://oathbreaker.ai/docs
+# - Provider/variant attribution: https://oathbreaker.ai/models/glm-5-3-abliterated
+# - USD per million tokens: https://oathbreaker.ai/pricing
+# - Refuseless variant and GLM-5.3 lineage:
+#   https://refuseless.com/models/glm-5.3-abliterated
+# Oathbreaker is a gateway to Refuseless's glm-5.3-abliterated, based on Z.ai GLM-5.3.
+# The served derivative has no published checkpoint identified in those sources;
+# do not advertise the original weights or unverified base-model benchmark scores.
+# release_date is this Oathbreaker alias's initial release in the provider's
+# release history; it is not the base model or upstream variant launch date.
+# Context is 131,072 GLM tokens shared by input, safety headroom and requested output.
+# Effort: reasoning_effort = low|high|max (default low); no off toggle or reasoning budget.
+# max_tokens and max_completion_tokens are both supported; output includes reasoning.
+# Cache reads are implicit and billed only when reported by upstream usage.
+# Only Chat Completions is exposed; no Responses, Messages or strict JSON Schema.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+base_model_omit = ["weights", "benchmarks"]
+name = "Oathbreaker GLM-5.3 Abliterated"
+description = "Refuseless's abliterated GLM-5.3 variant, served through Oathbreaker's OpenAI-compatible Chat Completions API"
+open_weights = false
+release_date = "2026-11-09"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
+structured_output = false
+top_k = false
+cache = { implicit = true }
+stream_usage = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.30 }
+
+[cost.text.output]
+price = 5
