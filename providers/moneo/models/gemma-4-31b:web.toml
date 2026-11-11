@@ -2,8 +2,8 @@
 # has_vision=true, has_tools=true, has_reasoning=false, input_per_1m_usd=0.15, output_per_1m_usd=0.40:
 # https://api.moneo.one/v1/models
 # `:web` is therefore part of the exact wire ID. Search is bundled into token prices; no separate search fee is published.
-# The route reports has_reasoning=false; the Chat Completions response filter also removes every reasoning field. MIME types inherit the Google lab model
-# because Moneo publishes only has_vision=true, not a narrower MIME allowlist.
+# The route reports has_reasoning=false; the Chat Completions response filter also removes every reasoning field.
+# No MIME-level override is authored because Moneo publishes only has_vision=true, not a narrower MIME allowlist.
 # Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
 schema = 2
 base_model = "google/gemma-4-31b-it"

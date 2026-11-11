@@ -2,15 +2,16 @@
 # has_vision=true, has_tools=true, has_reasoning=true, input_per_1m_usd=0.75, output_per_1m_usd=4.00:
 # https://api.moneo.one/v1/models
 # `:web` is therefore part of the exact wire ID. Search is bundled into token prices; no separate search fee is published.
-# Host reasoning override: the sanitizer drops native thinking controls and the response filter removes all reasoning fields.
-# Modalities, tool choice and structured output inherit the Kimi lab model; the host catalog does not publish MIME-level deltas.
+# Live Chat Completions probe (2026-11-11): completion_tokens_details.reasoning_tokens was nonzero (38-48)
+# for base and top-level reasoning variants. No tested toggle/effort value had an affirmed deterministic effect.
+# MIME-level overrides, tool choice, and structured output are omitted as unverified on this host.
 # Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 name = "Kimi K2.7 Code (Web)"
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true }
 
 [limit]
 context = 256_000

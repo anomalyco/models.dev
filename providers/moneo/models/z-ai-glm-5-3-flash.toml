@@ -1,8 +1,9 @@
 # Moneo catalog row (retrieved 2026-11-11): id/model=`z-ai-glm-5-3-flash`, context_tokens=1000000,
 # has_vision=false, has_tools=true, has_reasoning=true, input_per_1m_usd=0.15, output_per_1m_usd=0.50:
 # https://api.moneo.one/v1/models
-# Host modality override maps to has_vision=false. The Chat Completions sanitizer drops reasoning_effort and the response filter removes all reasoning fields
-# because Moneo strips reasoning output. Tool choice inherits the Zhipu lab model (auto only).
+# Host modality override maps to has_vision=false. Effort wire: reasoning.effort = low|high|max.
+# Live Chat Completions probe (2026-11-11): all three values returned HTTP 200 and affected completion usage.
+# Tool choice and structured output are omitted as unverified on this host.
 # Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
@@ -10,13 +11,9 @@ name = "GLM 5.3 Flash"
 
 [modalities]
 input = ["text"]
-output = ["text"]
 
 [capabilities]
-reasoning = { supported = false }
-
-[limit]
-context = 1_000_000
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]
 price = 0.15

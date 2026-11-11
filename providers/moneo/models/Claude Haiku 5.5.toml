@@ -3,17 +3,18 @@
 # input_per_1m_usd=0.10, output_per_1m_usd=0.50: https://api.moneo.one/v1/models
 # The filename must retain spaces to address this host wire ID; `claude-haiku-5-5` is the lab ID and fails on Moneo.
 # Host modality/context overrides map directly to has_vision=false and context_tokens=200000.
-# The Chat Completions sanitizer drops Anthropic thinking/output_config controls and the response filter removes all reasoning fields.
+# Toggle wire: reasoning.enabled = true|false. Effort wire: reasoning.effort = low|medium|high|xhigh|max.
+# Live Chat Completions probe (2026-11-11): enabled=false reduced completion tokens from 55 to 4;
+# all five effort values returned HTTP 200 with observable usage changes. Reasoning text remains hidden.
 # Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [modalities]
 input = ["text"]
-output = ["text"]
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 200_000

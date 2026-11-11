@@ -2,18 +2,16 @@
 # has_vision=false, has_tools=true, has_reasoning=true, input_per_1m_usd=0.15, output_per_1m_usd=0.30:
 # https://api.moneo.one/v1/models
 # `:web` is therefore part of the exact wire ID. Search is bundled into token prices; no separate search fee is published.
-# Host reasoning override: Moneo removes reasoning_content/reasoning/reasoning_details from every Chat Completions response.
-# The Chat Completions sanitizer forwards only top-level `reasoning` and drops native DeepSeek thinking/effort keys; the response filter removes all reasoning fields, so reasoning is not caller-observable.
+# Toggle wire: reasoning.enabled = true|false. Effort wire: reasoning.effort = low|high|max.
+# Live Chat Completions probe (2026-11-11): effort=max increased completion tokens from 20-24 to 178;
+# enabled and all three effort values returned successfully. Reasoning text remains hidden.
 # Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash (Web)"
 
 [capabilities]
-reasoning = { supported = false }
-
-[limit]
-context = 1_000_000
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]
 price = 0.15

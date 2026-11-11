@@ -1,16 +1,16 @@
 # Moneo catalog row (retrieved 2026-11-11): id/model=`nvidia-nemotron-3-5-super-vl-120b-a12b`, context_tokens=262144,
 # has_vision=true, has_tools=true, has_reasoning=true, input_per_1m_usd=0.20, output_per_1m_usd=0.50:
 # https://api.moneo.one/v1/models
-# Host context override maps directly to context_tokens=262144. Modalities inherit the NVIDIA lab model because Moneo
-# publishes only has_vision=true, not a narrower MIME allowlist. The sanitizer drops chat_template_kwargs/enable_thinking and the response filter removes all reasoning fields
-# because Moneo strips reasoning output.
+# Host context override maps directly to context_tokens=262144. No MIME-level override is authored because Moneo
+# publishes only has_vision=true, not a narrower MIME allowlist. Toggle wire: reasoning.enabled = true|false.
+# Live probe (2026-11-11): false changed reasoning_tokens from 137 to 0; true restored 124. Reasoning text remains hidden.
 # Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
 schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 name = "Nemotron 3.5 Super VL 120B"
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 262_144
