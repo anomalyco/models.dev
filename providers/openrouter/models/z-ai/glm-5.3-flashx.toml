@@ -3,6 +3,7 @@
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+# Cache: automatic (https://openrouter.ai/docs/guides/best-practices/prompt-caching#z-ai)
 schema = 2
 name = "GLM 5.3 FlashX"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
@@ -19,6 +20,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = false
 temperature = true
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576

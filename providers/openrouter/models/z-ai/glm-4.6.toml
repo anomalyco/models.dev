@@ -3,6 +3,7 @@
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = false: hoisted on Venice, Novita (live)
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
+# Cache: automatic (https://openrouter.ai/docs/guides/best-practices/prompt-caching#z-ai)
 schema = 2
 base_model = "zhipuai/glm-4.6"
 
@@ -10,6 +11,7 @@ base_model = "zhipuai/glm-4.6"
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { implicit = true }
 
 [api.chat-completions]
 

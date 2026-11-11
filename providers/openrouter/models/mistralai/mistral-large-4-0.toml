@@ -4,6 +4,7 @@
 # Effort: reasoning.effort = low|medium|high. OpenRouter's /models still lists the preview's none|high, but none and
 #   reasoning.enabled = false return 400 from Mistral ("supported values: high, low, medium"); low, medium and high
 #   return 200 with reasoning tokens (live 2026-10-31). The sync overrides OpenRouter's metadata for this model.
+# Cache: automatic. OpenRouter lists a cached-input price for this model and has no caching section for this lab (live 2026-11-04, direct, Responses with prompt_cache_key: an immediate re-send was served from cache; 11 of 18 later checks warm, the oldest at 10 min: https://github.com/ngvoicu/cache-ttl-probe/blob/main/results/openrouter-direct/R11-2026-11-04T19-00-15.json)
 schema = 2
 base_model = "mistral/mistral-large-4"
 description = "Flagship Mistral model for advanced reasoning, coding, and multilingual work"
@@ -12,6 +13,7 @@ description = "Flagship Mistral model for advanced reasoning, coding, and multil
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { implicit = true }
 
 [api.chat-completions]
 
