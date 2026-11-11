@@ -4,6 +4,7 @@
 # Effort: reasoning_effort = low|high|max
 # Checked live 2026-11-11 with each serving provider pinned as `<provider>:zhipu/glm-5.3` (https://www.ohmygpt.com/docs/provider-routing): the three levels were accepted on both serving providers and reasoning tokens rose with the level on both; thinking cannot be turned off (thinking.type = disabled returns 400 or is ignored).
 # The creator's own entry is providers/zhipuai/models/glm-5.3.toml; only what held on every serving provider is listed.
+# top_k: accepted by every serving provider (live 2026-11-11), and none of their own models.dev entries excludes it.
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
 # Limits: the catalog shows context 1,048,576, above the creator's own entry (1,000,000). A relay cannot widen the upstream's window, so the creator's figure stands.
 # Prices: the catalog's headline price, which is its lowest-priced serving provider (Tencent Cloud TokenHub). The gateway tries the cheaper provider first; a request served by another provider is billed at that provider's rate, up to 1.61x on input (catalog providers[].pricing).
