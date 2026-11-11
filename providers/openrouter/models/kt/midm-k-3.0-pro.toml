@@ -1,23 +1,24 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 schema = 2
-name = "ERNIE-5.5-Flash-Preview"
+name = "Mi:dm K 3.0 Pro"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
-family = "ernie"
-open_weights = true
-release_date = "2026-11-10"
+open_weights = false
+release_date = "2026-11-05"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["high"] }
+tools = { supported = false }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
 
 [limit]
-context = 1_024_000
-output = 921_600
+context = 261_795
+output = 235_615
 
 [api.chat-completions]
 
@@ -28,8 +29,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.28
-cache = { read = 0.028 }
+price = 0.2
+cache = { read = 0.04 }
 
 [cost.text.output]
-price = 1.13
+price = 0.8
