@@ -1,0 +1,16 @@
+# Yantra AI lists these models at its vendor cost plus a 15% margin. Prices are USD per 1M tokens, converted from the INR prices on
+# https://apikeys.in/models.html at 94.5 INR per USD. Yantra bills in INR, so the USD figure moves slightly if that rate changes.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 200_000
+
+[cost.text.input]
+price = 3.45
+
+[cost.text.output]
+price = 17.25
