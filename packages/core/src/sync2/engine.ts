@@ -66,6 +66,7 @@ export async function plan<Raw>(module: SyncModule<Raw> | AgentModule, options: 
   }
   const byLowerID = new Map([...files.values()].map((file) => [file.id.toLowerCase(), file]));
   const docs: ReadonlyMap<string, Doc> = new Map([...files.values()].map((file) => [file.id, file.doc]));
+  const ignored = ignoredModels(root, module.id);
   const seen = new Map<string, string>();
   const skipped: string[] = [];
 
@@ -80,7 +81,7 @@ export async function plan<Raw>(module: SyncModule<Raw> | AgentModule, options: 
     const refined = module.kind === "agent" || module.refine === undefined ? observation : module.refine(observation, file?.doc, docs);
     if (refined.rebuild !== undefined && (file !== undefined || (!refined.updateOnly && module.policy.creates !== "never"))) rebuild(context, refined, file);
     else if (file !== undefined) update(context, refined, file);
-    else if (refined.updateOnly) continue;
+    else if (refined.updateOnly || ignored.has(refined.id)) continue;
     else if (module.policy.creates === "never") skipped.push(refined.id);
     else create(context, refined);
   }
@@ -555,6 +556,14 @@ function mergeTables(current: unknown, observed: Doc, defaultApi: string | undef
   const lone = keys.length === 1 ? tables[keys[0]!] : undefined;
   if (!own && keys[0] === defaultApi && isTable(lone) && Object.keys(lone).length === 0) return current;
   return tables;
+}
+
+/** IDs in providers/<id>/sync-ignore.toml: models that don't belong in the catalog, never created or reported. */
+export function ignoredModels(root: string, provider: string): ReadonlySet<string> {
+  const file = path.join(root, "providers", provider, "sync-ignore.toml");
+  if (!existsSync(file)) return new Set();
+  const { models } = Bun.TOML.parse(readFileSync(file, "utf8")) as { models?: Record<string, unknown> };
+  return new Set(Object.keys(models ?? {}));
 }
 
 // The API a model without `[api.*]` tables is served on, as the generator resolves it.

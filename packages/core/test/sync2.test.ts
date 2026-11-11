@@ -165,6 +165,17 @@ test("a new model without a lab match or reasoning controls is a gap, not a file
   expect(result.gaps[0]!.known?.id).toBe("lab/thinker");
 });
 
+test("models in sync-ignore.toml are never created or reported", async () => {
+  const root = await catalog({
+    "models/lab/a.toml": lab(false),
+    "providers/host/sync-ignore.toml": '[models]\n"lab/a" = "dated snapshot"\n"lab/unknown" = "internal ID"\n',
+  });
+  const { result, writes } = await plan(provider([priced("lab/a", 1), priced("lab/unknown", 1)]), { root });
+  expect(writes.size).toBe(0);
+  expect(result.gaps).toEqual([]);
+  expect(result.notices).toEqual([]);
+});
+
 test("creates: gap reports every new model; creates: never only notes them", async () => {
   const root = await catalog({ "models/lab/a.toml": lab(false) });
   const gaps = await plan(provider([priced("lab/a", 1)], { creates: "gap" }), { root });

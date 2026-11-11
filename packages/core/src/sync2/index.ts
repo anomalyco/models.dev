@@ -1,5 +1,6 @@
-// `bun models:sync2 <provider> [--dry-run] [--json] [--raw=<file> | --observations=<file>]`
+// `bun models:sync2 <provider> [--dry-run] [--json] [--report=<file>] [--raw=<file> | --observations=<file>]`
 // `bun models:sync2 <agent provider> --agent-brief --json`
+// `bun models:sync2 --list[=agents]`
 
 import { agentBrief, parseObservations } from "./agent.js";
 import { plan, sync } from "./engine.js";
@@ -62,13 +63,21 @@ export { agentBrief, parseObservations, plan, sync };
 export type * from "./types.js";
 
 export async function main(args = process.argv.slice(2)) {
+  const list = args.find((arg) => arg === "--list" || arg.startsWith("--list="));
+  if (list !== undefined) {
+    // A GitHub Actions matrix: API modules, or agent modules with --list=agents.
+    const listed = list === "--list=agents" ? agents : modules;
+    console.log(JSON.stringify({ include: Object.entries(listed).map(([provider, module]) => ({ provider, name: module.name })) }));
+    return;
+  }
   const id = args.find((arg) => !arg.startsWith("-"));
   const module = id === undefined ? undefined : modules[id] ?? agents[id];
   const value = (flag: string) => args.find((arg) => arg.startsWith(`--${flag}=`))?.slice(flag.length + 3);
   if (module === undefined) {
     console.error([
-      `Usage: bun models:sync2 <provider> [--dry-run] [--json] [--raw=<file> | --observations=<file>]`,
+      `Usage: bun models:sync2 <provider> [--dry-run] [--json] [--report=<file>] [--raw=<file> | --observations=<file>]`,
       `       bun models:sync2 <agent provider> --agent-brief --json`,
+      `       bun models:sync2 --list[=agents]`,
       `Providers: ${Object.keys(modules).join(", ")}`,
       `Agent providers (run from --observations only): ${Object.keys(agents).join(", ")}`,
     ].join("\n"));
@@ -85,10 +94,46 @@ export async function main(args = process.argv.slice(2)) {
   if (rawFile !== undefined && observationsFile !== undefined) throw new Error("Pass --raw or --observations, not both");
   if (module.kind === "agent" && observationsFile === undefined) throw new Error(`${module.name} is an agent provider; pass --observations=<file>`);
   const raw = rawFile === undefined ? undefined : await Bun.file(rawFile).json();
-  const observed = observationsFile === undefined ? undefined : await parseObservations(module, await Bun.file(observationsFile).json());
+  const observed = observationsFile === undefined ? undefined : await parseObservations(module, answerJSON(await Bun.file(observationsFile).text()));
   const result = await sync(module, { dryRun: args.includes("--dry-run"), raw, observed });
+  const reportFile = value("report");
+  if (reportFile !== undefined) await Bun.write(reportFile, report(module, result));
   if (args.includes("--json")) console.log(JSON.stringify(result, null, 2));
   else console.log(summary(module, result, args.includes("--dry-run")));
+}
+
+/** An observation file, or an agent's answer whose last ```json block is one. */
+export function answerJSON(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    const block = [...text.matchAll(/```json\s*\n([\s\S]*?)```/g)].at(-1);
+    if (block === undefined) throw new Error("The observation file is neither JSON nor an answer with a ```json block");
+    return JSON.parse(block[1]!);
+  }
+}
+
+/** The sync pull request's body. */
+export function report(module: SyncModule<any> | AgentModule, result: SyncResult) {
+  const { counts } = result.risk;
+  const code = (text: string) => `\`${text.replaceAll("`", "'")}\``;
+  const field = (value: unknown) => (value === undefined ? "unset" : code(JSON.stringify(value)));
+  const filled = result.gaps.filter((gap) => gap.kind !== "removal");
+  const removals = result.gaps.filter((gap) => gap.kind === "removal");
+  const section = (title: string, lines: string[]) => (lines.length === 0 ? [] : [`### ${title}`, "", ...lines, ""]);
+  return [
+    `Sync for ${module.name}: ${counts.created} created, ${counts.updated} updated, ${counts.deleted} deleted, ${counts.deprecated} deprecated.`,
+    "",
+    ...(result.risk.safe ? [] : section("Needs review", result.risk.reasons.map((reason) => `- ${reason}`))),
+    ...section("Changes", result.changes.map((change) => {
+      const fields = change.fields.map((item) => `${code(item.path)} ${field(item.before)} → ${field(item.after)}`);
+      return `- ${change.kind} ${code(change.path)}${fields.length > 0 ? `: ${fields.join(", ").slice(0, 2000)}` : ""}`;
+    })),
+    ...section("Models the sync couldn't finish", filled.map((gap) => `- ${code(gap.model)} (${gap.kind}): ${gap.reason}`)),
+    ...section("Dropped by the source, kept", removals.map((gap) => `- ${code(gap.model)}: ${gap.reason}`)),
+    ...section("Notices", result.notices.map((notice) => `- ${notice}`)),
+    ...section("Evidence", (result.evidence ?? []).map((item) => `- ${code(item.model)} (${item.fields.join(", ") || "listed"}): "${item.quote.replaceAll("\n", " ").slice(0, 300)}" ${item.url}`)),
+  ].join("\n").slice(0, 60_000);
 }
 
 function summary(module: SyncModule<any> | AgentModule, result: SyncResult, dryRun: boolean) {
