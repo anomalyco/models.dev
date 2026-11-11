@@ -1,6 +1,7 @@
-# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/openai/gpt-6-1-terra
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-10), https://wiro.ai/models/openai/gpt-6-1-terra
 # and https://wiro.ai/docs/completions-api
-# Prices: the model page's token rates per million tokens: input $1.00, output $5.00.
+# Upstream: x_wiro.pricing_source.source_model = "openai/gpt-6.1-terra".
+# Prices: catalog pricing (USD per token) x 1,000,000.
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max (Chat Completions). reasoning.effort (Responses)
 # and output_config.effort (Messages) take the same levels.
 # These are the model's declared levels (the reasoning effort options on its model page). The gateway
@@ -12,13 +13,19 @@
 # "hello", a regex grammar (ZZ[0-9]{3}) and the same Lark grammar each returned a matching value 2 times out
 # of 2 on both APIs.
 # Messages takes function tools only (Anthropic's custom type is a function tool).
-# Modalities: the catalog lists text input for this model, within the lab's formats.
+# Structured output: not listed for this model (catalog structured_outputs = false).
+# Modalities: text and image input (catalog capabilities.input_modalities), with the gateway's JPEG,
+# PNG, GIF and WebP within the lab's list; no document input, so no PDF. Live 2026-11-10, a PNG on
+# Chat Completions was read correctly.
+# Limits: context_length 1,050,000 and max_tokens 128,000 (catalog) match the lab file, so they are
+# inherited. The catalog's max_input_tokens (1,050,000) is the whole window, so the lab's input
+# limit (922,000, the window less the output) is kept.
 # APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
