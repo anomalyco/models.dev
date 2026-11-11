@@ -1,5 +1,5 @@
 schema = 2
-name = "ERNIE-5.5-Flash-Preview"
+name = "ERNIE-5.5-Flash-Preview (free)"
 description = "Flagship model for demanding analysis, coding, and production agent workflows"
 family = "ernie"
 open_weights = true
@@ -28,8 +28,7 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.28
-cache = { read = 0.028 }
+price = 0
 
 [cost.text.output]
-price = 1.13
+price = 0
