@@ -1,7 +1,7 @@
 # Sources (accessed 2026-11-11):
 # - Model ID and direct per-million-token rates: https://outerlabs.ai/docs ("Models & rates").
-# - Outer Labs rates (standard accounts, 30% below direct on every token type) and prompt-length bands:
-#   https://outerlabs.ai/pricing. Company accounts pay 40% below direct; the standard rate is recorded here.
+# - Outer Labs rates (40% below direct on every token type, on every account) and prompt-length bands:
+#   https://outerlabs.ai/pricing.
 # - Capabilities: live requests on production, 2026-11-11, on POST /v1/chat/completions and POST /v1/messages
 #   (base https://api.outerlabs.ai/v1). GPT family tested with gpt-6.1-sol, plus gpt-6-astra for reasoning effort: tool calls and results,
 #   forced tool choice, JSON-schema structured output and automatic prompt caching (13,184 cached tokens reported
@@ -25,17 +25,17 @@ cache = { implicit = true }
 [api.chat-completions]
 
 [cost.text.input]
-price = 1.4
-cache = { read = 0.14 }
+price = 1.2
+cache = { read = 0.12 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
-price = 2.8
-cache = { read = 0.28 }
+price = 2.4
+cache = { read = 0.24 }
 
 [cost.text.output]
-price = 7
+price = 6
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
-price = 10.5
+price = 9

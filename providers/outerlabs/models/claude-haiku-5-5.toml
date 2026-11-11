@@ -1,7 +1,7 @@
 # Sources (accessed 2026-11-11):
 # - Model ID and direct per-million-token rates: https://outerlabs.ai/docs ("Models & rates").
-# - Outer Labs rates (standard accounts, 30% below direct on every token type) and prompt-length bands:
-#   https://outerlabs.ai/pricing. Company accounts pay 40% below direct; the standard rate is recorded here.
+# - Outer Labs rates (40% below direct on every token type, on every account) and prompt-length bands:
+#   https://outerlabs.ai/pricing.
 # - Capabilities: live requests on production, 2026-11-11, on POST /v1/chat/completions and POST /v1/messages
 #   (base https://api.outerlabs.ai/v1). Claude family tested with claude-fable-5-2, plus claude-opus-5-5, claude-sonnet-5-5 and
 #   claude-haiku-5-5 for tool choice: tool calls and results, JSON-schema structured output, thinking controls
@@ -25,17 +25,17 @@ cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tool
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.07
-cache = { read = 0.007, write = { "5m" = 0.0875, "1h" = 0.14 } }
+price = 0.06
+cache = { read = 0.006, write = { "5m" = 0.075, "1h" = 0.12 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 100_000 } }
-price = 0.35
-cache = { read = 0.035, write = { "5m" = 0.4375, "1h" = 0.7 } }
+price = 0.3
+cache = { read = 0.03, write = { "5m" = 0.375, "1h" = 0.6 } }
 
 [cost.text.output]
-price = 0.35
+price = 0.3
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 100_000 } }
-price = 1.75
+price = 1.5

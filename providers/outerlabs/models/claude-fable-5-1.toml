@@ -1,7 +1,7 @@
 # Sources (accessed 2026-11-11):
 # - Model ID and direct per-million-token rates: https://outerlabs.ai/docs ("Models & rates").
-# - Outer Labs rates (standard accounts, 30% below direct on every token type) and prompt-length bands:
-#   https://outerlabs.ai/pricing. Company accounts pay 40% below direct; the standard rate is recorded here.
+# - Outer Labs rates (40% below direct on every token type, on every account) and prompt-length bands:
+#   https://outerlabs.ai/pricing.
 # - Capabilities: live requests on production, 2026-11-11, on POST /v1/chat/completions and POST /v1/messages
 #   (base https://api.outerlabs.ai/v1). Claude family tested with claude-fable-5-2, plus claude-opus-5-5, claude-sonnet-5-5 and
 #   claude-haiku-5-5 for tool choice: tool calls and results, JSON-schema structured output, thinking controls
@@ -23,8 +23,8 @@ cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tool
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 7
-cache = { read = 0.175, write = { "5m" = 8.75, "1h" = 14 } }
+price = 6
+cache = { read = 0.15, write = { "5m" = 7.5, "1h" = 12 } }
 
 [cost.text.output]
-price = 35
+price = 30
