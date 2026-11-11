@@ -202,7 +202,7 @@ export function buildAbacusModel(
     cost,
   };
 
-  const v2Set = narrowedInput !== undefined && isNarrower(narrowedInput, labInput)
+  const v2Set = labInput !== undefined && isNarrower(narrowedInput, labInput)
     ? {
       "modalities.input": narrowedInput,
       "modalities.output": toMime(labOutputModalities(baseModel) ?? [...outputKinds]),
@@ -281,8 +281,8 @@ function intentionalSkip(model: AbacusModel, baseModel: string | undefined) {
   return type !== undefined && type !== "chat";
 }
 
-function isNarrower(values: string[], full: string[]) {
-  return values.length < full.length;
+export function isNarrower(values: string[], full: string[] | undefined) {
+  return full !== undefined && values.length < full.length;
 }
 
 // Keep the authored order (and MIME variants) when the feed still accepts the

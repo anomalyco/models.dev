@@ -4,6 +4,7 @@ import {
   abacus,
   AbacusModel,
   buildAbacusModel,
+  isNarrower,
   resolveAbacusBaseModel,
 } from "../src/sync/providers/abacus.js";
 
@@ -54,6 +55,10 @@ test("does not write a modality override when RouteLLM accepts every lab kind", 
     abacusModel({ id: "zai-org/GLM-5.3", input_modalities: ["text"], thinking: undefined }),
   );
   expect(built?.v2Set).toBeUndefined();
+});
+
+test("a missing lab modality list is never treated as narrower", () => {
+  expect(isNarrower(["text"], undefined)).toBe(false);
 });
 
 test("reasoning follows thinking and preserves authored controls", () => {
