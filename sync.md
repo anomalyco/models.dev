@@ -28,6 +28,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync sovereigneg` syncs only SovereignEG.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -481,6 +482,21 @@ engy is implemented in `packages/core/src/sync/providers/engy.ts`.
   - Point `base_model` at the lab entry for the exact id, adding it under `models/` if it is missing. Pointing at a sibling is not a substitute: because an authored `base_model` wins, the sync never corrects it later.
 - Per-token USD string prices become per-1M, rounded to six decimals; two would carry float error otherwise.
 - Modalities are sorted into catalogue order; wire order is arbitrary.
+
+## SovereignEG Notes
+
+SovereignEG is implemented in `packages/core/src/sync/providers/sovereigneg.ts`.
+
+- Run it with `bun models:sync sovereigneg` or `bun sovereigneg:sync`.
+- Source endpoint: `https://backend.sovereigneg.com/v1/models`. It rejects unauthenticated requests, so the sync needs `SOVEREIGNEG_API_KEY` (a workflow secret) and fails without it. The same catalog is public as HTML at https://sovereigneg.com/models; there is no public JSON endpoint.
+- Only live, public `modality = "chat"` routes that list `tools` in `supported_parameters` are synced. Embedding, image, rerank and decision routes are left for hand-authored files.
+- SovereignEG bills in EGP and publishes EGP prices only. It sets the EGP price of a relayed model from its USD rate at an exchange rate refreshed from open.er-api.com, so the sync divides each EGP price by `rates.EGP` from `https://open.er-api.com/v6/latest/USD` and rounds to three significant figures. The result is the USD equivalent of what a customer pays, not the lab's list price.
+- An authored price within 2% of the newly converted one is kept, so the daily rate change does not rewrite every file. A rate outside 10 to 500 EGP per USD, or a failed rate request, fails the run before any writes.
+- The catalog owns `cost.input`, `cost.output`, `cost.cache_read`, `cost.cache_write` (the 5-minute rate; the 1-hour rate is not synced), `limit.context`, `limit.output` when published, `temperature`, `structured_output` (from `structured_outputs`) and `deprecated` status (from `deprecated_at`). Names and modalities are inherited from the lab: `display_name` is often the route ID, and the catalog lists input kinds rather than MIME types. A route that lists text-only input is written as text-only; a hand-authored `name` is kept.
+- IDs are bare (`claude-sonnet-5.5`), so `base_model` resolves from `provider_handle` plus the ID, then from a bare ID whose filename is unique across labs. An authored `base_model` wins. A route with no lab entry is skipped and listed in the sync notices; `trackMissingModels` is off, so it opens no issue, and an existing local file for it is kept.
+- The catalog says whether a route accepts `reasoning_effort` but not which levels. Authored controls are kept. A new reasoning route that lists `reasoning_effort` takes the lab's effort levels (`labEffortValues`); one with no lab ladder raises `MissingReasoningOptionsError` and is not created; one that does not list `reasoning_effort` is written with no caller control.
+- Empty and duplicate-ID inventories fail before writes. Routes absent from the catalog, or no longer live tool-capable chat routes, are removed.
+- Headers are generated and carry no rate or EGP figure, since either would change on every run.
 
 ## Standalone Generators
 
