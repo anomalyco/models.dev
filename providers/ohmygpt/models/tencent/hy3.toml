@@ -4,6 +4,7 @@
 # Effort: reasoning_effort = none|high; none turns thinking off
 # Checked live 2026-11-11 with each serving provider pinned as `<provider>:tencent/hy3` (https://www.ohmygpt.com/docs/provider-routing): reasoning_effort = none returned no reasoning_content and high returned it. thinking.type = enabled|disabled switches thinking too; providers/tencent-tokenhub lists that toggle next to this effort list, and only the effort form is kept because a toggle cannot be paired with a list that contains none.
 # The creator's own entry is providers/tencent-tokenhub/models/hy3.toml; only what held on every serving provider is listed.
+# top_k: accepted by every serving provider (live 2026-11-11), and none of their own models.dev entries excludes it.
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
 # Limits: none overridden. The catalog's figures for this model (context 256,000, input 192,000, output 128,000) are the lab file's.
 schema = 2

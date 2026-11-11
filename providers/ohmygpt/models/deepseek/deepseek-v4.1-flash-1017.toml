@@ -5,6 +5,7 @@
 # Effort: reasoning_effort = low|high|max
 # Checked live 2026-11-11 with each serving provider pinned as `<provider>:deepseek/deepseek-v4.1-flash-1017` (https://www.ohmygpt.com/docs/provider-routing): thinking.type = disabled returned no reasoning_content on every serving provider, and reasoning_effort low, high and max were accepted on every one.
 # The creator's own entry is providers/deepseek/models/deepseek-flash.toml; only what held on every serving provider is listed.
+# top_k = false: providers/alibaba, providers/alibaba-cn, providers/deepseek exclude top_k for this model, so it does not hold on every serving provider. A request that sends it still returns 200 on each of them (live 2026-11-11), so acceptance alone does not show support.
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
 # Limits: none overridden. The catalog's figures for this model (context 1,000,000, output 384,000) are the lab file's.
 # Prices: the catalog's headline price, which is its lowest-priced serving provider (Tencent Cloud TokenHub). The gateway tries the cheaper provider first; a request served by another provider is billed at that provider's rate, up to 2.22x on input (catalog providers[].pricing).
@@ -15,6 +16,7 @@ base_model = "deepseek/deepseek-v4.1-flash-1017"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+top_k = false
 cache = { implicit = true }
 
 [api.chat-completions]

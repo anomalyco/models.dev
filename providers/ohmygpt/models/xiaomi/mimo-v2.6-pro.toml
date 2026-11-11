@@ -4,6 +4,7 @@
 # Toggle: thinking.type = enabled|disabled (default enabled)
 # Checked live 2026-11-11 with each serving provider pinned as `<provider>:xiaomi/mimo-v2.6-pro` (https://www.ohmygpt.com/docs/provider-routing): with no thinking field the answer carried reasoning_content; thinking.type = disabled returned none, on every serving provider.
 # The creator's own entry is providers/xiaomi/models/mimo-v2.6-pro.toml; only what held on every serving provider is listed.
+# top_k: accepted by every serving provider (live 2026-11-11), and none of their own models.dev entries excludes it.
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
 # Limits: none overridden. The catalog's figures for this model (context 1,048,576, output 131,072) are the lab file's.
 schema = 2

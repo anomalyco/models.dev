@@ -4,6 +4,7 @@
 # Toggle: thinking.type = enabled|disabled (default enabled)
 # Checked live 2026-11-11 with each serving provider pinned as `<provider>:zhipu/glm-5.1` (https://www.ohmygpt.com/docs/provider-routing): with no thinking field the answer carried reasoning_content; thinking.type = disabled returned none, on every serving provider.
 # The creator's own entry is providers/zhipuai/models/glm-5.1.toml; only what held on every serving provider is listed.
+# top_k = false: providers/zhipuai excludes top_k for this model, so it does not hold on every serving provider. A request that sends it still returns 200 on each of them (live 2026-11-11), so acceptance alone does not show support.
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
 # Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
 # Prices: the catalog's headline price, which is its lowest-priced serving provider (Alibaba Cloud (Model Studio Intl)). The gateway tries the cheaper provider first; a request served by another provider is billed at that provider's rate, up to 1.46x on input (catalog providers[].pricing).
@@ -14,6 +15,7 @@ base_model = "zhipuai/glm-5.1"
 [capabilities]
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 structured_output = true
+top_k = false
 cache = { implicit = true }
 
 [limit]
