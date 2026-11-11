@@ -1,0 +1,26 @@
+schema = 2
+name = "Assistant Pepe 32B"
+description = "Assistant Pepe 32B is SicariusSicariiStuff's Qwen3-32B finetune for creative writing, brainstorming, roleplay and irreverent conversation. Trained on UBW Tapestries, it has a built-in conversational persona and replies without a separate thinking mode. It accepts and returns text, with a 40,960-token context window and up to 8,192 output tokens."
+open_weights = true
+release_date = "2026-11-03"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 40_960
+input = 40_960
+output = 8_192
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.45

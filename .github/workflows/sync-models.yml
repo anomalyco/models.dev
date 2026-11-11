@@ -44,6 +44,7 @@ jobs:
     needs: providers
     if: github.repository == 'anomalyco/models.dev'
     runs-on: blacksmith-4vcpu-ubuntu-2404
+    environment: release
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.providers.outputs.matrix) }}
@@ -52,6 +53,7 @@ jobs:
     permissions:
       contents: write
       issues: write
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -59,6 +61,32 @@ jobs:
         with:
           ref: dev
           persist-credentials: false
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::604439173067:role/github/models.dev-release
+          role-session-name: models.dev-sync-${{ github.run_id }}
+          aws-region: us-east-1
+
+      - name: Fetch secrets
+        uses: aws-actions/aws-secretsmanager-get-secrets@2297f9a879480a9e3af9b293ed15c70caf8e1c88 # v3.0.2
+        with:
+          secret-ids: |
+            ANTHROPIC_API_KEY,models.dev/release/ANTHROPIC_API_KEY
+            BASETEN_API_KEY,models.dev/release/BASETEN_API_KEY
+            CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN,models.dev/release/CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN
+            DEEPINFRA_API_KEY,models.dev/release/DEEPINFRA_API_KEY
+            DIGITALOCEAN_API_TOKEN,models.dev/release/DIGITALOCEAN_API_TOKEN
+            FIREWORKS_API_KEY,models.dev/release/FIREWORKS_API_KEY
+            GOOGLE_API_KEY,models.dev/release/GOOGLE_API_KEY
+            MERGE_GATEWAY_API_KEY,models.dev/release/MERGE_GATEWAY_API_KEY
+            MISTRAL_API_KEY,models.dev/release/MISTRAL_API_KEY
+            NOVITA_AI_API_KEY,models.dev/release/NOVITA_AI_API_KEY
+            OPENAI_API_KEY,models.dev/release/OPENAI_API_KEY
+            OPENROUTER_API_KEY,models.dev/release/OPENROUTER_API_KEY
+            XAI_API_KEY,models.dev/release/XAI_API_KEY
+          parse-json-secrets: false
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
@@ -72,29 +100,29 @@ jobs:
         run: bun models:sync ${{ matrix.provider }}
         env:
           GH_TOKEN: ${{ github.token }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          BASETEN_API_KEY: ${{ secrets.BASETEN_API_KEY }}
-          DEEPINFRA_API_KEY: ${{ secrets.DEEPINFRA_API_KEY }}
-          DIGITALOCEAN_API_TOKEN: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
+          ANTHROPIC_API_KEY: ${{ env.ANTHROPIC_API_KEY }}
+          BASETEN_API_KEY: ${{ env.BASETEN_API_KEY }}
+          DEEPINFRA_API_KEY: ${{ env.DEEPINFRA_API_KEY }}
+          DIGITALOCEAN_API_TOKEN: ${{ env.DIGITALOCEAN_API_TOKEN }}
           DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-          FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
+          FIREWORKS_API_KEY: ${{ env.FIREWORKS_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ env.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
           VENICE_API_KEY: ${{ secrets.VENICE_API_KEY }}
           LLMGATEWAY_API_KEY: ${{ secrets.LLMGATEWAY_API_KEY }}
-          MERGE_GATEWAY_API_KEY: ${{ secrets.MERGE_GATEWAY_API_KEY }}
-          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
-          NOVITA_AI_API_KEY: ${{ secrets.NOVITA_AI_API_KEY }}
+          MERGE_GATEWAY_API_KEY: ${{ env.MERGE_GATEWAY_API_KEY }}
+          MISTRAL_API_KEY: ${{ env.MISTRAL_API_KEY }}
+          NOVITA_AI_API_KEY: ${{ env.NOVITA_AI_API_KEY }}
           KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_API_KEY: ${{ env.GOOGLE_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
-          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
-          CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
-          CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN: ${{ secrets.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN }}
+          XAI_API_KEY: ${{ env.XAI_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
+          CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID: ${{ vars.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
+          CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN: ${{ env.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN }}
 
       - name: Validate models
         run: bun validate
@@ -140,14 +168,31 @@ jobs:
     if: always() && github.repository == 'anomalyco/models.dev' && needs.providers.result == 'success'
     runs-on: ubuntu-latest
     environment: automation
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::604439173067:role/github/models.dev-automation
+          role-session-name: models.dev-automation-${{ github.run_id }}
+          aws-region: us-east-1
+
+      - name: Fetch secrets
+        uses: aws-actions/aws-secretsmanager-get-secrets@2297f9a879480a9e3af9b293ed15c70caf8e1c88 # v3.0.2
+        with:
+          secret-ids: |
+            AUTOMATION_APP_PRIVATE_KEY,models.dev/automation/AUTOMATION_APP_PRIVATE_KEY
+          parse-json-secrets: false
+
       - name: Create app token
         id: app
         uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
         with:
           app-id: ${{ vars.AUTOMATION_APP_ID }}
-          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          private-key: ${{ env.AUTOMATION_APP_PRIVATE_KEY }}
           repositories: models.dev
           permission-contents: write
           permission-issues: write

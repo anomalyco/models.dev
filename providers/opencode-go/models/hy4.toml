@@ -1,0 +1,19 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-11-04).
+# Effort: reasoning_effort = none|high, as on Tencent TokenHub (https://cloud.tencent.com/document/product/1823/131208),
+#   which Go proxies; none and high verified through opencode.ai/inference on 2026-11-04.
+# Mid-conversation flags left out: tencent-tokenhub/hy4 sets none.
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501

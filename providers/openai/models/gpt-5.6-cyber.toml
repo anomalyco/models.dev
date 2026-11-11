@@ -6,6 +6,7 @@
 # Access requires Daybreak approval (https://openai.com/daybreak/), so unapproved keys get
 # "does not exist or you do not have access". Capabilities match gpt-daybreak-red-latest.
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# Cache writes: 30m (default) is 1.25x input; 12h (Responses API) is 2.5x. https://developers.openai.com/api/docs/guides/prompt-caching
 schema = 2
 v2_only = true
 base_model = "openai/gpt-5.6-cyber"
@@ -16,12 +17,12 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 structured_output = true
 system_updates = true
 store = true
-cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
 prompt_cache_key = true
 
 [cost.text.input]
 price = 12.5
-cache = { read = 1.25, write = 15.625 }
+cache = { read = 1.25, write = { "30m" = 15.625, "12h" = 31.25 } }
 
 [cost.text.output]
 price = 75

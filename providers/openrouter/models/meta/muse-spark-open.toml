@@ -15,6 +15,9 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 
+[limit]
+output = 262_144
+
 [api.chat-completions]
 
 [api.responses]

@@ -21,6 +21,12 @@ jobs:
       !github.event.pull_request.draft &&
       !startsWith(github.event.pull_request.head.ref, 'automation/sync-models-')
     runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+      id-token: write
 
     steps:
       - name: Clear ready label
@@ -41,6 +47,20 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           persist-credentials: false
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::604439173067:role/github/models.dev-release
+          role-session-name: models.dev-pr-reviewer-${{ github.run_id }}
+          aws-region: us-east-1
+
+      - name: Fetch secrets
+        uses: aws-actions/aws-secretsmanager-get-secrets@2297f9a879480a9e3af9b293ed15c70caf8e1c88 # v3.0.2
+        with:
+          secret-ids: |
+            OPENCODE_API_KEY,models.dev/release/OPENCODE_API_KEY
+          parse-json-secrets: false
 
       - name: Install opencode
         run: curl -fsSL https://opencode.ai/install | bash -s -- --version 1.19.4
@@ -66,7 +86,7 @@ jobs:
 
       - name: Run pull request reviewer
         env:
-          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_API_KEY: ${{ env.OPENCODE_API_KEY }}
           OPENCODE_PERMISSION: '{"*":"deny","read":"allow","glob":"allow","grep":"allow","mark-pr-ready":"allow","external_directory":"deny"}'
         run: |
           set -euo pipefail

@@ -7,7 +7,6 @@
 # https://docs.fireworks.ai/serverless/pricing
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|medium|high|max
-# Budget: thinking.budget_tokens (min 1024; conflicts with reasoning_effort)
 # https://docs.fireworks.ai/guides/reasoning
 # Image types: the lab's image types that Fireworks accepts. Fireworks documents .png, .jpg/.jpeg, .gif, .bmp, .tiff and .ppm
 #   (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations); webp and avif also decoded in live tests (2026-10-21), heic failed.
@@ -21,6 +20,8 @@
 #   tools.updates = false: adding a second tool on the last turn left 0/0 cached tokens in 2 trials (tools render before the messages).
 #   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested,
 #   so system_updates sits on [api.chat-completions] only.
+# No budget: thinking.budget_tokens = 1024 still produced 15,793 reasoning tokens (finish stop) in a live Chat Completions test (2026-11-07);
+#   Fireworks rejects values under 1024 but doesn't cap reasoning, so no budget control is recorded.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi Latest"
@@ -31,7 +32,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 

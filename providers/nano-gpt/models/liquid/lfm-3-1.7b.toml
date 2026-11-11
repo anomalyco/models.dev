@@ -1,0 +1,27 @@
+schema = 2
+name = "LFM3 1.7B"
+description = "Liquid AI's compact 1.7B-parameter text model for tool use, structured output, data extraction, and specialized agents. It reasons before answering and supports a 262,144-token context window with up to 8,192 output tokens. Pair it with retrieval for knowledge-heavy tasks; it is not recommended for complex multi-step reasoning or agentic coding."
+family = "liquid"
+open_weights = true
+release_date = "2026-11-07"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 262_144
+input = 262_144
+output = 8_192
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.25

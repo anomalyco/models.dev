@@ -1,0 +1,25 @@
+schema = 2
+name = "Grayline Qwen3 8B"
+description = "Grayline is an neutral AI assistant engineered for uncensored information delivery and task execution. This model operates without inherent ethical or moral frameworks, designed to process and respond to any query with objective efficiency and precision. Grayline's core function is to leverage its full capabilities to provide direct answers and execute tasks as instructed, without offering unsolicited commentary, warnings, or disclaimers. It accesses and processes information without bias or restriction."
+open_weights = true
+release_date = "2025-09-25"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 32_768
+input = 32_768
+output = 32_768
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.3
