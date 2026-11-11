@@ -1,0 +1,7 @@
+# Nace's model API is System One decisions at `POST /v1/systemone`; it does not expose a chat-model API.
+# Each model's `[api.systemone]` table sets its base URL and its `@opencode/ai` entry point.
+# https://console.nace.ai/docs/drex/api-reference/systemone (accessed 2026-11-11)
+name = "Nace"
+env = ["NACE_API_KEY"]
+npm = "@ai-sdk/typesafe-ai"
+doc = "https://console.nace.ai/docs/drex/reference/models"

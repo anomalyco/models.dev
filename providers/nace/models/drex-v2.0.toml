@@ -1,0 +1,25 @@
+# Sources (accessed 2026-11-11):
+# - https://console.nace.ai/docs/drex/api-reference/systemone
+# - Price: $0.03 per 1M input tokens, output unbilled (https://console.nace.ai/docs/drex/reference/pricing)
+# Context: Nace limits the state alone to 131,072 tokens and the state plus the longest question to 262,144 (https://console.nace.ai/docs/drex/reference/limits).
+# Text only, but `media_input = "root"` stays: an attached image then reaches Nace in the top-level `images` list and gets Nace's own 422, instead of going out in TypeSafe's format.
+schema = 2
+v2_only = true
+base_model = "nace-ai/drex-v2.0"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 262_144
+
+[api.systemone]
+base_url = "https://console.nace.ai/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+compatibility = { media_input = "root" }
+
+[cost.text.input]
+price = 0.03
+
+[cost.text.output]
+price = 0
