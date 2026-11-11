@@ -1,21 +1,18 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
-# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
-# effort_updates = false: no per-turn effort control
-# tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
-name = "Xing4.0 29B A4B (free)"
-description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
-family = "agi"
+name = "Motif 3"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "motif"
 open_weights = true
-release_date = "2026-10-16"
+release_date = "2026-11-02"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+tools = { supported = false }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
@@ -33,7 +30,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0
+price = 0.3
+cache = { read = 0.06 }
 
 [cost.text.output]
-price = 0
+price = 1.2
