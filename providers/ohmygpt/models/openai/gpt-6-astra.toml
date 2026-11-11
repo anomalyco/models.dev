@@ -4,6 +4,8 @@
 # Effort: reasoning_effort (Chat Completions) or reasoning.effort (Responses) = low|medium|high|xhigh. providers/openai/models/gpt-6-astra.toml also lists max: here it is accepted on Responses only (the other returns 400, live 2026-11-11), so it is not listed.
 # tools.freeform on [api.responses] only: checked live 2026-11-11. /v1/responses accepted custom tools as text, lark, regex and enforced the grammars (asked to pass `hello`, the regex ZZ[0-9]{3} and the equivalent lark grammar each returned ZZ plus three digits). On /v1/chat/completions the custom tool did not reach the model on this host: with tool_choice required it answered in text that it has no such tool.
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: none overridden. The catalog's figures for this model (context 1,050,000, output 128,000) are the lab file's.
+# Prices: the catalog's lower band includes a prompt of exactly 272,000 input tokens (tier bound 272,001, exclusive), so the band above it uses gt.
 schema = 2
 base_model = "openai/gpt-6-astra"
 

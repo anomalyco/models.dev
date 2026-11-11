@@ -6,6 +6,7 @@
 # The creator's own entry is providers/tencent-tokenhub/models/hy4-preview.toml; only what held on every serving provider is listed.
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
 # Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+# Limits: the catalog shows context 1,048,576, above the creator's own entry (1,024,000). A relay cannot widen the upstream's window, so the creator's figure stands.
 schema = 2
 base_model = "tencent/hy4-preview"
 

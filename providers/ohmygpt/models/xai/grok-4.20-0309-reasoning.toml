@@ -5,7 +5,8 @@
 # Responses uses @ai-sdk/xai: xAI rejects the item_reference items @ai-sdk/openai sends on the second step of a tool loop (422, live 2026-11-11).
 # PDF input works on Responses only; xAI's Chat Completions returns 400 for file content (live 2026-11-11).
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
-# Prices: the band above 200,000 input tokens starts one token later here than on providers/xai/models/grok-4.20-0309-reasoning.toml: the catalog's lower band includes a prompt of exactly 200,000 tokens (tier bound 200,001, exclusive), so the override uses gt.
+# Limits: the catalog shows context 2,000,000, output 128,000, above the creator's own entry (1,000,000, 30,000). A relay cannot widen the upstream's window, so the creator's figures stand.
+# Prices: the catalog's lower band includes a prompt of exactly 200,000 input tokens (tier bound 200,001, exclusive), so the band above it uses gt. providers/xai/models/grok-4.20-0309-reasoning.toml starts that band one token earlier (gte).
 schema = 2
 base_model = "xai/grok-4.20-0309-reasoning"
 

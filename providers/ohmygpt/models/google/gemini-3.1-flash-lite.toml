@@ -6,6 +6,7 @@
 # Effort: generationConfig.thinkingConfig.thinkingLevel = minimal|low|medium|high on generateContent; reasoning_effort with the same values on Chat Completions, which OhMyGPT sends as thinkingLevel (https://www.ohmygpt.com/docs/api/thinking#gemini). Levels follow providers/google/models/gemini-3.1-flash-lite.toml. Checked live 2026-11-11 on Chat Completions: each listed level is accepted. reasoning_effort = none selects the model's lowest level, not off, so it is not listed.
 # Input: video is accepted on generateContent only; Chat Completions returns 400 for video content (live 2026-11-11).
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: none overridden. The catalog's figures for this model (context 1,048,576, output 65,536) are the lab file's.
 schema = 2
 base_model = "google/gemini-3.1-flash-lite"
 

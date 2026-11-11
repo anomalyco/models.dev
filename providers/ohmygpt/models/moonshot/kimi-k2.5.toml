@@ -6,6 +6,7 @@
 # Checked live 2026-11-11 with each serving provider pinned as `<provider>:moonshot/kimi-k2.5` (https://www.ohmygpt.com/docs/provider-routing): with no thinking field the answer carried no reasoning_content; thinking.type = enabled returned it and disabled did not; thinking_budget = 300 held reasoning to 300 tokens, while thinking.budget_tokens = 300 was ignored (5,225 reasoning tokens); temperature = 0.3 was accepted.
 # temperature: accepted on this host (Alibaba Cloud); the lab file's false describes Moonshot's own API.
 # Cache: the catalog prices implicit cache reads and an explicit cache (its own read and write prices).
+# Limits: none overridden. The catalog's figures for this model (context 262,144, output 262,144) are the lab file's.
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 

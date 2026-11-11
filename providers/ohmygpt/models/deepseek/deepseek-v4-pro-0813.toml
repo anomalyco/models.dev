@@ -6,6 +6,7 @@
 # Checked live 2026-11-11 with each serving provider pinned as `<provider>:deepseek/deepseek-v4-pro-0813` (https://www.ohmygpt.com/docs/provider-routing): thinking.type = disabled returned no reasoning_content on every serving provider, and reasoning_effort low, high and max were accepted on every one.
 # The creator's own entry is providers/deepseek/models/deepseek-v4-pro.toml; only what held on every serving provider is listed.
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: none overridden. The catalog's figures for this model (context 1,000,000, output 384,000) are the lab file's.
 # Prices: base prices are off-peak. The catalog prices 01:00-04:00 and 06:00-10:00 UTC on weekdays at 2x, written as a multiplier below.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
