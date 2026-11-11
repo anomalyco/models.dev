@@ -1,0 +1,35 @@
+# Prices and limits: https://velobase.io/api/v1/models (accessed 2026-11-11), USD per token x 1e6
+# Reasoning controls follow the underlying model on other OpenAI-compatible relays
+# Effort: reasoning.effort or reasoning_effort on Chat Completions
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tokens = 1_024 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.011, write = 0.1375 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.22
+cache = { read = 0.022, write = 0.275 }
+
+[cost.text.output]
+price = 0.55
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.825

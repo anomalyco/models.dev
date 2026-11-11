@@ -1,0 +1,10 @@
+# Velobase is a prepaid LLM API gateway. One key serves models from many labs
+# through OpenAI Chat Completions, OpenAI Responses and Anthropic Messages, all
+# under https://velobase.io/api/v1. Model IDs are <lab>/<model>.
+# Model list with prices: https://velobase.io/api/v1/models
+name = "Velobase"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["VELOBASE_API_KEY"]
+api = "https://velobase.io/api/v1"
+doc = "https://velobase.io/models"
