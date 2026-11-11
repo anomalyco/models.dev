@@ -1,0 +1,25 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/moonshot/kimi-k2.6 (snapshot 2026-11-11): prices, limits and the serving provider (moonshot).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT and Moonshot AI (moonshot) is its only serving provider, so the request body reaches the vendor as sent and vendor fields work as the vendor documents them (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models). Reasoning controls follow providers/moonshotai/models/kimi-k2.6.toml.
+# Toggle: thinking.type = "enabled" (default) | "disabled"; reasoning returned in reasoning_content.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+temperature = false
+top_p = false
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.0439
+cache = { read = 0.17666 }
+
+[cost.text.output]
+price = 4.3362

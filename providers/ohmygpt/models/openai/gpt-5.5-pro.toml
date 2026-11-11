@@ -1,0 +1,32 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/openai/gpt-5.5-pro (snapshot 2026-11-11): prices, limits and the serving provider (openai).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Responses is this model's native protocol on OhMyGPT; Chat Completions requests are converted to it, reasoning_effort included (https://www.ohmygpt.com/docs/api/protocols#other-protocols, https://www.ohmygpt.com/docs/api/thinking#other-models).
+# Effort: reasoning_effort (Chat Completions) or reasoning.effort (Responses) = medium|high|xhigh, as on providers/openai/models/gpt-5.5-pro.toml. Checked live 2026-11-11: every listed level is accepted on both APIs.
+schema = 2
+base_model = "openai/gpt-5.5-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 27
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 54
+
+[cost.text.output]
+price = 162
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 243
+
+[cost.web_search]
+price = 9

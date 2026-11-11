@@ -1,0 +1,43 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/xai/grok-4.20-0309-reasoning (snapshot 2026-11-11): prices, limits and the serving provider (xai).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions and Responses are both native protocols for this model on OhMyGPT (native: true in the catalog); the request body reaches xAI as sent (https://www.ohmygpt.com/docs/api/protocols#native-protocol).
+# Reasoning is always on with no caller control, as on providers/xai/models/grok-4.20-0309-reasoning.toml (live 2026-11-11: every reasoning_effort value returns 400).
+# Responses uses @ai-sdk/xai: xAI rejects the item_reference items @ai-sdk/openai sends on the second step of a tool loop (422, live 2026-11-11).
+# PDF input works on Responses only; xAI's Chat Completions returns 400 for file content (live 2026-11-11).
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+schema = 2
+base_model = "xai/grok-4.20-0309-reasoning"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 2_000_000
+output = 128_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/xai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.375
+cache = { read = 0.22 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.75
+cache = { read = 0.44 }
+
+[cost.text.output]
+price = 2.75
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 5.5
+
+[cost.web_search]
+price = 5.5

@@ -1,0 +1,29 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/moonshot/kimi-k2.7-code (snapshot 2026-11-11): prices, limits and the serving providers (moonshot, alibaba).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT; the request is forwarded to the serving provider (Moonshot AI (Kimi), Alibaba Cloud (Model Studio Intl)) without protocol conversion (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
+# Checked live 2026-11-11 with each serving provider pinned as `<provider>:moonshot/kimi-k2.7-code` (https://www.ohmygpt.com/docs/provider-routing): reasoning is always on with no caller control: thinking.type = disabled returns 400 on Moonshot AI and is ignored on Alibaba Cloud, and no reasoning_effort value is accepted on both.
+# The creator's own entry is providers/moonshotai/models/kimi-k2.7-code.toml; only what held on every serving provider is listed.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+# Prices: the catalog's headline price, which is its lowest-priced serving provider (Alibaba Cloud (Model Studio Intl)). The gateway tries the cheaper provider first; a request served by another provider is billed at that provider's rate, up to 1.46x on input (catalog providers[].pricing).
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 262_000
+output = 262_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.71512
+cache = { read = 0.14304 }
+
+[cost.text.output]
+price = 2.97048

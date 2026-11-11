@@ -1,0 +1,23 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/tencent/hy3 (snapshot 2026-11-11): prices, limits and the serving provider (tencent).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT; the request is forwarded to the serving provider (Tencent Cloud TokenHub) without protocol conversion (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Checked live 2026-11-11 with each serving provider pinned as `<provider>:tencent/hy3` (https://www.ohmygpt.com/docs/provider-routing): with no thinking field the answer carried reasoning_content; thinking.type = disabled returned none, on every serving provider. reasoning_effort = none also turns thinking off; it is not listed because a toggle cannot be paired with an effort list that contains none, which is how providers/tencent-tokenhub writes this model.
+# The creator's own entry is providers/tencent-tokenhub/models/hy3.toml; only what held on every serving provider is listed.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+schema = 2
+base_model = "tencent/hy3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.146
+cache = { read = 0.0365 }
+
+[cost.text.output]
+price = 0.584

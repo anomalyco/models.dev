@@ -1,0 +1,29 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/minimax/minimax-m3.1-flash (snapshot 2026-11-11): prices, limits and the serving providers (minimax, tencent).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT; the request is forwarded to the serving provider (MiniMax, Tencent Cloud TokenHub) without protocol conversion (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+# Checked live 2026-11-11 with each serving provider pinned as `<provider>:minimax/minimax-m3.1-flash` (https://www.ohmygpt.com/docs/provider-routing): every level was accepted on both serving providers; thinking cannot be turned off (thinking.type = disabled and reasoning_effort = none return 400 on both).
+# The creator's own entry is providers/minimax/models/MiniMax-M3.1-Flash.toml; only what held on every serving provider is listed.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+# Prices: the catalog's headline price, which is its lowest-priced serving provider (Tencent Cloud TokenHub). The gateway tries the cheaper provider first; a request served by another provider is billed at that provider's rate, up to 1.03x on input (catalog providers[].pricing).
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+cache = { implicit = true }
+
+[limit]
+output = 524_288
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1606
+cache = { read = 0.01606 }
+
+[cost.text.output]
+price = 0.6424
