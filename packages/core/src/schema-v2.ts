@@ -469,6 +469,8 @@ export const CostUnitV2Values = [
   "megapixel",
   "second",
   "minute",
+  // A document page, as an OCR API counts them.
+  "page",
 ] as const;
 
 export const CostUnitV2 = z.enum(CostUnitV2Values);
@@ -551,6 +553,9 @@ export const CostConditionKeyV2Values = [
   "websocket",
   "style",
   "voice_control",
+  // True when an OCR request asks for annotations (Mistral's `bbox_annotation_format`
+  // or `document_annotation_format`).
+  "annotation",
 ] as const;
 
 export const CostConditionKeyV2 = z.enum(CostConditionKeyV2Values);
@@ -584,6 +589,7 @@ const CostConditionsV2 = z
     websocket: CostConditionV2,
     style: CostConditionV2,
     voice_control: CostConditionV2,
+    annotation: CostConditionV2,
   } satisfies Record<(typeof CostConditionKeyV2Values)[number], z.ZodTypeAny>)
   .partial();
 

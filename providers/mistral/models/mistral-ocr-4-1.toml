@@ -1,7 +1,10 @@
 # Sources:
 #   GET https://api.mistral.ai/v1/models (mistral-ocr-4-1; served on POST /v1/ocr)
-#   https://docs.mistral.ai/models/ocr-4-1 and https://docs.mistral.ai/inference/pricing ($4 per 1,000 pages, $5 per 1,000 annotated pages)
-# No [cost]: OCR is billed per page, which the cost schema has no unit for.
+#   https://docs.mistral.ai/models/ocr-4-1 ($4 per 1,000 pages, $5 per 1,000 annotated pages) and
+#     https://docs.mistral.ai/inference/pricing ($4 per 1,000 pages), both accessed 2026-11-11
+# Cost: USD per page (the per-1,000-page prices / 1,000); annotated pages are pages of a request that sets
+#   bbox_annotation_format or document_annotation_format. Not modeled: the pricing page's "Cached input" column
+#   ($0.4 per 1,000 pages), which no Mistral page explains for OCR.
 # APIs: the /v1/models capabilities (completion_fim: POST /v1/fim/completions; moderation: /v1/moderations; ocr: /v1/ocr), https://docs.mistral.ai/api. No AI SDK or OpenCode package calls them.
 schema = 2
 v2_only = true
@@ -9,3 +12,11 @@ base_model = "mistral/mistral-ocr-4-1"
 
 [api.ocr]
 sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+unit = "page"
+price = 0.004
+
+[[cost.text.input.overrides]]
+when = { annotation = { equals = true } }
+price = 0.005

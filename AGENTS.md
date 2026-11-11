@@ -241,7 +241,7 @@ description = "One or two sentences on what the lab builds."
 ## Cost (always USD)
 
 - **Token prices are USD per million tokens.** Never publish EUR, CNY, CHF, etc. as if they were USD. Convert and note rate/date in a **top-of-file** comment.
-- Text prices live in `[cost.text.input]` (`price`, `cache = { read, write }`) and `[cost.text.output]` (`price`, `reasoning`). Audio/image/video use `[cost.audio.input]` etc.; non-token units set `unit` (`character`, `image`, `megapixel`, `second`, `minute`; priced per unit).
+- Text prices live in `[cost.text.input]` (`price`, `cache = { read, write }`) and `[cost.text.output]` (`price`, `reasoning`). Audio/image/video use `[cost.audio.input]` etc.; non-token units set `unit` (`character`, `image`, `megapixel`, `second`, `minute`, `page`; priced per unit).
 - Cache writes with several TTLs: `write = { "5m" = 6.25, "1h" = 10 }`. v1 only gets the first TTL listed.
 - **Context-based pricing → overrides** keyed on `context`. The threshold is where that band starts; no duplicate thresholds.
 - Service tiers, regions, and time-of-day pricing → `[[cost.multipliers]]`.
