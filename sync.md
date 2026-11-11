@@ -137,23 +137,23 @@ Prefer small, provider-specific PRs when adding a provider. If the provider has 
 
 ## Automation
 
-`.github/workflows/sync-models.yml` runs on an hourly schedule and manually through `workflow_dispatch`.
+`.github/workflows/sync-models.yml` runs every six hours and manually through `workflow_dispatch`.
 
 The workflow:
 
 - Checks out `dev`.
 - Installs dependencies with Bun.
 - Discovers sync providers with `bun models:sync --list-providers`.
-- Runs one provider per matrix job with `bun models:sync ${{ matrix.provider }}`.
-- Runs `bun validate`.
-- Uploads the provider's catalog changes, if any, as a patch. These jobs never see the app's key. Their built-in token can open missing-model issues and dispatch the issue fixer, but can't change `dev` or workflows.
+- Syncs every provider in one job, running `bun models:sync <provider>` for each in turn. Each provider starts from a clean `dev` so its patch contains only its own changes. A provider that fails to sync or validate is dropped and reported; the rest still sync and publish.
+- Runs `bun validate` after each provider that changed the catalog.
+- Uploads the changed providers' catalog changes as patches in one artifact. This job never sees the app's key. Its built-in token can open missing-model issues and dispatch the issue fixer, but can't change `dev` or workflows.
 - Runs one `publish` job with a token from the `models.dev automation` GitHub App, whose key is in the `automation` environment. It runs only the scripts in `.github/sync-models/`, not repository code, and creates or updates a provider-specific sync PR for each patch that changes only catalog TOML files. It enables auto-merge only when the sync job marked the change safe and the patch itself passes the same limits: every file is in that provider's `models/` folder, at most 10 models created, at most 10 deleted, at most 15 of both, no more than half of the provider's models deleted, and at least one model left.
 - Uses `.sync/model-sync-report.md` as the PR body.
 - Auto-merges syncs that `bun sync:auto-merge` marks safe. The app's PRs run `Validate Models` and its merges run `Deploy` as usual.
 
-Each provider writes to a fixed provider branch like `automation/sync-models-openrouter`. If that provider's sync PR is already open, later scheduled runs force-update the same branch and edit the existing PR instead of creating another one. Provider jobs do not share unmerged changes with each other; OpenRouter only uses `base_model` for model metadata entries already present on `dev`.
+Each provider writes to a fixed provider branch like `automation/sync-models-openrouter`. If that provider's sync PR is already open, later scheduled runs force-update the same branch and edit the existing PR instead of creating another one. Providers do not share unmerged changes with each other; OpenRouter only uses `base_model` for model metadata entries already present on `dev`.
 
-CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get an hourly provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
+CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get a provider-specific sync branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
