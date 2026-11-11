@@ -1,9 +1,9 @@
 # Pricing: https://ai.klavo.ru/models/qwen3.6-35b-a3b lists 28 / 6 / 170 RUB per 1M input / cached input / output
 # tokens (checked 2026-11-11); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4
 # decimals.
-# Klavo AI is a relay. Limits, input types and capabilities follow the same-model entries
-# providers/engy/models/qwen3.6-35b-a3b.toml and providers/openrouter/models/qwen/qwen3.6-35b-a3b.toml: the smaller
-# limit and the input types they share. Reasoning controls are those of this API.
+# Klavo AI is a relay. Input types, structured_output and cache follow the same-model entries
+# providers/engy/models/qwen3.6-35b-a3b.toml and providers/openrouter/models/qwen/qwen3.6-35b-a3b.toml (the input
+# types they share). Limits and reasoning controls are this API's own.
 # Limits: GET https://api.klavo.ru/v1/models reports context_length 208_192 and meta.max_output 8_192 (checked
 # 2026-11-11); a request with max_tokens = 8_192 was accepted live on 2026-11-10.
 # Cache: implicit, done by the hosts behind the API. Cached input tokens come back in
@@ -29,7 +29,6 @@ cache = { implicit = true }
 
 [limit]
 context = 208_192
-input = 200_000
 output = 8_192
 
 [cost.text.input]
