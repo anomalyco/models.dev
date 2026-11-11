@@ -107,6 +107,12 @@ export interface SyncProvider<SourceModel> {
   /** Report remote-only models skipped by skipCreates as GitHub issues. */
   trackMissingModels?: boolean;
   deleteMissing?: boolean;
+  /**
+   * With deletion on, keep local files for source models the provider skips
+   * through `sourceID`. Defaults to false: a skipped id is deleted like any
+   * other model the provider does not translate.
+   */
+  retainSkipped?: boolean;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
   preserveDescriptions?: boolean;
@@ -371,7 +377,7 @@ export async function syncProvider<SourceModel>(
       const skippedID = provider.sourceID?.(sourceModel);
       if (skippedID !== undefined) {
         skippedRemote.push(skippedID);
-        skippedRemoteIDs.add(skippedID);
+        if (provider.retainSkipped === true) skippedRemoteIDs.add(skippedID);
       }
       const missingID = provider.missingModelID?.(sourceModel);
       if (missingID !== undefined) missingRemote.add(missingID);

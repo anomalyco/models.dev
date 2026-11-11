@@ -93,6 +93,7 @@ export const abacus = {
   // it no longer lists are removed, including the 40 #10776 had marked
   // `deprecated` for manual review.
   deleteMissing: true,
+  retainSkipped: true,
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
