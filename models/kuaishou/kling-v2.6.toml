@@ -1,0 +1,25 @@
+# Synchronized sound is embedded in the MP4; audio denotes its modality, not a separate downloadable file.
+# https://mixroute.ai/docs/model-api/kuaishou/kling-2.6
+# Source: https://ir.kuaishou.com/news-releases/news-release-details/kling-ai-annualized-revenue-run-rate-hits-usd240-million
+# Source: providers/vercel/models/klingai/kling-v2.6-i2v.toml
+schema = 2
+type = "video"
+name = "Kling 2.6"
+description = "Text- and image-to-video model with native audio generation"
+open_weights = false
+release_date = "2025-12-03"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["video/mp4", "audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

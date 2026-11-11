@@ -1,0 +1,12 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/xai/models/grok-4.20-0309-reasoning.toml
+schema = 2
+base_model = "xai/grok-4.20-0309-reasoning"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]

@@ -1,0 +1,7 @@
+# Catalog: https://api.mixroute.ai/v1/models
+schema = 2
+v2_only = true
+base_model = "openai/gpt-4o-transcribe"
+
+[api.transcriptions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }

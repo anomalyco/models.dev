@@ -1,0 +1,8 @@
+# Catalog: https://api.mixroute.ai/v1/models
+schema = 2
+v2_only = true
+base_model = "alibaba/wan3.0-video-prime"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+path = "/video/generations"

@@ -1,0 +1,14 @@
+# Custom-tool probe 2026-11-01, responses: text, lark, regex returned custom tool calls; grammar probes matched ZZ[0-9]{3}.
+# Custom-tool probe 2026-11-01, chat-completions: rejected (400); The requested operation is unsupported..
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/opencode/models/gpt-5-codex.toml
+schema = 2
+base_model = "openai/gpt-5-codex"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }

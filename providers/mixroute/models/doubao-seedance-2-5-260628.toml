@@ -1,0 +1,9 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Model IDs and modes: https://mixroute.ai/docs/api-reference/endpoint/seedance
+schema = 2
+base_model = "bytedance-seed/seedance-2.5"
+name = "Seedance 2.5 (Doubao)"
+
+[api.videos]
+path = "/video/generations"
+sdk = { aisdk = "none", opencodeai = "none" }

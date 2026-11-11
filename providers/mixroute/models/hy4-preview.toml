@@ -1,0 +1,9 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/openrouter/models/tencent/hy4-preview.toml
+schema = 2
+base_model = "tencent/hy4-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+
+[api.chat-completions]

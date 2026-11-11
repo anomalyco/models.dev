@@ -1,0 +1,13 @@
+# Custom-tool probe 2026-11-01, Responses: synchronous requests timed out; a streaming regex probe exhausted 1024 reasoning tokens without a tool call. Formats remain unverified.
+# Custom-tool probe 2026-11-01, chat-completions: rejected (400); The requested operation is unsupported..
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/openai/models/gpt-5-pro.toml
+schema = 2
+base_model = "openai/gpt-5-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
