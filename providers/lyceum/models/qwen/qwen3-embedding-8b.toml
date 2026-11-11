@@ -1,10 +1,11 @@
 # API: POST https://api.lyceum.technology/openai/v1/embeddings, embeddings endpoint only (https://docs.lyceum.technology/docs/inference/serverless#embeddings)
-# Context inherits the lab's 32,768: Lyceum doesn't document an input limit for this model.
+# Price and context: GET https://api.lyceum.technology/openai/v1/models (2026-11-11) lists 0.02 USD per million input tokens and context_length 32,768, the same as the lab file. Also on https://lyceum.technology/models/
 schema = 2
+v2_only = true
 base_model = "alibaba/qwen3-embedding-8b"
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.02
