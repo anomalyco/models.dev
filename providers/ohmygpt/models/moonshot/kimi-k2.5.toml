@@ -1,14 +1,17 @@
 # Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/moonshot/kimi-k2.5 (snapshot 2026-11-11): prices, limits and the serving provider (alibaba).
 # Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
 # API: Chat Completions is this model's native protocol on OhMyGPT; the request is forwarded to the serving provider (Alibaba Cloud (Model Studio Intl)) without protocol conversion (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
-# Toggle: thinking.type = enabled|disabled (default disabled on this host)
-# Checked live 2026-11-11 with each serving provider pinned as `<provider>:moonshot/kimi-k2.5` (https://www.ohmygpt.com/docs/provider-routing): with no thinking field the answer carried no reasoning_content; thinking.type = enabled returned it and disabled did not.
+# Toggle: enable_thinking true|false (default false); thinking.type = enabled|disabled works as well
+# Budget: thinking_budget (integer reasoning tokens, with enable_thinking = true); upper bound from providers/alibaba-cn/models/kimi-k2.5.toml
+# Checked live 2026-11-11 with each serving provider pinned as `<provider>:moonshot/kimi-k2.5` (https://www.ohmygpt.com/docs/provider-routing): with no thinking field the answer carried no reasoning_content; thinking.type = enabled returned it and disabled did not; thinking_budget = 300 held reasoning to 300 tokens, while thinking.budget_tokens = 300 was ignored (5,225 reasoning tokens); temperature = 0.3 was accepted.
+# temperature: accepted on this host (Alibaba Cloud); the lab file's false describes Moonshot's own API.
 # Cache: the catalog prices implicit cache reads and an explicit cache (its own read and write prices).
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = { max = 81_920 } }
+temperature = true
 cache = { implicit = true, explicit = true }
 
 [api.chat-completions]

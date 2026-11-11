@@ -5,7 +5,6 @@
 # Responses uses @ai-sdk/xai: xAI rejects the item_reference items @ai-sdk/openai sends on the second step of a tool loop (422, live 2026-11-11).
 # PDF input works on Responses only; xAI's Chat Completions returns 400 for file content (live 2026-11-11).
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
-# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
 schema = 2
 base_model = "xai/grok-4.3"
 
@@ -13,9 +12,6 @@ base_model = "xai/grok-4.3"
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 cache = { implicit = true }
-
-[limit]
-output = 128_000
 
 [api.chat-completions]
 
