@@ -63,6 +63,7 @@ import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
+import { wiro } from "./providers/wiro.js";
 import { xai } from "./providers/xai.js";
 
 const ExistingModelType = AuthoredModelShape.partial()
@@ -229,6 +230,7 @@ export const providers: {
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
+  wiro: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
   aiand,
@@ -276,6 +278,7 @@ export const providers: {
   vercel,
   venice,
   wandb,
+  wiro,
   xai,
 };
 
@@ -298,6 +301,7 @@ export const groups = {
     "openrouter",
     "prime",
     "vercel",
+    "wiro",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
   direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],

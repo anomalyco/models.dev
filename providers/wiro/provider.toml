@@ -15,6 +15,8 @@
 # x-wiro-adjusted-parameters header. Turning reasoning off works only where the model has an off control
 # (reasoning_enabled in generation_controls, or a declared none effort); elsewhere it returns HTTP 400.
 # Each model file's header lists its controls and the live checks behind them.
+# packages/core/src/sync/providers/wiro.ts keeps prices, price bands, context and output limits and
+# structured output in step with GET /v1/models, and removes models it no longer lists (see sync.md).
 # Sources:
 # https://wiro.ai/docs/completions-api
 # https://llm.wiro.ai/v1/models
