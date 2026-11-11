@@ -120,7 +120,7 @@ skip = [
 ]
 "google/gemini-4" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Vertex AI: no per-turn effort or tool-change mechanism.",
-  "Live 2026-10-19: a mid-conversation system message misses the warm cache (hoisted into the system instruction), so system_updates = false; response_format json_schema is enforced.",
+  "Live 2026-10-19 on Gemini 4 Argon: a mid-conversation system message misses the warm cache (hoisted into the system instruction), so system_updates = false; response_format json_schema is enforced.",
 ]
 "meta/muse-spark-1" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), translated to Meta's Responses API: no per-turn effort or tool-change mechanism.",
@@ -553,8 +553,8 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 # https://ai.google.dev/gemini-api/docs/thinking
 # https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon
 # https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# structured_output is left out: response_format json_schema was not probed on Carbon (gateway balance ran out, 2026-11-11).
 [models."google/gemini-4-carbon"]
-structured_output = true
 note = [
   "Effort: reasoning_effort = low|medium|high (maps to Gemini's thinking level; live 2026-11-11, 0 / 210 / 232 reasoning tokens).",
   "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon",
