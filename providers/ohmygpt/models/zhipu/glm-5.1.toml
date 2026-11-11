@@ -7,6 +7,7 @@
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
 # Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
 # Prices: the catalog's headline price, which is its lowest-priced serving provider (Alibaba Cloud (Model Studio Intl)). The gateway tries the cheaper provider first; a request served by another provider is billed at that provider's rate, up to 1.46x on input (catalog providers[].pricing).
+# Prices: the band above 32,000 input tokens starts one token later here than on providers/zhipuai/models/glm-5.1.toml: the catalog's lower band includes a prompt of exactly 32,000 tokens (tier bound 32,001, exclusive), so the override uses gt.
 schema = 2
 base_model = "zhipuai/glm-5.1"
 

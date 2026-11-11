@@ -3,6 +3,7 @@
 # API: Chat Completions is this model's native protocol on OhMyGPT and Alibaba Cloud (alibaba) is its only serving provider, so the request body reaches the vendor as sent and vendor fields work as the vendor documents them (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models). Reasoning controls follow providers/alibaba/models/qwen3.8-flash.toml.
 # Toggle: enable_thinking true|false (hybrid)
 # Effort: reasoning_effort = low|medium|xhigh (not yet in the API reference; see
+# the Qwen3.8-Flash-Next release blog)
 # Budget: thinking_budget (Max Reasoning 262K)
 # Cache: the catalog prices implicit cache reads and an explicit cache (its own read and write prices).
 # Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
