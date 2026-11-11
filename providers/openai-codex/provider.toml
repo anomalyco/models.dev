@@ -4,8 +4,11 @@
 # catalog GET https://chatgpt.com/backend-api/codex/models (authenticated).
 # env: there is no API key; the client holds the ChatGPT OAuth token. The name below is a placeholder because a
 # provider needs at least one entry (#3754 proposed allowing an empty list instead).
+# opencodeai: the OpenAI Responses entry point, as `openai` uses: the backend speaks the Responses format. Signing in
+# and sending the OAuth token is the client's job.
 name = "OpenAI Codex (ChatGPT plan)"
 env = ["CHATGPT_ACCESS_TOKEN"]
 npm = "@ai-sdk/openai"
+opencodeai = "@opencode/ai/providers/openai/responses"
 doc = "https://developers.openai.com/codex"
 api = "https://chatgpt.com/backend-api/codex"
