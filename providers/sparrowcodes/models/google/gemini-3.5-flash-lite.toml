@@ -1,0 +1,17 @@
+# Prices and limits: https://api.sparrowcodes.com/v1/models (accessed 2026-11-11)
+# Served on OpenAI-compatible Chat Completions; reasoning_effort accepts low, medium and high.
+schema = 2
+base_model = "google/gemini-3.5-flash-lite"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2.5

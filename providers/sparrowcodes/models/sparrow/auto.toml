@@ -1,0 +1,26 @@
+# Host-unique router: https://api.sparrowcodes.com/v1/models (accessed 2026-11-11)
+# Picks a model per task from the SparrowCodes catalog (currently Claude Haiku 5.5 / Sonnet 5.5,
+# GPT-6.1 Sol, DeepSeek V4.1 Flash, Qwen3.7 Plus, Qwen3 Coder 30B) and bills the chosen model's
+# price, so no fixed cost is listed. The response's `model` field names the model that answered.
+schema = 2
+name = "Sparrow Auto"
+description = "Router that picks a low-cost or stronger model per coding task and keeps it for the task so prompt caching holds"
+open_weights = false
+release_date = "2026-11-10"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 65_536
+
+[api.chat-completions]

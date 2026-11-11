@@ -1,0 +1,20 @@
+# Prices and limits: https://api.sparrowcodes.com/v1/models (accessed 2026-11-11)
+# Served on OpenAI-compatible Chat Completions; reasoning_effort accepts low, medium and high.
+schema = 2
+base_model = "zhipuai/glm-4.7-flash"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 0.4
