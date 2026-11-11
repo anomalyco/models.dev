@@ -11,6 +11,9 @@
 # Gemini POST /v1/models/{model}:generateContent: `generationConfig.thinkingConfig`.
 # Prices are charged in Coins, OhMyGPT's billing unit: 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs; the API and that
 # page name the unit "credits", as in `price_credits`). Model files convert them to USD.
+# Sync: no sync module yet; one is planned as the follow-up PR. GET /v1/models does not enumerate the served set: it marks
+# every entry available, including a model that is not callable yet and models scheduled for retirement, so it cannot
+# decide which files to create or delete. Scheduled price changes it announces are already in the model files as dated rules.
 name = "OhMyGPT"
 env = ["OHMYGPT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
