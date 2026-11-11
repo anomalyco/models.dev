@@ -4,7 +4,7 @@ TODO: delete
 
 Model syncs are centralized in `packages/core/src/sync/index.ts`. The runner owns file IO, TOML formatting, validation, reporting, dry runs, and deletion behavior. `packages/core/script/sync-models.ts` is only the CLI wrapper for `bun models:sync`. Individual provider sync modules only fetch source data, parse it, and translate each source model into the catalog schema.
 
-The grouped sync targets are available for local convenience, but CI syncs each provider separately so every provider gets its own reusable automation PR.
+CI now runs the new engine, `bun models:sync2` (see [Automation](#automation) and `packages/core/src/sync2/README.md`). The old sync below stays for local runs and the parity tests.
 
 ## Commands
 
@@ -30,8 +30,6 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
-- `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
-- `bun models:sync <provider> --no-issues` skips opening GitHub issues in Actions.
 - `bun validate` validates the generated catalog after a sync.
 
 Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR body. Do not commit that report from local runs.
@@ -51,36 +49,14 @@ Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR
 - Replaces symlinked files safely by removing the symlink before writing.
 - Removes existing files that are no longer present in the desired synced set.
 - Writes `.sync/model-sync-report.md` for GitHub Actions.
-- When `skipCreates` is set and issue opens are enabled, opens one deduped GitHub issue per remote model missing from the local catalog (via `gh`).
-- When a provider selectively skips only some models, `missingModelID` can preserve existing metadata and mark those skips for the same deduped issue flow without disabling safe automatic creates.
+- When `skipCreates` is set, reports each remote model missing from the local catalog as `missing`.
+- When a provider selectively skips only some models, `missingModelID` can preserve existing metadata and report those skips as `missing` without disabling safe automatic creates.
 
 Because the runner removes files missing from the desired set, a provider module should only skip source models when deleting existing local files for those skipped IDs is intentional.
 
-## Missing-model GitHub issues
+## Missing models
 
-Providers that cannot safely auto-create TOMLs set `skipCreates: true`. In GitHub Actions (or with `--open-issues`), each skipped remote ID may open a GitHub issue unless the provider sets `trackMissingModels: false`:
-
-1. Title: `[missing-model] <provider>: <model-id>` (stable for dedupe)
-2. Labels: `automation`, `model-sync`, `missing-model`, `provider:<id>`
-3. Lists existing issues (open **and** closed) with those labels; skips create when the title already exists
-4. Dispatches the Issue Fixer explicitly so issues created with `GITHUB_TOKEN` can still produce PRs
-5. If listing fails, creates nothing (fail closed)
-
-Every six hours, a recovery workflow checks the oldest open issues with all three automation labels. It redispatches up to three issues that are at least one hour old and have no closing pull request, so a missed or failed Issue Fixer run does not leave them stranded. The one-hour delay keeps the recovery run from racing the initial dispatch.
-
-Providers that can auto-create most models may instead return an ID from `missingModelID` only for `translateModel` skips that need manual metadata. The runner preserves an existing local entry for that ID while the issue is handled. Intentional skips return `undefined` and do not open issues.
-
-Requires `GH_TOKEN` on the sync workflow step. Local runs are notice-only unless `--open-issues`. Use `--no-issues` / `--dry-run` to skip creates. Each newly opened issue explicitly dispatches the issue-fixer workflow so an agent can research the missing metadata and open a model PR.
-
-The first Actions run may open a batch of issues per provider, including remote IDs the catalog intentionally omits (e.g. OpenAI whisper/tts/moderation surfaces, dated snapshots). This one-time volume is accepted by design: close unwanted issues once and the closed-title dedupe suppresses them permanently. If the dedupe list window (1000 labeled issues per provider) ever fills, the sync fails closed and creates nothing rather than risk duplicates.
-
-Pioneer and Ofox track remote-only chat models as missing-model issues. Their APIs are not authoritative enough to create complete TOMLs directly, so the issue-fixer agent researches the missing canonical and provider-specific metadata before opening a PR.
-
-Ollama Cloud tracks every remote-only ID from its public `/v1/models` endpoint as a missing-model issue. Existing provider TOMLs and entries absent from the endpoint are preserved because the inventory does not provide enough metadata to author complete entries or determine removals safely.
-
-OpenAI also sets `trackMissingModels: false`: `/v1/models` is scoped to the automation account and mixes public models with legacy, internal experiment, dated snapshot, and non-catalog IDs without lifecycle metadata. Existing OpenAI TOMLs are still preserved by the availability sync.
-
-Google sets `trackMissingModels: false`: `/v1beta/models` does not expose lifecycle metadata and can retain shut-down models, superseded snapshots, moving aliases, and EAP IDs. Existing Google TOMLs are still updated from API-authoritative fields.
+Providers that cannot safely auto-create TOMLs set `skipCreates: true`, and `missingModelID` reports selective skips that need hand-written metadata. The old sync lists these as `missing` in its `--result-out` JSON and opens no issues. CI runs the new engine (`packages/core/src/sync2`), where they are gaps; see [Automation](#automation).
 
 ## Provider Modules
 
@@ -137,25 +113,44 @@ Prefer small, provider-specific PRs when adding a provider. If the provider has 
 
 ## Automation
 
-`.github/workflows/sync-models.yml` runs every six hours and manually through `workflow_dispatch`.
+CI runs the new engine, `bun models:sync2` (`packages/core/src/sync2/README.md`). Everything runs in this repository's GitHub Actions. There is no other state: branches, pull requests and workflow runs are the queue. Every job that runs repository code has a read-only token or none; every job that pushes runs only the scripts in `.github/sync-models/` from the workflow's own commit, with a token from the `models.dev automation` GitHub App. Provider and model keys come from AWS Secrets Manager (`models.dev/release/*`, read by jobs in the `release` environment); the app's key is `models.dev/automation/AUTOMATION_APP_PRIVATE_KEY`, read only by jobs in the `automation` environment, which only `dev` can use.
 
-The workflow:
+### Sync Model Catalogs (`sync-models.yml`, every 6 hours)
 
-- Checks out `dev`.
-- Installs dependencies with Bun.
-- Discovers sync providers with `bun models:sync --list-providers`.
-- Syncs every provider in one job, running `bun models:sync <provider>` for each in turn. Each provider starts from a clean `dev` so its patch contains only its own changes. A provider that fails to sync or validate is dropped and reported; the rest still sync and publish.
-- Runs `bun validate` after each provider that changed the catalog.
-- Uploads the changed providers' catalog changes as patches in one artifact. This job never sees the app's key. Its built-in token can open missing-model issues and dispatch the issue fixer, but can't change `dev` or workflows.
-- Runs one `publish` job with a token from the `models.dev automation` GitHub App, whose key is in the `automation` environment. It runs only the scripts in `.github/sync-models/`, not repository code, and creates or updates a provider-specific sync PR for each patch that changes only catalog TOML files. It enables auto-merge only when the sync job marked the change safe and the patch itself passes the same limits: every file is in that provider's `models/` folder, at most 10 models created, at most 10 deleted, at most 15 of both, no more than half of the provider's models deleted, and at least one model left.
-- Uses `.sync/model-sync-report.md` as the PR body.
-- Auto-merges syncs that `bun sync:auto-merge` marks safe. The app's PRs run `Validate Models` and its merges run `Deploy` as usual.
+1. One job lists providers with `bun models:sync2 --list` (agent providers aren't in it) and syncs them in turn, resetting to a clean `dev` before each so a patch holds only its own provider's changes: `bun models:sync2 <provider> --json --report=report.md`, then `bun validate` if files changed. A provider that fails is dropped and listed, the rest still publish, and the run goes red at the end. It uploads one artifact with each changed provider's result, report and patch, plus the results of unchanged providers that have gaps.
+2. `publish` runs `publish.sh` for each patch. It rebuilds `automation/sync-models-<provider>` from current `dev`, force-pushes it and opens or updates the PR, with the report as its body. It allows only catalog TOML and auto-merges only when the result's `risk.safe` is true and its own checks agree: every file in that provider's `models/` folder, at most 10 created, 10 deleted and 15 of both, no more than half the provider's models deleted, at least one left, no Cloudflare AI Gateway deletions.
+3. `gaps` runs `dispatch-gaps.sh`, which starts Fill Catalog Gap for each `new` or `update` gap, at most 5 a run. It skips a gap when:
+   - branch `automation/gap-<provider>-<first 10 hex of sha256(model id)>` exists (an open gap PR, or one closed without merging: delete the branch to try again),
+   - an open PR adds (or, for `update`, changes) `providers/<provider>/models/<model>.toml`,
+   - the model is in the provider's `sync-ignore.toml`,
+   - a `gap <provider>/<model>` run started in the last 7 days, whatever its result.
 
-Each provider writes to a fixed provider branch like `automation/sync-models-openrouter`. If that provider's sync PR is already open, later scheduled runs force-update the same branch and edit the existing PR instead of creating another one. Providers do not share unmerged changes with each other; OpenRouter only uses `base_model` for model metadata entries already present on `dev`.
+   Removal gaps (the source dropped a file the policy keeps) are only listed in the sync PR body.
 
-CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get a provider-specific sync branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
+### Fill Catalog Gap (`fill-gap.yml`, started by the sync or by hand)
 
-Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
+The first job runs opencode's `missing-model` agent (`.opencode/agent/missing-model.md`) with only the model key: no GitHub token, no shell, no AWS or Actions credentials in its environment. Its prompt is built only from the run's inputs (provider, model, kind, the missing fields, the sync's reason and what the source said). The job checks that only `models/` and `providers/` TOML changed, runs `bun validate`, and uploads the patch and the agent's answer. If the agent changed nothing and its answer starts with `Leave out:`, the patch adds the model to the provider's `sync-ignore.toml` instead.
+
+The second job runs `publish-gap.sh`: it puts the patch on `automation/gap-<provider>-<hash>` from current `dev` and opens the PR with the agent's answer as its body. It never enables auto-merge itself.
+
+### Gap Auto-merge (`gap-auto-merge.yml`)
+
+Runs when PR Reviewer finishes and hourly. It enables auto-merge on a gap PR only when the reviewer has labeled it `reviewer: ready` and the PR is low risk: it only adds files, at most 3, all catalog TOML, none of them a `provider.toml` or `sync-ignore.toml` (`gap-risk.sh`). It turns auto-merge off on gap PRs that no longer qualify. GitHub still merges only after the required checks pass. Leave-out PRs and anything else wait for a maintainer.
+
+### Observe Agent Providers (`observe-providers.yml`, daily)
+
+For Amazon Bedrock, Vertex and Azure (`bun models:sync2 --list=agents`), opencode's read-only `observer` agent (`.opencode/agent/observer.md`) reads the provider's pages from `bun models:sync2 <provider> --agent-brief --json`. Its answer goes through `bun models:sync2 <provider> --observations=<answer>`, and the patch is published like a sync on `automation/sync-models-<provider>`, with the quoted evidence in the body. These PRs never auto-merge.
+
+### Leaving a model out
+
+`providers/<provider>/sync-ignore.toml` lists models that don't belong in the catalog. The engine never creates or reports them, and the gap dispatcher skips them:
+
+```toml
+[models]
+"gpt-4o-2024-05-13" = "dated snapshot of gpt-4o"
+```
+
+Keep `[models]` as the file's only table. A new sync provider needs no workflow changes unless it needs new secrets. Actions are pinned by commit SHA; keep new ones pinned the same way.
 
 ## Eden AI Notes
 
@@ -268,7 +263,7 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 - Model IDs are derived from the `models/{model}` resource names.
 - The API is authoritative for display names, temperature metadata, and the `thinking` flag when present. Token limits normally come from the API, except Gemini 2.5 Computer Use, Gemini 3 Pro Image, and two Gemini 3.1 Flash Image variants whose model-specific cards document different limits.
 - Local Google models missing from the API response are removed.
-- New Google API models are not created automatically (`skipCreates`) and do not open missing-model issues because the endpoint is not lifecycle-authoritative.
+- New Google API models are not created automatically (`skipCreates`) and are not reported as missing because the endpoint is not lifecycle-authoritative.
 - Missing-model tracking is limited to recognizable public model families; opaque API codenames such as `ajax`, `perseus`, and `thorin` are ignored.
 
 ## GitHub Copilot Notes
@@ -278,8 +273,8 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - Source: `https://raw.githubusercontent.com/github/docs/main/data/tables/copilot/models-and-pricing.yml`
 - The YML contains only token rates, so the sync only updates `[cost]`: `input`, `cached_input` (as `cache_read`), `cache_write`, `output`, and long-context rows as `cost.tiers`.
 - Display names are converted to file IDs, with minimal special case logic to match existing model entries.
-- Unmatched rows open missing-model issues, and local entries missing from the source are kept.
-- When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model issues. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
+- Unmatched rows are reported as missing, and local entries missing from the source are kept.
+- When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model reports. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
 
 ## Novita AI Notes
 
@@ -287,7 +282,7 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - CI key: `NOVITA_AI_API_KEY`; locally `NOVITA_AI_MODELS_DEV_KEY` takes precedence when set.
 - Sync existing chat models' input/output/cache prices, context/output limits, and context pricing tiers only. Preserve curated capabilities, reasoning controls, dates, descriptions, optional pricing, and leading wire/source comments.
 - Decimal `price_per_m_decimal` fields are USD/MTok; legacy integer fields are scaled by 10,000.
-- New eligible models use the existing missing-model issue-fixer pipeline, which opens separate PRs without enabling auto-merge. The update-only sync PRs use the normal auto-merge policy; no provider-specific exception is needed.
+- New eligible models are gaps that Fill Catalog Gap handles in separate PRs. The update-only sync PRs use the normal auto-merge policy; no provider-specific exception is needed.
 - Never delete entries absent from the account-scoped inventory. In particular, the list omits working embedding/reranking routes. These remain hand-authored.
 - Skip deferred Sao10K routes, known unadvertised/development aliases, non-chat rows, zero-limit placeholders, and unpriced rows.
 

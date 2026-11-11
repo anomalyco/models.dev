@@ -1,13 +1,14 @@
 # sync2
 
-A second model sync engine, built next to the old one in `../sync`. The providers in the parity table below run on it so far. The old sync still runs everything in CI.
+A second model sync engine, built next to the old one in `../sync`. CI runs it for every provider below (see "Automation" in `sync.md`).
 
 ```sh
-bun models:sync2 <provider> [--dry-run] [--json] [--raw=<file> | --observations=<file>]
+bun models:sync2 <provider> [--dry-run] [--json] [--report=<file>] [--raw=<file> | --observations=<file>]
 bun models:sync2 <agent provider> --agent-brief --json
+bun models:sync2 --list[=agents]
 ```
 
-`--json` prints one result object to stdout. `--raw` reads the source data from a file instead of fetching it. `--observations` applies an observation file instead (see [Agent providers](#agent-providers)). The CLI writes nothing but model files.
+`--json` prints one result object to stdout. `--report` writes the result as the sync PR's Markdown body. `--raw` reads the source data from a file instead of fetching it. `--observations` applies an observation file instead (see [Agent providers](#agent-providers)); it also takes an agent's answer whose last ```` ```json ```` block is the file. `--list` prints the API modules as a GitHub Actions matrix, `--list=agents` the agent modules. The CLI writes nothing but model files (and the report).
 
 ## A provider module
 
@@ -58,7 +59,7 @@ The engine takes the first hint with a lab file, ignoring case. A test checks th
 
 ## Agent providers
 
-Amazon Bedrock, Vertex and Azure have no API good enough to sync from. An agent running elsewhere reads their docs and pricing pages and writes an observation file; this repo defines what it reads and applies what it writes.
+Amazon Bedrock, Vertex and Azure have no API good enough to sync from. The observer agent (`.github/workflows/observe-providers.yml`) reads their docs and pricing pages daily and writes an observation file; the module defines what it reads and the engine applies what it writes.
 
 An agent module has no fetch:
 
@@ -141,7 +142,9 @@ A gap is a model the engine can't finish on its own. It is returned instead of a
 - `update`: a patch would turn reasoning on for a file with no reasoning controls, a `report` field disagrees with the file, or the patched file fails the schema. The file is left alone.
 - `removal`: the source dropped a file and `removals` is `keep`.
 
-The engine opens no issues. Whatever runs it decides what to do with gaps.
+The engine opens no issues. In CI, Fill Catalog Gap handles `new` and `update` gaps (see "Automation" in `sync.md`).
+
+IDs in `providers/<provider>/sync-ignore.toml` (`[models]` table, ID = reason) are never created or reported as gaps.
 
 ## Result and risk
 
