@@ -1,0 +1,27 @@
+# Source: https://api.experientiallabs.ai/api/models/glm-5.3-flash-uncensored
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: https://api.experientiallabs.ai/api/models/glm-5.3-flash-uncensored; intersected with published default-route efforts.
+# Effort: top-level reasoning_effort = low|high|max.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+# Cache: host docs describe provider prefix reuse; published cache prices establish support.
+schema = 2
+base_model = "dealignai/glm-5.3-flash-uncensored"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+input = 917_504
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.5

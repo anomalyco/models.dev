@@ -1,0 +1,33 @@
+# Model card and weights: https://huggingface.co/dealignai/GLM-5.3-Flash-UNCENSORED-FP8
+# Context: text_config.max_position_embeddings in that repository's config.json.
+# The model card documents retained image/video support; it does not specify MIME types.
+# Release date: Hugging Face repository creation (2026-08-26).
+# Sampling, tools and output cap retain the upstream GLM-5.3-Flash architecture/template:
+# https://huggingface.co/zai-org/GLM-5.3-Flash and https://docs.z.ai/guides/vlm/glm-5.3-flash
+# Host identity: https://api.experientiallabs.ai/api/models/glm-5.3-flash-uncensored (huggingface_url).
+schema = 2
+name = "GLM-5.3 Flash Uncensored"
+description = "dealignai's weight-modified FP8 GLM-5.3 Flash checkpoint, retaining multimodal input, reasoning and tool calling."
+family = "glm-flash"
+open_weights = true
+release_date = "2026-08-26"
+license = "MIT"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/dealignai/GLM-5.3-Flash-UNCENSORED-FP8"

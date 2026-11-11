@@ -1,0 +1,32 @@
+# Source: https://api.experientiallabs.ai/api/models/claude-haiku-5.5
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: https://api.experientiallabs.ai/api/models/claude-haiku-5.5; intersected with published default-route efforts.
+# Effort: top-level reasoning_effort = low|medium|high.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+# Cache: host docs describe provider prefix reuse; published cache prices establish support.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
+cache = { implicit = true }
+
+[limit]
+input = 1_000_000
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

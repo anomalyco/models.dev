@@ -1,0 +1,32 @@
+# Model card and weights: https://huggingface.co/dealignai/GLM-5.3-UNCENSORED-FP8
+# Context: max_position_embeddings in that repository's config.json.
+# Release date: Hugging Face repository creation (2026-08-30).
+# Sampling, tools and output cap retain the upstream GLM-5.3 architecture/template:
+# https://huggingface.co/zai-org/GLM-5.3 and https://docs.z.ai/guides/llm/glm-5.3
+# Host identity: https://api.experientiallabs.ai/api/models/glm-5.3-uncensored (huggingface_url).
+schema = 2
+name = "GLM-5.3 Uncensored"
+description = "dealignai's weight-modified FP8 GLM-5.3 checkpoint with reasoning and tool calling."
+family = "glm"
+open_weights = true
+release_date = "2026-08-30"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/dealignai/GLM-5.3-UNCENSORED-FP8"
