@@ -1,0 +1,16 @@
+# Served checkpoint: XiaomiMiMo/MiMo-V2.6-Flash-RL, the open weights the lab entry
+# links to. FlexAI's catalog lists it as hybrid_thinking, but the switch has not
+# yet been measured on this host, so no toggle or effort levels are declared.
+# https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.13
+cache = { read = 0.0195 }
+
+[cost.text.output]
+price = 0.28
