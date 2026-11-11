@@ -56,6 +56,7 @@ export const VultrModel = z.object({
   reasoning: z.object({
     mandatory: z.boolean().nullish(),
     supported_efforts: z.array(z.string()).nullish(),
+    supports_max_tokens: z.boolean().nullish(),
   }).passthrough().nullish(),
 }).passthrough();
 
@@ -90,7 +91,12 @@ export const vultr = {
     return VultrResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    if (!chatRow(model)) return undefined;
+    if (!chatRow(model)) {
+      // Image, speech, embedding and other rows aren't synced; keep any
+      // authored entry exactly as it is instead of removing it as missing.
+      const authored = context.authored(model.id);
+      return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
+    }
     const existing = context.existing(model.id);
     const authored = context.authored(model.id);
     if (existing !== undefined && authored !== undefined) {
@@ -131,7 +137,8 @@ export function createVultrModel(model: VultrModel) {
     header: [
       reasoning?.options.some((option) => option.type === "toggle") ? "# Toggle: reasoning.enabled = true|false" : undefined,
       levels.length > 0 ? `# Effort: reasoning_effort = ${levels.join("|")}` : undefined,
-      reasoning === undefined ? undefined : `# Reasoning levels: ${reasoning.source} (Vultr maps reasoning_effort onto the model's native levels)`,
+      reasoning?.options.some((option) => option.type === "budget_tokens") ? "# Budget: reasoning.max_tokens (integer reasoning tokens)" : undefined,
+      reasoning === undefined ? undefined : `# Reasoning controls: ${reasoning.source} (Vultr maps them onto the model's native controls)`,
       `# Prices, context, tools and structured output: GET ${API_ENDPOINT}`,
     ].filter((line) => line !== undefined).join("\n") + "\n",
   };
@@ -140,7 +147,8 @@ export function createVultrModel(model: VultrModel) {
 // Vultr lists one reasoning_effort alias set for every model, so the levels
 // come from the lab's own provider entry, else OpenRouter's (the same-surface
 // peer). An off switch there (a toggle, or `none`) is Vultr's
-// reasoning.enabled; budgets and defaults are not carried over.
+// reasoning.enabled and a budget is reasoning.max_tokens; defaults are not
+// carried over.
 function vultrReasoning(model: VultrModel, base: string) {
   if (model.reasoning == null) {
     throw new MissingReasoningOptionsError(
@@ -167,10 +175,22 @@ function vultrReasoning(model: VultrModel, base: string) {
       `${peer.source} lists ${unsupported.join(", ")}, which Vultr's reasoning.supported_efforts for ${model.id} doesn't accept; author capabilities.reasoning by hand`,
     );
   }
+  // A peer budget is Vultr's reasoning.max_tokens when the catalog says the
+  // model takes it. The peer's bounds are native to its host, so none are kept.
+  const budget = peer.options.some((option) => option.type === "budget_tokens")
+    && model.reasoning.supports_max_tokens === true;
   const options: ReasoningOption[] = [
     ...(offSwitch && model.reasoning.mandatory !== true ? [{ type: "toggle" } as ReasoningOption] : []),
     ...(levels.length > 0 ? [{ type: "effort", values: levels } as ReasoningOption] : []),
+    ...(budget ? [{ type: "budget_tokens" } as ReasoningOption] : []),
   ];
+  // Publishing no controls would claim the caller has none.
+  if (options.length === 0 && peer.options.length > 0) {
+    throw new MissingReasoningOptionsError(
+      model.id,
+      `${peer.source} lists reasoning controls (${peer.options.map((option) => option.type).join(", ")}) that Vultr's catalog doesn't expose for ${model.id}; author capabilities.reasoning by hand`,
+    );
+  }
   return { options, source: peer.source };
 }
 

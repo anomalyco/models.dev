@@ -120,7 +120,7 @@ test("new models take the lab's reasoning controls, with an off switch as reason
     expect(await syncProvider(provider, { openIssues: false })).toMatchObject({ created: 2, updated: 0, deleted: 0 });
 
     const mimoText = await Bun.file(path.join(modelsDir, "mimo-v2.6-flash.toml")).text();
-    expect(mimoText).toStartWith("# Toggle: reasoning.enabled = true|false\n# Reasoning levels: providers/xiaomi/models/mimo-v2.6-flash.toml");
+    expect(mimoText).toStartWith("# Toggle: reasoning.enabled = true|false\n# Reasoning controls: providers/xiaomi/models/mimo-v2.6-flash.toml");
     const mimo = Bun.TOML.parse(mimoText) as Record<string, any>;
     expect(mimo.base_model).toBe("xiaomi/mimo-v2.6-flash");
     expect(mimo.release_date).toBeUndefined();
@@ -153,6 +153,63 @@ test("new models are not created when Vultr can't serve the lab's controls", asy
       expect(result.notices.find((notice) => notice.startsWith("minimax-m3.1-flash:"))).toContain(reason);
       expect(await Bun.file(path.join(modelsDir, "minimax-m3.1-flash.toml")).exists()).toBe(false);
     }
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("a budget control is carried as reasoning.max_tokens only when Vultr takes it", async () => {
+  const { root, modelsDir } = await fixture();
+  // google/gemini-2.5-pro's own entry has a budget and no toggle or effort.
+  await mkdir(path.join(root, "models/google"), { recursive: true });
+  await copyFile(path.join(REPO, "models/google/gemini-2.5-pro.toml"), path.join(root, "models/google/gemini-2.5-pro.toml"));
+  const target = path.join(modelsDir, "gemini-2.5-pro.toml");
+  try {
+    const without = model({ id: "gemini-2.5-pro", reasoning: { mandatory: true, supported_efforts: ["high"], supports_max_tokens: false } });
+    const skipped = await syncProvider({ ...vultr, modelsDir, fetchModels: async () => ({ data: [without, model()] }) }, { openIssues: false });
+    expect(skipped.created).toBe(0);
+    expect(skipped.notices.find((notice) => notice.startsWith("gemini-2.5-pro:"))).toContain("doesn't expose");
+    expect(await Bun.file(target).exists()).toBe(false);
+
+    const withBudget = model({ id: "gemini-2.5-pro", reasoning: { mandatory: true, supported_efforts: ["high"], supports_max_tokens: true } });
+    expect(await syncProvider({ ...vultr, modelsDir, fetchModels: async () => ({ data: [withBudget, model()] }) }, { openIssues: false }))
+      .toMatchObject({ created: 1 });
+    const text = await Bun.file(target).text();
+    expect(text).toContain("# Budget: reasoning.max_tokens (integer reasoning tokens)\n");
+    expect((Bun.TOML.parse(text) as Record<string, any>).capabilities.reasoning).toEqual({ supported: true, budget: {} });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("an authored entry for a row the sync doesn't cover is kept as it is", async () => {
+  const { root, modelsDir } = await fixture();
+  await mkdir(path.join(root, "models/alibaba"), { recursive: true });
+  await copyFile(path.join(REPO, "models/alibaba/qwen3-embedding-4b.toml"), path.join(root, "models/alibaba/qwen3-embedding-4b.toml"));
+  const embedding: VultrModel = {
+    id: "qwen3-embedding-4b",
+    input_modalities: [{ type: "text", supported_inputs: { max_context_length: { value: 32_768, unit: "token" } } }],
+    output_modalities: [{ type: "embeddings", pricing: [{ type: "completion", unit: "token", cost_usd: "0.00000005" }] }],
+  };
+  const authored = [
+    "# Prices: https://api.vultrinference.com/docs/models/qwen3-embedding-4b.md",
+    "schema = 2",
+    "v2_only = true",
+    'base_model = "alibaba/qwen3-embedding-4b"',
+    "",
+    "[api.embeddings]",
+    'sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }',
+    "",
+    "[cost.text.input]",
+    "price = 0.05",
+    "",
+  ].join("\n");
+  const file = Bun.file(path.join(modelsDir, "qwen3-embedding-4b.toml"));
+  await Bun.write(file, authored);
+  try {
+    const provider = { ...vultr, modelsDir, fetchModels: async () => ({ data: [model(), embedding] }) };
+    expect(await syncProvider(provider, { openIssues: false })).toMatchObject({ updated: 0, deleted: 0 });
+    expect(await file.text()).toBe(authored);
   } finally {
     await rm(root, { recursive: true, force: true });
   }
