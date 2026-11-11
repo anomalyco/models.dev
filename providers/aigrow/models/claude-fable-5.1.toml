@@ -1,8 +1,10 @@
-# Prices: https://aigrow.gg/ai-api (read 2026-11-11). Cache writes bill at 1.25x the input rate for the 5m and the 1h TTL alike.
+# Prices: https://aigrow.gg/ai-api, table "USD per million tokens", row "Claude Fable 5.1" (read 2026-11-11): input $2.50, output $12.50, cache read $0.25, cache write $3.125. These are the USD a buyer pays per 1M tokens, copied with no conversion. Cache writes bill at 1.25x the input rate for the 5m and the 1h TTL alike.
 # APIs: Anthropic Messages (POST /v1/messages) and OpenAI Chat Completions (POST /v1/chat/completions) on the same key: https://aigrow.gg/ai-api/guide
 # Effort: output_config.effort (Messages) and reasoning_effort (Chat Completions) are forwarded unchanged; levels as on providers/anthropic; each level returned 200 on this host (2026-11-11).
 # Cache: cache_control breakpoints are forwarded on Messages; TTLs, breakpoints and minimum copied from providers/anthropic.
 # Mid-conversation flags and tool strict/search are left unset: not tested on this host.
+# Structured output: a JSON schema is enforced on Messages (output_config.format); on Chat Completions response_format returned JSON in a code fence, so the schema is not enforced there (probed 2026-11-11); the flag is per model and follows Messages, the API listed first.
+# Input: a PNG image and a PDF were read on both APIs (probed 2026-11-11). Context: a 580K-token prompt was accepted and the limit error names 1,000,000 tokens.
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
@@ -15,8 +17,6 @@ cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tool
 base_url = "https://aigrow.gg/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
-# Structured output: a JSON schema is enforced on Messages (output_config.format); on Chat Completions response_format returned JSON in a code fence, so the schema is not enforced there (probed 2026-11-11); the flag is per model and follows Messages, the API listed first.
-# Input: a PNG image and a PDF were read on both APIs (probed 2026-11-11). Context: a 580K-token prompt was accepted and the limit error names 1,000,000 tokens.
 [api.chat-completions]
 
 [cost.text.input]
