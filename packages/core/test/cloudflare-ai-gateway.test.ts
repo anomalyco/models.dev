@@ -4,7 +4,6 @@ import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promis
 import path from "node:path";
 
 import { syncProvider } from "../src/sync/index.js";
-import * as missingIssues from "../src/sync/missing-issues.js";
 import {
   buildCloudflareAiGatewayMediaModel,
   buildCloudflareAiGatewayModel,
@@ -17,7 +16,7 @@ import {
   splitLabTools,
 } from "../src/sync/providers/cloudflare-ai-gateway.js";
 
-test("missing reasoning controls open issues without deleting existing models or blocking valid ones", async () => {
+test("missing reasoning controls are reported without deleting existing models or blocking valid ones", async () => {
   const dir = await mkdtemp(path.join(import.meta.dirname, "../../../providers/.reasoning-sync-"));
   const modelsDir = path.join(dir, "models");
   const ids = ["deepreinforce/ornith-1.0-9b", "deepreinforce/ornith-1.0-31b"];
@@ -26,7 +25,6 @@ test("missing reasoning controls open issues without deleting existing models or
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, content);
   await writeFile(path.join(dir, "provider.toml"), 'name = "Test"\nnpm = "ai-gateway-provider"\nenv = []\n');
-  const issues = spyOn(missingIssues, "openMissingModelIssues").mockResolvedValue([]);
   const provider = {
     ...cloudflareAiGateway, modelsDir,
     async fetchModels() {
@@ -40,16 +38,14 @@ test("missing reasoning controls open issues without deleting existing models or
     },
   };
   try {
-    const result = await syncProvider(provider, { openIssues: true });
+    const result = await syncProvider(provider);
     expect(result).toMatchObject({ created: 1, updated: 0, deleted: 0, unchanged: 1 });
     expect(await readFile(file, "utf8")).toBe(content);
     expect(await Bun.file(path.join(modelsDir, `${ids[1]}.toml`)).exists()).toBe(false);
-    expect(issues.mock.calls[0]?.[1]).toEqual(ids);
-    expect(issues.mock.calls[0]?.[2]?.reasons?.[ids[0]!]).toContain("reasoning_options");
+    expect(result.missing.map((item) => item.id)).toEqual([...ids].sort());
+    expect(result.missing.find((item) => item.id === ids[0])?.reason).toContain("reasoning_options");
     await expect(syncProvider({ ...provider, async fetchModels() { throw new Error("fetch failed"); } })).rejects.toThrow("fetch failed");
-    expect(issues).toHaveBeenCalledTimes(1);
   } finally {
-    issues.mockRestore();
     await rm(dir, { recursive: true, force: true });
   }
 });
