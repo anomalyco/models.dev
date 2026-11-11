@@ -7091,6 +7091,65 @@ test("preserves the authored header comment block when rewriting a changed model
   }
 });
 
+test("retains a skipped remote model's file when deleteMissing is on", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-skip-retain-"));
+  const modelsDir = path.join(dir, "models");
+  await mkdir(modelsDir, { recursive: true });
+  await Bun.write(path.join(modelsDir, "kept-skip.toml"), [
+    "schema = 2",
+    'name = "Kept Skip"',
+    'description = "Hand-authored entry for a provider skip"',
+    'release_date = "2026-01-01"',
+    "open_weights = false",
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
+    "",
+    "[limit]",
+    "context = 1_000",
+    "output = 100",
+    "",
+    "[cost.text.input]",
+    "price = 1",
+    "",
+    "[cost.text.output]",
+    "price = 2",
+    "",
+  ].join("\n"));
+
+  const provider: SyncProvider<{ id: string }> = {
+    id: "example",
+    name: "Example",
+    modelsDir,
+    deleteMissing: true,
+    async fetchModels() {
+      return [{ id: "kept-skip" }];
+    },
+    parseModels(raw) {
+      return raw as { id: string }[];
+    },
+    sourceID(model) {
+      return model.id;
+    },
+    translateModel() {
+      return undefined;
+    },
+  };
+
+  try {
+    const result = await syncProvider(provider);
+    expect(result.deleted).toBe(0);
+    expect(await Bun.file(path.join(modelsDir, "kept-skip.toml")).exists()).toBe(true);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 test("retains authored data when OpenRouter reports an unavailable stub", () => {
   const authored = {
     name: "Claude Fable Latest",

@@ -109,7 +109,7 @@ test("transcription SKUs are intentional skips, not missing models", () => {
     authored: () => undefined,
   })).toBeUndefined();
   expect(abacus.missingModelID?.(model)).toBeUndefined();
-  expect(abacus.sourceID?.(model)).toBeUndefined();
+  expect(abacus.sourceID?.(model)).toBe("gpt-4o-transcribe");
 });
 
 test("lab media models stay out of scope even when RouteLLM calls them text_generation", () => {
@@ -121,7 +121,7 @@ test("lab media models stay out of scope even when RouteLLM calls them text_gene
   });
   expect(buildAbacusModel(model)).toBeUndefined();
   expect(abacus.missingModelID?.(model)).toBeUndefined();
-  expect(abacus.sourceID?.(model)).toBeUndefined();
+  expect(abacus.sourceID?.(model)).toBe("gemini-nano-banana-2.1");
 });
 
 test("an existing authored base_model always wins", () => {

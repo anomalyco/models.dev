@@ -338,6 +338,7 @@ export async function syncProvider<SourceModel>(
   const desiredV2 = new Map<string, { content: string }>();
   const caseNormalizedDesiredPaths = new Map<string, string>();
   const skippedRemote: string[] = [];
+  const skippedRemoteIDs = new Set<string>();
   const missingRemote = new Set<string>();
   const missingReasoning = new Map<string, string>();
   const translateNotices: string[] = [];
@@ -368,7 +369,10 @@ export async function syncProvider<SourceModel>(
     }
     if (translated === undefined) {
       const skippedID = provider.sourceID?.(sourceModel);
-      if (skippedID !== undefined) skippedRemote.push(skippedID);
+      if (skippedID !== undefined) {
+        skippedRemote.push(skippedID);
+        skippedRemoteIDs.add(skippedID);
+      }
       const missingID = provider.missingModelID?.(sourceModel);
       if (missingID !== undefined) missingRemote.add(missingID);
       continue;
@@ -569,6 +573,13 @@ export async function syncProvider<SourceModel>(
       continue;
     }
     if (missingReasoning.has(relativePath.slice(0, -5))) {
+      unchanged++;
+      continue;
+    }
+    // A provider can name a source model it deliberately does not translate;
+    // its local file is the hand-authored entry for that skip, so keep it even
+    // when deleteMissing would otherwise remove every untranslated model.
+    if (skippedRemoteIDs.has(relativePath.slice(0, -5))) {
       unchanged++;
       continue;
     }

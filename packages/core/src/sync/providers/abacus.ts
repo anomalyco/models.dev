@@ -89,10 +89,10 @@ export const abacus = {
   id: "abacus",
   name: "Abacus",
   modelsDir: "providers/abacus/models",
-  // /v1/models is the served catalog, but retired IDs keep their entries: the
-  // migration in #10776 marked 40 of them `status = "deprecated"` for manual
-  // lifecycle review, and the feed has no lifecycle metadata of its own.
-  deleteMissing: false,
+  // /v1/models is the served catalog and authoritative for availability: ids
+  // it no longer lists are removed, including the 40 #10776 had marked
+  // `deprecated` for manual review.
+  deleteMissing: true,
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
@@ -108,7 +108,9 @@ export const abacus = {
     return models;
   },
   sourceID(model) {
-    return intentionalSkip(model, resolveAbacusBaseModel(model.id)) ? undefined : model.id;
+    // Name intentional skips so the runner keeps their hand-authored files when
+    // deleteMissing is on; missingModelID still keeps them out of issues.
+    return model.id;
   },
   missingModelID(model) {
     // Intentional skips need no issue; anything else without a lab entry needs
