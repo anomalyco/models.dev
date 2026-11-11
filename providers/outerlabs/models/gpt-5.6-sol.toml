@@ -1,0 +1,36 @@
+# Sources (accessed 2026-11-11):
+# - Model ID and direct per-million-token rates: https://outerlabs.ai/docs ("Models & rates").
+# - Outer Labs rates (standard accounts, 30% below direct on every token type) and prompt-length bands:
+#   https://outerlabs.ai/pricing. Company accounts pay 40% below direct; the standard rate is recorded here.
+# - Capabilities: live requests on production, 2026-11-11, on POST /v1/chat/completions and POST /v1/messages
+#   (base https://api.outerlabs.ai/v1). GPT family tested with gpt-6.1-sol, plus gpt-6-astra for reasoning effort: tool calls and results,
+#   forced tool choice, JSON-schema structured output and automatic prompt caching (13,184 cached tokens reported
+#   in usage) all pass through. reasoning_effort is passed to the provider (unsupported values are refused);
+#   reasoning text is not returned.
+#   Only what those tests confirmed is declared; mid-conversation update flags, strict tools and search are left out.
+schema = 2
+base_model = "openai/gpt-5.6-sol"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 2.8
+cache = { read = 0.28, write = 2.8 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 5.6
+cache = { read = 0.56, write = 5.6 }
+
+[cost.text.output]
+price = 14
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 21
