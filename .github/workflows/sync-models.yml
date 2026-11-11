@@ -5,10 +5,11 @@ on:
     - cron: "17 */6 * * *"
   workflow_dispatch:
 
-# sync runs repository code and provider API keys with the built-in token only. It uploads each provider's catalog
-# patch as data. publish runs only .github/sync-models/ from this commit with a models.dev automation app token from
-# the automation environment: it applies each patch, allowing only catalog TOML, opens or updates the provider's pull
-# request and auto-merges safe syncs. The app's pull requests run their checks and its merges deploy as usual.
+# sync runs repository code and provider API keys with a read-only token. It uploads each provider's result, report and
+# catalog patch as data. publish runs only .github/sync-models/ from this commit with a models.dev automation app token
+# from the automation environment: it applies each patch, allowing only catalog TOML, opens or updates the provider's
+# pull request and auto-merges safe syncs. The app's pull requests run their checks and its merges deploy as usual.
+# gaps runs only .github/sync-models/ too and starts Fill Catalog Gap for new gaps nobody is handling yet.
 permissions:
   contents: read
 
@@ -23,11 +24,9 @@ jobs:
     environment: release
     outputs:
       changed: ${{ steps.sync.outputs.changed }}
-    # bun models:sync opens an issue for each missing model and dispatches the issue fixer (repository_dispatch needs
-    # contents: write). The built-in token can't change dev or workflows; catalog changes still go through publish.
+      gaps: ${{ steps.sync.outputs.gaps }}
     permissions:
-      contents: write
-      issues: write
+      contents: read
       id-token: write
 
     steps:
@@ -74,7 +73,6 @@ jobs:
       - name: Sync model catalogs
         id: sync
         env:
-          GH_TOKEN: ${{ github.token }}
           ANTHROPIC_API_KEY: ${{ env.ANTHROPIC_API_KEY }}
           BASETEN_API_KEY: ${{ env.BASETEN_API_KEY }}
           DEEPINFRA_API_KEY: ${{ env.DEEPINFRA_API_KEY }}
@@ -110,11 +108,11 @@ jobs:
 
           base="$(git rev-parse HEAD)"
           changed=false
+          gaps=false
 
-          if ! bun models:sync --list-providers | jq -r '.include[] | [.provider, .name] | @tsv' > "$providers"; then
+          if ! bun models:sync2 --list | jq -r '.include[] | [.provider, .name] | @tsv' > "$providers"; then
             echo "::error::failed to list sync providers"
-            echo "failed=true" >> "$GITHUB_OUTPUT"
-            echo "changed=$changed" >> "$GITHUB_OUTPUT"
+            printf 'failed=true\nchanged=%s\ngaps=%s\n' "$changed" "$gaps" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -125,11 +123,15 @@ jobs:
             # provider (or a failed one) left behind can appear in this provider's patch.
             git reset -q --hard "$base"
             git clean -qfd models providers
-            rm -f .sync/model-sync-report.md "$RUNNER_TEMP/auto-merge"
+            dir="$out/sync-$provider"
+            rm -rf "$dir"
+            mkdir -p "$dir"
 
             result=ok
-            if ! bun models:sync "$provider" < /dev/null; then
+            if ! bun models:sync2 "$provider" --json --report="$dir/report.md" < /dev/null > "$dir/result.json"; then
               result="sync failed"
+            elif ! jq -e '.provider and (.changes | type == "array") and (.gaps | type == "array")' "$dir/result.json" > /dev/null; then
+              result="invalid result"
             elif [ -n "$(git status --porcelain -- models providers)" ] && ! bun validate < /dev/null; then
               result="validation failed"
             fi
@@ -139,29 +141,39 @@ jobs:
               echo "::error::$provider: $result"
               printf '%s: %s\n' "$provider" "$result" >> "$failures"
               printf '| %s | %s |\n' "$provider" "$result" >> "$results"
+              rm -rf "$dir"
               echo "::endgroup::"
               continue
+            fi
+
+            has_gaps=false
+            if jq -e 'any(.gaps[]; .kind == "new" or .kind == "update")' "$dir/result.json" > /dev/null; then
+              has_gaps=true
+              gaps=true
             fi
 
             if [ -z "$(git status --porcelain -- models providers)" ]; then
               echo "No model catalog changes found."
               printf '| %s | unchanged |\n' "$provider" >> "$results"
+              # Keep the result only when Fill Catalog Gap may need it.
+              if [ "$has_gaps" = true ]; then
+                printf '%s' "$provider" > "$dir/provider"
+                printf '%s' "$name" > "$dir/name"
+              else
+                rm -rf "$dir"
+              fi
               echo "::endgroup::"
               continue
             fi
 
-            dir="$out/sync-$provider"
-            mkdir -p "$dir"
-            tee -a "$GITHUB_STEP_SUMMARY" < .sync/model-sync-report.md >/dev/null
+            tee -a "$GITHUB_STEP_SUMMARY" < "$dir/report.md" >/dev/null
 
             git add models providers
             git -c user.name=sync -c user.email=sync@localhost commit -q --no-verify -m sync
             git diff --binary HEAD^ HEAD > "$dir/changes.patch"
-            GITHUB_OUTPUT="$RUNNER_TEMP/auto-merge" bun sync:auto-merge HEAD^ HEAD
-            sed -n 's/^safe=//p' "$RUNNER_TEMP/auto-merge" | tr -d '\n' > "$dir/safe"
+            jq -j '.risk.safe' "$dir/result.json" > "$dir/safe"
             printf '%s' "$provider" > "$dir/provider"
             printf '%s' "$name" > "$dir/name"
-            cp .sync/model-sync-report.md "$dir/report.md"
 
             printf '| %s | changed |\n' "$provider" >> "$results"
             changed=true
@@ -171,14 +183,14 @@ jobs:
           git reset -q --hard "$base"
           git clean -qfd models providers
 
-          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          printf 'changed=%s\ngaps=%s\n' "$changed" "$gaps" >> "$GITHUB_OUTPUT"
           if [ -s "$failures" ]; then
             echo "failed=true" >> "$GITHUB_OUTPUT"
           fi
           cat "$results" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload changes
-        if: steps.sync.outputs.changed == 'true'
+        if: steps.sync.outputs.changed == 'true' || steps.sync.outputs.gaps == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: sync
@@ -190,7 +202,7 @@ jobs:
       - name: Check for failed providers
         if: steps.sync.outputs.failed == 'true'
         run: |
-          echo "These providers did not sync and produced no patch:"
+          echo "These providers did not sync and produced no patch or gaps:"
           cat "$RUNNER_TEMP/sync-failures"
           exit 1
 
@@ -266,7 +278,53 @@ jobs:
           export BOT_NAME BOT_EMAIL
           failed=0
           for dir in "$RUNNER_TEMP"/sync/sync-*/; do
-            [ -d "$dir" ] || continue
+            [ -f "$dir/changes.patch" ] || continue
             bash ../trusted/.github/sync-models/publish.sh "$dir" || failed=1
           done
           exit "$failed"
+
+  gaps:
+    needs: sync
+    # Runs when some provider syncs failed, so the others' gaps still start.
+    if: always() && github.repository == 'anomalyco/models.dev' && github.ref == 'refs/heads/dev' && needs.sync.outputs.gaps == 'true'
+    runs-on: ubuntu-latest
+    # The built-in token can start workflows (workflow_dispatch is the exception to its no-trigger rule) and read pull
+    # requests; it can't push.
+    permissions:
+      actions: write
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Check out gap scripts
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          path: trusted
+          sparse-checkout: /.github/sync-models/
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      # Only the ignore lists are read from here.
+      - name: Check out dev ignore lists
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: dev
+          path: repo
+          sparse-checkout: /providers/*/sync-ignore.toml
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Download results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: sync
+          path: ${{ runner.temp }}/sync
+
+      - name: Start gap runs
+        working-directory: repo
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          GAP_LIMIT: 5
+        run: bash ../trusted/.github/sync-models/dispatch-gaps.sh "$RUNNER_TEMP/sync"
