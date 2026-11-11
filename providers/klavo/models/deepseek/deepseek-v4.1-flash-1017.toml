@@ -1,10 +1,10 @@
 # Pricing: https://ai.klavo.ru/models/deepseek-v4.1-flash-1017 lists 24 / 1.5 / 100 RUB per 1M input / cached input /
 # output tokens (checked 2026-11-11); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4
 # decimals.
-# Klavo AI is a relay. Limits, input types and capabilities follow the same-model entries
+# Klavo AI is a relay. Input types, structured_output and cache follow the same-model entries
 # providers/engy/models/deepseek-v4.1-flash-1017.toml and
-# providers/openrouter/models/deepseek/deepseek-v4.1-flash-1017.toml: the smaller limit and the input types they
-# share. Reasoning controls are those of this API.
+# providers/openrouter/models/deepseek/deepseek-v4.1-flash-1017.toml (the input types they share). Limits and
+# reasoning controls are this API's own.
 # Limits: GET https://api.klavo.ru/v1/models reports context_length 1_048_576 and meta.max_output 65_536 (checked
 # 2026-11-11); a request with max_tokens = 65_536 was accepted live on 2026-11-10.
 # Cache: implicit, done by the hosts behind the API. Cached input tokens come back in
@@ -24,7 +24,6 @@ cache = { implicit = true }
 
 [limit]
 context = 1_048_576
-input = 983_040
 output = 65_536
 
 [cost.text.input]
