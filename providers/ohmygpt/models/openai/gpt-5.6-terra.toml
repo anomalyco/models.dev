@@ -1,0 +1,36 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/openai/gpt-5.6-terra (snapshot 2026-11-11): prices, limits and the serving providers (azure, openai).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions and Responses are both native protocols for this model on OhMyGPT (native: true in the catalog); the request body reaches OpenAI as sent (https://www.ohmygpt.com/docs/api/protocols#native-protocol).
+# Effort: reasoning_effort (Chat Completions) or reasoning.effort (Responses) = none|low|medium|high|xhigh. providers/openai/models/gpt-5.6-terra.toml also lists max: here it is accepted on Responses only (the other returns 400, live 2026-11-11), so it is not listed.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+schema = 2
+base_model = "openai/gpt-5.6-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.18, write = 2.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 3.6
+cache = { read = 0.36, write = 4.5 }
+
+[cost.text.output]
+price = 10.8
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16.2
+
+[cost.web_search]
+price = 12.6
