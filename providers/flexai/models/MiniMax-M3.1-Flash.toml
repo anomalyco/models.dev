@@ -2,8 +2,11 @@
 # Measured on FlexAI 2026-11-11 (length of reasoning_content, 3 prompts, no max_tokens):
 #   default 14/268/1454 · enable_thinking=false 90/194/1369 · thinking.disabled 31/131/1524
 #   enable_thinking=true 146/176/646 · thinking.enabled 117/328/1564
-# No effort levels are declared: reasoning_effort is accepted but the levels are not
-# ordered (low 31/244/39437 · high 46/218/379).
+# Effort (median reasoning_content, 3 runs per level, one hard prompt):
+#   default 3826 · top-level low 3087 · medium 3623 · high 3968
+#   chat_template_kwargs.reasoning_effort low 2921 · medium 2885 · high 4020
+# high reasons somewhat more than low, but medium is not separable and the ranges
+# overlap, so no effort levels are declared yet.
 # Context: 1_048_576 is the served window (GET /v1/models context_length).
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
