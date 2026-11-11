@@ -1,21 +1,22 @@
 # Pricing: https://ai.klavo.ru/models/minimax-m3.1-flash lists 24 / 2.5 / 95 RUB per 1M input / cached input / output
-# tokens (checked 2026-11-10); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4
+# tokens (checked 2026-11-11); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4
 # decimals.
-# Klavo AI is a relay: a request goes to one of the upstream providers of the model, and the limits are the smallest
-# across them.
-# Limits: GET https://api.klavo.ru/v1/models reports meta.max_output 524_288 (checked 2026-11-10); a request with
-# max_tokens = 524_288 was accepted live on 2026-11-10.
+# Klavo AI is a relay. Limits, input types and capabilities follow the same-model entry
+# providers/openrouter/models/minimax/minimax-m3.1-flash.toml. Reasoning controls are those of this API.
+# Limits: GET https://api.klavo.ru/v1/models reports context_length 1_000_000 and meta.max_output 524_288 (checked
+# 2026-11-11); a request with max_tokens = 524_288 was accepted live on 2026-11-10.
+# Cache: implicit, done by the hosts behind the API. Cached input tokens come back in
+# usage.prompt_tokens_details.cached_tokens and are billed at the cache price below. No TTL is published.
 # Effort: reasoning_effort = low|medium|high|xhigh|max; other levels map to the nearest.
 # Live check 2026-11-10 through https://api.klavo.ru/v1, 2 requests per variant, median reasoning tokens: none keeps
 # reasoning (20 tokens), so there is no off switch.
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
-[modalities]
-input = ["text"]
-
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 524_288
