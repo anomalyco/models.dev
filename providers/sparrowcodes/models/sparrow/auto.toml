@@ -2,6 +2,9 @@
 # Picks a model per task from the SparrowCodes catalog (currently Claude Haiku 5.5 / Sonnet 5.5,
 # GPT-6.1 Sol, DeepSeek V4.1 Flash, Qwen3.7 Plus, Qwen3 Coder 30B) and bills the chosen model's
 # price, so no fixed cost is listed. The response's `model` field names the model that answered.
+# Image input: when a request has images, the router only picks models whose input_modalities include image
+# (internal/gateway/auto_router.go), so image tasks go to the Claude models.
+# Reasoning: a caller's reasoning_effort (gateway accepts minimal/low/medium/high) is forwarded to the chosen model.
 schema = 2
 name = "Sparrow Auto"
 description = "Router that picks a low-cost or stronger model per coding task and keeps it for the task so prompt caching holds"
@@ -14,7 +17,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 temperature = false
 top_p = false
 top_k = false
