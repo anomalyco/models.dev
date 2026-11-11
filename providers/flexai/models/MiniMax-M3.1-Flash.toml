@@ -1,6 +1,9 @@
-# Always-on reasoner: FlexAI's catalog lists this model as always_thinking, so no
-# toggle is declared. The catalog also lists reasoning_effort, but its effect has
-# not yet been measured on this host, so no effort levels are declared.
+# Always-on reasoner: no request switch turns reasoning off, so no toggle is declared.
+# Measured on FlexAI 2026-11-11 (length of reasoning_content, 3 prompts, no max_tokens):
+#   default 14/268/1454 · enable_thinking=false 90/194/1369 · thinking.disabled 31/131/1524
+#   enable_thinking=true 146/176/646 · thinking.enabled 117/328/1564
+# No effort levels are declared: reasoning_effort is accepted but the levels are not
+# ordered (low 31/244/39437 · high 46/218/379).
 # Context: 1_048_576 is the served window (GET /v1/models context_length).
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
@@ -11,6 +14,9 @@ reasoning = { supported = true }
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.15
