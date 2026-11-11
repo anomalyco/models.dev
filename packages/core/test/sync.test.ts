@@ -7210,6 +7210,67 @@ test("deletes a skipped remote model's file when retainSkipped is off", async ()
   }
 });
 
+test("refuses to delete more than the configured fraction of the catalog", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-delete-floor-"));
+  const modelsDir = path.join(dir, "models");
+  await mkdir(modelsDir, { recursive: true });
+  const toml = (name: string) => [
+    "schema = 2",
+    `name = "${name}"`,
+    `description = "Tracked model ${name}"`,
+    'release_date = "2026-01-01"',
+    "open_weights = false",
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
+    "",
+    "[limit]",
+    "context = 1_000",
+    "output = 100",
+    "",
+    "[cost.text.input]",
+    "price = 1",
+    "",
+    "[cost.text.output]",
+    "price = 2",
+    "",
+  ].join("\n");
+  for (const id of ["a", "b", "c", "d"]) {
+    await Bun.write(path.join(modelsDir, `${id}.toml`), toml(id));
+  }
+
+  const provider: SyncProvider<{ id: string }> = {
+    id: "example",
+    name: "Example",
+    modelsDir,
+    deleteMissing: true,
+    maxDeleteFraction: 0.5,
+    async fetchModels() {
+      return [{ id: "a" }];
+    },
+    parseModels(raw) {
+      return raw as { id: string }[];
+    },
+    translateModel() {
+      return undefined;
+    },
+  };
+
+  try {
+    await expect(syncProvider(provider)).rejects.toThrow(/refusing to delete/);
+    for (const id of ["a", "b", "c", "d"]) {
+      expect(await Bun.file(path.join(modelsDir, `${id}.toml`)).exists()).toBe(true);
+    }
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 test("retains authored data when OpenRouter reports an unavailable stub", () => {
   const authored = {
     name: "Claude Fable Latest",

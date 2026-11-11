@@ -94,6 +94,9 @@ export const abacus = {
   // `deprecated` for manual review.
   deleteMissing: true,
   retainSkipped: true,
+  // Refuse a run that would delete more than half the catalog: the public feed
+  // could otherwise turn a truncated-but-valid response into a mass deletion.
+  maxDeleteFraction: 0.5,
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {

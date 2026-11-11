@@ -113,6 +113,12 @@ export interface SyncProvider<SourceModel> {
    * other model the provider does not translate.
    */
   retainSkipped?: boolean;
+  /**
+   * Refuse a run that would delete more than this fraction of the local
+   * catalog, before any file is written. Protects deletion-authoritative
+   * providers from a truncated but schema-valid source response.
+   */
+  maxDeleteFraction?: number;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
   preserveDescriptions?: boolean;
@@ -464,6 +470,26 @@ export async function syncProvider<SourceModel>(
       header,
       v2Set: translated.v2Set,
     });
+  }
+
+  const localCount = existing.size + brokenSymlinks.size;
+  if (
+    provider.deleteMissing !== false
+    && provider.maxDeleteFraction !== undefined
+    && options.newOnly !== true
+    && localCount > 0
+  ) {
+    const deletable = [...new Set([...existing.keys(), ...brokenSymlinks])].filter((relativePath) => {
+      if (desired.has(relativePath) || desiredV2.has(relativePath)) return false;
+      const id = relativePath.slice(0, -5);
+      return !missingRemote.has(id) && !missingReasoning.has(id) && !skippedRemoteIDs.has(id);
+    });
+    if (deletable.length > localCount * provider.maxDeleteFraction) {
+      throw new Error(
+        `${provider.name}: refusing to delete ${deletable.length} of ${localCount} local models `
+        + `(more than ${provider.maxDeleteFraction * 100}%); the source may be truncated`,
+      );
+    }
   }
 
   const files: SyncResult["files"] = [];
