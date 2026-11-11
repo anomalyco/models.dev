@@ -1,7 +1,9 @@
 # Pricing: https://ai.klavo.ru/models/mimo-v2.6-pro lists 70 / 1 / 140 RUB per 1M input / cached input / output tokens
-# (checked 2026-11-10); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4 decimals.
-# Klavo AI is a relay: a request goes to one of the upstream providers of the model, and the limits are the smallest
-# across them.
+# (checked 2026-11-11); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4 decimals.
+# Klavo AI is a relay. Limits, input types and capabilities follow the same-model entry
+# providers/openrouter/models/xiaomi/mimo-v2.6-pro.toml. Reasoning controls are those of this API.
+# Cache: implicit, done by the hosts behind the API. Cached input tokens come back in
+# usage.prompt_tokens_details.cached_tokens and are billed at the cache price below. No TTL is published.
 # Toggle: reasoning.enabled = false turns reasoning off (thinking.type = disabled is taken too); it is on by default.
 # No graded levels.
 # Live check 2026-11-10 through https://api.klavo.ru/v1, 2 requests per variant, median reasoning tokens: off -> 0
@@ -10,11 +12,10 @@
 schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 
-[modalities]
-input = ["text"]
-
 [capabilities]
 reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.848
