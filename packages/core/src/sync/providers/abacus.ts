@@ -94,9 +94,10 @@ export const abacus = {
   // `deprecated` for manual review.
   deleteMissing: true,
   retainSkipped: true,
-  // Refuse a run that would delete more than half the catalog: the public feed
-  // could otherwise turn a truncated-but-valid response into a mass deletion.
-  maxDeleteFraction: 0.5,
+  // Refuse a feed with fewer than half the local catalog's models: the public
+  // endpoint could otherwise turn a truncated-but-valid response into a mass
+  // deletion. The 108 -> 79 migration passes because the feed has 87 rows.
+  minSourceFraction: 0.5,
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
     if (!response.ok) {

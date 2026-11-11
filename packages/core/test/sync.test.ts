@@ -7210,7 +7210,7 @@ test("deletes a skipped remote model's file when retainSkipped is off", async ()
   }
 });
 
-test("refuses to delete more than the configured fraction of the catalog", async () => {
+test("refuses an implausibly small source relative to the catalog", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "sync-delete-floor-"));
   const modelsDir = path.join(dir, "models");
   await mkdir(modelsDir, { recursive: true });
@@ -7249,7 +7249,7 @@ test("refuses to delete more than the configured fraction of the catalog", async
     name: "Example",
     modelsDir,
     deleteMissing: true,
-    maxDeleteFraction: 0.5,
+    minSourceFraction: 0.5,
     async fetchModels() {
       return [{ id: "a" }];
     },
@@ -7262,10 +7262,19 @@ test("refuses to delete more than the configured fraction of the catalog", async
   };
 
   try {
-    await expect(syncProvider(provider)).rejects.toThrow(/refusing to delete/);
+    await expect(syncProvider(provider)).rejects.toThrow(/refusing to sync/);
     for (const id of ["a", "b", "c", "d"]) {
       expect(await Bun.file(path.join(modelsDir, `${id}.toml`)).exists()).toBe(true);
     }
+
+    const plausible: SyncProvider<{ id: string }> = {
+      ...provider,
+      async fetchModels() {
+        return [{ id: "a" }, { id: "b" }, { id: "c" }];
+      },
+    };
+    const result = await syncProvider(plausible);
+    expect(result.deleted).toBe(4);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

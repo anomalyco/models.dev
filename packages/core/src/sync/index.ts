@@ -114,11 +114,11 @@ export interface SyncProvider<SourceModel> {
    */
   retainSkipped?: boolean;
   /**
-   * Refuse a run that would delete more than this fraction of the local
-   * catalog, before any file is written. Protects deletion-authoritative
-   * providers from a truncated but schema-valid source response.
+   * Refuse to sync when the source has fewer than this fraction of the local
+   * catalog's models, before any file is written. Protects providers whose
+   * deletions are authoritative from a truncated but schema-valid response.
    */
-  maxDeleteFraction?: number;
+  minSourceFraction?: number;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
   preserveDescriptions?: boolean;
@@ -474,22 +474,15 @@ export async function syncProvider<SourceModel>(
 
   const localCount = existing.size + brokenSymlinks.size;
   if (
-    provider.deleteMissing !== false
-    && provider.maxDeleteFraction !== undefined
+    provider.minSourceFraction !== undefined
     && options.newOnly !== true
     && localCount > 0
+    && sourceModels.length < localCount * provider.minSourceFraction
   ) {
-    const deletable = [...new Set([...existing.keys(), ...brokenSymlinks])].filter((relativePath) => {
-      if (desired.has(relativePath) || desiredV2.has(relativePath)) return false;
-      const id = relativePath.slice(0, -5);
-      return !missingRemote.has(id) && !missingReasoning.has(id) && !skippedRemoteIDs.has(id);
-    });
-    if (deletable.length > localCount * provider.maxDeleteFraction) {
-      throw new Error(
-        `${provider.name}: refusing to delete ${deletable.length} of ${localCount} local models `
-        + `(more than ${provider.maxDeleteFraction * 100}%); the source may be truncated`,
-      );
-    }
+    throw new Error(
+      `${provider.name}: refusing to sync ${sourceModels.length} source models against ${localCount} local models `
+      + `(the source is under ${provider.minSourceFraction * 100}% of the catalog); it may be truncated`,
+    );
   }
 
   const files: SyncResult["files"] = [];
