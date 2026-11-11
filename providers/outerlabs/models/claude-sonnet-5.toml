@@ -8,6 +8,8 @@
 #   (thinking blocks returned, thinking tokens reported) and cache_control caching (creation then read of 20,484
 #   tokens) all pass through. Tool choice and reasoning controls mirror what Anthropic accepts for this model.
 #   Only what those tests confirmed is declared; mid-conversation update flags, strict tools and search are left out.
+# Toggle: {"thinking": {"type": "enabled"|"disabled"}} on POST /v1/messages (live 2026-11-11: enabled returned a thinking block and 51 thinking tokens, disabled returned none).
+# Effort: `reasoning_effort` on POST /v1/chat/completions.
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 

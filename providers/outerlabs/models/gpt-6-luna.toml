@@ -8,11 +8,17 @@
 #   in usage) all pass through. reasoning_effort is passed to the provider (unsupported values are refused);
 #   reasoning text is not returned.
 #   Only what those tests confirmed is declared; mid-conversation update flags, strict tools and search are left out.
+# Freeform: custom tools are rejected on POST /v1/chat/completions (live 2026-11-11 on gpt-6.1-sol: format text, regex
+#   `ZZ[0-9]{3}` and lark each returned 400), so `freeform` is left out.
+# Cache: automatic only. There is no cache-write price; tokens not read from cache bill at the input rate.
+# Effort: `reasoning_effort: "none"` is refused by this host for this model (live 2026-11-11, 400 "reasoning switched off
+#   (reasoning_effort none) cannot be carried to this model"), so `none` is left out of the effort list.
+# Tool choice: `required` and a named function both returned the forced call (live 2026-11-11).
 schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { implicit = true }
@@ -21,12 +27,12 @@ cache = { implicit = true }
 
 [cost.text.input]
 price = 0.07
-cache = { read = 0.007, write = 0.07 }
+cache = { read = 0.007 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 0.14
-cache = { read = 0.014, write = 0.14 }
+cache = { read = 0.014 }
 
 [cost.text.output]
 price = 0.35

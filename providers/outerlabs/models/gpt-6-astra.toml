@@ -8,6 +8,9 @@
 #   in usage) all pass through. reasoning_effort is passed to the provider (unsupported values are refused);
 #   reasoning text is not returned.
 #   Only what those tests confirmed is declared; mid-conversation update flags, strict tools and search are left out.
+# Freeform: custom tools are rejected on POST /v1/chat/completions (live 2026-11-11 on gpt-6.1-sol: format text, regex
+#   `ZZ[0-9]{3}` and lark each returned 400), so `freeform` is left out.
+# Cache: automatic only. There is no cache-write price; tokens not read from cache bill at the input rate.
 schema = 2
 base_model = "openai/gpt-6-astra"
 
@@ -21,12 +24,12 @@ cache = { implicit = true }
 
 [cost.text.input]
 price = 7
-cache = { read = 0.7, write = 7 }
+cache = { read = 0.7 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 14
-cache = { read = 1.4, write = 14 }
+cache = { read = 1.4 }
 
 [cost.text.output]
 price = 35
