@@ -2,6 +2,7 @@
 # Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
 # API: Chat Completions and Responses are both native protocols for this model on OhMyGPT (native: true in the catalog); the request body reaches OpenAI as sent (https://www.ohmygpt.com/docs/api/protocols#native-protocol).
 # Effort: reasoning_effort (Chat Completions) or reasoning.effort (Responses) = low|medium|high|xhigh. providers/openai/models/gpt-6.1-sol.toml also lists max: here it is accepted on Responses only (the other returns 400, live 2026-11-11), so it is not listed.
+# tools.freeform on [api.responses] only: checked live 2026-11-11. /v1/responses accepted custom tools as text, lark, regex and enforced the grammars (asked to pass `hello`, the regex ZZ[0-9]{3} and the equivalent lark grammar each returned ZZ plus three digits). On /v1/chat/completions the custom tool did not reach the model on this host: with tool_choice required it answered in text that it has no such tool.
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
 schema = 2
 base_model = "openai/gpt-6.1-sol"
@@ -15,6 +16,7 @@ cache = { implicit = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [cost.text.input]
 price = 1.8
