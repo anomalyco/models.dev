@@ -1,11 +1,15 @@
 # Always reasons: Lyceum says it can't be disabled ({"thinking": false} is accepted but ignored). https://docs.lyceum.technology/docs/inference/serverless#controlling-reasoning
 # Effort: low|medium|xhigh (Qwen3.8 ladder; levels undocumented for this model). Lyceum documents no reasoning budget field, so no budget.
+# Limits: GET https://api.lyceum.technology/openai/v1/models (2026-11-11) reports max_output_tokens 65,536; the context matches the lab file.
 schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 cache = { implicit = true }
+
+[limit]
+output = 65_536
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
