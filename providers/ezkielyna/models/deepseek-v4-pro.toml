@@ -1,0 +1,25 @@
+# Ezkielyna serves deepseek/deepseek-v4-pro under the id `deepseek-v4-pro` (Standard key group, 1x).
+# Prices: public price list GET https://api.ezkielyna.store/api/pricing (read 2026-11-11),
+#   USD/MTok = model_ratio x 2 x group_ratio; output = input x completion_ratio; cache read = input x cache_ratio.
+#   Same prices in IDR: https://ezkielyna.store/harga-api-ai
+# Live status and success rate: https://api.ezkielyna.store/status
+# Reasoning controls follow the underlying model's peers on other relays; the gateway forwards
+#   reasoning_effort / thinking unchanged to an upstream serving the same model.
+# Toggle: thinking.type = enabled|disabled (forwarded unchanged)
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.02186 }
+
+[cost.text.output]
+price = 1.976
