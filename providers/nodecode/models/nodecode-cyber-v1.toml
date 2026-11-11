@@ -1,0 +1,56 @@
+# Cyber v1: Nodecode's abliterated model for authorized security testing and pentest
+# agents, built on DeepSeek with Foresight Labs finetunes; unique to this host, so it is
+# defined inline (no base_model).
+# Sources (accessed 2026-11-12):
+#   https://nodecode.ai/cyber  (model card)
+#   https://nodecode.ai/docs/cyber  (1,048,576-token context; reasoning arrives in
+#     `message.reasoning` on chat completions; tool calls)
+#   https://nodecode.ai/docs/pricing#what-a-call-costs  (USD per 1M tokens: 0.33 input,
+#     0.009 cached input, 1.32 output; cached input of a request over 262,144 input tokens
+#     pays 4x the cached price; every token 50% off from Friday 00:00 to Monday 00:00
+#     Amsterdam time)
+#   GET https://api.nodecode.ai/v1/models  (context_length 1048576, max_output_tokens 131072)
+# Reasoning is always on, with no documented request control. It arrives in
+#   message.reasoning (live probe, 2026-11-12); reasoning_field = "reasoning" is valid in v2,
+#   but v1's interleaved.field only allows reasoning_content|reasoning_details, so it is left unset.
+# Weekend multiplier: Amsterdam midnight written as 23:00 UTC (CET, UTC+1); during
+# Dutch summer time the window starts and ends an hour earlier in UTC.
+# Release date: the model was first listed as Cyber v1 on nodecode.ai/pricing on 2026-10-19.
+schema = 2
+name = "Cyber v1"
+description = "Abliterated model built on DeepSeek for authorized security testing and pentest agents"
+open_weights = false
+release_date = "2026-10-19"
+last_updated = "2026-11-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+cache = { implicit = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.009 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 262_144 } }
+cache = { read = 0.036 }
+
+[cost.text.output]
+price = 1.32
+
+[[cost.multipliers]]
+when = { any = [{ utc_days = { in = ["fri", "sat"] } }, { all = [{ utc_days = { in = ["thu"] } }, { utc_hours = { gte = "23:00" } }] }, { all = [{ utc_days = { in = ["sun"] } }, { utc_hours = { lt = "23:00" } }] }] }
+factor = 0.5
