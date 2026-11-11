@@ -15,42 +15,49 @@ import { REPO_ROOT } from "../src/sync2/catalog.js";
 // the file in place. On Linux both engines see the exact path and agree.
 const caseInsensitive = existsSync(path.join(REPO_ROOT, "PACKAGE.JSON"));
 const nearaiCase = caseInsensitive
-  ? ["providers/nearai/models/Qwen/qwen3.5-397b-a17b.toml", "providers/nearai/models/Qwen/qwen3.7-max.toml"]
+  ? ["providers/nearai/models/Qwen/qwen3.7-max.toml"]
   : [];
 const EXPECTED: Record<string, string[]> = {
   // Vercel: a new standalone file lists its reasoning capability before tools;
   // the old sync wrote tools first (base_model files put reasoning first in both).
-  "vercel/perturbed": ["providers/vercel/models/acme/brand-new.toml"],
+  // Seed 1.6 and 1.8 have left the catalog since the fixture was recorded, so both engines recreate them.
+  "vercel/recorded": ["providers/vercel/models/bytedance/seed-1.6.toml", "providers/vercel/models/bytedance/seed-1.8.toml"],
+  "vercel/perturbed": [
+    "providers/vercel/models/acme/brand-new.toml",
+    "providers/vercel/models/bytedance/seed-1.6.toml",
+    "providers/vercel/models/bytedance/seed-1.8.toml",
+  ],
   // OpenRouter: a new model with no lab file that reasons with no listed controls
   // is a gap; the old sync wrote a standalone file with reasoning = { supported = true }.
-  "openrouter/perturbed": ["providers/openrouter/models/acme/brand-new.toml"],
+  // Seed 2.0 Code has left the catalog since the fixture was recorded; both engines recreate it, the
+  // new one listing structured_output before reasoning.
+  "openrouter/recorded": ["providers/openrouter/models/bytedance-seed/seed-2.0-code.toml"],
+  "openrouter/perturbed": ["providers/openrouter/models/acme/brand-new.toml", "providers/openrouter/models/bytedance-seed/seed-2.0-code.toml"],
   // Cloudflare AI Gateway: a context window equal to the lab's is inherited (the
   // old sync wrote it into the file: qwen3-max, gpt-5.4, the new o3-pro), a
   // rewritten file keeps its tools table's key order (the old sync reordered it:
-  // gpt-4o, gpt-5.4, claude-opus-4.8), and a new 5m write price keeps the file's
-  // 1h price (the old sync scaled it by the 5m change: claude-opus-4.8).
+  // gpt-4o, gpt-5.4, claude-opus-4.8, and gpt-4.1-nano, whose cache price the
+  // catalog has changed since the recording), and a new 5m write price keeps the
+  // file's 1h price (the old sync scaled it by the 5m change: claude-opus-4.8).
+  "cloudflare-ai-gateway/recorded": ["providers/cloudflare-ai-gateway/models/openai/gpt-4.1-nano.toml"],
   "cloudflare-ai-gateway/perturbed": [
     "providers/cloudflare-ai-gateway/models/alibaba/qwen3-max.toml",
     "providers/cloudflare-ai-gateway/models/anthropic/claude-opus-4.8.toml",
+    "providers/cloudflare-ai-gateway/models/openai/gpt-4.1-nano.toml",
     "providers/cloudflare-ai-gateway/models/openai/gpt-4o.toml",
     "providers/cloudflare-ai-gateway/models/openai/gpt-5.4.toml",
     "providers/cloudflare-ai-gateway/models/openai/o3-pro.toml",
   ],
-  // DigitalOcean: a new file's kinds take the lab's formats (the old sync wrote
-  // bare kinds), a new model that reasons with no listed efforts is a gap (the
-  // old sync wrote reasoning = { supported = true }), and so is a new model
-  // with no lab file (the old sync wrote a standalone file).
-  "digitalocean/recorded": ["providers/digitalocean/models/anthropic-claude-fable-5.2.toml", "providers/digitalocean/models/kimi-k3.1-pro.toml"],
-  "digitalocean/perturbed": [
-    "providers/digitalocean/models/acme-brand-new.toml",
-    "providers/digitalocean/models/anthropic-claude-fable-5.2.toml",
-    "providers/digitalocean/models/kimi-k3.1-pro.toml",
-  ],
+  // DigitalOcean: a new model with no lab file is a gap (the old sync wrote a standalone file).
+  "digitalocean/perturbed": ["providers/digitalocean/models/acme-brand-new.toml"],
   // DevPass: a new reasoning price on a model whose parameters don't list
   // reasoning is written; the old sync couldn't write it and left the file.
   "llmgateway/perturbed": ["providers/llmgateway/models/o3.toml"],
   // Eden AI: a new file's kinds take the lab's formats (the old sync wrote bare kinds).
-  "edenai/perturbed": ["providers/edenai/models/openai/gpt-4.1-nano.toml"],
+  // An alias the catalog has since pointed at a newer model (Claude Fable Latest, now 5.2) keeps
+  // its base_model; the old sync re-resolved it from the recorded source (5.1).
+  "edenai/recorded": ["providers/edenai/models/anthropic/claude-fable-latest.toml"],
+  "edenai/perturbed": ["providers/edenai/models/anthropic/claude-fable-latest.toml", "providers/edenai/models/openai/gpt-4.1-nano.toml"],
   // EmpirioLabs: a model that starts reasoning with no controls is a gap.
   "empiriolabs/perturbed": ["providers/empiriolabs/models/gemma-3-27b.toml"],
   // CoreWeave: a model that drops its only control (a toggle) is written without
@@ -112,15 +119,16 @@ const EXPECTED: Record<string, string[]> = {
   // Cortecs: a new model with no lab file is a gap (the old sync wrote a
   // standalone file), and so is a new or standalone model that starts reasoning
   // with no controls (the old sync wrote reasoning = { supported = true }).
-  "cortecs/recorded": ["providers/cortecs/models/kimi-k3.1-pro.toml"],
+  // GLM 5.1 and MiniCPM-V 4.5 have left the catalog since the fixture was recorded.
+  "cortecs/recorded": ["providers/cortecs/models/glm-5.1.toml", "providers/cortecs/models/minicpm-v-4.5.toml"],
   "cortecs/perturbed": [
     "providers/cortecs/models/brand-new-model.toml",
-    "providers/cortecs/models/kimi-k3.1-pro.toml",
     "providers/cortecs/models/minicpm-v-4.5.toml",
     "providers/cortecs/models/qwen3-235b-a22b-instruct-2507-fp8.toml",
   ],
   // NanoGPT: a model that starts reasoning with no controls is a gap.
-  "nano-gpt/perturbed": ["providers/nano-gpt/models/qwen/qwen3.8-max.toml"],
+  "nano-gpt/recorded": ["providers/nano-gpt/models/arcee-ai/trinity-large-thinking.toml"],
+  "nano-gpt/perturbed": ["providers/nano-gpt/models/arcee-ai/trinity-large-thinking.toml", "providers/nano-gpt/models/qwen/qwen3.8-max.toml"],
   // Requesty: a new model with no lab file is a gap; the old sync wrote a standalone file.
   "requesty/perturbed": ["providers/requesty/models/acme-brand-new.toml"],
   // A new Venice model with no lab file. The old sync wrote a standalone file with a generated
