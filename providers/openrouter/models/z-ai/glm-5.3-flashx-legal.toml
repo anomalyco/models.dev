@@ -1,3 +1,4 @@
+# Cache: automatic (https://openrouter.ai/docs/guides/best-practices/prompt-caching#z-ai)
 schema = 2
 name = "GLM 5.3 FlashX Legal"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
@@ -14,6 +15,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 temperature = true
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576

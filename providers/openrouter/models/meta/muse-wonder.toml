@@ -3,6 +3,7 @@
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+# Cache: automatic. OpenRouter lists a cached-input price for this model and has no caching section for this lab (live 2026-11-04, direct, Responses with prompt_cache_key: an immediate re-send was served from cache; 20 of 27 later checks warm, the oldest at 25 min: https://github.com/ngvoicu/cache-ttl-probe/blob/main/results/openrouter-direct/R10-2026-11-04T19-00-07.json)
 schema = 2
 name = "Muse Wonder"
 description = "Open Llama multimodal model for image understanding and text reasoning"
@@ -19,6 +20,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = true
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576

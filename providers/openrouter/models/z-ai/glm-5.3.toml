@@ -2,6 +2,7 @@
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+# Cache: automatic (https://openrouter.ai/docs/guides/best-practices/prompt-caching#z-ai; live 2026-11-04, direct, Responses with prompt_cache_key: an immediate re-send was served from cache; 17 of 42 later checks warm, the oldest at 75 min: https://github.com/ngvoicu/cache-ttl-probe/blob/main/results/openrouter-direct/R9-2026-11-04T18-59-59.json)
 schema = 2
 base_model = "zhipuai/glm-5.3"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
@@ -10,6 +11,7 @@ description = "Flagship GLM model for hybrid reasoning, coding, and agentic engi
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576

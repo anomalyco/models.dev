@@ -5,6 +5,7 @@
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+# Cache: automatic (https://openrouter.ai/docs/guides/best-practices/prompt-caching#moonshot-ai)
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 
@@ -17,6 +18,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
+cache = { implicit = true }
 
 [limit]
 output = 235_929
