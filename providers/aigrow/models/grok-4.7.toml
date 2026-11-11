@@ -1,0 +1,23 @@
+# Prices: https://aigrow.gg/ai-api (read 2026-11-11). One flat rate at every context length (no 200K tier); cache writes bill at 1.25x the input rate.
+# API: OpenAI Chat Completions only (POST /v1/chat/completions); the Messages endpoint does not serve this model.
+# Effort: reasoning_effort is forwarded unchanged; levels and default as on providers/xai; each level returned 200 on this host (2026-11-11).
+# Cache: automatic prefix caching, as on providers/xai.
+# Input: a PNG image was read; a PDF file part returned 400 on this host (2026-11-11), so PDF is left out. A JSON schema response_format worked.
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.25, write = 1.875 }
+
+[cost.text.output]
+price = 3
