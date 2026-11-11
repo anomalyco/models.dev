@@ -546,6 +546,21 @@ note = [
 ]
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
+# Gemini 4 Carbon takes the same route and controls as Argon (Vertex AI, REST chat-completions).
+# Live 2026-11-11 through the unified-billing gateway key: low|medium|high accepted
+# (reasoning tokens 0 / 210 / 232 on a short math prompt); none and minimal were not re-probed
+# (balance ran out); minimal is rejected on Google's own API (providers/google gemini-4-carbon).
+# https://ai.google.dev/gemini-api/docs/thinking
+# https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon
+# https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+[models."google/gemini-4-carbon"]
+structured_output = true
+note = [
+  "Effort: reasoning_effort = low|medium|high (maps to Gemini's thinking level; live 2026-11-11, 0 / 210 / 232 reasoning tokens).",
+  "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
 # Gemini 2.5 and 3.x on the REST API's chat-completions route (catalog provider_details
 # google-vertex-ai). They were skipped while they had no lab file. The catalog schemas list no
 # effort enum, so the values are Google's own lists (providers/google) cut to what Cloudflare
