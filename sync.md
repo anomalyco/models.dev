@@ -355,7 +355,7 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 ## Wiro AI Notes
 
 - Wiro AI is implemented in `packages/core/src/sync/providers/wiro.ts`.
-- Source endpoint: `https://llm.wiro.ai/v1/models`; required auth: `WIRO_API_KEY` (the list answers 401 without a key).
+- Source endpoint: `https://llm.wiro.ai/v1/models`; no authentication required, so the sync needs no secret. The module sends `WIRO_API_KEY` when one is set.
 - The catalog owns per-token USD prices (`pricing.prompt`, `completion`, `input_cache_read`, `input_cache_write`), the price bands in `x_wiro.pricing_tiers` (each band after the first becomes a context tier), `context_length`, `max_tokens`, and structured output: `structured_output_modes` listing `json_schema`. JSON mode alone (`json_object`) does not count.
 - The catalog quotes each model at the rate in force when it answers. The sync divides every quote by the file's multipliers in force at that moment (DeepSeek's peak hours, dated price changes), so files keep their base rates and their multipliers. A multiplier it can't evaluate, or one that starts or ends during the request, leaves that model's prices as they are and adds a notice.
 - Limits up to the lab's are published as quoted, and a limit equal to the lab's is inherited. A larger catalog limit is published only when the file already states it (checked by hand), and the catalog can still lower that value.

@@ -5,7 +5,8 @@ import type { ExistingModel, SyncedModel, SyncProvider } from "../index.js";
 import { modelMetadata } from "./openrouter.js";
 
 // Wiro AI's LLM gateway lists every model it serves, with USD per-token prices,
-// context price bands and limits (https://wiro.ai/docs/completions-api).
+// context price bands and limits (https://wiro.ai/docs/completions-api). The
+// list needs no key; WIRO_API_KEY is sent when one is set.
 const API_ENDPOINT = "https://llm.wiro.ai/v1/models";
 
 // Absence from the catalog removes a model, so a response this small is treated
@@ -133,7 +134,7 @@ export async function fetchWiroModels(fetcher: typeof fetch = fetch, key = proce
     const response = await fetcher(url, { headers });
     if (!response.ok) {
       const hint = !key && (response.status === 401 || response.status === 403)
-        ? "; the model list needs a Wiro API key in WIRO_API_KEY"
+        ? "; set WIRO_API_KEY if the model list asks for a key"
         : "";
       throw new Error(`Wiro AI models request failed: ${response.status} ${response.statusText}${hint}`);
     }
