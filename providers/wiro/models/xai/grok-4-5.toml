@@ -11,7 +11,9 @@
 # Live 2026-11-08 on this model: reasoning_effort = xhigh answered with x-wiro-adjusted-parameters:
 # reasoning.effort=high.
 # Structured output: json_schema (catalog structured_output_modes).
-# Modalities: the catalog lists document, image, text input for this model, within the lab's formats.
+# Modalities: the catalog lists document, image and text input for this model. The lab file has no PDF,
+# but xAI's own entry for Grok 4.5 (providers/xai/models/grok-4.5.toml) lists it, as do the OpenRouter
+# and Vercel entries.
 # Limits: max_tokens 65,536 (catalog), below the lab's.
 # Sampling: top_k is not in the catalog's supported_parameters.
 # APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.

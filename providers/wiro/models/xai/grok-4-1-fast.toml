@@ -13,16 +13,13 @@
 # Structured output: json_schema (catalog structured_output_modes).
 # Cache: the model page prices cached input, and the provider caches without a request field, so
 # cache = { implicit = true }.
-# Modalities: the catalog lists document, image, text input for this model, within the lab's formats.
+# Modalities: the lab file's text, JPEG and PNG input. Neither lab file for Grok 4.1 Fast nor any other
+# host lists PDF for it, so the file adds none.
 # Sampling: top_k is not in the catalog's supported_parameters.
 # APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
 schema = 2
 base_model = "xai/grok-4.1-fast-reasoning"
 name = "Grok 4.1 Fast"
-
-[modalities]
-input = ["text", "image/jpeg", "image/png", "application/pdf"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
