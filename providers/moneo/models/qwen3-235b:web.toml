@@ -1,24 +1,19 @@
-# Availability, exact wire ID, capabilities, limit and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
-# Reasoning: the model reasons internally (public catalog has_reasoning=true), but Moneo's Chat Completions gateway
-# strips all reasoning output before replying and silently accepts/ignores every reasoning control.
-# Live probe (2026-11-11, POST /v1/chat/completions): reasoning_effort, thinking.type=disabled and enable_thinking=false
-# each return HTTP 200, yet no reasoning_content / reasoning / reasoning_details field ever appears in the response.
-# Therefore no toggle, effort enum or budget control is exposed, and no reasoning field is ever surfaced to the caller.
-# tool_choice: live probe confirms auto / none / required / named (specific) function are all accepted (HTTP 200).
-# The `:web` suffix is part of the exact Moneo wire ID; web search is bundled into token pricing and has no separate fee.
+# Moneo catalog row (retrieved 2026-11-11): id/model=`qwen3-235b:web`, context_tokens=128000,
+# has_vision=false, has_tools=true, has_reasoning=true, input_per_1m_usd=0.40, output_per_1m_usd=3.00:
+# https://api.moneo.one/v1/models
+# `:web` is therefore part of the exact wire ID. Search is bundled into token prices; no separate search fee is published.
+# The sanitizer drops Qwen enable_thinking/budget controls and the response filter removes all reasoning fields.
+# Tool choice inherits the Alibaba lab model (auto/none); HTTP 200 for other values did not prove enforcement.
+# Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
 schema = 2
 base_model = "alibaba/qwen3-235b-a22b"
 name = "Qwen3 235B (Web)"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true }
-structured_output = true
+reasoning = { supported = false }
 
 [limit]
 context = 128_000
-
-[api.chat-completions]
 
 [cost.text.input]
 price = 0.40

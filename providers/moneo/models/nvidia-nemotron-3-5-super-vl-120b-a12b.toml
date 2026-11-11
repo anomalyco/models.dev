@@ -1,27 +1,19 @@
-# Availability, exact wire ID, host modalities, limit and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
-# Reasoning: the model reasons internally (public catalog has_reasoning=true), but Moneo's Chat Completions gateway
-# strips all reasoning output before replying and silently accepts/ignores every reasoning control.
-# Live probe (2026-11-11, POST /v1/chat/completions): reasoning_effort, thinking.type=disabled and enable_thinking=false
-# each return HTTP 200, yet no reasoning_content / reasoning / reasoning_details field ever appears in the response.
-# Therefore no toggle, effort enum or budget control is exposed, and no reasoning field is ever surfaced to the caller.
-# tool_choice: live probe confirms auto / none / required / named (specific) function are all accepted (HTTP 200).
+# Moneo catalog row (retrieved 2026-11-11): id/model=`nvidia-nemotron-3-5-super-vl-120b-a12b`, context_tokens=262144,
+# has_vision=true, has_tools=true, has_reasoning=true, input_per_1m_usd=0.20, output_per_1m_usd=0.50:
+# https://api.moneo.one/v1/models
+# Host context override maps directly to context_tokens=262144. Modalities inherit the NVIDIA lab model because Moneo
+# publishes only has_vision=true, not a narrower MIME allowlist. The sanitizer drops chat_template_kwargs/enable_thinking and the response filter removes all reasoning fields
+# because Moneo strips reasoning output.
+# Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
 schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 name = "Nemotron 3.5 Super VL 120B"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true }
-structured_output = true
+reasoning = { supported = false }
 
 [limit]
 context = 262_144
-
-[api.chat-completions]
 
 [cost.text.input]
 price = 0.20

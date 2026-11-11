@@ -1,25 +1,19 @@
-# Availability, exact wire ID, host capability/modalities, limit and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
-# Moneo's public catalog explicitly reports has_reasoning=false for this route.
-# Live probe (2026-11-11): base and reasoning_effort=high both return HTTP 200 with no reasoning output, confirming has_reasoning=false.
-# tool_choice: live probe confirms auto / none / required / named (specific) function are all accepted (HTTP 200).
-# The `:web` suffix is part of the exact Moneo wire ID; web search is bundled into token pricing and has no separate fee.
+# Moneo catalog row (retrieved 2026-11-11): id/model=`gemma-4-31b:web`, context_tokens=256000,
+# has_vision=true, has_tools=true, has_reasoning=false, input_per_1m_usd=0.15, output_per_1m_usd=0.40:
+# https://api.moneo.one/v1/models
+# `:web` is therefore part of the exact wire ID. Search is bundled into token prices; no separate search fee is published.
+# The route reports has_reasoning=false; the Chat Completions response filter also removes every reasoning field. MIME types inherit the Google lab model
+# because Moneo publishes only has_vision=true, not a narrower MIME allowlist.
+# Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
 schema = 2
 base_model = "google/gemma-4-31b-it"
 name = "Gemma 4 31B (Web)"
 
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
-structured_output = true
 
 [limit]
 context = 256_000
-
-[api.chat-completions]
 
 [cost.text.input]
 price = 0.15

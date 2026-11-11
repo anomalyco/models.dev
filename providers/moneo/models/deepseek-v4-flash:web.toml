@@ -1,21 +1,19 @@
-# Availability, exact wire ID, capabilities, limits and prices: https://api.moneo.one/v1/models (accessed 2026-11-11)
-# Reasoning: the model reasons internally (public catalog has_reasoning=true), but Moneo's Chat Completions gateway
-# strips all reasoning output before replying and silently accepts/ignores every reasoning control.
-# Live probe (2026-11-11, POST /v1/chat/completions): reasoning_effort, thinking.type=disabled and enable_thinking=false
-# each return HTTP 200, yet no reasoning_content / reasoning / reasoning_details field ever appears in the response.
-# Therefore no toggle, effort enum or budget control is exposed, and no reasoning field is ever surfaced to the caller.
-# tool_choice: live probe confirms auto / none / required / named (specific) function are all accepted (HTTP 200).
-# The `:web` suffix is part of the exact Moneo wire ID; web search is bundled into token pricing and has no separate fee.
+# Moneo catalog row (retrieved 2026-11-11): id/model=`deepseek-v4-flash:web`, context_tokens=1000000,
+# has_vision=false, has_tools=true, has_reasoning=true, input_per_1m_usd=0.15, output_per_1m_usd=0.30:
+# https://api.moneo.one/v1/models
+# `:web` is therefore part of the exact wire ID. Search is bundled into token prices; no separate search fee is published.
+# Host reasoning override: Moneo removes reasoning_content/reasoning/reasoning_details from every Chat Completions response.
+# The Chat Completions sanitizer forwards only top-level `reasoning` and drops native DeepSeek thinking/effort keys; the response filter removes all reasoning fields, so reasoning is not caller-observable.
+# Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 name = "DeepSeek V4 Flash (Web)"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true }
-structured_output = true
+reasoning = { supported = false }
 
-[api.chat-completions]
+[limit]
+context = 1_000_000
 
 [cost.text.input]
 price = 0.15
