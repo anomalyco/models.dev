@@ -3,7 +3,8 @@
 # Effort: reasoning_effort is forwarded unchanged; levels as on providers/google; each level returned 200 on this host (2026-11-11). No default is stated: this host's default was not confirmed.
 # Cache, and the 32,768-token output limit per request, copied from providers/google.
 # Structured output: response_format with a JSON schema returned JSON in a code fence, so it is off (probed 2026-11-11).
-# Input: a PNG image and a PDF were read (probed 2026-11-11); audio and video were not probed and are left out.
+# Input: a PNG image and a PDF were read (probed 2026-11-11). Audio and video are left out because this host does not read them from the parts a Chat Completions client sends (probed 2026-11-11): an input_audio part (wav, mp3), a video_url part and a file part with an mp4 were ignored (the model answered that it received none), and a file part with a wav returned a different wrong answer on each of three runs. They were read only as a base64 data URL inside an image_url part, a shape outside the Chat Completions spec: a spoken four-digit code came back from wav, mp3, ogg and m4a, and a four-digit number shown on screen from mp4, webm and mov.
+# Tools: a function tool returned a tool call with the right arguments on Chat Completions with tool_choice "auto" (probed 2026-11-11).
 schema = 2
 base_model = "google/gemini-4-argon"
 

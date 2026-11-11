@@ -3,6 +3,7 @@
 # Effort: reasoning_effort is forwarded unchanged; levels and default as on providers/xai; each level returned 200 on this host (2026-11-11).
 # Cache: automatic prefix caching, as on providers/xai.
 # Input: a PNG image was read; a PDF file part returned 400 on this host (2026-11-11), so PDF is left out. A JSON schema response_format worked.
+# Tools: a function tool returned a tool call with the right arguments on Chat Completions with tool_choice "auto" (probed 2026-11-11).
 schema = 2
 base_model = "xai/grok-4.7"
 

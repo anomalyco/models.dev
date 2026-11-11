@@ -5,6 +5,7 @@
 # Mid-conversation flags, tool strict/search and fast mode are left unset: not tested on this host.
 # Structured output: a JSON schema is enforced on Messages (output_config.format); on Chat Completions response_format returned JSON in a code fence, so the schema is not enforced there (probed 2026-11-11); the flag is per model and follows Messages, the API listed first.
 # Input: a PNG image and a PDF were read on both APIs (probed 2026-11-11). Context: a 580K-token prompt was accepted and the limit error names 1,000,000 tokens.
+# Tools: a function tool returned a tool call with the right arguments on Chat Completions with tool_choice "auto" (probed 2026-11-11).
 schema = 2
 base_model = "anthropic/claude-fable-5-2"
 

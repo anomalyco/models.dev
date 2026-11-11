@@ -2,7 +2,7 @@
 # API: OpenAI Chat Completions only (POST /v1/chat/completions); there is no Responses API.
 # Effort: reasoning_effort is forwarded unchanged; levels as on providers/openai; each level returned 200 on this host (2026-11-11). A JSON schema response_format, a PNG image and a PDF file part all worked (probed 2026-11-11).
 # Cache: automatic prefix caching; minimum copied from providers/openai.
-# Tools: custom (freeform) tools do not reach the model on this host, so freeform is left out. Probed 2026-11-11 on Chat Completions with one custom tool per format (text, a regex grammar ZZ[0-9]{3}, the same grammar in lark): with tool_choice "required" each request returned 400 "Tool choice 'required' must be specified with 'tools' parameter", and with no tool_choice each returned 200 with no tool call and the model answering that the tool is not available.
+# Tools: custom (freeform) tools do not reach the model on this host, so freeform is left out. Probed 2026-11-11 on Chat Completions with one custom tool per format (text, a regex grammar ZZ[0-9]{3}, the same grammar in lark): with tool_choice "required" each request returned 400 "Tool choice 'required' must be specified with 'tools' parameter", and with no tool_choice each returned 200 with no tool call and the model answering that the tool is not available. Function tools are forwarded: a function tool returned a tool call with the right arguments under tool_choice "required" and "auto" (probed 2026-11-11).
 schema = 2
 base_model = "openai/gpt-6-astra"
 
