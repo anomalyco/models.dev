@@ -10,6 +10,7 @@
 # Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): no reasoning or tools, so no effort or tool updates.
 # system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
 schema = 2
+type = "moderation"
 name = "GLiNER2-Guardrails-PII-Multi"
 description = "A 300M-parameter multilingual model that runs LLM safety moderation and PII detection in a single forward pass."
 open_weights = true

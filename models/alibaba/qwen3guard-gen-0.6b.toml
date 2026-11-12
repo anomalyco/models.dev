@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-12): https://huggingface.co/Qwen/Qwen3Guard-Gen-0.6B (Apache-2.0; fine-tuned from
+#   Qwen/Qwen3-0.6B; published 2025-09-23 per the Hugging Face API createdAt), https://github.com/QwenLM/Qwen3Guard.
+#   Generative safety classifier: labels a prompt or a response Safe, Controversial or Unsafe and names the
+#   categories, as text; 119 languages. Context: max_position_embeddings 32,768 in config.json, no rope scaling.
+# Not v2_only: v1 already serves it (cortecs, ovhcloud).
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
+type = "moderation"
+name = "Qwen3Guard-Gen-0.6B"
+description = "Multilingual Qwen3-based safety classifier that labels prompts and responses safe, controversial, or unsafe"
+family = "qwen"
+open_weights = true
+release_date = "2025-09-23"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3Guard-Gen-0.6B"

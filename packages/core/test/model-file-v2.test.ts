@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { formatModelV2, formatTomlValue, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
-import { explicitFalseFlags, modelV2ToV1, readLabMetadata } from "../src/translate.js";
+import { explicitFalseFlags, modelV2ToV1, readLabMetadata, v1ModelType } from "../src/translate.js";
 
 test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the lab", () => {
   const doc = {
@@ -406,4 +406,9 @@ test("patchModelV2 keeps a type that v1 can't carry", () => {
   const next = patchModelV2(doc, { name: "Extractor", cost: { input: 1 } }, { name: "Extractor", cost: { input: 2 } });
   expect(next.type).toBe("extraction");
   expect(next.v2_only).toBe(true);
+});
+
+test("v1 publishes moderation models untyped, without v2_only", () => {
+  expect(v1ModelType("moderation", undefined)).toBeUndefined();
+  expect(() => v1ModelType("extraction", undefined)).toThrow();
 });
