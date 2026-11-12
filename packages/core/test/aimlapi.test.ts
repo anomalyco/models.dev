@@ -100,8 +100,8 @@ test("a base with no lab entry falls back to the OpenRouter peer's ladder, inter
   expect(resolveLadder("tencent/hy3", "tencent/hy3", ["low", "medium", "high"])).toEqual(["low", "high"]);
   // A peer-listed `none` is not taken on trust the way a lab-listed one is.
   expect(resolveLadder("tencent/hy3", "tencent/hy3", ["none", "low", "medium", "high"])).toEqual(["low", "high"]);
-  // OpenRouter files Alibaba under `qwen/`.
-  expect(labLadder("alibaba/qwen3.8-27b")).toEqual({ kind: "effort", values: ["low", "medium", "xhigh"], source: "peer" });
+  // The lab now publishes the Qwen ladder directly.
+  expect(labLadder("alibaba/qwen3.8-27b")).toEqual({ kind: "effort", values: ["low", "medium", "xhigh"], source: "lab" });
 });
 
 test("a peer that is toggle-only counts as no effort ladder, not as a licence for the host enum", () => {
