@@ -3,8 +3,10 @@
 # - https://platform.minimax.io/docs/guides/image-generation
 # - https://www.minimax.io/blog/minimax-h3-image ("Highspeed mode reaches 3-4x the speed" of mainstream alternatives)
 # Same endpoints and modalities as MiniMax-H3-Image (POST /v1/images/generations and /v1/images/edits);
-# only the model id and price tier differ. Highspeed is a faster serving mode of MiniMax-H3-Image, so it shares
-# that model's published weights and license, like the MiniMax M2.x highspeed variants.
+# only the model id and price tier differ. MiniMax's announcement describes Highspeed as a "mode" of H3 Image, not a
+# separate model, so this entry treats it as the same published checkpoint served faster and shares its weights and
+# license, like the MiniMax M2.x highspeed variants. The H3 video tiers (Highspeed, Lite) are listed as separate
+# hosted models with no published checkpoint, so they stay open_weights = false.
 schema = 2
 v2_only = true
 type = "image"
