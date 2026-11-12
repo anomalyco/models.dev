@@ -3362,7 +3362,7 @@ test("inherits Hyper reasoning when API omits reasoning metadata", () => {
   const model = hyperModel({ id: "llama-3.3-70b-instruct", reasoning: undefined });
 
   expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).toMatchObject({
-    attachment: false,
+    base_model: "meta/llama-3.3-70b-instruct",
   });
   expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning");
   expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning_options");
