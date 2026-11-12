@@ -5,7 +5,6 @@ import { z } from "zod";
 import type {
   ExistingModel,
   SyncProvider,
-  SyncedBaseModel,
   SyncedFullModel,
   SyncedModel,
 } from "../index.js";
@@ -206,13 +205,12 @@ export function buildNeuralwattModel(
   };
 
   if (baseModel !== undefined) {
-    const factored = factorBaseModel(
+    return factorBaseModel(
       baseModel,
       values,
       limit,
       authored?.base_model_omit,
-    ) as SyncedBaseModel;
-    return capabilities.reasoning ? factored : omitInheritedReasoningOptions(factored, baseModel);
+    );
   }
 
   // Only a model that already has a local TOML reaches this branch: creates
@@ -234,15 +232,6 @@ export function buildNeuralwattModel(
 // cannot re-derive, such as a canonical ID with a suffix the served ID drops.
 function baseModelFor(model: NeuralwattModel, authored: ExistingModel | undefined) {
   return resolveBaseModel(model) ?? authored?.base_model;
-}
-
-// The catalog rejects reasoning_options on a non-reasoning model, so a fast
-// variant has to drop the options its canonical entry declares.
-function omitInheritedReasoningOptions(factored: SyncedBaseModel, baseModel: string) {
-  if (modelMetadata(baseModel).reasoning_options === undefined) return factored;
-  const omit = factored.base_model_omit ?? [];
-  if (omit.includes("reasoning_options")) return factored;
-  return { ...factored, base_model_omit: [...omit, "reasoning_options"] };
 }
 
 // Match on the bare slug. The Hugging Face org is no help: repacks are served
