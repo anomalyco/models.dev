@@ -1,0 +1,50 @@
+# Sources (accessed 2026-11-13):
+# - https://qvac.tether.io/blog/on-device-ai-agent-botpsy
+# - https://huggingface.co/qvac/BotPsy-0.8B
+# Open weights under Apache 2.0. Built on Qwen3.5-0.8B for on-device tool calling and agentic tasks.
+schema = 2
+name = "BotPsy-0.8B"
+description = "0.8B parameter on-device agentic model optimized for tool calling and multi-step personal assistant tasks, outperforming larger models in its class"
+family = "botpsy"
+open_weights = true
+release_date = "2026-11-11"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 32_768
+output = 8_192
+
+[[weights]]
+label = "Hugging Face (BF16)"
+url = "https://huggingface.co/qvac/BotPsy-0.8B"
+format = "safetensors"
+
+[[weights]]
+label = "GGUF (Q4_K_M)"
+url = "https://huggingface.co/qvac/BotPsy-0.8B-GGUFs"
+format = "gguf"
+
+[[links]]
+url = "https://qvac.tether.io/blog/on-device-ai-agent-botpsy"
+type = "announcement"
+
+[[links]]
+url = "https://huggingface.co/qvac/BotPsy-0.8B"
+type = "model_card"
+
+[[benchmarks]]
+name = "BFCL v4"
+score = 44.0
+metric = "accuracy"
+source = "https://qvac.tether.io/blog/on-device-ai-agent-botpsy"

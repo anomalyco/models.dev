@@ -1,0 +1,35 @@
+# Sources (accessed 2026-11-13):
+# - https://empero.org/writing/manta
+# - https://empero.org/manta
+# Manta is in early access / waitlist; public release pending. Claims 100 million token context.
+# Weights not yet released.
+schema = 2
+name = "Manta"
+description = "Long-context model that reads up to 100 million tokens in one prompt, with strong recall over massive documents"
+family = "manta"
+open_weights = false
+release_date = "2026-11-06"
+license = "Proprietary"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 100_000_000
+output = 8_192
+
+[[links]]
+url = "https://empero.org/writing/manta"
+type = "announcement"
+
+[[links]]
+url = "https://empero.org/manta"
+type = "docs"
