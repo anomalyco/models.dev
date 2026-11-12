@@ -24,20 +24,20 @@ capabilities = { tools = { freeform = ["text", "lark", "regex"], updates = true 
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 4.4
-cache = { read = 0.44, write = 5.5 }
+price = 4
+cache = { read = 0.4, write = 5 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
-price = 8.8
-cache = { read = 0.88, write = 11 }
+price = 8
+cache = { read = 0.8, write = 10 }
 
 [cost.text.output]
-price = 22
+price = 20
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
-price = 33
+price = 30
 
 [cost.web_search]
 price = 10
