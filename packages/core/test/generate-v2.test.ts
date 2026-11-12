@@ -166,6 +166,9 @@ describe("v2 catalog generation", () => {
     const gemini = providersV2.google?.models["gemini-3.8-flash"];
     expect(gemini?.recommended_api).toBe("interactions");
     expect(Object.keys(gemini?.api ?? {})).toEqual(["generate-content", "chat-completions", "interactions"]);
+    // Guardrails are typed in v2 only; v1 keeps publishing them untyped.
+    expect(providersV2.groq?.models["meta-llama/llama-prompt-guard-2-86m"]?.type).toBe("moderation");
+    expect(providersV2.openrouter?.models["openai/gpt-oss-safeguard-20b"]?.type).toBe("moderation");
     expect(
       providersV2["google-vertex"]?.models["gemini-2.5-pro"]?.api[
         "generate-content"
