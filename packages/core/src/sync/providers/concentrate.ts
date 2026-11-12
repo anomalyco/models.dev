@@ -27,7 +27,7 @@ const Route = z.object({
   pricing: z.array(Price),
   supports: z.object({
     endpoint: z.object({ chat: z.boolean(), decisions: z.boolean().optional() }).passthrough(),
-    tools: z.object({ function_calling: z.boolean() }).passthrough(),
+    tools: z.object({ function_calling: z.boolean(), custom_tools: z.boolean().optional() }).passthrough(),
     reasoning: z.object({ effort: z.record(z.boolean()).optional() }).passthrough().optional(),
     input: z.object({ image: Formats, file: Formats }).passthrough(),
   }).passthrough(),
@@ -60,7 +60,6 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
   "kimi-k3-1-pro-highspeed": "moonshotai/kimi-k3.1-pro",
   "llama-4-maverick": "meta/llama-4-maverick-17b-instruct",
   "llama-4-scout": "meta/llama-4-scout-17b-instruct",
-  "magistral-small-1.2": "mistral/magistral-small-2509",
   "minimax-m2-1-highspeed": "minimax/MiniMax-M2.1",
   "ministral-3-3b": "mistral/ministral-3-3b-instruct-2512",
   "ministral-3-8b": "mistral/ministral-3-8b-instruct-2512",
@@ -80,7 +79,6 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
   "qwen3-235b-a22b-instruct": "alibaba/qwen3-235b-a22b-instruct-2507",
   "qwen3-30b": "alibaba/qwen3-30b-a3b",
   "qwen3-30b-a3b-instruct": "alibaba/qwen3-30b-a3b-instruct-2507",
-  "qwen3-max-thinking": "alibaba/qwen3-max",
   "qwen3.6-35b": "alibaba/qwen3.6-35b-a3b",
 };
 // Not synced: Concentrate's PII redaction service (not a language model), and models whose
@@ -88,7 +86,7 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
 const NOT_MODELS = new Set([
   "redact-v1",
   "gpt-4o", "gpt-5.2", "gpt-5.3-codex", "gpt-5.4-mini", "gpt-5.4-nano", "gpt-oss-safeguard-120b",
-  "glm-5.2", "gpt-oss-20b", "hy4-preview", "magistral-small-1.2",
+  "glm-5.2", "gpt-oss-20b", "hy4-preview", "magistral-small-1.2", "qwen3-max-thinking",
 ]);
 
 export const concentrate = {
@@ -117,7 +115,7 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   const base = resolveConcentrateBaseModel(model);
   if (NOT_MODELS.has(model.id) || routes.length === 0 || base === undefined) return undefined;
 
-  // Concentrate picks a route per request, so prices are the most expensive route's: no request bills above them.
+  // Concentrate picks a route per request, so prices are the most expensive route's: an upper bound at the default tier.
   const lab = base.split("/")[0]!;
   const chosen = routes.flatMap(([, route]) => {
     const standard = standardPrice(route);
@@ -131,7 +129,10 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   // Decision models answer TypeSafe's System One format at /v1/systemone.
   if (chat.length === 0) {
     const systemone = { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/typesafe-ai/decisions" } };
-    return { id: model.id, v2: clean({ schema: 2, v2_only: labFile?.v2_only, base_model: base, api: { systemone }, cost: price }) };
+    // System One takes model, state and questions only (no sampling parameters), and answers are structured.
+    const sampling = Object.fromEntries(["temperature", "top_p", "top_k"].filter((key) => labFile?.capabilities?.[key] === true).map((key) => [key, false]));
+    const capabilities = { structured_output: true, ...sampling };
+    return { id: model.id, v2: clean({ schema: 2, v2_only: labFile?.v2_only, base_model: base, capabilities, api: { systemone }, cost: price }) };
   }
 
   // Concentrate routes each request to a route serving the features it uses, so a capability holds if any route serves it.
@@ -157,8 +158,11 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   doc.capabilities = clean({
     ...doc.capabilities,
     reasoning: thinks ? reasoning(firstParty?.reasoning, efforts, claude) : { supported: false },
-    cache: chosen?.tokens.cache?.read === undefined ? undefined : firstParty?.cache,
+    cache: chosen?.tokens.cache?.read === undefined ? undefined : firstParty?.cache ?? { implicit: true },
   });
+  // Custom tools (free-form and grammar formats) take the lab's formats where a route accepts them.
+  const freeform = supports.some((s) => s.tools.custom_tools === true) ? firstParty?.tools?.freeform : undefined;
+  if (freeform !== undefined) doc.capabilities.tools = { ...doc.capabilities.tools, supported: true, freeform };
   if (claude) doc.api = { messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } } };
   if (price === undefined) delete doc.cost;
   else doc.cost = price;
@@ -167,16 +171,21 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
       ? claude ? "# Toggle: thinking.type = enabled|disabled" : "# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions"
       : undefined,
     doc.limit ? `# Limit: max_input_tokens ${model.max_input_tokens}, max_tokens ${model.max_tokens} at ${API_ENDPOINT}, capped at the lab's` : undefined,
+    freeform !== undefined ? "# Custom tools: text, lark and regex grammars on Responses (enforced live 2026-11-12)" : undefined,
+    budgetEffort(firstParty?.reasoning, claude) && doc.capabilities.reasoning?.effort?.some((level: string) => GRADED.includes(level)) ? "# Effort: Concentrate maps reasoning.effort to the model's thinking budget (graded, live 2026-11-12)" : undefined,
   ].filter(Boolean).join("\n");
   return { id: model.id, v2: doc, ...(header ? { header } : {}) };
 }
 
-// The lab's first-party controls on the levels this host accepts. A lab toggle becomes
-// `none`, Concentrate's off switch; Claude keeps Anthropic's own toggle and budget.
+// A budget-only lab outside Claude: Concentrate's routes take reasoning.effort and map it to the thinking budget.
+const budgetEffort = (lab: Record<string, any> | undefined, claude: boolean) => !claude && lab?.budget !== undefined && lab.effort === undefined;
+const GRADED = ["low", "medium", "high"];
+
+// The lab's controls on the levels this host accepts, never the full list the routes take: a budget-only lab gets
+// the graded levels, a lab toggle (or no reference controls) becomes `none`, and Claude keeps Anthropic's fields.
 function reasoning(lab: Record<string, any> | undefined, efforts: string[], claude: boolean) {
-  // A lab with controls but no effort list (e.g. budget-only Claude) takes no effort here either; with no
-  // reference controls at all, only the off switch is published rather than every level the routes accept.
-  const labEffort: string[] = lab?.effort ?? [];
+  const graded = efforts.filter((level) => GRADED.includes(level));
+  const labEffort: string[] = lab?.effort ?? (budgetEffort(lab, claude) && graded.length >= 2 ? graded : []);
   const effort = efforts.filter((level) => labEffort.includes(level) || (level === "none" && (lab === undefined || lab.toggle === true) && !claude));
   // An off switch with no graded levels is a toggle (`none` off, omitted on), as relays such as Bothub publish it.
   const onOff = effort.length === 1 && effort[0] === "none";
@@ -188,7 +197,7 @@ function reasoning(lab: Record<string, any> | undefined, efforts: string[], clau
   });
 }
 
-// Reasoning and cache from the lab's own provider file for this model, else OpenRouter's, else another peer's.
+// Capabilities (reasoning, cache, tools) from the lab's own provider file, else OpenRouter's, else another peer's.
 let peerCapabilities: Map<string, Record<string, any>> | undefined;
 function labCapabilities(base: string) {
   if (peerCapabilities === undefined) {

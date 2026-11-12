@@ -8,6 +8,7 @@ output = ["text"]
 [capabilities]
 structured_output = true
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.375

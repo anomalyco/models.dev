@@ -2,6 +2,9 @@ schema = 2
 v2_only = true
 base_model = "baseten/mammoth-1"
 
+[capabilities]
+structured_output = true
+
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
 

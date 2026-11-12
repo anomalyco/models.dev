@@ -10,6 +10,7 @@ output = ["text"]
 [capabilities]
 structured_output = true
 reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
 
 [limit]
 context = 262_144

@@ -4,9 +4,9 @@ import { buildConcentrateModel, concentrate, type ConcentrateModel, resolveConce
 
 const usd = (USD: number, units = 1_000_000) => ({ price: { USD }, units });
 const tokens = (input: number, output: number, read?: number) => ({ input: usd(input), output: usd(output), ...(read === undefined ? {} : { cache: { read: usd(read) } }) });
-const route = (o: { pricing?: unknown[]; tools?: boolean; effort?: Record<string, boolean>; chat?: boolean } = {}) => ({
+const route = (o: { pricing?: unknown[]; tools?: boolean; custom?: boolean; effort?: Record<string, boolean>; chat?: boolean } = {}) => ({
   pricing: o.pricing ?? [{ tokens: tokens(1, 2) }],
-  supports: { endpoint: { chat: o.chat ?? true, decisions: !(o.chat ?? true) }, tools: { function_calling: o.tools ?? true }, reasoning: { effort: o.effort ?? {} }, input: { image: {}, file: {} } },
+  supports: { endpoint: { chat: o.chat ?? true, decisions: !(o.chat ?? true) }, tools: { function_calling: o.tools ?? true, custom_tools: o.custom ?? false }, reasoning: { effort: o.effort ?? {} }, input: { image: {}, file: {} } },
 });
 const model = (id: string, author: string, providers: Record<string, unknown>, thinks = true) => ({
   id, author: { slug: author }, max_input_tokens: 10_000_000, max_tokens: 10_000_000, providers,
@@ -26,7 +26,7 @@ describe("Concentrate sync", () => {
   });
 
   test("prices from the most expensive route, with context tiers and web search", () => {
-    const lab = route({ effort: { ...all, none: false }, pricing: [
+    const lab = route({ custom: true, effort: { ...all, none: false }, pricing: [
       { condition: { service_tier: "priority" }, tokens: tokens(10, 60) },
       { condition: { input_gte: 272_000 }, tokens: tokens(10, 45, 1) },
       // A tier above the context the model can take never applies, so it is left out.
@@ -44,8 +44,23 @@ describe("Concentrate sync", () => {
     });
     // Any route's levels count (Concentrate routes by feature), limited to the lab's own; limits capped to the lab's.
     expect(doc.capabilities.reasoning).toEqual({ supported: true, effort: ["none", "low", "medium", "high", "xhigh"] });
+    // A route that takes custom tools gets the lab's free-form formats.
+    expect(doc.capabilities.tools).toEqual({ supported: true, freeform: ["text", "lark", "regex"] });
     expect(doc.api).toBeUndefined();
     expect(doc.limit).toBeUndefined();
+  });
+
+  test("marks a host that bills cache reads as caching, implicitly when the reference has no details", () => {
+    const priced = route({ pricing: [{ tokens: tokens(1, 2, 0.1) }] });
+    expect(v2(model("kimi-k2-5", "moonshot", { moonshot: priced })).capabilities.cache).toEqual({ implicit: true });
+    expect(v2(model("kimi-k2-5", "moonshot", { moonshot: route() })).capabilities.cache).toBeUndefined();
+  });
+
+  test("maps effort onto budget-only labs with graded low/medium/high, never the full list", () => {
+    expect(v2(model("gemini-2.5-pro", "google", { vertex: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true, effort: ["low", "medium", "high"] });
+    expect(v2(model("gemini-2.5-flash", "google", { vertex: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true, effort: ["none", "low", "medium", "high"] });
+    // Fewer than two graded levels stays an on/off switch.
+    expect(v2(model("gemini-2.5-flash", "google", { vertex: route({ effort: { none: true, medium: true } }) })).capabilities.reasoning).toEqual({ supported: true, toggle: true });
   });
 
   test("serves Claude over Messages with Anthropic's toggle", () => {
@@ -59,6 +74,8 @@ describe("Concentrate sync", () => {
 
   test("serves decision models over System One", () => {
     expect(Object.keys(v2(model("jev-1.14.0", "typesafe", { typesafe: route({ chat: false }) })).api)).toEqual(["systemone"]);
+    // System One takes no sampling parameters, and its answers are structured.
+    expect(v2(model("clef", "cloudflare", { cloudflare: route({ chat: false }) })).capabilities).toEqual({ structured_output: true, temperature: false, top_p: false, top_k: false });
   });
 
   test("skips services and unmapped models, and marks non-reasoners", () => {

@@ -1,5 +1,5 @@
-# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions
 # Limit: max_input_tokens 262144, max_tokens 32768 at https://api.concentrate.ai/v1/models, capped at the lab's
+# Effort: Concentrate maps reasoning.effort to the model's thinking budget (graded, live 2026-11-12)
 schema = 2
 base_model = "alibaba/qwen3.6-27b"
 
@@ -9,7 +9,7 @@ output = ["text"]
 
 [capabilities]
 structured_output = true
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
 output = 32_768

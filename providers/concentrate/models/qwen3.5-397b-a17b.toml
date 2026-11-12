@@ -1,4 +1,4 @@
-# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions
+# Effort: Concentrate maps reasoning.effort to the model's thinking budget (graded, live 2026-11-12)
 schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 
@@ -8,7 +8,7 @@ output = ["text"]
 
 [capabilities]
 structured_output = true
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [cost.text.input]
 price = 0.6

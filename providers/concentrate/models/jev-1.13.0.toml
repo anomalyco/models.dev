@@ -1,6 +1,9 @@
 schema = 2
 base_model = "typesafe/jev-1.13.0"
 
+[capabilities]
+structured_output = true
+
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
 

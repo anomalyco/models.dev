@@ -1,3 +1,4 @@
+# Custom tools: text, lark and regex grammars on Responses (enforced live 2026-11-12)
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
@@ -5,6 +6,7 @@ base_model = "openai/gpt-6.1-sol"
 structured_output = true
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
 
 [cost.text.input]
 price = 2
