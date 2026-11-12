@@ -1,6 +1,7 @@
 # Model ID from BytePlus ModelArk model list: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-list
 # USD pricing from BytePlus ModelArk pricing page: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-pricing
 # USD pricing, per million tokens. Tiered by prompt length.
+# Output limit: BytePlus Ark accepts max_tokens up to 131_072 (same as volcengine Ark).
 schema = 2
 base_model = "bytedance-seed/seed-2.0-mini"
 
@@ -8,7 +9,6 @@ base_model = "bytedance-seed/seed-2.0-mini"
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-# BytePlus Ark accepts max_tokens up to 131_072 for this model (same as volcengine Ark).
 [limit]
 output = 131_072
 
