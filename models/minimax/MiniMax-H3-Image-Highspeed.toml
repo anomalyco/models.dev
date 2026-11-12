@@ -3,17 +3,17 @@
 # - https://platform.minimax.io/docs/guides/image-generation
 # - https://www.minimax.io/blog/minimax-h3-image ("Highspeed mode reaches 3-4x the speed" of mainstream alternatives)
 # Same endpoints and modalities as MiniMax-H3-Image (POST /v1/images/generations and /v1/images/edits);
-# only the model id and price tier differ. Weights are published for MiniMax-H3-Image only: the HF model card's
-# Model Zoo (https://huggingface.co/MiniMaxAI/MiniMax-H3-Image) lists MiniMax-H3-Image and MiniMax-H3-Image-PE,
-# the MiniMaxAI org has no Highspeed repo, and nothing says the Highspeed tier serves the published checkpoint.
+# only the model id and price tier differ. Highspeed is a faster serving mode of MiniMax-H3-Image, so it shares
+# that model's published weights and license, like the MiniMax M2.x highspeed variants.
 schema = 2
 v2_only = true
 type = "image"
 name = "MiniMax H3 Image Highspeed"
 description = "Faster tier of MiniMax H3 Image for text-to-image and image editing"
 family = "minimax"
-open_weights = false
+open_weights = true
 release_date = "2026-11-10"
+license = "MiniMax H3 Image Community License Agreement"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"]
@@ -33,3 +33,16 @@ output = 0
 [[links]]
 url = "https://www.minimax.io/blog/minimax-h3-image"
 type = "announcement"
+
+[[links]]
+url = "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image"
+type = "model_card"
+
+[[weights]]
+label = "Hugging Face: MiniMax-H3-Image"
+url = "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image"
+format = "safetensors"
+
+[[links]]
+url = "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image/blob/main/LICENSE"
+type = "license"
