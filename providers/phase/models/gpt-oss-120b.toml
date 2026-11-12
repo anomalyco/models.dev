@@ -1,0 +1,18 @@
+# Source: https://router.phase.xyz/v1/models (2026-11-12). Plus $0.001 fixed fee per call.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 131_072
+output = 4_096
+
+[cost.text.input]
+price = 0.0385
+
+[cost.text.output]
+price = 0.1768
