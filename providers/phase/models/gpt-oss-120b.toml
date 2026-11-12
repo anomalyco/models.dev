@@ -1,9 +1,11 @@
 # Source: https://router.phase.xyz/v1/models (2026-11-12). Plus $0.001 fixed fee per call.
+# Reasoning control: the router forwards the OpenAI `reasoning_effort` request field to the upstream unchanged
+# (low | medium | high); other reasoning fields (`thinking`, `reasoning`) are not forwarded.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
 [limit]
