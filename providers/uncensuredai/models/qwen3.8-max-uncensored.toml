@@ -2,8 +2,11 @@
 # Hosted model: https://uncensuredai.com/en/models/qwen3.8-max-uncensored
 # Client capabilities: https://uncensuredai.com/model-capabilities.json
 # Base lineage: https://routerhub.si/models/qwen3.8-max-uncensored
-# The public gateway catalog leaves tool calling and reasoning controls unconfirmed.
-# The catalog flags below describe the client features advertised by this entry.
+# The gateway capabilities entry and RouterHub both publish max output = 131,000.
+# Direct RouterHub checks returned the requested named function and arguments.
+# Effort: reasoning_effort = none|low|medium|xhigh. With none the response contained no reasoning.
+# Top-level thinking_budget with enable_thinking was accepted upstream. Leave budget
+# out until the public gateway and generic client budget encoding are verified together.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen 3.8 Max Uncensored"
@@ -14,8 +17,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 cache = { implicit = true }
 
 [limit]

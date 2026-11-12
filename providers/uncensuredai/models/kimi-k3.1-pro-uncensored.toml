@@ -2,7 +2,9 @@
 # Hosted model: https://uncensuredai.com/en/models/kimi-k3.1-pro-uncensored
 # Client capabilities: https://uncensuredai.com/model-capabilities.json
 # Base lineage: https://routerhub.si/models/kimi-k3.1-pro-uncensored
-# Gateway QA confirmed function calls and reported reasoning tokens with server defaults.
+# Gateway QA confirmed function calls. Direct checks on the RouterHub route
+# returned reasoning with reasoning_effort = low|high|max.
+# Moonshot documents max as the base model default.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro Uncensored"
@@ -13,7 +15,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
 cache = { implicit = true }
 
 [cost.text.input]

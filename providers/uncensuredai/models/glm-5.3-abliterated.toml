@@ -2,14 +2,15 @@
 # Hosted model: https://uncensuredai.com/en/models/glm-5.3-abliterated
 # Client capabilities: https://uncensuredai.com/model-capabilities.json
 # Base lineage: https://routerhub.si/models/glm-5.3-abliterated
-# The gateway returned reasoning and text with reasoning_effort=high in a live check.
+# Effort: reasoning_effort = low|high|max, matching the Zhipu lab baseline.
+# Gateway QA confirmed high. Direct checks on the RouterHub route confirmed low and max.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3 Abliterated"
 description = "GLM 5.3 Abliterated served by UncensuredAI over Chat Completions."
 
 [capabilities]
-reasoning = { supported = true, effort = ["high"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
 
 [limit]

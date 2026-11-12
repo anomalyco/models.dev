@@ -3,7 +3,8 @@
 # Client capabilities: https://uncensuredai.com/model-capabilities.json
 # Base lineage: https://api.refuseless.com/models
 # The standard route lists this API ID as 1017. Context follows the gateway capabilities JSON.
-# The gateway also accepts reasoning_effort=off. The catalog exposes the three graded levels.
+# The gateway capabilities entry documents default_effort = low and reasoning_effort = off|low|high|max.
+# Off uses the same reasoning_effort field. The standard upstream also accepts none for off.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash Abliterated"
@@ -14,7 +15,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "low" } }
 cache = { implicit = true }
 
 [limit]
