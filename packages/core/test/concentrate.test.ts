@@ -52,6 +52,17 @@ describe("Concentrate sync", () => {
     expect(doc.limit).toBeUndefined();
   });
 
+  test("takes a cheaper route's context tier when it costs more than the top route there", () => {
+    const doc = v2(model("grok-4.6", "xai", {
+      bedrock: route({ pricing: [{ tokens: tokens(2.2, 6.6) }] }),
+      xai: route({ pricing: [{ tokens: tokens(2, 6) }, { condition: { input_gte: 200_000 }, tokens: tokens(4, 12) }, { condition: { input_gte: 300_000 }, tokens: tokens(4, 12) }] }),
+    }));
+    expect(doc.cost.text).toEqual({
+      input: { price: 2.2, overrides: [{ when: { context: { gte: 200_000 } }, price: 4 }] },
+      output: { price: 6.6, overrides: [{ when: { context: { gte: 200_000 } }, price: 12 }] },
+    });
+  });
+
   test("marks a host that bills cache reads as caching, implicitly when the reference has no details", () => {
     const priced = route({ pricing: [{ tokens: tokens(1, 2, 0.1) }] });
     expect(v2(model("kimi-k2-5", "moonshot", { moonshot: priced })).capabilities.cache).toEqual({ implicit: true });

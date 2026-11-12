@@ -18,5 +18,14 @@ output = 128_000
 price = 2.2
 cache = { read = 0.55 }
 
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 4
+cache = { read = 1 }
+
 [cost.text.output]
 price = 6.6
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_000 } }
+price = 12

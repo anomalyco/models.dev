@@ -82,12 +82,16 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
   "qwen3.6-35b": "alibaba/qwen3.6-35b-a3b",
 };
 // Not synced: Concentrate's PII redaction service (not a language model), and models whose
-// Concentrate catalog entry is being corrected (effort levels, cache price, tool or structured-output support).
+// Concentrate catalog entry is being corrected (effort levels, cache price, tool or structured-output support),
+// and models that didn't complete a tool call end to end in OpenCode.
 const NOT_MODELS = new Set([
   "redact-v1",
   "gpt-4o", "gpt-5.2", "gpt-5.3-codex", "gpt-5.4-mini", "gpt-5.4-nano", "gpt-oss-safeguard-120b",
   "glm-5.2", "gpt-oss-20b", "hy4-preview", "magistral-small-1.2", "qwen3-max-thinking",
   "muse-spark-1.3", "muse-spark-1.3-contributor",
+  "gemma-3-4b", "gemma-3-27b", "gpt-oss-120b", "kimi-k2-thinking", "llama-3.1-8b-instruct", "llama-3.1-70b-instruct",
+  "llama-3.2-1b-instruct", "llama-3.2-3b-instruct", "llama-3.3-70b-instruct", "llama-4-maverick", "llama-4-scout",
+  "ministral-3-14b", "mistral-large-3", "mistral-nemo", "palmyra-x4", "palmyra-x5", "qwen3-32b", "qwen3-coder-30b-a3b",
 ]);
 
 export const concentrate = {
@@ -116,17 +120,18 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   const base = resolveConcentrateBaseModel(model);
   if (NOT_MODELS.has(model.id) || routes.length === 0 || base === undefined) return undefined;
 
-  // Concentrate picks a route per request, so prices are the most expensive route's: an upper bound at the default tier.
+  // Concentrate picks a route per request, so each price is the most expensive route's at that prompt size: an upper
+  // bound at the default tier.
   const lab = base.split("/")[0]!;
-  const chosen = routes.flatMap(([, route]) => {
-    const standard = standardPrice(route);
-    return standard?.tokens === undefined ? [] : [{ route, standard, tokens: standard.tokens }];
-  }).sort((a, b) => total(b.tokens) - total(a.tokens))[0];
+  const top = (size: number) => routes.map(([, route]) => priceAt(route, size))
+    .filter((price) => price?.tokens !== undefined).sort((a, b) => total(b!.tokens!) - total(a!.tokens!))[0];
+  const chosen = top(0);
   const labFile = readToml(path.join(ROOT, "models", `${base}.toml`));
   // A relay serves no more than the model takes; the catalog can over-report a route's limit.
   const limit = { context: capped(model.max_input_tokens, labFile?.limit?.context), output: capped(model.max_tokens, labFile?.limit?.output) };
   const firstParty = labCapabilities(base);
-  const price = chosen && cost(chosen.route, chosen.standard, limit.context, firstParty?.cache?.explicit?.ttl ?? firstParty?.cache?.implicit?.ttl);
+  const thresholds = [...new Set(routes.flatMap(([, route]) => tiers(route).map((tier) => Number(tier.condition!.input_gte))))];
+  const price = chosen && cost(chosen, thresholds.filter((size) => size < limit.context).sort((a, b) => a - b).map((size) => [size, top(size)!] as const), firstParty?.cache?.explicit?.ttl ?? firstParty?.cache?.implicit?.ttl);
 
   // Decision models answer TypeSafe's System One format at /v1/systemone.
   if (chat.length === 0) {
@@ -159,7 +164,7 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   doc.capabilities = clean({
     ...doc.capabilities,
     reasoning: thinks ? reasoning(firstParty?.reasoning, efforts, claude) : undefined,
-    cache: chosen?.tokens.cache?.read === undefined ? undefined : firstParty?.cache ?? { implicit: true },
+    cache: chosen?.tokens?.cache?.read === undefined ? undefined : firstParty?.cache ?? { implicit: true },
   });
   // Custom tools (free-form and grammar formats) take the lab's formats where a route accepts them.
   const freeform = supports.some((s) => s.tools.custom_tools === true) ? firstParty?.freeform : undefined;
@@ -172,8 +177,8 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
       ? claude ? "# Toggle: thinking.type = enabled|disabled" : "# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions"
       : undefined,
     doc.limit ? `# Limit: max_input_tokens ${model.max_input_tokens}, max_tokens ${model.max_tokens} at ${API_ENDPOINT}, capped at the lab's` : undefined,
-    freeform !== undefined ? "# Custom tools: text, lark and regex grammars on Responses (enforced live 2026-11-12)" : undefined,
-    budgetEffort(firstParty?.reasoning, claude) && doc.capabilities.reasoning?.effort?.some((level: string) => GRADED.includes(level)) ? "# Effort: Concentrate maps reasoning.effort to the model's thinking budget (graded, live 2026-11-12)" : undefined,
+    freeform !== undefined ? `# Custom tools: text, lark and regex grammars on Responses, per supports.tools.custom_tools at ${API_ENDPOINT}` : undefined,
+    budgetEffort(firstParty?.reasoning, claude) && doc.capabilities.reasoning?.effort?.some((level: string) => GRADED.includes(level)) ? `# Effort: Concentrate maps reasoning.effort to the model's thinking budget, per supports.reasoning.effort at ${API_ENDPOINT}` : undefined,
   ].filter(Boolean).join("\n");
   return { id: model.id, v2: doc, ...(header ? { header } : {}) };
 }
@@ -227,8 +232,15 @@ function standardPrice(route: Route): z.infer<typeof Price> | undefined {
     .sort((a, b) => Number(b.condition?.date_gte ?? 0) - Number(a.condition?.date_gte ?? 0))[0];
 }
 
-// Standard prices, `input_gte` tiers as context overrides, and web search per 1,000 calls.
-function cost(route: Route, standard: z.infer<typeof Price>, context: number, ttls?: string[]) {
+// A route's `input_gte` tiers at the default tier, lowest first; `input_gte` is where a band starts (inclusive).
+const tiers = (route: Route) => route.pricing
+  .filter((price) => price.tokens !== undefined && typeof price.condition?.input_gte === "number"
+    && Object.keys(price.condition).every((key) => key === "input_gte" || key === "description"))
+  .sort((a, b) => Number(a.condition!.input_gte) - Number(b.condition!.input_gte));
+const priceAt = (route: Route, size: number) => tiers(route).filter((tier) => Number(tier.condition!.input_gte) <= size).at(-1) ?? standardPrice(route);
+
+// Standard prices, context overrides where a band costs more, and web search per 1,000 calls.
+function cost(standard: z.infer<typeof Price>, bands: (readonly [number, z.infer<typeof Price>])[], ttls?: string[]) {
   const tokens = standard.tokens!;
   // Write prices are keyed by the reference's cache TTLs (an unnamed one takes the first), leaving out TTLs it doesn't
   // offer; when it lists no TTLs, the write price is a plain price, as the lab publishes it.
@@ -242,23 +254,20 @@ function cost(route: Route, standard: z.infer<typeof Price>, context: number, tt
       }))),
     });
   };
-  const tiers = route.pricing
-    .filter((price) => price.tokens !== undefined && typeof price.condition?.input_gte === "number" && price.condition.input_gte < context
-      && Object.keys(price.condition).every((key) => key === "input_gte" || key === "description"))
-    .sort((a, b) => Number(a.condition!.input_gte) - Number(b.condition!.input_gte));
-  // `input_gte` is where the band starts (inclusive), as in xAI's own entries.
-  const when = (tier: z.infer<typeof Price>) => ({ context: { gte: Number(tier.condition!.input_gte) } });
+  // A band that costs the same as the one below it adds nothing.
+  const band = (price: z.infer<typeof Price>) => JSON.stringify([price.tokens!.input, price.tokens!.output, price.tokens!.cache?.read].map((money) => money && perMillion(money)));
+  const overrides = bands.filter(([, price], index) => band(price) !== band(index === 0 ? standard : bands[index - 1]![1]));
   const search = standard.tool_calls?.web_search;
   return clean({
     text: {
       input: clean({
         price: perMillion(tokens.input),
         cache: cache(tokens.cache),
-        overrides: tiers.length === 0 ? undefined : tiers.map((tier) => clean({ when: when(tier), price: perMillion(tier.tokens!.input), cache: cache(tier.tokens!.cache) })),
+        overrides: overrides.length === 0 ? undefined : overrides.map(([gte, price]) => clean({ when: { context: { gte } }, price: perMillion(price.tokens!.input), cache: cache(price.tokens!.cache) })),
       }),
       output: clean({
         price: perMillion(tokens.output),
-        overrides: tiers.length === 0 ? undefined : tiers.map((tier) => ({ when: when(tier), price: perMillion(tier.tokens!.output) })),
+        overrides: overrides.length === 0 ? undefined : overrides.map(([gte, price]) => ({ when: { context: { gte } }, price: perMillion(price.tokens!.output) })),
       }),
     },
     web_search: search && { price: round(search.price.USD * 1000 / search.units) },

@@ -15,5 +15,14 @@ cache = { implicit = { min_tokens = 512 } }
 price = 0.3
 cache = { read = 0.06 }
 
+[[cost.text.input.overrides]]
+when = { context = { gte = 512_000 } }
+price = 0.6
+cache = { read = 0.12 }
+
 [cost.text.output]
 price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 512_000 } }
+price = 2.4
