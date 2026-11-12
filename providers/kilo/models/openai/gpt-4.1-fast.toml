@@ -1,0 +1,14 @@
+schema = 2
+base_model = "openai/gpt-4.1"
+name = "OpenAI: GPT-4.1 (Fast)"
+description = "GPT 4.1 is OpenAI's flagship model for complex tasks. It is well suited for problem solving across domains."
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 3.5
+cache = { read = 0.875 }
+
+[cost.text.output]
+price = 14

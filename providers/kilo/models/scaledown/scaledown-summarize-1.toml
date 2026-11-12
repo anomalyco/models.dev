@@ -1,0 +1,25 @@
+schema = 2
+name = "ScaleDown: Summarize-1"
+description = "ScaleDown Summarize-1 is a task-specific language model for abstractive summarization of long documents, transcripts, and conversations. It rewrites source text into concise summaries and accepts instructions for format, language, length, and focus, making it useful for document processing, meeting summaries, and support workflows."
+open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 1_000
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,19 @@
+schema = 2
+base_model = "deepseek/deepseek-v3.1"
+name = "DeepSeek: DeepSeek V3.1"
+description = "DeepSeek-V3.1 is post-trained on the top of DeepSeek-V3.1-Base, which is built upon the original V3 base checkpoint through a two-phase long context extension approach, following the methodology outlined in the original DeepSeek-V3 report. We have expanded our dataset by collecting additional long documents and substantially extending both training phases. The 32K extension phase has been increased 10-fold to 630B tokens, while the 128K extension phase has been extended by 3.3x to 209B tokens. Additionally, DeepSeek-V3.1 is trained using the UE8M0 FP8 scale data format to ensure compatibility with microscaling data formats."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 163_840
+output = 128_000
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 0.95
