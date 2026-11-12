@@ -27,8 +27,11 @@ function context(existing?: Record<string, unknown>, authored = existing) {
   >[1];
 }
 
-test("applies the flex discount the API omits, without float noise", () => {
-  const model = buildNeuralwattModel(sourceModel("glm-5.2-flex"), undefined, undefined);
+test("keeps the discounted flex prices reported by the API", () => {
+  const source = sourceModel("glm-5.2-flex", {
+    pricing: { input_per_million: 0.9425, output_per_million: 2.925, cached_input_per_million: 0.09425 },
+  });
+  const model = buildNeuralwattModel(source, undefined, undefined);
 
   expect(model.cost).toEqual({ input: 0.9425, output: 2.925, cache_read: 0.09425 });
 });
@@ -39,14 +42,23 @@ test("keeps standard pricing on standard model IDs", () => {
   expect(model.cost).toEqual({ input: 1.45, output: 4.5, cache_read: 0.145 });
 });
 
+test("includes advertised audio input without requiring vision", () => {
+  const source = sourceModel("glm-5.2", {
+    capabilities: { tools: true, json_mode: false, vision: false, audio_input: true, reasoning: true },
+  });
+  const model = buildNeuralwattModel(source, undefined, undefined);
+
+  expect(model.attachment).toBe(true);
+  expect(model.modalities?.input).toEqual(["text", "audio"]);
+});
+
 test("syncs the effort ladder and keeps authored budget bounds", () => {
   const authored = { reasoning_options: [{ type: "budget_tokens" as const, max: 32_000 }] };
 
   const model = buildNeuralwattModel(sourceModel("glm-5.2"), undefined, authored);
 
-  // formatToml sorts effort values, so the API's order is kept as-is.
   expect(model.reasoning_options).toEqual([
-    { type: "effort", values: ["max", "high", "none"] },
+    { type: "effort", values: ["none", "high", "max"] },
     { type: "budget_tokens", max: 32_000 },
   ]);
 });
@@ -55,7 +67,7 @@ test("declares the budget control the API never describes", () => {
   const model = buildNeuralwattModel(sourceModel("glm-5.2"), undefined, undefined);
 
   expect(model.reasoning_options).toEqual([
-    { type: "effort", values: ["max", "high", "none"] },
+    { type: "effort", values: ["none", "high", "max"] },
     { type: "budget_tokens" },
   ]);
 });
@@ -71,7 +83,7 @@ test("omits the budget control on the models that reject it", () => {
   );
 
   for (const model of [flash, flex, gemma]) {
-    expect(model.reasoning_options).toEqual([{ type: "effort", values: ["max", "high", "none"] }]);
+    expect(model.reasoning_options).toEqual([{ type: "effort", values: ["none", "high", "max"] }]);
   }
 });
 
@@ -155,6 +167,31 @@ test("prefers a resolved base over a stale authored pointer", () => {
   const model = buildNeuralwattModel(sourceModel("kimi-k3"), undefined, authored);
 
   expect(model).toMatchObject({ base_model: "moonshotai/kimi-k3" });
+});
+
+test("uses the exact checkpoint published by the API", () => {
+  const source = sourceModel("deepseek-v4.1-flash", {
+    huggingface_id: "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  });
+  expect(buildNeuralwattModel(source, undefined, undefined).base_model)
+    .toBe("deepseek/deepseek-v4.1-flash-1017");
+});
+
+test("inherits the lab output limit when the API reports no limit", () => {
+  const model = buildNeuralwattModel(sourceModel("kimi-k3.1-pro"), undefined, undefined);
+  expect(model.base_model).toBe("moonshotai/kimi-k3.1-pro");
+  expect(model.limit).not.toHaveProperty("output");
+});
+
+test("new models retain lab MIME types for advertised inputs", () => {
+  const source = sourceModel("kimi-k3.1-pro", {
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: true },
+  });
+  const model = neuralwatt.translateModel(source, context());
+  const input = model?.v2Set?.["modalities.input"];
+  expect(input).toContain("image/jpeg");
+  expect(input).not.toContain("image");
+  expect(input?.some((format) => format.startsWith("video/"))).toBe(false);
 });
 
 test("carries no reasoning options onto a non-reasoning variant", () => {

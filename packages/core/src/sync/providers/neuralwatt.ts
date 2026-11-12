@@ -1,4 +1,5 @@
 import path from "node:path";
+import { readFileSync } from "node:fs";
 import { z } from "zod";
 
 import type {
@@ -9,12 +10,9 @@ import type {
   SyncedModel,
 } from "../index.js";
 import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
+import { toV1Modality } from "../../translate.js";
 
 const API_ENDPOINT = "https://api.neuralwatt.com/v1/models";
-
-// Flex is billed at 65% of standard, but /v1/models quotes the standard rate
-// for -flex IDs. https://portal.neuralwatt.com/docs/guides/flex-tier
-const FLEX_MULTIPLIER = 0.65;
 
 // Serving tiers Neuralwatt layers onto a base checkpoint.
 const TIER_SUFFIX = /-(fast|flex|short)$/;
@@ -36,10 +34,8 @@ const MOE_SUFFIX = /^-a\d+b$/;
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 
-// Catalog effort levels; formatToml orders them weakest to strongest.
+// Catalog effort levels, from lowest to highest.
 const EFFORT_VALUES = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
-
-type Effort = (typeof EFFORT_VALUES)[number];
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
@@ -57,6 +53,7 @@ const Metadata = z.object({
     tools: z.boolean(),
     json_mode: z.boolean(),
     vision: z.boolean(),
+    audio_input: z.boolean().optional(),
     reasoning: z.boolean(),
   }).passthrough(),
   // Optional: `capabilities.reasoning` is the authoritative flag, and a model
@@ -135,9 +132,14 @@ export const neuralwatt = {
     }
 
     const translated = buildNeuralwattModel(model, existing, authored);
+    const base = "base_model" in translated ? translated.base_model : undefined;
+    const input = translated.modalities?.input;
     return {
       id: model.id,
       model: translated,
+      v2Set: existing === undefined && base !== undefined && input !== undefined
+        ? { "modalities.input": inputFormats(base, input) }
+        : undefined,
       header: translated.reasoning_options?.some((option) => option.type === "budget_tokens")
         ? BUDGET_HEADER
         : undefined,
@@ -145,28 +147,37 @@ export const neuralwatt = {
   },
 } satisfies SyncProvider<NeuralwattModel>;
 
+function inputFormats(base: string, input: string[]) {
+  const lab = Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${base}.toml`), "utf8")) as {
+    modalities: { input: string[] };
+  };
+  return input.flatMap((modality) => {
+    const formats = lab.modalities.input.filter((format) => toV1Modality(format) === modality);
+    return formats.length > 0 ? formats : [modality];
+  });
+}
+
 export function buildNeuralwattModel(
   model: NeuralwattModel,
   existing: ExistingModel | undefined,
   authored: ExistingModel | undefined,
 ): SyncedModel {
   const { capabilities, limits } = model.metadata;
+  const baseModel = baseModelFor(model, authored);
+  const baseOutput = baseModel === undefined ? undefined : modelMetadata(baseModel).limit?.output;
 
   const context = limits.max_context_length ?? model.max_model_len ?? existing?.limit?.context ?? 0;
   const limit = {
     context,
     input: existing?.limit?.input,
-    // The API reports no output cap for models that can fill the context.
-    output: limits.max_output_tokens ?? existing?.limit?.output ?? context,
+    output: limits.max_output_tokens ?? existing?.limit?.output ?? baseOutput ?? context,
   };
 
   const modalities: { input: Modality[]; output: Modality[] } = {
-    // Neuralwatt only advertises vision, never video or audio input.
     input: capabilities.vision ? ["text", "image"] : ["text"],
     output: ["text"],
   };
-
-  const baseModel = baseModelFor(model, authored);
+  if (capabilities.audio_input) modalities.input.push("audio");
 
   const values: Partial<SyncedFullModel> = {
     name: existing?.name ?? model.metadata.display_name,
@@ -174,7 +185,7 @@ export function buildNeuralwattModel(
     family: existing?.family,
     release_date: existing?.release_date,
     last_updated: existing?.last_updated,
-    attachment: capabilities.vision,
+    attachment: modalities.input.length > 1,
     reasoning: capabilities.reasoning,
     reasoning_options: capabilities.reasoning ? reasoningOptions(model, authored) : undefined,
     temperature: existing?.temperature,
@@ -240,8 +251,8 @@ function omitInheritedReasoningOptions(factored: SyncedBaseModel, baseModel: str
 // under the quantizer's namespace, not the lab's.
 function resolveBaseModel(model: NeuralwattModel): string | undefined {
   const repo = model.metadata.huggingface_id?.split("/")[1];
-  const slugs = [strip(model.id, TIER_SUFFIX)];
-  if (repo !== undefined) slugs.push(strip(repo.toLowerCase(), REPO_SUFFIX));
+  const slugs = repo === undefined ? [] : [repo.toLowerCase(), strip(repo.toLowerCase(), REPO_SUFFIX)];
+  slugs.push(strip(model.id, TIER_SUFFIX));
 
   for (const slug of slugs) {
     const match = resolveModelMetadataBaseModel(slug) ?? resolveMoeBaseModel(slug);
@@ -278,8 +289,7 @@ function reasoningOptions(
 ): SyncedFullModel["reasoning_options"] {
   const authoredOptions = authored?.reasoning_options ?? [];
   const efforts = model.metadata.reasoning?.supported_efforts;
-  const values = (efforts ?? [])
-    .filter((effort): effort is Effort => EFFORT_VALUES.includes(effort as Effort));
+  const values = EFFORT_VALUES.filter((effort) => efforts?.includes(effort));
   const options: NonNullable<SyncedFullModel["reasoning_options"]> = authoredOptions
     .filter((option) => option.type !== "effort");
 
@@ -308,18 +318,11 @@ function buildCost(
   existing: ExistingModel | undefined,
 ): SyncedFullModel["cost"] | undefined {
   const { pricing } = model.metadata;
-  const flex = model.id.endsWith("-flex");
-  const input = price(pricing.input_per_million, flex);
-  const output = price(pricing.output_per_million, flex);
+  const input = pricing.input_per_million;
+  const output = pricing.output_per_million;
 
-  if (pricing.pricing_tbd === true || input === undefined || output === undefined) {
+  if (pricing.pricing_tbd === true || input == null || output == null) {
     return existing?.cost;
   }
-  return { input, output, cache_read: price(pricing.cached_input_per_million, flex) };
-}
-
-// toPrecision drops the float error in products like 4.5 * 0.65.
-function price(value: number | null | undefined, flex: boolean) {
-  if (value == null) return undefined;
-  return flex ? Number((value * FLEX_MULTIPLIER).toPrecision(12)) : value;
+  return { input, output, cache_read: pricing.cached_input_per_million ?? undefined };
 }
