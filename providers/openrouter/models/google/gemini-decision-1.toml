@@ -1,24 +1,12 @@
 schema = 2
+base_model = "google/gemini-decision-1"
 type = "decision"
-name = "Gemini Decision 1"
 description = "Decision model for typed evaluation of shared state"
-family = "gemini"
-open_weights = false
-release_date = "2026-11-11"
-
-[modalities]
-input = ["text", "image", "audio", "video", "application/pdf"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
-temperature = false
-
-[limit]
-context = 262_144
-output = 0
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
