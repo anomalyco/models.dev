@@ -2,6 +2,8 @@
 # metadata.reasoning.supported_efforts = max|high|medium|low|none.
 # medium is a supported level; xhigh maps to max, minimal to low.
 # Source: https://api.neuralwatt.com/v1/models
+# metadata.limits.max_output_tokens = null; no host cap is reported.
+# Inherited lab output (131,072) is a fallback, not a verified host cap.
 # Budget: thinking_token_budget (integer reasoning tokens)
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"

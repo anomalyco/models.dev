@@ -56,5 +56,5 @@ Notes
 - Preview models are access-gated and stay out of the public catalog until
   access is granted. See https://portal.neuralwatt.com/docs/guides/preview-models
 - Neuralwatt reports real-time energy consumption (Joules/kWh) per request.
-- Models that report no max_output_tokens are capped only by their context
-  window, and are cataloged with output equal to context.
+- A null max_output_tokens does not establish the host's output cap.
+  Sync keeps the existing output limit or uses the lab limit as a fallback.
