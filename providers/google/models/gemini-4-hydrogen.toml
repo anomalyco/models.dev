@@ -26,9 +26,6 @@ cache = { implicit = { min_tokens = 4_096 } }
 service_tier = ["flex", "priority"]
 temperature = true
 
-[limit]
-output = 65_536
-
 [api.generate-content]
 
 [api.chat-completions]
