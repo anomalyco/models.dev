@@ -131,12 +131,25 @@ export const neuralwatt = {
     const translated = buildNeuralwattModel(model, existing, authored);
     const base = "base_model" in translated ? translated.base_model : undefined;
     const input = translated.modalities?.input;
+    let v2Set: { "modalities.input": string[] } | undefined;
+    if (base !== undefined && input !== undefined && authored?.modalities?.input === undefined) {
+      const lab = labModalities(base);
+      const kinds = [...new Set(lab.input.map(toV1Modality))];
+      const output = translated.modalities?.output;
+      if (
+        input.length === kinds.length && input.every((kind) => kinds.includes(kind))
+        && (output === undefined || output.length === lab.output.length
+          && output.every((kind) => lab.output.map(toV1Modality).includes(kind)))
+      ) {
+        delete translated.modalities;
+      } else {
+        v2Set = { "modalities.input": inputFormats(lab.input, input) };
+      }
+    }
     return {
       id: model.id,
       model: translated,
-      v2Set: existing === undefined && base !== undefined && input !== undefined
-        ? { "modalities.input": inputFormats(base, input) }
-        : undefined,
+      v2Set,
       header: translated.reasoning_options?.some((option) => option.type === "budget_tokens")
         ? BUDGET_HEADER
         : undefined,
@@ -144,12 +157,16 @@ export const neuralwatt = {
   },
 } satisfies SyncProvider<NeuralwattModel>;
 
-function inputFormats(base: string, input: string[]) {
+function labModalities(base: string) {
   const lab = Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${base}.toml`), "utf8")) as {
-    modalities: { input: string[] };
+    modalities: { input: string[]; output: string[] };
   };
+  return lab.modalities;
+}
+
+function inputFormats(lab: string[], input: string[]) {
   return input.flatMap((modality) => {
-    const formats = lab.modalities.input.filter((format) => toV1Modality(format) === modality);
+    const formats = lab.filter((format) => toV1Modality(format) === modality);
     return formats.length > 0 ? formats : [modality];
   });
 }

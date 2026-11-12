@@ -229,6 +229,57 @@ test("new models retain lab MIME types for advertised inputs", () => {
   expect(input?.some((format) => format.startsWith("video/"))).toBe(false);
 });
 
+test("existing vision models keep inherited lab modalities", () => {
+  const source = sourceModel("deepseek-v4.1-flash", {
+    huggingface_id: "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: true },
+  });
+  const authored = { base_model: "deepseek/deepseek-v4.1-flash-1017" };
+  const existing = { ...authored, modalities: { input: ["text", "image"], output: ["text"] } };
+  const result = neuralwatt.translateModel(source, context(existing, authored));
+
+  expect(result?.model.modalities).toBeUndefined();
+  expect(result?.v2Set).toBeUndefined();
+});
+
+test("new vision models omit modalities identical to the lab", () => {
+  const source = sourceModel("deepseek-v4.1-flash", {
+    huggingface_id: "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: true },
+  });
+  const result = neuralwatt.translateModel(source, context());
+
+  expect(result?.model.modalities).toBeUndefined();
+  expect(result?.v2Set).toBeUndefined();
+});
+
+test("existing models without input overrides use lab MIME types for a subset", () => {
+  const source = sourceModel("kimi-k3.1-pro", {
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: true },
+  });
+  const authored = { base_model: "moonshotai/kimi-k3.1-pro" };
+  const result = neuralwatt.translateModel(source, context(authored));
+  const input = result?.v2Set?.["modalities.input"];
+
+  expect(input).toContain("image/jpeg");
+  expect(input).not.toContain("image");
+  expect(input?.some((format) => format.startsWith("video/"))).toBe(false);
+});
+
+test("existing model input overrides are left to the MIME-preserving patcher", () => {
+  const source = sourceModel("kimi-k3.1-pro", {
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: true },
+  });
+  const authored = {
+    base_model: "moonshotai/kimi-k3.1-pro",
+    modalities: { input: ["text", "image"], output: ["text"] },
+  };
+  const result = neuralwatt.translateModel(source, context(authored));
+
+  expect(result?.model.modalities?.input).toEqual(["text", "image"]);
+  expect(result?.v2Set).toBeUndefined();
+});
+
 test("inherits context when the API omits it", () => {
   const source = sourceModel("kimi-k3.1-pro", {
     limits: { max_context_length: null, max_output_tokens: null },
