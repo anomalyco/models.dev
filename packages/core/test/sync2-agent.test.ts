@@ -9,7 +9,11 @@ import { plan } from "../src/sync2/engine.js";
 import { agents, modules } from "../src/sync2/index.js";
 import { amazonBedrock } from "../src/sync2/providers/amazon-bedrock.js";
 import { azure } from "../src/sync2/providers/azure.js";
+import { cohere } from "../src/sync2/providers/cohere.js";
 import { googleVertex } from "../src/sync2/providers/google-vertex.js";
+import { minimax } from "../src/sync2/providers/minimax.js";
+import { zai } from "../src/sync2/providers/zai.js";
+import { zhipuai } from "../src/sync2/providers/zhipuai.js";
 import type { AgentModule } from "../src/sync2/types.js";
 
 const roots: string[] = [];
@@ -275,6 +279,67 @@ price = 15
   expect(result.evidence?.map((item) => item.model)).toEqual(["gpt-5.4", "gpt-5.4", "gpt-9"]);
 });
 
+test("minimax: a discounted price and a long-prompt band; zai: a USD price on a lowercased ID", async () => {
+  const root = await catalog({
+    "models/minimax/MiniMax-M3.toml": lab(),
+    "models/zhipuai/glm-5.3.toml": lab(),
+    "providers/minimax/models/MiniMax-M3.toml": priced("minimax/MiniMax-M3", 0.3),
+    "providers/zai/models/glm-5.3.toml": priced("zhipuai/glm-5.3", 1.4),
+  });
+  const pricing = "https://platform.minimax.io/docs/guides/pricing-paygo";
+  const { result, writes } = await run(minimax, root, {
+    provider: "minimax",
+    complete: false,
+    observations: [{
+      id: "MiniMax-M3",
+      fields: { "cost.text.input.price": 0.25, "cost.text.input.overrides": [{ when: { context: { gt: 512_000 } }, price: 0.5, cache: { read: 0.1 } }] },
+      evidence: [{ url: pricing, quote: "MiniMax-M3 ≤ 512k input tokens ~~$0.60~~ $0.25 | > 512k input tokens ~~$1.20~~ $0.50 ... $0.10", fields: ["cost.text.input.price", "cost.text.input.overrides"] }],
+    }],
+  });
+  expect(result.changes.map((change) => [change.model, change.fields.map((field) => field.path)])).toEqual([["MiniMax-M3", ["cost.text.input.price", "cost.text.input.overrides"]]]);
+  expect(writes.get("providers/minimax/models/MiniMax-M3.toml")).toContain("when = { context = { gt = 512_000 } }\nprice = 0.5\ncache = { read = 0.1 }");
+
+  const zaiResult = await run(zai, root, {
+    provider: "zai",
+    complete: false,
+    observations: [{ id: "glm-5.3", fields: { "cost.text.output.price": 4.8 }, evidence: [{ url: "https://docs.z.ai/guides/overview/pricing", quote: "GLM-5.3 | $1.4 | $0.26 | Limited-time Free | $4.8", fields: ["cost.text.output.price"] }] }],
+  });
+  expect(zaiResult.result.changes.map((change) => change.fields)).toEqual([[{ path: "cost.text.output.price", before: 7, after: 4.8 }]]);
+});
+
+test("zhipuai states limits and deprecation only; cohere evidence must come from Cohere's pages", async () => {
+  const root = await catalog({
+    "models/zhipuai/glm-5.1.toml": lab(),
+    "models/cohere/command-r-08-2024.toml": lab(),
+    "providers/zhipuai/models/glm-5.1.toml": priced("zhipuai/glm-5.1", 0.9),
+    "providers/cohere/models/command-r-08-2024.toml": priced("cohere/command-r-08-2024", 0.15),
+  });
+  const overview = "https://docs.bigmodel.cn/cn/guide/start/model-overview";
+  await expect(parseObservations(zhipuai, {
+    provider: "zhipuai",
+    complete: false,
+    observations: [{ id: "glm-5.1", fields: { "cost.text.input.price": 0.9 }, evidence: [{ url: overview, quote: "GLM-5.1 6 元", fields: ["cost.text.input.price"] }] }],
+  }, root)).rejects.toThrow("cost.text.input.price isn't a field Zhipu AI syncs");
+  const { result } = await run(zhipuai, root, {
+    provider: "zhipuai",
+    complete: false,
+    observations: [{ id: "glm-5.1", fields: { "limit.context": 1_000_000, status: "deprecated" }, evidence: [{ url: overview, quote: "GLM-5.1 上下文 1M；2027 年 1 月 31 日下线", fields: ["limit.context", "status"] }] }],
+  });
+  expect(result.changes.map((change) => change.fields.map((field) => field.path))).toEqual([["limit.context", "status"]]);
+
+  await expect(parseObservations(cohere, {
+    provider: "cohere",
+    complete: false,
+    observations: [{ id: "command-r-08-2024", fields: { status: "deprecated" }, evidence: [{ url: "https://openrouter.ai/cohere", quote: "deprecated", fields: ["status"] }] }],
+  }, root)).rejects.toThrow("must be https on cohere.com, docs.cohere.com");
+  const deprecated = await run(cohere, root, {
+    provider: "cohere",
+    complete: false,
+    observations: [{ id: "command-r-08-2024", fields: { status: "deprecated" }, evidence: [{ url: "https://docs.cohere.com/docs/deprecations", quote: "command-r-08-2024 Deprecated, shutdown 2027-03-01", fields: ["status"] }] }],
+  });
+  expect(deprecated.result.changes.map((change) => change.kind)).toEqual(["update"]);
+});
+
 test("agent results are never safe, even with nothing to change", async () => {
   const root = await catalog({ "models/openai/gpt-5.4.toml": lab(), "providers/azure/models/gpt-5.4.toml": priced("openai/gpt-5.4", 2.5) });
   const { result } = await run(azure, root, {
@@ -300,7 +365,7 @@ test("an API module can apply an observation file in place of its source", async
 });
 
 test("agent modules: every owned field is one agents can state, and every catalog file has a plausible ID", async () => {
-  expect(Object.keys(agents).sort()).toEqual(["amazon-bedrock", "azure", "google-vertex"]);
+  expect(Object.keys(agents).sort()).toEqual(["amazon-bedrock", "azure", "cohere", "google-vertex", "minimax", "zai", "zhipuai"]);
   for (const module of Object.values(agents)) {
     for (const owned of module.policy.owns) expect(Object.keys(AGENT_FIELDS)).toContain(typeof owned === "string" ? owned : owned.path);
     expect(module.policy.creates).toBe("gap");

@@ -15,6 +15,7 @@ import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareAiGateway } from "./providers/cloudflare-ai-gateway.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
+import { cohere } from "./providers/cohere.js";
 import { cortecs } from "./providers/cortecs.js";
 import { crossmodel } from "./providers/crossmodel.js";
 import { deepinfra } from "./providers/deepinfra.js";
@@ -63,7 +64,7 @@ import type { AgentModule, SyncModule, SyncResult } from "./types.js";
 export const modules: Record<string, SyncModule<any>> = { aiand, aimlapi, alibaba, ambient, anthropic, baseten, chutes, "cloudflare-ai-gateway": cloudflareAiGateway, "cloudflare-workers-ai": cloudflareWorkersAi, cortecs, crossmodel, deepinfra, deepseek, digitalocean, edenai, empiriolabs, engy, "fireworks-ai": fireworksAi, friendli, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, llmgateway, "llmgateway-providers": llmgatewayProviders, "merge-gateway": mergeGateway, meta, mistral, modular, moonshotai, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, openrouter, ovhcloud, pioneer, prime, requesty, tinfoil, venice, vercel, wandb, xai };
 
 // Hosts with no API to sync from: an agent reads their docs and writes an observation file.
-export const agents: Record<string, AgentModule> = { "amazon-bedrock": amazonBedrock, azure, "google-vertex": googleVertex, minimax, zai, zhipuai };
+export const agents: Record<string, AgentModule> = { "amazon-bedrock": amazonBedrock, azure, cohere, "google-vertex": googleVertex, minimax, zai, zhipuai };
 
 export { agentBrief, parseObservations, plan, sync };
 export type * from "./types.js";
