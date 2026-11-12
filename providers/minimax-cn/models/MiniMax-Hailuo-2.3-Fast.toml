@@ -1,0 +1,22 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api.minimax.cn/v1/video_generation, image-to-video only
+#   (https://platform.minimaxi.com/docs/api-reference/video-generation-i2v)
+# - Pricing (CNY per video): https://platform.minimaxi.com/docs/pricing/overview#models/video (listed under 历史模型):
+#   768P 6s ¥1.35, 768P 10s ¥2.25, 1080P 6s ¥2.31. Recorded per second of output (price / duration); 10s is 768P only.
+# CNY→USD rate: 6.685797, 2026-11-12, source: https://open.er-api.com/v6/latest/USD
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-Hailuo-2.3-Fast"
+
+[api.videos]
+base_url = "https://api.minimax.cn"
+path = "/v1/video_generation"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.033653
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "1080P" } }, { duration = { equals = 6 } }] }
+price = 0.057585

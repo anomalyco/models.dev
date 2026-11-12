@@ -1,0 +1,35 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api.minimax.io/v1/video_generation, text-to-video, image-to-video and first & last frame
+#   (https://platform.minimax.io/docs/api-reference/video-generation-t2v, https://platform.minimax.io/docs/api-reference/video-generation-i2v,
+#   https://platform.minimax.io/docs/api-reference/video-generation-fl2v)
+# - Pricing: https://platform.minimax.io/docs/pricing/overview#models/video (listed under Legacy Models, USD per video):
+#   768P 6s $0.28, 768P 10s $0.56, 1080P 6s $0.49, 512P 6s $0.10, 512P 10s $0.15 (512P is image-to-video only).
+#   Recorded per second of output (price / duration). 1080P is 6s only (duration tables in the T2V, I2V and FL2V references).
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-Hailuo-02"
+
+[api.videos]
+base_url = "https://api.minimax.io"
+path = "/v1/video_generation"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.0466666667
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "768P" } }, { duration = { equals = 10 } }] }
+price = 0.056
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "1080P" } }, { duration = { equals = 6 } }] }
+price = 0.0816666667
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "512P" } }, { duration = { equals = 6 } }] }
+price = 0.0166666667
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "512P" } }, { duration = { equals = 10 } }] }
+price = 0.015
