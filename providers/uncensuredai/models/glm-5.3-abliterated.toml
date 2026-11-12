@@ -1,0 +1,23 @@
+# Pricing (USD per 1M tokens): https://uncensuredai.com/api/pricing
+# Hosted model: https://uncensuredai.com/en/models/glm-5.3-abliterated
+# Client capabilities: https://uncensuredai.com/model-capabilities.json
+# Base lineage: https://routerhub.si/models/glm-5.3-abliterated
+# The gateway returned reasoning and text with reasoning_effort=high in a live check.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 Abliterated"
+description = "GLM 5.3 Abliterated served by UncensuredAI over Chat Completions."
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.70
+cache = { read = 0.28 }
+
+[cost.text.output]
+price = 1.95

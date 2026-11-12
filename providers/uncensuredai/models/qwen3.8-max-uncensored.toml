@@ -1,0 +1,29 @@
+# Pricing (USD per 1M tokens): https://uncensuredai.com/api/pricing
+# Hosted model: https://uncensuredai.com/en/models/qwen3.8-max-uncensored
+# Client capabilities: https://uncensuredai.com/model-capabilities.json
+# Base lineage: https://routerhub.si/models/qwen3.8-max-uncensored
+# The public gateway catalog leaves tool calling and reasoning controls unconfirmed.
+# The catalog flags below describe the client features advertised by this entry.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen 3.8 Max Uncensored"
+description = "Qwen 3.8 Max Uncensored served by UncensuredAI over Chat Completions."
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[limit]
+output = 131_000
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.055 }
+
+[cost.text.output]
+price = 1.25

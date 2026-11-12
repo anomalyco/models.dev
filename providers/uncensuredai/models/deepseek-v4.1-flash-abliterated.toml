@@ -1,0 +1,28 @@
+# Pricing (USD per 1M tokens): https://uncensuredai.com/api/pricing
+# Hosted model: https://uncensuredai.com/en/models/deepseek-v4.1-flash-abliterated
+# Client capabilities: https://uncensuredai.com/model-capabilities.json
+# Base lineage: https://api.refuseless.com/models
+# The standard route lists this API ID as 1017. Context follows the gateway capabilities JSON.
+# The gateway also accepts reasoning_effort=off. The catalog exposes the three graded levels.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash Abliterated"
+description = "DeepSeek V4.1 Flash Abliterated served by UncensuredAI over Chat Completions."
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.27
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.95

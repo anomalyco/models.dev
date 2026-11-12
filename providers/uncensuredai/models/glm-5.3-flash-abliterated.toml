@@ -1,0 +1,26 @@
+# Pricing (USD per 1M tokens): https://uncensuredai.com/api/pricing
+# Hosted model: https://uncensuredai.com/en/models/glm-5.3-flash-abliterated
+# Client capabilities: https://uncensuredai.com/model-capabilities.json
+# Base lineage: https://api.refuseless.com/models/glm-5.3-flash-abliterated
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash Abliterated"
+description = "GLM 5.3 Flash Abliterated served by UncensuredAI over Chat Completions."
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.22
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 0.80
