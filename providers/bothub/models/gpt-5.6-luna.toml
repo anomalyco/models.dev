@@ -4,11 +4,12 @@
 
 # Controls mirrored from the lab entry: off is effort=none; graded
 # levels — no toggle.
-# tools.freeform omitted: not live-probed on Bothub this pass; not copied from OpenAI lab (AGENTS.md).
+# Live probe 2026-11-12: tools.freeform text|lark|regex → HTTP 200.
 schema = 2
 base_model = "openai/gpt-5.6-luna"
 
 [capabilities]
+tools = { freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
