@@ -1,6 +1,10 @@
 # Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
 # (checked 2026-11-12): 0.02 / 0.45 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
+# Effort: reasoning_effort = none|low|high|max
+# Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
+# No published thinking.type / thinking_budget / enable_thinking controls on this host.
+# Levels: https://bothub.chat/deepseek-v4.1-flash (checked 2026-11-12).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 

@@ -1,10 +1,10 @@
 # Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
 # (checked 2026-11-12): 0.74 / 2.23 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
-# Controls: bothub exposes a single reasoning_effort parameter on
-# POST /v1/chat/completions (see providers/bothub/provider.toml); no
-# thinking.type toggle is documented for this host. Levels verified
-# against the bothub model page; "none" disables reasoning.
+# Effort: reasoning_effort = none|low|high|max
+# Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
+# No published thinking.type / thinking_budget / enable_thinking controls on this host.
+# Levels: https://bothub.chat/deepseek-v4-pro-0813 (checked 2026-11-12).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
