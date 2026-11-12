@@ -10,6 +10,8 @@
 # overrides the name. Motion control adds a reference motion video (.mp4/.mov) as input.
 # Cost conditions: resolution uses the API's own values ("720p", "1080p", "4k");
 #   generate_audio = audio "native"; mode = "motion-control" is the /motion-control/<model> endpoint.
+# Combinations: 4K is $0.42/s with or without native audio (the 4k override comes last among those). Motion control
+#   is 720p or 1080p only and its audio is "original" or "off" (no native audio), so it has no 4K or audio price.
 schema = 2
 v2_only = true
 base_model = "kuaishou/kling-v3.0-pro"

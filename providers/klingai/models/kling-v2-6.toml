@@ -10,6 +10,8 @@
 # Cost conditions: resolution uses the API's own values ("720p", "1080p");
 #   generate_audio = audio "native"; voice_control = a voice item referenced in the prompt; mode = "motion-control" is
 #   the /motion-control/<model> endpoint.
+# Combinations: motion control is 720p or 1080p and its audio is "original" or "off" (no native audio), so it has
+#   no audio price. No 4K on Kling 2.6.
 schema = 2
 v2_only = true
 base_model = "kuaishou/kling-v2.6"
