@@ -3,10 +3,12 @@
 # Client capabilities: https://uncensuredai.com/model-capabilities.json
 # Base lineage: https://routerhub.si/models/qwen3.8-max-uncensored
 # The gateway capabilities entry and RouterHub both publish max output = 131,000.
-# Direct RouterHub checks returned the requested named function and arguments.
 # Effort: reasoning_effort = none|low|medium|xhigh. With none the response contained no reasoning.
+# Gateway QA (2026-11-13): all four values and a named function call passed
+# through an isolated instance of the production gateway binary on the active route.
 # Top-level thinking_budget with enable_thinking was accepted upstream. Leave budget
 # out until the public gateway and generic client budget encoding are verified together.
+# The text-only input override uses both modality keys as required by AuthoredModelV2.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen 3.8 Max Uncensored"

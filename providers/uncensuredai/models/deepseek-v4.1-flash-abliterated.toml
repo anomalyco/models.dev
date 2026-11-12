@@ -4,7 +4,9 @@
 # Base lineage: https://api.refuseless.com/models
 # The standard route lists this API ID as 1017. Context follows the gateway capabilities JSON.
 # The gateway capabilities entry documents default_effort = low and reasoning_effort = off|low|high|max.
-# Off uses the same reasoning_effort field. The standard upstream also accepts none for off.
+# Gateway QA (2026-11-13): off and none both suppressed reasoning through an
+# isolated instance of the production gateway binary on the standard route.
+# The text-only input override uses both modality keys as required by AuthoredModelV2.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash Abliterated"

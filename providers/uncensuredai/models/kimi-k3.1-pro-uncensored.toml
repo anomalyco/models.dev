@@ -2,9 +2,10 @@
 # Hosted model: https://uncensuredai.com/en/models/kimi-k3.1-pro-uncensored
 # Client capabilities: https://uncensuredai.com/model-capabilities.json
 # Base lineage: https://routerhub.si/models/kimi-k3.1-pro-uncensored
-# Gateway QA confirmed function calls. Direct checks on the RouterHub route
-# returned reasoning with reasoning_effort = low|high|max.
+# Gateway QA (2026-11-13): low, high, max and a named function call passed
+# through an isolated instance of the production gateway binary on the active route.
 # Moonshot documents max as the base model default.
+# The text-only input override uses both modality keys as required by AuthoredModelV2.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro Uncensored"
