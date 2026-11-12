@@ -7,11 +7,6 @@
 schema = 2
 v2_only = true
 base_model = "minimax/MiniMax-H3-Image-Highspeed"
-name = "MiniMax H3 Image Highspeed"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["image/jpeg", "image/png", "image/webp"]
 
 [limit]
 context = 4_096
