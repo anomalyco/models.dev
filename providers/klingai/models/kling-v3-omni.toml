@@ -1,0 +1,48 @@
+# Sources (accessed 2026-11-12):
+# - Model ID kling-v3-omni (Kling 3.0 Omni): https://kling.ai/document-api/guides/capability-map/video
+# - API: POST https://api-singapore.klingai.com/omni-video/kling-3.0-omni (https://kling.ai/document-api/api/video/3-0-omni/video-omni);
+#   the legacy /v1/videos/omni-video endpoint takes model_name = "kling-v3-omni".
+#   Resolution 720p (default), 1080p or 4k; audio off (default), native, or original with a reference video.
+# - Pricing: https://kling.ai/document-api/pricing/base/video ("Balance" tab, USD per second of output). Prepaid
+#   resource packages (https://kling.ai/dev/pricing) bill in units at a lower effective rate and are not recorded.
+#   Native audio isn't available with a reference video, so there is no price for both.
+# Cost conditions: resolution uses the API's own values ("720p", "1080p", "4k");
+#   generate_audio = audio "native"; input_video = a feature_video or base_video item in contents.
+# Combinations: 4K is $0.42/s with or without native audio and with or without a reference video, so the 4k
+#   override comes last.
+# No voice_control price: the pricing page lists voice reference prices only for Kling 2.6.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v3.0-omni"
+
+[api.videos]
+base_url = "https://api-singapore.klingai.com"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.084
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.112
+
+[[cost.video.output.overrides]]
+when = { generate_audio = { equals = true } }
+price = 0.112
+
+[[cost.video.output.overrides]]
+when = { generate_audio = { equals = true }, resolution = { equals = "1080p" } }
+price = 0.14
+
+[[cost.video.output.overrides]]
+when = { input_video = { equals = true } }
+price = 0.126
+
+[[cost.video.output.overrides]]
+when = { input_video = { equals = true }, resolution = { equals = "1080p" } }
+price = 0.168
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" } }
+price = 0.42
