@@ -1,0 +1,23 @@
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen: Qwen 3.8 Max"
+description = "Qwen 3.8 Max is a 2.4-trillion-parameter MoE model delivering a comprehensive leap in coding and professional work. Autonomously codes and delivers complete projects spanning 10+ days. Handles hundreds of specialized tasks across legal, financial, design, and other professional domains, producing production-grade results end-to-end in a single conversation. Native visual understanding runs through the full cycle of planning, execution, and verification, enabling deep semantic analysis of ultra-long documents and extended video content. In long-horizon tasks, plans autonomously, iterates through closed feedback loops, and continuously evolves."
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 262_144
+output = 128_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6
