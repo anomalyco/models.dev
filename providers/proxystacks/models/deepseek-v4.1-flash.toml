@@ -6,6 +6,8 @@
 # https://proxystacks.com/en/pricing . Base prices are the off-peak rate
 # (input $0.0895 listed as $0.09, cache read $0.002); the x2 multiplier covers the peak windows
 # Mon-Fri 09:00-11:59 and 14:00-17:59 Asia/Shanghai (= 01:00-03:59 and 06:00-09:59 UTC).
+# Limits reflect the upstream official API (GET /models: context_window 1048576,
+# max_output_tokens 393216), overriding the older model-card values inherited via base_model.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
@@ -17,11 +19,15 @@ top_k = false
 stream_usage = true
 cache = { implicit = true }
 
+[limit]
+context = 1_048_576
+output = 393_216
+
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.09
+price = 0.0895
 cache = { read = 0.002 }
 
 [cost.text.output]
