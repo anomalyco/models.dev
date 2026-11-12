@@ -1,5 +1,8 @@
 # Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
-# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Name, description, limits and capabilities from the curated provider entries in this repo (provider fields
+# stripped). Sampling: temperature only, as this maker's own API entries author it
+# (providers/abliteration-ai/models/*.toml); the base model is DeepSeek V4.1-Flash-1017
+# (https://docs.abliteration.ai/models).
 # Source: abliteration.ai's own model, served on its API (https://abliteration.ai)
 schema = 2
 name = "Abliterated Large Flash"
@@ -14,7 +17,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
-temperature = false
+temperature = true
 top_p = false
 top_k = false
 

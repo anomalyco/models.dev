@@ -3,14 +3,16 @@
 # Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
 # measure it on: providers/venice/models/abliteration-abliterated-model-large-flash.toml
 # Accepts image input: the router passes images through for this model.
-# Reasoning: no effort levels listed, as on the Venice entry. Probed through
-# https://openuncensored.com/api/v1 on 2026-11-12, the same prompt twice at each level: low used 128
-# and 105 reasoning tokens, high 63 and 96, so the two levels make no measurable difference.
+# Reasoning: reasoning_effort, passed through to the host. abliteration.ai serves this model first and
+# documents its levels for it, "none disables reasoning; other values select the requested depth"
+# (https://docs.abliteration.ai/capabilities/thinking). Probed through https://openuncensored.com/api/v1:
+# none returns no reasoning, low and high do (2026-11-08); on one short prompt low and high used a
+# similar number of reasoning tokens (2026-11-12), so only these three levels are listed.
 schema = 2
 base_model = "abliteration-ai/abliterated-model-large-flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
 
 [cost.text.input]

@@ -1,5 +1,7 @@
 # Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
-# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Name, description, limits and capabilities from the curated provider entries in this repo (provider fields
+# stripped). Sampling: the serving API, NanoGPT, documents temperature, top_p and top_k (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion);
+# the model card names no base model.
 # Source: https://huggingface.co/heabsy/CyberHeabsy
 schema = 2
 name = "CyberHeabsy"
@@ -14,9 +16,9 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
-temperature = false
-top_p = false
-top_k = false
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_048_576
