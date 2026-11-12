@@ -2,6 +2,7 @@
 # API: POST https://api.x.ai/v1/videos/generations (https://docs.x.ai/developers/rest-api-reference/inference/videos.md).
 # Pricing (accessed 2026-11-12): https://docs.x.ai/developers/pricing lists the base per-second price; resolution tiers follow the same prices
 # that Cloudflare AI Gateway (no-markup passthrough of the xAI catalog), OpenRouter and Vercel publish for this model.
+# Input image (image-to-video) fee: same as OpenRouter and Cloudflare AI Gateway for this model.
 schema = 2
 type = "video"
 name = "Grok Imagine Video"
@@ -35,3 +36,7 @@ price = 0.05
 [[cost.video.output.overrides]]
 when = { resolution = { equals = "720p" } }
 price = 0.07
+
+[cost.image.input]
+unit = "image"
+price = 0.002
