@@ -171,9 +171,15 @@ export function buildAbacusModel(
 
   const labLimit = labLimits(baseModel);
   const limit = {
-    context: capped(model.context_length, labLimit?.context) ?? authored?.limit?.context,
+    // A feed value at or above the lab cap means "inherit the lab"; it clears
+    // an older host override. Only a silent feed preserves the authored limit.
+    context: model.context_length === undefined
+      ? authored?.limit?.context
+      : capped(model.context_length, labLimit?.context),
     input: authored?.limit?.input,
-    output: capped(model.max_completion_tokens, labLimit?.output) ?? authored?.limit?.output,
+    output: model.max_completion_tokens === undefined
+      ? authored?.limit?.output
+      : capped(model.max_completion_tokens, labLimit?.output),
   };
 
   const cost = {

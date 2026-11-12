@@ -191,3 +191,22 @@ test("a feed limit below the lab cap still overrides", () => {
   }));
   expect(built?.model).toMatchObject({ limit: { context: 262_144 } });
 });
+
+test("a feed limit at or above the lab cap clears an authored host override", () => {
+  const authored = { limit: { context: 262_144, output: 65_536 } } as any;
+  const built = buildAbacusModel(
+    abacusModel({ id: "qwen3.8-max", context_length: 1_000_000, max_completion_tokens: 131_072 }),
+    authored,
+  );
+  expect(built?.model).not.toHaveProperty("limit.context");
+  expect(built?.model).not.toHaveProperty("limit.output");
+});
+
+test("a silent feed keeps the authored host limit", () => {
+  const authored = { limit: { context: 262_144, output: 65_536 } } as any;
+  const built = buildAbacusModel(
+    abacusModel({ id: "qwen3.8-max", context_length: undefined, max_completion_tokens: undefined }),
+    authored,
+  );
+  expect(built?.model).toMatchObject({ limit: { context: 262_144, output: 65_536 } });
+});
