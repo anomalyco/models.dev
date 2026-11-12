@@ -1,5 +1,6 @@
 # Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
 # carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Sampling: temperature only, as the maker's own entry authors it (providers/abliteration-ai/models/abliterated-model.toml).
 # Source: abliteration.ai's own model, served on its API (https://abliteration.ai)
 schema = 2
 name = "Abliterated Model"
@@ -16,8 +17,8 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
-top_p = true
-top_k = true
+top_p = false
+top_k = false
 
 [limit]
 context = 150_000
