@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-12):
+# - https://platform.minimax.io/docs/pricing/overview#models/image (MiniMax-H3-Image-Highspeed, "Highspeed" tier)
+# - https://platform.minimax.io/docs/guides/image-generation
+# - https://www.minimax.io/blog/minimax-h3-image ("Highspeed mode reaches 3-4x the speed" of mainstream alternatives)
+# Same endpoints and modalities as MiniMax-H3-Image (POST /v1/images/generations and /v1/images/edits);
+# only the model id and price tier differ. Weights are published for MiniMax-H3-Image only.
+schema = 2
+v2_only = true
+type = "image"
+name = "MiniMax H3 Image Highspeed"
+description = "Faster tier of MiniMax H3 Image for text-to-image and image editing"
+family = "minimax"
+open_weights = false
+release_date = "2026-11-10"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"]
+output = ["image/jpeg", "image/png", "image/webp"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+url = "https://www.minimax.io/blog/minimax-h3-image"
+type = "announcement"
