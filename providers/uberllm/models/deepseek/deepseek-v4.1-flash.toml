@@ -1,4 +1,4 @@
-# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-11-04).
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-11-12).
 # Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
 # Off is effort=none; graded levels, no toggle.
 # Effort: reasoning_effort = none|low|high|max (DeepSeek's levels plus none, as on OpenRouter). Live on a counting prompt:
@@ -18,8 +18,8 @@ cache = { implicit = true }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.00585
-cache = { read = 0.000975 }
+price = 0.00594
+cache = { read = 0.00108 }
 
 [cost.text.output]
-price = 0.065
+price = 0.108

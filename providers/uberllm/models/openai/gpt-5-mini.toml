@@ -1,4 +1,4 @@
-# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-11-04).
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-11-12).
 # Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
 # Effort: reasoning_effort = minimal|low|medium|high (OpenAI's list; reasoning tokens 256 / 256 / 384 / 320 on a counting prompt).
 # tools.freeform: left out. Custom tools (text, regex ZZ[0-9]{3}, lark) were accepted on /v1/chat/completions but the model
@@ -14,8 +14,8 @@ reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.0675
-cache = { read = 0.00675 }
+price = 0.075
+cache = { read = 0.0075 }
 
 [cost.text.output]
-price = 0.54
+price = 0.6
