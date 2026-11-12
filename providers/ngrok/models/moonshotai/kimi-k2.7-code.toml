@@ -1,0 +1,18 @@
+# Source: ngrok.ai catalog, provider `moonshotai` (default route for this ID), accessed 2026-11-12.
+# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# Reasoning and cache controls copied from providers/moonshotai (multi-model relay policy, AGENTS.md).
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 4.05

@@ -1,0 +1,20 @@
+# Source: ngrok.ai catalog, provider `anthropic` (default route for this ID), accessed 2026-11-12.
+# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+schema = 2
+base_model = "anthropic/claude-opus-4-1"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 15.05
+cache = { read = 1.55, write = { "5m" = 18.8, "1h" = 30.05 } }
+
+[cost.text.output]
+price = 75.05

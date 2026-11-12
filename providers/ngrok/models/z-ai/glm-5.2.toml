@@ -1,0 +1,20 @@
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Effort: reasoning_effort = high|max (default max); none|minimal skip thinking, low|medium map to high, xhigh maps to max
+# Source: ngrok.ai catalog, provider `z-ai` (default route for this ID), accessed 2026-11-12.
+# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# Reasoning and cache controls copied from providers/zai (multi-model relay policy, AGENTS.md).
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.45
+cache = { read = 0.31 }
+
+[cost.text.output]
+price = 4.45

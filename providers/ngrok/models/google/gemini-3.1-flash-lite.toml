@@ -1,0 +1,21 @@
+# Source: ngrok.ai catalog, provider `google` (default route for this ID), accessed 2026-11-12.
+# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# Reasoning and cache controls copied from providers/google (multi-model relay policy, AGENTS.md).
+schema = 2
+base_model = "google/gemini-3.1-flash-lite"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true, explicit = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.55
+
+[cost.audio.input]
+price = 0.55

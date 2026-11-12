@@ -1,0 +1,29 @@
+# Source: ngrok.ai catalog, provider `meta` (default route for this ID), accessed 2026-11-12.
+# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# Reasoning and cache controls copied from providers/meta (multi-model relay policy, AGENTS.md).
+schema = 2
+base_model = "meta/muse-spark-1.1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.3
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 4.3
+
+[cost.audio.input]
+price = 1.3

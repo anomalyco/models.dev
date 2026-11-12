@@ -1,0 +1,20 @@
+# Source: ngrok.ai catalog, provider `google` (default route for this ID), accessed 2026-11-12.
+# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# Reasoning and cache controls copied from providers/google (multi-model relay policy, AGENTS.md).
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[modalities]
+input = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.05

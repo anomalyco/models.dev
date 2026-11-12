@@ -1,0 +1,25 @@
+# Source: ngrok.ai catalog, provider `anthropic` (default route for this ID), accessed 2026-11-12.
+# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# Reasoning and cache controls copied from providers/anthropic. The gateway forwards output_config on
+# /v1/messages and strips reasoning_effort on Chat Completions, so Messages is listed first:
+# https://ngrok.com/docs/ai-gateway/providers/anthropic#parameters-the-gateway-removes
+schema = 2
+base_model = "anthropic/claude-sonnet-4-5"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1024 } }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1024 } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 3.05
+cache = { read = 0.35, write = { "5m" = 3.8, "1h" = 6.05 } }
+
+[cost.text.output]
+price = 15.05

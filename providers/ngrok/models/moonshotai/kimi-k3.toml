@@ -1,0 +1,22 @@
+# Effort: reasoning_effort = "low" | "high" | "max" (default "max"); always thinks, reasoning in reasoning_content.
+# Source: ngrok.ai catalog, provider `moonshotai` (default route for this ID), accessed 2026-11-12.
+# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# Reasoning and cache controls copied from providers/moonshotai (multi-model relay policy, AGENTS.md).
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = { ttl = ["5m", "1h"] } }
+
+[limit]
+output = 1_048_576
+
+[cost.text.input]
+price = 3.05
+cache = { read = 0.35, write = 3.05 }
+
+[cost.text.output]
+price = 15.05
