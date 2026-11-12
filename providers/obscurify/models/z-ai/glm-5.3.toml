@@ -3,6 +3,7 @@
 # Controls follow providers/zhipuai/models/glm-5.3.toml (thinking cannot be turned off).
 # Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: low and max accepted, max reasoned about 5x longer.
 # Limits: GET https://obscurify.ai/v1/models reports context_length 1048576 (lab file: 1000000) and no max output. A prompt longer than the lab's window could not be verified here, so context and output are inherited from the lab.
+# Reasoning is returned in message.reasoning (checked live on POST /v1/chat/completions, 2026-11-11). reasoning_field = "reasoning" is valid in v2, but v1's interleaved.field only allows reasoning_content|reasoning_details, so no reasoning_field is set rather than a wrong one.
 # Cache: automatic, no cache_control markers. Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-11-11: the same 7k+ token prompt sent twice; the second reply reported usage.prompt_tokens_details.cached_tokens, billed (usage.cost) at the cache read rate.
 schema = 2
 base_model = "zhipuai/glm-5.3"
