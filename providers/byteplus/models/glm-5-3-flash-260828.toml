@@ -1,11 +1,13 @@
-# Model ID from BytePlus ModelArk pricing page (accessed 2026-11-12).
+# Model ID from BytePlus ModelArk model list: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-list
+# USD pricing from BytePlus ModelArk pricing page: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-pricing
 # USD pricing, per million tokens.
+# GLM-5.3-Flash always reasons (thinking cannot be disabled on this model ID)
+# Effort: reasoning_effort = low|high|max
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
-structured_output = true
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

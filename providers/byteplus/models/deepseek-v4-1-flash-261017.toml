@@ -1,10 +1,13 @@
-# Model ID from BytePlus ModelArk model list (accessed 2026-11-12).
+# Model ID from BytePlus ModelArk model list: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-list
+# USD pricing from BytePlus ModelArk pricing page: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-pricing
 # USD pricing, per million tokens. Peak/off-peak tiered.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
 schema = 2
-base_model = "deepseek/deepseek-v4.1-flash"
+base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]
@@ -13,6 +16,10 @@ compatibility = { reasoning_field = "reasoning_content" }
 [cost.text.input]
 price = 0.15
 cache = { read = 0.003 }
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
 
 [cost.text.output]
 price = 0.6
