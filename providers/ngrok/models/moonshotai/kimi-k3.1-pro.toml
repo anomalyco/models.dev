@@ -1,7 +1,8 @@
 # Source: ngrok.ai catalog, provider `moonshotai` (default route for this ID), accessed 2026-11-12.
 # Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
-# Cache writes: the ngrok catalog lists one write rate ($2/M) for every TTL; the lab lists { "5m" = 2, "1h" = 4 }.
+# Cache writes: credits pay the catalog's single write rate ($2/M + fee) at every TTL; the catalog has no
+# TTL-conditioned write rate for this model (it does for Claude). The lab lists { "5m" = 2, "1h" = 4 }.
 # Reasoning, cache and compatibility markers from providers/moonshotai (the lab's own provider entry). The gateway
 # forwards requests minus unsupported params and returns responses unchanged:
 # https://ngrok.com/docs/ai-gateway/how-it-works

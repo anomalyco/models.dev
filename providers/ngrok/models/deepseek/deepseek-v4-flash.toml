@@ -3,6 +3,8 @@
 # Source: ngrok.ai catalog, provider `deepseek` (default route for this ID), accessed 2026-11-12.
 # Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# Peak hours: credits bill DeepSeek's off-peak price at every hour, so there is no peak multiplier:
+# https://ngrok.com/docs/ai-gateway/providers/deepseek#peak-and-off-peak-pricing
 # Reasoning, cache and compatibility markers from providers/deepseek (the lab's own provider entry). The gateway
 # forwards requests minus unsupported params and returns responses unchanged:
 # https://ngrok.com/docs/ai-gateway/how-it-works
