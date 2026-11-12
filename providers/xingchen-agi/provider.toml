@@ -1,0 +1,13 @@
+# XingChen-AGI — new provider declaration (OpenAI-compatible endpoint,
+# same pattern as providers/deepseek/provider.toml).
+name = "XingChen-AGI"
+# No first-party AI SDK package: an OpenAI-compatible provider requires npm + api.
+npm = "@ai-sdk/openai-compatible"
+# Public OpenAI-compatible endpoint (auth: standard Authorization: Bearer API key).
+api = "https://api-maas.teleai.com.cn/v1"
+# Environment variable users set their API key in.
+env = ["XINGCHEN_API_KEY"]
+# Public docs link. Points to the provider's Hugging Face org page until the model
+# documentation goes live on the public release date (2026-11-18); will be updated
+# to the model's docs page then.
+doc = "https://huggingface.co/XingChen-AGI"

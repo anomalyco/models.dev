@@ -1,0 +1,29 @@
+# Xing4.1-Preview @ XingChen-AGI — provider model file, overrides only
+# (fields identical to the lab file are inherited via base_model).
+schema = 2
+base_model = "xingchen-agi/xing4.1-preview"
+
+[capabilities]
+# Thinking is a binary toggle on this host (no effort levels).
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[cost.text.input]
+# Official USD list prices per million tokens, off-peak base tier:
+# input $0.11 / cache read $0.0022 / output $0.45.
+price = 0.11
+cache = { read = 0.0022 }
+
+[cost.text.output]
+price = 0.45
+
+# Peak hours double all token prices (input/output/cache read; factor = 2).
+# Official peak window: Mon-Fri 00:00-11:00 New York time. Cost condition keys only
+# support fixed UTC (no time zone / DST), so this encodes the EST offset
+# (Mon-Fri 05:00-16:00 UTC), which matches the official window from launch
+# (2026-11-18) through March 2027; during US daylight saving the live window
+# is 04:00-15:00 UTC.
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "05:00" } }, { utc_hours = { lt = "16:00" } }] }
+factor = 2
