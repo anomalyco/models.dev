@@ -2,6 +2,7 @@
 # - API: POST https://api.minimax.io/v2/video_generation (https://platform.minimax.io/docs/api-reference/video-generation-v2-create)
 # - Pricing: https://platform.minimax.io/docs/pricing/overview#models/video (USD per second of output and of input video;
 #   input images are billed per image after the first 5 per task)
+#   output per second: 768P $0.04, 480P $0.025; input video per second: 768P $0.04, 480P $0.025; input image $0.02 each after the first 5 per task
 # Not modeled: the free quota of 5 input images per task; audio input is free.
 schema = 2
 v2_only = true
