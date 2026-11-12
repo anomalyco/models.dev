@@ -11,8 +11,8 @@
 # Billed per million tokens; tokens ~= (input video seconds + output seconds) x width x height x fps / 1024,
 # exact count in usage.completion_tokens. With video input there is a minimum token charge, not modelled here.
 # Prices: 480p/720p 70 CNY (42 with input video), 1080p 77 CNY (46 with input video).
-# Output formats mp4 (default) and mov via output_format; mov is listed for Seedance 2.5 only. Generated sound
-# is a track inside the container, so no audio type is listed.
+# Output formats mp4 (default) and mov via output_format; mov is listed for Seedance 2.5 only. Keeps the lab's
+# generic audio entry for the synchronized sound track.
 schema = 2
 v2_only = true
 base_model = "bytedance-seed/seedance-2.5"
@@ -33,7 +33,7 @@ input = [
   "audio/wav",
   "audio/mpeg",
 ]
-output = ["video/mp4", "video/quicktime"]
+output = ["video/mp4", "video/quicktime", "audio"]
 
 [api.videos]
 base_url = "https://ark.cn-beijing.volces.com/api/v3"
