@@ -42,6 +42,10 @@
 #   so it is left unset.
 # Weekend multiplier: Amsterdam midnight written as 23:00 UTC (CET, UTC+1); during
 # Dutch summer time the window starts and ends an hour earlier in UTC.
+# Structured output, live probe 2026-11-12 on Chat Completions: response_format json_schema with
+#   strict = true (object of string, number and an array capped at 2 items, additionalProperties
+#   false) and a prompt asking for a chatty paragraph -> HTTP 200 with schema-valid JSON in 4 of 4
+#   runs, 2 with thinking off and 2 with thinking on. So structured_output = true.
 # Image input, live probe 2026-11-12 on Chat Completions (thinking off): a 64x64 red image as a
 #   JPEG, PNG, GIF and WebP data URL each -> HTTP 200 "Red" (197 prompt tokens), so the base model's
 #   image input is inherited.
@@ -58,6 +62,7 @@ release_date = "2026-10-19"
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
+structured_output = true
 
 [limit]
 context = 1_048_576
