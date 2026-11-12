@@ -11,7 +11,7 @@ cache = { implicit = { min_tokens = 512 }, explicit = true }
 
 [cost.text.input]
 price = 0.6
-cache = { read = 0.06, write = { "5m" = 0.375 } }
+cache = { read = 0.06, write = 0.375 }
 
 [cost.text.output]
 price = 2.4

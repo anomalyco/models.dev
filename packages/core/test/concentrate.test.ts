@@ -46,6 +46,8 @@ describe("Concentrate sync", () => {
     expect(doc.capabilities.reasoning).toEqual({ supported: true, effort: ["none", "low", "medium", "high", "xhigh"] });
     // A route that takes custom tools gets the lab's free-form formats.
     expect(doc.capabilities.tools).toEqual({ supported: true, freeform: ["text", "lark", "regex"] });
+    // Formats listed on the reference's Responses table count too (OpenAI's gpt-6-luna).
+    expect(v2(model("gpt-6-luna", "openai", { openai: route({ custom: true }) })).capabilities.tools?.freeform).toEqual(["text", "lark", "regex"]);
     expect(doc.api).toBeUndefined();
     expect(doc.limit).toBeUndefined();
   });
@@ -54,6 +56,14 @@ describe("Concentrate sync", () => {
     const priced = route({ pricing: [{ tokens: tokens(1, 2, 0.1) }] });
     expect(v2(model("kimi-k2-5", "moonshot", { moonshot: priced })).capabilities.cache).toEqual({ implicit: true });
     expect(v2(model("kimi-k2-5", "moonshot", { moonshot: route() })).capabilities.cache).toBeUndefined();
+  });
+
+  test("keys cache writes by the TTLs the reference offers, or a plain price when it lists none", () => {
+    const write = (key: string, USD: number) => ({ tokens: { ...tokens(1, 2, 0.1), cache: { read: usd(0.1), write: { [key]: usd(USD) } } } });
+    // OpenAI caches for 30m/12h; an unnamed write price is the first.
+    expect(v2(model("gpt-5.6-luna", "openai", { openai: route({ pricing: [write("cache_write_tokens", 0.25)] }) })).cost.text.input.cache).toEqual({ read: 0.1, write: { "30m": 0.25 } });
+    // MiniMax publishes its write price without a TTL.
+    expect(v2(model("minimax-m2-7", "minimax", { minimax: route({ pricing: [write("ephemeral_5m_input_tokens", 0.375)] }) })).cost.text.input.cache).toEqual({ read: 0.1, write: 0.375 });
   });
 
   test("maps effort onto budget-only labs with graded low/medium/high, never the full list", () => {

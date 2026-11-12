@@ -124,7 +124,8 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   const labFile = readToml(path.join(ROOT, "models", `${base}.toml`));
   // A relay serves no more than the model takes; the catalog can over-report a route's limit.
   const limit = { context: capped(model.max_input_tokens, labFile?.limit?.context), output: capped(model.max_tokens, labFile?.limit?.output) };
-  const price = chosen && cost(chosen.route, chosen.standard, limit.context);
+  const firstParty = labCapabilities(base);
+  const price = chosen && cost(chosen.route, chosen.standard, limit.context, firstParty?.cache?.explicit?.ttl ?? firstParty?.cache?.implicit?.ttl);
 
   // Decision models answer TypeSafe's System One format at /v1/systemone.
   if (chat.length === 0) {
@@ -153,7 +154,6 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
 
   // Claude uses the Messages API, where prompt caching and Anthropic's thinking fields are native.
   const claude = lab === "anthropic";
-  const firstParty = labCapabilities(base);
   const thinks = model.capabilities.thinking.supported || model.capabilities.effort.supported || labFile?.capabilities?.reasoning?.supported === true;
   doc.capabilities = clean({
     ...doc.capabilities,
@@ -161,7 +161,7 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
     cache: chosen?.tokens.cache?.read === undefined ? undefined : firstParty?.cache ?? { implicit: true },
   });
   // Custom tools (free-form and grammar formats) take the lab's formats where a route accepts them.
-  const freeform = supports.some((s) => s.tools.custom_tools === true) ? firstParty?.tools?.freeform : undefined;
+  const freeform = supports.some((s) => s.tools.custom_tools === true) ? firstParty?.freeform : undefined;
   if (freeform !== undefined) doc.capabilities.tools = { ...doc.capabilities.tools, supported: true, freeform };
   if (claude) doc.api = { messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } } };
   if (price === undefined) delete doc.cost;
@@ -206,12 +206,17 @@ function labCapabilities(base: string) {
     const files = (readdirSync(dir, { recursive: true }) as string[]).filter((file) => file.endsWith(".toml") && file.includes("/models/") && !file.startsWith("concentrate/"));
     for (const file of files.sort((a, b) => Number(b.startsWith("openrouter/")) - Number(a.startsWith("openrouter/")))) {
       const toml = readToml(path.join(dir, file));
-      if (typeof toml?.base_model === "string" && toml.capabilities?.reasoning !== undefined && !peerCapabilities.has(toml.base_model)) peerCapabilities.set(toml.base_model, toml.capabilities);
+      if (typeof toml?.base_model === "string" && toml.capabilities?.reasoning !== undefined && !peerCapabilities.has(toml.base_model)) peerCapabilities.set(toml.base_model, capabilitiesOf(toml));
     }
   }
   const [lab, ...rest] = base.split("/");
-  return readToml(path.join(ROOT, "providers", lab!, "models", `${rest.join("/")}.toml`))?.capabilities ?? peerCapabilities.get(base);
+  return capabilitiesOf(readToml(path.join(ROOT, "providers", lab!, "models", `${rest.join("/")}.toml`))) ?? peerCapabilities.get(base);
 }
+// Free-form formats sit on the top-level tools or on the Responses table (e.g. OpenAI's gpt-6-luna).
+const capabilitiesOf = (toml: Record<string, any> | undefined) => toml?.capabilities && {
+  ...toml.capabilities,
+  freeform: toml.capabilities.tools?.freeform ?? toml.api?.responses?.capabilities?.tools?.freeform,
+};
 
 // The standard price: no condition, or a scheduled change that has already started.
 function standardPrice(route: Route): z.infer<typeof Price> | undefined {
@@ -222,15 +227,20 @@ function standardPrice(route: Route): z.infer<typeof Price> | undefined {
 }
 
 // Standard prices, `input_gte` tiers as context overrides, and web search per 1,000 calls.
-function cost(route: Route, standard: z.infer<typeof Price>, context: number) {
+function cost(route: Route, standard: z.infer<typeof Price>, context: number, ttls?: string[]) {
   const tokens = standard.tokens!;
-  const cache = (cached: Tokens["cache"]) => clean({
-    read: cached?.read && perMillion(cached.read),
-    write: clean(Object.fromEntries(Object.entries(cached?.write ?? {}).flatMap(([key, money]) => {
-      const ttl = key.match(/^ephemeral_(\w+)_input_tokens$/)?.[1] ?? (key === "cache_write_tokens" ? "5m" : undefined);
-      return ttl === undefined ? [] : [[ttl, perMillion(money)]];
-    }))),
-  });
+  // Write prices are keyed by the reference's cache TTLs (an unnamed one takes the first), leaving out TTLs it doesn't
+  // offer; when it lists no TTLs, the write price is a plain price, as the lab publishes it.
+  const cache = (cached: Tokens["cache"]) => {
+    const first = Object.values(cached?.write ?? {})[0];
+    return clean({
+      read: cached?.read && perMillion(cached.read),
+      write: ttls === undefined ? first && perMillion(first) : clean(Object.fromEntries(Object.entries(cached?.write ?? {}).flatMap(([key, money]) => {
+        const ttl = key.match(/^ephemeral_(\w+)_input_tokens$/)?.[1] ?? (key === "cache_write_tokens" ? ttls?.[0] : undefined);
+        return ttl === undefined || !ttls.includes(ttl) ? [] : [[ttl, perMillion(money)]];
+      }))),
+    });
+  };
   const tiers = route.pricing
     .filter((price) => price.tokens !== undefined && typeof price.condition?.input_gte === "number" && price.condition.input_gte < context
       && Object.keys(price.condition).every((key) => key === "input_gte" || key === "description"))

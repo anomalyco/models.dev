@@ -10,12 +10,12 @@ tools = { supported = true, freeform = ["text", "lark", "regex"] }
 
 [cost.text.input]
 price = 1
-cache = { read = 0.05, write = { "5m" = 1.25 } }
+cache = { read = 0.05, write = { "30m" = 1.25 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 2
-cache = { read = 0.1, write = { "5m" = 2.5 } }
+cache = { read = 0.1, write = { "30m" = 2.5 } }
 
 [cost.text.output]
 price = 5
