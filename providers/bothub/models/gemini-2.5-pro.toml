@@ -1,5 +1,5 @@
 # Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
-# (checked 2026-11-03): 1.06 / 8.5 USD per 1M input / output tokens.
+# (checked 2026-11-12): 1.07 / 8.57 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
 schema = 2
 base_model = "google/gemini-2.5-pro"
@@ -12,15 +12,15 @@ structured_output = true
 legacy_interleaved = true
 
 [cost.text.input]
-price = 1.06
+price = 1.07
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 200000 } }
-price = 2.13
+price = 2.14
 
 [cost.text.output]
-price = 8.5
+price = 8.57
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 200000 } }
-price = 12.75
+price = 12.85
