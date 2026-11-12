@@ -92,7 +92,8 @@ describe("Concentrate sync", () => {
     expect(buildConcentrateModel(model("redact-v1", "concentrate", { concentrate: route() }))).toBeUndefined();
     expect(buildConcentrateModel(model("not-a-real-model", "nobody", { nobody: route() }))).toBeUndefined();
     expect(concentrate.missingModelID?.(model("redact-v1", "concentrate", {}))).toBeUndefined();
-    expect(v2(model("gpt-4.1", "openai", { openai: route() }, false)).capabilities?.reasoning).toEqual({ supported: false });
+    // A non-reasoning model inherits the lab's `reasoning = { supported = false }` instead of restating it.
+    expect(v2(model("gpt-4.1", "openai", { openai: route() }, false)).capabilities?.reasoning).toBeUndefined();
     // A lab reasoner stays one even when Concentrate flags no reasoning control: always-on.
     expect(v2(model("deepseek-r1", "deepseek", { deepseek: route() }, false)).capabilities.reasoning).toEqual({ supported: true });
   });

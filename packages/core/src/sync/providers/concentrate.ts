@@ -87,6 +87,7 @@ const NOT_MODELS = new Set([
   "redact-v1",
   "gpt-4o", "gpt-5.2", "gpt-5.3-codex", "gpt-5.4-mini", "gpt-5.4-nano", "gpt-oss-safeguard-120b",
   "glm-5.2", "gpt-oss-20b", "hy4-preview", "magistral-small-1.2", "qwen3-max-thinking",
+  "muse-spark-1.3", "muse-spark-1.3-contributor",
 ]);
 
 export const concentrate = {
@@ -157,7 +158,7 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   const thinks = model.capabilities.thinking.supported || model.capabilities.effort.supported || labFile?.capabilities?.reasoning?.supported === true;
   doc.capabilities = clean({
     ...doc.capabilities,
-    reasoning: thinks ? reasoning(firstParty?.reasoning, efforts, claude) : { supported: false },
+    reasoning: thinks ? reasoning(firstParty?.reasoning, efforts, claude) : undefined,
     cache: chosen?.tokens.cache?.read === undefined ? undefined : firstParty?.cache ?? { implicit: true },
   });
   // Custom tools (free-form and grammar formats) take the lab's formats where a route accepts them.

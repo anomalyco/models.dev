@@ -6,7 +6,6 @@ input = ["text", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = false }
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
 
 [cost.text.input]
