@@ -1,7 +1,10 @@
+# Toggle: reasoning_effort = "none" (off) | any other level (on) on Chat Completions
 # Source: ngrok.ai catalog, provider `google` (default route for this ID), accessed 2026-11-12.
-# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
-# Reasoning and cache controls copied from providers/google (multi-model relay policy, AGENTS.md).
+# Reasoning, cache and compatibility markers from providers/google (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
@@ -15,7 +18,6 @@ structured_output = true
 
 [cost.text.input]
 price = 0.05
-cache = { read = 0.05 }
 
 [cost.text.output]
 price = 0.05

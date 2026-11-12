@@ -1,7 +1,10 @@
 # Source: ngrok.ai catalog, provider `openai` (default route for this ID), accessed 2026-11-12.
-# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
-# Reasoning and cache controls copied from providers/openai (multi-model relay policy, AGENTS.md).
+# Reasoning, cache and compatibility markers from providers/openai (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
+# tools.freeform not authored: custom-tool grammars have not been live-probed through the gateway yet.
 schema = 2
 base_model = "openai/gpt-5.2-pro"
 

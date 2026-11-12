@@ -1,8 +1,11 @@
-# Effort: reasoning_effort (Chat), output_config.effort (Messages), reasoning.effort (Responses) = low|medium|high (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create, https://platform.stepfun.com/docs/zh/api-reference/chat/messages-create, https://platform.stepfun.com/docs/zh/api-reference/responses/responses-create).
+# Effort: reasoning_effort (Chat), output_config.effort (Messages), reasoning.effort (Responses) = low|medium|high
 # Source: ngrok.ai catalog, provider `tokenhub` (default route for this ID), accessed 2026-11-12.
-# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
-# Reasoning and cache controls copied from providers/stepfun (multi-model relay policy, AGENTS.md).
+# List price is the ngrok catalog row for this route ($1/$2.7 per M); providers/stepfun lists $1.04613/$2.98895.
+# Reasoning, cache and compatibility markers from providers/stepfun (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
 schema = 2
 base_model = "stepfun/step-5-preview"
 
@@ -19,6 +22,7 @@ cache = { implicit = { min_tokens = 256 } }
 output = 64_000
 
 [api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

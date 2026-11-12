@@ -1,8 +1,11 @@
 # Effort: reasoning_effort = "low" | "high" | "max" (default "max"); always thinks, reasoning in reasoning_content.
 # Source: ngrok.ai catalog, provider `moonshotai` (default route for this ID), accessed 2026-11-12.
-# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
-# Reasoning and cache controls copied from providers/moonshotai (multi-model relay policy, AGENTS.md).
+# Cache writes: the ngrok catalog lists one write rate ($3/M) for every TTL; the lab lists { "5m" = 3, "1h" = 6 }.
+# Reasoning, cache and compatibility markers from providers/moonshotai (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -13,6 +16,9 @@ cache = { implicit = { ttl = ["5m", "1h"] } }
 
 [limit]
 output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 3.05

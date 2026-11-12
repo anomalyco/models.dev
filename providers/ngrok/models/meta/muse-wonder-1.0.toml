@@ -1,8 +1,10 @@
 # Effort: reasoning_effort = minimal|low|medium|high|xhigh|max (per the API's validation error, verified 2026-10-12 in providers/meta)
 # Source: ngrok.ai catalog, provider `meta` (default route for this ID), accessed 2026-11-12.
-# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
-# Reasoning and cache controls copied from providers/meta (multi-model relay policy, AGENTS.md).
+# Reasoning, cache and compatibility markers from providers/meta (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
 schema = 2
 base_model = "meta/muse-wonder-1.0"
 

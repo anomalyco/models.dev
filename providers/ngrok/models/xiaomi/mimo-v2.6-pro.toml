@@ -1,8 +1,10 @@
-# Toggle: thinking.type = enabled|disabled (default enabled; Responses reasoning.effort only maps none -> off, every other level -> on, so no graded effort is authored)
+# Toggle: thinking.type = enabled|disabled
 # Source: ngrok.ai catalog, provider `tokenhub` (default route for this ID), accessed 2026-11-12.
-# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
-# Reasoning and cache controls copied from providers/xiaomi (multi-model relay policy, AGENTS.md).
+# Reasoning, cache and compatibility markers from providers/xiaomi (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
 schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 
@@ -19,6 +21,7 @@ cache = { implicit = true }
 context = 1_000_000
 
 [api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

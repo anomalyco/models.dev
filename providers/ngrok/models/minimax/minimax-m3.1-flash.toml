@@ -1,8 +1,10 @@
-# Effort: output_config.effort = low|medium|high|xhigh|max, default max. Thinking cannot be disabled: thinking.type = disabled or effort none returns 400.
+# Effort: output_config.effort = low|medium|high|xhigh|max, default max. Thinking cannot be
 # Source: ngrok.ai catalog, provider `minimax` (default route for this ID), accessed 2026-11-12.
-# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
-# Reasoning and cache controls copied from providers/minimax (multi-model relay policy, AGENTS.md).
+# Reasoning, cache and compatibility markers from providers/minimax (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
@@ -19,6 +21,7 @@ cache = { implicit = { min_tokens = 512 } }
 output = 524_288
 
 [api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

@@ -1,8 +1,10 @@
-# Effort: reasoning_effort = none|high (default high). "none" is how thinking is turned off on this id, so per AGENTS.md there is no separate toggle entry.
+# Effort: reasoning_effort = none|high (default high). "none" is how thinking is turned off on
 # Source: ngrok.ai catalog, provider `tokenhub` (default route for this ID), accessed 2026-11-12.
-# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
-# Reasoning and cache controls copied from providers/tencent-tokenhub (multi-model relay policy, AGENTS.md).
+# Reasoning, cache and compatibility markers from providers/tencent-tokenhub (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
 schema = 2
 base_model = "tencent/hy4"
 
@@ -11,7 +13,6 @@ reasoning = { supported = true, effort = ["none", "high"] }
 
 [limit]
 context = 1_000_000
-input = 960_000
 output = 64_000
 
 [api.chat-completions]
@@ -24,7 +25,6 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 
 [cost.text.input]
 price = 0.884
-cache = { read = 0.092 }
 
 [cost.text.output]
 price = 2.551

@@ -1,14 +1,19 @@
 # Toggle: thinking.type = enabled|disabled (default enabled)
 # Source: ngrok.ai catalog, provider `z-ai` (default route for this ID), accessed 2026-11-12.
-# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
-# Reasoning and cache controls copied from providers/zai (multi-model relay policy, AGENTS.md).
+# Reasoning, cache and compatibility markers from providers/zai (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
 schema = 2
 base_model = "zhipuai/glm-4.7-flashx"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.12

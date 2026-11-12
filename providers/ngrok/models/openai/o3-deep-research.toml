@@ -1,11 +1,12 @@
 # Source: ngrok.ai catalog, provider `openai` (default route for this ID), accessed 2026-11-12.
-# Prices = provider list price + $0.05/M processing fee on all request and response tokens:
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# Cache: the ngrok catalog marks implicit caching for this model; OpenAI caches prompts of 1,024+ tokens.
 schema = 2
 base_model = "openai/o3-deep-research"
 
 [capabilities]
-reasoning = { supported = true }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
