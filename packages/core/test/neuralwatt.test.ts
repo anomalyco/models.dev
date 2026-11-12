@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { expect, spyOn, test } from "bun:test";
 
 import { AuthoredModel } from "../src/schema.js";
 import { buildNeuralwattModel, neuralwatt, type NeuralwattModel } from "../src/sync/providers/neuralwatt.js";
@@ -26,6 +26,25 @@ function context(existing?: Record<string, unknown>, authored = existing) {
     typeof neuralwatt.translateModel
   >[1];
 }
+
+test("fetches the public catalog without credentials", async () => {
+  const fetcher = spyOn(globalThis, "fetch").mockResolvedValue(
+    Response.json({ scope: "public", data: [] }),
+  );
+  try {
+    await neuralwatt.fetchModels();
+    expect(fetcher).toHaveBeenCalledWith("https://api.neuralwatt.com/v1/models");
+  } finally {
+    fetcher.mockRestore();
+  }
+});
+
+test("refuses customer-scoped catalogs", () => {
+  const model = sourceModel("kimi-k3.1-pro");
+  expect(neuralwatt.parseModels({ scope: "public", data: [model] })).toHaveLength(1);
+  expect(() => neuralwatt.parseModels({ scope: "customer", data: [model] })).toThrow();
+  expect(() => neuralwatt.parseModels({ data: [model] })).toThrow();
+});
 
 test("keeps the discounted flex prices reported by the API", () => {
   const source = sourceModel("glm-5.2-flex", {

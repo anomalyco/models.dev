@@ -445,9 +445,8 @@ Neuralwatt is implemented in `packages/core/src/sync/providers/neuralwatt.ts`.
 
 - Run it with `bun models:sync neuralwatt`; it is also in the `direct` group.
 - Source endpoint: `https://api.neuralwatt.com/v1/models`.
-- Optional auth: `NEURALWATT_API_KEY`. Without it the response is the public catalog. With it, the response is scoped to that account.
-- `status = "beta"` means not generally available. Beta models appear in the response for an account that requested access to a beta model from the portal models page.
-- `deleteMissing: false`, because we don't want to inadvertently delete a model when (for example) only its visibility changes. A run cannot tell a retired model from a beta this account was never granted, so absent models are retained and listed by `missingNotice`.
+- The sync sends no credentials and requires `scope = "public"`. It rejects customer-scoped responses, which can include private grants. The [endpoint documentation](https://docs.neuralwatt.com/api/models#list-models) documents scopes but no per-model availability status. This prevents private account grants from creating public catalog entries.
+- `deleteMissing: false`: absence alone does not prove retirement. Missing entries are retained and reported for review.
 - The endpoint reports final prices for each model ID, including the discounted flex prices. The sync uses those prices without an additional multiplier.
 - Verified on 2026-11-12: Kimi K3.1 Pro reports input/output/cache-read prices of 2/10/0.2; its flex entry reports 1.3/6.5/0.13. MiMo reports 0.435/0.87/0.0036 and flex 0.28275/0.5655/0.00234. All are USD per million tokens. The [models documentation](https://docs.neuralwatt.com/api/models#metadatapricing) states that `flex_discount_multiplier` is already applied. Older catalog headers that describe undiscounted endpoint prices are historical; #13486 updates the MiMo notes.
 - The API is authoritative for pricing, the context window, vision, tool calling, JSON mode, the reasoning flag, deprecation, and the `reasoning_effort` array. `metadata.reasoning` is optional, because a model with no reasoning has no effort ladder to report; every other metadata block is required, so an upstream change there fails the sync.

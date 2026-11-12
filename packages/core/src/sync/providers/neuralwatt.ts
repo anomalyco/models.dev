@@ -75,6 +75,7 @@ export const NeuralwattModel = z.object({
 }).passthrough();
 
 export const NeuralwattResponse = z.object({
+  scope: z.literal("public"),
   data: z.array(NeuralwattModel),
 }).passthrough();
 
@@ -84,7 +85,7 @@ export const neuralwatt = {
   id: "neuralwatt",
   name: "Neuralwatt",
   modelsDir: "providers/neuralwatt/models",
-  // Beta models are listed only for accounts granted access to each one.
+  // A missing public listing does not prove retirement.
   deleteMissing: false,
   sourceID(model) {
     return model.id;
@@ -105,10 +106,7 @@ export const neuralwatt = {
     ];
   },
   async fetchModels() {
-    const headers = process.env.NEURALWATT_API_KEY
-      ? { Authorization: `Bearer ${process.env.NEURALWATT_API_KEY}` }
-      : undefined;
-    const response = await fetch(API_ENDPOINT, { headers });
+    const response = await fetch(API_ENDPOINT);
     if (!response.ok) {
       throw new Error(`Neuralwatt request failed: ${response.status} ${response.statusText}`);
     }
