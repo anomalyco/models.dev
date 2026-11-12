@@ -8,53 +8,36 @@ Provider Details
 - Environment variable: NEURALWATT_API_KEY
 - Documentation: https://portal.neuralwatt.com/docs
 
-Standard Models
-- deepseek-v4-flash: DeepSeek V4 Flash, 1M context
-- deepseek-v4-pro: DeepSeek V4 Pro, 1M context, private preview
-- gemma-4-31b: Gemma 4 31B, image input, 262K context
-- glm-5.2: GLM 5.2, 1M context
-- glm-5.2-short: GLM 5.2 Short, 200K context, 32K output cap
-- glm-5.3: GLM 5.3, 1M context, gated preview
-- kimi-k2.7-code: Kimi K2.7 Code, image input, 262K context
-- kimi-k3: Kimi K3, image input, 1M context
-- qwen-3.8-27b: Qwen 3.8 27B, image input, 262K context, private preview
-- qwen3.6-35b: Qwen3.6 35B, image input, 131K context
+Available Models
 
-Fast Variants
-Tuned for lower latency. What that means differs per model:
-- glm-5.2-fast, glm-5.2-short-fast: reasoning stays available, but defaults off
-- kimi-k2.7-code-fast: reasoning capped to a short budget and cannot be disabled
-- kimi-k3-fast, qwen3.6-35b-fast: no reasoning
+Use [GET /v1/models](https://api.neuralwatt.com/v1/models) for current model
+IDs, limits, prices, and capabilities. The [model files](models/) contain
+the catalog entries. Check each variant's metadata for its controls and limits.
 
-Flex Variants
-Discounted, best-effort latency. Requests may be held under load.
-- deepseek-v4-flash-flex, glm-5.2-flex, glm-5.2-short-flex,
-  glm-5.2-short-fast-flex, kimi-k2.7-code-flex, kimi-k3-flex
+Public and authenticated responses both listed the same 23 models with
+identical model metadata on 2026-11-12. Other accounts may have private grants.
 
 Pricing
-- Rates come from metadata.pricing on GET /v1/models. Preview models require an
-  authenticated request to appear.
-- Cached input is published per model as cached_input_per_million. It is 10% of
-  the input price on most models, but 20% on deepseek-v4-flash and 55.6% on
-  qwen-3.8-27b, so read the field rather than applying a ratio.
+
+- Rates come from metadata.pricing on GET /v1/models, in USD per million tokens.
+- Read cached_input_per_million directly; cache discounts vary by model.
 - There is no separate cache-write charge.
-- Flex is billed at 0.65x the standard rate (35% off), cached input included.
+- Flex prices from the endpoint already include the discount. Do not apply
+  flex_discount_multiplier again.
 - Flex requires stream = true. Non-streaming requests fall through to the
   standard tier and are billed at standard rates.
 
 Reasoning Controls
+
 - reasoning_effort accepts the levels in metadata.reasoning.supported_efforts.
-  Most lists include none, which is the off switch. glm-5.3 is the exception:
-  it reports reasoning.mandatory and offers only low, high and max.
+  Where listed, none disables reasoning.
 - accepted_efforts is wider than supported_efforts. The extra values are
   aliases the API folds into a supported level, not distinct levels.
-- thinking_token_budget is accepted on every model except deepseek-v4-flash and
-  gemma-4-31b, which reject it with a 400 on the V2 model runner.
-- kimi-k2.7-code and its variants expose no effort control, only a budget.
+- Check the model file's reasoning controls and source notes before using
+  thinking_token_budget. Support depends on the served model.
 
 Notes
-- Preview models are access-gated and stay out of the public catalog until
-  access is granted. See https://portal.neuralwatt.com/docs/guides/preview-models
+
 - Neuralwatt reports real-time energy consumption (Joules/kWh) per request.
 - A null max_output_tokens does not establish the host's output cap.
   Sync keeps the existing output limit or uses the lab limit as a fallback.
