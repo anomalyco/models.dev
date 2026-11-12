@@ -1,0 +1,17 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 1.75/14, cache read 0.175 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "openai/gpt-5.3-codex"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14

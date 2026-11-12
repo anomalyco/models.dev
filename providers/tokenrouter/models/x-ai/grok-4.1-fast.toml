@@ -1,0 +1,13 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 0.2/0.5, cache read 0.05 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "xai/grok-4.1-fast"
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.5

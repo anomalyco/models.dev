@@ -1,0 +1,16 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 0.1/0.25, cache read 0.05 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.25

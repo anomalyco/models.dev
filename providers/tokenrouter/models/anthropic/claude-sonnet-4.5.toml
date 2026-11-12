@@ -1,0 +1,17 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 3/15, cache read 0.3, cache write 3.75 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "anthropic/claude-sonnet-4-5"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1024 } }
+structured_output = true
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

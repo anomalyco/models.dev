@@ -1,0 +1,17 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 8/40, cache read 0.2, cache write 10 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = 10 }
+
+[cost.text.output]
+price = 40

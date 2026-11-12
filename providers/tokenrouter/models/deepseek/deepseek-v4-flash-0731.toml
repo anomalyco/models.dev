@@ -1,0 +1,16 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 0.264/0.792, cache read 0.0084 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.264
+cache = { read = 0.0084 }
+
+[cost.text.output]
+price = 0.792
