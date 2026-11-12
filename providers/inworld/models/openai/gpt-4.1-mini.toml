@@ -1,0 +1,18 @@
+# Source: https://api.inworld.ai/llm/v1alpha/models (accessed 2026-11-11).
+# Prices are API per-token rates converted to USD per million tokens.
+# Tools and schema output: https://docs.inworld.ai/router/capabilities/tool-calling
+# https://docs.inworld.ai/router/capabilities/structured-outputs
+schema = 2
+base_model = "openai/gpt-4.1-mini"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1.6
