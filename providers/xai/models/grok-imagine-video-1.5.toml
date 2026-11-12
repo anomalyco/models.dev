@@ -1,6 +1,11 @@
 # API: POST https://api.x.ai/v1/videos/generations (https://docs.x.ai/developers/rest-api-reference/inference/videos.md).
+# Pricing (accessed 2026-11-12): https://docs.x.ai/developers/pricing ($0.080 / sec, flat across resolutions: https://docs.x.ai/developers/models/grok-imagine-video-1.5)
 schema = 2
 base_model = "xai/grok-imagine-video-1.5"
 
 [api.videos]
 sdk = { opencodeai = "@opencode/ai/protocols/xai-video" }
+
+[cost.video.output]
+unit = "second"
+price = 0.08

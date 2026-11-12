@@ -2,11 +2,15 @@
 # - https://docs.x.ai/developers/models/grok-imagine-image-2.0
 # - https://docs.x.ai/developers/pricing (Imagine: $0.04 / image)
 # - https://docs.x.ai/docs/guides/image-generation
-# Pricing is per image (by quality and resolution), which v1 cost can't express; no [cost] authored.
 # API: POST https://api.x.ai/v1/images/generations (https://docs.x.ai/developers/rest-api-reference/inference/images.md).
+# Pricing (accessed 2026-11-12): https://docs.x.ai/developers/pricing ($0.04 / image)
 schema = 2
 v2_only = true
 base_model = "xai/grok-imagine-image-2.0"
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/providers/xai/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.04
