@@ -1,5 +1,6 @@
 # Cyber v1: Nodecode's abliterated model for authorized security testing and pentest
-# agents, built on DeepSeek V4.1 Flash 1017 (named on nodecode.ai/cyber); unique to this host, so it is defined inline (no base_model).
+# agents: DeepSeek V4.1 Flash 1017 with its refusal direction abliterated (named on nodecode.ai/cyber),
+# so it inherits the lab entry (base_model) and overrides only what this host serves differently.
 # Sources (accessed 2026-11-12):
 #   https://nodecode.ai/cyber  (model card)
 #   https://nodecode.ai/docs/cyber  (1,048,576-token context; reasoning arrives in
@@ -41,24 +42,22 @@
 #   so it is left unset.
 # Weekend multiplier: Amsterdam midnight written as 23:00 UTC (CET, UTC+1); during
 # Dutch summer time the window starts and ends an hour earlier in UTC.
+# Image input, live probe 2026-11-12 on Chat Completions (thinking off): a 64x64 red image as a
+#   JPEG, PNG, GIF and WebP data URL each -> HTTP 200 "Red" (197 prompt tokens), so the base model's
+#   image input is inherited.
+# Weights: nodecode.ai/cyber names the checkpoint (pqhaz/DeepSeek-V4.1-Flash-1017-heretic,
+#   https://huggingface.co/pqhaz/DeepSeek-V4.1-Flash-1017-heretic) and says "The weights are a
+#   public Hugging Face checkpoint", so open_weights is inherited (true).
 # Release date: the model was first listed as Cyber v1 on nodecode.ai/pricing on 2026-10-19.
 schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "Cyber v1"
 description = "Abliterated DeepSeek V4.1 Flash 1017 for authorized security testing and pentest agents"
-open_weights = false
 release_date = "2026-10-19"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
-temperature = true
-top_p = true
-top_k = true
 
 [limit]
 context = 1_048_576
