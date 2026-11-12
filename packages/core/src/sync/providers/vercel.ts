@@ -309,11 +309,7 @@ export function buildVercelModel(
   return factorBaseModel(baseModel, {
     type: synced.type,
     name: synced.name,
-    // The lab describes the decision task; a generic gateway chat description
-    // must not override it when the provider file has no curated description.
-    description: model.type === "evaluation" && existing?.description === undefined
-      ? undefined
-      : synced.description,
+    description: existing?.description,
     attachment: synced.attachment,
     reasoning: synced.reasoning,
     reasoning_options: synced.reasoning_options,
