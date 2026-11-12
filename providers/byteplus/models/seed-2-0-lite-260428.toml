@@ -8,6 +8,10 @@ base_model = "bytedance-seed/seed-2.0-lite"
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
+# BytePlus Ark accepts max_tokens up to 131_072 for this model (same as volcengine Ark).
+[limit]
+output = 131_072
+
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
