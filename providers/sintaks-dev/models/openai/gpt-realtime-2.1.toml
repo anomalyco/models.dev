@@ -1,0 +1,13 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+v2_only = true
+schema = 2
+base_model = "openai/gpt-realtime-2.1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 4.4
+
+[cost.text.output]
+price = 26.4

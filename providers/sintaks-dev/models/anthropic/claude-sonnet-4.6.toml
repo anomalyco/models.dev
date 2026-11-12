@@ -1,0 +1,12 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+
+[cost.text.input]
+price = 4.05
+
+[cost.text.output]
+price = 20.25

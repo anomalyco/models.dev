@@ -1,0 +1,12 @@
+# Sintaks.dev is an OpenAI-compatible multi-model gateway. All chat models are
+# served over POST `/chat/completions` with the OpenAI wire format; reasoning is
+# controlled with `reasoning_effort` (values copied from the lab's own provider
+# entry per model). Decision models use a System One wire body at the same
+# base_url; image models use the OpenAI Images API; embeddings use `/embeddings`.
+# https://api.sintaks.dev/v1/models (accessed 2026-11-12)
+name = "Sintaks.dev (Indonesia AI Gateway)"
+env = ["SINTAKS_DEV_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.sintaks.dev/v1"
+doc = "https://docs.sintaks.dev"

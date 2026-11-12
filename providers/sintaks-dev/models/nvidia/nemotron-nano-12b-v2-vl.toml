@@ -1,0 +1,12 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+schema = 2
+base_model = "nvidia/nemotron-nano-12b-v2-vl"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.27
+
+[cost.text.output]
+price = 0.81

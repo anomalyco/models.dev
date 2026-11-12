@@ -1,0 +1,12 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.2025
+
+[cost.text.output]
+price = 0.6345

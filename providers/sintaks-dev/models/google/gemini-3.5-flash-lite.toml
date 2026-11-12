@@ -1,0 +1,12 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+schema = 2
+base_model = "google/gemini-3.5-flash-lite"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.405
+
+[cost.text.output]
+price = 3.375

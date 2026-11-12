@@ -1,0 +1,11 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+v2_only = true
+schema = 2
+base_model = "google/text-multilingual-embedding-002"
+
+[api.embeddings]
+base_url = "https://api.sintaks.dev/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.03375

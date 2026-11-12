@@ -1,0 +1,12 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+schema = 2
+base_model = "xai/grok-build-0.1"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2.7
+
+[cost.text.output]
+price = 5.4
