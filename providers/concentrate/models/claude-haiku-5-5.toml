@@ -15,7 +15,7 @@ price = 0.1
 cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 100_001 } }
+when = { context = { gte = 100_001 } }
 price = 0.5
 cache = { read = 0.05, write = { "5m" = 0.625, "1h" = 1 } }
 
@@ -23,7 +23,7 @@ cache = { read = 0.05, write = { "5m" = 0.625, "1h" = 1 } }
 price = 0.5
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 100_001 } }
+when = { context = { gte = 100_001 } }
 price = 2.5
 
 [cost.web_search]

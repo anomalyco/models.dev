@@ -246,7 +246,8 @@ function cost(route: Route, standard: z.infer<typeof Price>, context: number, tt
     .filter((price) => price.tokens !== undefined && typeof price.condition?.input_gte === "number" && price.condition.input_gte < context
       && Object.keys(price.condition).every((key) => key === "input_gte" || key === "description"))
     .sort((a, b) => Number(a.condition!.input_gte) - Number(b.condition!.input_gte));
-  const when = (tier: z.infer<typeof Price>) => ({ context: { gt: Number(tier.condition!.input_gte) } });
+  // `input_gte` is where the band starts (inclusive), as in xAI's own entries.
+  const when = (tier: z.infer<typeof Price>) => ({ context: { gte: Number(tier.condition!.input_gte) } });
   const search = standard.tool_calls?.web_search;
   return clean({
     text: {

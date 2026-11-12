@@ -13,22 +13,22 @@ reasoning = { supported = true, toggle = true }
 price = 0.115
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 128_000 } }
+when = { context = { gte = 128_000 } }
 price = 0.287
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 256_000 } }
+when = { context = { gte = 256_000 } }
 price = 0.573
 
 [cost.text.output]
 price = 0.688
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 128_000 } }
+when = { context = { gte = 128_000 } }
 price = 1.72
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 256_000 } }
+when = { context = { gte = 256_000 } }
 price = 3.44
 
 [cost.web_search]

@@ -37,8 +37,8 @@ describe("Concentrate sync", () => {
     const doc = v2(model("gpt-5.5", "openai", { openai: lab, cheap: route({ tools: false, effort: { none: true }, pricing: [{ tokens: tokens(0.1, 0.2) }] }) }));
     expect(doc.cost).toEqual({
       text: {
-        input: { price: 5, cache: { read: 0.5 }, overrides: [{ when: { context: { gt: 272_000 } }, price: 10, cache: { read: 1 } }] },
-        output: { price: 30, overrides: [{ when: { context: { gt: 272_000 } }, price: 45 }] },
+        input: { price: 5, cache: { read: 0.5 }, overrides: [{ when: { context: { gte: 272_000 } }, price: 10, cache: { read: 1 } }] },
+        output: { price: 30, overrides: [{ when: { context: { gte: 272_000 } }, price: 45 }] },
       },
       web_search: { price: 14 },
     });
