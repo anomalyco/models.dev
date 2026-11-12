@@ -293,7 +293,7 @@ test("runner patches prices in v2 files in place and keeps MIME, flags, status a
   expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 3 });
 });
 
-test("a price update keeps the mid-conversation flags copied from Anthropic", async () => {
+test("a price update keeps Messages API system updates", async () => {
   const opus = await Bun.file("providers/github-copilot/models/claude-opus-4.8.toml").text();
   const modelsDir = await scratchProvider({
     "claude-opus-4.8.toml": opus.replace("[cost.text.output]\nprice = 25", "[cost.text.output]\nprice = 26"),
@@ -306,7 +306,7 @@ test("a price update keeps the mid-conversation flags copied from Anthropic", as
   expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
   const synced = await Bun.file(path.join(modelsDir, "claude-opus-4.8.toml")).text();
   expect(Bun.TOML.parse(synced)).toMatchObject({
-    capabilities: { tools: { supported: true, updates: true }, system_updates: true },
+    api: { messages: { capabilities: { system_updates: true } } },
     cost: { text: { output: { price: 25 } } },
   });
   expect(synced).toBe(opus);
