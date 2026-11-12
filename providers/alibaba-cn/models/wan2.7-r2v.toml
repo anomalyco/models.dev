@@ -1,6 +1,7 @@
 # Sources (accessed 2026-11-12):
 # - Pricing (China (Beijing), CNY): https://help.aliyun.com/zh/model-studio/model-pricing
 #   per second of output video: 1080P ¥1, 720P ¥0.6
+#   base price is 1080P, the default resolution in the API reference below
 #   reference videos are billed per second at the same rate, capped at 5 seconds of input per task
 # CNY→USD rate: 6.685797, 2026-11-12, source: https://open.er-api.com/v6/latest/USD
 # - API: POST https://dashscope.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis with `X-DashScope-Async: enable`,

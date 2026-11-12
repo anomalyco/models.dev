@@ -1,6 +1,7 @@
 # Sources (accessed 2026-11-12):
 # - Pricing (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing
 #   per second of output video: 1080P $0.15, 720P $0.1
+#   base price is 1080P, the default resolution in the API reference below
 #   reference videos are billed per second at the same rate, capped at 5 seconds of input per task
 # - API: POST https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis with `X-DashScope-Async: enable`,
 #   then poll GET /api/v1/tasks/{task_id} (https://www.alibabacloud.com/help/en/model-studio/wan-video-to-video-api-reference)
