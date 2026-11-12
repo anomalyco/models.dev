@@ -99,7 +99,7 @@ export async function plan<Raw>(module: SyncModule<Raw> | AgentModule, options: 
   const byPath = (a: { path: string }, b: { path: string }) => a.path.localeCompare(b.path);
   const changes = context.changes.sort(byPath);
   const gaps = context.gaps.sort((a, b) => a.model.localeCompare(b.model));
-  const risk = classifyRisk({ provider: module.id, before: files.size, changes, gaps, observedBy: observed?.by });
+  const risk = classifyRisk({ provider: module.id, before: files.size, changes, gaps, observedBy: observed?.by, review: module.policy.review });
   const touched = new Set([...changes, ...gaps].map((item) => item.model.toLowerCase()));
   const evidence = observed?.evidence.filter((item) => touched.has(item.model.toLowerCase()));
   return {

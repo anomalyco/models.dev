@@ -78,6 +78,8 @@ export const alibaba: SyncModule<unknown> = {
     ],
     creates: "gap",
     removals: "keep",
+    // New module: a person checks its first runs before they merge. Remove once its output is trusted.
+    review: "new sync module",
   },
   // A deprecated file the list drops is expected, not news.
   manages: (_id, file) => file.status !== "deprecated",

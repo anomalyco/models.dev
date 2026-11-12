@@ -223,3 +223,6 @@ Every provider the old sync covers now has a module here.
 | moonshotai | `/models` plus the DocTable calls compiled into the pricing page | context, image/video input, efforts and default (K3), prices with cache writes per TTL | gap; deprecate |
 
 The China twins (alibaba-cn, moonshotai-cn) need China-region keys and aren't synced.
+
+
+A module with `policy.review` set never auto-merges: new modules start that way until a person has checked their first runs.

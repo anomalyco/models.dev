@@ -615,3 +615,9 @@ test("refine finishes an observation with the file it updates and the provider's
   expect(seen).toEqual([["lab/a", true, 2], ["lab/b", true, 2], ["lab/c", false, 2]]);
   expect(result.changes.map((change) => [change.kind, change.model])).toEqual([["update", "lab/b"], ["create", "lab/c"]]);
 });
+
+test("a module under review never auto-merges", () => {
+  const risk = classifyRisk({ provider: "alibaba", before: 10, changes: [], gaps: [], review: "new sync module" });
+  expect(risk.safe).toBe(false);
+  expect(risk.reasons).toContain("review: new sync module");
+});

@@ -59,6 +59,8 @@ export const deepseek: SyncModule<unknown> = {
     ],
     creates: "gap",
     removals: "deprecate",
+    // New module: a person checks its first runs before they merge. Remove once its output is trusted.
+    review: "new sync module",
   },
   async fetch() {
     const key = requireEnv("DeepSeek", "DEEPSEEK_API_KEY");

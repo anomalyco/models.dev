@@ -102,6 +102,10 @@ export interface Policy {
   /** A file the source no longer lists: delete it, mark it deprecated, or keep it and report a gap. */
   removals: "delete" | "deprecate" | "keep";
   /**
+   * A person reviews every change: set on a newly added module until its first runs have been checked, then removed.
+   */
+  review?: string;
+  /**
    * A new file whose context window differs from its lab's doesn't inherit
    * the lab's `limit.input`: it gets `base_model_omit = ["limit.input"]`.
    */
