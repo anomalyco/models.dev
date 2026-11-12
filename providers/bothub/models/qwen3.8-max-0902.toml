@@ -4,7 +4,7 @@
 # Effort: reasoning_effort = minimal|low|medium|high|xhigh
 # Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
 # No published thinking.type / thinking_budget / enable_thinking controls on this host.
-# Levels: https://bothub.chat/qwen3.8-max-0902 (checked 2026-11-12).
+# Live probe 2026-11-12: reasoning_effort=minimal|high → HTTP 200 on qwen3.8-max-0902.
 schema = 2
 base_model = "alibaba/qwen3.8-max-0902"
 

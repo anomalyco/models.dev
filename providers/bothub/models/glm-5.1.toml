@@ -4,7 +4,7 @@
 # Effort: reasoning_effort = low|medium|high
 # Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
 # No published thinking.type / thinking_budget / enable_thinking controls on this host.
-# Levels: https://bothub.chat/glm-5.1 (checked 2026-11-12).
+# Live probe 2026-11-12: reasoning_effort=low|high → HTTP 200 on glm-5 (family).
 schema = 2
 base_model = "zhipuai/glm-5.1"
 
