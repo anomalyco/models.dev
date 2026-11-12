@@ -1,10 +1,18 @@
 # Audio format (input format String, WAV/WebAudio; 16 kHz): https://build.nvidia.com/nvidia/nemotron-voicechat/modelcard
-# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+# Sampling: temperature/top_p/top_k are runtime features of the host.
+# Closed weights: this is the 12B early-access NIM from 2026-03-16, which
+# the NIM card puts under the NVIDIA Software and Model Evaluation
+# License. NVIDIA's open checkpoint is a later, separate release,
+# NemotronLabs VoiceChat (11.1B, 2026-08), with its own NIM container
+# (nemotron-labs-voicechat). NVIDIA does not state that the two are the
+# same checkpoint.
+# https://huggingface.co/nvidia/NVIDIA-NemotronLabs-VoiceChat-11B
+# https://catalog.ngc.nvidia.com/orgs/nim/nvidia/containers/nemotron-labs-voicechat
 schema = 2
 name = "Nemotron VoiceChat"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
 family = "nemotron"
-open_weights = true
+open_weights = false
 release_date = "2026-03-16"
 
 [modalities]
