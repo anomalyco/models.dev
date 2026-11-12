@@ -64,6 +64,7 @@ import {
   mediaCost,
   mediaType,
   openrouter,
+  modelMetadata,
   resolveCanonicalBaseModel,
   resolveMediaBaseModel,
   catalogCost,
@@ -3900,14 +3901,16 @@ test("resolves DeepInfra ByteDance IDs to canonical metadata", () => {
     .toBe("bytedance-seed/seed-2.0-code");
 });
 
-test("DeepInfra preserves live modalities for new base models", () => {
+test("DeepInfra inherits matching modalities for new base models", () => {
   const model = buildDeepInfraModel(
     deepInfraModel("Qwen/Qwen3.5-9B", ["multimodal", "input-video"]),
     undefined,
     "alibaba/qwen3.5-9b",
   );
 
-  expect(model).toMatchObject({
+  expect(model.base_model).toBe("alibaba/qwen3.5-9b");
+  expect(model).not.toHaveProperty("modalities");
+  expect({ ...modelMetadata("alibaba/qwen3.5-9b"), ...model }).toMatchObject({
     attachment: true,
     modalities: { input: ["text", "image", "video"] },
   });
@@ -3954,6 +3957,25 @@ test("DeepInfra keeps an authored knowledge override on base_model entries", () 
   expect(model).toMatchObject({ knowledge: "2025-12" });
 });
 
+test.each([
+  [null, { "5m": 1.25, "1h": 2 }, 0.9375],
+  [0, { "5m": 1.25 }, 0],
+  [0.5, { "5m": 1.25 }, 0.375],
+  [null, { invalid: 1, "5m": -1, "1h": 2 }, 1.5],
+] as const)("DeepInfra maps cache write rate %p and retention %p to v1", (rate, retention, expected) => {
+  const source: DeepInfraModel = {
+    ...deepInfraModel("zai-org/GLM-5.2", []),
+    pricing: {
+      cents_per_input_token: 0.000075,
+      cents_per_output_token: 0.00024,
+      rate_per_input_token_cached: 0.2,
+      rate_per_input_token_cache_write: rate,
+      rate_per_explicit_cache_write_token: retention,
+    },
+  };
+  expect(buildDeepInfraModel(source, undefined, "zhipuai/glm-5.2").cost?.cache_write).toBe(expected);
+});
+
 test("DeepInfra writes service tiers, prompt caching and retention prices as v2 data", () => {
   const model: DeepInfraModel = {
     ...deepInfraModel("zai-org/GLM-5.2", []),
@@ -3980,6 +4002,7 @@ test("DeepInfra writes service tiers, prompt caching and retention prices as v2 
       { when: { service_tier: { equals: "flex" } }, factor: 0.8 },
     ],
     "cost.text.input.cache.explicit": { write: { "5m": 0.9375, "1h": 1.5 } },
+    "cost.text.input.cache.write": undefined,
   });
 
   // Without catalog values only paths the file already has are cleared.
@@ -4033,6 +4056,7 @@ test("DeepInfra price updates keep v2 data and restore the synced v2 values", as
     const result = await syncProvider(provider);
     expect(result).toMatchObject({ created: 0, updated: 1, deleted: 0 });
     expect(await readFile(path.join(modelsDir, `${id}.toml`), "utf8")).toBe(shipped);
+    expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 1 });
   } finally {
     await rm(root, { recursive: true, force: true });
   }
