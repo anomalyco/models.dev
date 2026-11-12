@@ -3,12 +3,10 @@ schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 
 [limit]
-context = 262_144
 output = 65_536
 
 [cost.text.input]
