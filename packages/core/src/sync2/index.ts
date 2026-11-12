@@ -36,6 +36,7 @@ import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
 import { mistral } from "./providers/mistral.js";
 import { modular } from "./providers/modular.js";
+import { moonshotai } from "./providers/moonshotai.js";
 import { morph } from "./providers/morph.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { nearai } from "./providers/nearai.js";
@@ -55,7 +56,7 @@ import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 import type { AgentModule, SyncModule, SyncResult } from "./types.js";
 
-export const modules: Record<string, SyncModule<any>> = { aiand, aimlapi, ambient, anthropic, baseten, chutes, "cloudflare-ai-gateway": cloudflareAiGateway, "cloudflare-workers-ai": cloudflareWorkersAi, cortecs, crossmodel, deepinfra, deepseek, digitalocean, edenai, empiriolabs, engy, "fireworks-ai": fireworksAi, friendli, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, llmgateway, "llmgateway-providers": llmgatewayProviders, "merge-gateway": mergeGateway, meta, mistral, modular, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, openrouter, ovhcloud, pioneer, prime, requesty, tinfoil, venice, vercel, wandb, xai };
+export const modules: Record<string, SyncModule<any>> = { aiand, aimlapi, ambient, anthropic, baseten, chutes, "cloudflare-ai-gateway": cloudflareAiGateway, "cloudflare-workers-ai": cloudflareWorkersAi, cortecs, crossmodel, deepinfra, deepseek, digitalocean, edenai, empiriolabs, engy, "fireworks-ai": fireworksAi, friendli, "github-copilot": githubCopilot, google, huggingface, hyper, inceptron, kilo, llmgateway, "llmgateway-providers": llmgatewayProviders, "merge-gateway": mergeGateway, meta, mistral, modular, moonshotai, morph, "nano-gpt": nanoGpt, nearai, "novita-ai": novitaAi, ofox, "ollama-cloud": ollamaCloud, openai, openrouter, ovhcloud, pioneer, prime, requesty, tinfoil, venice, vercel, wandb, xai };
 
 // Hosts with no API to sync from: an agent reads their docs and writes an observation file.
 export const agents: Record<string, AgentModule> = { "amazon-bedrock": amazonBedrock, azure, "google-vertex": googleVertex };

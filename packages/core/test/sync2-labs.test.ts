@@ -7,6 +7,7 @@ import path from "node:path";
 
 import { plan } from "../src/sync2/engine.js";
 import { deepseek, parseDeepSeekPricing } from "../src/sync2/providers/deepseek.js";
+import { moonshotai, parseMoonshotPricing } from "../src/sync2/providers/moonshotai.js";
 import type { Observation } from "../src/sync2/types.js";
 
 const FIXTURES = path.join(import.meta.dirname, "fixtures", "sync2");
@@ -116,4 +117,33 @@ price = 1.98
   expect(result.changes.map((change) => [change.kind, change.model])).toEqual([["update", "deepseek-flash"], ["deprecate", "deepseek-v4-pro"]]);
   expect(result.changes[0]!.fields).toEqual([{ path: "cost.text.input.price", before: 0.14, after: 0.15 }]);
   expect(result.gaps.map((gap) => [gap.kind, gap.model])).toEqual([["new", "deepseek-v5"]]);
+});
+
+test("moonshotai: prices per TTL from the compiled pricing tables, efforts only where /models lists them", async () => {
+  const observations = byID(moonshotai.observe(await fixture("moonshotai")));
+  expect(observations.get("kimi-k3")).toEqual({
+    id: "kimi-k3",
+    limit: { context: 1_048_576 },
+    modalities: { input: ["text", "image", "video"] },
+    capabilities: { reasoning: { effort: ["low", "high", "max"], default: { type: "effort", value: "max" } } },
+    cost: { text: { input: { price: 3, cache: { read: 0.3, write: { "5m": 3, "1h": 6 } } }, output: { price: 15 } } },
+  });
+  // K2 has no efforts and no cache write price.
+  expect(observations.get("kimi-k2.6")).toEqual({
+    id: "kimi-k2.6",
+    limit: { context: 262_144 },
+    modalities: { input: ["text", "image", "video"] },
+    cost: { text: { input: { price: 0.95, cache: { read: 0.16, write: null } }, output: { price: 4 } } },
+  });
+  // Not on the pricing page yet: no cost, so its file keeps its own.
+  expect(observations.get("kimi-k2.8-preview")?.cost).toBeUndefined();
+});
+
+test("moonshotai: the pricing parser fails closed on changed columns or cells", async () => {
+  const { pricing } = await fixture("moonshotai");
+  expect([...parseMoonshotPricing(pricing).keys()].sort()).toEqual(["kimi-k2.6", "kimi-k2.7-code", "kimi-k2.7-code-highspeed", "kimi-k3", "kimi-k3.1-pro", "kimi-k3.1-pro-highspeed"]);
+  expect(() => parseMoonshotPricing(pricing.replace("{title:`Output`,width:`15%`}", "{title:`Output (CNY)`,width:`15%`}"))).toThrow("unexpected columns");
+  expect(() => parseMoonshotPricing(pricing.replace("`$3.00 / MTok`", "`¥3.00 / MTok`"))).toThrow("isn't a dollar price");
+  expect(() => parseMoonshotPricing(pricing.replace("`$15.00 / MTok`,", ""))).toThrow("5 columns");
+  expect(() => parseMoonshotPricing("<html></html>")).toThrow("no price tables");
 });
