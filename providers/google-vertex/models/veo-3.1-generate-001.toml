@@ -1,0 +1,34 @@
+# Sources (accessed 2026-11-12):
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/veo/3-1-generate.md.txt
+#   (veo-3.1-generate-001, GA, us-central1 only, retirement May 4, 2027 or later; output 720p, 1080p, 4K)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (Veo section; Veo 3.1:
+#   video + audio $0.40 720p/1080p, $0.60 4k; video only $0.20 720p/1080p, $0.40 4k)
+# - API: POST https://us-central1-aiplatform.googleapis.com/v1/projects/PROJECT_ID/locations/us-central1/publishers/google/models/MODEL_ID:predictLongRunning
+#   (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/video/generate-videos-from-text.md.txt)
+# Pricing unit: the pricing page lists these as "/ 1 count" without naming the unit. They are recorded per second
+# of output video: they match the Gemini API's per-second Veo 3.1 rates, and Veo bills by output duration.
+# The REST reference marks "4k" as Veo 3.1 Preview only while the model page lists 4K output; the 4k price is kept.
+# opencodeai = "none": no @opencode/ai entry point serves Vertex predictLongRunning video generation.
+schema = 2
+v2_only = true
+base_model = "google/veo-3.1-generate-001"
+
+[api.videos]
+base_url = "https://us-central1-aiplatform.googleapis.com/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/us-central1"
+sdk = { opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.4
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" } }
+price = 0.6
+
+[[cost.video.output.overrides]]
+when = { generate_audio = { equals = false } }
+price = 0.2
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" }, generate_audio = { equals = false } }
+price = 0.4
