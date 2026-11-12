@@ -1,8 +1,10 @@
 # Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
 # (checked 2026-11-12): 1.2 / 3.77 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
-# Controls mirrored from the lab entry: GLM-5.3 always reasons; effort
-# low|high|max with default max, no toggle.
+# Effort: reasoning_effort = low|high|max
+# Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
+# No published thinking.type / thinking_budget / enable_thinking controls on this host.
+# Levels: https://bothub.chat/glm-5.3 (checked 2026-11-12).
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
