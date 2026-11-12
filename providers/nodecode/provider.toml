@@ -1,10 +1,11 @@
 # Nodecode's own hosted models, served by Foresight Labs on machines in Europe.
 # Sources (accessed 2026-11-12):
 #   https://nodecode.ai/docs/models#nodecodes-own-models  (base URL, OpenAI wire, provider id `nodecode`, keys `sk-nc-`)
-#   https://nodecode.ai/docs/cyber  (quickstart; the same key also answers /v1/responses and /v1/messages)
+#   https://nodecode.ai/docs/cyber  (quickstart; the same key also answers /v1/responses and /v1/messages,
+#     both verified live 2026-11-12, see the model file)
 name = "Nodecode"
 env = ["NODECODE_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"
 api = "https://api.nodecode.ai/v1"
-doc = "https://nodecode.ai/docs/cyber"
+doc = "https://nodecode.ai/docs/models"

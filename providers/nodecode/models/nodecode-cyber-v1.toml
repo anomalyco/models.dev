@@ -1,6 +1,5 @@
 # Cyber v1: Nodecode's abliterated model for authorized security testing and pentest
-# agents, built on DeepSeek with Foresight Labs finetunes; unique to this host, so it is
-# defined inline (no base_model).
+# agents, built on DeepSeek; unique to this host, so it is defined inline (no base_model).
 # Sources (accessed 2026-11-12):
 #   https://nodecode.ai/cyber  (model card)
 #   https://nodecode.ai/docs/cyber  (1,048,576-token context; reasoning arrives in
@@ -10,9 +9,21 @@
 #     pays 4x the cached price; every token 50% off from Friday 00:00 to Monday 00:00
 #     Amsterdam time)
 #   GET https://api.nodecode.ai/v1/models  (context_length 1048576, max_output_tokens 131072)
-# Reasoning is always on, with no documented request control. It arrives in
-#   message.reasoning (live probe, 2026-11-12); reasoning_field = "reasoning" is valid in v2,
-#   but v1's interleaved.field only allows reasoning_content|reasoning_details, so it is left unset.
+# Reasoning probes, live 2026-11-12 against https://api.nodecode.ai/v1, model nodecode-cyber-v1,
+#   temperature 0, same short arithmetic prompt on every API:
+#   Chat Completions: chat_template_kwargs.thinking=false -> no reasoning, 2 completion tokens
+#     (default: 226 reasoning chars, 105 tokens), so toggle = true. thinking.type=disabled is
+#     ignored there. reasoning_effort is validated (an unknown value -> HTTP 400 listing
+#     none|minimal|low|medium|high|...), but low/high/max gave no consistent change: on a harder
+#     prompt, 2 runs each, low 191-199, high 275-298, max 194-234 completion tokens, same answer.
+#     So no effort ladder is published.
+#   Responses: served; output carries a reasoning item before the message. reasoning.effort
+#     low/high made no difference and an unknown value is accepted (HTTP 200), so it is a no-op.
+#   Messages (x-api-key auth): served; thinking.type=disabled -> no thinking block,
+#     enabled/default -> thinking blocks. output_config.effort=low made no difference.
+# Reasoning arrives in message.reasoning on Chat Completions; reasoning_field = "reasoning" is
+#   valid in v2, but v1's interleaved.field only allows reasoning_content|reasoning_details,
+#   so it is left unset.
 # Weekend multiplier: Amsterdam midnight written as 23:00 UTC (CET, UTC+1); during
 # Dutch summer time the window starts and ends an hour earlier in UTC.
 # Release date: the model was first listed as Cyber v1 on nodecode.ai/pricing on 2026-10-19.
@@ -29,7 +40,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
 temperature = true
 top_p = true
@@ -39,6 +50,14 @@ top_k = false
 context = 1_048_576
 output = 131_072
 
+# Chat Completions first keeps v1 output unchanged; all three share https://api.nodecode.ai/v1.
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.33
