@@ -5,6 +5,8 @@
 # Effort: reasoning_effort = none|high (default high, reasoning on by default;
 # aliases max/xhigh/medium/low -> high, minimal -> none) per metadata.reasoning
 # and the model page mapping. Off is effort=none, so no separate toggle.
+# metadata.pricing.cached_input_per_million = 0.0036 USD.
+# Checked public and authenticated GET /v1/models on 2026-11-12.
 # Budget: thinking_token_budget (integer reasoning tokens) accepted on this host.
 # Neuralwatt serves text+image+audio input (capabilities vision + audio_input
 # true; video_url is rejected per chat-completions content-parts docs, so the
