@@ -9,11 +9,17 @@
 # RouteLLM output_token_rate: 0.00000047
 # RouteLLM cached_input_token_rate: 0.000000016
 # RouteLLM thinking: None
+# Context: the lab documents 262,144 native, extensible to 1M; RouteLLM advertises
+# the 1,000,000 extended window (feed accessed 2026-11-12), so the host value is
+# published instead of the native cap.
 schema = 2
 base_model = "alibaba/qwen3.8-flash-next"
 
 [capabilities]
 reasoning = { supported = true }
+
+[limit]
+context = 1_000_000
 
 [cost.text.input]
 price = 0.15

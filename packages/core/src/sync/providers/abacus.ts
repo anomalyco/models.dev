@@ -41,7 +41,25 @@ const HEADER_NOTES: Record<string, string[]> = {
     "# rates in exchange for Meta using prompts and completions to train future Meta",
     "# models\" (accessed 2026-10-29).",
   ],
+  "Qwen/Qwen3.8-Flash-Next": [
+    "# Context: the lab documents 262,144 native, extensible to 1M; RouteLLM advertises",
+    "# the 1,000,000 extended window (feed accessed 2026-11-12), so the host value is",
+    "# published instead of the native cap.",
+  ],
 };
+
+// GPT-5+ custom tools: RouteLLM's Chat Completions reference accepts only
+// `type: "function"` tools and documents no custom/freeform or grammar field,
+// so no freeform formats are published for the surface this catalog models.
+const FREEFORM_NOTE = [
+  "# tools.freeform: not listed - RouteLLM Chat Completions accepts only",
+  "# type \"function\" tools and documents no custom/grammar field",
+  "# (https://abacus.ai/help/route-llm/chat-completions, accessed 2026-11-12).",
+];
+
+// The feed's value above the lab's native cap is a real host extension here:
+// the lab documents 262,144 native, extensible to 1M.
+const EXTENDED_CONTEXT_IDS = new Set(["Qwen/Qwen3.8-Flash-Next"]);
 
 // RouteLLM files these under `text_generation`, but they are transcription
 // endpoints. The Abacus provider entry has never carried STT SKUs (#4705, #7901).
@@ -51,6 +69,10 @@ const TRANSCRIPTION_IDS = new Set([
   "gpt-4o-transcribe",
   "gpt-4o-mini-transcribe",
 ]);
+
+// Feed rows with a complete full-inline local entry: the sync must not rewrite
+// them or open a missing-model issue for an id that already exists.
+const LOCAL_ONLY_IDS = new Set(["route-llm"]);
 
 const Rate = z.union([z.string(), z.number()]);
 
@@ -175,7 +197,9 @@ export function buildAbacusModel(
     // an older host override. Only a silent feed preserves the authored limit.
     context: model.context_length === undefined
       ? authored?.limit?.context
-      : capped(model.context_length, labLimit?.context),
+      : EXTENDED_CONTEXT_IDS.has(model.id)
+        ? model.context_length
+        : capped(model.context_length, labLimit?.context),
     input: authored?.limit?.input,
     output: model.max_completion_tokens === undefined
       ? authored?.limit?.output
@@ -285,7 +309,7 @@ function labLimits(baseModel: string) {
 }
 
 function intentionalSkip(model: AbacusModel, baseModel: string | undefined) {
-  if (TRANSCRIPTION_IDS.has(model.id)) return true;
+  if (TRANSCRIPTION_IDS.has(model.id) || LOCAL_ONLY_IDS.has(model.id)) return true;
   if (baseModel === undefined) return false;
   const type = labType(baseModel);
   return type !== undefined && type !== "chat";
@@ -308,6 +332,7 @@ function header(model: AbacusModel) {
     "# Source: https://routellm.abacus.ai/v1/models",
     "# RouteLLM reasoning: /v1/models exposes only `thinking`; the provider API has no",
     "# toggle, effort or budget request field (provider.toml audit, 2026-06-25).",
+    ...(/^gpt-[5-9]/.test(model.id) ? FREEFORM_NOTE : []),
     ...(HEADER_NOTES[model.id] ?? []),
     `# RouteLLM input_modalities: ${JSON.stringify(model.input_modalities)}`,
     `# RouteLLM output_modalities: ${JSON.stringify(model.output_modalities)}`,

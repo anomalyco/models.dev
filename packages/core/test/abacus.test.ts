@@ -117,6 +117,12 @@ test("transcription SKUs are intentional skips, not missing models", () => {
   expect(abacus.sourceID?.(model)).toBe("gpt-4o-transcribe");
 });
 
+test("route-llm is an intentional local entry, not a missing model", () => {
+  const model = abacusModel({ id: "route-llm", thinking: undefined });
+  expect(abacus.missingModelID?.(model)).toBeUndefined();
+  expect(abacus.sourceID?.(model)).toBe("route-llm");
+});
+
 test("lab media models stay out of scope even when RouteLLM calls them text_generation", () => {
   const model = abacusModel({
     id: "gemini-nano-banana-2.1",
@@ -209,4 +215,17 @@ test("a silent feed keeps the authored host limit", () => {
     authored,
   );
   expect(built?.model).toMatchObject({ limit: { context: 262_144, output: 65_536 } });
+});
+
+test("the extended Qwen3.8-Flash-Next window keeps the host value", () => {
+  const built = buildAbacusModel(abacusModel({
+    id: "Qwen/Qwen3.8-Flash-Next",
+    context_length: 1_000_000,
+  }));
+  expect(built?.model).toMatchObject({ limit: { context: 1_000_000 } });
+});
+
+test("GPT-5+ files record the host's missing freeform support", () => {
+  const built = buildAbacusModel(abacusModel({ id: "gpt-6-sol" }));
+  expect(built?.header).toContain("tools.freeform: not listed");
 });

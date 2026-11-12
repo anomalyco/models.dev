@@ -8,6 +8,9 @@
 # RouteLLM cached_input_token_rate: 0.00000002
 # RouteLLM thinking: True
 # Prices refreshed from https://routellm.abacus.ai/v1/models (accessed 2026-10-21).
+# tools.freeform: not listed - RouteLLM Chat Completions accepts only
+# type "function" tools and documents no custom/grammar field
+# (https://abacus.ai/help/route-llm/chat-completions, accessed 2026-11-12).
 schema = 2
 base_model = "openai/gpt-5.6-luna"
 base_model_omit = ["limit.input"]
