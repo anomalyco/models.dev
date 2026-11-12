@@ -1,0 +1,33 @@
+# Relay of the official DeepSeek API: reasoning controls and reasoning_content pass through
+# unchanged; reasoning tokens billed at the output rate.
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Effort: reasoning_effort = low|high|max (default high; `none` also disables thinking upstream)
+# Cost (retrieved 2026-11-13): https://proxystacks.com/public/model-rates ,
+# https://proxystacks.com/en/pricing . Base prices are the off-peak rate
+# (input $0.0895 listed as $0.09, cache read $0.002); the x2 multiplier covers the peak windows
+# Mon-Fri 09:00-11:59 and 14:00-17:59 Asia/Shanghai (= 01:00-03:59 and 06:00-09:59 UTC).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+stream_usage = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.37
+reasoning = 0.37
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
