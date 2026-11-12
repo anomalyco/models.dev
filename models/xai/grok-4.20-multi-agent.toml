@@ -1,6 +1,7 @@
 # Lab for undated gateway id grok-4.20-multi-agent (Bothub/OpenRouter).
 # tools=false: xAI general access; client-side tools need beta
 # (see providers/xai/models/grok-4.20-multi-agent-0309.toml).
+# Limits: match xAI peer providers/xai/models/grok-4.20-multi-agent-0309.toml
 schema = 2
 name = "Grok 4.20 Multi-Agent"
 description = "Multi-agent Grok for long-horizon reasoning, coding, and live assistance"
@@ -20,5 +21,5 @@ top_p = true
 top_k = false
 
 [limit]
-context = 2_000_000
-output = 1_800_000
+context = 1_000_000
+output = 30_000
