@@ -15,7 +15,7 @@ stream_usage = true
 cache = { implicit = true }
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.0975
