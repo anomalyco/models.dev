@@ -1,0 +1,22 @@
+# Pricing: https://ai.google.dev/gemini-api/docs/pricing#gemini-decision ($0.10 per 1M input tokens for text, image, video,
+#   audio and PDF; output is 0 tokens; no context caching).
+# Endpoint (System One, POST /systemone): https://opencode.ai/v2/docs/console/models/ (accessed 2026-11-12).
+# Media goes in `state` as chat-style parts (image_url, input_audio, video_url, file); Zen translates the request to
+#   Google's Decisions API.
+schema = 2
+v2_only = true
+base_model = "google/gemini-decision-1"
+
+[capabilities]
+cache = false
+
+[api.systemone]
+base_url = "https://opencode.ai/inference/systemone/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/opencode/decisions" }
+compatibility = { media_input = "state" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0
