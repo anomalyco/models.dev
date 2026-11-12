@@ -5,7 +5,7 @@ on:
     - cron: "23 6 * * *"
   workflow_dispatch:
 
-# Amazon Bedrock, Vertex and Azure have no API to sync from. observe runs the observer agent (opencode, model key only,
+# Agent providers (bun models:sync2 --list=agents) have no API to sync from. observe runs the observer agent (opencode, model key only,
 # no GitHub token, no shell, no edits) on each provider's brief, then applies its observations through the sync engine
 # and uploads the result like Sync Model Catalogs does. publish runs only .github/sync-models/ with the automation app
 # token. Agent results are never safe (risk reason agent-observed), so these pull requests never auto-merge. gaps starts

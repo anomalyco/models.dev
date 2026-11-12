@@ -50,12 +50,15 @@ jobs:
             ANTHROPIC_API_KEY,models.dev/release/ANTHROPIC_API_KEY
             BASETEN_API_KEY,models.dev/release/BASETEN_API_KEY
             CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN,models.dev/release/CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN
+            DASHSCOPE_API_KEY,models.dev/release/DASHSCOPE_API_KEY
             DEEPINFRA_API_KEY,models.dev/release/DEEPINFRA_API_KEY
+            DEEPSEEK_API_KEY,models.dev/release/DEEPSEEK_API_KEY
             DIGITALOCEAN_API_TOKEN,models.dev/release/DIGITALOCEAN_API_TOKEN
             FIREWORKS_API_KEY,models.dev/release/FIREWORKS_API_KEY
             GOOGLE_API_KEY,models.dev/release/GOOGLE_API_KEY
             MERGE_GATEWAY_API_KEY,models.dev/release/MERGE_GATEWAY_API_KEY
             MISTRAL_API_KEY,models.dev/release/MISTRAL_API_KEY
+            MOONSHOT_API_KEY,models.dev/release/MOONSHOT_API_KEY
             NOVITA_AI_API_KEY,models.dev/release/NOVITA_AI_API_KEY
             OPENAI_API_KEY,models.dev/release/OPENAI_API_KEY
             OPENROUTER_API_KEY,models.dev/release/OPENROUTER_API_KEY
@@ -75,7 +78,9 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ env.ANTHROPIC_API_KEY }}
           BASETEN_API_KEY: ${{ env.BASETEN_API_KEY }}
+          DASHSCOPE_API_KEY: ${{ env.DASHSCOPE_API_KEY }}
           DEEPINFRA_API_KEY: ${{ env.DEEPINFRA_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ env.DEEPSEEK_API_KEY }}
           DIGITALOCEAN_API_TOKEN: ${{ env.DIGITALOCEAN_API_TOKEN }}
           DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           FIREWORKS_API_KEY: ${{ env.FIREWORKS_API_KEY }}
@@ -86,6 +91,7 @@ jobs:
           LLMGATEWAY_API_KEY: ${{ secrets.LLMGATEWAY_API_KEY }}
           MERGE_GATEWAY_API_KEY: ${{ env.MERGE_GATEWAY_API_KEY }}
           MISTRAL_API_KEY: ${{ env.MISTRAL_API_KEY }}
+          MOONSHOT_API_KEY: ${{ env.MOONSHOT_API_KEY }}
           NOVITA_AI_API_KEY: ${{ env.NOVITA_AI_API_KEY }}
           KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
           GOOGLE_API_KEY: ${{ env.GOOGLE_API_KEY }}

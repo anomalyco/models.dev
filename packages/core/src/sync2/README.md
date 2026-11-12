@@ -59,7 +59,7 @@ The engine takes the first hint with a lab file, ignoring case. A test checks th
 
 ## Agent providers
 
-Amazon Bedrock, Vertex and Azure have no API good enough to sync from. The observer agent (`.github/workflows/observe-providers.yml`) reads their docs and pricing pages daily and writes an observation file; the module defines what it reads and the engine applies what it writes.
+Amazon Bedrock, Vertex, Azure, MiniMax, Z.AI, Zhipu AI and Cohere have no API good enough to sync from (MiniMax, Z.AI and Zhipu list model IDs only; Cohere has no prices). The observer agent (`.github/workflows/observe-providers.yml`) reads their docs and pricing pages daily and writes an observation file; the module defines what it reads and the engine applies what it writes.
 
 An agent module has no fetch:
 
@@ -211,3 +211,15 @@ IDs in `providers/<provider>/sync-ignore.toml` (`[models]` table, ID = reason) a
 
 
 Every provider the old sync covers now has a module here.
+
+## Lab modules with no old sync
+
+`alibaba`, `deepseek` and `moonshotai` are new; `test/sync2-labs.test.ts` checks them on their recorded sources.
+
+| Provider | Source | Owns | Creates / removals |
+| --- | --- | --- | --- |
+| alibaba | Model Studio's catalog API (`dashscope-intl.aliyuncs.com/api/v1/models`, undocumented, USD) | limits, image/audio/video kinds, deprecated status from a retirement date, input/output/thinking-output prices, implicit and 5-minute explicit cache, context tiers as bands | gap (chat models with function calling only); keep, deprecated files not reported |
+| deepseek | `/models` plus the pricing table (`pricing.md`) | limits, image input, efforts and default, off-peak prices (refuses to run unless peak is 2x) | gap; deprecate |
+| moonshotai | `/models` plus the DocTable calls compiled into the pricing page | context, image/video input, efforts and default (K3), prices with cache writes per TTL | gap; deprecate |
+
+The China twins (alibaba-cn, moonshotai-cn) need China-region keys and aren't synced.

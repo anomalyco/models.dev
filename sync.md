@@ -139,7 +139,7 @@ Runs when PR Reviewer finishes and hourly. It enables auto-merge on a gap PR onl
 
 ### Observe Agent Providers (`observe-providers.yml`, daily)
 
-For Amazon Bedrock, Vertex and Azure (`bun models:sync2 --list=agents`), opencode's read-only `observer` agent (`.opencode/agent/observer.md`) reads the provider's pages from `bun models:sync2 <provider> --agent-brief --json`. Its answer goes through `bun models:sync2 <provider> --observations=<answer>`, and the patch is published like a sync on `automation/sync-models-<provider>`, with the quoted evidence in the body. These PRs never auto-merge.
+For the agent providers (`bun models:sync2 --list=agents`: Amazon Bedrock, Vertex, Azure, MiniMax, Z.AI, Zhipu AI and Cohere), opencode's read-only `observer` agent (`.opencode/agent/observer.md`) reads the provider's pages from `bun models:sync2 <provider> --agent-brief --json`. Its answer goes through `bun models:sync2 <provider> --observations=<answer>`, and the patch is published like a sync on `automation/sync-models-<provider>`, with the quoted evidence in the body. These PRs never auto-merge.
 
 ### Leaving a model out
 
