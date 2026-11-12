@@ -59,6 +59,7 @@ import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { morph } from "./providers/morph.js";
 import { tinfoil } from "./providers/tinfoil.js";
+import { uberllm } from "./providers/uberllm.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -224,6 +225,7 @@ export const providers: {
   requesty: SyncProvider<any>;
   morph: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
+  uberllm: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -270,6 +272,7 @@ export const providers: {
   requesty,
   morph,
   tinfoil,
+  uberllm,
   vercel,
   venice,
   wandb,
@@ -294,6 +297,7 @@ export const groups = {
     "requesty",
     "openrouter",
     "prime",
+    "uberllm",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],

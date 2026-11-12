@@ -27,6 +27,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync uberllm` syncs only UberLLM.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -351,6 +352,20 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - A new model whose lab entry has `reasoning = true` is not created. The endpoint says nothing about how a route turns reasoning on, off or up, so the run opens a deduped GitHub issue asking for the route's controls to be researched and hand-authored in `capabilities.reasoning`. Once that file exists, the sync keeps it priced like any other. Reasoning is judged from the lab entry, never from `supported_features`.
 - A live model with no lab entry is not created either, and opens a missing-model issue. `openai/privacy-filter` is skipped silently because the token-cost schema cannot describe it.
 - Absence removes a model, so the fetch refuses a response carrying fewer than twenty models: a truncated list that still parses would otherwise be indistinguishable from a mass retirement. A local entry the catalog cannot price is republished unchanged rather than dropped, because dropping it would delete a route that is still served.
+
+## UberLLM Notes
+
+- UberLLM is implemented in `packages/core/src/sync/providers/uberllm.ts`.
+- Source endpoint: `https://api.uberllm.dev/v1/models`.
+- No authentication is required; the catalog is public, so the sync needs no repository secret.
+- Existing models are updated from the catalog's input and output prices (`pricing.input_usd`, `pricing.output_usd`, already USD per million tokens) and context window. Prices follow a market and move between runs.
+- `pricing.cache_read_usd` updates the cached-input price only in a file that already has one. Caching is confirmed per model by a live probe recorded in the file header, so the catalog never adds a cache price.
+- `context` is the catalog's `context_length`, capped at the lab entry's context.
+- `limit.output` is never synced. `max_output_tokens` is not enforced: a request above it is accepted (65,536 where the catalog says 65,535).
+- Reasoning controls, `capabilities.cache`, `[api.*]` compatibility and header comments stay hand-authored from live probes; the catalog's `supported_parameters` does not say which reasoning field a route honours.
+- New models are not created (`skipCreates`) and do not open missing-model issues (`trackMissingModels: false`): the catalog lists a few hundred routes and the provider directory is a curated, probed subset.
+- A local model absent from the catalog is removed. The fetch refuses a response carrying fewer than fifty models, so a truncated list cannot read as a mass retirement.
+- A row with `available: false` (no seller serving it at that moment) keeps its file unchanged: neither repriced nor removed.
 
 ## OpenAI Notes
 
