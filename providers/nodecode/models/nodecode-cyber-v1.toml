@@ -13,14 +13,29 @@
 #   temperature 0, same short arithmetic prompt on every API:
 #   Chat Completions: chat_template_kwargs.thinking=false -> no reasoning, 2 completion tokens
 #     (default: 226 reasoning chars, 105 tokens), so toggle = true. thinking.type=disabled is
-#     ignored there. reasoning_effort is validated (an unknown value -> HTTP 400 listing
-#     none|minimal|low|medium|high|...), but low/high/max gave no consistent change: on a harder
-#     prompt, 2 runs each, low 191-199, high 275-298, max 194-234 completion tokens, same answer.
-#     So no effort ladder is published.
-#   Responses: served; output carries a reasoning item before the message. reasoning.effort
-#     low/high made no difference and an unknown value is accepted (HTTP 200), so it is a no-op.
+#     ignored there.
+#   Responses: served; output carries a reasoning item before the message.
 #   Messages (x-api-key auth): served; thinking.type=disabled -> no thinking block,
-#     enabled/default -> thinking blocks. output_config.effort=low made no difference.
+#     enabled/default -> thinking blocks.
+# Effort, live probe 2026-11-12 on Chat Completions plus the serving engine's encoding:
+#   reasoning_effort="bogus" -> HTTP 400, the complete validated enum:
+#     "Input should be 'none', 'minimal', 'low', 'medium', 'high', 'xhigh' or 'max'".
+#   Of those, the engine takes low, high, xhigh and max (HTTP 200); minimal and medium -> HTTP 400
+#     "DeepSeek V4.1 reasoning_effort must be low, high, xhigh, max, or an integer within [1, 100]";
+#     none -> 200 with thinking off (0 reasoning chars).
+#   The engine (vLLM, tokenizers/deepseek_v41_encoding.py, inspected on the serving host
+#     2026-11-12) renders the level as a numeric reasoning budget at the head of the prompt in
+#     thinking mode: low=50, high=75, xhigh=75, max=100; unset = high. So the distinct levels are
+#     low|high|max with default high, the same ladder as DeepSeek's own deepseek-flash.
+#   Output length did not separate the levels on a short arithmetic prompt (4 runs each, reasoning
+#     chars: low 678-1477, high 978-1532, max 675-1030, same answer), so the ladder rests on the
+#     validation and the encoding, not on that prompt.
+#   The same budget is reached from the other APIs: Responses reasoning.effort low->low,
+#     medium/high->high, xhigh->xhigh, none/minimal->thinking off; Messages output_config.effort
+#     low->low, medium/high->high, xhigh->xhigh, max->max.
+# top_k, live probe 2026-11-12 on Chat Completions (thinking off, temperature 1.5, 5 runs each):
+#   top_k=1 -> 4 of 5 answers open with the same word; no top_k -> 5 different words.
+#   top_k="abc" -> HTTP 400 "body.top_k: Input should be a valid integer". So top_k = true.
 # Reasoning arrives in message.reasoning on Chat Completions; reasoning_field = "reasoning" is
 #   valid in v2, but v1's interleaved.field only allows reasoning_content|reasoning_details,
 #   so it is left unset.
@@ -32,7 +47,6 @@ name = "Cyber v1"
 description = "Abliterated DeepSeek V4.1 Flash 1017 for authorized security testing and pentest agents"
 open_weights = false
 release_date = "2026-10-19"
-last_updated = "2026-11-06"
 
 [modalities]
 input = ["text"]
@@ -40,11 +54,11 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
 temperature = true
 top_p = true
-top_k = false
+top_k = true
 
 [limit]
 context = 1_048_576
