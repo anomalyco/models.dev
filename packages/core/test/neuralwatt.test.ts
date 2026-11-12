@@ -229,6 +229,32 @@ test("new models retain lab MIME types for advertised inputs", () => {
   expect(input?.some((format) => format.startsWith("video/"))).toBe(false);
 });
 
+test("inherits context when the API omits it", () => {
+  const source = sourceModel("kimi-k3.1-pro", {
+    limits: { max_context_length: null, max_output_tokens: null },
+  });
+  source.max_model_len = undefined;
+  const model = buildNeuralwattModel(source, undefined, undefined);
+  expect(model.base_model).toBe("moonshotai/kimi-k3.1-pro");
+  expect(model.limit?.context).toBeUndefined();
+});
+
+test("caps fallback output at the served context", () => {
+  const source = sourceModel("kimi-k3.1-pro", {
+    limits: { max_context_length: 4096, max_output_tokens: null },
+  });
+  expect(buildNeuralwattModel(source, undefined, undefined).limit)
+    .toMatchObject({ context: 4096, output: 4096 });
+});
+
+test("rejects a missing context without a lab or authored limit", () => {
+  const source = sourceModel("unknown", {
+    limits: { max_context_length: null, max_output_tokens: null },
+  });
+  source.max_model_len = undefined;
+  expect(() => buildNeuralwattModel(source, undefined, undefined)).toThrow("no usable context limit");
+});
+
 test("carries no reasoning options onto a non-reasoning variant", () => {
   const source = sourceModel("kimi-k3-fast", {
     capabilities: { tools: true, json_mode: true, vision: true, reasoning: false },

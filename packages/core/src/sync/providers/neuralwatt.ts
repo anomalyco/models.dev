@@ -161,13 +161,16 @@ export function buildNeuralwattModel(
 ): SyncedModel {
   const { capabilities, limits } = model.metadata;
   const baseModel = baseModelFor(model, authored);
-  const baseOutput = baseModel === undefined ? undefined : modelMetadata(baseModel).limit?.output;
+  const baseLimit = baseModel === undefined ? undefined : modelMetadata(baseModel).limit;
 
-  const context = limits.max_context_length ?? model.max_model_len ?? existing?.limit?.context ?? 0;
+  const context = limits.max_context_length ?? model.max_model_len ?? existing?.limit?.context ?? baseLimit?.context;
+  if (context === undefined || context <= 0) {
+    throw new Error(`Neuralwatt model ${model.id} has no usable context limit`);
+  }
   const limit = {
     context,
     input: existing?.limit?.input,
-    output: limits.max_output_tokens ?? existing?.limit?.output ?? baseOutput ?? context,
+    output: Math.min(limits.max_output_tokens ?? existing?.limit?.output ?? baseLimit?.output ?? context, context),
   };
 
   const modalities: { input: Modality[]; output: Modality[] } = {
