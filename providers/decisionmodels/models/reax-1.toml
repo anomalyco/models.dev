@@ -1,6 +1,8 @@
-# Sources (accessed 2026-10-25): https://api.decisionmodels.io/v1/models (live registry), https://decisionmodels.io/pricing , https://decisionmodels.io/docs/quickstart
+# Sources (accessed 2026-11-12): https://api.decisionmodels.io/v1/models (live registry), https://decisionmodels.io/pricing , https://decisionmodels.io/docs/quickstart
 # Prices are USD per 1M input tokens on the Peer-to-Peer (S1-Region: global) tier; output tokens are free. The EU tier (S1-Region: eu)
-#   costs $0.084 per 1M input tokens; it is not modelled because the EU/global ratio differs per model.
+#   costs $0.103 per 1M input tokens; it is not modelled because the EU/global ratio differs per model.
+#   Price book S1-LAUNCH-7 (accounts created from 2026-11-12); older accounts keep their earlier rates.
+# reax-1 is deprecated and retires on 2026-12-05; its successor is reax-1.3.
 # Model: REAX 1 by Decision Models, a fine-tune of Perplexity Decider v1.2 (Apache-2.0, derived from Qwen3.8-27B). reax-1 always points to the current release (pinned: reax-1-20261021). Up to 3 questions per request.
 # release_date: 2026-10-21 is the date of the pinned release reax-1-20261021.
 schema = 2
@@ -9,6 +11,7 @@ name = "REAX 1"
 description = "Open decision model fine-tuned by Decision Models for text decisions: up to three typed noul, choice or score questions per request, answered with probabilities"
 open_weights = true
 release_date = "2026-10-21"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
@@ -30,7 +33,7 @@ base_url = "https://api.decisionmodels.io/v1"
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
 
 [cost.text.input]
-price = 0.08
+price = 0.097
 
 [cost.text.output]
 price = 0
