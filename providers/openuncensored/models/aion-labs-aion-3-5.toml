@@ -7,13 +7,11 @@ schema = 2
 base_model = "aion-labs/aion-3.5"
 
 [capabilities]
-cache = { implicit = true }
 reasoning = { supported = true }
 structured_output = true
 
 [cost.text.input]
 price = 3.75
-cache = { read = 0.9375 }
 
 [cost.text.output]
 price = 7.5
