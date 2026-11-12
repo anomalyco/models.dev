@@ -1,15 +1,18 @@
-# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-10-28. One flat price per model.
+# Prices: GET https://obscurify.ai/v1/models (pricing.* per token x 1M), synced by packages/core/src/sync/providers/obscurify.ts. One flat price per model.
 # Effort: reasoning_effort = low|medium|high|xhigh|max
 # Controls follow providers/anthropic/models/claude-sonnet-5-5.toml (thinking cannot be turned off).
 # Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: low and max accepted (no reasoning at low, reasoning returned at max).
+# Cache: automatic, no cache_control markers. Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-11-11: the same 7k+ token prompt sent twice; the second reply reported usage.prompt_tokens_details.cached_tokens, billed (usage.cost) at the cache read rate; the first was billed at the cache write rate.
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
 price = 2.21
+cache = { read = 0.1105, write = 2.7625 }
 
 [cost.text.output]
 price = 11.05

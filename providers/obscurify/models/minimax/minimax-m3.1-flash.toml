@@ -1,16 +1,19 @@
-# Prices: GET https://obscurify.ai/v1/models (pricing.prompt and pricing.completion per token x 1M), accessed 2026-11-07. One flat price per model.
+# Prices: GET https://obscurify.ai/v1/models (pricing.* per token x 1M), synced by packages/core/src/sync/providers/obscurify.ts. One flat price per model.
 # Effort: reasoning_effort = low|medium|high|xhigh|max
 # Controls follow providers/minimax/models/MiniMax-M3.1-Flash.toml (thinking cannot be turned off).
 # Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: low and max accepted, max reasoned about 3x longer.
 # Limits: GET https://obscurify.ai/v1/models reports context_length 1048576 (lab file: 1000000) and no max output. A prompt longer than the lab's window could not be verified here, so context and output are inherited from the lab.
+# Cache: automatic, no cache_control markers. Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-11-11: the same 7k+ token prompt sent twice; the second reply reported usage.prompt_tokens_details.cached_tokens, billed (usage.cost) at the cache read rate; a hit is not guaranteed (cached on one of two runs).
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
-price = 0.0975
+price = 0.16575
+cache = { read = 0.016575 }
 
 [cost.text.output]
-price = 0.39
+price = 0.663
