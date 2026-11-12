@@ -1,0 +1,27 @@
+# Model ID from BytePlus ModelArk model list (accessed 2026-11-12).
+# USD pricing, per million tokens. Tiered by prompt length.
+schema = 2
+base_model = "bytedance-seed/seed-2.0-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.02 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.8
