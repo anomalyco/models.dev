@@ -1,6 +1,7 @@
 import { expect, spyOn, test } from "bun:test";
 
 import { AuthoredModel } from "../src/schema.js";
+import { groups, providers } from "../src/sync/index.js";
 import { buildNeuralwattModel, neuralwatt, type NeuralwattModel } from "../src/sync/providers/neuralwatt.js";
 
 function sourceModel(id: string, metadata: Record<string, unknown> = {}): NeuralwattModel {
@@ -26,6 +27,11 @@ function context(existing?: Record<string, unknown>, authored = existing) {
     typeof neuralwatt.translateModel
   >[1];
 }
+
+test("Neuralwatt sync is registered for direct runs", () => {
+  expect(providers.neuralwatt).toBe(neuralwatt);
+  expect(groups.direct).toContain("neuralwatt");
+});
 
 test("fetches the public catalog without credentials", async () => {
   const fetcher = spyOn(globalThis, "fetch").mockResolvedValue(
