@@ -2,6 +2,10 @@
 # (checked 2026-11-12): 2.25 / 6.76 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
 # Limits: https://bothub.chat/models (checked 2026-11-12): output 450k.
+# Effort: reasoning_effort = low|medium|high|xhigh
+# Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
+# No published thinking.type / thinking_budget / enable_thinking controls on this host.
+# Levels: https://bothub.chat/grok-4.7 (checked 2026-11-12).
 schema = 2
 base_model = "xai/grok-4.7"
 
