@@ -2,6 +2,8 @@
 # - https://docs.x.ai/developers/models/grok-imagine-video-1.5-lite
 # - https://docs.x.ai/developers/models (Imagine pricing: grok-imagine-video-1.5-lite $0.020/sec)
 # API: POST https://api.x.ai/v1/videos/generations (https://docs.x.ai/developers/rest-api-reference/inference/videos.md).
+# Pricing (accessed 2026-11-12): https://docs.x.ai/developers/pricing lists the base per-second price; resolution tiers follow the same prices
+# that Cloudflare AI Gateway (no-markup passthrough of the xAI catalog), OpenRouter and Vercel publish for this model.
 schema = 2
 base_model = "xai/grok-imagine-video-1.5-lite"
 
@@ -11,3 +13,11 @@ sdk = { opencodeai = "@opencode/ai/protocols/xai-video" }
 [cost.video.output]
 unit = "second"
 price = 0.02
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" } }
+price = 0.03
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.14

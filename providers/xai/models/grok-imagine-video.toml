@@ -1,6 +1,7 @@
 # Image and video MIME types: https://docs.x.ai/developers/rest-api-reference/inference/videos (image inputs JPEG, PNG or WebP; video inputs and generated videos are .mp4)
 # API: POST https://api.x.ai/v1/videos/generations (https://docs.x.ai/developers/rest-api-reference/inference/videos.md).
-# Pricing (accessed 2026-11-12): https://docs.x.ai/developers/pricing ($0.050 / sec; xAI lists one per-second price and no resolution tiers, although some gateways bill 720p higher)
+# Pricing (accessed 2026-11-12): https://docs.x.ai/developers/pricing lists the base per-second price; resolution tiers follow the same prices
+# that Cloudflare AI Gateway (no-markup passthrough of the xAI catalog), OpenRouter and Vercel publish for this model.
 schema = 2
 type = "video"
 name = "Grok Imagine Video"
@@ -30,3 +31,7 @@ sdk = { opencodeai = "@opencode/ai/protocols/xai-video" }
 [cost.video.output]
 unit = "second"
 price = 0.05
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" } }
+price = 0.07
