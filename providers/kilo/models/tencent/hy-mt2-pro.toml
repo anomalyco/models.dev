@@ -1,0 +1,26 @@
+schema = 2
+name = "Tencent: Tencent Hy-MT2-Pro"
+description = "Hy-MT2-Pro is Tencent Cloud Hunyuan’s flagship translation model, featuring 30B-A3B parameters and an 8K-token context window. It delivers bidirectional translation across 33 core language pairs, plus five minority-language and dialect pairs. With industry-leading performance on FLORES-200 and WMT25, it excels in specialized domains and real-world business scenarios while supporting structured, contextual, terminology-aware, style-specific, and delimiter-preserving translation."
+family = "Hy"
+open_weights = false
+release_date = "2026-05-21"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 8_000
+output = 4_000
+
+[cost.text.input]
+price = 0.074
+
+[cost.text.output]
+price = 0.295

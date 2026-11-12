@@ -1,0 +1,34 @@
+# Sources (accessed 2026-11-12):
+# - https://platform.minimax.io/docs/api-reference/video-generation-v2-create (POST /v2/video_generation; 480P and 768P output (no 2K), duration 4-15s;
+#   inputs: images JPG/JPEG/PNG/WEBP/HEIC/HEIF, videos MP4/MOV, audio WAV/MP3; text-to-video, first/last frame, reference-to-video)
+# - https://platform.minimax.io/docs/pricing/overview#models/video
+# Hosted-only variant of MiniMax H3 (no separate weights). Release date: the platform docs do not date this variant
+# separately, so it follows the H3 launch (2026-07-31): https://platform.minimax.io/docs/release-notes/models
+# Output: MP4 with synchronized audio inside the container, so no separate audio output is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "MiniMax H3 Highspeed"
+description = "MiniMax H3 video tier that balances quality and speed, with multimodal references and synchronized audio"
+family = "minimax"
+open_weights = false
+release_date = "2026-07-31"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+url = "https://platform.minimax.io/docs/api-reference/video-generation-v2-create"
+type = "docs"

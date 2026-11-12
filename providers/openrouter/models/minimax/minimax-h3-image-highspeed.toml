@@ -6,23 +6,10 @@
 # https://openrouter.ai/docs/guides/overview/multimodal/image-generation
 schema = 2
 v2_only = true
-type = "image"
-name = "MiniMax H3 Image Highspeed"
-description = "Image generation model"
-open_weights = false
-release_date = "2026-11-11"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["image/jpeg", "image/png", "image/webp"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
+base_model = "minimax/MiniMax-H3-Image-Highspeed"
 
 [limit]
 context = 4_096
-output = 0
 
 [api.images]
 base_url = "https://openrouter.ai/api/v1"

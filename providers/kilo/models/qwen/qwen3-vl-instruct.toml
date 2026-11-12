@@ -1,0 +1,27 @@
+schema = 2
+name = "Qwen: Qwen3 VL 235B A22B Instruct"
+description = "The Qwen3 series VL models has been comprehensively upgraded in areas such as visual coding and spatial perception. Its visual perception and recognition capabilities have significantly improved, supporting the understanding of ultra-long videos, and its OCR functionality has undergone a major enhancement."
+family = "qwen"
+open_weights = false
+release_date = "2025-09-23"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.11 }
+
+[cost.text.output]
+price = 0.88

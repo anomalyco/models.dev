@@ -1,0 +1,27 @@
+schema = 2
+name = "Amazon: Nova 2 Lite"
+description = "Nova 2 Lite is a fast, cost-effective reasoning model for everyday workloads that can process text, images, and videos to generate text."
+family = "nova"
+open_weights = false
+release_date = "2025-12-02"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.0825 }
+
+[cost.text.output]
+price = 2.75

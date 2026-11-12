@@ -1,0 +1,19 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek: DeepSeek V4.1 Flash 1017 Fast"
+description = "Higher-throughput variant of DeepSeek V4.1 Flash 1017 served by Baseten for multimodal reasoning, tool calling, and structured output, with automatic prefix caching."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.014 }
+
+[cost.text.output]
+price = 2.4

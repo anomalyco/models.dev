@@ -1,0 +1,15 @@
+schema = 2
+base_model = "openai/gpt-5.6-luna"
+name = "OpenAI: GPT 5.6 Luna (Fast)"
+description = "GPT-5.6 Luna is a fast, affordable GPT-5.6 model that brings strong capability at the lowest cost in the series."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04, write = 0.5 }
+
+[cost.text.output]
+price = 2.4

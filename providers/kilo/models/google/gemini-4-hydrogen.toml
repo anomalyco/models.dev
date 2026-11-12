@@ -1,0 +1,31 @@
+schema = 2
+name = "Google: Gemini 4 Hydrogen"
+description = "Gemini 4 Hydrogen is the high-efficiency workhorse model of the Gemini 4 family from Google, built for high-throughput agentic workflows, coding and multi-model routing at lower cost and latency than..."
+family = "gemini"
+open_weights = false
+release_date = "2026-11-12"
+
+[modalities]
+input = ["audio", "application/pdf", "image", "text", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.0375, write = 0.041667 }
+
+[cost.text.output]
+price = 3.75
+reasoning = 3.75
+
+[cost.web_search]
+price = 14

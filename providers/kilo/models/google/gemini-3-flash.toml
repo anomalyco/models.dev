@@ -1,0 +1,27 @@
+schema = 2
+name = "Google: Gemini 3 Flash"
+description = "Google's most intelligent model built for speed, combining frontier intelligence with superior search and grounding."
+family = "gemini"
+open_weights = false
+release_date = "2025-12-17"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 65_000
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 3

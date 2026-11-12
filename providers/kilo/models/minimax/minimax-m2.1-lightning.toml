@@ -1,0 +1,27 @@
+schema = 2
+name = "MiniMax: MiniMax M2.1 Lightning (retires Nov 18)"
+description = "MiniMax-M2.1-lightning is a faster version of MiniMax-M2.1, offering the same performance but with significantly higher throughput (output speed ~100 TPS, MiniMax-M2 output speed ~60 TPS)."
+family = "minimax"
+open_weights = false
+release_date = "2025-12-23"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 204_800
+output = 131_072
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.375 }
+
+[cost.text.output]
+price = 2.4

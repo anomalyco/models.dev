@@ -1,0 +1,27 @@
+schema = 2
+name = "Laguna S 2.1 (retires Nov 13)"
+description = "Laguna S 2.1 is Poolside's new open-weight model for agentic coding and long-horizon work."
+family = "laguna-s"
+open_weights = false
+release_date = "2026-07-20"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.009 }
+
+[cost.text.output]
+price = 0.18

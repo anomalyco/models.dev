@@ -1,0 +1,27 @@
+schema = 2
+name = "Meituan: LongCat 2.5"
+description = "LongCat 2.5 is Meituan’s native multimodal model for coding and long-running agent workflows. It combines visual understanding with multi-step reasoning and tool use to work across complex codebases and full-project development. Its 1M-token context window supports tasks involving large documents, codebases, and text and image inputs."
+family = "longcat"
+open_weights = false
+release_date = "2026-11-02"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2
