@@ -1,0 +1,19 @@
+# Limit: max_input_tokens 131072, max_tokens 32768 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "mistral/mistral-nemo"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+
+[limit]
+output = 32_768
+
+[cost.text.input]
+price = 0.029
+
+[cost.text.output]
+price = 0.03

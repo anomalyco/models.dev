@@ -1,0 +1,19 @@
+# Limit: max_input_tokens 1000000, max_tokens 64000 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "amazon/nova-2-lite"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 2.5

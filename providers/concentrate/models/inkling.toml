@@ -1,0 +1,21 @@
+# Limit: max_input_tokens 1048576, max_tokens 262144 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "thinkingmachines/inkling"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
+
+[limit]
+output = 262_144
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.27 }
+
+[cost.text.output]
+price = 5

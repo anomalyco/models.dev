@@ -1,0 +1,21 @@
+# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions
+# Limit: max_input_tokens 202752, max_tokens 131072 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "zhipuai/glm-4.7"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 202_752
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.2

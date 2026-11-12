@@ -1,0 +1,20 @@
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, budget = { min = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }
+
+[cost.text.output]
+price = 5
+
+[cost.web_search]
+price = 10

@@ -1,0 +1,17 @@
+schema = 2
+base_model = "cohere/command-a"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0 }
+
+[cost.text.output]
+price = 10

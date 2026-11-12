@@ -1,0 +1,18 @@
+# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions
+schema = 2
+base_model = "deepseek/deepseek-v3.1"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 0.95

@@ -1,0 +1,20 @@
+# Limit: max_input_tokens 1048576, max_tokens 65536 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3

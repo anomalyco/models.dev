@@ -1,0 +1,17 @@
+# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions
+# Limit: max_input_tokens 1048576, max_tokens 65536 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.24

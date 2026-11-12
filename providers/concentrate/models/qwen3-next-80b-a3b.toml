@@ -1,0 +1,16 @@
+schema = 2
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 1.2

@@ -27,6 +27,7 @@ import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareAiGateway } from "./providers/cloudflare-ai-gateway.js";
 import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
+import { concentrate } from "./providers/concentrate.js";
 import { cortecs } from "./providers/cortecs.js";
 import { crossmodel } from "./providers/crossmodel.js";
 import { deepinfra } from "./providers/deepinfra.js";
@@ -192,6 +193,7 @@ export const providers: {
   chutes: SyncProvider<any>;
   "cloudflare-ai-gateway": SyncProvider<any>;
   "cloudflare-workers-ai": SyncProvider<any>;
+  concentrate: SyncProvider<any>;
   cortecs: SyncProvider<any>;
   crossmodel: SyncProvider<any>;
   deepinfra: SyncProvider<any>;
@@ -239,6 +241,7 @@ export const providers: {
   chutes,
   "cloudflare-ai-gateway": cloudflareAiGateway,
   "cloudflare-workers-ai": cloudflareWorkersAi,
+  concentrate,
   cortecs,
   crossmodel,
   deepinfra,
@@ -282,6 +285,7 @@ export const providers: {
 export const groups = {
   aggregators: [
     "aimlapi",
+    "concentrate",
     "crossmodel",
     "edenai",
     "empiriolabs",

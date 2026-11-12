@@ -1,0 +1,20 @@
+# Limit: max_input_tokens 200000, max_tokens 128000 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "zhipuai/glm-4.7-flash"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true }
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.4

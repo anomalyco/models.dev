@@ -1,0 +1,17 @@
+schema = 2
+base_model = "minimax/MiniMax-M2.7-highspeed"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = { min_tokens = 512 }, explicit = true }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06, write = { "5m" = 0.375 } }
+
+[cost.text.output]
+price = 2.4

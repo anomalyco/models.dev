@@ -167,6 +167,17 @@ Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 - New reasoning models with neither a resolved mapping nor authored controls remain skipped for manual authoring. No empty placeholder is generated, so the normal auto-merge policy remains unchanged; legitimate always-on `[]` entries are not blanket-blocked.
 - Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
 
+## Concentrate Notes
+
+Concentrate is implemented in `packages/core/src/sync/providers/concentrate.ts`.
+
+- Source endpoint: `https://api.concentrate.ai/v1/models`; no auth required. One page lists every model with its routes, prices and per-route capabilities.
+- Every model maps to a `base_model`; IDs that need more than dots-for-dashes or an `-it` / `-instruct` suffix are listed in `BASE_MODEL_ALIASES`. Models without a lab entry are reported as missing models.
+- Concentrate routes each request to a route that serves the features it uses, so tools, attachments and effort levels count when any route serves them. PDF input follows each route's `supports.input.file.pdf`; Concentrate accepts PDFs for models without native document input too. Limits are capped at the lab's, and a file that lowers them names the source values in its header.
+- Concentrate picks a route per request, so prices are the most expensive route's (an upper bound: no request bills above them): the standard price, `input_gte` tiers as context overrides, cache reads/writes and web search.
+- Reasoning copies the lab's first-party controls (else OpenRouter's, else another peer's) on the levels Concentrate accepts, with `none` as the off switch. An off switch with no graded levels (a lab toggle, or no reference controls) is published as `toggle`, with `reasoning.effort = none` as its wire path; the full list the routes accept is never published. Claude keeps Anthropic's toggle and budget and is served over Messages; other models use the provider's Responses default, which carries reasoning natively (no `interleaved` field).
+- Decision models are served over System One at `/v1/systemone`. `redact-v1` (PII redaction) is skipped.
+
 ## CrossModel Notes
 
 CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.

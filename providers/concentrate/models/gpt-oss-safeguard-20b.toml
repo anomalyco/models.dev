@@ -1,0 +1,21 @@
+# Limit: max_input_tokens 131072, max_tokens 16384 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "openai/gpt-oss-safeguard-20b"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+structured_output = true
+reasoning = { supported = true }
+
+[limit]
+output = 16_384
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.2

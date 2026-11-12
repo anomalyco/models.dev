@@ -1,0 +1,39 @@
+# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions
+schema = 2
+base_model = "alibaba/qwen3.7-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 0.028
+cache = { read = 0.006 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.083
+cache = { read = 0.017 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.165
+cache = { read = 0.033 }
+
+[cost.text.output]
+price = 0.11
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.33
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.66
+
+[cost.web_search]
+price = 0.573411

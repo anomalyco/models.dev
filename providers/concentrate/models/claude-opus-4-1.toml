@@ -1,0 +1,17 @@
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "anthropic/claude-opus-4-1"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 1_024 } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 15
+cache = { read = 1.5, write = { "5m" = 18.75 } }
+
+[cost.text.output]
+price = 75

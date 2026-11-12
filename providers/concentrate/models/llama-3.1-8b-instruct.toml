@@ -1,0 +1,15 @@
+schema = 2
+base_model = "meta/llama-3.1-8b-instruct"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 0.22
+
+[cost.text.output]
+price = 0.22

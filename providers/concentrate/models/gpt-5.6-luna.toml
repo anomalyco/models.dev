@@ -1,0 +1,26 @@
+schema = 2
+base_model = "openai/gpt-5.6-luna"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02, write = { "5m" = 0.25 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.4
+cache = { read = 0.04, write = { "5m" = 0.5 } }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.8
+
+[cost.web_search]
+price = 14

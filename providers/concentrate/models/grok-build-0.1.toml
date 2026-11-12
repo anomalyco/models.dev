@@ -1,0 +1,31 @@
+# Limit: max_input_tokens 256000, max_tokens 64000 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "xai/grok-build-0.1"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4

@@ -1,0 +1,11 @@
+schema = 2
+base_model = "cloudflare/clef"
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.24
+
+[cost.text.output]
+price = 0

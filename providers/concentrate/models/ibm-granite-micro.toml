@@ -1,0 +1,21 @@
+# Limit: max_input_tokens 131000, max_tokens 32750 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "ibm/granite-4-h-micro"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = false }
+
+[limit]
+context = 131_000
+output = 32_750
+
+[cost.text.input]
+price = 0.017
+
+[cost.text.output]
+price = 0.112
