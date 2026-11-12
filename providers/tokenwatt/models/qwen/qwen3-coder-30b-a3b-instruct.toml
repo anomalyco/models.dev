@@ -1,17 +1,16 @@
-# TokenWatt serves Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8 with vLLM on one H100 in the US: 131,072-token context and
-# up to 65,536 output tokens per request; tool calls and JSON-schema structured outputs; non-thinking model.
-# Cached input tokens are billed at the input price. Prices from https://api.tokenwatt.io/v1/models and
-# https://www.tokenwatt.io/api.html (accessed 2026-11-12).
+# TokenWatt serves Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8 with vLLM on one H100 in the US with a 131,072-token
+# context (the base model allows 262,144). Prompt prefixes are cached automatically (vLLM prefix caching; no
+# cache_control needed) and cached input tokens are billed at the input price. Prices from
+# https://api.tokenwatt.io/v1/models and https://www.tokenwatt.io/api.html (accessed 2026-11-12).
 schema = 2
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 
 [capabilities]
-tools = { supported = true }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 131_072
-output = 65_536
 
 [cost.text.input]
 price = 0.07
