@@ -1,4 +1,8 @@
-# Sources (accessed 2026-11-09):
+# Sources (accessed 2026-11-09 to 2026-11-12):
+# - Model ID: deepseek/deepseek-v4.1-flash, the literal "id" in GET https://api.logits.com/v1/models.
+# - Prompt cache: https://logits.com/docs says usage reports
+#   prompt_tokens_details.cached_tokens and cached input is billed at the cached
+#   rate. It documents no cache markers, so the cache is implicit.
 # - Price, USD per 1M tokens: $0.15 input, $0.003 cached input, $0.60 output.
 #   https://logits.com/pricing and the price list JSON at https://api.logits.com/models
 #   (prompt 0.00000015, cached_prompt 0.000000003 per token; same rate for image tokens).
@@ -29,6 +33,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], default = { type = "effort", value = "high" } }
+cache = { implicit = true }
 structured_output = true
 
 [limit]
