@@ -3,7 +3,9 @@
 # - https://platform.minimax.io/docs/guides/image-generation
 # - https://www.minimax.io/blog/minimax-h3-image ("Highspeed mode reaches 3-4x the speed" of mainstream alternatives)
 # Same endpoints and modalities as MiniMax-H3-Image (POST /v1/images/generations and /v1/images/edits);
-# only the model id and price tier differ. Weights are published for MiniMax-H3-Image only.
+# only the model id and price tier differ. Weights are published for MiniMax-H3-Image only: the HF model card's
+# Model Zoo (https://huggingface.co/MiniMaxAI/MiniMax-H3-Image) lists MiniMax-H3-Image and MiniMax-H3-Image-PE,
+# the MiniMaxAI org has no Highspeed repo, and nothing says the Highspeed tier serves the published checkpoint.
 schema = 2
 v2_only = true
 type = "image"
