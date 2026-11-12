@@ -95,6 +95,22 @@ test("gives a budget-only model its single control", () => {
   expect(model.reasoning_options).toEqual([{ type: "budget_tokens" }]);
 });
 
+test.each(["deepseek-v4-flash-speed", "deepseek-v4-flash-speed-flex"])(
+  "omits budgets for the older V4 serving tier %s", (id) => {
+    const model = buildNeuralwattModel(sourceModel(id), undefined, undefined);
+    expect(model.reasoning_options?.some((option) => option.type === "budget_tokens")).toBe(false);
+  },
+);
+
+test.each([
+  "deepseek-v4.1-flash", "deepseek-v4.1-flash-flex",
+  "deepseek-v4.1-flash-speed", "nw-flash", "nw-flash-flex",
+])("keeps verified budget support on %s", (id) => {
+  const source = sourceModel(id, { huggingface_id: "deepseek-ai/DeepSeek-V4.1-Flash-1017" });
+  const model = buildNeuralwattModel(source, undefined, undefined);
+  expect(model.reasoning_options).toContainEqual({ type: "budget_tokens" });
+});
+
 test("keeps the authored ladder when the API sends no reasoning block", () => {
   const source = sourceModel("glm-5.2", { reasoning: undefined });
   const authored = {

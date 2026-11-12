@@ -15,7 +15,7 @@ import { toV1Modality } from "../../translate.js";
 const API_ENDPOINT = "https://api.neuralwatt.com/v1/models";
 
 // Serving tiers Neuralwatt layers onto a base checkpoint.
-const TIER_SUFFIX = /-(fast|flex|short)$/;
+const TIER_SUFFIX = /-(fast|flex|short|speed)$/;
 
 // Quantization and checkpoint-date suffixes on Hugging Face repo names.
 const REPO_SUFFIX = /-(nvfp4|fp8|awq|int4|\d{4})$/;
@@ -24,9 +24,9 @@ const REPO_SUFFIX = /-(nvfp4|fp8|awq|int4|\d{4})$/;
 // the endpoint never describes, in the header the runner re-attaches.
 const BUDGET_HEADER = "# Budget: thinking_token_budget (integer reasoning tokens)\n";
 
-// thinking_token_budget is accepted on every model except these two, which
-// reject it with a 400. Serving tiers share their base model's behaviour.
-// https://portal.neuralwatt.com/docs/api/chat-completions
+// The docs exclude V4 Flash and Gemma. Live checks on 2026-11-12
+// accepted budgets on V4.1 Flash, Speed, Flex, and nw-flash aliases.
+// https://docs.neuralwatt.com/api/chat-completions#reasoning-token-budget
 const BUDGET_REJECTORS = new Set(["deepseek-v4-flash", "gemma-4-31b"]);
 
 // A canonical ID may carry an MoE active-parameter suffix the served ID drops.

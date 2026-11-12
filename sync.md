@@ -465,6 +465,7 @@ Neuralwatt is implemented in `packages/core/src/sync/providers/neuralwatt.ts`.
 - Every model Neuralwatt serves is open weights, and reasoning traces always return on a `reasoning` field, so `interleaved` is set for reasoning models.
 - Interior (i.e., not in the header/top of the TOML file) comments are not preserved. Keep per-model wire notes in the leading comment block, which the runner does preserve.
 - The sync emits a `thinking_token_budget` note as a generated header for any model carrying a `budget_tokens` control.
+- Budget exclusions include the older V4 Flash `-speed` tiers. Live authenticated checks on 2026-11-12 accepted `thinking_token_budget=1` on V4.1 Flash, Flex, Speed, `nw-flash`, and `nw-flash-flex` (HTTP 200 with reasoning followed by content). The dated catalog evidence is in #13486.
 
 ## Requesty Notes
 
