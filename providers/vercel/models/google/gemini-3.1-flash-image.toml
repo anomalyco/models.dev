@@ -6,7 +6,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high"] }
+reasoning = { supported = true, toggle = true, effort = ["minimal", "high"] }
 cache = { implicit = true }
 
 [cost.text.input]

@@ -6294,6 +6294,25 @@ test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
   expect(synced).not.toHaveProperty("family");
 });
 
+test("Vercel variants keep authored provider descriptions", () => {
+  for (const id of ["zai/glm-4.6v-flash-free", "anthropic/claude-opus-5-fast"]) {
+    const [model] = vercel.parseModels({
+      data: [{
+        id,
+        name: "Provider variant",
+        created: 1_784_937_600,
+        type: "language",
+        context_window: 128_000,
+        max_tokens: 24_000,
+        tags: ["tool-use"],
+        pricing: { input: "0", output: "0" },
+      }],
+    });
+    const description = "Provider-specific description";
+    expect(buildVercelModel(model!, { description })).toMatchObject({ description });
+  }
+});
+
 test("Vercel sync accepts evaluation and unknown future model types", () => {
   const [evaluation, future] = vercel.parseModels({
     data: [
