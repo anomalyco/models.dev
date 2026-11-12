@@ -1,5 +1,5 @@
 # Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
-# (checked 2026-11-03): 0.88 / 2.65 USD per 1M input / output tokens.
+# (checked 2026-11-12): 0.9 / 2.71 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
 schema = 2
 base_model = "xai/grok-4.6"
@@ -15,15 +15,15 @@ output = 450000
 legacy_interleaved = true
 
 [cost.text.input]
-price = 0.88
+price = 0.9
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 200000 } }
-price = 1.77
+price = 1.8
 
 [cost.text.output]
-price = 2.65
+price = 2.71
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 200000 } }
-price = 5.3
+price = 5.41
