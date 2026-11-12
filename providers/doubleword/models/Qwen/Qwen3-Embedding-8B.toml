@@ -1,7 +1,11 @@
 # Pricing: realtime tariff from GET https://api.doubleword.ai/v1/models?include=pricing (2026-11-05),
 # matching https://docs.doubleword.ai/inference-api/models/qwen-qwen3-embedding-8b. Async/batch tiers are cheaper and not modelled here.
+# API: POST /v1/embeddings, verified live 2026-11-12.
 schema = 2
 base_model = "alibaba/qwen3-embedding-8b"
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.04
