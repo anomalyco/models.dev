@@ -2,8 +2,10 @@
 #   https://x.com/BytePlusGlobal/status/1984128274562158674
 #   and listed as a new release in October 2025: https://docs.byteplus.com/en/docs/ModelArk/model-release-announcement-2025
 # Model page: https://docs.byteplus.com/en/docs/ModelArk/1901652 (text-to-video and first-frame image-to-video)
-# Image formats jpeg, png, webp, bmp, tiff, gif (heic/heif only from Seedance 1.5 pro on):
-#   https://ai.byteplus.com/ark/region:ap-southeast-1/docs/create-video-generation-task-api.md (accessed 2026-11-12)
+# Image formats jpeg, png, webp, bmp, tiff, gif; no heic/heif on 1.0. The BytePlus task API says heic/heif start at
+#   "Seedance 1.5 pro and later" (https://ai.byteplus.com/ark/region:ap-southeast-1/docs/create-video-generation-task-api.md),
+#   while the Volcengine Ark doc says Seedance 2.0 and later (https://www.volcengine.com/docs/82379/1520757), both accessed
+#   2026-11-12. seedance-1.5-pro.toml follows the Ark wording.
 # Output: MP4 without sound (480p, 720p, 1080p, 24 fps, 2-12 s): https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-list.md
 # Sampling: the task API has no temperature, top_p or top_k.
 schema = 2
