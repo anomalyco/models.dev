@@ -1,0 +1,11 @@
+# Phase Router: OpenAI-compatible router (also Anthropic Messages at /v1/messages).
+# Catalog with prices: GET https://router.phase.xyz/v1/models (accessed 2026-11-12).
+# `phase.input_per_m` / `phase.output_per_m` are micro-USD per 1M tokens;
+# prices below are converted to USD/MTok. Each call also carries a fixed
+# per-call fee (`phase.per_call`, 1000 micro-USD = $0.001) not modeled here.
+name = "Phase Router"
+env = ["PHASE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://router.phase.xyz/v1"
+doc = "https://router.phase.xyz/models"
