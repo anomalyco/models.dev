@@ -9,11 +9,14 @@
 #   deployment does not accept image input even though the lab model can.
 # - modalities output = ["text"]: text-only emission (no audio/image output declared);
 #   required by the schema-2 validator.
-# - reasoning = { supported = true, toggle = true }: re-probed 2026-10-23 on this host with
-#   reasoning explicitly enabled. Default request: no reasoning, completion_tokens_details
-#   .reasoning_tokens = 0. With "reasoning": {"enabled": true} (or chat_template_kwargs
-#   {"enable_thinking": true}) the response carries message.reasoning and
-#   reasoning_tokens = 399 of 400. Off by default, caller-toggled; no effort levels.
+# - reasoning = { supported = true, toggle = true }: re-probed 2026-11-12 on this host. Default
+#   request: no reasoning, completion_tokens_details.reasoning_tokens = 0. With
+#   chat_template_kwargs {"enable_thinking": true} (or reasoning_effort = "high") the reasoning
+#   arrives in a separate message.reasoning field (reasoning_tokens = 399 of 400). A
+#   "reasoning": {"enabled": true} request body does not enable it on this host. Off by default,
+#   caller-toggled; no effort levels.
+# - [api.chat-completions] compatibility replay_reasoning: the side channel is message.reasoning,
+#   which has no named v1 field, so the bare replay form is declared.
 schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
@@ -32,3 +35,6 @@ price = 0.21
 
 [limit]
 context = 32_768
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }

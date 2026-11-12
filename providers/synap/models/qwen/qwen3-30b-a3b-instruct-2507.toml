@@ -1,5 +1,7 @@
-# Sources (accessed 2026-10-18, re-verified on the live feed 2026-11-11):
-# - Model id, USD pricing and context: https://synap402.com/v1/models?format=openrouter
+# Sources (accessed 2026-10-18, re-verified on the live feed 2026-11-12):
+# - Model id: the exact id listed by GET https://synap402.com/v1/models (2026-11-12). The
+#   shorter alias qwen/qwen3-30b-a3b is also accepted, but the listed id is used here.
+# - USD pricing and context: https://synap402.com/v1/models?format=openrouter
 #   (cost_usd per token: 0.000000081267 prompt / 0.0000002438 completion; the feed names it
 #   "Qwen: Qwen3 30B A3B Instruct 2507", so the host serves the 2507 non-thinking weights).
 # - base_model: the instruct-2507 lab entry - this id does NOT serve the hybrid-thinking
