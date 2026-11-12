@@ -9,7 +9,7 @@ schema = 2
 base_model = "openai/gpt-5.6-luna"
 
 [capabilities]
-tools = { freeform = ["text", "lark", "regex"] }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 

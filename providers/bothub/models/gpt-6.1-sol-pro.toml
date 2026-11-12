@@ -6,7 +6,7 @@ schema = 2
 base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
-tools = { freeform = ["text", "lark", "regex"] }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
