@@ -1,5 +1,5 @@
 # Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
-# (checked 2026-11-03): 0.22 / 1.08 USD per 1M input / output tokens.
+# (checked 2026-11-12): 0.22 / 1.1 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
 schema = 2
 base_model = "alibaba/qwen3-coder-flash"
@@ -15,19 +15,19 @@ price = 0.22
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 32000 } }
-price = 0.36
+price = 0.37
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 128000 } }
-price = 0.57
+price = 0.59
 
 [cost.text.output]
-price = 1.08
+price = 1.1
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 32000 } }
-price = 1.79
+price = 1.83
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 128000 } }
-price = 2.87
+price = 2.93
