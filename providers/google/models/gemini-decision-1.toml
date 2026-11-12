@@ -11,9 +11,11 @@ base_model = "google/gemini-decision-1"
 [capabilities]
 cache = false
 
+[limit]
+output = 1
+
 [api.gemini-decisions]
-base_url = "https://generativelanguage.googleapis.com/v1beta"
-sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/google/decisions" }
+sdk = { opencodeai = "@opencode/ai/providers/google/decisions", aisdk = "none" }
 
 [cost.text.input]
 price = 0.1
