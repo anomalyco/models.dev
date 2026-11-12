@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { plan } from "../src/sync2/engine.js";
+import { alibaba } from "../src/sync2/providers/alibaba.js";
 import { deepseek, parseDeepSeekPricing } from "../src/sync2/providers/deepseek.js";
 import { moonshotai, parseMoonshotPricing } from "../src/sync2/providers/moonshotai.js";
 import type { Observation } from "../src/sync2/types.js";
@@ -146,4 +147,107 @@ test("moonshotai: the pricing parser fails closed on changed columns or cells", 
   expect(() => parseMoonshotPricing(pricing.replace("`$3.00 / MTok`", "`¥3.00 / MTok`"))).toThrow("isn't a dollar price");
   expect(() => parseMoonshotPricing(pricing.replace("`$15.00 / MTok`,", ""))).toThrow("5 columns");
   expect(() => parseMoonshotPricing("<html></html>")).toThrow("no price tables");
+});
+
+test("alibaba: context tiers become bands, peak prices need a half-price off-peak, and unmappable prices are left out", async () => {
+  const raw = await fixture("alibaba");
+  const observations = byID(alibaba.observe(raw));
+  expect(observations.get("qwen3.7-plus")).toEqual({
+    id: "qwen3.7-plus",
+    status: null,
+    limit: { context: 1_000_000, output: 131_072 },
+    modalities: { input: ["image", "text", "video"], output: ["text"] },
+    cost: {
+      text: {
+        input: {
+          price: 0.4,
+          cache: { read: 0.08, explicit: { read: 0.04, write: 0.5 } },
+          overrides: [{ when: { context: { gt: 256_000 } }, price: 1.2, cache: { read: 0.24, explicit: { read: 0.12, write: 1.5 } } }],
+        },
+        output: { price: 1.6, reasoning: null, overrides: [{ when: { context: { gt: 256_000 } }, price: 4.8 }] },
+      },
+    },
+  });
+  // A separate thinking output price is the reasoning price.
+  expect(observations.get("qwen-plus")?.cost?.text?.output).toEqual({
+    price: 1.2,
+    reasoning: 4,
+    overrides: [{ when: { context: { gt: 256_000 } }, price: 3.6, reasoning: 12 }],
+  });
+  // Peak and off-peak: the peak price, since files hold the off-peak multiplier.
+  expect(observations.get("deepseek-v4.1-flash")?.cost?.text?.input).toEqual({ price: 0.3, cache: { read: 0.006, explicit: null }, overrides: null });
+  // A retirement date deprecates; omni prices (audio tokens) aren't mapped.
+  expect(observations.get("qwen3.5-plus")?.status).toBe("deprecated");
+  expect(observations.get("qwen3.8-omni-flash")?.cost).toBeUndefined();
+  // Snapshots, namespaced copies and media models only update files that exist.
+  for (const id of ["qwen3.7-plus-2026-05-26", "ZHIPU/GLM-5.3", "wan2.7-t2v", "qwen-plus-latest"]) expect(observations.get(id)?.updateOnly).toBe(true);
+  expect(observations.get("kimi-k3.1-pro")?.updateOnly).toBeUndefined();
+
+  const flash = raw.models.find((model: any) => model.model === "deepseek-v4.1-flash");
+  flash.prices[0].prices.find((price: any) => price.type === "input_token" && price.time_band === "offpeak").price = "0.2";
+  expect(byID(alibaba.observe(raw)).get("deepseek-v4.1-flash")?.cost).toBeUndefined();
+});
+
+test("alibaba: keeps a file's unrounded price and a spelled-out reasoning price, and doesn't report deprecated files it drops", async () => {
+  const raw = { models: (await fixture("alibaba")).models.filter((model: any) => ["qwen-flash", "qwen3.5-plus"].includes(model.model)) };
+  const header = `name = "Alibaba"\nnpm = "@ai-sdk/openai-compatible"\napi = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"\n`;
+  const root = await catalog({
+    "providers/alibaba/provider.toml": header,
+    "models/alibaba/qwen-flash.toml": lab(),
+    "models/alibaba/qwen3.5-plus.toml": lab(`["text", "image/png", "video/mp4"]`),
+    "models/alibaba/qwen-turbo.toml": lab(),
+    "models/alibaba/qwen3-max.toml": lab(),
+    "providers/alibaba/models/qwen-flash.toml": `schema = 2
+base_model = "alibaba/qwen-flash"
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.01, explicit = { read = 0.005, write = 0.0625 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.25
+cache = { read = 0.05, explicit = { read = 0.025, write = 0.3125 } }
+
+[cost.text.output]
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 2
+`,
+    "providers/alibaba/models/qwen3.5-plus.toml": `schema = 2
+base_model = "alibaba/qwen3.5-plus"
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[cost.text.input]
+price = 0.4
+cache = { explicit = { read = 0.04, write = 0.5 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.5
+cache = { explicit = { read = 0.05, write = 0.625 } }
+
+[cost.text.output]
+price = 2.4
+reasoning = 2.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 3
+`,
+    "providers/alibaba/models/qwen-turbo.toml": `schema = 2\nbase_model = "alibaba/qwen-turbo"\nstatus = "deprecated"\n`,
+    "providers/alibaba/models/qwen3-max.toml": `schema = 2\nbase_model = "alibaba/qwen3-max"\n`,
+  });
+  const { result } = await plan(alibaba, { root, raw });
+  expect(result.changes.map((change) => [change.model, change.fields.map((field) => field.path)])).toEqual([["qwen3.5-plus", ["status"]]]);
+  expect(result.gaps.map((gap) => [gap.kind, gap.model])).toEqual([["removal", "qwen3-max"]]);
 });
