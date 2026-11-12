@@ -3,11 +3,12 @@
 # Anthropic Messages (POST /v1/messages). Keys start with `ag_` and are sent as
 # `Authorization: Bearer` or `x-api-key`. GET /v1/models lists the served ids
 # (it needs a key). Setup: https://aigrow.gg/ai-api/guide
-# Prices: https://aigrow.gg/ai-api (read 2026-11-11). The table on that page is
+# Prices: https://aigrow.gg/ai-api (read 2026-11-12). The figure on that page is
 # headed "USD per million tokens" and lists, for each model, the USD a buyer pays
 # per 1M tokens. The model files copy those figures with no conversion, and each
-# one names its row. Each model has one flat rate at every context length, and a
-# prompt-cache write bills at 1.25x the input rate.
+# one names its row. Each model has one flat rate at every context length. A
+# prompt-cache write bills at 1.25x the input rate, and at 2x on the Claude
+# models, where every write goes to the 1-hour cache.
 name = "AIGROW"
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"

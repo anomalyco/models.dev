@@ -1,4 +1,4 @@
-# Prices: https://aigrow.gg/ai-api, table "USD per million tokens", row "GPT-6.1 Terra" (read 2026-11-11): input $0.50, output $3.125, cache read $0.05, cache write $0.625. These are the USD a buyer pays per 1M tokens, copied with no conversion. One flat rate at every context length (no long-context tier); cache writes bill at 1.25x the input rate.
+# Prices: https://aigrow.gg/ai-api, figure "USD per million tokens", row "GPT-6.1 Terra" (read 2026-11-12): input $0.25, output $1.25, cache read $0.05, cache write $0.3125. These are the USD a buyer pays per 1M tokens, copied with no conversion. One flat rate at every context length (no long-context tier); cache writes bill at 1.25x the input rate.
 # API: OpenAI Chat Completions only (POST /v1/chat/completions); there is no Responses API.
 # Effort: reasoning_effort is forwarded unchanged; levels as on providers/openai; each level returned 200 on this host (2026-11-11). A JSON schema response_format, a PNG image and a PDF file part all worked (probed 2026-11-11).
 # Cache: automatic prefix caching; minimum copied from providers/openai.
@@ -12,8 +12,8 @@ structured_output = true
 cache = { implicit = { min_tokens = 1_024 } }
 
 [cost.text.input]
-price = 0.5
-cache = { read = 0.05, write = 0.625 }
+price = 0.25
+cache = { read = 0.05, write = 0.3125 }
 
 [cost.text.output]
-price = 3.125
+price = 1.25

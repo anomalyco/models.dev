@@ -1,4 +1,4 @@
-# Prices: https://aigrow.gg/ai-api, table "USD per million tokens", row "Grok 4.7" (read 2026-11-11): input $1.50, output $3.00, cache read $0.25, cache write $1.875. These are the USD a buyer pays per 1M tokens, copied with no conversion. One flat rate at every context length (no 200K tier); cache writes bill at 1.25x the input rate.
+# Prices: https://aigrow.gg/ai-api, figure "USD per million tokens", row "Grok 4.7" (read 2026-11-12): input $0.50, output $1.50, cache read $0.125, cache write $0.625. These are the USD a buyer pays per 1M tokens, copied with no conversion. One flat rate at every context length (no 200K tier); cache writes bill at 1.25x the input rate.
 # API: OpenAI Chat Completions only (POST /v1/chat/completions); the Messages endpoint does not serve this model.
 # Effort: reasoning_effort is forwarded unchanged; levels and default as on providers/xai; each level returned 200 on this host (2026-11-11).
 # Cache: automatic prefix caching, as on providers/xai.
@@ -17,8 +17,8 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [cost.text.input]
-price = 1.5
-cache = { read = 0.25, write = 1.875 }
+price = 0.5
+cache = { read = 0.125, write = 0.625 }
 
 [cost.text.output]
-price = 3
+price = 1.5

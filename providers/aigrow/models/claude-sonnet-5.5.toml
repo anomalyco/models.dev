@@ -1,4 +1,4 @@
-# Prices: https://aigrow.gg/ai-api, table "USD per million tokens", row "Claude Sonnet 5.5" (read 2026-11-11): input $1.50, output $7.50, cache read $0.075, cache write $1.875. These are the USD a buyer pays per 1M tokens, copied with no conversion. Cache writes bill at 1.25x the input rate for the 5m and the 1h TTL alike.
+# Prices: https://aigrow.gg/ai-api, figure "USD per million tokens", row "Claude Sonnet 5.5" (read 2026-11-12): input $0.80, output $4.00, cache read $0.075, cache write $1.60. These are the USD a buyer pays per 1M tokens, copied with no conversion. Every prompt-cache write on this host goes to the 1-hour cache whatever TTL the request names and bills at 2x the input rate, so the 5m and the 1h write cost the same.
 # APIs: Anthropic Messages (POST /v1/messages) and OpenAI Chat Completions (POST /v1/chat/completions) on the same key: https://aigrow.gg/ai-api/guide
 # Effort: output_config.effort (Messages) and reasoning_effort (Chat Completions) are forwarded unchanged; levels as on providers/anthropic; each level returned 200 on this host (2026-11-11).
 # Cache: cache_control breakpoints are forwarded on Messages; TTLs, breakpoints and minimum copied from providers/anthropic.
@@ -21,8 +21,8 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 [api.chat-completions]
 
 [cost.text.input]
-price = 1.5
-cache = { read = 0.075, write = { "5m" = 1.875, "1h" = 1.875 } }
+price = 0.8
+cache = { read = 0.075, write = { "5m" = 1.6, "1h" = 1.6 } }
 
 [cost.text.output]
-price = 7.5
+price = 4
