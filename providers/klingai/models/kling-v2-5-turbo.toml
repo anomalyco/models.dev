@@ -5,6 +5,7 @@
 #   model_name = "kling-v2-5-turbo". Resolution 720p (default) or 1080p; first + last frame is 1080p only.
 # - Pricing: https://kling.ai/document-api/pricing/base/video ("Balance" tab, USD per second of output). Prepaid
 #   resource packages (https://kling.ai/dev/pricing) bill in units at a lower effective rate and are not recorded.
+# Cost conditions: resolution uses the API's own values ("720p", "1080p", "4k").
 schema = 2
 v2_only = true
 base_model = "kuaishou/kling-v2.5-turbo"

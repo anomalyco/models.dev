@@ -7,6 +7,9 @@
 # - Pricing: https://kling.ai/document-api/pricing/base/video ("Balance" tab, USD per second of output). Prepaid
 #   resource packages (https://kling.ai/dev/pricing) bill in units at a lower effective rate and are not recorded.
 #   voice_control is a native-audio request that references a voice.
+# Cost conditions: resolution uses the API's own values ("720p", "1080p", "4k");
+#   generate_audio = audio "native"; voice_control = a voice item referenced in the prompt; mode = "motion-control" is
+#   the /motion-control/<model> endpoint.
 schema = 2
 v2_only = true
 base_model = "kuaishou/kling-v2.6"

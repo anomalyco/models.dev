@@ -8,6 +8,8 @@
 #   resource packages (https://kling.ai/dev/pricing) bill in units at a lower effective rate and are not recorded.
 # Base model: Kling's API serves Standard (720p), Pro (1080p) and 4K as one model, so this points at the Pro lab file and
 # overrides the name. Motion control adds a reference motion video (.mp4/.mov) as input.
+# Cost conditions: resolution uses the API's own values ("720p", "1080p", "4k");
+#   generate_audio = audio "native"; mode = "motion-control" is the /motion-control/<model> endpoint.
 schema = 2
 v2_only = true
 base_model = "kuaishou/kling-v3.0-pro"
