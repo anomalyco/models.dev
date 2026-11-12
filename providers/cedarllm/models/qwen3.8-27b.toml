@@ -1,0 +1,27 @@
+# Toggle: reasoning_effort = none (off) | any other value (on); also chat_template_kwargs.enable_thinking = true|false. Thinking is off by default.
+# Effort levels are not graded: every non-"none" value only switches thinking on, so this is a binary toggle.
+# Source: https://cedarllm.com/docs and https://api.cedarllm.com/v1/models (accessed 2026-11-12)
+# Prices from the catalog: prompt 0.00000003, completion 0.00000115, input_cache_read 0.00000003 USD/token.
+# Served as a 4-bit GGUF build; input is text and images (documented with JPEG/PNG examples), no video, so modalities.input is narrowed.
+# Limits: context_length 262144, max_output_length 32768 (same as the lab file).
+# Mid-conversation: reasoning and tools are per-request fields only (no effort_updates / tools.updates).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = false } }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.15
