@@ -2,6 +2,7 @@
 # - Pricing (China (Beijing), CNY): https://help.aliyun.com/zh/model-studio/model-pricing
 #   per second of output video: 1080P with audio ¥0.5, 720P with audio ¥0.3, 1080P silent ¥0.25, 720P silent ¥0.15
 #   base price is 1080P, the default resolution in the API reference below
+#   resolution tiers are 720P and 1080P; this legacy API takes a width*height `size` in one of those tiers
 #   reference videos are billed per second at the same rate, capped at 5 seconds of input per task
 # CNY→USD rate: 6.685797, 2026-11-12, source: https://open.er-api.com/v6/latest/USD
 # - API: POST https://dashscope.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis with `X-DashScope-Async: enable`,
@@ -26,15 +27,15 @@ unit = "second"
 price = 0.0748
 
 [[cost.video.output.overrides]]
-when = { resolution = { equals = "720p" }, generate_audio = { equals = true } }
+when = { resolution = { equals = "720P" }, generate_audio = { equals = true } }
 price = 0.0449
 
 [[cost.video.output.overrides]]
-when = { resolution = { equals = "1080p" }, generate_audio = { equals = false } }
+when = { resolution = { equals = "1080P" }, generate_audio = { equals = false } }
 price = 0.0374
 
 [[cost.video.output.overrides]]
-when = { resolution = { equals = "720p" }, generate_audio = { equals = false } }
+when = { resolution = { equals = "720P" }, generate_audio = { equals = false } }
 price = 0.0224
 
 [cost.video.input]
@@ -42,13 +43,13 @@ unit = "second"
 price = 0.0748
 
 [[cost.video.input.overrides]]
-when = { resolution = { equals = "720p" }, generate_audio = { equals = true } }
+when = { resolution = { equals = "720P" }, generate_audio = { equals = true } }
 price = 0.0449
 
 [[cost.video.input.overrides]]
-when = { resolution = { equals = "1080p" }, generate_audio = { equals = false } }
+when = { resolution = { equals = "1080P" }, generate_audio = { equals = false } }
 price = 0.0374
 
 [[cost.video.input.overrides]]
-when = { resolution = { equals = "720p" }, generate_audio = { equals = false } }
+when = { resolution = { equals = "720P" }, generate_audio = { equals = false } }
 price = 0.0224

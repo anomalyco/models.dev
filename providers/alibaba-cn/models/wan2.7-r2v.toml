@@ -13,10 +13,6 @@ v2_only = true
 base_model = "alibaba/wan2.7"
 name = "Wan2.7 Reference-to-Video"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
-output = ["video/mp4"]
-
 [api.videos]
 base_url = "https://dashscope.aliyuncs.com"
 sdk = { aisdk = "@ai-sdk/alibaba", opencodeai = "none" }
@@ -26,7 +22,7 @@ unit = "second"
 price = 0.1496
 
 [[cost.video.output.overrides]]
-when = { resolution = { equals = "720p" } }
+when = { resolution = { equals = "720P" } }
 price = 0.0897
 
 [cost.video.input]
@@ -34,5 +30,5 @@ unit = "second"
 price = 0.1496
 
 [[cost.video.input.overrides]]
-when = { resolution = { equals = "720p" } }
+when = { resolution = { equals = "720P" } }
 price = 0.0897

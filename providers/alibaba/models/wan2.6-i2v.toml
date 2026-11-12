@@ -2,6 +2,7 @@
 # - Pricing (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing
 #   per second of output video: 1080P $0.15, 720P $0.1
 #   base price is 1080P, the default resolution in the API reference below
+#   resolution tiers are 720P and 1080P; this legacy API takes a width*height `size` in one of those tiers
 # - API: POST https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis with `X-DashScope-Async: enable`,
 #   then poll GET /api/v1/tasks/{task_id} (https://www.alibabacloud.com/help/en/model-studio/legacy-image-to-video-api-reference)
 # - Inputs: first-frame image JPEG, JPG, PNG, BMP or WEBP; audio WAV or MP3; output MP4 (H.264)
@@ -10,6 +11,10 @@ schema = 2
 v2_only = true
 base_model = "alibaba/wan2.6"
 name = "Wan2.6 Image-to-Video"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp", "audio/wav", "audio/mpeg"]
+output = ["video/mp4"]
 
 [api.videos]
 base_url = "https://dashscope-intl.aliyuncs.com"
@@ -20,5 +25,5 @@ unit = "second"
 price = 0.15
 
 [[cost.video.output.overrides]]
-when = { resolution = { equals = "720p" } }
+when = { resolution = { equals = "720P" } }
 price = 0.1
