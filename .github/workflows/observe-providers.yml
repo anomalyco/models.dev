@@ -8,7 +8,8 @@ on:
 # Amazon Bedrock, Vertex and Azure have no API to sync from. observe runs the observer agent (opencode, model key only,
 # no GitHub token, no shell, no edits) on each provider's brief, then applies its observations through the sync engine
 # and uploads the result like Sync Model Catalogs does. publish runs only .github/sync-models/ with the automation app
-# token. Agent results are never safe (risk reason agent-observed), so these pull requests never auto-merge.
+# token. Agent results are never safe (risk reason agent-observed), so these pull requests never auto-merge. gaps starts
+# Fill Catalog Gap for new and update gaps like Sync Model Catalogs does; removal gaps stay in the pull request body.
 permissions:
   contents: read
 
@@ -53,6 +54,9 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    # Matrix legs share one output: only legs with gaps write it, and empty values never overwrite it.
+    outputs:
+      gaps: ${{ steps.gaps.outputs.gaps }}
     env:
       PROVIDER: ${{ matrix.provider }}
       NAME: ${{ matrix.name }}
@@ -132,6 +136,13 @@ jobs:
           bun models:sync2 "$PROVIDER" --observations="$RUNNER_TEMP/answer.md" --json --report="$OUT/report.md" > "$OUT/result.json"
           jq -e '.provider and (.changes | type == "array") and (.gaps | type == "array")' "$OUT/result.json" > /dev/null
           tee -a "$GITHUB_STEP_SUMMARY" < "$OUT/report.md" > /dev/null
+
+      - name: Check for gaps
+        id: gaps
+        run: |
+          if jq -e 'any(.gaps[]; .kind == "new" or .kind == "update")' "$OUT/result.json" > /dev/null; then
+            echo "gaps=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Validate models
         env:
@@ -235,3 +246,49 @@ jobs:
             bash ../trusted/.github/sync-models/publish.sh "$dir" || failed=1
           done
           exit "$failed"
+
+  gaps:
+    needs: observe
+    # Runs when some providers failed, so the others' gaps still start.
+    if: always() && github.repository == 'anomalyco/models.dev' && github.ref == 'refs/heads/dev' && needs.observe.outputs.gaps == 'true'
+    runs-on: ubuntu-latest
+    # The built-in token can start workflows (workflow_dispatch is the exception to its no-trigger rule) and read pull
+    # requests; it can't push.
+    permissions:
+      actions: write
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Check out gap scripts
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          path: trusted
+          sparse-checkout: /.github/sync-models/
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      # Only the ignore lists are read from here.
+      - name: Check out dev ignore lists
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: dev
+          path: repo
+          sparse-checkout: /providers/*/sync-ignore.toml
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Download results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          path: ${{ runner.temp }}/sync
+          pattern: sync-*
+
+      - name: Start gap runs
+        working-directory: repo
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          GAP_LIMIT: 5
+        run: bash ../trusted/.github/sync-models/dispatch-gaps.sh "$RUNNER_TEMP/sync"

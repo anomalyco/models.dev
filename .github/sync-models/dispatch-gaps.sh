@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # dispatch-gaps.sh <dir>: run from a checkout of dev. <dir> holds the sync artifacts (sync-<provider>/, each with
 # provider and result.json). Starts the Fill Catalog Gap workflow for each new or update gap nobody is handling yet, at
-# most GAP_LIMIT per run. Removal gaps are only listed in the sync pull request. Uses git, gh, jq and python3 only;
-# never runs repository code. GitHub itself is the state:
+# most GAP_LIMIT per run. Removal gaps are only listed in the sync pull request. Used by Sync Model Catalogs and
+# Observe Agent Providers. Uses git, gh, jq and python3 only; never runs repository code. GitHub itself is the state:
 #   - branch automation/gap-<provider>-<hash> exists: a gap pull request is open, or was closed without merging
 #     (delete the branch to try again)
 #   - an open pull request already adds (new) or changes (update) the model's file

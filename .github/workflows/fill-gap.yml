@@ -1,7 +1,7 @@
 name: Fill Catalog Gap
 run-name: gap ${{ inputs.provider }}/${{ inputs.model }}
 
-# Started by Sync Model Catalogs (dispatch-gaps.sh) for one model the sync couldn't finish, or by hand.
+# Started by Sync Model Catalogs and Observe Agent Providers (dispatch-gaps.sh) for one model the sync couldn't finish, or by hand.
 on:
   workflow_dispatch:
     inputs:
@@ -113,6 +113,12 @@ jobs:
               echo '```json'
               jq . <<< "$KNOWN" | head -c 20000
               echo '```'
+            fi
+            # Agent providers have no catalog API: point the agent at the pages the observer reads.
+            if bun models:sync2 --list=agents | jq -e --arg p "$PROVIDER" 'any(.include[]; .provider == $p)' > /dev/null; then
+              echo
+              echo "This provider has no catalog API. Research it on these pages first:"
+              bun models:sync2 "$PROVIDER" --agent-brief --json | jq -r '.sources[] | "- \(.url): \(.what)"'
             fi
             echo
             if [ "$KIND" = update ]; then
