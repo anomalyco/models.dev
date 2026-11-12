@@ -54,9 +54,6 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    # Matrix legs share one output: only legs with gaps write it, and empty values never overwrite it.
-    outputs:
-      gaps: ${{ steps.gaps.outputs.gaps }}
     env:
       PROVIDER: ${{ matrix.provider }}
       NAME: ${{ matrix.name }}
@@ -136,13 +133,6 @@ jobs:
           bun models:sync2 "$PROVIDER" --observations="$RUNNER_TEMP/answer.md" --json --report="$OUT/report.md" > "$OUT/result.json"
           jq -e '.provider and (.changes | type == "array") and (.gaps | type == "array")' "$OUT/result.json" > /dev/null
           tee -a "$GITHUB_STEP_SUMMARY" < "$OUT/report.md" > /dev/null
-
-      - name: Check for gaps
-        id: gaps
-        run: |
-          if jq -e 'any(.gaps[]; .kind == "new" or .kind == "update")' "$OUT/result.json" > /dev/null; then
-            echo "gaps=true" >> "$GITHUB_OUTPUT"
-          fi
 
       - name: Validate models
         env:
@@ -249,8 +239,10 @@ jobs:
 
   gaps:
     needs: observe
-    # Runs when some providers failed, so the others' gaps still start.
-    if: always() && github.repository == 'anomalyco/models.dev' && github.ref == 'refs/heads/dev' && needs.observe.outputs.gaps == 'true'
+    # Always runs after the observe legs (some may have failed) and reads every uploaded result itself: matrix legs share
+    # one output, so a flag set by one leg can't be trusted to survive the others. dispatch-gaps.sh skips results
+    # without new or update gaps.
+    if: always() && github.repository == 'anomalyco/models.dev' && github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     # The built-in token can start workflows (workflow_dispatch is the exception to its no-trigger rule) and read pull
     # requests; it can't push.
@@ -280,12 +272,16 @@ jobs:
           persist-credentials: false
 
       - name: Download results
+        id: results
+        # No leg may have uploaded anything (every provider failed or had nothing to report).
+        continue-on-error: true
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: ${{ runner.temp }}/sync
           pattern: sync-*
 
       - name: Start gap runs
+        if: steps.results.outcome == 'success'
         working-directory: repo
         env:
           GH_TOKEN: ${{ github.token }}
