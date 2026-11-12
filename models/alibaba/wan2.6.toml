@@ -1,6 +1,7 @@
 # Released 2025-12-03 (wan2.6-t2v): https://www.alibabacloud.com/help/en/model-studio/newly-released-models
 # Formats: images JPEG, JPG, PNG, BMP or WEBP; audio WAV or MP3:
 #   https://www.alibabacloud.com/help/en/model-studio/image-to-video-api-reference
+# Reference videos (wan2.6-r2v): MP4 or MOV (https://www.alibabacloud.com/help/en/model-studio/legacy-wan-reference-to-video-api-reference, accessed 2026-11-12).
 # Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
 schema = 2
 v2_only = true
@@ -11,7 +12,7 @@ open_weights = false
 release_date = "2025-12-03"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp", "audio/wav", "audio/mpeg"]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
 output = ["video/mp4"]
 
 [capabilities]
