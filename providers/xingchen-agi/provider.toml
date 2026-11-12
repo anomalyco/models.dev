@@ -3,6 +3,9 @@
 name = "XingChen-AGI"
 # No first-party AI SDK package: an OpenAI-compatible provider requires npm + api.
 npm = "@ai-sdk/openai-compatible"
+# OpenCode AI entry point for the generic OpenAI-compatible transport
+# (same as every other OpenAI-compatible provider without its own package).
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Public OpenAI-compatible endpoint (auth: standard Authorization: Bearer API key).
 api = "https://api-maas.teleai.com.cn/v1"
 # Environment variable users set their API key in.
