@@ -4,7 +4,7 @@
 schema = 2
 name = "Xing4.1-Preview"
 description = "Xing4.1-Preview is a high-performance, low-activation MoE model from the Xing series (285B total, 17B active). Optimized for agentic coding and long-horizon agent workflows, it delivers deep reasoning, structured output and function calling with a native 1M-token context (extrapolatable to 512K). Trained on domestic accelerators for enterprise-grade deployment."
-family = "Xing"
+family = "xing"
 open_weights = true
 knowledge = "2026-03"
 release_date = "2026-11-18"
@@ -19,7 +19,9 @@ tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-# top_k omitted (= false): the OpenAI-compatible endpoint does not expose top_k.
+# top_k = false: the OpenAI-compatible endpoint does not expose top_k.
+# (Lab files require an explicit value for every capability flag.)
+top_k = false
 
 [limit]
 # Public API window: 192k (native 1M, extrapolatable to 512K at the model level).
