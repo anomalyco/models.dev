@@ -20,6 +20,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"], budget = {} }
+structured_output = true
 
 [limit]
 context = 1_048_560
@@ -29,8 +30,8 @@ output = 393_216
 legacy_interleaved = true
 
 [cost.text.input]
-price = 0.87
-cache = { read = 0.036 }
+price = 0.435
+cache = { read = 0.0036 }
 
 [cost.text.output]
-price = 1.74
+price = 0.87

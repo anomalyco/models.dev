@@ -1,0 +1,22 @@
+# Budget: thinking_token_budget (integer reasoning tokens)
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash (Speed)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"], budget = {} }
+structured_output = true
+
+[limit]
+context = 1_048_560
+output = 393_216
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

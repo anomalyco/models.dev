@@ -1,0 +1,24 @@
+# Budget: thinking_token_budget (integer reasoning tokens)
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = {} }
+structured_output = true
+
+[limit]
+context = 1_048_560
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10
