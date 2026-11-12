@@ -8,6 +8,7 @@ base_model = "minimax/MiniMax-M3.1-Flash"
 
 [modalities]
 input = ["text"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "medium", "high", "xhigh", "max"] }
