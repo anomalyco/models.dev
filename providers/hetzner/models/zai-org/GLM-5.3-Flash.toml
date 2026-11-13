@@ -1,4 +1,4 @@
-# Hetzner Experiments inference (https://inference.hetzner.com/v1, OpenAI Chat Completions).
+# Hetzner Inference API (https://inference.hetzner.com/v1, OpenAI Chat Completions).
 # Verified against GET /v1/models with an API key (2026-11-11): id "zai-org/GLM-5.3-Flash"
 #   (alias "z-ai/glm-5.3-flash" points to the same deployment), max_model_len 1048576.
 # Probed with an API key (2026-11-12): image input (image_url), tool calling, json_object and
@@ -8,7 +8,6 @@
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM-5.3-Flash"
-status = "beta"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/webp"]
