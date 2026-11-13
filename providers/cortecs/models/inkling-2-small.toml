@@ -1,0 +1,23 @@
+# Effort: Cortecs takes reasoning_effort none|minimal|low|medium|high|xhigh|max and maps a level the model lacks to the next lower one it has (https://docs.cortecs.ai/routing/reasoning, "Controlling reasoning" and "How Cortecs maps effort"). The levels are the ones other hosts of this model take: minimal|low|medium|high|max (providers/openrouter, providers/cloudflare-workers-ai, providers/edenai Nebius entry; Nebius is the only provider Cortecs routes it to). Not probed live: no Cortecs key here.
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: automatic prefix caching on every routed provider (nebius); the catalog lists a cache read price. https://docs.cortecs.ai/routing/prompt-caching
+# Modalities: the catalog lists text and image input, the same as the lab, so they are inherited.
+# Limit: context is the catalog's 1,048,000. Its max_output_tokens (1,048,000) equals its context_size, which is not a per-request output cap, so the lab's 131,072 output limit is inherited.
+# Prices: catalog EUR converted at 1.114 USD per EUR.
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_048_000
+
+[cost.text.input]
+price = 0.306
+cache = { read = 0.061 }
+
+[cost.text.output]
+price = 1.023

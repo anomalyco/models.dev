@@ -1,9 +1,13 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
+const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const API_ENDPOINT = "https://api.cortecs.ai/v1/models";
 const CANONICAL_BASE_MODEL_EXCEPTIONS = {
   "claude-sonnet-4": "anthropic/claude-sonnet-4-0",
@@ -65,12 +69,61 @@ export const cortecs = {
     return CortecsResponse.parse(raw).data;
   },
   translateModel(model, context) {
+    const existing = context.existing(model.id);
+    // The catalog says nothing about which reasoning_effort levels a model
+    // takes, so a new reasoning model needs them researched before it's created.
+    if (existing === undefined && cortecsReasons(model)) {
+      throw new MissingReasoningOptionsError(model.id, "Cortecs lists no reasoning controls; author them before creating this model");
+    }
     return {
       id: model.id,
-      model: buildCortecsModel(model, context.existing(model.id), context.authored(model.id)),
+      model: buildCortecsModel(model, existing, context.authored(model.id)),
+      v2Set: existing === undefined ? exactModalities(model) : undefined,
     };
   },
 } satisfies SyncProvider<CortecsModel>;
+
+// The catalog lists modality kinds only (image, audio). A new file takes the
+// lab's exact MIME types of each listed kind, so it doesn't write the generic
+// kind where the lab names formats. Returns nothing when that equals the lab's list.
+export function exactModalities(model: CortecsModel) {
+  const canonical = resolveCortecsBaseModel(model.id);
+  if (canonical === undefined) return undefined;
+  const lab = labModalities(canonical);
+  if (lab === undefined) return undefined;
+  const input = exactKinds(model.input_modalities, lab.input);
+  const output = exactKinds(model.output_modalities, lab.output);
+  const same = (a: string[], b: string[]) => a.length === b.length && a.every((value) => b.includes(value));
+  if (same(input, lab.input) && same(output, lab.output)) return undefined;
+  return { modalities: { input, output } };
+}
+
+function exactKinds(kinds: CortecsModality[], lab: string[]) {
+  return kinds.flatMap((kind) => {
+    const mime = kind === "pdf" ? "application/pdf" : kind;
+    const exact = lab.filter((item) => item === mime || item.startsWith(`${mime}/`));
+    return exact.length > 0 ? exact : [mime];
+  });
+}
+
+function labModalities(modelID: string) {
+  try {
+    const lab = Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8")) as {
+      modalities?: { input?: string[]; output?: string[] };
+    };
+    return lab.modalities?.input === undefined || lab.modalities.output === undefined
+      ? undefined
+      : { input: lab.modalities.input, output: lab.modalities.output };
+  } catch {
+    return undefined;
+  }
+}
+
+function cortecsReasons(model: CortecsModel) {
+  if (model.supported_features.includes("reasoning")) return true;
+  const canonical = resolveCortecsBaseModel(model.id);
+  return canonical !== undefined && modelMetadata(canonical).reasoning === true;
+}
 
 function dateFromTimestamp(timestamp: number) {
   return new Date(timestamp * 1_000).toISOString().slice(0, 10);
@@ -95,11 +148,17 @@ export function buildCortecsModel(
   const reasoningOptions = canonical === undefined
     ? (sourceReasoning ? existing?.reasoning_options ?? [] : undefined)
     : (existing?.reasoning === true ? existing.reasoning_options : undefined);
+  // A max_output_tokens at or above the context window is the window repeated,
+  // not a per-request cap. Keep an authored output limit; a linked file otherwise
+  // inherits the lab's.
+  const reportedOutput = model.max_output_tokens !== undefined && model.max_output_tokens < model.context_size
+    ? model.max_output_tokens
+    : undefined;
   const limit = {
     context: model.context_size,
     input: existing?.limit?.input,
-    output: model.max_output_tokens ?? authored?.limit?.output ?? model.context_size,
-  };
+    output: reportedOutput ?? authored?.limit?.output ?? (canonical === undefined ? model.context_size : undefined),
+  } as SyncedFullModel["limit"];
   const cost = {
     input: usd(model.pricing.input_token),
     output: usd(model.pricing.output_token),
