@@ -64,7 +64,14 @@ export const groq = {
   translateModel(model, context) {
     const existing = context.existing(model.id);
     if (existing === undefined || !isTextModel(model)) return undefined;
-    return { id: model.id, model: buildGroqModel(model, existing) };
+    // The v1 view reduces MIME types to generic kinds, which can factor a
+    // hand-authored format list away against the lab file; keep it verbatim.
+    const modalities = context.v2?.(model.id)?.modalities;
+    return {
+      id: model.id,
+      model: buildGroqModel(model, existing),
+      v2Set: modalities === undefined ? undefined : { modalities },
+    };
   },
 } satisfies SyncProvider<GroqModel>;
 

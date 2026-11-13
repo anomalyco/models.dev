@@ -87,3 +87,12 @@ test("fetches with the API key and requires one", async () => {
     else process.env.GROQ_API_KEY = saved;
   }
 });
+
+test("keeps the file's exact input formats", () => {
+  const modalities = { input: ["text", "image/jpeg", "image/bmp"], output: ["text"] };
+  const translated = groq.translateModel(groqModel(), {
+    ...context({ "qwen/qwen3.8-27b": authored() }),
+    v2: () => ({ schema: 2, base_model: "alibaba/qwen3.8-27b", modalities }),
+  } as never);
+  expect(translated?.v2Set).toEqual({ modalities });
+});
