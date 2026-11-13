@@ -1,8 +1,10 @@
 # Catalog: https://cloud-api.near.ai/v1/models (2026-11-13): 1M context, 128K output, text and image
 # input, $8 / $40 per MTok, cache read $0.2 ($0.0000002 per token), reasoning in supported_features.
-# Reasoning: the Fable 5 and 5.1 routes on this host take no caller-side control (reasoning_effort and
-# thinking.type are rejected, reasoning.effort is a measured no-op; see claude-fable-5-1.toml). I have
-# not re-probed 5.2 because I had no NEAR AI key, so it is authored the same way as its siblings.
+# Reasoning: not probed on this route (no NEAR AI key). The Fable 5 and 5.1 routes took no caller control
+# (see claude-fable-5-1.toml), but NEAR documents provider-standard controls on third-party Claude routes
+# (https://docs.near.ai/cloud/reasoning-models), and its newer Claude entries (opus-5-5, sonnet-5-5) author the
+# lab effort set. So this follows the lab (providers/anthropic/models/claude-fable-5-2.toml) and relay peers:
+# effort low|medium|high|xhigh|max. Re-check against the live route when a key is available.
 # Text and image only: the lab entry adds pdf, and a type: "file" content part fails schema
 # deserialisation on the other Fable routes here; /v1/models lists only text and image input.
 schema = 2
@@ -13,7 +15,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
 price = 8
