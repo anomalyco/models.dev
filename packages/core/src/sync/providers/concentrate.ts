@@ -94,6 +94,15 @@ const NOT_MODELS = new Set([
   "ministral-3-14b", "mistral-large-3", "mistral-nemo", "palmyra-x4", "palmyra-x5", "qwen3-32b", "qwen3-coder-30b-a3b",
 ]);
 
+// Live probes on Concentrate, the evidence AGENTS.md asks for: a regex grammar (`ZZ[0-9]{3}`) enforced on custom tools,
+// and reasoning that grows from effort low to high on a budget-only lab. Other models publish neither until probed.
+const PROBED = "2026-11-13";
+const GRAMMAR_ENFORCED = new Set([
+  "gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5.1", "gpt-5.4", "gpt-5.4-pro", "gpt-5.5", "gpt-5.6-luna", "gpt-5.6-sol",
+  "gpt-5.6-terra", "gpt-6-astra", "gpt-6-luna", "gpt-6-sol", "gpt-6.1-sol", "gpt-6.1-terra",
+]);
+const EFFORT_GRADED = new Set(["gemini-2.5-flash-lite"]);
+
 export const concentrate = {
   id: "concentrate",
   name: "Concentrate",
@@ -163,11 +172,11 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   const thinks = model.capabilities.thinking.supported || model.capabilities.effort.supported || labFile?.capabilities?.reasoning?.supported === true;
   doc.capabilities = clean({
     ...doc.capabilities,
-    reasoning: thinks ? reasoning(firstParty?.reasoning, efforts, claude) : undefined,
+    reasoning: thinks ? reasoning(firstParty?.reasoning, efforts, claude, model.id) : undefined,
     cache: chosen?.tokens?.cache?.read === undefined ? undefined : firstParty?.cache ?? { implicit: true },
   });
   // Custom tools (free-form and grammar formats) take the lab's formats where a route accepts them.
-  const freeform = supports.some((s) => s.tools.custom_tools === true) ? firstParty?.freeform : undefined;
+  const freeform = GRAMMAR_ENFORCED.has(model.id) && supports.some((s) => s.tools.custom_tools === true) ? firstParty?.freeform : undefined;
   if (freeform !== undefined) doc.capabilities.tools = { ...doc.capabilities.tools, supported: true, freeform };
   if (claude) doc.api = { messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } } };
   if (price === undefined) delete doc.cost;
@@ -177,21 +186,21 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
       ? claude ? "# Toggle: thinking.type = enabled|disabled" : "# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions"
       : undefined,
     doc.limit ? `# Limit: max_input_tokens ${model.max_input_tokens}, max_tokens ${model.max_tokens} at ${API_ENDPOINT}, capped at the lab's` : undefined,
-    freeform !== undefined ? `# Custom tools: text, lark and regex grammars on Responses, per supports.tools.custom_tools at ${API_ENDPOINT}` : undefined,
-    budgetEffort(firstParty?.reasoning, claude) && doc.capabilities.reasoning?.effort?.some((level: string) => GRADED.includes(level)) ? `# Effort: Concentrate maps reasoning.effort to the model's thinking budget, per supports.reasoning.effort at ${API_ENDPOINT}` : undefined,
+    freeform !== undefined ? `# Custom tools: regex grammar ZZ[0-9]{3} enforced on Responses (live probe ${PROBED})` : undefined,
+    budgetEffort(firstParty?.reasoning, claude, model.id) && doc.capabilities.reasoning?.effort?.some((level: string) => GRADED.includes(level)) ? `# Effort: reasoning.effort maps to the thinking budget, more reasoning at high than low (live probe ${PROBED})` : undefined,
   ].filter(Boolean).join("\n");
   return { id: model.id, v2: doc, ...(header ? { header } : {}) };
 }
 
-// A budget-only lab outside Claude: Concentrate's routes take reasoning.effort and map it to the thinking budget.
-const budgetEffort = (lab: Record<string, any> | undefined, claude: boolean) => !claude && lab?.budget !== undefined && lab.effort === undefined;
+// A budget-only lab outside Claude where a probe showed Concentrate maps reasoning.effort to the thinking budget.
+const budgetEffort = (lab: Record<string, any> | undefined, claude: boolean, id: string) => !claude && lab?.budget !== undefined && lab.effort === undefined && EFFORT_GRADED.has(id);
 const GRADED = ["low", "medium", "high"];
 
 // The lab's controls on the levels this host accepts, never the full list the routes take: a budget-only lab gets
 // the graded levels, a lab toggle (or no reference controls) becomes `none`, and Claude keeps Anthropic's fields.
-function reasoning(lab: Record<string, any> | undefined, efforts: string[], claude: boolean) {
+function reasoning(lab: Record<string, any> | undefined, efforts: string[], claude: boolean, id: string) {
   const graded = efforts.filter((level) => GRADED.includes(level));
-  const labEffort: string[] = lab?.effort ?? (budgetEffort(lab, claude) && graded.length >= 2 ? graded : []);
+  const labEffort: string[] = lab?.effort ?? (budgetEffort(lab, claude, id) && graded.length >= 2 ? graded : []);
   const effort = efforts.filter((level) => labEffort.includes(level) || (level === "none" && (lab === undefined || lab.toggle === true) && !claude));
   // An off switch with no graded levels is a toggle (`none` off, omitted on), as relays such as Bothub publish it.
   const onOff = effort.length === 1 && effort[0] === "none";

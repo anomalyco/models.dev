@@ -1,4 +1,4 @@
-# Effort: Concentrate maps reasoning.effort to the model's thinking budget, per supports.reasoning.effort at https://api.concentrate.ai/v1/models
+# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions
 schema = 2
 base_model = "alibaba/qwen3.5-35b-a3b"
 
@@ -8,7 +8,7 @@ output = ["text"]
 
 [capabilities]
 structured_output = true
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 0.25

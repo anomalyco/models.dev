@@ -1,4 +1,3 @@
-# Effort: Concentrate maps reasoning.effort to the model's thinking budget, per supports.reasoning.effort at https://api.concentrate.ai/v1/models
 schema = 2
 base_model = "google/gemini-2.5-pro"
 
@@ -8,7 +7,7 @@ output = ["text"]
 
 [capabilities]
 structured_output = true
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true }
 cache = { implicit = { min_tokens = 2_048 }, explicit = true }
 
 [cost.text.input]

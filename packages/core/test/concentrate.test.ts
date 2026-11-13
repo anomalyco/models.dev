@@ -48,6 +48,8 @@ describe("Concentrate sync", () => {
     expect(doc.capabilities.tools).toEqual({ supported: true, freeform: ["text", "lark", "regex"] });
     // Formats listed on the reference's Responses table count too (OpenAI's gpt-6-luna).
     expect(v2(model("gpt-6-luna", "openai", { openai: route({ custom: true }) })).capabilities.tools?.freeform).toEqual(["text", "lark", "regex"]);
+    // A model without a grammar probe publishes no free-form formats.
+    expect(v2(model("gpt-5.2-pro", "openai", { openai: route({ custom: true }) })).capabilities.tools?.freeform).toBeUndefined();
     expect(doc.api).toBeUndefined();
     expect(doc.limit).toBeUndefined();
   });
@@ -77,11 +79,13 @@ describe("Concentrate sync", () => {
     expect(v2(model("minimax-m2-7", "minimax", { minimax: route({ pricing: [write("ephemeral_5m_input_tokens", 0.375)] }) })).cost.text.input.cache).toEqual({ read: 0.1, write: 0.375 });
   });
 
-  test("maps effort onto budget-only labs with graded low/medium/high, never the full list", () => {
-    expect(v2(model("gemini-2.5-pro", "google", { vertex: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true, effort: ["low", "medium", "high"] });
-    expect(v2(model("gemini-2.5-flash", "google", { vertex: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true, effort: ["none", "low", "medium", "high"] });
+  test("maps effort onto budget-only labs with graded low/medium/high only where probed, never the full list", () => {
+    expect(v2(model("gemini-2.5-flash-lite", "google", { vertex: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true, effort: ["none", "low", "medium", "high"] });
     // Fewer than two graded levels stays an on/off switch.
-    expect(v2(model("gemini-2.5-flash", "google", { vertex: route({ effort: { none: true, medium: true } }) })).capabilities.reasoning).toEqual({ supported: true, toggle: true });
+    expect(v2(model("gemini-2.5-flash-lite", "google", { vertex: route({ effort: { none: true, medium: true } }) })).capabilities.reasoning).toEqual({ supported: true, toggle: true });
+    // Unprobed budget-only labs get no graded levels: an on/off switch where the lab can turn reasoning off.
+    expect(v2(model("gemini-2.5-flash", "google", { vertex: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true, toggle: true });
+    expect(v2(model("gemini-2.5-pro", "google", { vertex: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true });
   });
 
   test("serves Claude over Messages with Anthropic's toggle", () => {
