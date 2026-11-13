@@ -37,16 +37,15 @@ function authored(overrides: Record<string, unknown> = {}): ExistingModel {
 }
 
 test("takes exact prices, cache rate and limits from the list, keeping authored reasoning", () => {
-  expect(buildGroqModel(groqModel(), authored())).toMatchObject({
+  expect(buildGroqModel(groqModel(), authored({ cost: { input: 0.1, output: 0.1, cache_read: 0.05 } }))).toMatchObject({
     reasoning_options: [{ type: "effort", values: ["none", "default", "low", "medium", "high"] }],
     cost: { input: 0.8, output: 4, cache_read: 0.4 },
     limit: { context: 131_072, output: 16_384 },
   });
 });
 
-test("keeps the authored cache price for classifiers that only list a derived rate", () => {
-  const model = groqModel({ supported_features: ["json_mode"] });
-  const built = buildGroqModel(model, authored({ cost: { input: 0.04, output: 0.04 } }));
+test("doesn't add a cache price the file doesn't already have", () => {
+  const built = buildGroqModel(groqModel(), authored());
   expect(built.cost).toMatchObject({ input: 0.8, output: 4, cache_read: undefined });
 });
 

@@ -78,10 +78,6 @@ export async function fetchGroqModels(fetcher: typeof fetch = fetch) {
   return GroqResponse.parse(await response.json());
 }
 
-function generates(model: GroqModel) {
-  return model.supported_features?.some((feature) => feature === "tools" || feature === "reasoning") === true;
-}
-
 // The list states per-token prices, the context window and the output cap;
 // everything else in the file is hand-authored and kept.
 export function buildGroqModel(model: GroqModel, existing: ExistingModel): SyncedModel {
@@ -96,9 +92,9 @@ export function buildGroqModel(model: GroqModel, existing: ExistingModel): Synce
     ...existing.cost,
     input,
     output,
-    // The prompt guard classifiers list a cache rate (half their input price) but
-    // no tool or reasoning support; it isn't a prompt-caching claim, so their cost is left as authored.
-    cache_read: generates(model) ? perMillion(model.pricing?.input_cache_read) : existing.cost?.cache_read,
+    // The list gives every model a cache rate at half its input price, including models Groq's prompt caching page
+    // doesn't support (https://console.groq.com/docs/prompt-caching). So only a cache price already in the file is updated.
+    cache_read: existing.cost?.cache_read === undefined ? undefined : (perMillion(model.pricing?.input_cache_read) ?? existing.cost.cache_read),
   };
   const limit = { ...existing.limit, context: model.context_window, output: model.max_completion_tokens };
   const values = { ...current, cost, limit } as SyncedFullModel;
