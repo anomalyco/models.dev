@@ -7634,7 +7634,7 @@ test("factors OpenRouter video models onto lab files with the videos protocol", 
     v2_only: true,
     base_model: "google/veo-3.1-generate-preview",
     name: "Veo 3.1",
-    api: { videos: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" } } },
+    api: { videos: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/videos" } } },
     cost: {
       video: { output: { unit: "second", price: 0.4, overrides: [{ when: { generate_audio: { equals: false } }, price: 0.2 }] } },
     },

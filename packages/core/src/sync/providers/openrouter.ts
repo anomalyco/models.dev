@@ -443,7 +443,7 @@ const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk: string; opencodea
   embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/embeddings" },
   reranking: { protocol: "rerank", aisdk: "@ai-sdk/cohere", opencodeai: "none" },
   image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/images" },
-  video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
+  video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/videos" },
 };
 
 const MEDIA_HEADERS: Record<MediaType, string> = {
