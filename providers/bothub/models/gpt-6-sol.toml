@@ -1,7 +1,7 @@
 # Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
 # (checked 2026-11-12): 0.9 / 4.51 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
-# Live probe 2026-11-12: tools.freeform text|lark|regex → HTTP 200.
+# Live probe 2026-11-13: /v1/chat/completions accepted text, lark and regex custom tools and enforced the grammars (regex ZZ[0-9]{3} returned ZZ plus three digits; the lark grammar returned a matching sentence).
 schema = 2
 base_model = "openai/gpt-6-sol"
 
