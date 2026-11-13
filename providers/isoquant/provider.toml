@@ -1,6 +1,7 @@
 # Docs: https://isoquant.ai/docs (accessed 2026-11-13)
 # Model catalog and API metadata: https://api.isoquant.ai/v1/models (accessed 2026-11-13)
-# Serves OpenAI-compatible Chat Completions and Responses from the same base URL.
+# Serves OpenAI-compatible Chat Completions and Responses plus Anthropic-compatible Messages from the same base URL.
+# Messages requires `anthropic-version: 2023-06-01`.
 # `Isoquant-ZDR: required` is optional and opts into zero data retention.
 name = "Isoquant"
 npm = "@ai-sdk/openai-compatible"

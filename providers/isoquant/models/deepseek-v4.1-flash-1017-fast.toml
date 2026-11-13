@@ -1,5 +1,6 @@
 # API metadata (accessed 2026-11-13): https://api.isoquant.ai/v1/models
 # Chat Completions: POST /v1/chat/completions; Responses: POST /v1/responses.
+# Messages: POST /v1/messages (Anthropic-compatible, `anthropic-version: 2023-06-01`); effort via `output_config.effort`.
 # Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; none|low|high, default high.
 # max is rejected on both APIs: "Supported reasoning efforts are low, high and
 # none" (live probe 2026-11-13).
@@ -30,6 +31,9 @@ output = 943_718
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
