@@ -1,6 +1,8 @@
 # Source: ngrok.ai catalog, provider `openai` (default route for this ID), accessed 2026-11-12.
 # Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
 # https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# APIs: the surfaces the ngrok catalog lists for this route (chat-completions, responses):
+# https://ngrok.com/docs/ai-gateway/reference/model-catalog#openai
 # Cache: the ngrok catalog marks implicit caching for this model; OpenAI caches prompts of 1,024+ tokens.
 # tools.freeform not authored: custom-tool grammars have not been live-probed through the gateway yet.
 schema = 2
