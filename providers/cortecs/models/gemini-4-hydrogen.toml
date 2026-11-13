@@ -3,7 +3,7 @@
 # Cache: automatic prefix caching on every routed provider (google, google_priority). https://docs.cortecs.ai/routing/prompt-caching
 # Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities: text, image, audio, file); the catalog lists no video, so the lab's video types are dropped.
 # Limit: the catalog's max_output_tokens (1,048,576) equals its context_size, which is not a per-request output cap, so the lab's 65,536 output limit is inherited.
-# Prices: catalog EUR converted at 1.114 USD per EUR.
+# Prices: catalog EUR converted at 1.114 USD per EUR (the sync's rate as of 2026-07-30), the sync's rate as of 2026-07-30.
 schema = 2
 base_model = "google/gemini-4-hydrogen"
 
