@@ -1,9 +1,9 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
-# Toggle: enable_thinking = true|false; budget: thinking_budget = 0..262144.
-# These controls follow Alibaba's Qwen3.8 Max API and the Vercel entry for this model. CommandCode
-# forwarding remains unverified: the 2026-10-21 probe returned HTTP 429 and 2026-10-22 retries timed out.
+# Alibaba's Qwen3.8 Max API and the Vercel entry for this model expose enable_thinking and
+# thinking_budget (0..262144). CommandCode forwarding is unverified: the 2026-10-21 probe returned
+# HTTP 429 and 2026-10-22 retries timed out, so no toggle or budget is listed.
 # Live /chat/completions (2026-10-21): reasoning returned in reasoning and reasoning_details
 #   (array). reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
 #   max is accepted here (unlike Qwen3.6-Plus/3.7-Max/3.7-Plus, whose upstreams reject it).
@@ -22,7 +22,7 @@ schema = 2
 base_model = "alibaba/qwen3.8-max-prime"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, budget = { min = 0, max = 262_144 } }
+reasoning = { supported = true }
 
 [api.chat-completions]
 compatibility = { replay_reasoning = false }
