@@ -1,6 +1,8 @@
 # API metadata (accessed 2026-11-13): https://api.isoquant.ai/v1/models
 # Chat Completions: POST /v1/chat/completions; Responses: POST /v1/responses.
 # Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; none|low|high, default high.
+# max is rejected on both APIs: "Supported reasoning efforts are low, high and
+# none" (live probe 2026-11-13).
 # Tool choice: auto|none|required|function (recorded as "tool"); strict tools supported.
 # Output: API default 16384, maximum 943718; context 1048576.
 # temperature and top_p are accepted on Chat Completions and Responses; top_k is
