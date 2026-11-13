@@ -3,8 +3,9 @@
 # Messages: POST /v1/messages (Anthropic-compatible, `anthropic-version: 2023-06-01`); effort via `output_config.effort`.
 # Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; low|high|max, default max;
 # `none` is rejected on Chat Completions and Messages (live probes 2026-11-13).
-# Tool choice: Chat auto|required|named|none; Messages auto|any|tool|none; Responses auto|required|named|function.
-# `named`/`function`/`tool` are recorded as "tool" and `any` as "required".
+# Tool choice: Chat auto|none|required|named; Messages auto|none|any|tool; Responses auto|none|required|named|function.
+# Docs: "Use auto, required, none, or a named function." `named`/`function`/`tool` are recorded
+# as "tool" and `any` as "required"; `none` was probed on all three APIs (2026-11-13).
 # Strict tools: the catalog reports `strict_tools: true` on all three APIs, and a forced strict
 # tool call succeeded on Messages for both models (live probe 2026-11-13).
 # top_k is accepted on Chat Completions, Messages and Responses (live probes 2026-11-13).
