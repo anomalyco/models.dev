@@ -3,10 +3,13 @@
 # Gateway validation: reasoning_effort must be minimal, low, medium or high (anything else, e.g. max or none, is a 400).
 # reasoning_effort is forwarded, but this model only has on/off thinking upstream and the gateway has no
 # off value, so no caller control is listed.
+# Cache: upstream prompt caching is automatic (no markers); cache reads are reported in
+# usage.prompt_tokens_details.cached_tokens and billed at the cache read price below.
 schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true }
 
 [limit]

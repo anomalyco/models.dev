@@ -2,10 +2,13 @@
 # max_output_tokens and input_modalities. Served on Chat Completions only.
 # Gateway validation: reasoning_effort must be minimal, low, medium or high (anything else, e.g. max or none, is a 400).
 # reasoning_effort maps to Anthropic output_config.effort (minimal is sent as low).
+# Cache: the gateway adds Anthropic cache_control markers itself on multi-turn and tool requests (caller-placed
+# markers are left alone), and reports cache reads in usage.prompt_tokens_details.cached_tokens, so caching is implicit.
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [api.chat-completions]

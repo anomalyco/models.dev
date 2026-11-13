@@ -4,6 +4,8 @@
 # reasoning_effort is forwarded, but this model only has on/off thinking upstream and the gateway has no
 # off value, so no caller control is listed.
 # Modalities: input_modalities lists text only for this model on this host.
+# Cache: upstream prompt caching is automatic (no markers); cache reads are reported in
+# usage.prompt_tokens_details.cached_tokens and billed at the cache read price below.
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 
@@ -12,6 +14,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true }
 
 [limit]
