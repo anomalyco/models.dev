@@ -9,7 +9,11 @@
 # Pricing (USD per 1M tokens):
 #   Off-peak: input $0.11 / cache read $0.0022 / output $0.45.
 #   Peak:     input $0.22 / cache read $0.0045 / output $0.90 (published USD).
-#   RMB rate card: off-peak 0.75 / 0.015 / 3, peak 1.5 / 0.03 / 6 per 1M.
+#   RMB rate card (published separately): off-peak 0.75 / 0.015 / 3, peak
+#   1.5 / 0.03 / 6 per 1M.
+#   The rate card publishes the USD list prices directly; the USD figures above
+#   are as published, not a conversion of the RMB figures (RMB 0.03 at ~6.7
+#   CNY/USD ≈ $0.0045, matching the published USD cache read).
 #   Input and output scale exactly 2x at peak; the published USD cache read is
 #   $0.0045 (not a clean 2x of $0.0022), so the peak multipliers below apply a
 #   factor of 2 to input/output and 0.0045/0.0022 (= 45/22) to cache read, so the
