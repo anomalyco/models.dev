@@ -5,6 +5,8 @@
 # Output: API default 16384, maximum 943718; context 1048576.
 # temperature and top_p are accepted on Chat Completions and Responses; top_k is
 # not in the published parameter set and Responses rejects it.
+# store=true is rejected: "Only stateless foreground Responses are supported"
+# (live probe 2026-11-13).
 # Cached input price is published and prefix caching is automatic; no cache-write
 # price is published.
 schema = 2

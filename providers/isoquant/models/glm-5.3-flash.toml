@@ -3,15 +3,20 @@
 # Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; low|high|max, default max.
 # Tool choice: Chat auto|required|named|none; Responses auto|none|required|function (recorded as "tool").
 # top_k is not in the published parameter set.
+# Input: Isoquant docs say "Accepts text and image input"; the lab's video and
+# PDF inputs are not advertised. The docs image example uses image/gif, and the
+# remaining image types are inherited from the lab.
 # Host output policy is remaining_context; no fixed host cap is published, so the
 # model-level 131072 output limit is inherited.
+# store=true is rejected: "This backend requires store=false and full input
+# history; stored Responses are not available" (live probe 2026-11-13).
 # Cached input price is published and prefix caching is automatic; no cache-write
 # price is published.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
