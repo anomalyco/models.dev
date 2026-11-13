@@ -4566,6 +4566,11 @@ test("resolves Venice Pro routes to canonical OpenAI metadata", () => {
   ]);
 });
 
+test("does not resolve Venice fine-tunes to the lab model they share an id with", () => {
+  expect(resolveVeniceBaseModel("qwen-3-6-plus", "Qwen 3.6 Plus Uncensored")).toBeUndefined();
+  expect(resolveVeniceBaseModel("qwen-3-6-plus", "Qwen 3.6 Plus")).toBe("alibaba/qwen3.6-plus");
+});
+
 function veniceModel(overrides: Partial<VeniceModel["model_spec"]> = {}): VeniceModel {
   return {
     id: "claude-opus-4-8-fast",
