@@ -4,10 +4,10 @@
 # Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; low|high|max, default max;
 # `none` is rejected on all three APIs (live probes 2026-11-13).
 # Tool choice: Chat auto|none|required|named; Messages auto|none|any|tool; Responses auto|none|required|named.
-# Docs: "Use auto, required, none, or a named function." `named`/`function`/`tool` are recorded
-# as "tool" and `any` as "required"; `none` was probed on all three APIs (2026-11-13).
+# Docs: "Use auto, required, none, or a named function." `named`/`tool` are recorded as
+# "tool" and `any` as "required"; `none` was probed on all three APIs (2026-11-13).
 # Strict tools: the catalog reports `strict_tools: true` on all three APIs, and a forced strict
-# tool call succeeded on Messages for both models (live probe 2026-11-13).
+# tool call succeeded on Messages (live probe 2026-11-13).
 # top_k is accepted on Chat Completions, Messages and Responses (live probes 2026-11-13).
 # Input: the catalog reports text+image and the docs say "Accepts text and image
 # input" without listing formats. Live probes accepted data URIs for image/png,
