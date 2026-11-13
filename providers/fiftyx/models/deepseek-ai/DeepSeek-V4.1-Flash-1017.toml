@@ -1,8 +1,10 @@
 # Sources (accessed 2026-11-13):
 # - Prices (USD per million tokens: input 0.064, cache read 0.0012, output 0.24): https://50x.energy/#pricing
 # - Endpoint, authentication and model ID: https://ai.50x.energy/docs
-# - GET https://api.ai.50x.energy/v1/models reports max_model_len = context_length = 1_048_576 for this model.
-# Live checks against https://api.ai.50x.energy/v1/chat/completions on 2026-11-13, exact model ID:
+# - GET https://api.ai.50x.energy/v1/models lists id = "deepseek-ai/DeepSeek-V4.1-Flash-1017" (this file's path,
+#   the exact ID callers send as `model`), with max_model_len = context_length = 1_048_576.
+# Live checks against https://api.ai.50x.energy/v1/chat/completions on 2026-11-13, all with
+#   model = "deepseek-ai/DeepSeek-V4.1-Flash-1017":
 # - Limit: a 1_046_052-token prompt returned HTTP 200 and recalled start/middle/end markers; a prompt of
 #   1_048_577+ tokens returned HTTP 400 ("maximum context length is 1048576 tokens"). max_tokens = 1_048_576 was
 #   accepted, 1_048_577 rejected ("cannot be greater than max_model_len=1048576"); output shares the window with
