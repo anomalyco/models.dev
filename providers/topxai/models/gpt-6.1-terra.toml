@@ -15,6 +15,12 @@
 # /v1/chat/completions; none turns reasoning off, medium is the default.
 # The host lists text/image input and routes Chat Completions through Responses.
 # https://api.topxai.xyz/docs/api-reference (accessed 2026-11-09).
+# Custom tools, live 2026-11-13: /v1/responses enforced regex ZZ[0-9]{3} and the equivalent
+# lark grammar (asked to submit 42, both returned the custom tool call ZZ042), so
+# [api.responses] sets freeform = lark and regex; the unconstrained text format was not
+# tested. /v1/chat/completions returned HTTP 400 invalid_request ("The request was
+# rejected. Check the parameters and try again.") for a request with one regex custom
+# tool, so no freeform format is set there.
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 
@@ -30,6 +36,7 @@ reasoning = { supported = true, default = { type = "effort", value = "medium" },
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["lark", "regex"] } }
 
 [cost.text.input]
 price = 0.5
