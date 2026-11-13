@@ -30,7 +30,9 @@
 # Responses smoke-tested; Messages any returned tool_use and enabled thinking
 # worked with max_tokens > budget_tokens.
 # Cost: Token Plan Credits subscription; no public USD per-token rate.
+# Added as v2-only: Token Plan preview; v1 stays unchanged.
 schema = 2
+v2_only = true
 base_model = "alibaba/qwen4-max-preview"
 
 [capabilities]
