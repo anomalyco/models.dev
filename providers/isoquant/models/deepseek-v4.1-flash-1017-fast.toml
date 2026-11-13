@@ -1,0 +1,38 @@
+# API metadata (accessed 2026-11-13): https://api.isoquant.ai/v1/models
+# Chat Completions: POST /v1/chat/completions; Responses: POST /v1/responses.
+# Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; none|low|high, default high.
+# Tool choice: auto|none|required|function (recorded as "tool"); strict tools supported.
+# Output: API default 16384, maximum 943718; context 1048576.
+# temperature and top_p are accepted on Chat Completions and Responses; top_k is
+# not in the published parameter set and Responses rejects it.
+# Cached input price is published and prefix caching is automatic; no cache-write
+# price is published.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Fast"
+description = "High-throughput DeepSeek V4.1 Flash 1017 serving for reasoning, coding, vision, and agent workflows"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high"] }
+structured_output = true
+store = false
+cache = { implicit = true }
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.035
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.37

@@ -1,0 +1,10 @@
+# Docs: https://isoquant.ai/docs (accessed 2026-11-13)
+# Model catalog and API metadata: https://api.isoquant.ai/v1/models (accessed 2026-11-13)
+# Serves OpenAI-compatible Chat Completions and Responses from the same base URL.
+# `Isoquant-ZDR: required` is optional and opts into zero data retention.
+name = "Isoquant"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["ISOQUANT_API_KEY"]
+api = "https://api.isoquant.ai/v1"
+doc = "https://isoquant.ai/docs"

@@ -1,0 +1,39 @@
+# API metadata (accessed 2026-11-13): https://api.isoquant.ai/v1/models
+# Chat Completions: POST /v1/chat/completions; Responses: POST /v1/responses.
+# Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; low|high|max, default max.
+# Tool choice: Chat auto|required|named|none; Responses auto|none|required|function (recorded as "tool").
+# top_k is not in the published parameter set.
+# Host output policy is remaining_context; no fixed host cap is published, so the
+# model-level 131072 output limit is inherited.
+# Cached input price is published and prefix caching is automatic; no cache-write
+# price is published.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+store = false
+cache = { implicit = true }
+top_k = false
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.15
