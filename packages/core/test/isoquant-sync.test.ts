@@ -48,6 +48,12 @@ test("empty, duplicate and malformed upstream inventories fail before any catalo
     object: "list",
     data: [model({ isoquant: { ...model().isoquant, pricing: { ...model().isoquant.pricing, input_nano_usd_per_token: -1 } } })],
   })).toThrow("non-negative");
+  for (const value of ["", " ", "0x10", "free"]) {
+    expect(() => IsoquantResponse.parse({
+      object: "list",
+      data: [model({ isoquant: { ...model().isoquant, pricing: { ...model().isoquant.pricing, input_nano_usd_per_token: value as unknown as number } } })],
+    })).toThrow("non-negative decimal");
+  }
 });
 
 test("nano-USD prices convert to USD per million tokens and limits are API-authoritative", () => {
@@ -93,6 +99,14 @@ test("published efforts replace the authored effort list and an unknown value le
     isoquant: { ...model().isoquant, reasoning: { default_effort: "future", efforts: ["future"] } },
   });
   expect(buildIsoquantModel(unknown, authored).reasoning_options).toEqual([{ type: "toggle" }]);
+
+  const unsorted = model({
+    isoquant: { ...model().isoquant, reasoning: { default_effort: "max", efforts: ["high", "low", "low", "default"] } },
+  });
+  expect(buildIsoquantModel(unsorted, authored).reasoning_options).toEqual([
+    { type: "toggle" },
+    { type: "effort", values: ["low", "high", "default"] },
+  ]);
 });
 
 test("a published effort list containing none drops an authored toggle", () => {
@@ -121,6 +135,14 @@ test("the published default effort is carried through v2Set", () => {
   expect(isoquant.translateModel(model({
     isoquant: { ...model().isoquant, reasoning: null },
   }), { existing: () => existing, authored: () => existing })?.v2Set).toBeUndefined();
+
+  const notPublished = model({
+    isoquant: { ...model().isoquant, reasoning: { default_effort: "max", efforts: ["low", "high"] } },
+  });
+  expect(isoquant.translateModel(notPublished, { existing: () => existing, authored: () => existing })?.v2Set).toBeUndefined();
+
+  const disabled = { ...existing, reasoning: false };
+  expect(isoquant.translateModel(model(), { existing: () => disabled, authored: () => disabled })?.v2Set).toBeUndefined();
 });
 
 test("absent local files are skipped for hand authoring, while incomplete local metadata throws", () => {

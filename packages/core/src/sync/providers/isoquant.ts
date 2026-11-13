@@ -10,8 +10,14 @@ const API_ENDPOINT = "https://api.isoquant.ai/v1/models";
 
 const NanoUsdPerToken = z
   .union([z.string(), z.number()])
-  .transform((value) => Number(value))
-  .refine((value) => Number.isFinite(value) && value >= 0, "Isoquant prices must be non-negative numbers");
+  .transform((value) => (typeof value === "string" ? value.trim() : value))
+  .refine(
+    (value) => typeof value === "number"
+      ? Number.isFinite(value) && value >= 0
+      : /^\d+(?:\.\d+)?$/.test(value),
+    "Isoquant prices must be non-negative decimal numbers",
+  )
+  .transform((value) => Number(value));
 
 // Nano USD per token to USD per million tokens.
 const perMillion = (nanoUsdPerToken: number) => nanoUsdPerToken / 1_000;
@@ -96,7 +102,7 @@ export const isoquant = {
     return {
       id: model.id,
       model: buildIsoquantModel(model, existing),
-      v2Set: defaultEffortSet(model),
+      v2Set: defaultEffortSet(model, existing),
     };
   },
 } satisfies SyncProvider<IsoquantModel>;
@@ -109,7 +115,7 @@ export async function fetchIsoquantModels(fetcher: typeof fetch = fetch) {
   return IsoquantResponse.parse(await response.json());
 }
 
-const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"];
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"];
 
 // The catalog's efforts are the request values this host accepts, so they
 // replace an authored effort list. Other authored controls are kept, and an
@@ -117,7 +123,7 @@ const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"
 function isoquantReasoningOptions(model: IsoquantModel, existing: ExistingModel) {
   const efforts = model.isoquant.reasoning?.efforts;
   if (efforts == null || efforts.length === 0) return existing.reasoning_options;
-  const values = [...efforts].sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
+  const values = [...new Set(efforts)].sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
   const option = ReasoningOption.safeParse({ type: "effort", values });
   if (!option.success) return existing.reasoning_options;
   const merged = [
@@ -133,9 +139,12 @@ function isoquantReasoningOptions(model: IsoquantModel, existing: ExistingModel)
 }
 
 // The published default stays authoritative without a v1 field to carry it.
-function defaultEffortSet(model: IsoquantModel) {
+function defaultEffortSet(model: IsoquantModel, existing: ExistingModel) {
+  if (existing.reasoning === false) return undefined;
   const value = model.isoquant.reasoning?.default_effort;
   if (value == null || !EFFORT_ORDER.includes(value)) return undefined;
+  const efforts = model.isoquant.reasoning?.efforts;
+  if (efforts != null && efforts.length > 0 && !efforts.includes(value)) return undefined;
   return { "capabilities.reasoning.default": { type: "effort", value } };
 }
 

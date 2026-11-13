@@ -2,18 +2,19 @@
 # Chat Completions: POST /v1/chat/completions; Responses: POST /v1/responses.
 # Messages: POST /v1/messages (Anthropic-compatible, `anthropic-version: 2023-06-01`); effort via `output_config.effort`.
 # Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; low|high|max, default max;
-# `none` is rejected on Chat Completions and Messages (live probes 2026-11-13).
-# Tool choice: Chat auto|none|required|named; Messages auto|none|any|tool; Responses auto|none|required|named|function.
+# `none` is rejected on all three APIs (live probes 2026-11-13).
+# Tool choice: Chat auto|none|required|named; Messages auto|none|any|tool; Responses auto|none|required|named.
 # Docs: "Use auto, required, none, or a named function." `named`/`function`/`tool` are recorded
 # as "tool" and `any` as "required"; `none` was probed on all three APIs (2026-11-13).
 # Strict tools: the catalog reports `strict_tools: true` on all three APIs, and a forced strict
 # tool call succeeded on Messages for both models (live probe 2026-11-13).
 # top_k is accepted on Chat Completions, Messages and Responses (live probes 2026-11-13).
 # Input: the catalog reports text+image and the docs say "Accepts text and image
-# input" without listing formats. Live probes accepted data URIs for image/jpeg,
-# image/png, image/gif and image/webp; video and PDF are not advertised.
-# Host output policy is remaining_context; no fixed host cap is published, so the
-# model-level 131072 output limit is inherited.
+# input" without listing formats. Live probes accepted data URIs for image/png,
+# image/gif and image/webp; JPEG is inherited from the Z.AI lab docs. Video and
+# PDF are not advertised.
+# Host output policy is remaining_context; no fixed host cap is published in
+# /v1/models, so the model-level 131072 output limit is inherited.
 # store=true is rejected: "This backend requires store=false and full input
 # history; stored Responses are not available" (live probe 2026-11-13).
 # Cached input price is published and prefix caching is automatic; no cache-write

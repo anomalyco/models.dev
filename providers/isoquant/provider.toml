@@ -2,7 +2,8 @@
 # Model catalog and API metadata: https://api.isoquant.ai/v1/models (accessed 2026-11-13)
 # Serves OpenAI-compatible Chat Completions and Responses plus Anthropic-compatible Messages from the same base URL.
 # Messages requires `anthropic-version: 2023-06-01`.
-# `Isoquant-ZDR: required` is optional and opts into zero data retention.
+# `Isoquant-ZDR: required` opts a request into zero data retention; the DeepSeek
+# route is ZDR-required at the model level.
 name = "Isoquant"
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"

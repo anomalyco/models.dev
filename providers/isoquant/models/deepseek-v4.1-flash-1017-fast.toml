@@ -10,8 +10,8 @@
 # Messages (live probe 2026-11-13).
 # Output: API default 16384, maximum 943718; context 1048576.
 # temperature and top_p are accepted on all three APIs (live probes 2026-11-13;
-# Messages advertises neither but accepts both). top_k is rejected on Chat
-# Completions, Messages and Responses (live probes 2026-11-13).
+# Messages and Responses advertise neither but accept both). top_k is rejected on
+# Chat Completions, Messages and Responses (live probes 2026-11-13).
 # store=true is rejected: "Only stateless foreground Responses are supported"
 # (live probe 2026-11-13).
 # Cached input price is published and prefix caching is automatic; no cache-write
