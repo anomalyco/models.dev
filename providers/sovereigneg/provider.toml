@@ -1,0 +1,11 @@
+# SovereignEG: OpenAI-compatible inference platform for Egypt (EGP billing,
+# Egypt-hosted "Sovereign" models on own H200 GPUs, plus relayed frontier/open models).
+# API: POST https://backend.sovereigneg.com/v1/chat/completions (Chat Completions,
+# embeddings, images, model listing; no Responses/Assistants/Batch).
+# Docs: https://sovereigneg.com/docs — OpenAI SDK with custom base URL.
+name = "SovereignEG"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["SOVEREIGNEG_API_KEY"]
+api = "https://backend.sovereigneg.com/v1"
+doc = "https://sovereigneg.com/docs"
