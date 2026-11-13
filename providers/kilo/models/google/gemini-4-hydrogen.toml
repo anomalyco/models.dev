@@ -1,13 +1,7 @@
 schema = 2
+base_model = "google/gemini-4-hydrogen"
 name = "Google: Gemini 4 Hydrogen"
 description = "Gemini 4 Hydrogen is the high-efficiency workhorse model of the Gemini 4 family from Google, built for high-throughput agentic workflows, coding and multi-model routing at lower cost and latency than..."
-family = "gemini"
-open_weights = false
-release_date = "2026-11-12"
-
-[modalities]
-input = ["audio", "application/pdf", "image", "text", "video"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
@@ -16,7 +10,6 @@ structured_output = true
 temperature = true
 
 [limit]
-context = 1_048_576
 output = 943_718
 
 [cost.text.input]
