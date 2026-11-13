@@ -3,7 +3,7 @@
 # Weights card goes live at public release: https://huggingface.co/XingChen-AGI/Xing4.1-Preview
 schema = 2
 name = "Xing4.1-Preview"
-description = "Xing4.1-Preview is a high-performance, low-activation MoE model from the Xing series (285B total, 17B active). Optimized for agentic coding and long-horizon agent workflows, it delivers deep reasoning, structured output and function calling with a native 1M-token context (extrapolatable to 512K). Trained on domestic accelerators for enterprise-grade deployment."
+description = "Xing4.1-Preview is a high-performance, low-activation MoE model from the Xing series (285B total, 17B active). Optimized for agentic coding and long-horizon agent workflows, it delivers deep reasoning, structured output and function calling with a native 1M-token context. Trained on domestic accelerators for enterprise-grade deployment."
 family = "xing"
 open_weights = true
 knowledge = "2026-03"
@@ -19,12 +19,15 @@ tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-# top_k = false: the OpenAI-compatible endpoint does not expose top_k.
-# (Lab files require an explicit value for every capability flag.)
+# top_k = false: the provider's API docs state top_k is ignored and the model card
+# documents no top_k sampling parameter. (Lab files require an explicit value for
+# every capability flag.)
 top_k = false
 
 [limit]
-# Public API window: 192k (native 1M, extrapolatable to 512K at the model level).
-context = 192_000
+# Per the provider's official OpenAI-compatible API docs (2026-11-06):
+# context 1M / max input 192K / max output 192K / max chain-of-thought 128K
+# / thinking-mode input & output 64K each.
+context = 1_000_000
 input   = 192_000
 output  = 192_000
