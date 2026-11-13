@@ -1,3 +1,4 @@
+# Image prices (accessed 2026-11-12): no Azure retail meter for this model yet (https://prices.azure.com/api/retail/prices lists gpt-image-1 only), so OpenAI's rate is used: https://developers.openai.com/api/docs/pricing (Images, standard tier).
 schema = 2
 base_model = "openai/gpt-image-1.5"
 
@@ -9,4 +10,11 @@ price = 5
 cache = { read = 1.25 }
 
 [cost.text.output]
+price = 10
+
+[cost.image.input]
+price = 8
+cache = { read = 2 }
+
+[cost.image.output]
 price = 32

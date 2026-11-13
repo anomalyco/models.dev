@@ -4228,6 +4228,29 @@ test("base_model files from W&B, Hyper and Chutes leave model facts to the lab",
   }
 });
 
+test("Chutes rounds float noise out of prices without losing small prices", () => {
+  const model = buildChutesModel({
+    id: "Qwen/Qwen3.8-27B-TEE",
+    created: 0,
+    pricing: { prompt: 0.039, completion: 1.25, input_cache_read: 0.003899999999999999 },
+  }, undefined);
+  expect(model.cost).toEqual({ input: 0.039, output: 1.25, cache_read: 0.0039 });
+
+  const noisy = buildChutesModel({
+    id: "Qwen/Qwen3.6-27B-TEE",
+    created: 0,
+    pricing: { prompt: 0.25, completion: 2, input_cache_read: 0.024999999999999994 },
+  }, undefined);
+  expect(noisy.cost).toEqual({ input: 0.25, output: 2, cache_read: 0.025 });
+
+  const tiny = buildChutesModel({
+    id: "example/tiny-TEE",
+    created: 0,
+    pricing: { prompt: 0.0000015, completion: 0.000002 },
+  }, undefined);
+  expect(tiny.cost).toEqual({ input: 0.0000015, output: 0.000002, cache_read: undefined });
+});
+
 test("Hyper writes effort levels from lowest to highest", () => {
   const model = hyperModel({
     id: "glm-5.2",
@@ -6271,6 +6294,25 @@ test("Vercel Claude Opus fast variants factor onto base opus metadata", () => {
   expect(synced).not.toHaveProperty("family");
 });
 
+test("Vercel variants keep authored provider descriptions", () => {
+  for (const id of ["zai/glm-4.6v-flash-free", "anthropic/claude-opus-5-fast"]) {
+    const [model] = vercel.parseModels({
+      data: [{
+        id,
+        name: "Provider variant",
+        created: 1_784_937_600,
+        type: "language",
+        context_window: 128_000,
+        max_tokens: 24_000,
+        tags: ["tool-use"],
+        pricing: { input: "0", output: "0" },
+      }],
+    });
+    const description = "Provider-specific description";
+    expect(buildVercelModel(model!, { description })).toMatchObject({ description });
+  }
+});
+
 test("Vercel sync accepts evaluation and unknown future model types", () => {
   const [evaluation, future] = vercel.parseModels({
     data: [
@@ -6615,7 +6657,7 @@ test("Vercel sync maps every catalog type and lists the standard endpoint where 
   const base_url = "https://ai-gateway.vercel.sh/v1";
   const standard: Record<string, unknown> = {
     image: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
-    embedding: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "none" } },
+    embedding: { base_url, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/embeddings" } },
     reranking: { base_url, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
   };
   const vercelOnly = { base_url: "https://ai-gateway.vercel.sh/v4/ai", sdk: { opencodeai: "none" } };
@@ -6855,6 +6897,12 @@ test("Vercel media prices map to CostV2 units with conditional overrides", () =>
   // Transcription: per second; `input` next to it is a nominal placeholder.
   expect(cost("transcription", { input: "0.0000000002", transcription_duration_cost_per_second: "0.000284" }))
     .toEqual({ cost: { audio: { input: { unit: "second", price: 0.000284 } } } });
+  // Music and sound-effect speech models bill per second of output.
+  expect(cost("speech", { speech_output_cost_per_second: "0.0025" }))
+    .toEqual({ cost: { audio: { output: { unit: "second", price: 0.0025 } } } });
+  expect(cost("speech", { output: "0.000006", speech_output_cost_per_second: "0.0025" }).issue)
+    .toBe("speech_output_cost_per_second next to an output token price");
+
   expect(cost("transcription", { input: "0.000002", transcription_duration_cost_per_second: "0.0001" }).issue)
     .toBe("input next to transcription_duration_cost_per_second");
 
@@ -7217,7 +7265,7 @@ test("OpenRouter rerank and embedding files name the packages that speak their e
     rerank: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
   });
   expect(media("examplelab/embed-1", "embeddings", "embedding")).toEqual({
-    embeddings: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" } },
+    embeddings: { base_url: "https://openrouter.ai/api/v1", sdk: { aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/embeddings" } },
   });
 });
 
@@ -7423,6 +7471,25 @@ function openRouterVideoModel(skus: Record<string, string> | undefined, override
 }
 
 const videoCostOf = (skus: Record<string, string>) => mediaCost(openRouterVideoModel(skus), "video");
+
+test("prices chat models that also generate video from the video catalog's 360p tier", () => {
+  expect(videoCostOf({
+    duration_seconds_with_audio: "0.104256",
+    duration_seconds_with_audio_720p: "0.069504",
+    duration_seconds_with_audio_360p: "0.023172",
+  })).toEqual({
+    video: {
+      output: {
+        unit: "second",
+        price: 0.104256,
+        overrides: [
+          { when: { resolution: { equals: "720p" }, generate_audio: { equals: true } }, price: 0.069504 },
+          { when: { resolution: { equals: "360p" }, generate_audio: { equals: true } }, price: 0.023172 },
+        ],
+      },
+    },
+  });
+});
 
 test("maps OpenRouter video-only models to the video type", () => {
   const output = (value: string[]) =>

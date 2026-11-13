@@ -1,0 +1,26 @@
+schema = 2
+name = "Arrow 2 Telos"
+description = "Higher-refinement Arrow 2 variant combining Arrow's speed with frontier-model reasoning."
+open_weights = false
+release_date = "2026-09-16"
+
+[modalities]
+input = ["text", "image"]
+output = ["text", "image"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = false
+temperature = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 6
+cache = { read = 0.6, write = 7.5 }
+
+[cost.text.output]
+price = 30

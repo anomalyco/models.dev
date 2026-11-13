@@ -6,7 +6,7 @@ schema = 2
 base_model = "mistral/mistral-embed"
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.1

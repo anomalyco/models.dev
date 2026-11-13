@@ -132,12 +132,12 @@ compatibility = { reasoning_field = "reasoning_content" }
 - `opencodeai` (provider.toml's top-level field, or `sdk.opencodeai`) is an `@opencode/ai` entry point: `@opencode/ai/providers/<path>` (e.g. `@opencode/ai/providers/openai/chat`) or `@opencode/ai/protocols/<name>` (`openai-speech`, `openai-transcription`). v1 never publishes it.
 - An `[api.*]` table's `sdk.opencodeai` names the most specific entry point for that API: the provider's per-API path (`@opencode/ai/providers/vercel-ai-gateway/responses`) rather than its root (`@opencode/ai/providers/vercel-ai-gateway`), which belongs in provider.toml.
 - Image and decision models (not their chat APIs, such as `chat-completions`, `responses` or Google's `generate-content`) use `@opencode/ai/providers/<P>/images` or `@opencode/ai/providers/<P>/decisions`, where `<P>` is the package root the provider's chat models use (`google`, `openrouter`, `openai-compatible`, …, without a `/chat`, `/responses` or `/messages` suffix). A provider with no chat models uses its own `@opencode/ai/providers/<id>` package if one exists, else `openai-compatible`. Don't name a `protocols/*` module here: it doesn't know the host or auth.
-- Decision APIs differ in wire format (OpenAI Decisions, System One, Cloudflare `/ai/run`), and there is no `openai-compatible/decisions`. A `systemone` table on a host without its own package uses `@opencode/ai/providers/typesafe-ai/decisions` and keeps the host's `base_url`. OpenCode Zen uses `@opencode/ai/providers/opencode/decisions`.
+- Decision APIs differ in wire format (OpenAI Decisions, System One, Gemini Decisions, Cloudflare `/ai/run`), and there is no `openai-compatible/decisions`. A `systemone` table on a host without its own package uses `@opencode/ai/providers/typesafe-ai/decisions` and keeps the host's `base_url`. OpenCode Zen uses `@opencode/ai/providers/opencode/decisions`.
 - `"none"` in `sdk.aisdk`, `sdk.opencodeai` or the provider's `opencodeai` says no package supports that API: nothing is filled in (e.g. `sdk = { aisdk = "none" }` on a decision model's `[api.systemone]`).
 - `path` is the request path appended to `base_url`, set only when a host departs from its protocol's usual path. `systemone` normally posts to `{base_url}/systemone`; Inception serves the same body at `/v1/decisions`, so its `[api.systemone]` sets `base_url = "https://api.inceptionlabs.ai/v1"` and `path = "/decisions"`. v1 never publishes it.
 - `compatibility.media_input` (v2 only, `systemone` tables only) says where a System One host wants media (images, audio, video), named after where it goes in the request body: `"assets"` (the default: TypeSafe's `assets` map, referenced by name from `state`, plus the `TypeSafe-Danger-Zone-Images: true` header), `"state"` (media items such as `image_url`, `input_audio` and `video_url` inside a `state` list) or `"root"` (one top-level list per media kind: `images`, `audio`, `videos`, as Cloudflare Clef, Ollama, llama.cpp and AMD take). Set it on media models whose host isn't the default. `compatibility.reasoning_field` is only allowed on `chat-completions` tables.
 - `compatibility.max_tokens_field` (v2 only, `chat-completions` tables only) names the output-token cap field. Leave it out for hosts that take OpenAI's current `max_completion_tokens`; set `"max_tokens"` where the host only takes the older field (documented, or rejects/ignores `max_completion_tokens`).
-- Name the protocol by its wire format, not the model type, nor the host's path. `decisions` is only OpenAI's Decisions format; every host that takes System One's `{model, state, questions}` body is `systemone`, whatever its path. `realtime` is OpenAI's Realtime API; Google's Live API is `bidi-generate-content` and Lyria RealTime is `bidi-generate-music` (after their `BidiGenerateContent` / `BidiGenerateMusic` WebSocket methods).
+- Name the protocol by its wire format, not the model type, nor the host's path. `decisions` is only OpenAI's Decisions format; every host that takes System One's `{model, state, questions}` body is `systemone`, whatever its path. `gemini-decisions` is Google's Decisions API (`{model, input, questions}` with Interactions content blocks), which uses `@opencode/ai/providers/google/decisions`. `realtime` is OpenAI's Realtime API; Google's Live API is `bidi-generate-content` and Lyria RealTime is `bidi-generate-music` (after their `BidiGenerateContent` / `BidiGenerateMusic` WebSocket methods).
 - `legacy_shape = "responses" | "completions"` is v1-only: it keeps a v1 `provider.shape` that repeats the SDK's default. Sync writes and keeps it; don't add it by hand.
 - `legacy_interleaved = true` is v1-only: it keeps v1's bare `interleaved: true` (replaying reasoning is the default in v2). Sync writes and keeps it; don't add it by hand.
 
@@ -227,12 +227,16 @@ If the provider has a rich catalog API that can populate model data or authorita
 
 ## Lab pages (`labs/<lab-id>/`)
 
-A lab's `logo.svg` (same rules as provider logos) and optional `lab.toml` feed the website's lab pages only; neither is in the v1 or v2 API. `lab.toml` is v2 and holds just the lab's description:
+A lab's `logo.svg` (same rules as provider logos) and optional `lab.toml` feed the website's lab pages only; neither is in the v1 or v2 API. `lab.toml` is v2 and holds the lab's display name and description (each optional, at least one required):
 
 ```toml
 schema = 2
+name = "Voyage AI"
 description = "One or two sentences on what the lab builds."
 ```
+
+- `name` is the lab's official name and capitalization, from its own site or Hugging Face org. Without it, the site uses the name of the provider with the same id, else title-cases the id (`voyageai` → "Voyageai"), so set it whenever that comes out wrong. Note the source in a header comment when it isn't obvious.
+- Don't write a `description` you can't source; a name-only `lab.toml` is fine.
 
 ## Cost (always USD)
 

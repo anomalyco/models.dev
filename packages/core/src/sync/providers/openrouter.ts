@@ -223,6 +223,10 @@ export const openrouter = {
     for (const model of extra) {
       if (mediaType(model) === "video") model.video_pricing_skus = skus.get(model.id);
     }
+    // Chat models that also generate video (Gemini Omni) are priced per second in the video catalog.
+    for (const model of text.data) {
+      if (model.architecture.output_modalities.includes("video")) model.video_pricing_skus = skus.get(model.id);
+    }
     await Promise.all(extra.filter((model) => mediaType(model) === "image").map(async (model) => {
       model.image_endpoints = OpenRouterImageEndpoints.parse(await get(IMAGE_ENDPOINTS_URL(model.id))).endpoints;
     }));
@@ -419,7 +423,8 @@ const BASE_URL = "https://openrouter.ai/api/v1";
 // SDK provider implements embeddings. Rerank takes and returns Cohere's rerank
 // shape, so @ai-sdk/cohere works against it. Images also answer OpenAI's
 // /images/generations, so OpenCode uses its OpenAI media protocols for images,
-// speech and transcription; it has none for video, embeddings or rerank.
+// speech and transcription, and its OpenRouter provider for embeddings; it has
+// none for video or rerank.
 // https://openrouter.ai/docs/api/api-reference/tts/create-speech (POST /audio/speech)
 // https://openrouter.ai/docs/api/api-reference/stt/create-transcription (POST /audio/transcriptions)
 // https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request (POST /embeddings)
@@ -435,7 +440,7 @@ const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk: string; opencodea
     aisdk: "@ai-sdk/openai",
     opencodeai: "@opencode/ai/protocols/openai-transcription",
   },
-  embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
+  embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/embeddings" },
   reranking: { protocol: "rerank", aisdk: "@ai-sdk/cohere", opencodeai: "none" },
   image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/images" },
   video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
@@ -657,7 +662,7 @@ export function imageCost(model: OpenRouterModel) {
 
 type VideoSku = { target: "output" | "image"; unit: "second" | "token" | "image"; price: number; when: Record<string, string | boolean> };
 
-const VIDEO_RESOLUTION = "(480p|720p|768p|1080p|2k|4k)";
+const VIDEO_RESOLUTION = "(360p|480p|720p|768p|1080p|2k|4k)";
 const VIDEO_MODES: Record<string, string> = {
   text_to_video_: "text-to-video",
   image_to_video_: "image-to-video",
@@ -1323,6 +1328,7 @@ function catalogV2Set(model: OpenRouterModel, current: Record<string, unknown> |
       "cost.image": cost.image,
       "cost.audio": cost.audio,
       "cost.web_search": cost.webSearch,
+      ...(model.video_pricing_skus === undefined ? {} : { "cost.video": videoCost(model.video_pricing_skus)?.video }),
     },
   };
 }

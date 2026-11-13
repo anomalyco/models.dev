@@ -432,6 +432,8 @@ export const ApiProtocolV2Values = [
   "cohere-chat",
   "systemone",
   "decisions",
+  // Gemini Decisions API: `POST /v1beta/decisions` (`input` content blocks, `questions` map).
+  "gemini-decisions",
   "evaluate",
   "workers-ai-run",
   "images",
@@ -822,9 +824,13 @@ export type LabModelV2 = z.infer<typeof LabModelV2>;
 // on the website's lab pages. Not part of the v1 or v2 API output.
 export const LabMetadataV2 = z
   .object({
-    description: z.string().min(1, "Lab description cannot be empty"),
+    name: z.string().min(1, "Lab name cannot be empty").optional(),
+    description: z.string().min(1, "Lab description cannot be empty").optional(),
   })
-  .strict();
+  .strict()
+  .refine((lab) => lab.name !== undefined || lab.description !== undefined, {
+    message: "Lab metadata needs a name or a description",
+  });
 
 export type LabMetadataV2 = z.infer<typeof LabMetadataV2>;
 
