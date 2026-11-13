@@ -1,0 +1,43 @@
+# Sources (accessed 2026-11-13):
+# https://www.alibabacloud.com/help/en/model-studio/qwen4-max-preview
+# https://docs.qwencloud.com/token-plan/personal/token-plan-personal-overview
+# https://docs.qwencloud.com/developer-guides/text-generation/thinking
+# https://docs.qwencloud.com/api-reference/chat/openai-chat
+# https://www.alibabacloud.com/help/en/model-studio/pdf-understanding
+# Thinking: hybrid, enabled by default; reasoning_effort low|medium|xhigh
+# (default xhigh); thinking_budget 0..262144, mutually exclusive with
+# reasoning_effort. OpenAI max/high map to xhigh; none disables thinking.
+# preserve_thinking defaults true, so clients must replay historical
+# reasoning_content unchanged.
+# Output: max_tokens is equivalent to max_completion_tokens and limits thinking
+# plus the final answer (393,216 total).
+# Tools: Chat Completions accepts auto|none|named; Anthropic Messages adds any
+# (required). Live 2026-11-13: named tool_choice forced get_weather, required
+# forced a call with thinking off, and Messages any returned tool_use.
+# Responses and Messages smoke-tested live on 2026-11-13.
+# Cost: Token Plan Credits subscription; no public USD per-token rate.
+schema = 2
+base_model = "alibaba/qwen4-max-preview"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://token-plan.ap-southeast-1.maas.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
