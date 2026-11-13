@@ -16,6 +16,8 @@
 # reasoning_content value unchanged.
 # structured_output: response_format json_schema and json_object both returned
 # valid JSON (live 2026-11-13).
+# stream_usage: stream_options.include_usage returns usage on the final SSE
+# chunk (live 2026-11-13).
 # Output: max_tokens is equivalent to max_completion_tokens and limits thinking
 # plus the final answer (393,216 total).
 # Tools: tool_choice auto|none|named on every API, plus required (`any`) on
@@ -35,6 +37,7 @@ base_model = "alibaba/qwen4-max-preview"
 tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 1, max = 262_144 } }
 structured_output = true
+stream_usage = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
