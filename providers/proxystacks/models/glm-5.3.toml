@@ -1,6 +1,7 @@
 # Relay of the Zhipu GLM-5.3 endpoint: reasoning_effort and reasoning_content pass through
 # unchanged; reasoning tokens billed at the output rate.
 # Effort: reasoning_effort = low|high|max (default max; always thinks upstream, no off toggle)
+# max_tokens: the upstream accepts only the legacy `max_tokens` output-cap field.
 # Cost (retrieved 2026-11-13): https://proxystacks.com/public/model-rates ,
 # https://proxystacks.com/en/pricing (input $0.78, output $2.86, cache read $0.17 per MTok).
 schema = 2

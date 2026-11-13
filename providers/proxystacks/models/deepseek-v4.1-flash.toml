@@ -5,9 +5,12 @@
 # Effort: reasoning_effort = low|high|max (default high; `none` also disables thinking upstream)
 # max_tokens: the upstream accepts only the legacy `max_tokens` output-cap field.
 # Cost (retrieved 2026-11-13): https://proxystacks.com/public/model-rates ,
-# https://proxystacks.com/en/pricing . Base prices are the peak rate; the overrides give the
-# off-peak rate, billed outside Mon-Fri 09:00-11:59 and 14:00-17:59 Asia/Shanghai
-# (= 01:00-03:59 and 06:00-09:59 UTC, the same windows as the official DeepSeek peak).
+# https://proxystacks.com/en/pricing . Rate card per MTok (input/cache read/output):
+# peak $0.18/$0.0039/$0.74, off-peak $0.0895/$0.002/$0.37 — the card's peak rates are not
+# exact doubles, so both tiers are written as explicit prices. Base prices are the peak
+# rate; the overrides give the off-peak rate, billed outside Mon-Fri 09:00-11:59 and
+# 14:00-17:59 Asia/Shanghai (= 01:00-03:59 and 06:00-09:59 UTC, the same windows as the
+# official DeepSeek peak).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
