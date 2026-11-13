@@ -1,3 +1,5 @@
+# Sampling: live POST /v1/chat/completions 2026-11-13: temperature (0.3) and top_p (0.5) return 200 with
+# reasoning_effort = "none".
 schema = 2
 name = "GPT-6 Luna"
 description = "OpenAI's most efficient model for focused, high-volume tasks"
@@ -13,8 +15,8 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
-temperature = false
-top_p = false
+temperature = true
+top_p = true
 top_k = false
 
 [limit]
