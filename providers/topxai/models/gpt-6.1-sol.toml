@@ -7,8 +7,11 @@
 # Shared-pool price, 50% of OpenAI's list. Requests whose input, cache tokens included,
 # reaches 272,001 tokens bill the whole request at the override below.
 # https://api.topxai.xyz/pricing/gpt-6.1-sol and https://api.topxai.xyz/api/pricing (accessed 2026-10-23)
+# APIs: Chat Completions and Responses, https://api.topxai.xyz/docs/api-reference
+# (checked 2026-11-13; a live /v1/responses request returned 200 the same day).
 # Structured output: response_format json_schema (strict) and json_object return valid JSON on
-# /v1/chat/completions, checked live 2026-10-16.
+# /v1/chat/completions (checked live 2026-10-16), and a strict text.format json_schema
+# returns valid JSON on /v1/responses (checked live 2026-10-16).
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
@@ -16,6 +19,11 @@ base_model = "openai/gpt-6.1-sol"
 cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 1

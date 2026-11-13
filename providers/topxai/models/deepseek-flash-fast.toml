@@ -7,7 +7,12 @@
 # Images: base64 data URLs only; http(s) image URLs are not fetched.
 # The deployment ignores stop, a json_schema response format (json_object works),
 # tool_choice none/required and parallel_tool_calls: false, so structured output is
-# not claimed. Limits on this host: 1,048,576-token context, 262,144 output tokens.
+# not claimed and tools.choice lists only auto and a named function (tool), which work.
+# https://api.topxai.xyz/docs/deepseek-flash-abliterated (checked 2026-11-13)
+# Sampling: temperature and top_p work (same guide). top_k is accepted but has no effect:
+# two live requests on 2026-11-13 with top_k = 1 and temperature = 2 returned different
+# text, so top_k = false, as on deepseek-flash-Abliterated on the same deployment.
+# Limits on this host: 1,048,576-token context, 262,144 output tokens.
 # Fixed prices at every hour and context length; automatic cache reads, no separate
 # cache-write charge. Official DeepSeek comparison prices and peak hours do not apply.
 # Responses is stateless; send the full conversation. Messages converts to Chat.
@@ -16,8 +21,10 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }
+top_k = false
 
 [limit]
 context = 1_048_576

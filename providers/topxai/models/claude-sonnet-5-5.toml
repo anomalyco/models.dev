@@ -1,5 +1,8 @@
-# Native Messages preserves cache_control; the host supports 5m and 1h writes.
-# https://api.topxai.xyz/docs/api-reference (checked 2026-11-09).
+# APIs: Chat Completions (listed first, so v1 is unchanged) and native Messages,
+# https://api.topxai.xyz/docs/api-reference (checked 2026-11-13).
+# Explicit caching holds on both: Messages forwards cache_control as sent, and the
+# Chat Completions conversion to Claude Messages keeps cache_control, ttl included,
+# on system, message and tool blocks. The host prices 5m and 1h cache writes.
 # Sonnet 5.5 replaced Sonnet 5 on TopxAI on 2026-10-02; claude-sonnet-5 is retired (403).
 # Thinking follows Anthropic's Sonnet 5.5 contract: adaptive by default, effort via
 # $.output_config.effort on /v1/messages (relayed byte for byte) or $.reasoning_effort on
@@ -16,6 +19,11 @@ base_model = "anthropic/claude-sonnet-5-5"
 cache = { explicit = { ttl = ["5m", "1h"] } }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 1
