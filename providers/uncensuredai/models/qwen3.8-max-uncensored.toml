@@ -6,6 +6,7 @@
 # Effort: reasoning_effort = none|low|medium|xhigh. With none the response contained no reasoning.
 # Gateway QA (2026-11-13): all four values and a named function call passed
 # through an isolated instance of the production gateway binary on the active route.
+# Chat Completions QA (2026-11-13): reasoning_content in the JSON message and streamed deltas.
 # Top-level thinking_budget with enable_thinking was accepted upstream. Leave budget
 # out until the public gateway and generic client budget encoding are verified together.
 # The text-only input override uses both modality keys as required by AuthoredModelV2.
@@ -21,6 +22,9 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
 output = 131_000

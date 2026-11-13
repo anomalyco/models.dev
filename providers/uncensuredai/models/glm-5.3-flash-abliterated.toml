@@ -1,8 +1,12 @@
 # Pricing (USD per 1M tokens): https://uncensuredai.com/api/pricing
 # Hosted model: https://uncensuredai.com/en/models/glm-5.3-flash-abliterated
 # Client capabilities: https://uncensuredai.com/model-capabilities.json
+# The glm-5.3-flash-abliterated entry's context_window is 1,048,576 tokens.
 # Base lineage: https://api.refuseless.com/models/glm-5.3-flash-abliterated
 # The gateway capabilities entry documents reasoning_effort = low|high|max and default_effort = low.
+# Chat Completions QA (2026-11-13): JSON message uses reasoning_content and SSE
+# deltas use reasoning. Leave reasoning_field unset for detection because v1
+# cannot encode the streamed reasoning field.
 # The text-only input override uses both modality keys as required by AuthoredModelV2.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
