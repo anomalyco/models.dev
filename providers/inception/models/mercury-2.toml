@@ -1,29 +1,30 @@
-name = "Mercury 2"
-description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
-# Model exception (accessed 2026-06-25): `reasoning_effort = "instant"` is also
-# accepted for near-realtime responses, but it is not a models.dev effort enum.
-# https://docs.inceptionlabs.ai/capabilities/instant
-family = "mercury"
-release_date = "2026-02-24"
-last_updated = "2026-02-24"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
+# Sources (accessed 2026-10-21):
+# - Pricing: https://docs.inceptionlabs.ai/get-started/models and GET https://api.inceptionlabs.ai/v1/models:
+#   $0.25 input, $0.025 cached input, $0.75 output per MTok.
+# - Effort: https://docs.inceptionlabs.ai/capabilities/reasoning-efforts. reasoning_effort = instant|low|medium|high,
+#   default medium. The native `instant` value is not in the models.dev effort enum; do not map it to `none`.
+# - Tools and usage: https://api.inceptionlabs.ai/openapi.json (tool_choice auto|required|none or a named function;
+#   stream_options.include_usage) and https://docs.inceptionlabs.ai/resources/faq (usage chunk when streaming).
+# - Cache: https://docs.inceptionlabs.ai/resources/faq ("Prefix caching is automatic and requires no request parameter";
+#   no documented TTL, cached tokens billed at the input_cache_reads rate).
+# Knowledge cutoff 2025-01-01 is kept from the original entry; no Inception source states it.
+# APIs on this host: /v1/chat/completions (chat models), /v1/fim/completions and /v1/edit/completions (Mercury Edit 2),
+#   /v1/decisions (Mercury Decide), /v1/models.
+# Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
+schema = 2
+base_model = "inception/mercury-2"
 knowledge = "2025-01-01"
-tool_call = true
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
 structured_output = true
-open_weights = false
+stream_usage = true
+cache = { implicit = true }
 
-[cost]
-input = 0.25
-output = 0.75
-cache_read = 0.025
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
 
-[limit]
-context = 128_000
-output = 50_000
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.75

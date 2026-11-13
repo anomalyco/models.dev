@@ -1,6 +1,7 @@
 name = "STACKIT"
 env = ["STACKIT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Reasoning HTTP format (accessed 2026-06-25):
 # POST /v1/chat/completions is documented for GPT-OSS, but STACKIT does not
 # document a caller reasoning toggle, effort field, token budget, or bounds.

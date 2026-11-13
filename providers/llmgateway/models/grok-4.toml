@@ -1,24 +1,31 @@
+# Modalities: image formats from models/xai/grok-4.3.toml (same model)
+# system_updates = true: the gateway keeps later system messages in place on xai (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts: Claude native or <system-reminder> user turn, Gemini user turn, OpenAI/xAI forwarded)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 name = "Grok 4"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
-release_date = "2025-07-09"
-last_updated = "2025-07-09"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
+release_date = "2025-07-09"
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.75
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+system_updates = true
 
 [limit]
 context = 256_000
 output = 256_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 3
+cache = { read = 0.75 }
+
+[cost.text.output]
+price = 15

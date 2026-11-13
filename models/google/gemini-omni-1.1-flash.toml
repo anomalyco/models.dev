@@ -11,28 +11,53 @@
 # - reasoning = true: https://ai.google.dev/gemini-api/docs/omni documents the
 #   gemini-omni-1.1-flash REST response schema with a step {"type": "thought"};
 #   Google Cloud's model page also lists "Thinking: Supported" for the 1.1 preview.
-# - temperature = false: https://ai.google.dev/gemini-api/docs/omni Limitations —
+# - temperature/top_p/top_k = false: https://ai.google.dev/gemini-api/docs/omni Limitations —
 #   "System instructions, temperature, top_p, stop sequences, and negative prompts
-#   are not supported".
+#   are not supported". top_k isn't documented for Omni; it's set false with the
+#   other sampling parameters it disables.
 # - output 57_920: Google Cloud's Gemini Enterprise page for
 #   gemini-omni-1.1-flash-preview lists max output tokens 57,920; same value the
 #   sibling models/google/gemini-omni-flash-preview.toml files.
+# Video output format: https://ai.google.dev/gemini-api/docs/omni (model_output content mime_type video/mp4).
+# Image and video MIME types: Gemini API supported formats, which Omni takes as Interactions image and video inputs
+# (https://ai.google.dev/gemini-api/docs/omni):
+# - https://ai.google.dev/gemini-api/docs/image-understanding (Supported image formats: image/png, image/jpeg, image/webp, image/heic, image/heif)
+# - https://ai.google.dev/gemini-api/docs/video-understanding (Supported video formats: video/mp4, video/mpeg, video/mov, video/avi, video/x-flv, video/mpg, video/webm, video/wmv, video/3gpp)
+schema = 2
+type = "video"
 name = "Gemini Omni 1.1 Flash"
 description = "Video generation and editing model for scene extension, frame interpolation, and reference-guided multimodal control"
 family = "gemini"
-type = "video"
-release_date = "2026-08-27"
-last_updated = "2026-08-27"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = false
 open_weights = false
+release_date = "2026-08-27"
+
+[modalities]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 1_048_576
 output = 57_920
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["video"]

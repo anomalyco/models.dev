@@ -1,9 +1,15 @@
+schema = 2
 base_model = "thedrummer/skyfall-36b-v2"
 
-[cost]
-input = 0.75647
-output = 1.10032
-cache_read = 0.34385
+[capabilities]
+structured_output = true
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 0.5819
+cache = { read = 0.2645 }
+
+[cost.text.output]
+price = 0.8464

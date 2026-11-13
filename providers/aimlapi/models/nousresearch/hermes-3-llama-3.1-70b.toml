@@ -1,5 +1,11 @@
+schema = 2
 base_model = "nousresearch/hermes-3-llama-3.1-70b"
 
-[cost]
-input = 0.96278
-output = 0.96278
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.7406
+
+[cost.text.output]
+price = 0.7406

@@ -1,0 +1,32 @@
+# Sources (accessed 2026-10-21):
+# - https://huggingface.co/perplexity-ai/pplx-decider-flash-v1.2 (Apache-2.0; created 2026-10-15)
+# - https://docs.perplexity.ai/docs/decisions/quickstart: state of text, JSON or images (PNG, JPEG and WebP data URLs, up to
+#   8 images per question), 256K-token context window, typed answers with probabilities and no generated text.
+# Sampling: the Decisions API takes no sampling parameters.
+schema = 2
+v2_only = true
+type = "decision"
+name = "pplx-decider-flash-v1.2"
+description = "Smaller Perplexity decision model distilled onto Qwen3.5-4B for high-volume yes/no, choice and score questions about text or images"
+open_weights = true
+release_date = "2026-10-15"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/perplexity-ai/pplx-decider-flash-v1.2"

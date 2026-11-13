@@ -1,21 +1,34 @@
+# Sources (accessed 2026-10-19):
+# - https://docs.z.ai/guides/image/glm-image
+# - https://docs.z.ai/release-notes/new-released (launched 2026-01-14)
+# - https://docs.bigmodel.cn/cn/update/new-releases (2026-01-14)
+# Modalities stay generic:
+# - input "image": image-to-image comes from the open-weights release (Hugging Face card); no Z.AI/Zhipu
+#   source lists input formats, and the Z.AI image API takes only a text prompt.
+# - output "image": the image API returns a URL with no documented format. Live (2026-10-20, both hosts)
+#   the URL ends in .png and is served as Content-Type image/png, but the bytes are JPEG (FF D8 FF E0 JFIF).
+schema = 2
+type = "image"
 name = "GLM-Image"
 description = "GLM-Image is an image generation model adopts a hybrid autoregressive + diffusion decoder architecture. In general image generation quality, GLM‑Image aligns with mainstream latent diffusion approaches, but it shows significant advantages in text-rendering and knowledge‑intensive generation scenarios. It performs especially well in tasks requiring precise semantic understanding and complex information expression, while maintaining strong capabilities in high‑fidelity and fine‑grained detail generation. In addition to text‑to‑image generation, GLM‑Image also supports a rich set of image‑to‑image tasks including image editing, style transfer, identity‑preserving generation, and multi‑subject consistency."
-release_date = "2026-01-19"
-last_updated = "2026-01-19"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = true
+release_date = "2026-01-14"
 license = "MIT"
-
-[limit]
-context = 10_240
-output = 0
 
 [modalities]
 input = ["text", "image"]
 output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 10_240
+output = 0
 
 [[weights]]
 label = "Hugging Face"

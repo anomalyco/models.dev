@@ -4,11 +4,16 @@
 # endpoint (Nemotron-3-Nano-Omni-Reasoning-30B-A3B) behaves as a toggle
 # with inert low/medium/high values, so this is encoded the same way.
 # No interleaved claim is made.
-base_model = "nvidia/nemotron-3-super-120b-a12b"
-reasoning_options = [{ type = "toggle" }]
-
 # Pricing: https://www.crusoe.ai/cloud/pricing (accessed 2026-09-04)
-[cost]
-input = 0.30
-output = 2.40
-cache_read = 0.15
+schema = 2
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2.4

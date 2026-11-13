@@ -1,0 +1,26 @@
+# Sources (accessed 2026-10-24):
+# Prices, context and maximum output: https://docs.munito.ai/models/aleph-alpha-kolibri-1
+# Reasoning: https://docs.munito.ai/reasoning. The reasoning is in message.reasoning and delta.reasoning,
+# and the API reads reasoning_content (or reasoning) in the history.
+# Cache: automatic prefix cache, no cache_control markers, no cache-write fee (https://docs.munito.ai/prompt-caching).
+# Off is reasoning_effort = none (or chat_template_kwargs.enable_thinking = false). Graded levels, no toggle.
+schema = 2
+base_model = "aleph-alpha/kolibri-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 943_718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.13
+cache = { read = 0.078 }
+
+[cost.text.output]
+price = 0.51

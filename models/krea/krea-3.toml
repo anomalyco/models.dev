@@ -1,0 +1,25 @@
+# Released 2026-10-15: https://www.krea.ai/blog/introducing-krea-3 (served on OpenRouter as K3 Edit)
+#   API: https://www.krea.ai/docs/developers/krea-3/overview; input JPEG, PNG or WebP per
+#   https://www.eachlabs.ai/krea/krea-3/krea-3-image-edit/llms.txt. Output image/png through OpenRouter (2026-10-20).
+schema = 2
+v2_only = true
+type = "image"
+name = "Krea 3"
+description = "Fast image editing model that keeps products and characters consistent"
+open_weights = false
+release_date = "2026-10-15"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,24 +1,22 @@
+# Retired: absent from https://docs.frogbot.ai/api-reference/models (accessed 2026-10-21).
+# knowledge: FrogBot's value, unsourced (the lab states none). Kept so v1 doesn't change.
+schema = 2
+base_model = "zhipuai/glm-5.1"
 name = "Z.AI GLM-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2025-01-20"
-last_updated = "2025-02-22"
-attachment = true
-reasoning = false
-temperature = true
 knowledge = "2024-10"
-tool_call = true
-open_weights = true
+status = "deprecated"
 
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 198_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

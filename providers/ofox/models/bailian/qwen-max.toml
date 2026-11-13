@@ -1,7 +1,19 @@
 # https://ofox.ai/models/bailian/qwen-max
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen).
+# structured_output: Ofox's Qwen page documents response_format json_schema (https://ofox.ai/docs/develop/models/qwen); Alibaba's own API agrees (providers/alibaba).
+schema = 2
 base_model = "alibaba/qwen-max"
 
-[cost]
-input = 0.35
-output = 1.38
-cache_read = 0.069
+[capabilities]
+tools = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.35
+cache = { read = 0.069 }
+
+[cost.text.output]
+price = 1.38

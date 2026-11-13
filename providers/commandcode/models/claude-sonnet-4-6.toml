@@ -1,0 +1,20 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Mid-conversation flags follow Anthropic's own API for this model: Command Code serves it via @ai-sdk/anthropic. See providers/anthropic/models/claude-sonnet-4-6.toml.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = {} }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15

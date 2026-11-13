@@ -1,28 +1,30 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 name = "Fugu Ultra v1.1"
 description = "Sakana AI's upgraded Fugu Ultra release with stronger coding, agentic task execution, and advanced reasoning through dynamic orchestration of frontier models."
 family = "fugu"
-release_date = "2026-07-24"
-last_updated = "2026-07-24"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-07-24"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh", "max"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
 
-[cost]
-input = 5
-output = 30
-cache_read = 0.5
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_000_000
 input = 1_000_000
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 30

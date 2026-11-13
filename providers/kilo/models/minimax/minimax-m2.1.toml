@@ -1,12 +1,15 @@
+schema = 2
 base_model = "minimax/MiniMax-M2.1"
-description = "MiniMax model for chat, coding, office work, and agentic tasks"
-structured_output = false
+name = "MiniMax: MiniMax M2.1"
+description = "MiniMax 2.1 is MiniMax's latest model, optimized specifically for robustness in coding, tool use, instruction following, and long-horizon planning."
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.375 }
+
+[cost.text.output]
+price = 1.2

@@ -1,8 +1,12 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
-[[reasoning_options]]
-type = "budget_tokens"
+[capabilities]
+reasoning = { supported = true, budget = {} }
+structured_output = true
 
-[cost]
-input = 1.4375
-output = 5.75
+[cost.text.input]
+price = 1.4375
+
+[cost.text.output]
+price = 5.75

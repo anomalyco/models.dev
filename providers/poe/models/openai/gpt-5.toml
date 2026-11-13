@@ -1,24 +1,15 @@
-name = "GPT-5"
-description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-temperature = false
-open_weights = false
-tool_call = true
+# Effort: reasoning_effort = minimal|low|medium|high (default minimal)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+schema = 2
+base_model = "openai/gpt-5"
 
-[cost]
-input = 1.1
-output = 9
-cache_read = 0.11
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 
-[limit]
-context = 400_000
-output = 128_000
+[cost.text.input]
+price = 1.1364
+cache = { read = 0.1136 }
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 9.0909

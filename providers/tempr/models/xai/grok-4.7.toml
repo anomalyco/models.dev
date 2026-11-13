@@ -1,20 +1,31 @@
 # Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
 # Effort: reasoning.effort = low|medium|high|xhigh (alias: top-level reasoning_effort)
 # /v1/messages: output_config.effort = low|medium|high|xhigh
 # /v1/responses: reasoning.effort = low|medium|high|xhigh
+# Prompt caching (https://temprhq.io/docs/gateway-reference#prompt-caching): the provider caches long
+# prompts automatically, with no request changes.
+schema = 2
 base_model = "xai/grok-4.7"
 
-reasoning_options = [
-  { type = "effort", values = ["low", "medium", "high", "xhigh"] },
-]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+structured_output = true
 
-[cost]
-input = 2
-output = 6
-cache_read = 0.5
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 200000 }
-input = 4
-output = 12
-cache_read = 1
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12

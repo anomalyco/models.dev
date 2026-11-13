@@ -1,18 +1,27 @@
+# Toggle: thinking.type = enabled|disabled (Qiniu chat completions `thinking`, Anthropic/OpenAI style;
+# Qiniu says model support varies). https://developer.qiniu.com/aitokenapi/13390/chat-completions
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-08-04 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b"
 name = "Qwen 3 235B A22B"
-description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
-open_weights = false
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 128_000
 output = 32_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.28985507
+
+[cost.text.output]
+price = 1.15942029
+
+[[cost.text.output.overrides]]
+when = { thinking = { equals = true } }
+price = 2.89855072

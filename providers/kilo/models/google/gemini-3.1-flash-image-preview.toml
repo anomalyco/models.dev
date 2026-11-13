@@ -1,14 +1,19 @@
+schema = 2
 base_model = "google/gemini-3.1-flash-image-preview"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "high"] }
 structured_output = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "high"]
-
-[cost]
-input = 0.5
-output = 3
 
 [limit]
 output = 58_982
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 3
+
+[cost.web_search]
+price = 14

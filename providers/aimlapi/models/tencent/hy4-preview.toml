@@ -1,16 +1,19 @@
+schema = 2
 base_model = "tencent/hy4-preview"
 
-[interleaved]
-field = "reasoning_details"
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high"]
-
-[cost]
-input = 1.147084
-output = 3.439875
-cache_read = 0.057767
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+tools = { supported = true }
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.882372
+cache = { read = 0.044436 }
+
+[cost.text.output]
+price = 2.646058

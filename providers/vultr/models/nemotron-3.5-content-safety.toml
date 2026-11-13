@@ -1,10 +1,15 @@
 # Toggle: reasoning.enabled = true|false
+schema = 2
 base_model = "nvidia/nemotron-3.5-content-safety"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.05
-output = 0.15
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 131_072
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.15

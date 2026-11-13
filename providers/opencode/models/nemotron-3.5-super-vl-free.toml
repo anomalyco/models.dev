@@ -1,23 +1,29 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Modalities: Zen serves image input only (the lab's video input is not offered); image types from the lab.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh (not re-verified on Zen: the free tier only serves OpenCode clients)
+# Mid-conversation flags left out: nvidia has no provider file for nvidia/nemotron-3.5-super-vl-120b-a12b to follow (Zen passes requests through).
+schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 name = "Nemotron 3.5 Super VL Free"
-family = "nemotron-free"
-reasoning_options = [{ type = "effort", values = ["none", "minimal", "low", "medium", "high", "xhigh"] }]
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
 
 [limit]
 input = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

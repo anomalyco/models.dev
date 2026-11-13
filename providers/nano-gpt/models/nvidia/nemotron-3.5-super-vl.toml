@@ -1,28 +1,23 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 name = "Nvidia Nemotron 3.5 Super VL"
 description = "NVIDIA’s open-weight 120B model (12B active) for reasoning, coding, tool use, document and GUI understanding, and video understanding. Text, images and video in; text out. Served in NVFP4 with a 262,144-token shared context window. NanoGPT currently limits responses to 16,384 tokens while separate hosted output limits remain unpublished. OpenMDW 1.1 license."
-family = "nemotron"
-release_date = "2026-10-15"
-last_updated = "2026-10-15"
-attachment = true
-reasoning = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
 structured_output = true
-open_weights = true
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "medium", "high"]
-
-[cost]
-input = 0.15
-output = 0.5
-cache_read = 0.02
+tools = { supported = true }
 
 [limit]
 context = 262_144
 input = 262_144
 output = 16_384
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.5

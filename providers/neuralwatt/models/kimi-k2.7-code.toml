@@ -1,19 +1,27 @@
 # Budget: thinking_token_budget (integer reasoning tokens)
+# Deprecated: no longer listed in the public GET https://api.neuralwatt.com/v1/models (checked 2026-10-21).
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
+status = "deprecated"
 
-interleaved = true
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.95
-output = 4
-cache_read = 0.095
+[capabilities]
+reasoning = { supported = true, budget = {} }
+structured_output = true
 
 [limit]
 context = 262_128
 output = 262_128
 
-[modalities]
-input = ["text", "image"]
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.095 }
+
+[cost.text.output]
+price = 4

@@ -1,0 +1,25 @@
+# Released 2026-06-05: https://www.riverflow.ai/research/introducing-riverflow-2-5
+#   Output formats webp, png, jpg and thinking_level: https://replicate.com/sourceful/riverflow-v2.5-pro
+# Reasoning: the planner and judge run inside the service; no reasoning output is returned.
+schema = 2
+v2_only = true
+type = "image"
+name = "Riverflow 2.5 Pro"
+description = "Most capable Riverflow 2.5 agentic image model with candidate scoring and 4K output"
+open_weights = false
+release_date = "2026-06-05"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/webp", "image/png", "image/jpeg"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

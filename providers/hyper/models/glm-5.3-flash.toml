@@ -1,17 +1,23 @@
+# Mid-conversation: Hyper serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://hyper.charm.land/v1/models
+# Input MIME types: the lab's image list; Hyper's catalog reports vision without formats (https://hyper.charm.land/v1/models).
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
-last_updated = "2026-08-31"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
 
-[cost]
-input = 0.16332
-output = 0.5444
-cache_read = 0.031575
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.16332
+cache = { read = 0.031575 }
+
+[cost.text.output]
+price = 0.5444

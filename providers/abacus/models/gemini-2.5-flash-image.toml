@@ -6,18 +6,11 @@
 # RouteLLM max_completion_tokens: 32768
 # RouteLLM input_token_rate: 0.0000003
 # RouteLLM output_token_rate: 0.00003
+schema = 2
 base_model = "google/gemini-2.5-flash-image"
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 0.3
-output = 30
+[cost.text.input]
+price = 0.3
 
-[limit]
-context = 32_768
-output = 32_768
-
-[modalities]
-input = ["text", "image"]
-output = ["text", "image"]
+[cost.text.output]
+price = 30

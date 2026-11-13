@@ -1,14 +1,25 @@
+# Synced from CrossModel's catalog, https://www.crossmodel.ai/api/models (accessed 2026-10-21):
+# prices (USD micro/1M, threshold tiers -> context overrides), limits, modalities,
+# reasoning controls, structured_output.json_schema, context.caching, release_stage.
+# Effort: reasoning_effort (/v1/chat/completions), reasoning.effort (/v1/responses)
+# (https://www.crossmodel.ai/docs/api-reference/chat.md, responses.md)
+# Cache: catalog context.caching = true; CrossModel documents no mechanism (implicit/explicit, TTL).
+# Mid-conversation flags unset: CrossModel documents none and nothing was tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages (https://www.crossmodel.ai/docs/models-and-capabilities.md).
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
-cache_write = 3
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 1_048_576
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3 }
+
+[cost.text.output]
+price = 15

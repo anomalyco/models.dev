@@ -1,18 +1,29 @@
+# Modalities: Veo generated videos are video/mp4, https://ai.google.dev/gemini-api/docs/veo
+# Inputs: AI Gateway's catalog video_capabilities.input_limits (kinds and supported_formats), https://ai-gateway.vercel.sh/v1/models
+schema = 2
+base_model = "google/veo-3.1-fast-generate-001"
 name = "Veo 3.1 Fast Generate"
-description = "Video model for prompt-guided generation, editing, and motion workflows"
-family = "veo"
-release_date = "2025-10-15"
-last_updated = "2026-06-08"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-open_weights = false
 
-[limit]
-context = 0
-output = 0
+[api.videos]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }
 
-[modalities]
-input = ["text"]
-output = ["video"]
+[cost.video.output]
+unit = "second"
+price = 0.1
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" }, generate_audio = { equals = true } }
+price = 0.15
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, generate_audio = { equals = true } }
+price = 0.15
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" }, generate_audio = { equals = false } }
+price = 0.3
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" }, generate_audio = { equals = true } }
+price = 0.35

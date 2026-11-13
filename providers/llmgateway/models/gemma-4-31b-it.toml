@@ -1,10 +1,19 @@
+# Toggle: any $.reasoning_effort value turns reasoning on; omitting it (or "none" on mappings that don't declare it, which
+#   the gateway drops) leaves it off. Cerebras returns reasoning only when reasoning_effort is passed, and mappings that
+#   declare "none" receive it as-is (theopenco/llmgateway@1a1791f packages/models/src/models/google.ts gemma-4-31b-it; prepare-request-body.ts
+#   L1700-1727). Matches Google's toggle-only control; the gateway forwards effort tiers as-is (prepare-request-body.ts L1740-1745).
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "google/gemma-4-31b-it"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
-[cost]
-input = 0.1
-output = 0.25
-cache_read = 0.01
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.25

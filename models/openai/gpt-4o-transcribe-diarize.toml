@@ -1,0 +1,28 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize
+# https://community.openai.com/t/introducing-gpt-4o-transcribe-diarize-now-available-in-the-audio-api/1362933
+# Audio MIME types: https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create (file: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm)
+schema = 2
+v2_only = true
+type = "transcription"
+name = "GPT-4o Transcribe Diarize"
+description = "Speech-to-text model with built-in speaker diarization"
+family = "gpt"
+open_weights = false
+knowledge = "2024-06-01"
+release_date = "2025-10-17"
+
+[modalities]
+input = ["text", "audio/flac", "audio/mpeg", "audio/mp4", "audio/ogg", "audio/wav", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 16_000
+output = 2_000

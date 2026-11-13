@@ -1,22 +1,24 @@
 # Lab metadata carried over from providers/openrouter/models/deepseek/deepseek-chat-v3.1.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+schema = 2
 name = "DeepSeek V3.1"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
-release_date = "2025-08-21"
-last_updated = "2025-08-21"
-knowledge = "2025-03-31"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
-
-[limit]
-context = 163840
-output = 32768
+knowledge = "2025-03-31"
+release_date = "2025-08-21"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 163_840
+output = 32_768

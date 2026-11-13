@@ -1,18 +1,20 @@
+schema = 2
 base_model = "zhipuai/glm-5"
 name = "GLM-5 (Alibaba Cloud)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
 structured_output = false
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 0.573
-output = 2.58
 
 [limit]
 context = 202_752
 output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.573
+
+[cost.text.output]
+price = 2.58

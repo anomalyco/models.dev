@@ -1,23 +1,14 @@
-name = "o3-pro"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-pro"
-release_date = "2025-06-10"
-last_updated = "2025-06-10"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
-open_weights = false
-tool_call = true
+# Effort: reasoning_effort = low|medium|high (default medium)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+schema = 2
+base_model = "openai/o3-pro"
 
-[cost]
-input = 18
-output = 72
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[limit]
-context = 200_000
-output = 100_000
+[cost.text.input]
+price = 18.1818
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 72.7273

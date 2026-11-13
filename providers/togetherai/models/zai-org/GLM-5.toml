@@ -2,33 +2,24 @@
 # POST https://api.together.ai/v1/chat/completions
 # JSON reasoning.enabled: true | false; thinking is on by default.
 # Sources: https://docs.together.ai/docs/inference/chat/reasoning#enable-and-disable-reasoning
-# Deprecated: no longer listed in the Together.ai serverless catalog (accessed 2026-07-18).
-# Source: https://docs.together.ai/docs/serverless-models
-name = "GLM-5"
+# Deprecated: removed from serverless on 2026-06-22 (https://docs.together.ai/docs/deprecations,
+# accessed 2026-10-21); requests return 400 "Unable to access non-serverless model".
+schema = 2
 base_model = "zhipuai/glm-5"
-family = "glm"
-release_date = "2026-02-11"
-last_updated = "2026-02-11"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.00
-output = 3.20
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 202_752
-output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3.2

@@ -1,14 +1,21 @@
+# Catalog: GET https://api.synthetic.new/openai/v1/models (accessed 2026-10-21).
+# Effort: reasoning_effort (reasoning_parameters.efforts in the catalog).
+# Lists reasoning efforts none|low|medium|high and input_cache_reads $0.00000006.
+schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.3
-output = 1
-cache_read = 0.3
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
-context = 262_144
 output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1

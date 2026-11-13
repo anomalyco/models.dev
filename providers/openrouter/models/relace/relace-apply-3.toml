@@ -1,22 +1,24 @@
-name = "Relace Apply 3"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
+base_model = "relace/relace-apply-3"
 description = "General-purpose chat model for instruction following, writing, and analysis"
-release_date = "2025-09-26"
-last_updated = "2025-09-26"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 structured_output = false
-open_weights = false
 
-[cost]
-input = 0.85
-output = 1.25
+[api.chat-completions]
 
-[limit]
-context = 256_000
-output = 128_000
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.85
+
+[cost.text.output]
+price = 1.25

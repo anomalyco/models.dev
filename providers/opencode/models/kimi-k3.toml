@@ -1,17 +1,29 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21; cache write $3 from 2026-10-23).
+# thinking.type = disabled turns reasoning off (live: 0 reasoning tokens in 3 of 3 runs, vs 104-192 enabled).
+# reasoning_effort levels are graded on Zen (live, 3 trials each: low 94-374, high 339-520, max 817-1495 reasoning tokens; omitted behaves like max).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Cache (live): implicit (cached tokens reported without cache markers).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/moonshotai/models/kimi-k3.toml (Zen passes requests through).
+#   tools.updates is add only: on Chat Completions, a system message carrying `tools` (Moonshot dynamic tools, https://platform.kimi.ai/docs/guide/use-dynamic-tool-loading).
+# Tools follow Moonshot's API: https://platform.kimi.ai/docs/api/models-overview (tool_choice per model), https://platform.kimi.ai/docs/api/chat (strict); Zen passes requests through.
+schema = 2
 base_model = "moonshotai/kimi-k3"
-name = "Kimi K3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["max"]
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required"], updates = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+system_updates = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3 }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 15

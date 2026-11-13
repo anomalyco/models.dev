@@ -1,19 +1,47 @@
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-03-31 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+# Modalities: image formats from the Volcengine Ark image understanding, 图片格式说明 table (https://www.volcengine.com/docs/82379/1362931);
+# video formats from the Volcengine Ark video understanding, 视频格式说明 table (https://www.volcengine.com/docs/82379/1895586).
+schema = 2
 name = "Doubao-Seed 1.6 Thinking"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2025-08-15"
-last_updated = "2025-08-15"
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
-temperature = true
-structured_output = false
 open_weights = false
+release_date = "2025-08-15"
+status = "deprecated"
+
+[modalities]
+input = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "text", "video/mp4", "video/x-msvideo", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 256_000
 output = 32_000
 
-[modalities]
-input = ["image", "text", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.11594203
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.17391304
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.34782609
+
+[cost.text.output]
+price = 1.15942029
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 2.31884058
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 3.47826087

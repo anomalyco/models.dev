@@ -1,0 +1,36 @@
+# Sources:
+# - Model: https://docs.cohere.com/docs/transcribe-arabic
+# - Release: https://docs.cohere.com/changelog ("Meet Cohere Transcribe Arabic", July 7, 2026)
+# - Audio formats: https://docs.cohere.com/reference/create-audio-transcription ("Supported file extensions
+#   are flac, mp3, mpeg, mpga, ogg, and wav"); extensions mapped to MIME types (mp3/mpeg/mpga = audio/mpeg).
+# - Context: GET https://api.cohere.com/v1/models/<id> reports context_length 32768; no output limit is
+#   published (0, as for whisper-1).
+# - Sampling: the endpoint takes `temperature` only (no top_p/top_k).
+# - Weights: https://huggingface.co/CohereLabs/cohere-transcribe-arabic-07-2026 (Apache 2.0)
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Cohere Transcribe Arabic"
+description = "Cohere Transcribe fine-tune for Arabic dialects and Arabic-English code-switching"
+open_weights = true
+release_date = "2026-07-07"
+license = "Apache-2.0"
+
+[modalities]
+input = ["audio/flac", "audio/mpeg", "audio/ogg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/CohereLabs/cohere-transcribe-arabic-07-2026"

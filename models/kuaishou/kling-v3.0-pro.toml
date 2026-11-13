@@ -1,0 +1,25 @@
+# Released 2026-02-05: https://ir.kuaishou.com/news-releases/news-release-details/kling-ai-launches-30-model-ushering-era-where-everyone-can-be
+# Image inputs JPG/JPEG or PNG: https://app.klingai.com/global/dev/document-api/apiReference/model/imageToVideo
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling VIDEO 3.0 Pro"
+description = "Higher-quality Kling 3.0 video model with first and last frame control and native audio"
+open_weights = false
+release_date = "2026-02-05"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,0 +1,15 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api.minimax.io/v1/t2a_v2 (https://platform.minimax.io/docs/api-reference/speech-t2a-http); async long-form text uses the same price
+# - Pricing: https://platform.minimax.io/docs/pricing/overview#models/speech (USD $60 per 1M characters; one Chinese character counts as 2 characters)
+schema = 2
+v2_only = true
+base_model = "minimax/speech-2.8-turbo"
+
+[api.speech]
+base_url = "https://api.minimax.io/v1"
+path = "/t2a_v2"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+unit = "character"
+price = 60

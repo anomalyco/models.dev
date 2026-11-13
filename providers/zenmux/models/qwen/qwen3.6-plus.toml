@@ -1,31 +1,34 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Toggle: Chat Completions reasoning.enabled = true|false (https://docs.zenmux.ai/guide/advanced/reasoning.html).
+schema = 2
+base_model = "alibaba/qwen3.6-plus"
 name = "Qwen3.6-Plus"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-release_date = "2026-03-30"
-last_updated = "2026-03-30"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-open_weights = false
-
-[cost]
-input = 0.50
-output = 3.00
-cache_read = 0.05
-cache_write = 0.625
-
-[[cost.tiers]]
-tier = { size = 256_000 }
-input = 2.00
-output = 6.00
-cache_read = 0.20
-cache_write = 2.50
-
-[limit]
-context = 1_000_000
-output = 64_000
 
 [modalities]
-input = ["text"]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true, explicit = { min_tokens = 256 } }
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1, write = 0.625, explicit = { read = 0.05 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 2
+cache = { read = 0.4, write = 2.5, explicit = { read = 0.2 } }
+
+[cost.text.output]
+price = 3
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 6

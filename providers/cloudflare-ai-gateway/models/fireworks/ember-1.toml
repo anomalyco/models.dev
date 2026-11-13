@@ -1,18 +1,30 @@
-# Off: reasoning_effort = none; effort: low|high|max (Fireworks route; medium -> high, xhigh -> max).
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
+# Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).
+# Per-API flags: for models that also list the REST /ai/v1/responses route, system_updates sits on [api.chat-completions] only; it was checked on Chat Completions and the Responses route has no documented or tested in-place system message.
+# Off: reasoning_effort = none; effort: low|high|max (POST /ai/v1/chat/completions, Fireworks route; medium -> high, xhigh -> max; live 2026-10-19: none -> 0, low 50 / high 103 / max 151 reasoning tokens).
 # Sources: https://docs.fireworks.ai/api-reference/post-chatcompletions ; https://docs.fireworks.ai/guides/reasoning
+schema = 2
 base_model = "fireworks/ember-1"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
-
-[cost]
-input = 3
-output = 15
-cache_read = 0.3
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
 
 [limit]
 context = 1_040_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.responses]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

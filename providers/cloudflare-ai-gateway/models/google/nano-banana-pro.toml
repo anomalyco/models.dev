@@ -1,0 +1,23 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Modalities: the schema's prompt/image fields (the lab's MIME types) and output_format enum, else the lab's outputs. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+# output_tokens is the image output price: Gemini 3 Pro Image bills output images as tokens at $120 per 1M (https://ai.google.dev/gemini-api/docs/pricing).
+schema = 2
+v2_only = true
+base_model = "google/gemini-3-pro-image"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["image/jpeg", "image/png", "image/webp"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 2
+
+[cost.image.output]
+price = 120

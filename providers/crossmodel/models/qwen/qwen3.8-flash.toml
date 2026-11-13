@@ -1,14 +1,24 @@
+# Synced from CrossModel's catalog, https://www.crossmodel.ai/api/models (accessed 2026-10-21):
+# prices (USD micro/1M, threshold tiers -> context overrides), limits, modalities,
+# reasoning controls, structured_output.json_schema, context.caching, release_stage.
+# Toggle: thinking.type = enabled|disabled on /v1/messages
+# (https://www.crossmodel.ai/docs/api-reference/messages.md)
+# Effort: reasoning_effort (/v1/chat/completions), reasoning.effort (/v1/responses)
+# (https://www.crossmodel.ai/docs/api-reference/chat.md, responses.md)
+# Cache: catalog context.caching = true; CrossModel documents no mechanism (implicit/explicit, TTL).
+# Mid-conversation flags unset: CrossModel documents none and nothing was tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages (https://www.crossmodel.ai/docs/models-and-capabilities.md).
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
+[cost.text.input]
+price = 0.13
+cache = { read = 0.016, write = 0.2 }
 
-[cost]
-input = 0.13
-output = 0.43
-cache_read = 0.016
-cache_write = 0.2
+[cost.text.output]
+price = 0.43

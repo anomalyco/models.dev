@@ -1,0 +1,32 @@
+# https://huggingface.co/baidu/ERNIE-4.5-300B-A47B-Paddle (Apache-2.0, text-only MoE, 300B total / 47B active,
+# context length 131072; weights published 2025-06-30 with the ERNIE 4.5 family:
+# https://yiyan.baidu.com/blog/posts/ernie4.5/). The card gives no maximum output; 12,000 is the cap the
+# Paddle checkpoint is served with (GET https://api.jiekou.ai/openai/models, 2026-10-21).
+# Tools: ERNIE 4.5 post-training covers function calling (technical report,
+# https://ernie.baidu.com/blog/publication/ERNIE_Technical_Report.pdf); same as models/baidu/ernie-4.5-21b-a3b.toml.
+schema = 2
+name = "ERNIE 4.5 300B A47B"
+description = "Open ERNIE text MoE with 300B total and 47B active parameters"
+family = "ernie"
+open_weights = true
+release_date = "2025-06-30"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 12_000
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/baidu/ERNIE-4.5-300B-A47B-Paddle"

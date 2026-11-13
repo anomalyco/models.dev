@@ -1,21 +1,24 @@
-name = "Schematron V2 Small"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-release_date = "2026-04-16"
-last_updated = "2026-04-16"
-attachment = false
-reasoning = false
-tool_call = false
-open_weights = false
+# Mid-conversation (@ai-sdk/gateway): no per-turn effort or tool-change mechanism reaches this model on this API. system_updates left unset: live cache results on the default route were inconclusive.
+schema = 2
+base_model = "inference-net/schematron-v2-small"
 
-[cost]
-input = 0.05
-output = 0.23
-cache_read = 0.05
+[capabilities]
+structured_output = true
+cache = { implicit = true }
 
-[limit]
-context = 128_000
-output = 4_096
+[api.chat-completions]
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.23

@@ -1,7 +1,12 @@
+schema = 2
 base_model = "mistral/mistral-small-24b-instruct-2501"
 name = "Mistral Small 3 (Deep Infra)"
-tool_call = true
 
-[cost]
-input = 0.05
-output = 0.08
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.08

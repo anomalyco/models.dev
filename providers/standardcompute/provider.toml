@@ -1,7 +1,8 @@
-# Flat-rate smart-routing gateway: per-token cost is $0 because pricing is
-# subscription-based (fixed monthly plans, each with a monthly compute budget;
-# https://standardcompute.com/pricing and
-# https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-13).
+# Flat-rate smart-routing gateway: pricing is subscription-based (fixed
+# monthly plans, each with a monthly USD compute budget metered at the routed
+# model's cost; https://standardcompute.com/pricing and
+# https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16),
+# so the router model declares no per-token cost.
 # The "standardcompute" model id routes each request across the models the
 # customer has enabled from a curated catalog of ~1M-context models, or serves
 # the customer's pinned selection. Exact model ids: GET /v1/models (public).
@@ -16,11 +17,29 @@
 # reasoning fields use the per-model defaults saved in the customer dashboard.
 # Responses return `reasoning` plus OpenRouter-shape `reasoning_details`
 # (streaming included).
+# Pinned model ids (models/<lab>/<model>.toml, the base ids from GET /v1/models)
+# serve one catalog model each. Billing stays plan-based: "each request counts
+# against the budget at the model's per-token rate"
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16).
+# Standard Compute does not publish a separate per-model rate table; budget use
+# depends on which endpoints serve a request
+# (https://docs.standardcompute.com/regions-and-privacy, accessed 2026-10-16).
+# Each pinned model lists the current per-1M-token USD price (cache rates and
+# context tiers included) of the endpoint Standard Compute routes it to, as
+# charged against the budget. Where that price is a promotion, the header gives
+# the regular price and the end date, if published, so the cost can be updated
+# when the promotion ends.
+# Region-pinned variants (`:eu` / `:us` suffixes) are not listed. Like the
+# router, pinned models use the OpenRouter adapter so `reasoning_details` are
+# replayed as arrays. Limits inherit the lab entries; a pinned model overrides
+# only the gateway's per-request caps (850,000 input / 50,000 output on paid
+# plans) where a cap is smaller than the lab limit.
 name = "Standard Compute"
 env = ["STANDARDCOMPUTE_API_KEY"]
 # The endpoint is plain OpenAI Chat Completions, so the provider uses the
 # generic adapter. The model overrides `provider.npm` with the OpenRouter
 # adapter, which replays structured `reasoning_details` arrays on tool turns.
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 api = "https://api.stdcmpt.com/v1"
 doc = "https://docs.standardcompute.com/models"

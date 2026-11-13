@@ -1,11 +1,15 @@
+schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Cerebras)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
-[cost]
-input = 0.35
-output = 0.75
-cache_read = 0.35
+[cost.text.input]
+price = 0.35
+cache = { read = 0.35 }
+
+[cost.text.output]
+price = 0.75

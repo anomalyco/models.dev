@@ -2,22 +2,33 @@
 # - https://docs.x.ai/docs/models
 # - https://docs.x.ai/developers/models/grok-imagine-video-1.5
 # - https://docs.x.ai/docs/guides/video-generation
-
+# Inputs: GET https://api.x.ai/v1/video-generation-models lists input_modalities = text, image, audio.
+# Video editing and extension use grok-imagine-video, not 1.5:
+# https://docs.x.ai/developers/model-capabilities/video/editing, https://docs.x.ai/developers/model-capabilities/video/extension
+# Voice references: https://docs.x.ai/developers/model-capabilities/video/reference-to-video
+# Image and video MIME types: https://docs.x.ai/developers/rest-api-reference/inference/videos (image inputs JPEG, PNG or WebP; video inputs and generated videos are .mp4)
+# `audio` stays generic: audio input is reference_audios, which takes preset voices by voice_id; voice references from
+# your own audio files are partner-only with no published formats:
+# https://docs.x.ai/developers/model-capabilities/video/reference-to-video
+schema = 2
+type = "video"
 name = "Grok Imagine Video 1.5"
-description = "Video model for image-to-video generation, editing, and extension workflows"
+description = "Video model for text-to-video, image-to-video, and reference-to-video generation with optional voice references"
 family = "grok"
-release_date = "2026-05-30"
-last_updated = "2026-05-30"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = false
+release_date = "2026-05-30"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "audio"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 1_024
 output = 0
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["video"]

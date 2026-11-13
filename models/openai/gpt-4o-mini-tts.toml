@@ -1,0 +1,27 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-4o-mini-tts
+# https://developers.openai.com/api/docs/changelog
+# Audio MIME types: https://developers.openai.com/api/reference/resources/audio/subresources/speech/methods/create (response_format: mp3, opus, aac, flac, wav, pcm)
+schema = 2
+v2_only = true
+type = "speech"
+name = "GPT-4o Mini TTS"
+description = "Text-to-speech model powered by GPT-4o Mini with steerable voice delivery"
+family = "gpt-mini"
+open_weights = false
+release_date = "2025-03-20"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/opus", "audio/aac", "audio/flac", "audio/wav", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 2_000
+output = 0

@@ -1,0 +1,58 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/pricing#gemini-4-hydrogen
+# - https://ai.google.dev/gemini-api/docs/models/gemini-4-hydrogen
+# - https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/
+# Flat pricing across the whole context window, no introductory discount or scheduled increase. Only implicit caching is supported (explicit caching is not).
+# v2 capabilities and prices:
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/flex-inference
+# - https://ai.google.dev/gemini-api/docs/priority-inference
+# - https://ai.google.dev/gemini-api/docs/thinking
+# Flex is 0.5x ($0.75/$3.75/$0.0375) and Priority 1.8x ($2.70/$13.50/$0.135) Standard per the pricing page. Batch is 0.5x too (not modelled).
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-4-hydrogen; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-4-hydrogen
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Grounding keeps its price under Priority and Flex (https://ai.google.dev/gemini-api/docs/pricing).
+# APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview). Gemini 4 Hydrogen confirmed live 2026-11-12: generateContent with thinkingLevel low|medium|high|xhigh (minimal is rejected with a 400; the model page lists "low, medium, high, xhigh", high default), Chat Completions with reasoning_effort xhigh, Interactions with generation_config.thinking_level xhigh. cachedContents.create is rejected ("Explicit caching is not supported"). /v1beta/models reports inputTokenLimit 1,048,576, outputTokenLimit 65,536 (a single synchronous segment; up to 1,048,576 with long decode) and methods generateContent, countTokens, batchGenerateContent.
+# tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = { min_tokens = 4_096 } }
+service_tier = ["flex", "priority"]
+temperature = true
+
+[api.generate-content]
+
+[api.chat-completions]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.interactions]
+sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 7.5
+
+[cost.audio.input]
+price = 1.5
+cache = { read = 0.075 }
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 1.8, audio = 1.8 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5, audio = 0.5 }

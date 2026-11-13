@@ -1,0 +1,19 @@
+# Kling IMAGE 3.0. Kling also calls its 3.0 video model kling-v3 on the legacy video endpoints; that model is kling-3.0
+# here (providers/klingai/models/kling-3.0.toml).
+# Sources (accessed 2026-11-12):
+# - API: POST https://api-singapore.klingai.com/v1/images/generations with model_name = "kling-v3"
+#   (https://kling.ai/document-api/api/image/3-0-omni/image-generation). resolution "1k" (default) or "2k"; n 1-9.
+# - Pricing: https://kling.ai/document-api/pricing/base/image ("Balance" tab): $0.028 per image for text-to-image and
+#   image-to-image at 1K and 2K. Prepaid resource packages (https://kling.ai/dev/pricing) are not recorded.
+# aisdk = "none": @ai-sdk/klingai only has video models. opencodeai = "none": @opencode/ai has no Kling package.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-image-v3.0"
+
+[api.images]
+base_url = "https://api-singapore.klingai.com/v1"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.output]
+unit = "image"
+price = 0.028

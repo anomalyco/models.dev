@@ -3,16 +3,19 @@
 # CNY list price source: https://docs.volcengine.com/docs/82379/1449737 (深度思考) + 智谱官方价目表
 # GLM-5.3-Flash always reasons (thinking cannot be disabled on this model ID)
 # Effort: reasoning_effort = low|high|max
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.11875
-output = 0.41563
-cache_read = 0.03414
+[cost.text.input]
+price = 0.11875
+cache = { read = 0.03414 }
+
+[cost.text.output]
+price = 0.41563

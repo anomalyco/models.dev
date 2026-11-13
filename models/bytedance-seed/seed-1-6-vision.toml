@@ -1,22 +1,41 @@
 # Sources (accessed 2026-08-14):
 # - https://seed.bytedance.com/en/seed2
 # - https://www.volcengine.com/docs/82379/1330310
+# Image formats: Volcengine Ark image understanding, 图片格式说明 table, Content Type column as written
+#   (JPEG, PNG, GIF, WEBP, BMP, TIFF, ICO, DIB, ICNS, SGI, JPEG2000, HEIC/HEIF; DIB is image/bmp, HEIF is image/heic):
+#   https://www.volcengine.com/docs/82379/1362931
+# Sampling: the Ark Chat API takes temperature and top_p and has no top_k: https://www.volcengine.com/docs/82379/1494384
+schema = 2
 name = "Seed 1.6 Vision"
 description = "ByteDance Seed multimodal model for image understanding, visual reasoning, and tool-assisted tasks"
 family = "seed"
-release_date = "2025-08-15"
-last_updated = "2025-08-15"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2025-08-15"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/x-icon",
+  "image/x-icns",
+  "image/sgi",
+  "image/jp2",
+  "image/heic",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 256_000
 output = 32_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

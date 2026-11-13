@@ -1,19 +1,23 @@
+# release_date: the Deep Research models shipped in the OpenAI API on 2025-06-26 (https://platform.openai.com/docs/changelog); 2024-06-26 was a year typo.
+schema = 2
 name = "o4-mini-deep-research"
 description = "Research model for long-horizon investigation, synthesis, and analytical reports"
 family = "o-mini"
-release_date = "2024-06-26"
-last_updated = "2024-06-26"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-knowledge = "2024-05"
 open_weights = false
+knowledge = "2024-05"
+release_date = "2025-06-26"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 200_000
 output = 100_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

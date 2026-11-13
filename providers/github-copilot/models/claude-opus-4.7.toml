@@ -1,21 +1,39 @@
+# Deprecated: retired from Copilot on 2026-10-02 (https://docs.github.com/en/copilot/reference/ai-models/supported-models#model-retirement-history).
+# Mid-conversation flags are left out: Anthropic doesn't list this model for in-history system messages
+#   (https://platform.claude.com/docs/en/build-with-claude/working-with-messages), and tool_addition/tool_removal and
+#   per-message output_config need Anthropic betas that GitHub doesn't document for Copilot and VS Code's Copilot client
+#   doesn't send (extensions/copilot/src/platform/endpoint/node/chatEndpoint.ts:313-333 and messagesApi.ts:310 at
+#   https://github.com/microsoft/vscode/tree/bb29884).
+# APIs: GET /models supported_endpoints lists /v1/messages and /chat/completions for Claude models (authenticated, 2026-10-21; see provider.toml).
+schema = 2
 base_model = "anthropic/claude-opus-4-7"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
+status = "deprecated"
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 200_000
 input = 168_000
 output = 32_000
 
-[experimental.modes.fast]
-cost = { input = 30, output = 150, cache_read = 3, cache_write = 37.5 }
-provider = { body = { speed = "fast" }, headers = { anthropic-beta = "fast-mode-2026-02-01" } }
+[api.messages]
+base_url = "https://api.githubcopilot.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
-api = "https://api.githubcopilot.com/v1"
+[api.chat-completions]
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = 6
+
+[experimental.modes.fast]
+body = { speed = "fast" }
+headers = { anthropic-beta = "fast-mode-2026-02-01" }

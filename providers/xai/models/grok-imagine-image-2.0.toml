@@ -1,0 +1,41 @@
+# Sources:
+# - https://docs.x.ai/developers/models/grok-imagine-image-2.0
+# - https://docs.x.ai/developers/pricing (Imagine: $0.04 / image)
+# - https://docs.x.ai/docs/guides/image-generation
+# API: POST https://api.x.ai/v1/images/generations (https://docs.x.ai/developers/rest-api-reference/inference/images.md).
+# Pricing (accessed 2026-11-12): GET https://api.x.ai/v1/image-generation-models `pricing` (per image by quality and resolution; $0.04 is low quality at 1k, the default for generation).
+# Input image $0.01 per image: xAI pricing as recorded in models/xai/grok-imagine-image-quality.toml; same on Cloudflare AI Gateway and OpenRouter.
+schema = 2
+v2_only = true
+base_model = "xai/grok-imagine-image-2.0"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/xai/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.04
+
+[[cost.image.output.overrides]]
+when = { all = [{ quality = { equals = "low" } }, { resolution = { equals = "1.5k" } }] }
+price = 0.05
+
+[[cost.image.output.overrides]]
+when = { all = [{ quality = { equals = "low" } }, { resolution = { equals = "2k" } }] }
+price = 0.06
+
+[[cost.image.output.overrides]]
+when = { all = [{ quality = { equals = "medium" } }, { resolution = { equals = "1k" } }] }
+price = 0.06
+
+[[cost.image.output.overrides]]
+when = { all = [{ quality = { equals = "medium" } }, { resolution = { equals = "1.5k" } }] }
+price = 0.07
+
+[[cost.image.output.overrides]]
+when = { all = [{ quality = { equals = "medium" } }, { resolution = { equals = "2k" } }] }
+price = 0.08
+
+[cost.image.input]
+unit = "image"
+price = 0.01

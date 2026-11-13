@@ -1,23 +1,15 @@
+# Deprecated: not in Inference.net's public model list (GET https://api.inference.net/v1/models, checked 2026-10-21).
+schema = 2
+base_model = "meta/llama-3.2-11b-vision-instruct"
 name = "Llama 3.2 11B Vision Instruct"
 description = "Open Llama multimodal model for image understanding and text reasoning"
-family = "llama"
-release_date = "2025-01-01"
-last_updated = "2025-01-01"
-attachment = true
-reasoning = false
-temperature = true
-knowledge = "2023-12"
-tool_call = true
-open_weights = true
-
-[cost]
-input = 0.055
-output = 0.055
+status = "deprecated"
 
 [limit]
 context = 16_000
-output = 4_096
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.055
+
+[cost.text.output]
+price = 0.055

@@ -1,24 +1,22 @@
-name = "Gemini 3 Pro Preview"
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+schema = 2
+base_model = "google/gemini-3-pro-preview"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
-family = "gemini-pro"
-release_date = "2025-11-19"
-last_updated = "2025-11-19"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 knowledge = "2025-11"
-open_weights = false
 
-[cost]
-input = 0.57
-output = 3.43
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 1_000_000
 output = 65_000
 
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.57
+
+[cost.text.output]
+price = 3.43

@@ -1,17 +1,25 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (fal models: POST /v1/async-invoke, no OpenAI protocol)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/ ($0.00058 per compute second; no cost unit for compute time)
+schema = 2
+type = "speech"
 name = "Stable Audio 2.5 (Text-to-Audio)"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
+open_weights = false
 release_date = "2025-10-08"
 last_updated = "2026-04-16"
-attachment = false
-reasoning = false
+
+[modalities]
+input = ["text"]
+output = ["audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = false
-tool_call = false
-open_weights = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["text"]
-output = ["audio"]
+[api.speech]
+sdk = { aisdk = "none", opencodeai = "none" }

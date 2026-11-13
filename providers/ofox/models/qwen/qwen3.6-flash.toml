@@ -3,14 +3,24 @@
 # https://api.ofox.ai/v1/models/qwen/qwen3.6-flash
 # Toggle: enable_thinking true|false (Qwen/DashScope chat path through Ofox)
 # Budget: thinking_budget
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/qwen).
+schema = 2
 base_model = "alibaba/qwen3.6-flash"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens" }]
 
-[cost]
-input = 0.25
-output = 1.5
-cache_read = 0.025
-cache_write = 0.31
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 64_000
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025, write = 0.31 }
+
+[cost.text.output]
+price = 1.5

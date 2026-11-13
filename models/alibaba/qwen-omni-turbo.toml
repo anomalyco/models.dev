@@ -1,19 +1,27 @@
+# Audio input: AMR, WAV, 3GP/3GPP, AAC, MP3 per https://www.alibabacloud.com/help/en/model-studio/qwen-omni (registered MIME types used)
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+# Output audio: "Only wav is supported" per https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
+# Image input (attachment): the Qwen-Omni page as archived 2025-06-14 (https://web.archive.org/web/20250614083007/https://www.alibabacloud.com/help/en/model-studio/qwen-omni) lists "Image+Text" among the supported input combinations for Qwen-Omni (qwen-omni-turbo and qwen2.5-omni-7b); the current page no longer covers these retired models.
+schema = 2
 name = "Qwen-Omni Turbo"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
 family = "qwen"
+open_weights = false
+knowledge = "2024-04"
 release_date = "2025-01-19"
 last_updated = "2025-03-26"
-attachment = false
-reasoning = false
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "audio/amr", "audio/wav", "audio/3gpp", "audio/aac", "audio/mpeg", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text", "audio/wav"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
 temperature = true
-tool_call = true
-knowledge = "2024-04"
-open_weights = false
+top_p = true
+top_k = true
 
 [limit]
 context = 32_768
 output = 2_048
-
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text", "audio"]

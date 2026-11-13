@@ -1,0 +1,33 @@
+# Released 2025-11-25 with open weights under the FLUX Non-Commercial License: https://bfl.ai/blog/flux-2,
+#   https://huggingface.co/black-forest-labs/FLUX.2-dev (license_name flux-non-commercial-license)
+# 32B text-to-image and multi-reference editing model. BFL's API has no FLUX.2 [dev] endpoint, so input images and
+# output stay generic `image`: the open weights take and produce pixels and the format is chosen by the host.
+# No sampling temperature; prompts are not chat tokens, so context and output are 0.
+schema = 2
+v2_only = true
+type = "image"
+name = "FLUX.2 [dev]"
+description = "Open-weight 32B FLUX.2 image generation and multi-reference editing model"
+family = "flux"
+open_weights = true
+release_date = "2025-11-25"
+license = "FLUX Non-Commercial License"
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/black-forest-labs/FLUX.2-dev"

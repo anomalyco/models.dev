@@ -1,8 +1,17 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3-next-80b-a3b-instruct (accessed 2026-07-21)
+schema = 2
 base_model = "alibaba/qwen3-next-80b-a3b-instruct"
-structured_output = true
 
-[cost]
-input = 0.1
-output = 1.1
-cache_read = 0.05
+[capabilities]
+structured_output = true
+tools = { supported = true }
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1.1
