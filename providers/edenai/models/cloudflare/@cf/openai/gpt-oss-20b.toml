@@ -1,4 +1,4 @@
-# Output limit: no host-specific cap is documented, so output is capped at the context served here (the lab's raised cap would exceed it).
+# Output limit: this route is Cloudflare Workers AI @cf/openai/gpt-oss-20b, which documents 16,384 max output (see providers/cloudflare-workers-ai/models/@cf/openai/gpt-oss-20b.toml).
 schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "GPT OSS 20B (Cloudflare)"
@@ -10,7 +10,7 @@ structured_output = false
 
 [limit]
 context = 128_000
-output = 128_000
+output = 16_384
 
 [cost.text.input]
 price = 0.2
