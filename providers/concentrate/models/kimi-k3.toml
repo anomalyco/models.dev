@@ -12,7 +12,7 @@ cache = { implicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
 price = 3
-cache = { read = 0.3 }
+cache = { read = 0.3, write = { "5m" = 3 } }
 
 [cost.text.output]
 price = 15

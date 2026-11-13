@@ -2,18 +2,18 @@ import { describe, expect, test } from "bun:test";
 
 import { buildConcentrateModel, concentrate, type ConcentrateModel, resolveConcentrateBaseModel } from "../src/sync/providers/concentrate.js";
 
+const all = { none: true, low: true, medium: true, high: true, xhigh: true, max: true };
 const usd = (USD: number, units = 1_000_000) => ({ price: { USD }, units });
 const tokens = (input: number, output: number, read?: number) => ({ input: usd(input), output: usd(output), ...(read === undefined ? {} : { cache: { read: usd(read) } }) });
 const route = (o: { pricing?: unknown[]; tools?: boolean; custom?: boolean; effort?: Record<string, boolean>; chat?: boolean } = {}) => ({
   pricing: o.pricing ?? [{ tokens: tokens(1, 2) }],
-  supports: { endpoint: { chat: o.chat ?? true, decisions: !(o.chat ?? true) }, tools: { function_calling: o.tools ?? true, custom_tools: o.custom ?? false }, reasoning: { effort: o.effort ?? {} }, input: { image: {}, file: {} } },
+  supports: { endpoint: { chat: o.chat ?? true, decisions: !(o.chat ?? true) }, tools: { function_calling: o.tools ?? true, custom_tools: o.custom ?? false }, reasoning: { effort: o.effort ?? all }, input: { image: {}, file: {} } },
 });
 const model = (id: string, author: string, providers: Record<string, unknown>, thinks = true) => ({
   id, author: { slug: author }, max_input_tokens: 10_000_000, max_tokens: 10_000_000, providers,
   capabilities: { effort: { supported: thinks }, thinking: { supported: false }, structured_outputs: { supported: true } },
 }) as ConcentrateModel;
 const v2 = (entry: ConcentrateModel) => (buildConcentrateModel(entry) as { v2: Record<string, any> }).v2;
-const all = { none: true, low: true, medium: true, high: true, xhigh: true, max: true };
 
 describe("Concentrate sync", () => {
   test("maps Concentrate IDs onto models.dev lab IDs", () => {
@@ -65,6 +65,14 @@ describe("Concentrate sync", () => {
     });
   });
 
+  test("takes each price from the route that charges most for it", () => {
+    const doc = v2(model("kimi-k3-1-pro", "moonshot", {
+      moonshot: route({ pricing: [{ tokens: tokens(2, 10) }] }),
+      relace: route({ pricing: [{ tokens: tokens(1.6, 11.2, 0.3) }] }),
+    }));
+    expect(doc.cost.text).toEqual({ input: { price: 2, cache: { read: 0.3 } }, output: { price: 11.2 } });
+  });
+
   test("marks a host that bills cache reads as caching, implicitly when the reference has no details", () => {
     const priced = route({ pricing: [{ tokens: tokens(1, 2, 0.1) }] });
     expect(v2(model("kimi-k2-5", "moonshot", { moonshot: priced })).capabilities.cache).toEqual({ implicit: true });
@@ -79,13 +87,10 @@ describe("Concentrate sync", () => {
     expect(v2(model("minimax-m2-7", "minimax", { minimax: route({ pricing: [write("ephemeral_5m_input_tokens", 0.375)] }) })).cost.text.input.cache).toEqual({ read: 0.1, write: 0.375 });
   });
 
-  test("maps effort onto budget-only labs with graded low/medium/high only where probed, never the full list", () => {
-    expect(v2(model("gemini-2.5-flash-lite", "google", { vertex: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true, effort: ["none", "low", "medium", "high"] });
-    // Fewer than two graded levels stays an on/off switch.
-    expect(v2(model("gemini-2.5-flash-lite", "google", { vertex: route({ effort: { none: true, medium: true } }) })).capabilities.reasoning).toEqual({ supported: true, toggle: true });
-    // Unprobed budget-only labs get no graded levels: an on/off switch where the lab can turn reasoning off.
-    expect(v2(model("gemini-2.5-flash", "google", { vertex: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true, toggle: true });
-    expect(v2(model("gemini-2.5-pro", "google", { vertex: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true });
+  test("leaves out a reasoning model with no controls where the reference has them, unless probed always on", () => {
+    // Google's entry has effort levels; with no route levels and no probe, it isn't published as having no caller control.
+    expect(buildConcentrateModel(model("gemini-3.1-pro-preview", "google", { vertex: route({ effort: {} }) }))).toBeUndefined();
+    expect(v2(model("mistral-large-4", "mistral", { mistral: route({ effort: {} }) })).capabilities.reasoning).toEqual({ supported: true });
   });
 
   test("serves Claude over Messages with Anthropic's toggle", () => {
@@ -101,6 +106,10 @@ describe("Concentrate sync", () => {
     expect(Object.keys(v2(model("jev-1.14.0", "typesafe", { typesafe: route({ chat: false }) })).api)).toEqual(["systemone"]);
     // System One takes no sampling parameters, and its answers are structured.
     expect(v2(model("clef", "cloudflare", { cloudflare: route({ chat: false }) })).capabilities).toEqual({ structured_output: true, temperature: false, top_p: false, top_k: false });
+    // Concentrate's own image types and a smaller context than the lab's.
+    const clef = { ...model("clef-flash", "cloudflare", { cloudflare: route({ chat: false }) }), max_input_tokens: 24_576 };
+    expect(v2(clef).modalities).toEqual({ input: ["text"], output: ["text"] });
+    expect(v2(clef).limit).toEqual({ context: 24_576 });
   });
 
   test("skips services and unmapped models, and marks non-reasoners", () => {
@@ -110,6 +119,6 @@ describe("Concentrate sync", () => {
     // A non-reasoning model inherits the lab's `reasoning = { supported = false }` instead of restating it.
     expect(v2(model("gpt-4.1", "openai", { openai: route() }, false)).capabilities?.reasoning).toBeUndefined();
     // A lab reasoner stays one even when Concentrate flags no reasoning control: always-on.
-    expect(v2(model("deepseek-r1", "deepseek", { deepseek: route() }, false)).capabilities.reasoning).toEqual({ supported: true });
+    expect(v2(model("deepseek-r1", "deepseek", { deepseek: route({ effort: {} }) }, false)).capabilities.reasoning).toEqual({ supported: true });
   });
 });

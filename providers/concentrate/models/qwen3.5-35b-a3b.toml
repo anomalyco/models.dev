@@ -9,9 +9,14 @@ output = ["text"]
 [capabilities]
 structured_output = true
 reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.25
+cache = { read = 0.05 }
 
 [cost.text.output]
 price = 2
+
+[cost.web_search]
+price = 0.573411

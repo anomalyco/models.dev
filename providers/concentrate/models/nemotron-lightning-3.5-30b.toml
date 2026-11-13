@@ -6,12 +6,14 @@ base_model = "nvidia/nemotron-3.5-lightning"
 [capabilities]
 structured_output = true
 reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
 
 [limit]
 output = 65_536
 
 [cost.text.input]
 price = 0.06
+cache = { read = 0.03 }
 
 [cost.text.output]
 price = 0.24

@@ -11,8 +11,8 @@ reasoning = { supported = true, effort = ["low", "high", "max"] }
 cache = { implicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
-price = 1.6
-cache = { read = 0.24 }
+price = 2
+cache = { read = 0.24, write = { "5m" = 2 } }
 
 [cost.text.output]
 price = 11.2

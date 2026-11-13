@@ -1,6 +1,10 @@
 schema = 2
 base_model = "cloudflare/clef"
 
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [capabilities]
 structured_output = true
 temperature = false
