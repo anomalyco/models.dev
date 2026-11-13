@@ -1,9 +1,10 @@
 # Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+# Effort: reasoning_effort = low|high|max (default max); thinking.type only accepts enabled
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 
 [cost.text.input]
 price = 0.2025

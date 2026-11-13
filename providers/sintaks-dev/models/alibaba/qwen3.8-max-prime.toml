@@ -1,9 +1,12 @@
 # Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+# Toggle: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (integer reasoning tokens)
 schema = 2
 base_model = "alibaba/qwen3.8-max-prime"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, budget = {} }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
 
 [cost.text.input]
 price = 5.4

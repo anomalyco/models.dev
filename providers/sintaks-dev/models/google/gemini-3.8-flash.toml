@@ -1,9 +1,10 @@
 # Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+# Effort: thinkingConfig (forwarded as reasoning_effort) = low|medium|high
 schema = 2
 base_model = "google/gemini-3.8-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
 
 [cost.text.input]
 price = 2.025
