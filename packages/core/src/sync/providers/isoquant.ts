@@ -120,10 +120,16 @@ function isoquantReasoningOptions(model: IsoquantModel, existing: ExistingModel)
   const values = [...efforts].sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
   const option = ReasoningOption.safeParse({ type: "effort", values });
   if (!option.success) return existing.reasoning_options;
-  return [
+  const merged = [
     ...(existing.reasoning_options ?? []).filter((entry) => entry.type !== "effort"),
     option.data,
   ];
+  // An effort of "none" already disables reasoning, so a preserved toggle would
+  // duplicate the off control and can make clients send contradictory fields.
+  if (option.data.type !== "effort") return merged;
+  return option.data.values.includes("none")
+    ? merged.filter((entry) => entry.type !== "toggle")
+    : merged;
 }
 
 // The published default stays authoritative without a v1 field to carry it.

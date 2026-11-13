@@ -95,6 +95,26 @@ test("published efforts replace the authored effort list and an unknown value le
   expect(buildIsoquantModel(unknown, authored).reasoning_options).toEqual([{ type: "toggle" }]);
 });
 
+test("a published effort list containing none drops an authored toggle", () => {
+  const authored = { ...existing, reasoning_options: [{ type: "toggle" as const }] };
+  const deepseek = model({
+    id: "deepseek-v4.1-flash-1017-fast",
+    isoquant: {
+      context_length: 1_048_576,
+      output_limit: { max_tokens: 943_718, policy: "remaining_context" },
+      pricing: {
+        input_nano_usd_per_token: 35,
+        output_nano_usd_per_token: 370,
+        cached_input_nano_usd_per_token: 5,
+      },
+      reasoning: { default_effort: "high", efforts: ["none", "low", "high"] },
+    },
+  });
+  expect(buildIsoquantModel(deepseek, authored).reasoning_options).toEqual([
+    { type: "effort", values: ["none", "low", "high"] },
+  ]);
+});
+
 test("the published default effort is carried through v2Set", () => {
   const translated = isoquant.translateModel(model(), { existing: () => existing, authored: () => existing });
   expect(translated?.v2Set).toEqual({ "capabilities.reasoning.default": { type: "effort", value: "max" } });
