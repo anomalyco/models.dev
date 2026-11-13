@@ -7,6 +7,7 @@
 # No marker-based mechanism is documented for this route. Per catalog policy for documented caching with no
 # mechanism details, use implicit = true; no TTL is asserted. This declaration is documentation-based, not
 # a successful live cache probe: the 2026-10-30 probe returned 502.
+# Prices refreshed from https://api.outrun.to/pricing on 2026-11-13.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -19,8 +20,8 @@ cache = { implicit = true }
 output = 32_000
 
 [cost.text.input]
-price = 0.2
-cache = { read = 0.06, write = 0.2 }
+price = 1.2
+cache = { read = 0.2, write = 1.2 }
 
 [cost.text.output]
-price = 0.2
+price = 1.2
