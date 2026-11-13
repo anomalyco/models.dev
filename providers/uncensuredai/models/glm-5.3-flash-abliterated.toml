@@ -1,14 +1,15 @@
 # Pricing (USD per 1M tokens): https://uncensuredai.com/api/pricing
+# Public Chat Completions QA (2026-11-13): https://uncensuredai.com/v1/chat/completions
 # Hosted model: https://uncensuredai.com/en/models/glm-5.3-flash-abliterated
 # Client capabilities: https://uncensuredai.com/model-capabilities.json
 # The glm-5.3-flash-abliterated entry's context_window is 1,048,576 tokens.
 # The hosted model page lists GLM 5.3 Flash as the base model.
 # The gateway capabilities entry documents reasoning_effort = low|high|max and default_effort = low.
-# Chat Completions QA (2026-11-13): JSON message uses reasoning_content and SSE
+# Public gateway QA: low, high, and max produced reasoning. JSON uses reasoning_content and SSE
 # deltas use reasoning. Leave reasoning_field unset for detection because v1
 # cannot encode the streamed reasoning field.
-# Gateway QA (2026-11-13): Chat Completions identified the colors in both
-# inline PNG and JPEG photos. The prepaid gateway validator accepts only
+# Public gateway QA: inline PNG and JPEG returned HTTP 200 and image-based
+# answers. The prepaid gateway validator accepts only
 # inline JPEG and PNG attachments. Both modality keys are required by the schema.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"

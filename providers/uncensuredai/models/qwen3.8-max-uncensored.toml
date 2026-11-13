@@ -1,14 +1,13 @@
 # Pricing (USD per 1M tokens): https://uncensuredai.com/api/pricing
+# Public Chat Completions QA (2026-11-13): https://uncensuredai.com/v1/chat/completions
 # Hosted model: https://uncensuredai.com/en/models/qwen3.8-max-uncensored
 # Client capabilities: https://uncensuredai.com/model-capabilities.json
 # The hosted model page and gateway capabilities entry publish a 1,000,000-token
 # context matching the base and a 131,000-token output limit overriding the base.
-# Effort: reasoning_effort = none|low|medium|xhigh. With none the response contained no reasoning.
-# Gateway QA (2026-11-13): all four values and a named function call passed
-# through an isolated instance of the UncensuredAI gateway binary.
-# Chat Completions QA (2026-11-13): reasoning_content in the JSON message and streamed deltas.
-# Budget controls are omitted pending verification with the public gateway and generic client.
-# Gateway QA (2026-11-13): Chat Completions rejected inline PNG with HTTP 400
+# Graded reasoning efforts follow the first-party Models.dev entry.
+# Public text and SSE reasoning probes returned HTTP 503, so no host-specific
+# reasoning controls or response-field hint are advertised beyond the base.
+# Public gateway QA: Chat Completions rejected inline PNG with HTTP 400
 # (invalid_prepaid_media). The prepaid gateway media validator blocks file input
 # for this model. Both modality keys are required by the schema.
 schema = 2
@@ -21,11 +20,8 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 cache = { implicit = true }
-
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
 output = 131_000
