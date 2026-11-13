@@ -1,0 +1,41 @@
+# Sources (accessed 2026-11-13):
+# - Prices (USD per million tokens: input 0.064, cache read 0.0012, output 0.24): https://50x.energy/#pricing
+# - Endpoint, authentication and model ID: https://ai.50x.energy/docs
+# - GET https://api.ai.50x.energy/v1/models reports max_model_len = context_length = 1_048_576 for this model.
+# Live checks against https://api.ai.50x.energy/v1/chat/completions on 2026-11-13, exact model ID:
+# - Limit: a 1_046_052-token prompt returned HTTP 200 and recalled start/middle/end markers; a prompt of
+#   1_048_577+ tokens returned HTTP 400 ("maximum context length is 1048576 tokens"). max_tokens = 1_048_576 was
+#   accepted, 1_048_577 rejected ("cannot be greater than max_model_len=1048576"); output shares the window with
+#   the prompt, no separate lower output cap observed. max_completion_tokens is also accepted.
+# - Reasoning is on by default and billed as output (usage.completion_tokens_details.reasoning_tokens). It is
+#   returned in message.reasoning (stream: delta.reasoning), not reasoning_content. reasoning_field = "reasoning" is
+#   valid in v2, but v1's interleaved.field only allows reasoning_content|reasoning_details, so it is left unset.
+# - Effort: reasoning_effort = none|low|high|max (none = thinking off, 0 reasoning tokens). xhigh is accepted as an
+#   alias of high; minimal and medium return HTTP 400. Levels were not separable on the test prompt.
+# - Cache: automatic prefix cache, no markers: a repeated 20_421-token prompt reported
+#   prompt_tokens_details.cached_tokens = 20_352 on the second request.
+# - Tools: tool_choice auto|required|named function|none behave as expected; a tool/result round trip answered
+#   from the tool output.
+# - Structured output: response_format json_schema (strict, enum field) was enforced against a contradictory
+#   prompt; json_object returns valid JSON.
+# - Streaming: stream_options.include_usage returns usage in the final chunk, then [DONE].
+# - Images: a PNG data URL was read correctly (198 prompt tokens), so the lab's image modalities are inherited.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+stream_usage = true
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 0.064
+cache = { read = 0.0012 }
+
+[cost.text.output]
+price = 0.24
