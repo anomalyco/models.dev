@@ -5,6 +5,7 @@
 # Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
 # tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
 # system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+# Output limit: no host-specific cap is documented, so output is capped at the context served here (the lab's raised cap would exceed it).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 status = "deprecated"
@@ -16,6 +17,7 @@ structured_output = true
 
 [limit]
 context = 1_000_000
+output = 1_000_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
