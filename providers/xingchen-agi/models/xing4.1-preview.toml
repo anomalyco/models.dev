@@ -33,6 +33,9 @@ cache = { read = 0.0022 }
 [cost.text.output]
 price = 0.45
 
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
 [[cost.multipliers]]
 when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "05:00" } }, { utc_hours = { lt = "16:00" } }] }
 factor = 2
