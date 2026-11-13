@@ -6,7 +6,7 @@
 #   image-to-image $0.028, multi-image to image $0.056. Prepaid resource packages (https://kling.ai/dev/pricing) are not recorded.
 # Cost conditions: input_images = reference images sent in the image field (image-to-image); mode = "multi-image2image" is
 #   the /v1/images/multi-image2image endpoint, which takes the last path segment as its name.
-# aisdk = "none": @ai-sdk/klingai only has video models. opencodeai = "none": @opencode/ai has no Kling package.
+# aisdk = "none": @ai-sdk/klingai only has video models. opencodeai = "none": @opencode/ai has no Kling images entrypoint.
 schema = 2
 v2_only = true
 base_model = "kuaishou/kling-image-v2.1"

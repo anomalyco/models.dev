@@ -11,7 +11,8 @@
 # The China endpoint (https://api-beijing.klingai.com, CNY billing) is not covered here.
 # npm: @ai-sdk/klingai calls this host, but only the legacy /v1/videos/* endpoints with its own model IDs
 # (kling-v3.0-t2v, kling-v2.6-i2v, ...) and has no Kling 4.0, 3.0 Turbo or Omni models, so every model
-# sets aisdk = "none". opencodeai = "none": @opencode/ai has no Kling package.
+# sets aisdk = "none". opencodeai = "none": @opencode/ai has no Kling chat package; video models set
+# opencodeai = "@opencode/ai/providers/klingai/videos".
 name = "Kling AI"
 npm = "@ai-sdk/klingai"
 opencodeai = "none"
