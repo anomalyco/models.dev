@@ -8,6 +8,7 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/chat-latest
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# Regional processing (data residency) endpoints: +10% on token prices for models released on or after 2026-03-05 (FedRAMP endpoints also +10%, not modeled). Token-only factor so cost.web_search is unscaled. Source: https://developers.openai.com/api/docs/pricing (accessed 2026-11-12)
 schema = 2
 v2_only = true
 base_model = "openai/gpt-5.5-instant"
@@ -40,3 +41,7 @@ price = 30
 
 [cost.web_search]
 price = 10
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = { text = 1.1 }

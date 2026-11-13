@@ -6,7 +6,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high"] }
+reasoning = { supported = true, toggle = true, effort = ["minimal", "high"] }
 cache = { implicit = true }
 
 [cost.text.input]
@@ -15,3 +15,19 @@ cache = { read = 0.05 }
 
 [cost.text.output]
 price = 3
+
+[cost.image.output]
+unit = "image"
+price = 0.067
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "512" } }
+price = 0.045
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "2K" } }
+price = 0.101
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "4K" } }
+price = 0.151

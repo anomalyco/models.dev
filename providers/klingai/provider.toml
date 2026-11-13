@@ -1,0 +1,19 @@
+# Kling AI developer API, international endpoint (sources accessed 2026-11-12):
+# - https://kling.ai/document-api/guides/get-started/quick-start (API domain https://api-singapore.klingai.com;
+#   "Authorization: Bearer <API key>", keys created at https://kling.ai/dev/api-key)
+# - https://kling.ai/document-api/updates/api (2026-06-17: API key auth added next to the older access key +
+#   secret key pair, which callers sign into a short-lived HS256 JWT; the new per-model endpoints such as
+#   /text-to-video/kling-3.0-turbo take API keys only)
+# - https://kling.ai/document-api/guides/capability-map/video and https://kling.ai/document-api/guides/capability-map/image
+#   (model lists; doc points at the API overview, which links both)
+# env lists only the API key because it works on every endpoint. @ai-sdk/klingai reads KLINGAI_API_KEY, or
+# KLINGAI_ACCESS_KEY + KLINGAI_SECRET_KEY for the legacy JWT auth.
+# The China endpoint (https://api-beijing.klingai.com, CNY billing) is not covered here.
+# npm: @ai-sdk/klingai calls this host, but only the legacy /v1/videos/* endpoints with its own model IDs
+# (kling-v3.0-t2v, kling-v2.6-i2v, ...) and has no Kling 4.0, 3.0 Turbo or Omni models, so every model
+# sets aisdk = "none". opencodeai = "none": @opencode/ai has no Kling package.
+name = "Kling AI"
+npm = "@ai-sdk/klingai"
+opencodeai = "none"
+env = ["KLINGAI_API_KEY"]
+doc = "https://kling.ai/document-api/guides/get-started/overview"

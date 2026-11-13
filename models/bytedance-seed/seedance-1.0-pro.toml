@@ -1,0 +1,31 @@
+# Released 2025-06-11: https://seed.bytedance.com/en/blog/tech-report-of-seedance-1-0-is-now-publicly-available
+# Model page: https://seed.bytedance.com/en/seedance (Seedance 1.0 Pro is the large-parameter version of Seedance 1.0)
+# Image formats jpeg, png, webp, bmp, tiff, gif; no heic/heif on 1.0. The BytePlus task API says heic/heif start at
+#   "Seedance 1.5 pro and later" (https://ai.byteplus.com/ark/region:ap-southeast-1/docs/create-video-generation-task-api.md),
+#   while the Volcengine Ark doc says Seedance 2.0 and later (https://www.volcengine.com/docs/82379/1520757), both accessed
+#   2026-11-12. seedance-1.5-pro.toml follows the Ark wording.
+# Output: MP4 without sound (480p, 720p, 1080p, 24 fps, 2-12 s): https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-list.md
+# Sampling: the task API has no temperature, top_p or top_k.
+schema = 2
+v2_only = true
+type = "video"
+name = "Seedance 1.0 Pro"
+description = "Seedance 1.0 large-parameter video model with multi-shot storytelling, from text, a first frame or first and last frames"
+family = "seed"
+open_weights = false
+release_date = "2025-06-11"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

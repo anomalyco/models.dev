@@ -1,0 +1,22 @@
+schema = 2
+base_model = "moonshotai/kimi-k3"
+name = "MoonshotAI: Kimi K3 Fast"
+description = "Fast version of Kimi’s flagship model for long-horizon coding and end-to-end knowledge work, with a 1M-token context window."
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 4.5
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 22.5
