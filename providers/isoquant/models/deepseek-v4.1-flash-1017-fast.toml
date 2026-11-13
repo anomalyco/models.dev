@@ -2,15 +2,16 @@
 # Chat Completions: POST /v1/chat/completions; Responses: POST /v1/responses.
 # Messages: POST /v1/messages (Anthropic-compatible, `anthropic-version: 2023-06-01`); effort via `output_config.effort`.
 # Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; none|low|high, default high.
-# max is rejected on both APIs: "Supported reasoning efforts are low, high and
-# none" (live probe 2026-11-13).
+# max is rejected on all three APIs: "Supported reasoning efforts are low, high
+# and none" (live probes 2026-11-13).
 # Tool choice: Chat/Responses auto|none|required|function; Messages auto|none|any|tool.
 # `function`/`tool` are recorded as "tool" and `any` as "required".
 # Strict tools are supported on all three APIs; a forced strict tool call succeeded on
 # Messages (live probe 2026-11-13).
 # Output: API default 16384, maximum 943718; context 1048576.
-# temperature and top_p are accepted on Chat Completions and Responses; top_k is
-# rejected on both APIs (live probe 2026-11-13).
+# temperature and top_p are accepted on all three APIs (live probes 2026-11-13;
+# Messages advertises neither but accepts both). top_k is rejected on Chat
+# Completions, Messages and Responses (live probes 2026-11-13).
 # store=true is rejected: "Only stateless foreground Responses are supported"
 # (live probe 2026-11-13).
 # Cached input price is published and prefix caching is automatic; no cache-write
