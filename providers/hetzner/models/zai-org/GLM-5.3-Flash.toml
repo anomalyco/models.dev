@@ -2,9 +2,11 @@
 # Verified against GET /v1/models with an API key (2026-11-11): id "zai-org/GLM-5.3-Flash"
 #   (alias "z-ai/glm-5.3-flash" points to the same deployment), max_model_len 1048576.
 # Probed with an API key (2026-11-12): image input (image_url), tool calling, json_object and
-#   strict json_schema response formats, reasoning output and reasoning_effort all accepted all accepted.
-#   Video and PDF input were not tested, so only text and common image types are listed.
+#   strict json_schema response formats, reasoning output and reasoning_effort all accepted.
+#   Only PNG input was tested; JPEG and PNG are listed as in the base model.
 # Pricing is not published yet and is left out on purpose; it will be added in a follow-up PR.
+# Reasoning (2026-11-13): responses carry it in `reasoning`; prior turns' `reasoning_content` (and `reasoning`) are read back
+#   from the message history (prompt_tokens 30 -> 611 with a ~580-token reasoning text).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -18,4 +20,7 @@ reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
