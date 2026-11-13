@@ -119,6 +119,12 @@ function labModalities(modelID: string) {
   }
 }
 
+function inheritedOutput(canonical: string | undefined, context: number) {
+  if (canonical === undefined) return context;
+  const labOutput = (modelMetadata(canonical).limit as { output?: number } | undefined)?.output;
+  return labOutput !== undefined && labOutput > context ? context : undefined;
+}
+
 function cortecsReasons(model: CortecsModel) {
   if (model.supported_features.includes("reasoning")) return true;
   const canonical = resolveCortecsBaseModel(model.id);
@@ -150,14 +156,14 @@ export function buildCortecsModel(
     : (existing?.reasoning === true ? existing.reasoning_options : undefined);
   // A max_output_tokens at or above the context window is the window repeated,
   // not a per-request cap. Keep an authored output limit; a linked file otherwise
-  // inherits the lab's.
+  // inherits the lab's, unless that exceeds the context this route serves.
   const reportedOutput = model.max_output_tokens !== undefined && model.max_output_tokens < model.context_size
     ? model.max_output_tokens
     : undefined;
   const limit = {
     context: model.context_size,
     input: existing?.limit?.input,
-    output: reportedOutput ?? authored?.limit?.output ?? (canonical === undefined ? model.context_size : undefined),
+    output: reportedOutput ?? authored?.limit?.output ?? inheritedOutput(canonical, model.context_size),
   } as SyncedFullModel["limit"];
   const cost = {
     input: usd(model.pricing.input_token),
