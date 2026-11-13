@@ -4,7 +4,10 @@
 # Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; none|low|high, default high.
 # max is rejected on both APIs: "Supported reasoning efforts are low, high and
 # none" (live probe 2026-11-13).
-# Tool choice: auto|none|required|function (recorded as "tool"); strict tools supported.
+# Tool choice: Chat/Responses auto|none|required|function; Messages auto|none|any|tool.
+# `function`/`tool` are recorded as "tool" and `any` as "required".
+# Strict tools are supported on all three APIs; a forced strict tool call succeeded on
+# Messages (live probe 2026-11-13).
 # Output: API default 16384, maximum 943718; context 1048576.
 # temperature and top_p are accepted on Chat Completions and Responses; top_k is
 # rejected on both APIs (live probe 2026-11-13).
