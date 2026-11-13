@@ -6,15 +6,15 @@
 # Sources checked 2026-11-09; TopxAI-specific limits and formats stay in its provider file.
 # Default prompt caching is implicit. Explicit breakpoints are not claimed:
 # forwarding a cache option or listing a write price does not establish support.
-# https://ai.topxea.com/changelog#gpt-6-sol (checked 2026-11-09).
+# https://api.topxai.xyz/changelog#gpt-6-sol (checked 2026-11-09).
 # TopxAI's Auto route uses the shared-pool price below. The whole request uses
 # the long-context override above 272,000 input tokens, including cached tokens.
-# https://ai.topxea.com/pricing/gpt-6.1-terra and
-# https://ai.topxea.com/api/pricing (accessed 2026-11-09).
+# https://api.topxai.xyz/pricing/gpt-6.1-terra and
+# https://api.topxai.xyz/api/pricing (accessed 2026-11-09).
 # Effort: $.reasoning.effort on /v1/responses, $.reasoning_effort on
 # /v1/chat/completions; none turns reasoning off, medium is the default.
 # The host lists text/image input and routes Chat Completions through Responses.
-# https://ai.topxea.com/docs/api-reference (accessed 2026-11-09).
+# https://api.topxai.xyz/docs/api-reference (accessed 2026-11-09).
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 

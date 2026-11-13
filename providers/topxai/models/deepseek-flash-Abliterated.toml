@@ -1,15 +1,15 @@
 # Sampling: temperature and top_p work on this deployment; top_k is not
 # a documented host capability, so support is not advertised here.
-# https://ai.topxea.com/docs/deepseek-flash-abliterated (checked 2026-11-09).
+# https://api.topxai.xyz/docs/deepseek-flash-abliterated (checked 2026-11-09).
 # DeepSeek V4.1 Flash 1017 with its refusal alignment removed (abliterated), served from
 # TopxAI's private deployment, not DeepSeek's official API. Defined inline because this
 # variant does not have the official model's weights/benchmarks.
 # Launched 2026-10-24; replaces the retired deepseek-flash ID with no forwarding alias.
-# https://ai.topxea.com/blog/deepseek-flash-abliterated
+# https://api.topxai.xyz/blog/deepseek-flash-abliterated
 # Effort: reasoning_effort = none|low|high|max on Chat Completions (default low).
 # none disables reasoning, so there is no additional toggle. Text/image input,
-# limits, protocols and prices: https://ai.topxea.com/docs/deepseek-flash-abliterated
-# and https://ai.topxea.com/api/pricing (accessed 2026-11-10).
+# limits, protocols and prices: https://api.topxai.xyz/docs/deepseek-flash-abliterated
+# and https://api.topxai.xyz/api/pricing (accessed 2026-11-10).
 # Fixed prices at every hour and context length; automatic cache reads, no separate
 # cache-write charge. Official DeepSeek comparison prices and peak hours do not apply.
 # Responses is stateless; send the full conversation. Messages converts to Chat.

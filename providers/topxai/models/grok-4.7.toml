@@ -1,10 +1,10 @@
 # Automatic prompt caching; no explicit cache-control API or TTL is claimed.
-# https://ai.topxea.com/changelog#grok-4-7 (checked 2026-11-09).
+# https://api.topxai.xyz/changelog#grok-4-7 (checked 2026-11-09).
 # Effort: $.reasoning.effort on /v1/responses, $.reasoning_effort on /v1/chat/completions,
 # forwarded unchanged (default high). Shared-pool price, 50% of xAI's list; no
 # cache-write lane is sold. Requests whose input reaches 200,000 tokens bill the whole
 # request at the override below.
-# https://ai.topxea.com/pricing/grok-4.7 and https://ai.topxea.com/api/pricing (accessed 2026-10-23)
+# https://api.topxai.xyz/pricing/grok-4.7 and https://api.topxai.xyz/api/pricing (accessed 2026-10-23)
 # Structured output: response_format json_schema (strict) and json_object return valid JSON on
 # /v1/chat/completions, checked live 2026-10-16.
 schema = 2

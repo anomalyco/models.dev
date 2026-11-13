@@ -1,13 +1,13 @@
 # Automatic prompt caching; no explicit cache-control API or TTL is claimed.
-# https://ai.topxea.com/docs/kimi-k3-1-pro (checked 2026-11-09).
+# https://api.topxai.xyz/docs/kimi-k3-1-pro (checked 2026-11-09).
 # Kimi K3.1 Pro replaced kimi-k3 on this host; the old ID has no forwarding alias.
 # TopxAI serves it from a private deployment, not Moonshot's API, with text and image
 # input (base64 data URIs only), a 1,048,576-token context and 131,072 output tokens.
 # Its supported input set is narrower than the lab's, which also lists video.
 # Effort: reasoning_effort = low|high|max on Chat Completions (default low).
 # Reasoning is always on; no separate toggle. Host contract and current prices:
-# https://ai.topxea.com/docs/kimi-k3-1-pro, https://ai.topxea.com/pricing/kimi-k3.1-pro
-# and https://ai.topxea.com/api/pricing (accessed 2026-11-08). Fixed prices; caching is
+# https://api.topxai.xyz/docs/kimi-k3-1-pro, https://api.topxai.xyz/pricing/kimi-k3.1-pro
+# and https://api.topxai.xyz/api/pricing (accessed 2026-11-08). Fixed prices; caching is
 # automatic and no cache-write price is published.
 # The deployment ignores a json_schema response format (json_object works), so
 # structured output is not claimed. These capabilities were not re-tested with paid calls.

@@ -2,15 +2,15 @@
 # TopxAI's own private deployment rather than Z.ai's API. Unique to this host, so
 # defined inline. Text and image input (base64 data URLs only; http(s) image URLs are
 # not fetched). Launched 2026-11-08.
-# https://ai.topxea.com/docs/glm-5-3-abliterated (accessed 2026-11-08)
+# https://api.topxai.xyz/docs/glm-5-3-abliterated (accessed 2026-11-08)
 # Effort: reasoning_effort = low|high|max on /v1/chat/completions, reasoning.effort on
 # /v1/responses (default low); it always reasons.
 # Honours stop, json_object and json_schema response formats, tool_choice and
 # parallel_tool_calls: false, per the guide above. Responses is stateless; send the full
 # conversation. Messages converts to Chat. Fixed prices, no long-context tier and no
 # cache-write price; cached prompt tokens bill at the cache-read price.
-# https://ai.topxea.com/pricing/glm-5.3-flash-abliterated and
-# https://ai.topxea.com/api/pricing (accessed 2026-11-10)
+# https://api.topxai.xyz/pricing/glm-5.3-flash-abliterated and
+# https://api.topxai.xyz/api/pricing (accessed 2026-11-10)
 schema = 2
 name = "GLM-5.3-Flash-Abliterated"
 description = "GLM-5.3-Flash with refusal alignment removed, on TopxAI's private deployment; text and image input"

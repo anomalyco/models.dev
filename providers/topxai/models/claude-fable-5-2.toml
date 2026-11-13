@@ -1,13 +1,13 @@
 # Native Messages preserves cache_control; the host supports 5m and 1h writes.
-# https://ai.topxea.com/docs/api-reference (checked 2026-11-10).
+# https://api.topxai.xyz/docs/api-reference (checked 2026-11-10).
 # Effort only, as the lab and peers author this model: $.output_config.effort on
 # /v1/messages, $.reasoning_effort on /v1/chat/completions, both forwarded unchanged;
-# default high, as https://ai.topxea.com/api/pricing lists it.
+# default high, as https://api.topxai.xyz/api/pricing lists it.
 # Claude Fable 5.2 replaced Fable 5.1 on 2026-11-10 with no forwarding alias; the old ID
-# returns 403. https://ai.topxea.com/blog/claude-fable-5-2 (accessed 2026-11-10)
+# returns 403. https://api.topxai.xyz/blog/claude-fable-5-2 (accessed 2026-11-10)
 # Shared-pool price, 50% of Anthropic's list on every lane; cache writes for the 5m and
 # 1h TTLs from the same table.
-# https://ai.topxea.com/pricing/claude-fable-5-2 (accessed 2026-11-10)
+# https://api.topxai.xyz/pricing/claude-fable-5-2 (accessed 2026-11-10)
 schema = 2
 base_model = "anthropic/claude-fable-5-2"
 
