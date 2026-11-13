@@ -2,6 +2,9 @@
 schema = 2
 base_model = "openai/gpt-4o-mini"
 
+[limit]
+context = 128_000
+
 [cost.text.input]
 price = 0.2025
 

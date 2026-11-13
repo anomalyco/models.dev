@@ -2,6 +2,9 @@
 schema = 2
 base_model = "xai/grok-4.20-0309-non-reasoning"
 
+[limit]
+context = 2_000_000
+
 [cost.text.input]
 price = 3.375
 

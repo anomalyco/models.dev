@@ -6,6 +6,9 @@ base_model = "alibaba/qwen3.8-omni-flash"
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }
 
+[limit]
+context = 1_000_000
+
 [cost.text.input]
 price = 0.2025
 

@@ -2,6 +2,10 @@
 schema = 2
 base_model = "morph/morph-v3-fast"
 
+[limit]
+context = 81_920
+output = 81_920
+
 [cost.text.input]
 price = 1.08
 

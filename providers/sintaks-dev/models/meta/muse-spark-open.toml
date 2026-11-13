@@ -6,6 +6,9 @@ base_model = "meta/muse-spark-open"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 
+[limit]
+context = 1_048_576
+
 [cost.text.input]
 price = 1.6875
 

@@ -1,7 +1,10 @@
 # Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
-v2_only = true
 schema = 2
+v2_only = true
 base_model = "openai/text-embedding-ada-002"
+
+[limit]
+context = 8_192
 
 [api.embeddings]
 base_url = "https://api.sintaks.dev/v1"

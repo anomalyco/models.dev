@@ -6,6 +6,9 @@ base_model = "openai/o3-pro"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
+[limit]
+context = 200_000
+
 [cost.text.input]
 price = 22
 

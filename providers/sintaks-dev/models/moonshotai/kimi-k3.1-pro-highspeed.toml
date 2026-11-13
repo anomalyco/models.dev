@@ -6,6 +6,9 @@ base_model = "moonshotai/kimi-k3.1-pro"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
+[limit]
+context = 1_048_576
+
 [cost.text.input]
 price = 5.4
 

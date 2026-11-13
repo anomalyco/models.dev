@@ -6,6 +6,9 @@ base_model = "mistral/mistral-large-4"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
+[limit]
+context = 1_048_576
+
 [cost.text.input]
 price = 0.945
 
