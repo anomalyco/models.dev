@@ -1,0 +1,28 @@
+# Pricing and limits: https://api.gradiated.com/api/v1/models
+# Reasoning controls: https://gradiated.com/docs/models-pricing/#reasoning-controls
+# Reasoning is always on; reasoning_effort = low|high|max.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.25
+reasoning = 0.25
+
+[limit]
+context = 1_048_576
+input = 1_048_576
