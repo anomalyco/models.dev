@@ -1,15 +1,18 @@
-# Sources (accessed 2026-11-07):
-# - https://thinkingmachines.ai/news/inkling-2-small/
-# - https://thinkingmachines.ai/model-card/inkling-2-small/
-# Weights are closed at release; the lab plans to publish them under Apache-2.0 after safety testing.
+# Sources (accessed 2026-11-13):
+# - https://thinkingmachines.ai/news/inkling-2-small/ ("Nov 12, 2026 Update: Inkling 2 Small's weights are now
+#   available for download on HuggingFace.")
+# - https://thinkingmachines.ai/model-card/inkling-2-small/ (License: Apache 2.0; "released with open weights";
+#   two checkpoint formats, the main NVFP4 and an alternative MXFP8)
+# - https://huggingface.co/thinkingmachines/Inkling-2-Small (weights uploaded 2026-11-12)
+# Weights were closed at release on 2026-11-05 and published on 2026-11-12 under Apache-2.0.
 # Input: the model card lists "any pixel-based image input" without naming formats, so the generic image modality is used.
 schema = 2
 name = "Inkling 2 Small"
 description = "Multimodal MoE reasoning model (594B total, 17B active) for agentic coding, vision, and knowledge work"
 family = "ling"
-open_weights = false
+open_weights = true
 release_date = "2026-11-05"
-license = "Proprietary"
+license = "Apache-2.0"
 
 [modalities]
 input = ["text", "image"]
@@ -25,6 +28,16 @@ top_k = false
 [limit]
 context = 1_048_576
 output = 131_072
+
+[[weights]]
+label = "Hugging Face (NVFP4)"
+url = "https://huggingface.co/thinkingmachines/Inkling-2-Small"
+quantization = "nvfp4"
+
+[[weights]]
+label = "Hugging Face (MXFP8)"
+url = "https://huggingface.co/thinkingmachines/Inkling-2-Small-MXFP8"
+quantization = "mxfp8"
 
 [[links]]
 url = "https://thinkingmachines.ai/news/inkling-2-small/"
