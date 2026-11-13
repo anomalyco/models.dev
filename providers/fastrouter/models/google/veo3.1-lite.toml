@@ -1,18 +1,21 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Video: catalog videoCost rows per clip length (seconds) and resolution, priced here per second of output.
+# Limits: context is the catalog's context_length (400000; max_completion_tokens 0).
+# API: POST /api/v1/videos (https://docs.fastrouter.ai/api-reference/video.md).
+schema = 2
+base_model = "google/veo-3.1-lite-generate-preview"
 name = "Veo 3.1 Lite"
-description = "Video model for prompt-guided generation, editing, and motion workflows"
-family = "veo"
-release_date = "2026-05-01"
-last_updated = "2026-05-01"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = false
 
 [limit]
 context = 400_000
-output = 0
 
-[modalities]
-input = ["text", "image"]
-output = ["video"]
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.05
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.08

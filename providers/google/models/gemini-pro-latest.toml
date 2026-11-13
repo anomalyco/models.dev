@@ -1,0 +1,53 @@
+# Alias for the current Gemini Pro release (gemini-3.1-pro-preview).
+# Target: generateContent on gemini-pro-latest returns modelVersion "gemini-3.1-pro-preview" (checked 2026-10-20);
+# the last documented switch was to gemini-3-pro-preview (https://ai.google.dev/gemini-api/docs/changelog, 2026-01-21),
+# which shut down 2026-03-09 (https://ai.google.dev/gemini-api/docs/deprecations).
+# Keep capabilities and cost in sync with gemini-3.1-pro-preview. Flex/Priority are not listed for the alias.
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models (latest aliases)
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/generate-content/caching
+# - https://ai.google.dev/gemini-api/docs/thinking
+# - https://generativelanguage.googleapis.com/v1beta/models (displayName, limits, topP/topK)
+# system_updates: left out. Undocumented: the generateContent spec lists only "user" and "model" for
+#   Content.role (https://ai.google.dev/api/caching#Content). A {"role": "system"} entry in `contents` was
+#   accepted and kept the cache live (2026-10-23), but server behavior alone is not a documented mechanism.
+#   The Chat Completions endpoint moves a late system message to the top, and Interactions rejects it.
+# Thinking config and tools are request-level; changing the thinking level drops the cache (live 2026-10-23).
+# APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
+# tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+name = "Gemini Pro Latest"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = { min_tokens = 4_096 }, explicit = true }
+
+[api.generate-content]
+
+[api.chat-completions]
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.interactions]
+sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, storage = 4.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 12
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 18

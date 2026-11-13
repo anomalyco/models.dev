@@ -10,6 +10,7 @@ import { groups, providers } from "../src/sync/index.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import { buildEngyModel, engy, fetchEngyModels, type EngyModel } from "../src/sync/providers/engy.js";
 import { modelMetadata } from "../src/sync/providers/openrouter.js";
+import { modelV2ToV1 } from "../src/translate.js";
 
 const REPO = path.join(import.meta.dirname, "..", "..", "..");
 const SHIPPED_DIR = path.join(REPO, "providers", "engy", "models");
@@ -64,10 +65,12 @@ const SHIPPED: Record<string, Shipped> = Object.fromEntries(
   readdirSync(SHIPPED_DIR).map((file) => {
     const id = file.slice(0, -".toml".length);
     const text = readFileSync(path.join(SHIPPED_DIR, file), "utf8");
-    const authored = Bun.TOML.parse(text) as ExistingModel;
+    // The files are v2; the runner sees their v1 translation.
+    const raw = Bun.TOML.parse(text) as Record<string, unknown>;
+    const { id: _id, ...authored } = modelV2ToV1({ ...raw, id }) as ExistingModel & { id?: string };
     const { benchmarks: _benchmarks, weights: _weights, ...base } = modelMetadata(authored.base_model!);
     const resolved = mergeDeep(base, authored) as ExistingModel;
-    return [id, { text, header: text.slice(0, text.indexOf("base_model =")), resolved, wire: wireRow(id, resolved) }];
+    return [id, { text, header: text.slice(0, text.search(/^(schema|base_model) =/m)), resolved, wire: wireRow(id, resolved) }];
   }),
 );
 const GLM52 = SHIPPED["glm-5.2"]!;
@@ -320,7 +323,8 @@ function doubled(shipped: Shipped) {
   const input = shipped.resolved.cost!.input;
   return {
     prompt: perToken(input * 2)!,
-    rewrite: (text: string) => text.replace(`input = ${input}\n`, `input = ${input * 2}\n`),
+    rewrite: (text: string) =>
+      text.replace(`[cost.text.input]\nprice = ${input}\n`, `[cost.text.input]\nprice = ${input * 2}\n`),
   };
 }
 
@@ -350,7 +354,10 @@ test("a repricing changes the price line and nothing else", async () => {
   // Shipped kimi-k3, plus a glm-5.2 that overrides two intrinsic fields of its
   // base. An exact match proves the header, reasoning_options, the authored
   // limit split, the overrides and the modality order all survive the rewrite.
-  const glm52 = GLM52.text.replace("\n\n[interleaved]", "\ntemperature = false\ntool_call = false\n\n[interleaved]");
+  const glm52 = GLM52.text
+    .replace(/tools = { supported = true(, updates = false)? }/, "tools = { supported = false }")
+    .replace("\nstructured_output = true\n", "\nstructured_output = true\ntemperature = false\n");
+  expect(glm52).not.toBe(GLM52.text);
   await inRoot({ "glm-5.2.toml": glm52, "kimi-k3.toml": KIMI_K3.text }, async (modelsDir) => {
     let catalog = list();
     const provider = engyAt(modelsDir, () => catalog);

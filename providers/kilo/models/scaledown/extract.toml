@@ -1,22 +1,28 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 name = "ScaleDown: Extract"
 description = "Extract is a description-driven entity extraction model from ScaleDown. Instead of a fixed set of entity types, callers describe the fields they want in plain English through `provider.options.scaledown.entities`, and the..."
-release_date = "2026-10-13"
-last_updated = "2026-10-13"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-structured_output = false
 open_weights = false
+release_date = "2026-10-13"
 
-[cost]
-input = 0.05
-output = 0
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
 
 [limit]
 context = 1_000_000
 output = 900_000
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0

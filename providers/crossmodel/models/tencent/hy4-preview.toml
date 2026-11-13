@@ -1,15 +1,25 @@
+# Synced from CrossModel's catalog, https://www.crossmodel.ai/api/models (accessed 2026-10-21):
+# prices (USD micro/1M, threshold tiers -> context overrides), limits, modalities,
+# reasoning controls, structured_output.json_schema, context.caching, release_stage.
+# Effort: reasoning_effort (/v1/chat/completions), reasoning.effort (/v1/responses)
+# (https://www.crossmodel.ai/docs/api-reference/chat.md, responses.md)
+# Cache: catalog context.caching = true; CrossModel documents no mechanism (implicit/explicit, TTL).
+# Mid-conversation flags unset: CrossModel documents none and nothing was tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages (https://www.crossmodel.ai/docs/models-and-capabilities.md).
+schema = 2
 base_model = "tencent/hy4-preview"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
-
-[cost]
-input = 0.96
-output = 2.88
-cache_read = 0.048
-cache_write = 0.96
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
 output = 65_536
+
+[cost.text.input]
+price = 0.96
+cache = { read = 0.048, write = 0.96 }
+
+[cost.text.output]
+price = 2.88

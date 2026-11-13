@@ -1,25 +1,33 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
 # Effort: top-level reasoning_effort; levels shared by the pool members.
 # Context tiers are conservative pool price ceilings, including marginal-rate bands.
+# Cache: OpenAI and Gemini cache automatically with no flag; https://docs.opper.ai/build/gateway/prompt-caching (2026-10-21).
+schema = 2
 base_model = "openai/gpt-5.6-luna"
 
-reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
-
-[cost]
-input = 0.2
-output = 1.2
-cache_read = 0.02
-cache_write = 0.25
-
-[[cost.tiers]]
-tier = { type = "context", size = 272000 }
-input = 0.4
-output = 1.8
-cache_read = 0.04
-cache_write = 0.5
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+structured_output = true
 
 [limit]
-context = 1000000
+context = 1_000_000
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02, write = 0.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.4
+cache = { read = 0.04, write = 0.5 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.8

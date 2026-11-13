@@ -1,6 +1,15 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
+schema = 2
 base_model = "openai/gpt-6-astra"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 10.0
-output = 50.0
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 10
+cache = { read = 1 }
+
+[cost.text.output]
+price = 50

@@ -1,29 +1,35 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 6, output 24, cache read 1.3; input ≥32k: input 8, output 28, cache read 2.0
+schema = 2
+base_model = "zhipuai/glm-5.1"
 name = "Pro/zai-org/GLM-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-04-08"
-last_updated = "2026-04-08"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
-cache_write = 0
 
 [limit]
 context = 205_000
 output = 205_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.89668487
+cache = { read = 0.19428172, write = 0 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 32_000 } }
+price = 1.19557982
+cache = { read = 0.29889496, write = 0 }
+
+[cost.text.output]
+price = 3.58673947
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 32_000 } }
+price = 4.18452938

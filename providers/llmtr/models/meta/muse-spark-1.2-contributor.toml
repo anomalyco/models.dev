@@ -1,13 +1,18 @@
 # Hand-authored from LLMTR's public catalog https://llmtr.com/api/models (accessed 2026-08-16).
 # reasoning_options measured against POST https://llmtr.com/v1/chat/completions (2026-08-16).
 # Effort: $.reasoning.effort = minimal|low|medium|high|xhigh
+# Cache read price: GET https://llmtr.com/v1/models pricing.input_cache_read (accessed 2026-10-21).
+schema = 2
 base_model = "meta/muse-spark-1.2"
 name = "Muse Spark 1.2 Contributor"
 
-[cost]
-input = 0.1
-output = 0.2
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high", "xhigh"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.2

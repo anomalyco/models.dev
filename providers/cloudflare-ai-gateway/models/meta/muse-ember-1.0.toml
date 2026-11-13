@@ -1,0 +1,18 @@
+schema = 2
+base_model = "meta/muse-ember-1.0"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.004 }
+
+[cost.text.output]
+price = 0.5

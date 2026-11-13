@@ -1,32 +1,21 @@
+# Toggle: thinking.type = enabled|disabled (deprecated; not re-verified on Zen)
+# Mid-conversation flags left out: moonshotai has no provider file for moonshotai/kimi-k2.5 to follow (Zen passes requests through).
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
 name = "Kimi K2.5 Free"
 description = "Legacy model retained for compatibility with older integrations"
-family = "kimi-free"
-release_date = "2026-01-27"
-last_updated = "2026-01-27"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-knowledge = "2024-10"
-open_weights = true
 status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 262_144
-output = 262_144
+[cost.text.input]
+price = 0
+cache = { read = 0 }
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
-
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.output]
+price = 0

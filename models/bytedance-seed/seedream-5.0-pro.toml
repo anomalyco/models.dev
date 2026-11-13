@@ -1,0 +1,28 @@
+# Released 2026-07-08: https://seed.bytedance.com/en/seedream5_0_pro,
+#   https://finance.sina.com.cn/tech/digi/2026-07-08/doc-inihceiu8052714.shtml
+#   Input formats jpeg, png, webp, bmp, tiff, gif, heic, heif:
+#   https://ai.byteplus.com/resources/seedream-5-0-overview-what-we-know-about-this-version
+#   Output: output_format png or jpeg (jpeg by default).
+schema = 2
+v2_only = true
+type = "image"
+name = "Seedream 5.0 Pro"
+description = "Image generation and interactive editing model for commercial visual production"
+family = "seed"
+open_weights = false
+release_date = "2026-07-08"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif"]
+output = ["image/jpeg", "image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

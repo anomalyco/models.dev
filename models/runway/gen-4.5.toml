@@ -1,0 +1,26 @@
+# Released 2025-12-01: https://runway.com/research/introducing-runway-gen-4.5
+# Inputs: text, or an image (JPEG, PNG or WebP) for image-to-video: https://docs.dev.runwayml.com/assets/inputs/
+# Output: MP4 URLs: https://docs.dev.runwayml.com/assets/outputs/
+schema = 2
+v2_only = true
+type = "video"
+name = "Gen-4.5"
+description = "Video generation model for text-to-video and image-to-video with precise prompt adherence and physical accuracy"
+family = "runway"
+open_weights = false
+release_date = "2025-12-01"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

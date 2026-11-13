@@ -1,7 +1,17 @@
+# system_updates = true: the gateway keeps later system messages in place on google-ai-studio, google-vertex (theopenco/llmgateway@1a1791f packages/actions/src/prepare-request-body.ts: Claude native or <system-reminder> user turn, Gemini user turn, OpenAI/xAI forwarded)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "google/gemini-3-flash-preview"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
-[cost]
-input = 0.5
-output = 3
-cache_read = 0.05
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+system_updates = true
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 3

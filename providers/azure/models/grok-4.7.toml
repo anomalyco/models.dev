@@ -1,9 +1,16 @@
 # Source: https://ai.azure.com/catalog/models/grok-4.7
 # Pricing not yet published on Azure's public pricing page.
 # Azure catalog lists context/output limits identical to the base model (500k/500k), so no override is needed.
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+schema = 2
 base_model = "xai/grok-4.7"
 status = "beta"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }

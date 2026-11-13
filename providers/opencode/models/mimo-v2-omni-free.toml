@@ -1,32 +1,27 @@
+# Mid-conversation flags left out: xiaomi has no provider file for xiaomi/mimo-v2-omni to follow (Zen passes requests through).
+schema = 2
+base_model = "xiaomi/mimo-v2-omni"
 name = "MiMo V2 Omni Free"
 description = "Legacy model retained for compatibility with older integrations"
-family = "mimo-omni-free"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = true
 status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0
-output = 0
-cache_read = 0
-
-[limit]
-context = 262_144
-output = 64_000
-
 [modalities]
-input = ["text", "image", "audio", "pdf"]
+input = ["text", "image", "audio", "application/pdf"]
 output = ["text"]
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 64_000
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

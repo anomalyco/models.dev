@@ -1,17 +1,23 @@
 # attachment are not supported on AKI.IO for security reasons and therefore are disabled
 # AKI.IO uses the reasoning_option 'none' to disable reasoning
+# Prices: https://aki.io/#pricing lists EUR per 1M tokens (net); converted to USD at the ECB
+# reference rate of 1.1215 USD/EUR (2026-10-20). They were stored as unconverted EUR values.
+schema = 2
 base_model = "mistral/mistral-small-2603"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
 
-[cost]
-input = 0.20
-output = 0.60
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
 
 [limit]
 context = 262_144
 output = 81_920
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.2243
+
+[cost.text.output]
+price = 0.6729

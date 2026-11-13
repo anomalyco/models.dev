@@ -1,19 +1,24 @@
+# Sampling: open weights; generation_config.json sets temperature and top_p, and the model card samples with
+#   top_k=20 (https://huggingface.co/poolside/Laguna-XS.2).
+schema = 2
 name = "Laguna XS.2"
 description = "Agentic coding model from Poolside in the XS size class for local deployment"
 family = "laguna"
+open_weights = true
 release_date = "2026-04-28"
 last_updated = "2026-06-13"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = true
-
-[limit]
-context = 262_144
-output = 32_768
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768

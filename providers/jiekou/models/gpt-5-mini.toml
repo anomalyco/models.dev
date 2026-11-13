@@ -1,24 +1,18 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Effort: top-level reasoning_effort on /openai/chat/completions (provider.toml), values from providers/openai or relay peers for this model.
+schema = 2
+base_model = "openai/gpt-5-mini"
 name = "gpt-5-mini"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+cache = { implicit = true }
 structured_output = true
-open_weights = false
 
-[cost]
-input = 0.225
-output = 1.8
+[cost.text.input]
+price = 0.2375
+cache = { read = 0.0237 }
 
-[limit]
-context = 400000
-output = 128000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 1.9

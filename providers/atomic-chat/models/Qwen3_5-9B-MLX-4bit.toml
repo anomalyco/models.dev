@@ -1,22 +1,21 @@
+schema = 2
+base_model = "alibaba/qwen3.5-9b"
 name = "Qwen 3.5 9B (MLX 4-bit)"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-release_date = "2026-03-05"
-last_updated = "2026-04-04"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 32_768
 output = 8_192
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

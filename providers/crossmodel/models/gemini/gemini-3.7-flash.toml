@@ -1,14 +1,27 @@
+# Synced from CrossModel's catalog, https://www.crossmodel.ai/api/models (accessed 2026-10-21):
+# prices (USD micro/1M, threshold tiers -> context overrides), limits, modalities,
+# reasoning controls, structured_output.json_schema, context.caching, release_stage.
+# Effort: reasoning_effort (/v1/chat/completions), reasoning.effort (/v1/responses)
+# (https://www.crossmodel.ai/docs/api-reference/chat.md, responses.md)
+# MIME: the lab's types for the media kinds CrossModel lists; CrossModel documents no format list.
+# Cache: catalog context.caching = true; CrossModel documents no mechanism (implicit/explicit, TTL).
+# Mid-conversation flags unset: CrossModel documents none and nothing was tested live.
+# APIs: /v1/chat/completions, /v1/responses, /v1/messages (https://www.crossmodel.ai/docs/models-and-capabilities.md).
+schema = 2
 base_model = "google/gemini-3.7-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.75
-output = 3.75
-cache_read = 0.075
-cache_write = 0.75
-
 [modalities]
-input = ["text", "image", "audio", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075, write = 0.75 }
+
+[cost.text.output]
+price = 3.75

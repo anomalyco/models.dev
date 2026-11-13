@@ -1,25 +1,31 @@
 # Sources (accessed 2026-07-11):
 # - Pricing and model details: https://app.wafer.ai/models
 # - Reasoning controls: https://docs.wafer.ai/serverless/api-reference#reasoning-controls
+# Deprecated: not in GET https://pass.wafer.ai/v1/models (checked 2026-10-21), which lists GLM-5.2, GLM-5.3, GLM-5.3-Flash, Kimi-K3, Qwen3.8-27B and the DeepSeek V4 models.
+schema = 2
 base_model = "minimax/MiniMax-M3"
-structured_output = true
-reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["none", "low", "medium", "high", "max"] }]
-
-[cost]
-input = 0.33
-output = 1.32
-cache_read = 0.07
-cache_write = 0
-
-[[cost.tiers]]
-tier = { size = 512_000 }
-input = 0.66
-output = 2.64
-cache_read = 0.13
-cache_write = 0
-
-[limit]
-context = 1_048_576
+status = "deprecated"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.07, write = 0 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 512_000 } }
+price = 0.66
+cache = { read = 0.13, write = 0 }
+
+[cost.text.output]
+price = 1.32
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 512_000 } }
+price = 2.64

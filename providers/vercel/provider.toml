@@ -1,6 +1,7 @@
 name = "Vercel AI Gateway"
 env = ["AI_GATEWAY_API_KEY"]
 npm = "@ai-sdk/gateway"
+opencodeai = "@opencode/ai/providers/vercel-ai-gateway"
 # Reasoning HTTP format (accessed 2026-06-25):
 # POST https://ai-gateway.vercel.sh/v1/chat/completions
 # JSON reasoning.enabled: true | false; reasoning.effort: "none" | "minimal" |

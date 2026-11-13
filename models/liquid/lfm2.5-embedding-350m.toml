@@ -1,0 +1,31 @@
+# Released 2026-06-18: https://www.liquid.ai/blog/lfm2-5-retrievers
+# https://huggingface.co/LiquidAI/LFM2.5-Embedding-350M
+# Context: 512 tokens as served on OpenRouter (https://openrouter.ai/liquid/lfm-2.5-embedding-350m:free)
+schema = 2
+v2_only = true
+type = "embedding"
+name = "LFM2.5-Embedding-350M"
+description = "Open multilingual text embedding model for retrieval and semantic search"
+family = "liquid"
+open_weights = true
+release_date = "2026-06-18"
+license = "LFM Open License v1.0"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 512
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LiquidAI/LFM2.5-Embedding-350M"

@@ -5,14 +5,19 @@
 # Limits from https://docs.oracle.com/en-us/iaas/Content/generative-ai/meta-llama-4-scout.htm
 # The endpoint returns tool-call arguments as JSON strings and requires the first message
 # of a tool-calling request to be a user message.
-base_model = "meta/llama-4-scout-17b-instruct"
 # opencode sends its system prompt first with tools; OCI rejects that for Llama models
 # (400 "Tool calling for this Llama model requires the first message to be a user message").
-tool_call = false
+schema = 2
+base_model = "meta/llama-4-scout-17b-instruct"
 
-[cost]
-input = 0.72
-output = 0.72
+[capabilities]
+tools = { supported = false }
 
 [limit]
 context = 192_000
+
+[cost.text.input]
+price = 0.72
+
+[cost.text.output]
+price = 0.72

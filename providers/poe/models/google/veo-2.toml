@@ -1,18 +1,29 @@
+# Status: https://poe.com/Veo-2 is titled "Veo-2_DEPRECATED" (2026-10-21).
+# Modalities (video: Veo returns video/mp4; Poe lists none): https://ai.google.dev/gemini-api/docs/veo
+# APIs: POST /v1/videos (https://creator.poe.com/api-reference/createVideo) and Chat Completions for media bots (https://creator.poe.com/docs/external-applications/openai-compatible-api)
+schema = 2
+type = "video"
 name = "Veo-2"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 family = "veo"
-release_date = "2024-12-02"
-last_updated = "2024-12-02"
-attachment = true
-reasoning = false
-temperature = false
 open_weights = false
-tool_call = true
+release_date = "2024-12-02"
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 480
 output = 0
 
-[modalities]
-input = ["text"]
-output = ["video"]
+[api.chat-completions]
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }

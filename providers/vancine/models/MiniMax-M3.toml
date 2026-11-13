@@ -8,15 +8,21 @@
 # Lab cost (token plan): input 0.30 / output 1.20 / cache_read 0.06.
 # Vancine public pricing (/api/pricing) is 0.24 / 0.96 / 0.048 (USD/MTok).
 # No tiered pricing is published on the public Vancine pricing endpoint.
+# Deprecated: MiniMax-M3 is no longer listed on https://vancine.com/api/pricing (checked 2026-10-21; the
+# public pricing feed now lists MiniMax-M3.1-Flash and MiniMax-H3 instead).
+schema = 2
 base_model = "minimax/MiniMax-M3"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.24
-output = 0.96
-cache_read = 0.048
+[cost.text.input]
+price = 0.24
+cache = { read = 0.048 }
+
+[cost.text.output]
+price = 0.96

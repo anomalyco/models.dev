@@ -1,8 +1,13 @@
+schema = 2
 base_model = "alibaba/qwen3-coder-next"
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
 structured_output = false
 
-[cost]
-input = 0.15
-output = 0.8
-cache_read = 0.075
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 0.8

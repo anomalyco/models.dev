@@ -1,0 +1,29 @@
+# Canopy Labs publishes no weights or model card for this model; its only public documentation is the
+# GroqCloud model page https://console.groq.com/docs/model/canopylabs/orpheus-arabic-saudi and
+# https://console.groq.com/docs/text-to-speech/orpheus (accessed 2026-10-21).
+# Release date: the GroqCloud launch (Models API `created` = 1765926439).
+# Limits: 4,000-token context and 50,000 max output (Models API context_window / max_completion_tokens).
+# Output: WAV; Orpheus decodes SNAC tokens to 24 kHz audio, and `response_format` "wav" is the only format offered.
+# Sampling: no temperature, top_p or top_k request parameters (the speech request takes input, voice, response_format).
+schema = 2
+type = "speech"
+name = "Orpheus Arabic Saudi"
+description = "Expressive Saudi Arabic text-to-speech model with bracketed vocal directions"
+family = "canopylabs"
+open_weights = false
+release_date = "2025-12-16"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 4_000
+output = 50_000

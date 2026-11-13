@@ -1,17 +1,27 @@
+# Audio MIME types: OpenAI's audio API file formats (flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm), as in whisper-1:
+# https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create
+# The open-source whisper package decodes audio with ffmpeg and publishes no narrower list.
+# Released 2023-11-06: openai/whisper v20231106 "large-v3" (https://github.com/openai/whisper/blob/main/CHANGELOG.md#v20231106).
+#   2024-10-01 was large-v3-turbo (v20240930).
+schema = 2
+type = "transcription"
 name = "Whisper 3 Large"
 description = "Open Whisper checkpoint for robust multilingual transcription and captioning"
 family = "whisper"
-release_date = "2024-10-01"
-last_updated = "2024-10-01"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = true
+release_date = "2023-11-06"
+
+[modalities]
+input = ["audio/flac", "audio/mpeg", "audio/mp4", "audio/ogg", "audio/wav", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = false
 
 [limit]
 context = 448
 output = 4_096
-
-[modalities]
-input = ["audio"]
-output = ["text"]

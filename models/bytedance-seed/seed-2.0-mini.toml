@@ -1,22 +1,46 @@
 # Sources (accessed 2026-08-14):
 # - https://seed.bytedance.com/en/seed2
 # - https://www.volcengine.com/docs/82379/1330310
+# Image formats: Volcengine Ark image understanding, 图片格式说明 table, Content Type column as written
+#   (JPEG, PNG, GIF, WEBP, BMP, TIFF, ICO, DIB, ICNS, SGI, JPEG2000, HEIC/HEIF; DIB is image/bmp, HEIF is image/heic):
+#   https://www.volcengine.com/docs/82379/1362931
+# Video formats: Volcengine Ark video understanding, 视频格式说明 table (MP4 video/mp4, AVI video/x-msvideo,
+#   MOV video/quicktime): https://www.volcengine.com/docs/82379/1895586
+# Sampling: the Ark Chat API takes temperature and top_p and has no top_k: https://www.volcengine.com/docs/82379/1494384
+schema = 2
 name = "Seed 2.0 Mini"
 description = "Lightweight ByteDance Seed 2.0 model for low-latency multimodal reasoning and high-volume tasks"
 family = "seed"
-release_date = "2026-02-14"
-last_updated = "2026-02-14"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-02-14"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/x-icon",
+  "image/x-icns",
+  "image/sgi",
+  "image/jp2",
+  "image/heic",
+  "video/mp4",
+  "video/x-msvideo",
+  "video/quicktime",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 256_000
 output = 32_000
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]

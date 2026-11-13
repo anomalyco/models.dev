@@ -1,0 +1,18 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 (Inference.net)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 262_144
+output = 131_072
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 1

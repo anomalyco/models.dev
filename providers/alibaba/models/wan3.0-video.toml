@@ -1,0 +1,41 @@
+# Sources (accessed 2026-11-12):
+# - Pricing (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing
+#   per second of output video: 1080P $0.2, 720P $0.1, 480P $0.05
+#   base price is 1080P, the default resolution in the API reference below
+#   input video is billed per second at the same rate as output
+#   list price; a limited-time 30% discount is not recorded
+# - API: POST https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis with `X-DashScope-Async: enable`,
+#   then poll GET /api/v1/tasks/{task_id} (https://www.alibabacloud.com/help/en/model-studio/wan3-video-generation-api-reference)
+# base_url is passed as @ai-sdk/alibaba's videoBaseURL. No @opencode/ai package covers this API.
+# Not recorded: the Singapore free trial quota (valid for 90 days after activation).
+schema = 2
+v2_only = true
+base_model = "alibaba/wan3.0-video"
+
+[api.videos]
+base_url = "https://dashscope-intl.aliyuncs.com"
+sdk = { aisdk = "@ai-sdk/alibaba", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.2
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" } }
+price = 0.1
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480P" } }
+price = 0.05
+
+[cost.video.input]
+unit = "second"
+price = 0.2
+
+[[cost.video.input.overrides]]
+when = { resolution = { equals = "720P" } }
+price = 0.1
+
+[[cost.video.input.overrides]]
+when = { resolution = { equals = "480P" } }
+price = 0.05

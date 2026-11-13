@@ -1,17 +1,18 @@
+# Retired 2026-10-04 (rerouted to its replacement): https://docs.tensorx.ai/api-reference/model-deprecation (accessed 2026-10-21).
+# Toggle: chat_template_kwargs.enable_thinking = false (default on). Effort: reasoning_effort = <value>; "none" disables reasoning (from the v1 file's inline comments; the model is retired, so the current docs no longer cover it).
+schema = 2
 base_model = "zhipuai/glm-5v-turbo"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"enable_thinking": false}} (default on)
-
-[[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 1.2
-output = 4
-cache_read = 0.3
-cache_write = 1.5
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 
 [limit]
-context = 202752
+context = 202_752
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.3, write = 1.5 }
+
+[cost.text.output]
+price = 4

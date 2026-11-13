@@ -21,6 +21,7 @@ const XAIModel = z.object({
   completion_text_token_price_long_context: z.number().int().nonnegative().optional(),
   long_context_threshold: z.number().int().nonnegative().optional(),
   max_prompt_length: z.number().int().nonnegative().optional(),
+  unlisted: z.boolean().optional(),
 }).passthrough();
 
 const XAIModelList = z.object({
@@ -30,6 +31,10 @@ const XAIModelList = z.object({
 const XAIResponse = z.object({
   models: z.array(XAIModel),
 });
+
+// The Voice APIs (Text to Speech, Speech to Text, Speech to Speech) aren't in
+// any models endpoint. Listing them keeps sync from deleting their curated files.
+const UNLISTED_MODELS = ["grok-tts", "grok-voice-3.0", "grok-voice-transcribe-2.0"];
 
 const XAIAPIKey = z.object({
   acls: z.array(z.string()),
@@ -46,7 +51,7 @@ export const xai = {
     // Alias rows (canonical_id set) exist only to update already-cataloged
     // alias TOMLs; the canonical row carries the missing-model signal, so
     // skipped aliases must not be reported as missing models.
-    return model.canonical_id === undefined ? model.id : undefined;
+    return model.canonical_id === undefined && model.unlisted !== true ? model.id : undefined;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
@@ -91,9 +96,18 @@ export const xai = {
       }
     }
 
+    for (const id of UNLISTED_MODELS) {
+      if (!seen.has(id)) expanded.push({ id, created: 0, unlisted: true });
+    }
+
     return expanded;
   },
   translateModel(model, context) {
+    if (model.unlisted === true) {
+      const authored = context.authored(model.id);
+      return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
+    }
+
     const existing = context.existing(model.id);
     if (existing === undefined) return undefined;
 
@@ -131,12 +145,13 @@ async function fetchTypedModels(key: string, endpoint: string) {
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
-function modalities(values: string[] | undefined, fallback: Modality[]) {
+// Text models that take images also take PDFs, which the API doesn't list.
+function modalities(values: string[] | undefined, fallback: Modality[], pdf = false) {
   const allowed = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);
   const result = (values ?? [])
     .map((value) => value.toLowerCase())
     .filter((value): value is Modality => allowed.has(value as Modality));
-  if (result.includes("image")) result.push("pdf");
+  if (pdf && result.includes("image")) result.push("pdf");
   return [...new Set(result.length > 0 ? result : fallback)];
 }
 
@@ -211,8 +226,8 @@ export function buildXAIModel(model: XAIModel, existing: ExistingModel): SyncedM
     throw new Error(`xAI model ${model.id} has incomplete local TOML metadata required for sync`);
   }
 
-  const input = modalities(model.input_modalities, existing.modalities?.input ?? ["text"]);
   const output = modalities(model.output_modalities, existing.modalities?.output ?? ["text"]);
+  const input = modalities(model.input_modalities, existing.modalities?.input ?? ["text"], output.includes("text"));
 
   const values = {
     name,

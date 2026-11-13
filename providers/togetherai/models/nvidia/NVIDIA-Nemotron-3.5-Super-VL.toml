@@ -1,0 +1,36 @@
+# Serverless: $0.15 input, $0.02 cached input, $0.50 output per 1M; context 262,144 (accessed 2026-10-21):
+# https://docs.together.ai/docs/serverless-models
+# Toggle: reasoning.enabled = true|false (live 2026-10-21: false returns 0 reasoning tokens).
+# reasoning_effort values don't change the prompt token count, so no effort levels are listed.
+# Inputs (live 2026-10-21): PNG, JPEG and GIF images and MP4 video are read (a solid-red image or clip is
+# answered "Red"); a WebP photo was accepted but got an empty answer, so WebP is left out; audio is rejected.
+# Mid-conversation (live 2026-10-21): a late system message was followed and kept the cache;
+# adding a tool dropped the cache to 0.
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "video/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.5

@@ -1,0 +1,50 @@
+# NIM wire schema (accessed 2026-10-16): the published OpenAPI omits reasoning
+# controls, but the endpoint validates a top-level `reasoning_effort` — an invalid
+# value is rejected with "expected one of `none`, `minimal`, `low`, `medium`,
+# `high`, `xhigh`, `max`" (probed 2026-10-16 against integrate.api.nvidia.com).
+# `none` suppresses the reasoning_content side channel and `max` yields the longest
+# reasoning (verified live). The schema marks chat_template_kwargs.enable_thinking
+# const true and states setting false "does not stop reasoning generation" (probe:
+# completion_tokens unchanged, reasoning_content hidden), so it is not a real
+# toggle. Responses separate reasoning_content from the final content.
+# https://docs.api.nvidia.com/nim/reference/stepfun-ai-step-5-preview-infer
+#
+# Limits: max_tokens accepts 1,048,576 and rejects 1,048,577 ("Max tokens must not
+# exceed 1048576", probed 2026-10-16); prompt + output must fit the 1,048,576-token
+# context window. No separate lower output cap is published for this NIM route
+# (the 64k output cap on StepFun's first-party card applies to their own API).
+#
+# Pricing: hosted on NVIDIA's API trial tier and currently free — no separate list
+# rate is published for this ID. Source: this model's catalog card,
+# https://build.nvidia.com/stepfun-ai/step-5-preview (governed by the
+# NVIDIA API Trial Terms of Service).
+# Inputs (live 2026-10-21): PNG, JPEG and WebP images are read; GIF returns 415 Unsupported Media Type and
+# video and audio return 400.
+# Mid-conversation (live 2026-10-21, ~8k-token prefix, control turn then changed turn): changing reasoning_effort
+# (low → high) dropped the cache in 3 of 3 conclusive trials, and adding a tool dropped it in 2 of 2.
+# system_updates unset: the cache was kept in 2 of 3 trials.
+schema = 2
+base_model = "stepfun/step-5-preview"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+tools = { supported = true }
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

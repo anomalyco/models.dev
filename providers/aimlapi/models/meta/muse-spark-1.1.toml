@@ -1,13 +1,17 @@
+schema = 2
 base_model = "meta/muse-spark-1.1"
 
-[interleaved]
-field = "reasoning_details"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+tools = { supported = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[cost]
-input = 1.71925
-output = 5.84545
-cache_read = 0.20631
+[cost.text.input]
+price = 1.3225
+cache = { read = 0.1587 }
+
+[cost.text.output]
+price = 4.4965

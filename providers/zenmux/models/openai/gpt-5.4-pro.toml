@@ -1,27 +1,31 @@
-name = "GPT-5.4 Pro"
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+schema = 2
+base_model = "openai/gpt-5.4-pro"
+base_model_omit = ["limit.input"]
 description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
-release_date = "2026-03-20"
-last_updated = "2026-03-20"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["medium", "high", "xhigh"] }]
-temperature = true
-tool_call = true
-knowledge = "2025-08-31"
-open_weights = false
-
-[cost]
-input = 45.00
-output = 225.00
-
-[limit]
-context = 1_050_000
-output = 128_000
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://zenmux.ai/api/v1"
+[capabilities]
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+temperature = true
+
+[api.responses]
+base_url = "https://zenmux.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 30
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 272_000 } }
+price = 60
+
+[cost.text.output]
+price = 180
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 272_000 } }
+price = 270

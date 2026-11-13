@@ -1,0 +1,29 @@
+# Sources (accessed 2026-10-21): https://huggingface.co/k2-fsa/OmniVoice (Hub createdAt 2026-03-30): massively multilingual
+#   zero-shot text-to-speech (600+ languages) with voice cloning from reference audio; built on Qwen3-0.6B.
+# Weights: CC-BY-NC, non-commercial use only (AMD Token Factory listing). Output format is not documented, so it stays generic.
+schema = 2
+v2_only = true
+type = "speech"
+name = "OmniVoice"
+description = "Massively multilingual zero-shot text-to-speech model with preset, described or cloned voices"
+open_weights = true
+release_date = "2026-03-30"
+
+[modalities]
+input = ["text"]
+output = ["audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/k2-fsa/OmniVoice"

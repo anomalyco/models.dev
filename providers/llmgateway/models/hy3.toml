@@ -1,13 +1,19 @@
+# structured_output = true: /v1/models structured_outputs, strict json_schema (https://docs.llmgateway.io/learn/structured-outputs)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "tencent/hy3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh"]
-
-[cost]
-input = 0.132
-output = 0.528
-cache_read = 0.033
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
 
 [limit]
 context = 262_144
+
+[cost.text.input]
+price = 0.132
+cache = { read = 0.033 }
+
+[cost.text.output]
+price = 0.528

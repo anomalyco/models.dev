@@ -1,0 +1,10 @@
+# Included in every Token Plan tier; consumes 30M Credits per hour of input audio, counted to the second
+#   (https://mimo.mi.com/static/docs/price/token-plan.md). Cost is zeroed per this provider's subscription convention.
+# Served on Chat Completions with one `input_audio` part (https://mimo.mi.com/static/docs/api/audio/Speech-Recognition.md).
+schema = 2
+v2_only = true
+base_model = "xiaomi/mimo-v2.5-asr"
+
+[cost.audio.input]
+unit = "minute"
+price = 0

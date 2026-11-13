@@ -1,0 +1,29 @@
+# Prompt input recommended maximum is 4500 tokens; excess is truncated, not context.
+# https://docs.qwencloud.com/api-reference/image-generation/qwen-text-to-image
+# Released 2026-08-05: https://www.linkedin.com/posts/alibaba-cloud-computing-company_qwen-qwenimage3-alibabacloud-activity-7490710686034116610--0U-
+#   https://www.alibabacloud.com/help/en/model-studio/qwen-image-3-0-pro
+#   Input JPG, JPEG, PNG, BMP, TIFF, WEBP or GIF; output PNG: https://www.alibabacloud.com/help/en/model-studio/qwen-image-edit-guide
+schema = 2
+v2_only = true
+type = "image"
+name = "Qwen-Image-3.0-Pro"
+description = "Higher-quality Qwen-Image-3.0 for complex layouts, small text and photographic detail"
+family = "qwen"
+open_weights = false
+release_date = "2026-08-05"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/tiff", "image/webp", "image/gif"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+input = 4_500
+context = 0
+output = 0

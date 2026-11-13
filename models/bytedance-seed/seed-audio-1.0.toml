@@ -1,0 +1,26 @@
+# Released 2026-07-20: https://seed.bytedance.com/en/blog/from-speech-to-audio-creation-introducing-the-seed-audio-1-0-audio-creation-model
+# Output formats: mp3 and pcm, as documented for OpenRouter's speech API (the lab lists none here):
+#   https://openrouter.ai/docs/guides/overview/multimodal/tts
+schema = 2
+v2_only = true
+type = "speech"
+name = "Seed Audio 1.0"
+description = "Audio creation model generating speech, sound effects, and ambience from text prompts"
+family = "seed"
+open_weights = false
+release_date = "2026-07-20"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

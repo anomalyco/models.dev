@@ -1,21 +1,25 @@
 # Lab metadata carried over from providers/openrouter/models/openai/gpt-5.4-image-2.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Image output MIME types: https://developers.openai.com/api/docs/guides/tools-image-generation (GPT Image tool output_format: png, jpeg, webp)
+schema = 2
+type = "image"
 name = "GPT-5.4 Image 2"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "gpt"
-release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = false
-structured_output = true
 open_weights = false
-
-[limit]
-context = 272000
-output = 128000
+release_date = "2026-04-21"
 
 [modalities]
-input = ["image", "text", "pdf"]
-output = ["image", "text"]
+input = ["image/jpeg", "image/png", "image/gif", "image/webp", "text", "application/pdf"]
+output = ["image/png", "image/jpeg", "image/webp", "text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 272_000
+output = 128_000

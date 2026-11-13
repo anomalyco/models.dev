@@ -1,13 +1,22 @@
+# Text-only: GMI documents no image input for this model (no page in https://docs.gmicloud.ai/llms.txt;
+# the Kimi K2.6 page shows text-only examples), accessed 2026-10-21.
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code-highspeed"
-reasoning_options = []
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.90
-output = 8.00
-cache_read = 0.38
 
 [modalities]
 input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.9
+cache = { read = 0.38 }
+
+[cost.text.output]
+price = 8

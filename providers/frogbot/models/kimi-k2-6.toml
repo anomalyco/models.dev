@@ -1,24 +1,23 @@
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
 name = "Kimi-K2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-release_date = "1970-01-01"
-last_updated = "1970-01-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = false
 
-[cost]
-input = 0.95
-output = 4.0
-cache_read = 0.16
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 256_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4

@@ -1,28 +1,21 @@
+# knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
+# Mid-conversation flags left out: moonshotai has no provider file for moonshotai/kimi-k2-0905 to follow (Zen passes requests through).
+schema = 2
+base_model = "moonshotai/kimi-k2-0905"
+knowledge = "2024-10"
 name = "Kimi K2"
 description = "Legacy model retained for compatibility with older integrations"
-family = "kimi-k2"
-release_date = "2025-09-05"
-last_updated = "2025-09-05"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2024-10"
-open_weights = true
 status = "deprecated"
 
-[cost]
-input = 0.4
-output = 2.5
-cache_read = 0.4
-
 [limit]
-context = 262_144
 output = 262_144
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.input]
+price = 0.4
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5

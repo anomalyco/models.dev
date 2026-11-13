@@ -1,31 +1,26 @@
-name = "Kimi K2.6"
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Toggle: thinking.type = enabled|disabled (not re-verified on Zen: model access is disabled for the probe key)
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/moonshotai/models/kimi-k2.6.toml (Zen passes requests through).
+# Tools follow Moonshot's API: https://platform.kimi.ai/docs/api/models-overview (tool_choice per model), https://platform.kimi.ai/docs/api/chat (strict); Zen passes requests through.
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-release_date = "2026-04-21"
-last_updated = "2026-04-21"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-knowledge = "2024-10"
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.95
-output = 4.0
-cache_read = 0.16
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none"] }
+reasoning = { supported = true, toggle = true }
+system_updates = true
 
 [limit]
-context = 262_144
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4

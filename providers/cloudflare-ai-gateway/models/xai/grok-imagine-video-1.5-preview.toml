@@ -1,0 +1,27 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Modalities: the schema's prompt/image/video/audio fields (the lab's MIME types) and output_format enum, else the lab's video outputs. Prices: catalog provider_details per second of output video, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+# Grok Imagine 1.5 launched in preview on the xAI API 2026-06-03 (https://x.ai/news/grok-imagine-1-5). The shared schema's `video` field is for editing and extension, which run on grok-imagine-video, not 1.5.
+schema = 2
+v2_only = true
+base_model = "xai/grok-imagine-video-1.5"
+name = "Grok Imagine Video 1.5 Preview"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.08
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" } }
+price = 0.14
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.25

@@ -1,27 +1,18 @@
 # Not all models support the full range of configuration options. Where possible, orchestration maps unsupported values to the closest equivalent.
 # Reasoning support: https://help.sap.com/docs/sap-ai-core/generative-ai/reasoning?locale=en-US (accessed 2026-07-14)
+# Cost: Perplexity list price (https://docs.perplexity.ai/docs/getting-started/pricing), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+schema = 2
+base_model = "perplexity/sonar-deep-research"
 name = "sonar-deep-research"
-description = "Sonar search model for current answers, retrieval, and citation-backed chat"
-family = "sonar-deep-research"
-release_date = "2025-02-01"
-last_updated = "2025-09-01"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
-temperature = false
-tool_call = false
-knowledge = "2025-01"
-open_weights = false
 
-[cost]
-input = 2.00
-output = 8.00
-reasoning = 3.00
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 
-[limit]
-context = 128_000
-output = 32_768
+[cost.text.input]
+price = 2
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 8
+reasoning = 3

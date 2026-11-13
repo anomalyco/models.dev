@@ -3,12 +3,24 @@
 # No toggle: thinking.type=disabled returns 200 and still emits reasoning_content.
 # Output limit is inherited (384_000): 384_000 returns 200, 384_001 returns 400.
 # Measured 2026-10-13.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-21), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+# Status: deprecated. Neon serves Databricks-hosted models (https://neon.com/docs/ai-gateway/models), and Databricks
+# retires this model on 2026-11-19: https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models#deepseek-v41-flash
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-reasoning_options = [
-  { type = "effort", values = ["low", "high", "max"] },
-]
+status = "deprecated"
 
-[cost]
-input = 0.3
-output = 1.2
-cache_read = 0.03
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

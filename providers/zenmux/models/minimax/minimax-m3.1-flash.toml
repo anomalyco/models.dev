@@ -1,0 +1,25 @@
+# Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-10-19)
+# slug minimax/minimax-m3.1-flash: prompt 0.15, completion 0.6, input_cache_read 0.015
+# USD/MTok; context 1,000,000; max_completion_tokens 512,000; supports_reasoning = 2
+# (always-on, same class as minimax-m3 and gpt-5). Upstream thinking cannot be
+# disabled; depth is set by effort = low|medium|high|xhigh|max.
+# https://platform.minimax.io/docs/api-reference/text-anthropic-api
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[api.messages]
+base_url = "https://zenmux.ai/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

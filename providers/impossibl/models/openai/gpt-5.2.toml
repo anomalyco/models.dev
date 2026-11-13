@@ -1,11 +1,20 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Billing (https://impossibl.com/docs/billing): prepaid credits at the GET /v1/models rates, no usage
+# markup; buying credits adds a 5% platform fee (not representable here). Catalog checked 2026-10-21.
+# Reasoning (https://impossibl.com/docs/reasoning): Chat Completions reasoning_effort / Responses reasoning.effort
+# accept none|minimal|low|medium|high|xhigh|max and move to the nearest level the model has.
+# Prompt caching (https://impossibl.com/docs/prompt-caching): OpenAI, xAI, DeepSeek and Google routes cache implicitly.
+schema = 2
 base_model = "openai/gpt-5.2"
 
-[cost]
-input = 1.75
-output = 14.00
-cache_read = 0.175
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14

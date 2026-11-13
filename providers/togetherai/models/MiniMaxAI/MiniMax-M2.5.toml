@@ -2,28 +2,18 @@
 # POST https://api.together.ai/v1/chat/completions
 # The current reasoning model table does not list M2.5 or document controls.
 # Sources: https://docs.together.ai/docs/inference/chat/reasoning#supported-models
-name = "MiniMax-M2.5"
-description = "Legacy model retained for compatibility with older integrations"
-family = "minimax"
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
-attachment = false
-reasoning = true
-reasoning_options = []
+# Deprecated: no longer in the serverless catalog (https://docs.together.ai/docs/serverless-models,
+# accessed 2026-10-21); requests return 400 "Unable to access non-serverless model".
+schema = 2
+base_model = "minimax/MiniMax-M2.5"
 status = "deprecated"
-temperature = true
-tool_call = true
-open_weights = true
 
-[cost]
-input = 0.30
-cache_read = 0.06
-output = 1.20
+[capabilities]
+reasoning = { supported = true }
 
-[limit]
-context = 204_800
-output = 131_072
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1.2

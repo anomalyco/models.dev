@@ -1,6 +1,13 @@
+schema = 2
 base_model = "mistral/ministral-8b-2512"
 
-[cost]
-input = 0.41262
-output = 0.41262
-cache_read = 0.020631
+[capabilities]
+structured_output = true
+tools = { supported = true }
+
+[cost.text.input]
+price = 0.3174
+cache = { read = 0.01587 }
+
+[cost.text.output]
+price = 0.3174

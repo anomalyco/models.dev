@@ -1,0 +1,26 @@
+# Released 2025-10-28 (Hailuo 2.3 and Hailuo 2.3 Fast): https://www.minimax.io/news/minimax-hailuo-23
+# Input image formats (first_frame_image: JPG, JPEG, PNG, WebP): https://platform.minimax.io/docs/api-reference/video-generation-i2v
+# Output: an MP4 file (output_aigc.mp4): https://platform.minimax.io/docs/api-reference/video-generation-download
+schema = 2
+v2_only = true
+type = "video"
+name = "Hailuo 2.3"
+description = "Video model for realistic human motion, cinematic effects and stylized scenes from text or a first-frame image"
+family = "minimax"
+open_weights = false
+release_date = "2025-10-28"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

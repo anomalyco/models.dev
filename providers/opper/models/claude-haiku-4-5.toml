@@ -1,18 +1,24 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
+# Cache: opt-in cache_control (top-level automatic breakpoint or up to 4 per-block), 5m default or ttl 1h; https://docs.opper.ai/build/gateway/prompt-caching (2026-10-21). 1h write = highest pool member cache_creation_1h.
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
-structured_output = true
-
-reasoning_options = []
-
-[cost]
-input = 1.1
-output = 5.5
-cache_read = 0.11
-cache_write = 1.375
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.11, write = { "5m" = 1.375, "1h" = 2.2 } }
+
+[cost.text.output]
+price = 5.5

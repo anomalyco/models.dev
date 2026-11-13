@@ -1,8 +1,13 @@
+schema = 2
 base_model = "mistral/devstral-2512"
 name = "Devstral 2 (Mistral AI)"
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
 structured_output = false
 
-[cost]
-input = 0.4
-output = 2
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 2

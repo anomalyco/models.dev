@@ -1,9 +1,9 @@
-import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
+import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
@@ -14,9 +14,7 @@ const baseModelReasoningCache = new Map<string, boolean>();
 function baseModelReasoning(modelID: string): boolean {
   let value = baseModelReasoningCache.get(modelID);
   if (value === undefined) {
-    const parsed = Bun.TOML.parse(
-      readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8"),
-    ) as Record<string, unknown>;
+    const parsed = readLabModel(path.join(MODELS_DIR, `${modelID}.toml`), modelID);
     value = parsed.reasoning === true;
     baseModelReasoningCache.set(modelID, value);
   }
@@ -211,7 +209,9 @@ function pioneerReasoningOptions(model: PioneerModel): SyncedFullModel["reasonin
     );
   }
 
-  const values = [...new Set(levels.map((level) => level.effort).filter(isReasoningEffort))];
+  // v2 compares effort lists in order, so they are kept low to high.
+  const values = [...new Set(levels.map((level) => level.effort).filter(isReasoningEffort))]
+    .sort((a, b) => ReasoningEffortValues.indexOf(a) - ReasoningEffortValues.indexOf(b));
   return values.length > 0 ? [{ type: "effort", values }] : undefined;
 }
 
@@ -244,8 +244,11 @@ function buildPioneerModel(
   const status = model.deprecated === true ? "deprecated" : existing?.status;
   const baseModel = existing?.base_model ?? BaseModels[model.id];
   const apiReasoningOptions = pioneerReasoningOptions(model);
-  const reasoning = apiReasoningOptions !== undefined || supported(model, "thinking") || existing?.reasoning === true;
-  const reasoningOptions = apiReasoningOptions ?? (reasoning ? existing?.reasoning_options : undefined);
+  // The reasoning levels are the same boilerplate on every model (encoders
+  // included), so an existing file's authored reasoning flag decides.
+  const reasoning = existing?.reasoning
+    ?? (apiReasoningOptions !== undefined || supported(model, "thinking"));
+  const reasoningOptions = reasoning ? (apiReasoningOptions ?? existing?.reasoning_options) : undefined;
   const interleaved = reasoning ? (existing?.interleaved ?? { field: "reasoning_content" as const }) : undefined;
 
   if (baseModel !== undefined) {

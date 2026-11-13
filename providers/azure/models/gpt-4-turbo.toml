@@ -1,7 +1,19 @@
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+schema = 2
 base_model = "openai/gpt-4-turbo"
-status = "deprecated"
 base_model_omit = ["structured_output"]
+status = "deprecated"
 
-[cost]
-input = 10
-output = 30
+[capabilities]
+tools = { supported = true }
+cache = false
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 10
+
+[cost.text.output]
+price = 30

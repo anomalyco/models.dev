@@ -1,24 +1,20 @@
-name = "DeepSeek Reasoner"
-description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek-thinking"
-release_date = "2025-01-20"
-last_updated = "2025-01-20"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+# knowledge: kept from v1, where the generator copied the Helicone registry trainingDate; unsourced (lab: 2025-09).
+# Reasoning is always on for this model; no request field controls it.
+schema = 2
+base_model = "deepseek/deepseek-reasoner"
 knowledge = "2025-01"
-open_weights = false
 
-[cost]
-input = 0.56
-output = 1.68
-cache_read = 0.07
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
 
 [limit]
-context = 128000
-output = 64000
+context = 128_000
+output = 64_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.56
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 1.68

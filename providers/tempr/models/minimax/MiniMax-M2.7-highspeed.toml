@@ -1,12 +1,19 @@
 # Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
 # No reasoning control for this model: it reasons at its own depth, and the
 # x-tempr-reasoning-effort response header reports "default".
+# Status: deprecated in the Tempr catalog (tempr.status), as on the upstream provider.
+schema = 2
 base_model = "minimax/MiniMax-M2.7-highspeed"
+status = "deprecated"
 
-reasoning_options = []
+[capabilities]
+reasoning = { supported = true }
 
-[cost]
-input = 0.6
-output = 2.4
-cache_read = 0.06
-cache_write = 0.375
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06, write = 0.375 }
+
+[cost.text.output]
+price = 2.4

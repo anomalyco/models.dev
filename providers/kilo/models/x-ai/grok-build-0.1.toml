@@ -1,14 +1,24 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 base_model = "xai/grok-build-0.1"
 description = "Grok coding model for agentic engineering, edits, and codebase workflows"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 1
-output = 2
-cache_read = 0.2
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
 
 [limit]
 output = 230_400
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 2
+
+[cost.web_search]
+price = 5

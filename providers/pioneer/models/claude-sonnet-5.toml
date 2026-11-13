@@ -1,14 +1,24 @@
+# Status: deprecated. Not listed by GET https://api.fastino.ai/v1/models or GET https://api.fastino.ai/v1/base-models (2026-10-20); the inference catalog at https://docs.fastino.ai/concepts/models no longer lists it.
+# Reasoning: the underlying model's controls from providers/anthropic/models/claude-sonnet-5.toml; Pioneer's catalog listed the same boilerplate levels on every model.
+# Toggle: reasoning.enabled = true|false in Fastino's normalized `reasoning` object (https://docs.fastino.ai/openapi.json ChatCompletionRequest.reasoning).
+# Effort: reasoning.effort = low|medium|high|xhigh|max in the same object, rendered to the upstream's native field.
+# Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): effort_updates = false and
+# tools.updates = false: `reasoning` and `tools` are request-level, with no per-turn effort or tool addition/removal field.
+# system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
+schema = 2
 base_model = "anthropic/claude-sonnet-5"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 10

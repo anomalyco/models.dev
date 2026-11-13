@@ -1,0 +1,23 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-transcribe
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - Pricing lists only audio input ($2.00) and text output ($12.00); v1 has no audio-only input,
+# - so text input repeats the audio rate (same as gemini-3.5-live-translate-preview).
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.5-transcribe"
+
+[capabilities]
+cache = false
+
+[api.transcriptions]
+sdk = { opencodeai = "@opencode/ai/protocols/google-transcription" }
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 12
+
+[cost.audio.input]
+price = 2

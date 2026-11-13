@@ -1,24 +1,32 @@
-name = "Ministral 14B"
+# Mid-conversation (@ai-sdk/gateway): no per-turn effort or tool-change mechanism reaches this model on this API. system_updates left unset: live cache results on the default route were inconclusive.
+schema = 2
+base_model = "mistral/ministral-14b"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
-family = "ministral"
-release_date = "2025-12-02"
-last_updated = "2025-12-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
-knowledge = "2024-10"
-open_weights = false
-
-[cost]
-input = 0.2
-output = 0.2
-cache_read = 0.02
-
-[limit]
-context = 262_144
-output = 256_000
 
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+cache = { implicit = true }
+
+[limit]
+output = 256_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.2

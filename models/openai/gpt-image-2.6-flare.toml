@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-12):
+# - https://developers.openai.com/api/docs/models/gpt-image-2.6-flare
+# - https://developers.openai.com/api/docs/guides/image-generation#gpt-image-26 (complexity, SVG output_format "svg", animated GIF output_format "gif")
+# Release date: model object "created" on GET /v1/models (2026-10-28).
+# Image output MIME types: output_format png, jpeg, webp, svg and gif (https://developers.openai.com/api/docs/guides/image-generation).
+schema = 2
+v2_only = true
+type = "image"
+name = "GPT Image 2.6 Flare"
+description = "Fast image generation and editing with complexity control, markup-guided edits, SVG and animated GIF output"
+family = "gpt-image"
+open_weights = false
+release_date = "2026-10-28"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["image/png", "image/jpeg", "image/webp", "image/svg+xml", "image/gif"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

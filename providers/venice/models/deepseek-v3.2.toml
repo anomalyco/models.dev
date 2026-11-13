@@ -1,19 +1,39 @@
 # Live /models (2026-06-25): none|low|medium|high; no dedicated reasoning budget.
 # https://api.venice.ai/api/v1/models?type=text (accessed 2026-06-25)
+# Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
+# leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
+# on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
+# effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
+# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+# Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
+schema = 2
 base_model = "deepseek/deepseek-v3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-release_date = "2025-12-04"
-last_updated = "2026-06-11"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 0.33
-output = 0.48
-cache_read = 0.16
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
 
 [limit]
 context = 160_000
 output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 0.48
+
+[cost.web_search]
+price = 10

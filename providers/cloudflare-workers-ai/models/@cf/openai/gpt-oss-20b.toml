@@ -1,17 +1,34 @@
-# Native `/ai/run` schema has no reasoning control, and no model-specific
-# OpenAI-compatible reasoning field was verified. No token budget is documented.
-# https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/sync-input.json (accessed 2026-06-25)
+# Effort: reasoning_effort = low|medium|high (default medium), per the model page.
+# Live 2026-10-19: low and high change reasoning length; none is rejected (Invalid input).
+# https://developers.cloudflare.com/workers-ai/models/gpt-oss-20b/ (accessed 2026-10-19)
+# Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
+# https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted and honored (+18 tokens),
+# but with no prefix cache its placement can't be confirmed, so system_updates is unset.
+# Effort and tools render in the leading system/developer messages; no cache to keep.
+# Responses: POST /ai/v1/responses (non-streaming), for Workers AI models whose schema takes a Responses body, such as GPT-OSS:
+# https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/ (live 200 on 2026-10-22; every other text model returned 400).
+schema = 2
 base_model = "openai/gpt-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[cost]
-input = 0.2
-output = 0.3
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = false
+structured_output = true
 
 [limit]
 context = 128_000
 output = 16_384
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.3

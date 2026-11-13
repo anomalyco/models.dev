@@ -1,0 +1,18 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Live /chat/completions (2026-10-14): reasoning_effort=off -> HTTP 400, this alias cannot turn thinking off.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash Fast"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.28
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 0.56

@@ -1,0 +1,31 @@
+# Model card: https://huggingface.co/abacusai/Dracarys-Llama-3.1-70B-Instruct (Abacus.AI fine-tune of Llama 3.1 70B
+# Instruct for coding; license link https://llama.meta.com/llama3/license/). Published 2024-08-14 (Hugging Face createdAt).
+# Context 131,072: config.json max_position_embeddings and NVIDIA's card (https://build.nvidia.com/abacusai/dracarys-llama-3_1-70b-instruct),
+# which also says "Function Calling: Not supported". No separate output cap is published, so output = context.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Dracarys Llama 3.1 70B Instruct"
+description = "Abacus.AI coding fine-tune of Llama 3.1 70B Instruct"
+family = "llama"
+open_weights = true
+release_date = "2024-08-14"
+license = "Llama 3 Community License"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/abacusai/Dracarys-Llama-3.1-70B-Instruct"

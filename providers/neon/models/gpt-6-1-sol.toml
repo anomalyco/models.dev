@@ -2,23 +2,37 @@
 # Effort values are the gateway's own list:
 # "'reasoning_effort' does not support 'max' with this model. Supported values are: 'low', 'medium', 'high', and 'xhigh'".
 # Measured 2026-10-13.
+# Cache: implicit. neon.com/models.json publishes a cache_read price for this model (accessed 2026-10-21), and none of
+# Neon's routes for it take a cache-control field (Neon documents cache_control only for Claude on /anthropic/v1/messages),
+# so cached reads can only come from automatic prefix caching.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+schema = 2
 base_model = "openai/gpt-6.1-sol"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
-[cost]
-input = 2
-output = 10
-cache_read = 0.1
-cache_write = 2.5
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 4
-output = 15
-cache_read = 0.2
-cache_write = 5
+[api.responses]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+legacy_shape = "responses"
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
-shape = "responses"
+[api.chat-completions]
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15

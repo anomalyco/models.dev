@@ -1,27 +1,23 @@
-name = "DeepSeek R1 0528"
+# knowledge: Meganova's value, unsourced (the lab states none). Kept so v1 doesn't change.
+# Price: GET https://api.meganova.ai/api/v1/serverless/models (public catalog behind console.meganova.ai/serverless, accessed 2026-10-21)
+schema = 2
+base_model = "deepseek/deepseek-r1-0528"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek-thinking"
-release_date = "2025-05-28"
-last_updated = "2025-05-28"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
 knowledge = "2024-07"
-tool_call = false
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.50
-output = 2.15
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
 
 [limit]
-context = 163_840
 output = 64_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.15

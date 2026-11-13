@@ -1,17 +1,23 @@
-# Pricing: https://bothub.ru/models (accessed 2026-09-10).
-# RUB converted to USD at the CBR rate 85.4594 RUB/USD (2026-09-10).
+# Pricing: https://bothub.ru/models lists 146,47 / 439,4 RUB per 1M input / output tokens
+# (checked 2026-10-21).
+# RUB converted to USD at the CBR rate 82.8879 RUB/USD (2026-10-21), rounded to 4 decimals.
+# The per-model page (https://bothub.ru/<id>) shows prices about 6% higher.
 # Controls: bothub exposes a single reasoning_effort parameter on
 # POST /v1/chat/completions (see providers/bothub/provider.toml); no
 # thinking.type toggle is documented for this host. Levels verified
 # against the bothub model page; "none" disables reasoning.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
-interleaved = true
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high", "max"]
+[api.chat-completions]
+legacy_interleaved = true
 
-[cost]
-input = 1.61
-output = 4.84
+[cost.text.input]
+price = 1.7671
+
+[cost.text.output]
+price = 5.3011

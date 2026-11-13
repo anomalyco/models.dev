@@ -1,7 +1,23 @@
-# ALLaM-2-7B is provided unbilled via the Groq developer tier.
-# Verified via Groq Models API (no pricing object) and https://groq.com/pricing
+# ALLaM-2-7B is provided unbilled via the Groq developer tier: GET https://api.groq.com/openai/v1/models lists it with no
+# pricing object (accessed 2026-10-21); it isn't on https://console.groq.com/docs/models.
+# Limits: context_window 4096 and max_completion_tokens 4096, same as the lab.
+# Flex: `service_tier: "flex"` is available for all models to paid customers at on-demand pricing
+# (https://console.groq.com/docs/flex-processing, https://console.groq.com/docs/service-tiers).
+# Responses: POST https://api.groq.com/openai/v1/responses ("all models support the Responses API", stateless; https://console.groq.com/docs/responses-api); returned 200 live (2026-10-22).
+schema = 2
 base_model = "sdaia/allam-2-7b"
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+service_tier = ["flex"]
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.groq.com/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

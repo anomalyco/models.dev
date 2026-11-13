@@ -1,14 +1,20 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
 base_model = "cohere/command-a-reasoning-08-2025"
 name = "Cohere Command A (08/2025)"
-reasoning = false
-tool_call = false
-structured_output = false
 
-[cost]
-input = 2.5
-output = 10
-cache_read = 1.25
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 input = 256_000
 output = 8_192
+
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10

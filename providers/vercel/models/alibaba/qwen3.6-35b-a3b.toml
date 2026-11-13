@@ -1,0 +1,29 @@
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen 3.6 35B A3B"
+description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.375
+
+[cost.text.output]
+price = 2.25

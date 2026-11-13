@@ -1,9 +1,13 @@
 # Toggle: reasoning_effort = none (off) | high (on)
-
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.28
-output = 1.1
-cache_read = 0.056
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.28
+cache = { read = 0.056 }
+
+[cost.text.output]
+price = 1.1

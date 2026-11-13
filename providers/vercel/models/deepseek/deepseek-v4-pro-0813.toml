@@ -1,11 +1,27 @@
+# Mid-conversation: system_updates unset. Vercel doesn't document mid-conversation system messages for this model, and it routes to third-party hosts that don't document it either. The earlier true came from one live run on the default route (cache prefix kept, @ai-sdk/gateway, 2026-10-19), which isn't enough on its own. DeepSeek's own API moves them to the leading prompt on V4 Pro (providers/deepseek). No per-turn effort or tool-change mechanism reaches this model on this API.
+schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "high", "max"]
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
 
-[cost]
-input = 0.66
-output = 1.98
-cache_read = 0.066
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.066 }
+
+[cost.text.output]
+price = 1.98

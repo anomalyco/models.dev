@@ -1,26 +1,28 @@
-name = "GLM-5V-Turbo"
-description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-family = "glm"
-release_date = "2026-04-02"
-last_updated = "2026-04-02"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-open_weights = false
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.720
-output = 3.200
-
-[limit]
-context = 200_000
-output = 131_072
+# Toggle: thinking.type = enabled|disabled (lab-mapped, not probed on 302.AI)
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
+schema = 2
+base_model = "zhipuai/glm-5v-turbo"
 
 [modalities]
-input = ["text", "image", "video", "audio", "pdf"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime", "video/x-matroska", "audio", "application/pdf"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.72
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.1
+
+[cost.text.output]
+price = 3.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.8

@@ -1,12 +1,24 @@
+# Cache: none. The model page lists no cached-input price (prefix caching is enabled per model:
+# https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
+# Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted, adds a role header (+19 tokens) and is honored.
+# No prefix cache on this model, so effort and tool changes keep nothing.
+schema = 2
 base_model = "ibm/granite-4-h-micro"
 name = "Granite 4.0 H Micro"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-structured_output = false
 
-[cost]
-input = 0.017
-output = 0.112
+[capabilities]
+tools = { supported = true }
+cache = false
+structured_output = false
+system_updates = true
 
 [limit]
 context = 131_000
 output = 131_000
+
+[cost.text.input]
+price = 0.017
+
+[cost.text.output]
+price = 0.112

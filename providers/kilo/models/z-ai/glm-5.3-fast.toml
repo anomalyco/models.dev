@@ -1,0 +1,19 @@
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "Z.ai: GLM 5.3 Fast"
+description = "Speed-optimized version of Z.AI’s GLM-5.3 agentic coding model, built for responsive, real-time workloads. It supports advanced coding, long-horizon task execution, testing, vulnerability discovery, and cybersecurity analysis, making it ideal for developer tools, coding agents, and complex multi-step engineering workflows."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[cost.text.input]
+price = 2.1
+cache = { read = 0.21 }
+
+[cost.text.output]
+price = 6.6

@@ -1,33 +1,31 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max (deprecated; not re-verified on Zen)
+schema = 2
 name = "Space Bunny Free"
 description = "Anonymous preview reasoning model for coding, agentic tasks, tool use, and multimodal input"
-release_date = "2026-09-23"
-last_updated = "2026-09-23"
-
-attachment = true
-reasoning = true
-reasoning_options = [
-  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
-]
-tool_call = true
 open_weights = false
+release_date = "2026-09-23"
+status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
-cache_write = 0
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 1_048_576
 input = 524_288
 output = 524_288
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-api = "https://opencode.ai/inference/openai/v1"
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

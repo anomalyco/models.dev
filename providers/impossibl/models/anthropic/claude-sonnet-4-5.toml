@@ -1,15 +1,22 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Billing (https://impossibl.com/docs/billing): prepaid credits at the GET /v1/models rates, no usage
+# markup; buying credits adds a 5% platform fee (not representable here). Catalog checked 2026-10-21.
+# Reasoning (https://impossibl.com/docs/reasoning): Chat Completions reasoning_effort / Responses reasoning.effort
+# accept none|minimal|low|medium|high|xhigh|max and move to the nearest level the model has.
+# Toggle: {"thinking":{"type":"disabled"}}
+# Budget: {"thinking":{"type":"enabled","budget_tokens":<n>}}
+# Prompt caching (https://impossibl.com/docs/prompt-caching): cache_control breakpoints (or the request-level
+# marker), ttl "5m" (default) or "1h"; 1h write = catalog cache_write_1h_per_mtok_usd.
+schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
 
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.30
-cache_write = 3.75
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 
-[[reasoning_options]]
-type = "toggle" # API: {"thinking":{"type":"disabled"}}
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = { "5m" = 3.75, "1h" = 6 } }
 
-[[reasoning_options]]
-type = "budget_tokens" # API: {"thinking":{"type":"enabled","budget_tokens":<n>}}
-min = 1024
+[cost.text.output]
+price = 15

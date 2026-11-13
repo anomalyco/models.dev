@@ -1,31 +1,26 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# family: kept as "mimo-v2.5" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/xiaomi/models/mimo-v2.5.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+schema = 2
+base_model = "xiaomi/mimo-v2.5"
+family = "mimo-v2.5"
 name = "MiMo V2.5"
 description = "MiMo omni model for text, image, video, audio, and agents"
-family = "mimo-v2.5"
-release_date = "2026-04-22"
-last_updated = "2026-04-22"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.14
-output = 0.28
-cache_read = 0.0028
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
 
-[provider]
-api = "https://opencode.ai/inference/go/openai/v1"
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

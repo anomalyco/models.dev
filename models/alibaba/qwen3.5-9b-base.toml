@@ -1,0 +1,31 @@
+# Sources (accessed 2026-10-21): https://huggingface.co/Qwen/Qwen3.5-9B-Base (Apache-2.0; Hub createdAt 2026-02-26)
+# "the pre-trained only model ... for fine-tuning, in-context learning experiments, and other research or development
+#   purposes, not direct interaction"; image-text-to-text; context 262,144 natively, extensible to 1,010,000.
+# Base model: no chat template, tool calling or thinking mode. Input types follow the instruct Qwen3.5 lab files.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
+name = "Qwen3.5 9B Base"
+description = "Pre-trained Qwen3.5 base checkpoint for fine-tuning and research, without instruction tuning"
+family = "qwen"
+open_weights = true
+release_date = "2026-02-26"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3.5-9B-Base"

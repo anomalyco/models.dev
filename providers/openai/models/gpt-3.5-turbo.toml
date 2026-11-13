@@ -1,26 +1,39 @@
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-3.5-turbo
+schema = 2
 name = "GPT-3.5-turbo"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
 family = "gpt"
+open_weights = false
+knowledge = "2021-09-01"
 release_date = "2023-03-01"
 last_updated = "2023-11-06"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2021-09-01"
-tool_call = false
-structured_output = false
-open_weights = false
 status = "deprecated"
 
-[cost]
-input = 0.50
-output = 1.50
-cache_read = 0
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = true
+system_updates = true
+store = true
+cache = false
 
 [limit]
 context = 16_385
 output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.responses]
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0 }
+
+[cost.text.output]
+price = 1.5

@@ -93,10 +93,15 @@ function dateFromTimestamp(timestamp: number) {
 function reasoningOptions(model: HyperModel) {
   const effortLevels = model.reasoning?.effort_levels?.map((level) => level.value) ?? [];
   if (effortLevels.length === 0) return [];
-  const values = effortLevels.filter(isReasoningEffort);
+  // Low to high, so a reordered catalog never rewrites the files.
+  const values = effortLevels
+    .filter(isReasoningEffort)
+    .sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
   if (values.length === 0) return [{ type: "toggle" as const }];
   return [{ type: "effort" as const, values }];
 }
+
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"];
 
 function isReasoningEffort(value: string): value is z.infer<typeof ReasoningEffort> {
   return ReasoningEffort.safeParse(value).success;
@@ -173,9 +178,11 @@ export function buildHyperModel(
   }
 
   if (resolvedBase !== undefined) {
+    // Model facts belong to the lab file; a base_model file only carries host fields.
+    const { release_date: _release, last_updated: _updated, ...host } = values;
     return factorBaseModel(
       resolvedBase,
-      values,
+      host,
       limit,
       existing?.base_model === resolvedBase ? existing.base_model_omit : undefined,
     );

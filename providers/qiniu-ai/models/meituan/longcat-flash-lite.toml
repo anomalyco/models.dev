@@ -1,18 +1,29 @@
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-06-02 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+schema = 2
 name = "Meituan/Longcat-Flash-Lite"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-release_date = "2026-02-06"
-last_updated = "2026-02-06"
-attachment = false
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
 open_weights = false
+release_date = "2026-02-06"
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
 
 [limit]
 context = 256_000
 output = 320_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

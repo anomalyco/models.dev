@@ -2,21 +2,28 @@
 # $.reasoning_effort on /v1/chat/completions (alias $.reasoning.effort, which is also the Responses field);
 # $.output_config.effort on /v1/messages, subject to model support.
 # https://docs.aihubmix.com/cn/api/unified-inference
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+# Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
+schema = 2
 base_model = "openai/gpt-6-astra"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 } }
 
-[cost]
-input = 10
-output = 50
-cache_read = 1
-cache_write = 12.5
+[cost.text.input]
+price = 10
+cache = { read = 1, write = 12.5 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 20
-output = 75
-cache_read = 2
-cache_write = 25
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 20
+cache = { read = 2, write = 25 }
+
+[cost.text.output]
+price = 50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 75

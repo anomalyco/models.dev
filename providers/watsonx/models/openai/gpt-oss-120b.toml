@@ -1,9 +1,15 @@
 # Source: https://www.ibm.com/products/watsonx-ai/pricing (accessed 2026-08-08)
 # Reasoning: https://github.com/IBM/watsonx-ai-provider/blob/main/package/README.md (accessed 2026-08-08)
 # Effort: providerOptions.watsonx.reasoningEffort
+schema = 2
 base_model = "openai/gpt-oss-120b"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
-[cost]
-input = 0.159
-output = 0.636
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.159
+
+[cost.text.output]
+price = 0.636

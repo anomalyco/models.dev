@@ -1,0 +1,26 @@
+# Released 2026-06-02: https://microsoft.ai/news/mai-voice-2/
+# Output formats: mp3 and pcm, as documented for OpenRouter's speech API (the lab lists none here):
+#   https://openrouter.ai/docs/guides/overview/multimodal/tts
+schema = 2
+v2_only = true
+type = "speech"
+name = "MAI-Voice-2"
+description = "Expressive multilingual text-to-speech model for long-form and conversational voice"
+family = "mai"
+open_weights = false
+release_date = "2026-06-02"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,6 +1,7 @@
 name = "Volcengine Ark Coding Plan"
 env = ["ARK_CODING_PLAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Coding Plan is a subscription tier with its own base URL. Volcengine warns that
 # calling the pay-as-you-go https://ark.cn-beijing.volces.com/api/v3 with a Coding
 # Plan key does NOT draw down the subscription and bills separately, so the two

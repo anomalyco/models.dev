@@ -1,12 +1,17 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=qwen%2Fqwen3-32b (accessed 2026-07-21)
-
+schema = 2
 base_model = "alibaba/qwen3-32b"
-reasoning_options = []
-structured_output = false
 
-[cost]
-input = 0.15
-output = 0.6
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+tools = { supported = true }
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

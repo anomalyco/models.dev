@@ -1,0 +1,26 @@
+# https://docs.bigmodel.cn/cn/guide/models/embedding/embedding-3 (8K context window, dimensions 256-2048;
+#   array inputs are limited to 3,072 tokens per item and 64 items). Accessed 2026-11-08.
+# Release month is approximate: Zhipu publishes no release date; the official Python SDK added
+#   embedding-3 dimension support on 2024-08-08 (MetaGLM/zhipuai-sdk-python-v4 #47).
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Embedding-3"
+description = "Zhipu third-generation text embedding model with 256 to 2,048 dimensions"
+open_weights = false
+release_date = "2024-08"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0

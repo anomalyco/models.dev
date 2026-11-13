@@ -1,0 +1,19 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+schema = 2
+base_model = "sakana/fugu-ultra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh"] }
+structured_output = true
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 30

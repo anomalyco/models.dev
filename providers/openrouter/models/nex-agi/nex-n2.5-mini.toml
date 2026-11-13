@@ -1,28 +1,40 @@
+# Modalities (OpenRouter's documented formats, narrowed to the lab's list where it has one): image: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Nex AGI)
+# effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+schema = 2
 name = "Nex-N2.5-Mini"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "agi"
-release_date = "2026-09-08"
-last_updated = "2026-09-08"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = true
 open_weights = true
+release_date = "2026-09-08"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "medium", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
 
-[cost]
-input = 0.025
-output = 0.1
-cache_read = 0.0025
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 262_144
 output = 235_929
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.025
+cache = { read = 0.0025 }
+
+[cost.text.output]
+price = 0.1
