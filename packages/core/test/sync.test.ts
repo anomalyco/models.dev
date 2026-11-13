@@ -3469,6 +3469,20 @@ test("factors Eden AI models onto lab metadata and prices from list_pricing", ()
   expect(buildEdenAIModel(model)).not.toHaveProperty("reasoning");
 });
 
+test("Eden AI keeps an authored output cap", () => {
+  const model = edenAIModel({
+    id: "openai/gpt-5.6-terra",
+    model_name: "gpt-5.6-terra",
+    owned_by: "openai",
+    context_length: 128_000,
+    pricing: { input_cost_per_token: 0.0000013, output_cost_per_token: 0.0000078 },
+    list_pricing: { input_cost_per_token: 0.000002, output_cost_per_token: 0.000012 },
+  });
+  const authored: ExistingModel = { base_model: "openai/gpt-5.6-terra", limit: { context: 128_000, output: 16_384 } };
+  expect(buildEdenAIModel(model, authored, undefined, authored)).toMatchObject({ limit: { context: 128_000, output: 16_384 } });
+  expect(buildEdenAIModel(model)).not.toHaveProperty("limit.output");
+});
+
 test("takes Eden AI reasoning options from the model's own lab entry", () => {
   expect(reasoningOptionsFor("deepseek/deepseek-v4-pro")).toEqual([
     { type: "effort", values: ["none", "high", "max"] },

@@ -1,7 +1,7 @@
-# Output limit: aki.io documents no output cap; 32,768 is kept as authored rather than raised to the lab's 131,072, since the host's real cap isn't known.
 # attachment are not supported on AKI.IO for security reasons and therefore are disabled
 # Prices: https://aki.io/#pricing lists EUR per 1M tokens (net); converted to USD at the ECB
 # reference rate of 1.1215 USD/EUR (2026-10-20). They were stored as unconverted EUR values.
+# Output limit: aki.io documents no output cap, so output is capped at the context served here (the lab's raised cap would exceed it).
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
@@ -11,7 +11,7 @@ structured_output = true
 
 [limit]
 context = 128_000
-output = 32_768
+output = 128_000
 
 [cost.text.input]
 price = 0.168225
