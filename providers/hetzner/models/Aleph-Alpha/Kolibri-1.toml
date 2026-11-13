@@ -4,13 +4,13 @@
 # Probed with an API key (2026-11-12): tool calling, json_object and strict json_schema response
 #   formats, reasoning_content and reasoning_effort all accepted; image input is rejected (text only).
 # Pricing is not published yet and is left out on purpose; it will be added in a follow-up PR.
+# limit.output = the deployment's shared prompt+output window (max_model_len 262144); no separate output cap is set.
 schema = 2
 base_model = "aleph-alpha/kolibri-1"
-name = "Kolibri 1"
 
 [capabilities]
 structured_output = true
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
 context = 262_144
