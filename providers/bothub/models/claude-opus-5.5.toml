@@ -8,9 +8,6 @@ base_model = "anthropic/claude-opus-5-5"
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[api.chat-completions]
-legacy_interleaved = true
-
 [cost.text.input]
 price = 3.07
 

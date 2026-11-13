@@ -12,9 +12,6 @@ base_model = "moonshotai/kimi-k3.1-pro"
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
-[api.chat-completions]
-legacy_interleaved = true
-
 [cost.text.input]
 price = 2.25
 

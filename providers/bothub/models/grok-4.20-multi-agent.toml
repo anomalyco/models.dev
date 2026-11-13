@@ -12,9 +12,6 @@ base_model = "xai/grok-4.20-multi-agent"
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 
-[api.chat-completions]
-legacy_interleaved = true
-
 [cost.text.input]
 price = 1.41
 

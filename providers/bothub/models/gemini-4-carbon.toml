@@ -8,9 +8,6 @@ base_model = "google/gemini-4-carbon"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[api.chat-completions]
-legacy_interleaved = true
-
 [cost.text.input]
 price = 2.25
 

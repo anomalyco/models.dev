@@ -12,9 +12,6 @@ base_model = "deepseek/deepseek-v4.1-flash-1017"
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
-[api.chat-completions]
-legacy_interleaved = true
-
 [cost.text.input]
 price = 0.17
 
