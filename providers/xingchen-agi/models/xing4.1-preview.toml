@@ -7,14 +7,13 @@
 #   is not supported on this endpoint.
 #
 # Pricing (USD per 1M tokens, off-peak base tier): input $0.11 / cache read
-#   $0.0022 / output $0.45. Peak hours double all token prices via factor = 2
-#   below; the official rate card lists peak cache read at $0.0045 (2x resolves
-#   to $0.0044, i.e. the published figure is rounded).
-#   Peak window: Mon-Fri 00:00-11:00 New York time. Cost conditions support fixed
-#   UTC only (no timezone/DST), so it is encoded as the EST offset
-#   (Mon-Fri 05:00-16:00 UTC), which matches the official window from launch
-#   (2026-11-18) through March 2027; under US daylight saving the live window is
-#   04:00-15:00 UTC.
+#   $0.0022 / output $0.45. Peak hours double all three prices (USD $0.22 /
+#   $0.0044 / $0.90; the published RMB rate card is 1.5 / 0.03 / 6 per 1M) via
+#   factor = 2 below.
+#   Peak window is defined in Beijing time (UTC+8): Mon-Fri 00:00-11:00. Cost
+#   conditions only accept fixed UTC, so it is encoded as the two non-overlapping
+#   rules below — Sun-Thu 16:00-24:00 UTC and Mon-Fri 00:00-03:00 UTC. Beijing
+#   time has no daylight saving, so the mapping is exact year-round.
 #
 # Caching: provider docs confirm implicit caching (explicit caching unsupported).
 #   No minimum-token threshold is published, so it is declared bare per AGENTS.md.
@@ -36,6 +35,12 @@ price = 0.45
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
+# Beijing Mon-Fri 00:00-08:00 == UTC Sun-Thu 16:00-24:00.
 [[cost.multipliers]]
-when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "05:00" } }, { utc_hours = { lt = "16:00" } }] }
+when = { utc_days = { in = ["sun", "mon", "tue", "wed", "thu"] }, utc_hours = { gte = "16:00" } }
+factor = 2
+
+# Beijing Mon-Fri 08:00-11:00 == UTC Mon-Fri 00:00-03:00.
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { lt = "03:00" } }
 factor = 2
