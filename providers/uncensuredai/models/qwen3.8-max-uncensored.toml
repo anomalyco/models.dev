@@ -1,14 +1,16 @@
 # Pricing (USD per 1M tokens): https://uncensuredai.com/api/pricing
 # Hosted model: https://uncensuredai.com/en/models/qwen3.8-max-uncensored
 # Client capabilities: https://uncensuredai.com/model-capabilities.json
-# The hosted model page lists Qwen 3.8 Max as the base model. Both the page
-# and the gateway capabilities entry publish a 131,000-token output limit.
+# The hosted model page and gateway capabilities entry publish a 1,000,000-token
+# context matching the base and a 131,000-token output limit overriding the base.
 # Effort: reasoning_effort = none|low|medium|xhigh. With none the response contained no reasoning.
 # Gateway QA (2026-11-13): all four values and a named function call passed
 # through an isolated instance of the UncensuredAI gateway binary.
 # Chat Completions QA (2026-11-13): reasoning_content in the JSON message and streamed deltas.
 # Budget controls are omitted pending verification with the public gateway and generic client.
-# The text-only input override uses both modality keys as required by AuthoredModelV2.
+# Gateway QA (2026-11-13): Chat Completions rejected inline PNG with HTTP 400
+# (invalid_prepaid_media). The prepaid gateway media validator blocks file input
+# for this model. Both modality keys are required by the schema.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen 3.8 Max Uncensored"

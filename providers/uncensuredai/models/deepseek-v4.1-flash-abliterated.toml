@@ -9,7 +9,9 @@
 # isolated instance of the UncensuredAI gateway binary.
 # With high effort, the JSON message used reasoning_content and SSE deltas used
 # reasoning. Leave reasoning_field unset for detection because v1 cannot encode it.
-# The text-only input override uses both modality keys as required by AuthoredModelV2.
+# Gateway QA (2026-11-13): Chat Completions rejected inline PNG with HTTP 400
+# (invalid_prepaid_media). The prepaid gateway media validator blocks file input
+# for this model. Both modality keys are required by the schema.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash Abliterated"

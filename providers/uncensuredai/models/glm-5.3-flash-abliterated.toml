@@ -7,14 +7,16 @@
 # Chat Completions QA (2026-11-13): JSON message uses reasoning_content and SSE
 # deltas use reasoning. Leave reasoning_field unset for detection because v1
 # cannot encode the streamed reasoning field.
-# The text-only input override uses both modality keys as required by AuthoredModelV2.
+# Gateway QA (2026-11-13): Chat Completions identified the colors in both
+# inline PNG and JPEG photos. The prepaid gateway validator accepts only
+# inline JPEG and PNG attachments. Both modality keys are required by the schema.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash Abliterated"
 description = "GLM 5.3 Flash Abliterated served by UncensuredAI over Chat Completions."
 
 [modalities]
-input = ["text"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
