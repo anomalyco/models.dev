@@ -836,7 +836,7 @@ export type LabMetadataV2 = z.infer<typeof LabMetadataV2>;
 
 // `sdk.opencodeai` (and provider.toml's `opencodeai`) is an `@opencode/ai` entry
 // point: `@opencode/ai/providers/<path>` for a provider's chat, responses,
-// messages, images or decisions model (`@opencode/ai/providers/openai/chat`,
+// messages, images, videos or decisions model (`@opencode/ai/providers/openai/chat`,
 // `@opencode/ai/providers/openrouter/images`; System One decision hosts
 // without their own package use `@opencode/ai/providers/typesafe-ai/decisions`), or
 // `@opencode/ai/protocols/<name>` for an API with no provider entry point, such
