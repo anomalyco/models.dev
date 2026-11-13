@@ -1,3 +1,4 @@
+# Sampling: temperature and top_p return 200 on /v1/chat/completions and /v1/responses with reasoning effort "none" (live 2026-11-13).
 # tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (free-form text, or lark/regex grammars; GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
 # tools.search: tool_search on the Responses API only (gpt-5.4 and later, per the model page's Supported tools): https://developers.openai.com/api/docs/guides/tools-tool-search
 # Per-API tools: tool_search is Responses-only (Chat Completions returns 400 "Invalid value: 'tool_search'. Supported values are: 'function' and 'custom'", live 2026-10-26), so tools.search sits on [api.responses]. Strict function tools, tool_choice and custom tools (text, lark and regex) work on both APIs (Chat Completions `ChatCompletionCustomTool`: https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create; live 2026-10-26).
@@ -22,7 +23,9 @@ output = ["text"]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
-temperature = false
+temperature = true
+top_p = true
+top_k = false
 system_updates = true
 store = true
 cache = { implicit = { ttl = ["24h"], min_tokens = 1_024 } }
