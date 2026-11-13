@@ -8,8 +8,8 @@ base_model = "meta/llama-3.1-8b-instruct"
 context = 131_072
 
 [cost.text.input]
-price = 0.02
-cache = { read = 0.003 }
+price = 0.05
+cache = { read = 0.0075 }
 
 [cost.text.output]
-price = 0.05
+price = 0.08
