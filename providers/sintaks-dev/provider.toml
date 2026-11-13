@@ -1,11 +1,8 @@
-# Sintaks.dev is an OpenAI-compatible multi-model gateway. All chat models are
-# served over POST `/chat/completions` with the OpenAI wire format; reasoning_effort
-# is forwarded per model, with controls copied from the lab's own provider entry
-# (or an established same-surface peer) — bare "supported = true" means always-on
-# with no caller control, matching the native entry. Claude 4.x budget models are
-# exposed as toggle-only (thinking on/off); this host does not expose a token budget.
-# Decision models use a System One wire body at the same base_url;
-# image models use the OpenAI Images API; embeddings use `/embeddings`.
+# Sintaks.dev is an OpenAI-compatible multi-model gateway. This catalog includes
+# chat, image and embedding models; other API surfaces are deferred pending
+# verification. Prices are from the public gateway catalog.
+# Sync is deferred: the gateway model list can skip malformed active records, so
+# absence from that list is not a safe signal for automatic model deletion.
 # https://api.sintaks.dev/v1/models (accessed 2026-11-12)
 name = "Sintaks.dev (Indonesia AI Gateway)"
 env = ["SINTAKS_DEV_API_KEY"]
