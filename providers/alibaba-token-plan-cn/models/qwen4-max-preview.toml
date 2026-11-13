@@ -16,6 +16,8 @@
 # preserve_thinking defaults true, so clients must replay every historical
 # reasoning_content value unchanged.
 # structured_output: the China catalogue lists JSON Object and JSON Schema.
+# stream_usage: same shared Token Plan gateway as the international host; not
+# probed on the CN endpoint (no CN key).
 # Output: max_tokens is equivalent to max_completion_tokens and limits thinking
 # plus the final answer (393,216 total).
 # Tools: tool_choice auto|none|named on every API, plus required (`any`) on
@@ -34,6 +36,7 @@ base_model = "alibaba/qwen4-max-preview"
 tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 1, max = 262_144 } }
 structured_output = true
+stream_usage = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
