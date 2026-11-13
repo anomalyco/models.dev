@@ -1,15 +1,11 @@
 # Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
 # (checked 2026-11-12): 0.17 / 0.53 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
-# Effort: reasoning_effort = low|medium|high
-# Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
-# No published thinking.type / thinking_budget / enable_thinking controls on this host.
-# Live probe 2026-11-12: reasoning_effort=high → HTTP 200 on qwen3.8-flash.
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
 
 [api.chat-completions]
