@@ -1,15 +1,16 @@
 # Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
 # (checked 2026-11-12): 1.07 / 8.57 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
-# Effort: reasoning_effort = low|medium|high
 # Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
 # No published thinking.type / thinking_budget / enable_thinking controls on this host.
-# Live probe 2026-11-12: reasoning_effort=low|high → HTTP 200 on gemini-2.5-flash (family).
+# Live probe 2026-11-13, temperature 0, "Is 391 prime?":
+# reasoning_effort=low|medium|high → HTTP 200 on this id.
+# usage.reasoning_tokens is 0 on low, medium and high, so it shows no graded effect.
+# Effort omitted.
 schema = 2
 base_model = "google/gemini-2.5-pro"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
 [api.chat-completions]
