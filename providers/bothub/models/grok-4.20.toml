@@ -1,15 +1,11 @@
 # Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
 # (checked 2026-11-12): 1.41 / 2.82 USD per 1M input / output tokens.
 # Price taken from ECO mode; PRO may differ.
-# Effort: reasoning_effort = low|medium|high
-# Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
-# No published thinking.type / thinking_budget / enable_thinking controls on this host.
-# Live probe 2026-11-12: reasoning_effort=low|high → HTTP 200 on grok-4.20.
 schema = 2
 base_model = "xai/grok-4.20-0309-reasoning"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true }
 structured_output = true
 
 [api.chat-completions]
