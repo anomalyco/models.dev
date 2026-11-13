@@ -9,8 +9,9 @@
 # peak $0.18/$0.0039/$0.74, off-peak $0.0895/$0.002/$0.37 — the card's peak rates are not
 # exact doubles, so both tiers are written as explicit prices. Base prices are the peak
 # rate; the overrides give the off-peak rate, billed outside Mon-Fri 09:00-11:59 and
-# 14:00-17:59 Asia/Shanghai (= 01:00-03:59 and 06:00-09:59 UTC, the same windows as the
-# official DeepSeek peak).
+# 14:00-17:59 Asia/Shanghai (= 01:00-03:59 and 06:00-09:59 UTC). The windows coincide
+# with the official DeepSeek peak hours, but the published rate card defines them purely
+# by weekday and time — it lists no Chinese-public-holiday exception, so none is applied.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
