@@ -1,0 +1,18 @@
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = false
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 7.5

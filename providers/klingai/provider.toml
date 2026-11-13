@@ -4,7 +4,8 @@
 # - https://kling.ai/document-api/updates/api (2026-06-17: API key auth added next to the older access key +
 #   secret key pair, which callers sign into a short-lived HS256 JWT; the new per-model endpoints such as
 #   /text-to-video/kling-3.0-turbo take API keys only)
-# - https://kling.ai/document-api/guides/capability-map/video (model list)
+# - https://kling.ai/document-api/guides/capability-map/video and https://kling.ai/document-api/guides/capability-map/image
+#   (model lists; doc points at the API overview, which links both)
 # env lists only the API key because it works on every endpoint. @ai-sdk/klingai reads KLINGAI_API_KEY, or
 # KLINGAI_ACCESS_KEY + KLINGAI_SECRET_KEY for the legacy JWT auth.
 # The China endpoint (https://api-beijing.klingai.com, CNY billing) is not covered here.
@@ -15,4 +16,4 @@ name = "Kling AI"
 npm = "@ai-sdk/klingai"
 opencodeai = "none"
 env = ["KLINGAI_API_KEY"]
-doc = "https://kling.ai/document-api/guides/capability-map/video"
+doc = "https://kling.ai/document-api/guides/get-started/overview"

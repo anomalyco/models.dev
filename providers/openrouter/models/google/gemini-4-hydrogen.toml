@@ -1,13 +1,6 @@
 schema = 2
-name = "Gemini 4 Hydrogen"
+base_model = "google/gemini-4-hydrogen"
 description = "Gemini multimodal model for text, image, audio, video, and document tasks"
-family = "gemini"
-open_weights = false
-release_date = "2026-11-12"
-
-[modalities]
-input = ["audio", "application/pdf", "image", "text", "video"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
@@ -16,7 +9,6 @@ structured_output = true
 temperature = true
 
 [limit]
-context = 1_048_576
 output = 943_718
 
 [api.chat-completions]
