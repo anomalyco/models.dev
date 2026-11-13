@@ -12,6 +12,9 @@ base_model = "google/gemini-omni-1.2-flash"
 reasoning = { supported = true }
 temperature = true
 
+[api.videos]
+sdk = { opencodeai = "@opencode/ai/providers/google/videos" }
+
 [api.interactions]
 sdk = { opencodeai = "none" }
 

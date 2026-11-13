@@ -18,6 +18,9 @@ temperature = true
 context = 131_072
 output = 65_536
 
+[api.videos]
+sdk = { opencodeai = "@opencode/ai/providers/google/videos" }
+
 [api.interactions]
 sdk = { opencodeai = "none" }
 
