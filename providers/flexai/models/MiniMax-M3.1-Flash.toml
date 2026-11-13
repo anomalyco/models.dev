@@ -1,0 +1,29 @@
+# Always-on reasoner: no request switch turns reasoning off, so no toggle is declared.
+# Measured on FlexAI 2026-11-11 (length of reasoning_content, 3 prompts, no max_tokens):
+#   default 14/268/1454 · enable_thinking=false 90/194/1369 · thinking.disabled 31/131/1524
+#   enable_thinking=true 146/176/646 · thinking.enabled 117/328/1564
+# Effort (median reasoning_content, 3 runs per level, one hard prompt):
+#   default 3826 · top-level low 3087 · medium 3623 · high 3968
+#   chat_template_kwargs.reasoning_effort low 2921 · medium 2885 · high 4020
+# high reasons somewhat more than low, but medium is not separable and the ranges
+# overlap, so no effort levels are declared yet.
+# Context: 1_048_576 is the served window (GET /v1/models context_length).
+# https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

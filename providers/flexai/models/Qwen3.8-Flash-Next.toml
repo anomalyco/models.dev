@@ -1,0 +1,37 @@
+# Toggle: chat_template_kwargs.enable_thinking = true | false (default: false; FlexAI's
+# gateway turns thinking off when the switch is unset).
+# thinking.type is accepted but does NOT disable reasoning on this model (measured
+# 2026-10-05); the chat-template switch is the control that works.
+# Measured on FlexAI 2026-10-29 (length of reasoning_content, 3 prompts, no max_tokens,
+# every reply finish_reason stop):
+#   default 0/0/0 · enable_thinking=false 0/0/0 · enable_thinking=true 212/688/1883
+# No effort levels are declared. chat_template_kwargs.reasoning_effort reaches the
+# template (an invalid value returns 400 "Supported types are xhigh (default), medium,
+# and low"), but it has no measurable effect: on the hardest prompt, 3 runs per level
+# with thinking on, median reasoning_content is thinking-on 2275 · low 1808 ·
+# medium 1502 · xhigh 1665, with overlapping ranges. Top-level reasoning_effort
+# medium/high/max return 400 and low has no effect. Accepted values that do not
+# change reasoning give the caller no control.
+# Modalities: reads images (verified on two solid-colour fixtures), but video
+# is NOT served here -- a video_url part is coerced to image_url and rejected,
+# and input_video returns 500 -- so input is the lab's image MIME list without video.
+# https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
+base_model = "alibaba/qwen3.8-flash-next"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.0225 }
+
+[cost.text.output]
+price = 0.47

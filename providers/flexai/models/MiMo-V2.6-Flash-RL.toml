@@ -1,0 +1,29 @@
+# Served checkpoint: XiaomiMiMo/MiMo-V2.6-Flash-MOPD, the same architecture as the RL
+# release the lab entry links to, retrained to fix its tool-call repetition.
+# Toggle: chat_template_kwargs.enable_thinking = true | false, or
+# thinking.type = "enabled" | "disabled" (default: off).
+# Measured on FlexAI 2026-11-11 (length of reasoning_content, 3 prompts, no max_tokens,
+# every reply finish_reason stop):
+#   default 0/0/0 · enable_thinking=false 0/0/0 · enable_thinking=true 43/124/744
+#   thinking.disabled 0/0/0 · thinking.enabled 43/177/1406
+# Effort, with thinking on (median reasoning_content, 3 runs per level, one hard prompt):
+#   chat_template_kwargs.reasoning_effort low 4547 · medium 9162 · high 15154 (ordered)
+#   top-level reasoning_effort low 6829 · medium 3982 · high 4390 (not ordered)
+# No effort levels are declared yet: the lever works only as a chat-template kwarg,
+# and FlexAI's gateway does not yet map top-level reasoning_effort onto it.
+# https://docs.flex.ai/inference-api/agents/langchain
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0037 }
+
+[cost.text.output]
+price = 0.28
