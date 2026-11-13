@@ -1,11 +1,13 @@
 # API metadata (accessed 2026-11-13): https://api.isoquant.ai/v1/models
 # Chat Completions: POST /v1/chat/completions; Responses: POST /v1/responses.
-# Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; low|high|max, default max.
+# Reasoning: Chat `reasoning_effort`, Responses `reasoning.effort`; low|high|max, default max;
+# `none` is rejected (live probe 2026-11-13).
 # Tool choice: Chat auto|required|named|none; Responses auto|none|required|function (recorded as "tool").
-# top_k is not in the published parameter set.
-# Input: Isoquant docs say "Accepts text and image input"; the lab's video and
-# PDF inputs are not advertised. The docs image example uses image/gif, and the
-# remaining image types are inherited from the lab.
+# Strict tools: the catalog reports `strict_tools: true` for both Chat Completions and Responses.
+# top_k is accepted on Chat Completions (live probe 2026-11-13).
+# Input: the catalog reports text+image and the docs say "Accepts text and image
+# input" without listing formats. Live probes accepted data URIs for image/jpeg,
+# image/png, image/gif and image/webp; video and PDF are not advertised.
 # Host output policy is remaining_context; no fixed host cap is published, so the
 # model-level 131072 output limit is inherited.
 # store=true is rejected: "This backend requires store=false and full input
@@ -25,7 +27,6 @@ reasoning = { supported = true, default = { type = "effort", value = "max" }, ef
 structured_output = true
 store = false
 cache = { implicit = true }
-top_k = false
 
 [limit]
 context = 1_048_576

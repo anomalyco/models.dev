@@ -188,6 +188,17 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 - Models absent from the API or explicitly lacking tool/text support are removed. Empty, malformed and duplicate-ID inventories fail before writes. Internal/frontier namespaces, deployment-qualified IDs and uppercase namespaces are excluded; exact wire IDs are preserved on case-insensitive filesystems.
 - Cache prices are omitted when unavailable, including removal of stale cache rates. Unpublished input-token limits are omitted; generic `file` input does not imply PDF support. Reasoning options use the published per-model `reasoning_effort` values, including `none` when advertised.
 
+## Isoquant Notes
+
+Isoquant is implemented in `packages/core/src/sync/providers/isoquant.ts`.
+
+- Run with `bun models:sync isoquant` or `bun isoquant:sync`. The `https://api.isoquant.ai/v1/models` catalog is public, so no API key or new workflow secret is required.
+- Prices are published in nano-USD per token and converted to USD per million tokens. Context limits, `output_limit.max_tokens` and published effort lists are API-authoritative.
+- A model without a fixed output cap publishes only `output_limit.policy = "remaining_context"`, so the authored model-level output limit is kept.
+- `capabilities.reasoning.default` follows the published `default_effort` through `v2Set`. An unknown effort value leaves the authored controls untouched rather than inventing one.
+- Input formats, `store`, `cache`, tool details and API tables stay hand-authored: the catalog reports generic `text`/`image` modalities and no per-format or parameter-rejection detail.
+- New remote-only models open a missing-model issue (`skipCreates`). Entries absent from the catalog are retained because the catalog is small enough that a truncated response must not delete a live entry.
+
 ## EmpirioLabs Notes
 
 EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
