@@ -3,7 +3,7 @@ schema = 2
 base_model = "amazon/nova-2-lite"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [cost.text.input]
 price = 0.4455

@@ -3,7 +3,7 @@ schema = 2
 base_model = "anthropic/claude-opus-4-1"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 16.5

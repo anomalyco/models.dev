@@ -3,6 +3,9 @@ v2_only = true
 schema = 2
 base_model = "openai/gpt-realtime-2.1"
 
+[api.realtime]
+sdk = { opencodeai = "none" }
+
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 

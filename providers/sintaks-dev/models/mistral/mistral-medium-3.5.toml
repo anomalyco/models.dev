@@ -3,7 +3,7 @@ schema = 2
 base_model = "mistral/mistral-medium-3-5"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
 
 [cost.text.input]
 price = 2.025

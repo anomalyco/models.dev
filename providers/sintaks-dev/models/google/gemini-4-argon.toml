@@ -3,7 +3,7 @@ schema = 2
 base_model = "google/gemini-4-argon"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [cost.text.input]
 price = 5.4

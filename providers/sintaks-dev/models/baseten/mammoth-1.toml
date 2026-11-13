@@ -5,7 +5,7 @@ base_model = "baseten/mammoth-1"
 
 [api.systemone]
 base_url = "https://api.sintaks.dev/v1"
-sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openai-compatible" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
 
 [cost.text.input]
 price = 0.135

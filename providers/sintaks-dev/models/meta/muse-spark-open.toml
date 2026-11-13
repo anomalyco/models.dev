@@ -3,7 +3,7 @@ schema = 2
 base_model = "meta/muse-spark-open"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 
 [cost.text.input]
 price = 1.6875
