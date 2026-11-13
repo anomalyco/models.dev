@@ -1,0 +1,17 @@
+schema = 2
+base_model = "mistral/mistral-large-4"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.68
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 2.09

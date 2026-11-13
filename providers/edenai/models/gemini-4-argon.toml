@@ -1,0 +1,20 @@
+# Cache: Gemini accepts cache_control on a Chat Completions content block
+# (https://www.edenai.co/docs/v3/llms/prompt-caching).
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { explicit = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 0.1875 }
+
+[cost.text.output]
+price = 10
+reasoning = 10
+
+[cost.audio.input]
+price = 2
