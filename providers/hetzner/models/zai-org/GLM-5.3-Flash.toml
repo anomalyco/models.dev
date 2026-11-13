@@ -2,7 +2,7 @@
 # Verified against GET /v1/models with an API key (2026-11-11): id "zai-org/GLM-5.3-Flash"
 #   (alias "z-ai/glm-5.3-flash" points to the same deployment), max_model_len 1048576.
 # Probed with an API key (2026-11-12): image input (image_url), tool calling, json_object and
-#   strict json_schema response formats, reasoning_content and reasoning_effort all accepted.
+#   strict json_schema response formats, reasoning output and reasoning_effort all accepted all accepted.
 #   Video and PDF input were not tested, so only text and common image types are listed.
 # Pricing is not published yet and is left out on purpose; it will be added in a follow-up PR.
 schema = 2
@@ -10,6 +10,7 @@ base_model = "zhipuai/glm-5.3-flash"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
 
 [capabilities]
 structured_output = true
