@@ -12,6 +12,9 @@ base_model = "alibaba/qwen3.8-omni-flash"
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 262_144 } }
 structured_output = true
 
+[limit]
+context = 1_006_592
+
 [cost.text.input]
 price = 0.3
 cache = { read = 0.3 }

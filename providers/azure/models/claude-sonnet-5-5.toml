@@ -1,3 +1,5 @@
+# tools.strict/search: structured outputs (strict tool use) and tool search on Foundry: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models; model lists: https://platform.claude.com/docs/en/build-with-claude/structured-outputs, https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility
+# tools.choice: auto/any/tool/none; Opus 5.5, Sonnet 5.5 and Fable 5.1 reject forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
 # effort_updates: left out. Microsoft documents per-turn effort on Foundry only for Opus 5.5 and Opus 5, and Anthropic lists per-message effort as Claude API only; not tested here.
 # Model ID and pricing: https://platform.claude.com/docs/en/models/sonnet-5-5/overview
 # Foundry catalog: https://ai.azure.com/catalog/models/claude-sonnet-5-5
@@ -12,7 +14,7 @@ schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none"], search = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }

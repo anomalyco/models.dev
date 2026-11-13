@@ -3,11 +3,12 @@
 # Cache: explicit cache_control only, as on Anthropic (https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Zen forwards it: block and top-level cache_control and ttl 1h were honored, and no read happened without it (live on claude-haiku-5-5, claude-opus-5-5, claude-sonnet-5 and claude-sonnet-5-5). Zen lists only the 5m write price.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/anthropic/models/claude-fable-5.toml (Zen passes requests through).
 #   Surface: Messages carries the in-history messages (tool_addition/tool_removal for tools.updates).
+# Tools follow Anthropic's Messages API: https://platform.claude.com/docs/en/build-with-claude/structured-outputs (strict), https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility (search), https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use (choice); Zen passes requests through.
 schema = 2
 base_model = "anthropic/claude-fable-5"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 system_updates = true

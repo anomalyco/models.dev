@@ -1,0 +1,21 @@
+schema = 2
+base_model = "mistral/ministral-14b"
+name = "Mistral: Ministral 14B"
+description = "Ministral 3 14B is the largest model in the Ministral 3 family, offering state-of-the-art capabilities and performance comparable to its larger Mistral Small 3.2 24B counterpart. Optimized for local deployment, it delivers high performance across diverse hardware, including local setups."
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[limit]
+output = 256_000
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.2

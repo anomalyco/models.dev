@@ -1,0 +1,39 @@
+# Pricing and availability: https://developers.openai.com/api/docs/guides/decisions#pricing-and-availability
+#   ($0.10 per 1M uncached input tokens; cache reads and writes at the standard gpt-6-luna rates; long-context input
+#   multipliers apply; output tokens are not charged).
+# Cache rates and the 272K long-context band follow providers/openai/models/gpt-6-luna.toml.
+# Endpoint (System One, POST /systemone): https://opencode.ai/v2/docs/console/models/ (accessed 2026-11-12).
+# Zen translates the request to OpenAI's Decisions API (POST /v1/decisions), which takes text, images and JSON; files
+#   and audio aren't supported. Images go in `state` as chat-style `image_url` parts.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-6-luna"
+type = "decision"
+name = "GPT-6 Luna Decision"
+description = "GPT-6 Luna on OpenAI's Decisions API, returning typed yes/no, choice and score answers about text and images"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+cache = { implicit = { min_tokens = 1_024 } }
+
+[api.systemone]
+base_url = "https://opencode.ai/inference/systemone/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/opencode/decisions" }
+compatibility = { media_input = "state" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = { "30m" = 0.125, "12h" = 0.25 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.2
+cache = { read = 0.02, write = { "30m" = 0.25, "12h" = 0.5 } }
+
+[cost.text.output]
+price = 0

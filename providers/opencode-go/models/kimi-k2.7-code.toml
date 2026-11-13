@@ -1,9 +1,11 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/moonshotai/models/kimi-k2.7-code.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Tools follow Moonshot's API: https://platform.kimi.ai/docs/api/models-overview (tool_choice per model), https://platform.kimi.ai/docs/api/chat (strict); Go passes requests through.
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
 [capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none"] }
 reasoning = { supported = true }
 structured_output = true
 system_updates = true

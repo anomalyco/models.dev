@@ -3,7 +3,7 @@ schema = 2
 type = "decision"
 name = "Decider V1.2"
 description = "Decision model for typed evaluation of shared state"
-open_weights = false
+open_weights = true
 release_date = "2026-10-16"
 
 [modalities]
@@ -21,8 +21,8 @@ context = 262_144
 output = 0
 
 [api.systemone]
-sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter" }
-compatibility = { image_input = "state" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
+compatibility = { media_input = "state" }
 
 [cost.text.input]
 price = 0.02

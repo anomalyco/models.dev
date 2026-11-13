@@ -5,9 +5,12 @@
 # https://developers.cloudflare.com/workers-ai/features/prompt-caching/), and live repeats read 0 cached tokens.
 # Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message is accepted and adds a role header (+19 tokens). On 2026-10-23 QwQ ignored the test instruction both mid-conversation and at the top of the system prompt, so it's the model, not the placement.
 # No prefix cache on this model, so effort and tool changes keep nothing.
+# Deprecated: Workers AI retires this model on 2026-11-20; requests then return HTTP 410 Gone.
+# https://developers.cloudflare.com/changelog/post/2026-11-05-planned-model-deprecations/
 schema = 2
 base_model = "alibaba/qwq-32b"
 name = "Qwq 32B"
+status = "deprecated"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
 
 [capabilities]

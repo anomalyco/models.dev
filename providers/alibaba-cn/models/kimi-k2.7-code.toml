@@ -4,12 +4,13 @@
 # Cache: implicit (and explicit in China (Beijing)) per the context-cache model lists; implicit hits at 20% of input.
 # Explicit cache read: CNY 0.65 per 1M at the file's CNY 6.5 = $0.894 rate (https://www.qianwenai.com/models/kimi-k2.7-code, accessed 2026-10-23).
 # Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/kimi-k2.7-code, accessed 2026-10-23).
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.7-code"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, budget = {} }
 top_k = false
 stream_usage = true

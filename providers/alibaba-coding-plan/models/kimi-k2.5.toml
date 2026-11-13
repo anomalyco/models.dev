@@ -7,6 +7,7 @@
 # https://www.alibabacloud.com/help/en/model-studio/kimi-api
 # Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates is left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (the DeepSeek, Kimi and MiniMax series do not support top_k).
 # Input MIME types: Model Studio's Kimi doc (https://www.alibabacloud.com/help/en/model-studio/kimi-api) lists no formats, so the moonshotai/kimi-k2.5 lab's list is used.
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 name = "Kimi K2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
@@ -20,7 +21,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, toggle = true }
 temperature = true
 top_k = false

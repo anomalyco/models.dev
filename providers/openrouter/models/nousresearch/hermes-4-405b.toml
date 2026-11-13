@@ -23,6 +23,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 
 [cost.text.input]
 price = 1
+cache = { read = 0.2 }
 
 [cost.text.output]
 price = 3

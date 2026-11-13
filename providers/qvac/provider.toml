@@ -1,5 +1,9 @@
+# opencodeai = "none": @qvac/ai-sdk-provider resolves QVAC file references through the local
+# `qvac serve` /files endpoint before each call and can start a managed `qvac serve` itself.
+# The generic OpenAI-compatible entry point does neither.
+# Source: @qvac/ai-sdk-provider 0.10.1 dist/provider.js, dist/file-reference-model.js
 name = "QVAC"
 env = ["QVAC_API_KEY"]
 npm = "@qvac/ai-sdk-provider"
-opencodeai = "@opencode/ai/providers/openai-compatible"
+opencodeai = "none"
 doc = "https://www.npmjs.com/package/@qvac/ai-sdk-provider"

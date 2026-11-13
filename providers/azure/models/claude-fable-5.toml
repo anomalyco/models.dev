@@ -1,3 +1,5 @@
+# tools.strict/search: structured outputs (strict tool use) and tool search on Foundry: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models; model lists: https://platform.claude.com/docs/en/build-with-claude/structured-outputs, https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility
+# tools.choice: auto/any/tool/none; Opus 5.5, Sonnet 5.5 and Fable 5.1 reject forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
 # system_updates: left out. Microsoft documents mid-conversation system messages on Foundry only for Haiku 5.5, Opus 5.5, Opus 5, Sonnet 5.5 and Sonnet 5, and this model couldn't be tested here.
 # Azure catalog: https://ai.azure.com/catalog/models/claude-fable-5
 # Effort: output_config.effort = low|medium|high|xhigh. Foundry's effort table lists max as "No" for claude-fable-5 ("xhigh produces the same result as max"):
@@ -11,7 +13,7 @@ base_model = "anthropic/claude-fable-5"
 status = "beta"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 structured_output = true

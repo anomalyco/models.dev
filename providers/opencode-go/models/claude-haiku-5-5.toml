@@ -5,11 +5,12 @@
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/anthropic/models/claude-haiku-5-5.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 #   Surface: Messages carries the in-history messages (per-message output_config for effort_updates; tool_addition/tool_removal for tools.updates).
+# Tools follow Anthropic's Messages API: https://platform.claude.com/docs/en/build-with-claude/structured-outputs (strict), https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility (search), https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use (choice); Go passes requests through.
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, updates = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true

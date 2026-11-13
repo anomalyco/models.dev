@@ -13,7 +13,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, budget = { min = 1, max = 81_920 } }
 temperature = true
 cache = { implicit = true }

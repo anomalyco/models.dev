@@ -7,7 +7,7 @@ base_model = "alibaba/qwen3.8-max-prime"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
 

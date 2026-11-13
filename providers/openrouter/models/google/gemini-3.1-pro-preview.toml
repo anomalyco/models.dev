@@ -6,7 +6,7 @@ schema = 2
 base_model = "google/gemini-3.1-pro-preview"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }

@@ -12,7 +12,7 @@ input = ["text", "application/pdf", "image/jpeg", "image/png", "image/gif", "ima
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 system_updates = true

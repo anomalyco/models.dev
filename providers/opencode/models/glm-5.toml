@@ -5,13 +5,14 @@
 # Cache (live): implicit (cached tokens reported without cache markers).
 # knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/zhipuai/models/glm-5.toml (Zen passes requests through).
+# Tools follow Z.ai's API: https://docs.z.ai/api-reference/llm/chat-completion (tool_choice: only auto); Zen passes requests through.
 schema = 2
 base_model = "zhipuai/glm-5"
 knowledge = "2025-04"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
 system_updates = true

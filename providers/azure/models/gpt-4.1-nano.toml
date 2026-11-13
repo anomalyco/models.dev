@@ -1,3 +1,4 @@
+# tools.choice: tool_choice none/auto/required/named (https://learn.microsoft.com/en-us/azure/foundry/openai/latest); tools.strict: Structured outputs in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure and https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/structured-outputs#supported-models
 # Modalities: Azure OpenAI Responses image inputs (PNG, JPEG, WebP, non-animated GIF) and PDF input for vision models: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses#image-input-requirements
 # Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
 # system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
@@ -14,7 +15,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 store = true
 cache = { implicit = { min_tokens = 1_024 } }
 system_updates = true

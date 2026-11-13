@@ -1,0 +1,26 @@
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "max"] }
+structured_output = true
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[limit]
+output = 943_718
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1

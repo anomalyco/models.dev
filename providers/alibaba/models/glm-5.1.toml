@@ -6,12 +6,13 @@
 # Re-checked live 2026-10-23 (~8k-token first user message): with cache_control on that message (accepted, but no cache creation tokens are reported), enable_thinking and thinking_budget changes keep the cached prefix (7.2k-9.3k cached, same as the control); without markers the cache misses after an enable_thinking flip.
 # effort_updates: left out. Changing enable_thinking or thinking_budget on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 # Implicit cache read: $0.26 per 1M, 18.57% of input (https://www.qwencloud.com/models/glm-5.1 and the context-cache doc, accessed 2026-10-23; no explicit cache price is published).
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-5.1"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {} }
 structured_output = true
 stream_usage = true

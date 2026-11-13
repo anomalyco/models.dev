@@ -15,7 +15,7 @@ base_model = "motif-technologies/motif-3"
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 cache = { implicit = true }
-structured_output = false
+structured_output = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

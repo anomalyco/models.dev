@@ -5,7 +5,7 @@ name = "Qwen 3 Coder 30B A3B Instruct"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 
 [limit]

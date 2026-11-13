@@ -7,12 +7,15 @@
 # Mid-conversation (Converse): role "system" messages (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html) on Opus 4.8 and the Claude 5 family (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html);
 # toolAddition/toolRemoval by reference with anthropic_beta mid-conversation-tool-changes-2026-07-01 (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html).
 # Per-turn effort is a system-message output_config on InvokeModel only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html); a Converse Message has no such field, so effort_updates = false.
+# tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-6.html
+# tools.choice: Converse toolChoice auto/any/tool, no none (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ToolChoice.html); Claude takes any and tool: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html
+# tools.search: left out. Bedrock offers the tool search tool through InvokeModel only, not Converse: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-tool-search-tool
 schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 name = "Claude Sonnet 4.6 (EU)"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "required", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }

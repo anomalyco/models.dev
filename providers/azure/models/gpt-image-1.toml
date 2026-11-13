@@ -1,12 +1,20 @@
+# Image prices (accessed 2026-11-12): Azure Retail Prices API, https://prices.azure.com/api/retail/prices?$filter=contains(meterName,'gpt-image-1') (global meters: image input 0.01/1K, cached 0.0025/1K, output 0.04/1K tokens).
 schema = 2
 base_model = "openai/gpt-image-1"
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/azure/images" }
 
 [cost.text.input]
 price = 5
 cache = { read = 1.25 }
 
 [cost.text.output]
+price = 40
+
+[cost.image.input]
+price = 10
+cache = { read = 2.5 }
+
+[cost.image.output]
 price = 40

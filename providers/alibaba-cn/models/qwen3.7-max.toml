@@ -5,11 +5,12 @@
 # China (Beijing) list: $1.65/$4.951 (previously the Singapore prices). Cache: implicit hit 20%, explicit creation 125% of input.
 # Explicit cache read: 10% of the $1.65 Beijing input price (CNY 1.2 of CNY 12, https://www.qianwenai.com/models/qwen3.7-max, accessed 2026-10-23).
 # Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 base_model = "alibaba/qwen3.7-max"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 262_144 } }
 structured_output = true
 stream_usage = true

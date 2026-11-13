@@ -1,11 +1,13 @@
 # Budget: thinking.budget_tokens (min 1024) with thinking.type = enabled (deprecated; not re-verified on Zen)
 # Mid-conversation flags left out: anthropic has no provider file for anthropic/claude-opus-4-1 to follow (Zen passes requests through).
+# Tools follow Anthropic's Messages API: https://platform.claude.com/docs/en/build-with-claude/structured-outputs (strict), https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility (search), https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use (choice); Zen passes requests through.
 schema = 2
 base_model = "anthropic/claude-opus-4-1"
 name = "Claude Opus 4.1"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, budget = { min = 1_024 } }
 
 [api.messages]

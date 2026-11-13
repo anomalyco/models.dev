@@ -1,0 +1,37 @@
+# Sources (accessed 2026-11-12):
+# - Pricing (Singapore, USD): https://www.alibabacloud.com/help/en/model-studio/model-pricing
+#   per second of output video: 1080P with audio $0.075, 720P with audio $0.05, 1080P silent $0.0375, 720P silent $0.025
+#   base price is 1080P, the default resolution in the API reference below
+#   resolution tiers are 720P and 1080P; this legacy API takes a width*height `size` in one of those tiers
+# - API: POST https://dashscope-intl.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis with `X-DashScope-Async: enable`,
+#   then poll GET /api/v1/tasks/{task_id} (https://www.alibabacloud.com/help/en/model-studio/legacy-image-to-video-api-reference)
+# - Inputs: first-frame image JPEG, JPG, PNG, BMP or WEBP; audio WAV or MP3; output MP4 (H.264)
+# base_url is passed as @ai-sdk/alibaba's videoBaseURL. No @opencode/ai package covers this API.
+schema = 2
+v2_only = true
+base_model = "alibaba/wan2.6"
+name = "Wan2.6 Image-to-Video Flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp", "audio/wav", "audio/mpeg"]
+output = ["video/mp4"]
+
+[api.videos]
+base_url = "https://dashscope-intl.aliyuncs.com"
+sdk = { aisdk = "@ai-sdk/alibaba", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.075
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" }, generate_audio = { equals = true } }
+price = 0.05
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" }, generate_audio = { equals = false } }
+price = 0.0375
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" }, generate_audio = { equals = false } }
+price = 0.025

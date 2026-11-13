@@ -4,11 +4,12 @@
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/minimax/models/MiniMax-M3.toml (Zen passes requests through).
 #   system_updates left out although the lab claims it: Zen drops a later system message (live 2026-10-21 and 2026-10-23: 200, cache kept, but prompt tokens unchanged and the instruction ignored, 4/4).
+# Tools follow MiniMax's API: https://platform.minimax.io/docs/api-reference/text-chat-anthropic (ToolChoice: only auto); Zen passes requests through.
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
 

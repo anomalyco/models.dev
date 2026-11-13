@@ -5,11 +5,12 @@
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/deepseek/models/deepseek-v4-pro.toml (Zen passes requests through).
 #   system_updates true although the lab doesn't claim it: a system message before the next user turn kept the cache and was followed on Zen (live 2026-10-23: cached 6933-7839 vs control 6932-7536, French 5/5), so Zen's route doesn't hoist it like DeepSeek's own API.
 # effort_updates: left out. Changing thinking.type on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
+# Tools follow DeepSeek's API: https://api-docs.deepseek.com/api/create-chat-completion (tool_choice; strict needs DeepSeek's beta base URL, so it is left out); Zen passes requests through.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 structured_output = true
 cache = { implicit = true }

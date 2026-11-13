@@ -1,0 +1,19 @@
+# Model IDs: https://elevenlabs.io/docs/overview/models
+# API: POST https://api.elevenlabs.io/v1/speech-to-text with model_id (https://elevenlabs.io/docs/api-reference/speech-to-text/convert).
+# Pricing: https://elevenlabs.io/pricing/api (accessed 2026-11-08), billed in USD: Scribe v2 and Scribe v2 Medical $0.22 per
+#   audio hour = $0.0036667/minute; keyterm prompting adds $0.05/hour ($0.27/hour = $0.0045/minute).
+# Not modeled: transcript editing (+$0.07/hour) has no v2 cost condition.
+schema = 2
+v2_only = true
+base_model = "elevenlabs/scribe_v2_medical"
+
+[api.transcriptions]
+base_url = "https://api.elevenlabs.io"
+
+[cost.audio.input]
+unit = "minute"
+price = 0.0036667
+
+[[cost.audio.input.overrides]]
+when = { keyterms_prompt = { min_items = 1 } }
+price = 0.0045

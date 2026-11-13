@@ -4,7 +4,7 @@ base_model = "nvidia/nemotron-nano-9b-v2"
 name = "Nvidia Nemotron Nano 9B V2"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [api.chat-completions]

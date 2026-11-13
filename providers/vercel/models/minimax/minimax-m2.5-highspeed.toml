@@ -4,7 +4,7 @@ base_model = "minimax/MiniMax-M2.5-highspeed"
 name = "MiniMax M2.5 High Speed"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, budget = {} }
 cache = { implicit = true, explicit = true }
 

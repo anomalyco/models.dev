@@ -7,6 +7,8 @@
 # and is obeyed; changing tools between requests drops the cache after the system prompt (live 2026-10-22); switching
 # reasoning_effort drops the whole cached prefix (live 2026-10-23: 0 cached tokens none<->high). Caching:
 # https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic, 64-token blocks, prompt_cache_key).
+# Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named function; function.strict).
+#   strict + a named tool_choice were accepted live for this ID on 2026-10-24 (retired IDs are served by their successor).
 schema = 2
 name = "Magistral Medium (latest)"
 description = "Mistral reasoning model for transparent analysis, math, and complex decisions"
@@ -22,7 +24,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "high"] }
 temperature = true
 top_p = true

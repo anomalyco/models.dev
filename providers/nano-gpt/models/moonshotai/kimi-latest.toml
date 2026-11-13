@@ -7,7 +7,7 @@ schema = 2
 name = "Kimi Latest"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 family = "kimi"
-open_weights = true
+open_weights = false
 release_date = "2026-05-03"
 
 [modalities]
@@ -25,8 +25,8 @@ input = 1_048_576
 output = 943_718
 
 [cost.text.input]
-price = 1.2
-cache = { read = 0.2 }
+price = 2
+cache = { read = 0.2, write = 2 }
 
 [cost.text.output]
-price = 5.5
+price = 10

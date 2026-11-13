@@ -1,11 +1,13 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # Toggle: thinking.type = enabled|disabled (not re-verified on Zen: model access is disabled for the probe key)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/moonshotai/models/kimi-k2.6.toml (Zen passes requests through).
+# Tools follow Moonshot's API: https://platform.kimi.ai/docs/api/models-overview (tool_choice per model), https://platform.kimi.ai/docs/api/chat (strict); Zen passes requests through.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
 [capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none"] }
 reasoning = { supported = true, toggle = true }
 system_updates = true
 

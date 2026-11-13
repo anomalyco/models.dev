@@ -9,12 +9,12 @@ name = "Nemotron 3.5 Super VL"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 
 [limit]
-output = 235_929
+output = 943_718
 
 [api.chat-completions]
 
@@ -29,4 +29,4 @@ price = 0.15
 cache = { read = 0.02 }
 
 [cost.text.output]
-price = 0.5
+price = 0.47

@@ -7,7 +7,7 @@ base_model = "ibm/granite-4.2-8b"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
 
@@ -25,4 +25,4 @@ price = 0.06
 cache = { read = 0.015 }
 
 [cost.text.output]
-price = 0.25
+price = 0.15

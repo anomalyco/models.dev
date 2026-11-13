@@ -4,7 +4,7 @@ base_model = "openai/gpt-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }

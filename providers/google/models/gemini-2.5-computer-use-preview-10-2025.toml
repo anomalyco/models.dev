@@ -1,3 +1,4 @@
+# Pricing: the >200k tier ($2.50/$15) is not modeled: the model's context is 128,000 (https://generativelanguage.googleapis.com/v1beta/models, accessed 2026-11-12), so it can't apply.
 # Sources:
 # - https://ai.google.dev/gemini-api/docs/pricing
 #   (Gemini 2.5 Computer Use Preview: $1.25/$10 <=200k prompts, $2.50/$15 >200k; no cache row)
@@ -17,13 +18,5 @@ reasoning = { supported = true }
 [cost.text.input]
 price = 1.25
 
-[[cost.text.input.overrides]]
-when = { context = { gt = 200_000 } }
-price = 2.5
-
 [cost.text.output]
 price = 10
-
-[[cost.text.output.overrides]]
-when = { context = { gt = 200_000 } }
-price = 15

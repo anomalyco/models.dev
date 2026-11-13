@@ -1,0 +1,13 @@
+name = "BytePlus ModelArk"
+env = ["BYTEPLUS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# BytePlus ModelArk is the overseas brand of Volcengine Ark.
+# Same API surface, same models, different domain and API key.
+# Reasoning HTTP format: same as volcengine — `thinking.type` = enabled|disabled,
+# plaintext reasoning in `choices[].message.reasoning_content`.
+# Sources:
+# https://docs.byteplus.com/en/docs/ModelArk/1449737
+# https://docs.byteplus.com/api/docs/ModelArk/1529329
+doc = "https://docs.byteplus.com/en/docs/ModelArk/1529329"
+api = "https://ark.ap-southeast.bytepluses.com/api/v3"

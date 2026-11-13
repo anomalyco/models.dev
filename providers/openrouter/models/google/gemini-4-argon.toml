@@ -7,7 +7,7 @@ base_model = "google/gemini-4-argon"
 description = "Gemini multimodal model for text, image, audio, video, and document tasks"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true

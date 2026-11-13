@@ -7,7 +7,7 @@ base_model = "thinkingmachines/inkling-small"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
 structured_output = false
 

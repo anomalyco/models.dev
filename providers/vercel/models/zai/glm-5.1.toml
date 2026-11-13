@@ -4,7 +4,7 @@ base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }

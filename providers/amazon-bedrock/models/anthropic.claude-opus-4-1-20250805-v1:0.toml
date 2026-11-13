@@ -6,12 +6,13 @@
 # Mid-conversation (Converse): role "system" messages (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html) on Opus 4.8 and the Claude 5 family (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html);
 # toolAddition/toolRemoval by reference with anthropic_beta mid-conversation-tool-changes-2026-07-01 (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html).
 # Per-turn effort is a system-message output_config on InvokeModel only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html); a Converse Message has no such field, so effort_updates = false.
+# tools.choice: Converse toolChoice auto/any/tool, no none (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ToolChoice.html); Claude takes any and tool: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html
 schema = 2
 base_model = "anthropic/claude-opus-4-1-20250805"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "required", "tool"] }
 reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
 cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 

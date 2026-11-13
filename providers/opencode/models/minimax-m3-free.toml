@@ -1,6 +1,7 @@
 # Toggle: thinking.type = enabled|disabled (deprecated; not re-verified on Zen)
 # knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/minimax/models/MiniMax-M3.toml (Zen passes requests through).
+# Tools follow MiniMax's API: https://platform.minimax.io/docs/api-reference/text-chat-anthropic (ToolChoice: only auto); Zen passes requests through.
 schema = 2
 base_model = "minimax/MiniMax-M3"
 knowledge = "2025-01"
@@ -9,6 +10,7 @@ description = "Legacy model retained for compatibility with older integrations"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, toggle = true }
 system_updates = true
 

@@ -1,9 +1,11 @@
 # effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 # system_updates = false: Gemini places every system message, even one after the history, in its system instruction (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching#gemini-implicit-caching)
 # Cache: implicit (automatic) for Gemini models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
+# Type: chat, NanoGPT serves this ID on Chat Completions with text output only (https://nano-gpt.com/api/v1/models?detailed=true); its image generation IDs are separate (nano-banana-pro on https://nano-gpt.com/api/v1/image-models)
 # Modalities (image: the lab's formats that NanoGPT Chat Completions accepts): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
 schema = 2
 base_model = "google/gemini-3-pro-image-preview"
+type = "chat"
 name = "Gemini 3 Pro Image"
 
 [modalities]

@@ -5,7 +5,7 @@ schema = 2
 base_model = "alibaba/qwen-plus"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 structured_output = true
 

@@ -9,12 +9,13 @@
 # Prior sources (accessed 2026-07-20): thinking always-on; OpenAI-compatible Chat
 # effort low/medium/xhigh (high aliases to xhigh); thinking_budget 0..262144
 # mutually exclusive with reasoning_effort; preserve_thinking defaults true.
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 base_model = "alibaba/qwen3.8-max-preview"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
 structured_output = true
 

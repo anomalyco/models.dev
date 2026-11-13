@@ -14,6 +14,8 @@
 # Web search: $5 per 1,000 web_search tool calls: https://docs.x.ai/developers/pricing#tools-pricing
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Priority (https://docs.x.ai/developers/pricing).
 # APIs: Responses and Chat Completions (https://docs.x.ai/developers/rest-api-reference/inference/chat-completions), both confirmed live 2026-10-22. The Anthropic-compatible /v1/messages is listed under Legacy & Deprecated, so it is left out.
+# Tools: strict is implicitly always on for function tools (https://docs.x.ai/developers/model-capabilities/text/structured-outputs);
+# tool_choice auto|required|none or a named function (https://docs.x.ai/developers/tools/function-calling#tool-choice).
 schema = 2
 name = "Grok 4.3"
 description = "xAI's Grok for chat, coding, agentic tools, and lower hallucination risk"
@@ -26,7 +28,7 @@ input = ["text", "image/jpeg", "image/png", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 temperature = true

@@ -7,7 +7,11 @@
 # model says no video is attached) and audio is rejected; Together documents video input only for
 # dedicated endpoints (https://docs.together.ai/docs/inference/vision/inputs).
 # Mid-conversation (live 2026-10-21): a late system message was followed and kept the cache;
-# adding a tool dropped the cache to 0.
+# changing the top-level tools list dropped the cache to 0, which doesn't count as tools.updates.
+# tools.updates = true (add only, live 2026-10-27): Kimi's tool-carrying system message ({role: "system",
+# tools: [...]}, no content) after the last user turn was answered with a call to the added tool and kept the
+# cache [cached/prompt tokens, control -> test: 8064/8228 -> 8064/8338]. A late system message was obeyed in
+# the same run [8064/8228 -> 8064/8247].
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -16,7 +20,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, updates = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }
 structured_output = true

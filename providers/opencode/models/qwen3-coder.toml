@@ -1,9 +1,13 @@
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3-coder-480b-a35b-instruct.toml (Zen passes requests through).
+# Tools follow Alibaba's API: https://www.alibabacloud.com/help/en/model-studio/qwen-function-calling (Qwen models reject tool_choice required); Zen passes requests through.
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "Qwen3 Coder"
 description = "Legacy model retained for compatibility with older integrations"
 status = "deprecated"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 
 [api.chat-completions]
 base_url = "https://opencode.ai/inference/openai/v1"

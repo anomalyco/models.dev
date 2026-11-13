@@ -2,9 +2,12 @@ name = "Morph"
 env = ["MORPH_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"
-# Raw HTTP for the configured Apply models is POST `/v1/chat/completions`.
-# Morph documents no reasoning toggle, effort, or token-budget request field
-# for `morph-v3-fast`, `morph-v3-large`, or `auto`.
-# https://docs.morphllm.com/llms.txt (accessed 2026-06-25)
+# Raw HTTP is POST `/v1/chat/completions`; Fast Models also serve the Anthropic
+# Messages API at POST `/v1/messages`. The Apply models (`morph-v3-fast`,
+# `morph-v3-large`) and `auto` take no reasoning request field; Fast Models take
+# `reasoning_effort`. Prices are the direct list rates at
+# https://www.morphllm.com/api/models/json?prices=list (the bare URL is
+# Morph's OpenRouter provider feed, with OpenRouter channel prices).
+# https://docs.morphllm.com/llms.txt (accessed 2026-10-25)
 api = "https://api.morphllm.com/v1"
 doc = "https://docs.morphllm.com/api-reference/introduction" 

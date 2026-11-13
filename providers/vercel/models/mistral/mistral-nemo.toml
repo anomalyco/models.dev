@@ -4,7 +4,7 @@ base_model = "mistral/mistral-nemo"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [limit]
 context = 131_072

@@ -12,15 +12,15 @@ reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
 [limit]
-context = 1_050_000
-output = 945_000
+context = 1_000_000
+output = 65_536
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.14
-cache = { read = 0.003 }
+price = 0.4
+cache = { read = 0.08 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
@@ -28,7 +28,7 @@ price = 0.8
 cache = { read = 0.16 }
 
 [cost.text.output]
-price = 0.28
+price = 2
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 256_000 } }

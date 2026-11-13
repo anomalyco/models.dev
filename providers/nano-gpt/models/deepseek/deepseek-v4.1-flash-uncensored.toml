@@ -1,12 +1,12 @@
 schema = 2
 name = "DeepSeek V4.1 Flash Uncensored"
-description = "A lower-refusal finetune of DeepSeek V4.1 Flash with text input, optional reasoning, and tool calling. Supports a context window of up to 1M tokens."
+description = "A lower-refusal finetune of DeepSeek V4.1 Flash with text and image input, optional reasoning, and tool calling. Supports a context window of up to 1M tokens."
 family = "deepseek"
 open_weights = true
 release_date = "2026-10-01"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
 
 [capabilities]

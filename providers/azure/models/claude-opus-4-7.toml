@@ -1,3 +1,5 @@
+# tools.strict/search: structured outputs (strict tool use) and tool search on Foundry: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/claude-models; model lists: https://platform.claude.com/docs/en/build-with-claude/structured-outputs, https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility
+# tools.choice: auto/any/tool/none; Opus 5.5, Sonnet 5.5 and Fable 5.1 reject forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
 # Azure AI Foundry serves Claude Opus 4.7 at Anthropic list pricing:
 # https://platform.claude.com/docs/en/about-claude/pricing
 # Claude 4.6+ bills the full 1M context window at standard rates (no long-context
@@ -13,7 +15,7 @@ schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 2_048 } }
 structured_output = true

@@ -7,6 +7,7 @@
 # Budget: thinking.budget_tokens with thinking.type = enabled (not verified on Go: no Go subscription key was available)
 # family: kept as "qwen3.8-max" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.8-max.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Tools follow Alibaba's API: https://www.alibabacloud.com/help/en/model-studio/qwen-function-calling (Qwen models reject tool_choice required); Go passes requests through.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 family = "qwen3.8-max"
@@ -17,6 +18,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
 structured_output = true
 system_updates = true

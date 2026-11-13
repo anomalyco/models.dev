@@ -7,12 +7,15 @@
 # Mid-conversation updates follow the per-model lists in Anthropic's docs, which cover Google Cloud:
 # - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference)
 # - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort)
+# tools.choice: Messages tool_choice auto/any/tool/none; Opus 5.5, Sonnet 5.5 and Fable 5.1 reject any/tool: https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
+# tools.strict: left out; structured outputs (strict tool use) cover Claude 4.5 and later only: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/structured-outputs
+# tools.search: left out. Claude on Google Cloud supports client tools, not server tools (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/use-claude), and the tool search tool isn't documented here.
 schema = 2
 base_model = "anthropic/claude-opus-4-20250514"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, budget = { min = 1_024 } }
 structured_output = false
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }

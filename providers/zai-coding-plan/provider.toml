@@ -1,3 +1,5 @@
+# Chat Completions caps output with `max_tokens` only; `max_completion_tokens` is ignored
+# (https://docs.z.ai/api-reference/llm/chat-completion; same API as the pay-as-you-go endpoint, which was probed live 2026-10-24).
 # OpenAI Chat endpoint: POST https://api.z.ai/api/coding/paas/v4/chat/completions.
 # Coding Plan models currently available: glm-5.3, glm-5.3-flash. Requests for glm-5.2/glm-5.1
 # are routed to glm-5.3 and glm-4.7 to glm-5.3-flash.

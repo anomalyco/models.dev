@@ -6,7 +6,7 @@ base_model = "rekaai/reka-edge"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 structured_output = true
 

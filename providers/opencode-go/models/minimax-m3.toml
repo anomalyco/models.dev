@@ -4,6 +4,7 @@
 # knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
 # family: kept as "minimax-m3" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/minimax/models/MiniMax-M3.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Tools follow MiniMax's API: https://platform.minimax.io/docs/api-reference/text-chat-anthropic (ToolChoice: only auto); Go passes requests through.
 schema = 2
 base_model = "minimax/MiniMax-M3"
 family = "minimax-m3"
@@ -11,6 +12,7 @@ knowledge = "2025-01"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
 
 [capabilities]
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, toggle = true }
 system_updates = true
 

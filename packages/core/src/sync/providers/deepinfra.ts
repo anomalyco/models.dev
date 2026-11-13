@@ -81,13 +81,19 @@ export const deepinfra = {
   },
   parseModels(raw) {
     return DeepInfraResponse.parse(raw).filter((model) =>
-      model.type === "text-generation"
+      (model.type === "text-generation" || model.type === "embeddings")
       && !model.private
       && !isExcluded(model.model_name),
     );
   },
   translateModel(model, context) {
     const id = model.model_name;
+    // Embedding models are hand-authored v2 files: keep them as written, and
+    // report models without a file as skipped instead of retained-but-missing.
+    if (model.type === "embeddings") {
+      const v2 = context.v2?.(id);
+      return v2 === undefined ? undefined : { id, v2 };
+    }
     const existing = context.existing(id);
     const baseModel = existing === undefined
       ? resolveDeepInfraBaseModel(id)

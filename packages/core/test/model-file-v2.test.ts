@@ -334,8 +334,11 @@ test("readLabMetadata reads a v2 lab.toml and rejects v1 or unknown fields", () 
   try {
     expect(readLabMetadata(write("v2.toml", 'schema = 2\ndescription = "A lab."\n'))).toEqual({ description: "A lab." });
     expect(() => readLabMetadata(write("v1.toml", 'description = "A lab."\n'))).toThrow("schema = 2");
-    expect(() => readLabMetadata(write("extra.toml", 'schema = 2\ndescription = "A lab."\nname = "Lab"\n'))).toThrow();
+    expect(readLabMetadata(write("name.toml", 'schema = 2\nname = "Lab AI"\n'))).toEqual({ name: "Lab AI" });
+    expect(() => readLabMetadata(write("extra.toml", 'schema = 2\ndescription = "A lab."\nwebsite = "https://lab.ai"\n'))).toThrow();
     expect(() => readLabMetadata(write("empty.toml", 'schema = 2\ndescription = ""\n'))).toThrow();
+    expect(() => readLabMetadata(write("blank-name.toml", 'schema = 2\nname = ""\n'))).toThrow();
+    expect(() => readLabMetadata(write("bare.toml", "schema = 2\n"))).toThrow();
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -377,6 +380,25 @@ test("a type v1 doesn't know needs v2_only, and v1 leaves it out", () => {
     'Model type "extraction" isn\'t a v1 type, so the model must set `v2_only = true`',
   );
   expect(modelV2ToV1({ schema: 2, v2_only: true, ...model }).type).toBeUndefined();
+});
+
+test("an audio model stays in v1 untyped, without v2_only", () => {
+  const model = {
+    schema: 2,
+    id: "music",
+    type: "audio",
+    name: "Music",
+    description: "Generates music",
+    open_weights: false,
+    release_date: "2026-10-14",
+    modalities: { input: ["text"], output: ["text", "audio/mp3"] },
+    capabilities: { tools: { supported: false }, reasoning: { supported: false } },
+    limit: { context: 65_536, output: 65_536 },
+  };
+  const v1 = modelV2ToV1(model);
+  expect(v1.type).toBeUndefined();
+  expect("type" in v1).toBe(false);
+  expect(modelV2ToV1({ ...model, v2_only: true }).type).toBeUndefined();
 });
 
 test("patchModelV2 keeps a type that v1 can't carry", () => {

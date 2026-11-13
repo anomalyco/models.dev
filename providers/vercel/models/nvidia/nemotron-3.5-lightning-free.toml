@@ -8,7 +8,7 @@ name = "Nemotron 3.5 Lightning Free"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }

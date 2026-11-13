@@ -7,7 +7,7 @@ base_model = "sakana/fugu-max"
 description = "Multi-agent model for routing expert agents across complex analytical tasks"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
 

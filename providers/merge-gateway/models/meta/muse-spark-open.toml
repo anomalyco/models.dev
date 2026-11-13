@@ -7,11 +7,8 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
-structured_output = false
+structured_output = true
 tools = { supported = true }
-
-[limit]
-output = 262_144
 
 [cost.text.input]
 price = 1.25

@@ -5,7 +5,7 @@ schema = 2
 base_model = "google/gemini-3-pro-image"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 structured_output = true
 
@@ -15,7 +15,7 @@ context = 131_072
 [api.chat-completions]
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openrouter/images" }
 
 [cost.text.input]
 price = 2

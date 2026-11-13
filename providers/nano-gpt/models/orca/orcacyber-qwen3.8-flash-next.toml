@@ -1,0 +1,26 @@
+schema = 2
+name = "OrcaCyber Qwen3.8 Flash Next Uncensored"
+description = "An abliterated / uncensored variant of Qwen3.8 Flash Next for authorized security research, coding, and tool use. Accepts text and images, with reasoning enabled by default and an option to turn it off. Supports a 262K-token context window, up to 131K output tokens, tool calling, and structured output. Offensive work is permitted only within an authorized security engagement."
+open_weights = false
+release_date = "2026-11-02"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 261_632
+input = 261_632
+output = 131_072
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 1.6

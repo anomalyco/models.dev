@@ -4,7 +4,7 @@ base_model = "sakana/fugu-ultra"
 description = "Quality-first multi-agent model for hard research, analysis, and competitions"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
 temperature = true

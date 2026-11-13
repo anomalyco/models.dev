@@ -7,7 +7,7 @@ base_model = "fireworks/ember-1"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
 cache = { implicit = true }
 

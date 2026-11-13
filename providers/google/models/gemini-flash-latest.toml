@@ -6,6 +6,7 @@
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 # APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
+# tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
 schema = 2
 name = "Gemini Flash Latest"
 description = "High-efficiency Gemini model for agentic workflows, coding, and multimodal reasoning"
@@ -19,7 +20,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true

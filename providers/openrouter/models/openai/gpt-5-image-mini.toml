@@ -14,7 +14,7 @@ cache = { implicit = { min_tokens = 1_024 } }
 [api.chat-completions]
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openrouter/images" }
 
 [cost.text.input]
 price = 2.5

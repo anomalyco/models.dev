@@ -3,6 +3,7 @@
 # Budget: thinking.budget_tokens with thinking.type = enabled (deprecated; not re-verified on Zen)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.6-plus.toml (Zen passes requests through).
 # effort_updates: left out. Changing thinking.type or thinking.budget_tokens on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
+# Tools follow Alibaba's API: https://www.alibabacloud.com/help/en/model-studio/qwen-function-calling (Qwen models reject tool_choice required); Zen passes requests through.
 schema = 2
 base_model = "alibaba/qwen3.6-plus"
 name = "Qwen3.6 Plus Free"
@@ -10,6 +11,7 @@ description = "Legacy model retained for compatibility with older integrations"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, toggle = true, budget = {} }
 system_updates = true
 

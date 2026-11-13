@@ -10,7 +10,7 @@ base_model = "tencent/hy4-preview"
 name = "Tencent Hy4 Preview"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "high"] }
 cache = { implicit = true }
 

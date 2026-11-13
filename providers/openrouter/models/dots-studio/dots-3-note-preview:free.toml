@@ -9,7 +9,7 @@
 schema = 2
 name = "Dots3-Note Preview (free)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-open_weights = false
+open_weights = true
 release_date = "2026-08-14"
 status = "deprecated"
 
@@ -18,7 +18,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true

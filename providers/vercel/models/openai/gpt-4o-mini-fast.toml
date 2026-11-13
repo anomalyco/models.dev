@@ -6,7 +6,7 @@ base_model = "openai/gpt-4o-mini"
 name = "GPT-4o mini (Fast)"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 system_updates = true
 cache = { implicit = true }

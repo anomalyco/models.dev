@@ -1,0 +1,26 @@
+schema = 2
+name = "Apex"
+description = "Apex is Callstack’s agentic coding model for mobile and web development, optimized for React Native, React, and Next.js. With a 256K context window, it supports feature development, debugging, code reviews, testing, and large refactors."
+open_weights = false
+release_date = "2026-10-08"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = false
+temperature = true
+
+[limit]
+context = 262_144
+output = 131_072
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3

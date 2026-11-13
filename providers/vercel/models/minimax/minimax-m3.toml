@@ -9,8 +9,8 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true, budget = {} }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, toggle = true, budget = {} }
 cache = { implicit = true }
 
 [limit]

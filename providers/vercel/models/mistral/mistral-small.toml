@@ -4,7 +4,7 @@ schema = 2
 base_model = "mistral/mistral-small-latest"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 cache = { implicit = true }
 

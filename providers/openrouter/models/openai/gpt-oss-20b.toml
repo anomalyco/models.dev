@@ -6,9 +6,12 @@ base_model = "openai/gpt-oss-20b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+
+[limit]
+output = 117_964
 
 [api.chat-completions]
 
@@ -19,8 +22,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.018
-cache = { read = 0.009 }
+price = 0.03
+cache = { read = 0.03 }
 
 [cost.text.output]
-price = 0.09
+price = 0.13

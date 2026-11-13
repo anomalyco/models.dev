@@ -10,12 +10,13 @@
 # Service tiers: serviceTier.type = priority|flex accepted live (2026-10-19); AWS publishes no GLM 5.3 tier prices, so no multipliers.
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
 # Cache: the model card lists implicit caching for Responses/Chat Completions only; kept implicit because Converse returned cache reads live (2026-10-19).
+# tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5-3.html
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 (US)"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { implicit = true }

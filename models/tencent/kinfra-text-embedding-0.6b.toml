@@ -1,0 +1,25 @@
+# https://cloud.tencent.com/document/product/1823/133515 (1,024 dimensions, 32K context, 30+ languages;
+#   doc first published with the TokenHub embedding launch, last updated 2026-07-07). Accessed 2026-11-08.
+# Weights are not published (no Hugging Face repository). Release month taken from the launch doc.
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Kinfra Text Embedding 0.6B"
+description = "Lightweight Tencent text embedding model producing 1,024-dimensional vectors for large-scale retrieval"
+open_weights = false
+release_date = "2026-07"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0

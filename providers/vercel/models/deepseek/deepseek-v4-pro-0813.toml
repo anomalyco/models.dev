@@ -4,7 +4,7 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }

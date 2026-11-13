@@ -10,12 +10,15 @@
 # toolAddition/toolRemoval by reference with anthropic_beta mid-conversation-tool-changes-2026-07-01 (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html).
 # Per-turn effort is a system-message output_config on InvokeModel only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html); a Converse Message has no such field, so effort_updates = false.
 # system_updates: Anthropic's docs exclude Sonnet 5, but AWS lists it and Converse accepted a system message live (2026-10-19). AWS lists Sonnet 5 as rejecting tool changes.
+# tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-5.html
+# tools.choice: Converse toolChoice auto/any/tool, no none (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ToolChoice.html); Claude takes any and tool: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html
+# tools.search: left out. Bedrock offers the tool search tool through InvokeModel only, not Converse: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-tool-search-tool
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 name = "Claude Sonnet 5 (JP)"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "required", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true

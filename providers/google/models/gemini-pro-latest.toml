@@ -16,12 +16,13 @@
 #   The Chat Completions endpoint moves a late system message to the top, and Interactions rejects it.
 # Thinking config and tools are request-level; changing the thinking level drops the cache (live 2026-10-23).
 # APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
+# tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
 schema = 2
 base_model = "google/gemini-3.1-pro-preview"
 name = "Gemini Pro Latest"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = { min_tokens = 4_096 }, explicit = true }

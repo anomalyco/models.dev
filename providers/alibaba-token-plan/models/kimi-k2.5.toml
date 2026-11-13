@@ -11,12 +11,13 @@
 # https://www.alibabacloud.com/help/en/model-studio/kimi-api
 # https://www.alibabacloud.com/help/en/model-studio/deep-thinking
 # Mid-conversation: tools are a request-level parameter with no add/remove mechanism (tools.updates = false); not probed live (no plan key), so system_updates and effort_updates are left unset. Chat API: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (the DeepSeek, Kimi and MiniMax series do not support top_k).
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 family = "kimi-k2"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
 temperature = true

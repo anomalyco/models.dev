@@ -9,7 +9,7 @@ base_model = "alibaba/qwen3.7-flash"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = false
 

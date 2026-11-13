@@ -13,7 +13,7 @@ schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
 structured_output = true

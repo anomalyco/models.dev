@@ -1,5 +1,6 @@
 # Status: no longer listed for China (Beijing) on https://www.alibabacloud.com/help/en/model-studio/model-pricing or https://help.aliyun.com/zh/model-studio/model-pricing (accessed 2026-10-19); retired models are removed from the docs (https://www.alibabacloud.com/help/en/model-studio/model-depreciation).
 # max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 name = "Moonshot Kimi K2 Thinking"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
@@ -13,7 +14,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, budget = {} }
 structured_output = true
 temperature = true

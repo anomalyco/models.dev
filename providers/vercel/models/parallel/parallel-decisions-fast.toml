@@ -1,0 +1,22 @@
+schema = 2
+type = "decision"
+name = "Decisions Fast"
+description = "Decisions Fast is Parallel AI’s evaluation model for fast classification and scoring grounded in live web evidence. It answers yes/no, multiple-choice, and ordered scoring questions with probabilities and citations. Each request supports up to 100 related questions sharing the same context and retrieved evidence, with flat per-request pricing."
+open_weights = false
+release_date = "2026-11-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 32_000
+output = 0
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }

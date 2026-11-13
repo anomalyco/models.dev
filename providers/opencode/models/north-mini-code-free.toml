@@ -3,12 +3,14 @@
 #   /v1/models lists no json_mode/json_schema feature), and a proxy cannot add schema enforcement.
 # Effort: reasoning_effort = none|high (deprecated; not re-verified on Zen)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/cohere/models/north-mini-code-1-0.toml (Zen passes requests through).
+# Tools follow providers/cohere/models/north-mini-code-1-0.toml; Zen passes requests through.
 schema = 2
 base_model = "cohere/north-mini-code-1-0"
 name = "North Mini Code Free"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
 system_updates = true

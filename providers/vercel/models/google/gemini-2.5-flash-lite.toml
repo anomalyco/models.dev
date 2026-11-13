@@ -8,8 +8,8 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"], budget = {} }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"], budget = { min = 512 } }
 structured_output = true
 cache = { implicit = true }
 

@@ -4,7 +4,7 @@ base_model = "alibaba/qwen3-next-80b-a3b-instruct"
 name = "Qwen3 Next 80B A3B Instruct"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [limit]
 context = 262_114

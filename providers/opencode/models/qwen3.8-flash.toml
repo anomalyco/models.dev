@@ -6,11 +6,12 @@
 # Budget: thinking.budget_tokens with thinking.type = enabled
 # Cache (live): implicit read without markers, and explicit cache_control; a 1h ttl is written as 5m.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.8-flash.toml (Zen passes requests through).
+# Tools follow Alibaba's API: https://www.alibabacloud.com/help/en/model-studio/qwen-function-calling (Qwen models reject tool_choice required); Zen passes requests through.
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
 structured_output = true
 cache = { implicit = true, explicit = { ttl = ["5m"] } }

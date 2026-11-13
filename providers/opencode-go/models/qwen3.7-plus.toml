@@ -4,12 +4,14 @@
 # family: kept as "qwen3.7-plus" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.7-plus.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 # effort_updates: left out. Changing thinking.type or thinking.budget_tokens on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
+# Tools follow Alibaba's API: https://www.alibabacloud.com/help/en/model-studio/qwen-function-calling (Qwen models reject tool_choice required); Go passes requests through.
 schema = 2
 base_model = "alibaba/qwen3.7-plus"
 family = "qwen3.7-plus"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, toggle = true, budget = { max = 262_144 } }
 system_updates = true
 

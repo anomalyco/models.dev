@@ -7,7 +7,7 @@ base_model = "meta/muse-spark-1.1"
 description = "Open Llama multimodal model for image understanding and text reasoning"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
 

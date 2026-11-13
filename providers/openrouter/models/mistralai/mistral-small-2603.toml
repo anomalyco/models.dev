@@ -5,7 +5,7 @@ schema = 2
 base_model = "mistral/mistral-small-2603"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 

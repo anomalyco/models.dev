@@ -1,11 +1,13 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (Go list price from 2026-10-22).
 # Effort: reasoning_effort = low|medium|high|xhigh|max, same upstream as minimax-m3.1-flash-free.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/minimax/models/MiniMax-M3.1-Flash.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Tools follow MiniMax's API: https://platform.minimax.io/docs/api-reference/text-chat-anthropic (ToolChoice: only auto); Go passes requests through.
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 name = "MiniMax M3.1 Flash"
 
 [capabilities]
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 system_updates = true
 

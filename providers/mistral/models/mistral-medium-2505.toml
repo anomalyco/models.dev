@@ -1,6 +1,7 @@
 # Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 # Sampling: the chat API takes temperature and top_p but has no top_k (https://docs.mistral.ai/api/endpoint/chat).
 # tools.updates: adding or removing a tool busts the cache; tools render before the conversation (live 2026-10-22).
+# Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named function; function.strict).
 schema = 2
 name = "Mistral Medium 3"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
@@ -15,7 +16,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 temperature = true
 top_p = true

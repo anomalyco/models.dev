@@ -13,7 +13,7 @@ base_model = "openai/gpt-image-2"
 cache = { implicit = { min_tokens = 1_024 } }
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.text.input]
 price = 5

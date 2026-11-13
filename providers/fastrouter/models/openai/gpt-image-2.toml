@@ -12,7 +12,7 @@ name = "GPT Image 2"
 context = 128_000
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.image.input]
 price = 8

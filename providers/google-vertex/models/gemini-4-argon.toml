@@ -19,6 +19,7 @@
 # Grounding with Google Search: $14 per 1,000 grounding queries (each query the model runs is billed). Price: https://cloud.google.com/vertex-ai/generative-ai/pricing; support (supported models list): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/grounding/grounding-with-google-search
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Priority PayGo (https://cloud.google.com/vertex-ai/generative-ai/docs/priority-paygo); the scheduled increase is to token rates (https://cloud.google.com/vertex-ai/generative-ai/pricing); non-global region: Vertex bills Grounding with Google Search as a separate per-query SKU ($14 per 1,000 grounding queries) that these tiers don't scale (https://cloud.google.com/vertex-ai/generative-ai/pricing).
 # APIs: generateContent, and Interactions (https://docs.cloud.google.com/gemini-enterprise-agent-platform/reference/models/interactions-api lists this model; global location only).
+# tools.strict/choice: function_calling_config modes AUTO, ANY, NONE and VALIDATED ("ensures function schema adherence", which strict tools map to); ANY with allowed_function_names forces a tool: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/tools/function-calling#function-calling-modes
 schema = 2
 base_model = "google/gemini-4-argon"
 
@@ -27,7 +28,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = { min_tokens = 4_096 } }

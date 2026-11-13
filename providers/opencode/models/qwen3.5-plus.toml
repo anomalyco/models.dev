@@ -4,11 +4,13 @@
 # Budget: thinking.budget_tokens with thinking.type = enabled (not re-verified on Zen: model access is disabled for the probe key)
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.5-plus.toml (Zen passes requests through).
 # effort_updates: left out. Changing thinking.type or thinking.budget_tokens on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
+# Tools follow Alibaba's API: https://www.alibabacloud.com/help/en/model-studio/qwen-function-calling (Qwen models reject tool_choice required); Zen passes requests through.
 schema = 2
 base_model = "alibaba/qwen3.5-plus"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
 reasoning = { supported = true, toggle = true, budget = {} }
 system_updates = true
 

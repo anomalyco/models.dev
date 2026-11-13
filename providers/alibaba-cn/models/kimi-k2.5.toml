@@ -5,6 +5,7 @@
 # Prices: China (Beijing) USD list https://www.alibabacloud.com/help/en/model-studio/model-pricing (accessed 2026-10-19).
 # China (Beijing) list: $0.574/$3.011 (output was $2.411).
 # Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/kimi-k2.5, accessed 2026-10-23).
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
 schema = 2
 name = "Moonshot Kimi K2.5"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
@@ -18,7 +19,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = { max = 81_920 } }
 structured_output = false
 temperature = true
