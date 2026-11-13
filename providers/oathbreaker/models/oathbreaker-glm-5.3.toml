@@ -1,11 +1,12 @@
-# Sources (checked 2026-11-11):
+# Sources (checked 2026-11-13):
 # - Public alias, limits, supported request fields, reasoning and billing:
 #   https://oathbreaker.ai/docs
 # - Provider/variant attribution: https://oathbreaker.ai/models/glm-5-3-abliterated
 # - USD per million tokens: https://oathbreaker.ai/pricing
 # - Refuseless variant and GLM-5.3 lineage:
 #   https://refuseless.com/models/glm-5.3-abliterated
-# Oathbreaker is a gateway to Refuseless's glm-5.3-abliterated, based on Z.ai GLM-5.3.
+# Oathbreaker serves glm-5.3-abliterated, based on Z.ai GLM-5.3, with Refuseless
+# as primary and an approved Unlid backup; it does not train the underlying model.
 # The served derivative has no published checkpoint identified in those sources,
 # so open_weights is false. Lab weights and benchmarks are never inherited by
 # provider entries; the canonical model link still identifies the GLM-5.3 lineage.
@@ -19,7 +20,7 @@
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "Oathbreaker GLM-5.3 Abliterated"
-description = "Refuseless's abliterated GLM-5.3 variant, served through Oathbreaker's OpenAI-compatible Chat Completions API"
+description = "GLM-5.3 Abliterated served through Oathbreaker's OpenAI-compatible Chat Completions API"
 open_weights = false
 release_date = "2026-11-09"
 

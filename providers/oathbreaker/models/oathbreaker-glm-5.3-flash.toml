@@ -1,0 +1,49 @@
+# Sources (checked 2026-11-13):
+# - Public alias, text-only API, limits, reasoning and supplier attribution:
+#   https://oathbreaker.ai/models/glm-5-3-flash-abliterated
+# - Request fields, tool choice and default effort: https://oathbreaker.ai/docs
+# - USD per million tokens: https://oathbreaker.ai/pricing
+# - Public availability and current limits/prices: https://oathbreaker.ai/api/config
+# Oathbreaker serves the abliterated variant with Refuseless as primary and an
+# approved Unlid backup; it does not train the underlying Z.ai model.
+# The exact served derivative is not published as downloadable Oathbreaker weights.
+# Lab weights and benchmarks are never inherited by provider entries; the canonical
+# model link identifies the GLM-5.3-Flash lineage, not equivalent benchmark results.
+# release_date is the Oathbreaker alias's public launch, not the base model launch.
+# Context is shared by input, safety headroom and requested output.
+# Effort: reasoning_effort = low|high|max (default low); no off toggle or reasoning budget.
+# max_tokens and max_completion_tokens are supported; output includes reasoning.
+# Cache reads are implicit and billed only when reported by upstream usage.
+# Chat Completions only; no image input, Responses, Messages or strict tool schemas.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "Oathbreaker GLM-5.3 Flash Abliterated"
+description = "GLM-5.3 Flash Abliterated served through Oathbreaker's text-only OpenAI-compatible Chat Completions API"
+open_weights = false
+release_date = "2026-11-12"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
+structured_output = false
+top_k = false
+cache = { implicit = true }
+stream_usage = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.50
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1.50
