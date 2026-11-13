@@ -1,0 +1,16 @@
+# Hetzner Experiments inference (https://inference.hetzner.com/v1, OpenAI Chat Completions).
+# Verified against GET /v1/models with an API key (2026-11-11): id "zai-org/GLM-5.3"
+#   (alias "z-ai/glm-5.3" points to the same deployment), max_model_len 1048576.
+# Probed with an API key (2026-11-12): tool calling, json_object and strict json_schema response
+#   formats, reasoning_content and reasoning_effort all accepted.
+# Pricing is not published yet and is left out on purpose; it will be added in a follow-up PR.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3"
+status = "beta"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 1_048_576

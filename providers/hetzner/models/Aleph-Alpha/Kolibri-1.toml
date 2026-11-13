@@ -1,0 +1,16 @@
+# Hetzner Experiments inference (https://inference.hetzner.com/v1, OpenAI Chat Completions).
+# Verified against GET /v1/models with an API key (2026-11-11): id "Aleph-Alpha/Kolibri-1",
+#   max_model_len 262144. Hetzner serves the native 262,144-token context, not the 1M extrapolation.
+# Probed with an API key (2026-11-12): tool calling, json_object and strict json_schema response
+#   formats, reasoning_content and reasoning_effort all accepted; image input is rejected (text only).
+# Pricing is not published yet and is left out on purpose; it will be added in a follow-up PR.
+schema = 2
+base_model = "aleph-alpha/kolibri-1"
+name = "Kolibri 1"
+status = "beta"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 262_144
