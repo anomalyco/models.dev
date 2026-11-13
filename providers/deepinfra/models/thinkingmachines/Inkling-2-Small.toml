@@ -1,6 +1,7 @@
 # Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max is accepted (the request schema's enum for every model, checked live 2026-11-13: an unknown value is rejected with that list); "none" disables reasoning (https://docs.deepinfra.com/chat/reasoning). The levels are minimal|low|medium|high|max, as OpenRouter authors them, plus none, which Deep Infra documents and which Prime and Cloudflare Workers AI also take (providers/openrouter, providers/prime, providers/cloudflare-workers-ai). Not probed per level: the account had no balance for inference.
 # Mid-conversation flags: not tested, so left unset.
 # Limit: context is the 262,144 that both https://api.deepinfra.com/v1/openai/models (context_length and max_tokens) and the deploy catalog report; the lab's 1,048,576 is not served here. Output is inherited.
+# Prices, cache and structured output: the deploy catalog https://api.deepinfra.com/models/list?type=text-generation (accessed 2026-11-13): $0.3 input and $1 output per 1M tokens, cached input at 0.1x the input price ($0.03), tag structured-output; https://api.deepinfra.com/v1/openai/models lists the same prices and a prompt_cache tag (implicit cache, prompt_cache_key).
 schema = 2
 base_model = "thinkingmachines/inkling-2-small"
 
