@@ -10,12 +10,10 @@ name = "Kolibri 1"
 
 [capabilities]
 structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 262_144
 output = 262_144
 
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]

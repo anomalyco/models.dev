@@ -10,11 +10,8 @@ name = "GLM-5.3"
 
 [capabilities]
 structured_output = true
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [limit]
 context = 1_048_576
 
-
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
