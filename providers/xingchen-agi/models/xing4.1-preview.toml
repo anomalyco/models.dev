@@ -1,29 +1,38 @@
 # Xing4.1-Preview @ XingChen-AGI — provider model file, overrides only
 # (fields identical to the lab file are inherited via base_model).
+#
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default: true)
+#   Source: provider's official OpenAI-compatible API docs. The response carries
+#   the chain of thought in message.reasoning_content. Top-level reasoning_effort
+#   is not supported on this endpoint.
+#
+# Pricing (USD per 1M tokens, off-peak base tier): input $0.11 / cache read
+#   $0.0022 / output $0.45. Peak hours double all token prices via factor = 2
+#   below; the official rate card lists peak cache read at $0.0045 (2x resolves
+#   to $0.0044, i.e. the published figure is rounded).
+#   Peak window: Mon-Fri 00:00-11:00 New York time. Cost conditions support fixed
+#   UTC only (no timezone/DST), so it is encoded as the EST offset
+#   (Mon-Fri 05:00-16:00 UTC), which matches the official window from launch
+#   (2026-11-18) through March 2027; under US daylight saving the live window is
+#   04:00-15:00 UTC.
+#
+# Caching: provider docs confirm implicit caching (explicit caching unsupported).
+#   No minimum-token threshold is published, so it is declared bare per AGENTS.md.
 schema = 2
 base_model = "xingchen-agi/xing4.1-preview"
 
 [capabilities]
-# Thinking is a binary toggle on this host (no effort levels).
 reasoning = { supported = true, toggle = true }
 structured_output = true
-cache = { implicit = { min_tokens = 1_024 } }
+cache = { implicit = true }
 
 [cost.text.input]
-# Official USD list prices per million tokens, off-peak base tier:
-# input $0.11 / cache read $0.0022 / output $0.45.
 price = 0.11
 cache = { read = 0.0022 }
 
 [cost.text.output]
 price = 0.45
 
-# Peak hours double all token prices (input/output/cache read; factor = 2).
-# Official peak window: Mon-Fri 00:00-11:00 New York time. Cost condition keys only
-# support fixed UTC (no time zone / DST), so this encodes the EST offset
-# (Mon-Fri 05:00-16:00 UTC), which matches the official window from launch
-# (2026-11-18) through March 2027; during US daylight saving the live window
-# is 04:00-15:00 UTC.
 [[cost.multipliers]]
 when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, all = [{ utc_hours = { gte = "05:00" } }, { utc_hours = { lt = "16:00" } }] }
 factor = 2
