@@ -502,7 +502,7 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 
 ## Groq Notes
 
-- Source endpoint: `https://api.groq.com/openai/v1/models`, which needs `GROQ_API_KEY` (the workflow passes the `GROQ_API_KEY` repository secret).
+- Source endpoint: `https://api.groq.com/openai/v1/models`, which needs `GROQ_API_KEY` (the workflow reads it from AWS Secrets Manager as `models.dev/release/GROQ_API_KEY`).
 - Update-only for priced text models that already have a file: prices, the `input_cache_read` rate, `context_window` and `max_completion_tokens` come from the list. Reasoning efforts, service tiers, the Responses API and web search fees stay hand-authored, and new remote IDs open missing-model issues.
 - The cache rate is only synced for models listing `tools` or `reasoning`; the prompt guard classifiers list a derived rate that isn't a caching claim.
 - Speech, transcription and unpriced models are left alone, and nothing is deleted when a model drops out of the list; mark it `status = "deprecated"` by hand.
