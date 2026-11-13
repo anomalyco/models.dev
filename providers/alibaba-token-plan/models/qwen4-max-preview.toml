@@ -4,24 +4,36 @@
 # https://docs.qwencloud.com/developer-guides/text-generation/thinking
 # https://docs.qwencloud.com/api-reference/chat/openai-chat
 # https://www.alibabacloud.com/help/en/model-studio/pdf-understanding
-# Thinking: hybrid, enabled by default; reasoning_effort low|medium|xhigh
-# (default xhigh); thinking_budget 0..262144, mutually exclusive with
-# reasoning_effort. OpenAI max/high map to xhigh; none disables thinking.
-# preserve_thinking defaults true, so clients must replay historical
-# reasoning_content unchanged.
+# Toggle: enable_thinking true|false (hybrid; thinking enabled by default).
+# With enable_thinking=false, reasoning_effort must be "none" or omitted.
+# Effort: reasoning_effort = low|medium|xhigh (default xhigh). OpenAI aliases:
+# high and max map to xhigh, minimal maps to low, and none disables thinking
+# (Chat Completions and Responses); Anthropic Messages uses thinking.type
+# enabled|disabled with budget_tokens.
+# Budget: thinking_budget (1..262144) cannot be combined with reasoning_effort;
+# max_completion_tokens must be greater than it.
+# preserve_thinking defaults true, so clients must replay every historical
+# reasoning_content value unchanged.
+# structured_output: response_format json_schema and json_object both returned
+# valid JSON (live 2026-11-13).
 # Output: max_tokens is equivalent to max_completion_tokens and limits thinking
 # plus the final answer (393,216 total).
-# Tools: Chat Completions accepts auto|none|named; Anthropic Messages adds any
-# (required). Live 2026-11-13: named tool_choice forced get_weather, required
-# forced a call with thinking off, and Messages any returned tool_use.
-# Responses and Messages smoke-tested live on 2026-11-13.
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on
+# Anthropic Messages; no strict tool mode (sources in provider.toml).
+# Live on token-plan.ap-southeast-1.maas.aliyuncs.com 2026-11-13: toggle off
+# returned 0 reasoning tokens; low/medium/xhigh and the aliases high/max/minimal
+# produced reasoning; thinking_budget 1..262144, and joining it with
+# reasoning_effort returns 400; image and PDF inputs returned descriptions;
+# Chat named and required tool_choice forced a call with thinking off;
+# Responses smoke-tested; Messages any returned tool_use and enabled thinking
+# worked with max_tokens > budget_tokens.
 # Cost: Token Plan Credits subscription; no public USD per-token rate.
 schema = 2
 base_model = "alibaba/qwen4-max-preview"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "tool"] }
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 1, max = 262_144 } }
 structured_output = true
 
 [api.chat-completions]
