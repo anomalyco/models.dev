@@ -61,6 +61,7 @@ import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
+import { tempr } from "./providers/tempr.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -230,6 +231,7 @@ export const providers: {
   requesty: SyncProvider<any>;
   sambanova: SyncProvider<any>;
   morph: SyncProvider<any>;
+  tempr: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -280,6 +282,7 @@ export const providers: {
   requesty,
   sambanova: sambaNova,
   morph,
+  tempr,
   tinfoil,
   vercel,
   venice,
@@ -305,6 +308,7 @@ export const groups = {
     "novita-ai",
     "ofox",
     "requesty",
+    "tempr",
     "openrouter",
     "prime",
     "vercel",
