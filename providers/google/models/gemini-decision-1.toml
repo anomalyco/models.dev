@@ -1,0 +1,24 @@
+# Sources (accessed 2026-11-11):
+# - https://ai.google.dev/gemini-api/docs/decisions-api: POST /v1beta/decisions with x-goog-api-key; Gemini Developer API
+#   only. Media goes inline as base64 `data` or as a Files API, public or signed HTTPS `uri`. No context caching, Batch
+#   API, or Flex or Priority inference.
+# - https://ai.google.dev/gemini-api/docs/pricing#gemini-decision: $0.10 per 1M input tokens for text, image, video,
+#   audio and PDF; output is 0 tokens. Shared input is billed once per request.
+schema = 2
+v2_only = true
+base_model = "google/gemini-decision-1"
+
+[capabilities]
+cache = false
+
+[limit]
+output = 1
+
+[api.gemini-decisions]
+sdk = { opencodeai = "@opencode/ai/providers/google/decisions", aisdk = "none" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0

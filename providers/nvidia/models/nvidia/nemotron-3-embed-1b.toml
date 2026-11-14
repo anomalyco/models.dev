@@ -7,7 +7,7 @@ v2_only = true
 base_model = "nvidia/nemotron-3-embed-1b"
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0

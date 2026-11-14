@@ -96,18 +96,6 @@ interface SearchIndexItem {
   updated?: string;
 }
 
-const LAB_NAME_OVERRIDES: Record<string, string> = {
-  alibaba: "Alibaba",
-  meta: "Meta",
-  minimax: "MiniMax",
-  moonshotai: "Moonshot AI",
-  openai: "OpenAI",
-  perplexity: "Perplexity",
-  stepfun: "StepFun",
-  xai: "xAI",
-  zhipuai: "Zhipu AI",
-};
-
 const DEFAULT_PAGE_METADATA: PageMetadata = {
   title: "Models.dev - An open-source database of AI models",
   description:
@@ -1616,8 +1604,8 @@ function minDefined(values: Array<number | undefined>) {
 }
 
 function labName(labId: string) {
-  const override = LAB_NAME_OVERRIDES[labId];
-  if (override) return override;
+  const name = LabMetadata.get(labId)?.name;
+  if (name) return name;
 
   const providerName = Providers[labId]?.name;
   if (providerName) return providerName;

@@ -1,0 +1,43 @@
+# Served as `zenifra/deepseek-v4-flash-0731` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
+# (public, no auth, accessed 2026-11-09): name "DeepSeek V4 Flash 0731", context_length 1000000, max_output_tokens 393216.
+# Toggle: enable_thinking = true|false on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: enable_thinking=false -> 0 reasoning tokens, default -> 16 reasoning tokens).
+# Effort: reasoning_effort = low|high|max, from capabilities.reasoning.effort_levels.
+# structured_output = false: capabilities.response_schema = false, structured_outputs = false.
+# Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
+# top_k = false: not in supported_parameters, and the lab's own API doesn't take it.
+# Limits differ from the lab (1_000_000/384_000): Zenifra serves context 1_000_000 and output 393_216.
+# Prices: Zenifra lists BRL per 1M tokens (pricing): input BRL 2.2, output BRL 6.6, cache read BRL 0.29;
+#   off-peak 14:00-00:00 UTC: input BRL 1.1, output BRL 3.3, cache read BRL 0.14 (overrides keep these exact values instead of a 0.5 multiplier).
+# USD = BRL / 5.5146, the Banco Central do Brasil PTAX selling rate for 2026-11-09 (closing bulletin):
+# https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='11-09-2026'&$format=json
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = false
+top_k = false
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[limit]
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3989
+cache = { read = 0.0526 }
+
+[[cost.text.input.overrides]]
+when = { utc_hours = { gte = "14:00" } }
+price = 0.1995
+cache = { read = 0.0254 }
+
+[cost.text.output]
+price = 1.1968
+
+[[cost.text.output.overrides]]
+when = { utc_hours = { gte = "14:00" } }
+price = 0.5984

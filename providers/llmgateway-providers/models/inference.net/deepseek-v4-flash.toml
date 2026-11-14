@@ -1,0 +1,14 @@
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+name = "DeepSeek V4 Flash (Inference.net)"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[cost.text.input]
+price = 0.23
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.62

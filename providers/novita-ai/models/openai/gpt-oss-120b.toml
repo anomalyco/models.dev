@@ -9,6 +9,9 @@ tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
+[limit]
+output = 32_768
+
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 

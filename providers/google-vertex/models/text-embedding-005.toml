@@ -11,7 +11,7 @@ v2_only = true
 base_model = "google/text-embedding-005"
 
 [api.predict]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/google-vertex/embeddings" }
 
 [cost.text.input]
 unit = "character"

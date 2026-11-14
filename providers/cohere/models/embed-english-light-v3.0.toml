@@ -10,4 +10,4 @@ base_model = "cohere/embed-english-light-v3.0"
 
 [api.embeddings]
 base_url = "https://api.cohere.ai/compatibility/v1"
-sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "none" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/embeddings" }

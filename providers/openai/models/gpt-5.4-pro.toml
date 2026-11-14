@@ -3,6 +3,7 @@
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Flex (https://developers.openai.com/api/docs/guides/flex-processing).
 # tools.updates: left out. This model has no prompt caching (no cached-input price), so there is no cache for a tool change to keep.
+# Regional processing (data residency) endpoints: +10% on token prices for models released on or after 2026-03-05 (FedRAMP endpoints also +10%, not modeled). Token-only factor so cost.web_search is unscaled. Source: https://developers.openai.com/api/docs/pricing (accessed 2026-11-12)
 schema = 2
 name = "GPT-5.4 Pro"
 description = "More exact GPT-5.4 tier for demanding professional reasoning and agent tasks"
@@ -50,3 +51,7 @@ price = 10
 [[cost.multipliers]]
 when = { service_tier = { equals = "flex" } }
 factor = { text = 0.5 }
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = { text = 1.1 }

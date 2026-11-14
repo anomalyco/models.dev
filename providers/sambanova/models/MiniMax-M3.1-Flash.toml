@@ -1,0 +1,34 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+# Live POST /v1/chat/completions, 2026-11-11: the API's own 400 response lists these five values;
+#   low/medium/high changed reasoning length and max matched the default. Thinking cannot be disabled
+#   (chat_template_kwargs.thinking_mode = disabled returns "This model always thinks").
+# Deployment: Preview per https://docs.sambanova.ai/docs/en/models/sambacloud-models (Text + Image,
+#   base64 data URL accepted); the page does not yet list GLM-5.3, so that entry keeps no status.
+# Limits/pricing: GET https://api.sambanova.ai/v1/models (context_length/max_completion_tokens 1048576);
+#   https://cloud.sambanova.ai/plans/pricing (input 0.30, cached input 0.03, output 1.20 USD/MTok).
+# Caching: repeated 30k-token prompt reports cache_creation_tokens (implicit prefix cache).
+# Structured output: response_format json_schema is enforced (schema-conformant object returned against
+#   a conflicting prompt); json_object also works.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+status = "beta"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

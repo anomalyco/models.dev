@@ -7,7 +7,7 @@ v2_only = true
 base_model = "alibaba/qwen3.7-text-embedding"
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/alibaba/embeddings" }
 
 [cost.text.input]
 price = 0.074729

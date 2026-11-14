@@ -1,0 +1,25 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api.minimax.io/v1/video_generation, image-to-video only
+#   (https://platform.minimax.io/docs/api-reference/video-generation-i2v)
+# - Pricing: https://platform.minimax.io/docs/pricing/overview#models/video (listed under Legacy Models, USD per video):
+#   768P 6s $0.19, 768P 10s $0.32, 1080P 6s $0.33. Recorded per second of output (price / duration); 10s is 768P only.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-Hailuo-2.3-Fast"
+
+[api.videos]
+base_url = "https://api.minimax.io"
+path = "/v1/video_generation"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/minimax/videos" }
+
+[cost.video.output]
+unit = "second"
+price = 0.0316666667
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "768P" } }, { duration = { equals = 10 } }] }
+price = 0.032
+
+[[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "1080P" } }, { duration = { equals = 6 } }] }
+price = 0.055

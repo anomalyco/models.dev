@@ -1,0 +1,40 @@
+# Served as `zenifra/qwen3.6-plus` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
+# (public, no auth, accessed 2026-11-09): name "Qwen3.6 Plus", context_length 991808, max_output_tokens 65536.
+# Toggle: enable_thinking = true|false on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: enable_thinking=false -> 0 reasoning tokens, default -> 367 reasoning tokens).
+# Budget: thinking_budget on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: thinking_budget=20 -> exactly 20 reasoning tokens).
+# structured_output = true: capabilities.response_schema = true.
+# Cache: capabilities.prompt_caching = true, billed as cache_read_input.
+# Limits differ from the lab (1_000_000/65_536): Zenifra serves context 991_808 and output 65_536.
+# Prices: Zenifra lists BRL per 1M tokens (pricing): input BRL 1.43, output BRL 8.51, cache read BRL 0.15;
+#   above 256_000 input tokens (context_tiers min_input_tokens 256001): input BRL 5.68, output BRL 34.01, cache read BRL 0.58.
+# USD = BRL / 5.5146, the Banco Central do Brasil PTAX selling rate for 2026-11-09 (closing bulletin):
+# https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='11-09-2026'&$format=json
+schema = 2
+base_model = "alibaba/qwen3.6-plus"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 991_808
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2593
+cache = { read = 0.0272 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 1.03
+cache = { read = 0.1052 }
+
+[cost.text.output]
+price = 1.5432
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 6.1673

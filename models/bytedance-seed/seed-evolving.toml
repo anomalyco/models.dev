@@ -7,6 +7,9 @@
 # Video formats: Volcengine Ark video understanding, 视频格式说明 table (MP4 video/mp4, AVI video/x-msvideo,
 #   MOV video/quicktime): https://www.volcengine.com/docs/82379/1895586
 # Sampling: the Ark Chat API takes temperature and top_p and has no top_k: https://www.volcengine.com/docs/82379/1494384
+# Context 1024k per the Ark model list, doubao-seed-evolving rows (was 256k when the file was
+# written): https://www.volcengine.com/docs/82379/1330310 (accessed 2026-11-10); the Coding Plan
+# console description likewise advertises 1M context.
 schema = 2
 name = "Seed Evolving"
 description = "Rolling ByteDance Seed model for rapidly updated reasoning, coding, and agent capabilities"
@@ -42,5 +45,5 @@ top_p = true
 top_k = false
 
 [limit]
-context = 256_000
+context = 1_024_000
 output = 256_000

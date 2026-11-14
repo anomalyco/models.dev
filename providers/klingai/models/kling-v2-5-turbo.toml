@@ -1,0 +1,23 @@
+# Sources (accessed 2026-11-12):
+# - Model ID kling-v2-5-turbo (Kling 2.5 Turbo): https://kling.ai/document-api/guides/capability-map/video
+# - API: POST https://api-singapore.klingai.com/text-to-video/kling-2.5-turbo and /image-to-video/kling-2.5-turbo
+#   (https://kling.ai/document-api/api/video/2-5-turbo/image-to-video); the legacy /v1/videos/* endpoints take
+#   model_name = "kling-v2-5-turbo". Resolution 720p (default) or 1080p; first + last frame is 1080p only.
+# - Pricing: https://kling.ai/document-api/pricing/base/video ("Balance" tab, USD per second of output). Prepaid
+#   resource packages (https://kling.ai/dev/pricing) bill in units at a lower effective rate and are not recorded.
+# Cost conditions: resolution uses the API's own values ("720p", "1080p").
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v2.5-turbo"
+
+[api.videos]
+base_url = "https://api-singapore.klingai.com"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.042
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.07

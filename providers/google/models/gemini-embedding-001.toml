@@ -26,11 +26,11 @@ context = 2_048
 output = 1
 
 [api.embed-content]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/google/embeddings" }
 
 [api.embeddings]
 base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
-sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "none" }
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.15

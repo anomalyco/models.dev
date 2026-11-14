@@ -1,0 +1,33 @@
+# Prices from https://www.ruapi.ai/pricing (standard rate), checked 2026-10-23. USD per 1M tokens.
+# A prompt over 100,000 tokens (cache reads and writes included) is billed entirely at the higher tier, as at Anthropic.
+# Served over the native Anthropic Messages API (POST https://www.ruapi.ai/v1/messages);
+# cache_control markers (ttl included), thinking and output_config are forwarded unchanged.
+# Toggle: thinking.type = adaptive|disabled (disabled only at high effort or below)
+# Effort: output_config.effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+structured_output = true
+
+[api.messages]
+base_url = "https://www.ruapi.ai/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.12
+cache = { read = 0.012, write = { "5m" = 0.15, "1h" = 0.24 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.6
+cache = { read = 0.06, write = { "5m" = 0.75, "1h" = 1.2 } }
+
+[cost.text.output]
+price = 0.6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 3

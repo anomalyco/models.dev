@@ -1,0 +1,34 @@
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-mistral-ai
+# 0.0002 CHF per audio second = 0.012 CHF per audio minute, converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# The host bills audio time only ("Time CHF/second" table); no text-token prices are published.
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_mistralai/Voxtral-Mini-3B-2507 — the supported audio formats are
+#   documented on that page: the gateway transcribes via POST /v1/audio/transcriptions (max request body 50 MiB) and
+#   accepts the libsndfile format set aiff, au, avr, caf, flac, htk, ircam, mat4, mat5, mp3, mpc2k, nist, ogg, paf, pvf,
+#   raw, rf64, sd2, sds, svx, voc, w64, wav, wavex, wve, xi. webm is NOT in that set (unlike Mistral's own API, whose
+#   known-limitations page lists WAV/MP3/FLAC/OGG/WEBM), so audio/webm is intentionally omitted. The MIME types below are
+#   the intersection of the documented set with registered types: wav/mpeg (lab defaults) + flac/ogg + aiff + basic (au).
+schema = 2
+v2_only = true
+base_model = "mistral/voxtral-mini-3b-2507"
+type = "transcription"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/ogg", "audio/aiff", "audio/basic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[api.transcriptions]
+base_url = "https://llm.stoney-cloud.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.0143

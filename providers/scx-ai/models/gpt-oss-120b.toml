@@ -12,9 +12,6 @@ base_model = "openai/gpt-oss-120b"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
-[limit]
-output = 131_072
-
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
