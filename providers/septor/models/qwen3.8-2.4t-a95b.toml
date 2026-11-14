@@ -1,0 +1,23 @@
+# Price = midpoint of Septor's published range (input 1.495-2.875, output 4.485-8.625 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/qwen3.8-2.4t-a95b
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1048576
+output = 909000
+
+[cost.text.input]
+price = 2.185
+cache = { read = 0.40625 }
+
+[cost.text.output]
+price = 6.555

@@ -1,0 +1,23 @@
+# Price = midpoint of Septor's published range (input 0.053892-0.1725, output 0.215634-0.69 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/minimax-m3.1-flash
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1048576
+output = 524288
+
+[cost.text.input]
+price = 0.113196
+cache = { read = 0.0195 }
+
+[cost.text.output]
+price = 0.452817

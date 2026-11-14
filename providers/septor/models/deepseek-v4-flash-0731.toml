@@ -1,0 +1,23 @@
+# Price = midpoint of Septor's published range (input 0.069-0.161, output 0.207-0.322 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/deepseek-v4-flash-0731
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1048576
+output = 943718
+
+[cost.text.input]
+price = 0.115
+cache = { read = 0.0364 }
+
+[cost.text.output]
+price = 0.2645
