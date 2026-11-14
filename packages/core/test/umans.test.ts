@@ -223,6 +223,12 @@ test("keeps a curated status unless the card announces a retirement", () => {
   expect((buildUmansModel("umans-coder", retiring, false, beta) as Record<string, unknown>).status).toBe("deprecated");
 });
 
+test("clears a deprecated status when the id is listed again without a retirement", () => {
+  const retired = { ...coderOnGLM, status: "deprecated" } as unknown as ExistingModel;
+  expect((buildUmansModel("umans-coder", lineup["umans-coder"], false, retired) as Record<string, unknown>).status)
+    .toBeUndefined();
+});
+
 test("marks a retired id deprecated and leaves the rest of its file as authored", () => {
   const retired = source(lineup, { "umans-kimi-k3": { retired_on: "2026-11-09", replacement: "umans-kimi-k3.1-pro" } })
     .find((model) => model.id === "umans-kimi-k3")!;

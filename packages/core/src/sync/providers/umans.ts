@@ -234,7 +234,15 @@ export function buildUmansModel(
     if (reasoner && owned.reasoning_options === undefined && current.reasoning_options === undefined) {
       throw missingControls(id, card);
     }
-    const values = { ...current, ...owned, limit: { ...current.limit, ...owned.limit } } as SyncedFullModel;
+    // The API owns retirement: a listed card without one means active, so a
+    // `deprecated` status clears (a curated alpha or beta stays).
+    const status = owned.status ?? (current.status === "deprecated" ? undefined : current.status);
+    const values = {
+      ...current,
+      ...owned,
+      status,
+      limit: { ...current.limit, ...owned.limit },
+    } as SyncedFullModel;
     // The card names the weights each id serves, so an alias that moves to new
     // weights moves its base_model with it.
     const base = labExists(served) ? served : baseModel;
@@ -262,6 +270,9 @@ function umansProvider(id: string, name: string, plan: boolean) {
     name,
     modelsDir: `providers/${id}/models`,
     preserveBaseModels: false,
+    // factorBaseModel drops a lab-identical description; re-injecting the
+    // authored one would recreate the override (the ai& and Friendli shape).
+    preserveDescriptions: false,
     // Retired ids keep serving through a grace period; they are marked
     // deprecated from /v1/models/past and removed by hand once they stop.
     deleteMissing: false,
