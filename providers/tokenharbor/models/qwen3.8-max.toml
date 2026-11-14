@@ -1,0 +1,14 @@
+# Source: https://tokenharbor.ai/models (retrieved 2026-10-08); USD per 1M tokens.
+# Toggle: enable_thinking true|false (matches Alibaba native + 302ai relay peer)
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget in reasoning tokens (native max 262144)
+base_model = "alibaba/qwen3.8-max"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "effort", values = ["low", "medium", "xhigh"] },
+  { type = "budget_tokens" },
+]
+
+[cost]
+input = 2
+output = 6
