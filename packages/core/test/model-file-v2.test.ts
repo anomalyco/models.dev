@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { formatModelV2, formatTomlValue, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
+import { CostV2 } from "../src/schema-v2.js";
 import { explicitFalseFlags, modelV2ToV1, readLabMetadata } from "../src/translate.js";
 
 test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the lab", () => {
@@ -301,6 +302,34 @@ test("web search prices are written to v2 files, kept by patches, and left out o
   // A web search price alone has no v1 cost.
   expect(modelV2ToV1({ schema: 2, id: "x", cost: { web_search: { price: 10 } } }).cost).toBeUndefined();
   expect(() => modelV2ToV1({ schema: 2, id: "x", cost: { web_search: { price: 10, unit: "request" } } })).toThrow();
+});
+
+test("per-page OCR prices are written to v2 files, priced up when annotated, and left out of v1", () => {
+  const doc = {
+    schema: 2,
+    v2_only: true,
+    base_model: "mistral/mistral-ocr-4-1",
+    cost: {
+      text: {
+        input: { unit: "page", price: 0.004, overrides: [{ when: { annotation: { equals: true } }, price: 0.005 }] },
+      },
+    },
+  };
+  expect(CostV2.safeParse(doc.cost).success).toBe(true);
+  const toml = formatModelV2(doc);
+  expect(toml).toContain([
+    "[cost.text.input]",
+    'unit = "page"',
+    "price = 0.004",
+    "",
+    "[[cost.text.input.overrides]]",
+    "when = { annotation = { equals = true } }",
+    "price = 0.005",
+  ].join("\n"));
+  const parsed: Record<string, unknown> & { id: string } = { ...(Bun.TOML.parse(toml) as Record<string, unknown>), id: "mistral-ocr-4-1" };
+  expect(parsed.cost).toEqual(doc.cost);
+  // v1 prices are per token only.
+  expect(modelV2ToV1(parsed).cost).toBeUndefined();
 });
 
 test("v1 mode prices come from an object factor the same way as from a plain number", () => {
