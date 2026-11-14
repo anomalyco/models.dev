@@ -11,7 +11,7 @@ import {
   parseAnthropicPricing,
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
-import { buildCortecsModel, cortecs, type CortecsModel } from "../src/sync/providers/cortecs.js";
+import { buildCortecsModel, cortecs, exactModalities, type CortecsModel } from "../src/sync/providers/cortecs.js";
 import {
   buildCrossModel,
   crossmodel,
@@ -4399,6 +4399,71 @@ test("Cortecs linked files keep a display name and description that differ from 
   const model = buildCortecsModel(cortecsModel(), inherited, inherited);
   expect(model).not.toHaveProperty("name");
   expect(model).not.toHaveProperty("description");
+});
+
+test("Cortecs ignores an output limit that repeats the context window", () => {
+  const hydrogen = cortecsModel({
+    id: "gemini-4-hydrogen",
+    context_size: 1_048_576,
+    max_output_tokens: 1_048_576,
+    supported_features: ["json_mode", "reasoning", "tools"],
+  });
+  const linked: ExistingModel = { base_model: "google/gemini-4-hydrogen" };
+  // No authored output: the lab's limit is inherited instead of a 1M override.
+  expect(buildCortecsModel(hydrogen, linked, linked)).not.toHaveProperty("limit.output");
+  // An authored output limit stays.
+  const authored: ExistingModel = { base_model: "google/gemini-4-hydrogen", limit: { context: 1_048_576, output: 32_000 } };
+  expect(buildCortecsModel(hydrogen, authored, authored)).toMatchObject({ limit: { output: 32_000 } });
+  // A cap below the window is the host's.
+  expect(buildCortecsModel({ ...hydrogen, max_output_tokens: 65_535 }, linked, linked)).toMatchObject({ limit: { output: 65_535 } });
+});
+
+test("Cortecs caps an inherited output limit at the served context", () => {
+  // The lab documents 262,144 output tokens; this route serves 256,000 of context.
+  const ministral = cortecsModel({
+    id: "ministral-3b-2512",
+    context_size: 256_000,
+    max_output_tokens: 256_000,
+    supported_features: ["json_mode", "tools"],
+  });
+  const linked: ExistingModel = { base_model: "mistral/ministral-3-3b-instruct-2512" };
+  expect(buildCortecsModel(ministral, linked, linked)).toMatchObject({ limit: { context: 256_000, output: 256_000 } });
+});
+
+test("Cortecs new files take the lab's MIME types for each listed kind", () => {
+  const hydrogen = cortecsModel({
+    id: "gemini-4-hydrogen",
+    input_modalities: ["text", "image", "audio", "file"] as unknown as CortecsModel["input_modalities"],
+  });
+  const result = exactModalities({ ...hydrogen, input_modalities: ["text", "image", "audio", "pdf"] });
+  expect(result?.modalities.input).toContain("image/png");
+  expect(result?.modalities.input).toContain("audio/wav");
+  expect(result?.modalities.input).toContain("application/pdf");
+  expect(result?.modalities.input.some((value) => value.startsWith("video/"))).toBe(false);
+  expect(result?.modalities.input).not.toContain("image");
+  // Every lab kind listed: inherited.
+  expect(exactModalities({
+    ...hydrogen,
+    input_modalities: ["text", "image", "audio", "video", "pdf"],
+  })).toBeUndefined();
+});
+
+test("Cortecs and Deep Infra skip new reasoning models until their controls are authored", () => {
+  const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  expect(() => cortecs.translateModel(cortecsModel({
+    id: "inkling-2-small",
+    supported_features: ["json_mode", "reasoning", "tools"],
+  }), context)).toThrow(MissingReasoningOptionsError);
+  expect(() => deepinfra.translateModel(
+    deepInfraModel("thinkingmachines/Inkling-2-Small", ["chat", "reasoning"]),
+    context,
+  )).toThrow(MissingReasoningOptionsError);
+  // Existing files are still patched.
+  const existing: ExistingModel = { base_model: "thinkingmachines/inkling-2-small" };
+  expect(cortecs.translateModel(cortecsModel({
+    id: "inkling-2-small",
+    supported_features: ["json_mode", "reasoning", "tools"],
+  }), { existing: () => existing, authored: () => existing })).toMatchObject({ id: "inkling-2-small" });
 });
 
 test("syncs OpenRouter reasoning efforts from model metadata", () => {
