@@ -1,0 +1,45 @@
+# The OpenAI model (base_model) on a ChatGPT plan through Codex. Only what differs or is route-specific is set here.
+# Limits: same as the API. Codex clients default to a 500K working window and allow up to 872K (`context_window` /
+#   `max_context_window` in the Codex model catalog); those are client settings. The backend accepts the API's 922K
+#   input: 921,807 input tokens accepted, 921,957 rejected with context_too_large (2026-11-05, ChatGPT plan).
+# Reasoning: supported_reasoning_levels in the Codex model catalog (GET https://chatgpt.com/backend-api/codex/models,
+#   authenticated, 2026-11-08): low, medium, high, xhigh, max and ultra; the API has the same list without ultra.
+#   "ultra" is left out until the effort enum has it.
+# tools.freeform: live 2026-11-11 on a ChatGPT plan, Responses requests relayed to this backend by a local
+#   CLIProxyAPI pinned to the ChatGPT login. A custom tool with no format returned the text it was given; with a regex
+#   grammar `ZZ[0-9]{3}` and with the equivalent Lark grammar, a request to send "hello world" came back as "ZZ000"
+#   (grammar enforced). Codex itself sends its apply_patch tool as a Lark-grammar custom tool (the model catalog's
+#   apply_patch_tool_type = "freeform";
+#   https://github.com/openai/codex/blob/main/codex-rs/core/src/tools/handlers/apply_patch_spec.rs).
+# structured_output: live 2026-11-11 with Codex CLI 0.167.0 (`codex exec --output-schema`): with a schema whose only
+#   allowed `code` value is "ZZ417" and a prompt asking for a plain-prose greeting, the reply was
+#   {"code":"ZZ417","n":1}.
+# Cost: 0, as the other subscription providers publish it: usage counts against the ChatGPT plan, with no per-token
+#   price. "Usage drawn from your subscription has no long-context surcharge"
+#   (https://developers.openai.com/api/docs/models/gpt-6.1-sol).
+# Cache: Codex sends a prompt_cache_key per conversation; no lifetime is documented for this route, so only
+#   `implicit = true` is set. Observed with Codex CLI 0.166 on a ChatGPT plan (2026-11-07; warm checks per age, each a
+#   new session with a unique ~7k-token block, resumed once after the age):
+#   5m 3/3, 15m 2/3, 30m 3/3, 1h 2/3, 2h 3/3, 4h 1/3, 6h 1/3, 8h 2/3, 10h 1/3, 12h 0/3.
+#   Raw data: https://github.com/ngvoicu/cache-ttl-probe/blob/main/results/harness-2026-11-07/H1.jsonl
+schema = 2
+v2_only = true
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+prompt_cache_key = true
+
+[capabilities.cache]
+implicit = true
+
+[api.responses]
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
