@@ -1,0 +1,25 @@
+# Toggle: reasoning_effort = none (off) | any other value (on)
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 256_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.0765
+cache = { read = 0.0425 }
+
+[cost.text.output]
+price = 0.255

@@ -29,12 +29,12 @@ base_url = "https://ai-gateway.vercel.sh/v4/ai"
 sdk = { opencodeai = "none" }
 
 [cost.text.input]
-price = 0.9
-cache = { read = 0.09 }
+price = 1.8
+cache = { read = 0.18 }
 
 [cost.text.output]
-price = 4.5
+price = 9
 
 [cost.audio.input]
 unit = "second"
-price = 0.0006667
+price = 0.0013334

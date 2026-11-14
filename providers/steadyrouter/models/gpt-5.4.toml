@@ -1,0 +1,7 @@
+# Live probe through https://api.steadyrouter.com/v1/chat/completions, 2026-11-06.
+# tools.freeform left out: Chat Completions refused custom tools with 400 "Missing required parameter: tools[0].custom" in 6 of 6 tries (regex, lark, text), 2026-11-06.
+schema = 2
+base_model = "openai/gpt-5.4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }

@@ -1,0 +1,12 @@
+# Relay provider: OpenAI/Anthropic-compatible multi-model gateway (prepaid balance, per-token
+# metering). Reasoning controls (reasoning_effort, thinking.type, thinking_budget) and
+# reasoning_content are passed through to upstream lab endpoints unchanged.
+# Sources (accessed 2026-11-13):
+#   https://proxystacks.com/en/docs/opencode   (documented base URL and env var)
+#   https://proxystacks.com/public/model-rates (live rate card JSON)
+name = "ProxyStacks Relay"
+env = ["RELAY_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+doc = "https://proxystacks.com/en/docs/opencode"
+api = "https://proxystacks.com/v1"

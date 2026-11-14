@@ -20,3 +20,15 @@ cache = { read = 0.15 }
 
 [cost.text.output]
 price = 7.5
+
+[cost.image.output]
+unit = "image"
+price = 0.0336
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "2K" } }
+price = 0.0504
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "4K" } }
+price = 0.1134

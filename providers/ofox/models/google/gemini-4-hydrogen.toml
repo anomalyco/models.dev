@@ -1,0 +1,31 @@
+# Sources (accessed 2026-11-14):
+# - https://ofox.ai/models/google/gemini-4-hydrogen (Input $1.5/M, Output $7.5/M, Cache Read $0.075/M, Audio Input $1.5/M, Web Search $0.014/request; thinking levels low, medium, high (default), xhigh; implicit caching; protocols openai + gemini)
+# - https://ai.google.dev/gemini-api/docs/pricing#gemini-4-hydrogen (same list price)
+# Reasoning: multi-model relay, so the lab effort set low/medium/high/xhigh from providers/google/models/gemini-4-hydrogen.toml; the Ofox page confirms the same levels.
+# Mid-conversation (Ofox Gemini native API, https://ofox.ai/docs/api/gemini/generate-content): systemInstruction, thinkingConfig and tools are request-level and content roles are user/model, so system_updates, effort_updates and tools.updates are false.
+# Cache: implicit only (the Ofox page lists implicit context caching; Hydrogen does not support explicit cachedContents upstream).
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.generate-content]
+base_url = "https://api.ofox.ai/gemini/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 7.5
+
+[cost.audio.input]
+price = 1.5
+
+[cost.web_search]
+price = 14

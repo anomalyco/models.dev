@@ -1,0 +1,55 @@
+# Facts: https://huggingface.co/openpangu/openPangu-2.0-Pro (README: 512K context, params, release; benchmarks table)
+schema = 2
+name = "openPangu 2.0 Pro"
+description = "Huawei's 505B MoE flagship (18B active) for long-horizon agents and 512K context work, Ascend-native with slow/fast thinking"
+family = "pangu"
+open_weights = true
+release_date = "2026-07-31"
+knowledge = "2026-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 524_288
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/openpangu/openPangu-2.0-Pro"
+
+[[benchmarks]]
+name = "AIME 2026"
+score = 95.4
+metric = "Avg@16"
+variant = "thinking"
+source = "https://huggingface.co/openpangu/openPangu-2.0-Pro"
+
+[[benchmarks]]
+name = "SWE-bench Verified"
+score = 68.5
+metric = "Avg@3"
+variant = "thinking"
+source = "https://huggingface.co/openpangu/openPangu-2.0-Pro"
+
+[[benchmarks]]
+name = "LiveCodeBench V6"
+score = 85.7
+metric = "Avg@3"
+variant = "thinking"
+source = "https://huggingface.co/openpangu/openPangu-2.0-Pro"
+
+[[benchmarks]]
+name = "GPQA-Diamond"
+score = 87.9
+metric = "Avg@4"
+variant = "thinking"
+source = "https://huggingface.co/openpangu/openPangu-2.0-Pro"

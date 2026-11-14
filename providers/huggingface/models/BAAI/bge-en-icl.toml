@@ -1,0 +1,21 @@
+# API: the router maps this model to DeepInfra (feature-extraction, status live), served on DeepInfra's OpenAI embeddings route:
+#   https://huggingface.co/api/models/BAAI/bge-en-icl?expand[]=inferenceProviderMapping (accessed 2026-11-08)
+# Price: DeepInfra's rate, which the router passes through ($0.01/MTok, https://api.deepinfra.com/models/list, accessed 2026-11-08).
+# The router catalog (https://router.huggingface.co/v1/models) doesn't list embedding models.
+# Context: DeepInfra serves 8,192 tokens (max_tokens in its catalog).
+schema = 2
+v2_only = true
+base_model = "baai/bge-en-icl"
+
+[limit]
+context = 8_192
+
+[api.embeddings]
+base_url = "https://router.huggingface.co/deepinfra/v1/openai"
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

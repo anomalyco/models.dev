@@ -1,0 +1,17 @@
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-10-21)
+# This gateway accepts llama-3.3-70b-versatile and llama-3.1-8b-instant as alias ids for this model (verified live 2026-10-21; the response echoes
+#   the requested id), so configs written for Groq work without a model-name change.
+schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.5

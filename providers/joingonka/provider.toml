@@ -1,0 +1,16 @@
+# JoinGonka Gateway: an OpenAI-compatible API (Chat Completions, Responses) and an
+# Anthropic-compatible Messages API over open-weight models served by the
+# decentralized Gonka network (https://gonka.ai). A multi-model relay, not a lab.
+# Docs: https://gate.joingonka.ai/docs (models: /docs/models, request fields: /docs/api).
+# Live catalog: GET https://gate.joingonka.ai/v1/models; prices: GET https://gate.joingonka.ai/api/pricing.
+# Raw Chat Completions reasoning fields (https://gate.joingonka.ai/docs/api, "Passed through to the network
+# as-is"): reasoning_effort, reasoning, enable_thinking, chat_template_kwargs and thinking_token_budget go to the
+# model's chat template unchanged, except that two-mode models get their effort mapped (see each model file).
+# thinking is not forwarded. Reasoning text comes back in message.reasoning_content / delta.reasoning_content.
+# Billing is in GNK, the Gonka network token; each model file converts it to USD at the published rate.
+name = "JoinGonka"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["JOINGONKA_API_KEY"]
+api = "https://gate.joingonka.ai/v1"
+doc = "https://gate.joingonka.ai/docs/models"

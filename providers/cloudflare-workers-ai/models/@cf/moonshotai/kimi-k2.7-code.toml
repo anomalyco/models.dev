@@ -4,8 +4,11 @@
 # Images: jpeg/png/gif/webp data URLs accepted live 2026-10-19; bmp, tiff and heic rejected (code 8006).
 # Mid-conversation: Live 2026-10-19 (/ai/v1/chat/completions, x-session-affinity, ~7k-token prefix): a late system message keeps the cached prefix and is honored;
 # no effort control; adding or removing a tool drops the cached history (tools render ahead of it).
+# Deprecated: Workers AI retires this model on 2026-11-20; requests then return HTTP 410 Gone.
+# https://developers.cloudflare.com/changelog/post/2026-11-05-planned-model-deprecations/
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]

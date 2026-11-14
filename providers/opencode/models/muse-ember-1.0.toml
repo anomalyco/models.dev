@@ -1,0 +1,41 @@
+# Pricing and endpoint (Responses): https://opencode.ai/v2/docs/console/models/.
+# Over 200K-token prompts: $0.30 input, $0.012 cached input, $1.50 output (https://research.meta.ai/blog/muse-ember).
+# Modalities, capabilities, limits and effort levels supplied by the operator on 2026-11-09.
+# Name, description, input modalities (no audio) and output limit are kept from that operator-supplied entry;
+# Meta's own figures are in models/meta/muse-ember-1.0.toml. MIME types: https://dev.meta.ai/docs/media-understanding
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh|max.
+schema = 2
+base_model = "meta/muse-ember-1.0"
+name = "Muse Ember 1.0"
+description = "Reasoning model from Meta with text, image, video and PDF input and tool use"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+output = 270_000
+
+[api.responses]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 0.10
+cache = { read = 0.004, write = 0 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 0.30
+cache = { read = 0.012, write = 0 }
+
+[cost.text.output]
+price = 0.50
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 1.50

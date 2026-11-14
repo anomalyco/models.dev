@@ -1,0 +1,10 @@
+# Gisoo is an OpenAI-compatible, multi-model API that relays requests to the labs' models.
+# Model list, limits and USD prices: GET https://gisoo.pro/api/v1/models (public, no key; checked 2026-10-25).
+# Chat Completions takes reasoning_effort = minimal|low|medium|high on reasoning models:
+# https://gisoo.pro/docs/chat
+name = "Gisoo"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["GISOO_API_KEY"]
+api = "https://gisoo.pro/api/v1"
+doc = "https://gisoo.pro/docs/models"

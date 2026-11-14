@@ -14,19 +14,19 @@ knowledge = "2025-01-01"
 release_date = "2026-04-27"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/mpeg", "video/mov", "video/webm", "application/pdf", "audio/wav", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mp4"]
+input = ["audio/wav", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mp4", "application/pdf", "image/png", "image/jpeg", "image/webp", "image/gif", "text", "video/mp4", "video/mpeg", "video/mov", "video/webm"]
 output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 temperature = true
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
 
 [limit]
 context = 1_048_576
-output = 65_536
+output = 943_718
 
 [api.chat-completions]
 
@@ -37,18 +37,18 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.75
-cache = { read = 0.075, write = 0.041667 }
+price = 1.5
+cache = { read = 0.075, write = 0.083333 }
 
 [cost.text.output]
-price = 3.75
-reasoning = 3.75
+price = 7.5
+reasoning = 7.5
 
 [cost.image.input]
-price = 0.75
+price = 1.5
 
 [cost.audio.input]
-price = 0.75
+price = 1.5
 cache = { read = 0.075 }
 
 [cost.web_search]

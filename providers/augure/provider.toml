@@ -1,0 +1,16 @@
+# Augure: Canadian sovereign AI platform. OpenAI-compatible Chat Completions at
+# POST https://api.augureai.ca/v1/chat/completions (streaming with
+# stream_options.include_usage, tools, response_format json_object/json_schema,
+# image_url and file (PDF) parts, reasoning_effort on the reasoning tiers).
+# Reasoning models return thinking separately as `reasoning_content`.
+# Sources (accessed 2026-10-27):
+# - https://augureai.ca/docs/api
+# - https://augureai.ca/docs/models
+# - https://augureai.ca/docs/openai-compatible
+# - https://augureai.ca/docs/changelog
+name = "Augure"
+env = ["AUGURE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.augureai.ca/v1"
+doc = "https://augureai.ca/docs/api"
