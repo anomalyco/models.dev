@@ -22,6 +22,7 @@ base_model = "alibaba/qwen3.8-27b"
 
 [modalities]
 input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
