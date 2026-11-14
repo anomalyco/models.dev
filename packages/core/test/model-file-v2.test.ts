@@ -6,6 +6,18 @@ import path from "node:path";
 import { formatModelV2, formatTomlValue, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
 import { explicitFalseFlags, modelV2ToV1, readLabMetadata } from "../src/translate.js";
 
+test("patchModelV2 preserves and formats model privacy metadata", () => {
+  const privacy = { data_retention_days: 30, trains_on_data: false };
+  const doc = { schema: 2, base_model: "lab/model", privacy };
+  const synced = { base_model: "lab/model" };
+
+  console.log("[privacy metadata sync] patching and formatting a provider model");
+  const patched = patchModelV2(doc, synced, synced);
+  expect(patched.privacy).toEqual(privacy);
+  expect(Bun.TOML.parse(formatModelV2(patched)).privacy).toEqual(privacy);
+  console.log("[privacy metadata sync] retained provider model privacy", patched.privacy);
+});
+
 test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the lab", () => {
   const doc = {
     schema: 2,

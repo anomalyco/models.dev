@@ -70,10 +70,10 @@ export function readLabMetadata(filePath: string): LabMetadataV2 {
   return parsed.data;
 }
 
-// Reads a provider.toml as v1 fields: `opencodeai` (the default API's OpenCode
-// package) is v2-only.
+// Reads a provider.toml as v1 fields. OpenCode package and privacy metadata are
+// v2-only.
 export function providerTomlToV1(toml: Record<string, unknown>): Record<string, unknown> {
-  const { opencodeai: _opencodeai, ...v1 } = toml;
+  const { opencodeai: _opencodeai, privacy: _privacy, ...v1 } = toml;
   return v1;
 }
 

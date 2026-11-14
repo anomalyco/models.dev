@@ -128,9 +128,10 @@ async function loadProviderV2(
       name: v1Provider.name,
       doc: v1Provider.doc,
       env: v1Provider.env,
+      ...(toml.privacy !== undefined ? { privacy: toml.privacy } : {}),
       models,
     },
-    { providerPath, toml: rawProvider },
+    { providerPath, toml },
   );
 }
 
@@ -179,6 +180,7 @@ function withV2Fields(
     result.type = type;
   }
   if (authored.cost !== undefined) result.cost = authored.cost;
+  if (authored.privacy !== undefined) result.privacy = authored.privacy;
   if (authored.experimental !== undefined) result.experimental = authored.experimental;
   if (authored.metadata !== undefined) result.metadata = authored.metadata;
   return { model: result, tools: capabilities.tools };
