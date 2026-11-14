@@ -1,0 +1,27 @@
+# Toggle: reasoning.effort (Responses) or reasoning_effort (Chat Completions) = "none" turns reasoning off; any other level turns it on.
+# Reasoning controls: from providers/openrouter for the same base model, on NagaAI's effort scale.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "audio/mpeg", "audio/wav", "audio/flac", "audio/mp4", "audio/ogg"]
+output = ["text"]
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.175
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 4.35

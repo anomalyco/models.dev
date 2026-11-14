@@ -1,0 +1,21 @@
+# Reasoning controls: from providers/openrouter for the same base model, on NagaAI's effort scale.
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.105
+cache = { read = 0.021 }
+
+[cost.text.output]
+price = 0.42

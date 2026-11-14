@@ -1,0 +1,22 @@
+# Reasoning controls: from providers/openrouter for the same base model, on NagaAI's effort scale.
+schema = 2
+base_model = "sakana/fugu-ultra-v2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
+structured_output = true
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 15

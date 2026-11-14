@@ -47,6 +47,7 @@ import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
 import { mistral } from "./providers/mistral.js";
 import { modular } from "./providers/modular.js";
+import { nagaai } from "./providers/nagaai.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { nearai } from "./providers/nearai.js";
 import { novitaAi } from "./providers/novita-ai.js";
@@ -214,6 +215,7 @@ export const providers: {
   meta: SyncProvider<any>;
   mistral: SyncProvider<any>;
   modular: SyncProvider<any>;
+  nagaai: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
   nearai: SyncProvider<any>;
   "novita-ai": SyncProvider<any>;
@@ -262,6 +264,7 @@ export const providers: {
   meta,
   mistral,
   modular,
+  nagaai,
   "nano-gpt": nanoGpt,
   nearai,
   "novita-ai": novitaAi,
@@ -294,6 +297,7 @@ export const groups = {
     "llmgateway",
     "llmgateway-providers",
     "merge-gateway",
+    "nagaai",
     "nano-gpt",
     "novita-ai",
     "ofox",

@@ -1,0 +1,26 @@
+# Toggle: reasoning.effort (Responses) or reasoning_effort (Chat Completions) = "none" turns reasoning off; any other level turns it on.
+# Reasoning controls: from providers/openrouter for the same base model, on NagaAI's effort scale.
+schema = 2
+base_model = "alibaba/qwen3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.015
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.065

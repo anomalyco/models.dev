@@ -1,0 +1,29 @@
+# Toggle: reasoning.effort (Responses) or reasoning_effort (Chat Completions) = "none" turns reasoning off; any other level turns it on.
+# Reasoning controls: from providers/openrouter for the same base model, on NagaAI's effort scale.
+schema = 2
+base_model = "zhipuai/glm-5v-turbo"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 202_752
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 2

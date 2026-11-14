@@ -1,0 +1,26 @@
+# Context: NagaAI's upstream serves 1,048,576 tokens for this model, more than the lab's 262,144 (catalog limits.context_window checked against the serving providers 2026-11-07).
+# Reasoning controls: from providers/openrouter for the same base model, on NagaAI's effort scale.
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 3

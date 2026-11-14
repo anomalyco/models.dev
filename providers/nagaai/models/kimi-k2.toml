@@ -1,0 +1,17 @@
+schema = 2
+base_model = "moonshotai/kimi-k2"
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.285
+cache = { read = 0.106875 }
+
+[cost.text.output]
+price = 1.15
