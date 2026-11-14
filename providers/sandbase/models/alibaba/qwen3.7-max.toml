@@ -1,3 +1,4 @@
+# Live Chat Completions check 2026-11-14: thinking_budget = 16 returned 16 reasoning tokens, while 512 returned more.
 # Live chat-completions check 2026-11-14: enable_thinking = true|false.
 # Source: https://www.sandbase.ai/docs/api-reference/models/get
 # Prices: SandBase model detail API, checked 2026-11-14.
@@ -5,7 +6,7 @@ schema = 2
 base_model = "alibaba/qwen3.7-max"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [cost.text.input]
 price = 2.5
