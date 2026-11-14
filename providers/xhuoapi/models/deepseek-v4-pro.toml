@@ -1,0 +1,15 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-23); Standard group, the default for new accounts.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 1.056
+cache = { read = 0.088 }
+
+[cost.text.output]
+price = 3.168

@@ -1,0 +1,14 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-23); Standard group, the default for new accounts.
+# Effort: reasoning_effort = none|low|medium|high (Tested on XHuoAPI Chat Completions 2026-10-23: no field or none → no reasoning; low/medium/high return reasoning_content; thinking.type had no effect)
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.48
+cache = { read = 0.0747 }
+
+[cost.text.output]
+price = 2.52
