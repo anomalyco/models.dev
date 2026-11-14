@@ -8037,6 +8037,43 @@ test("lists the Images API next to chat for OpenRouter chat models with an image
   });
 });
 
+test("syncs OpenRouter embedding and reranking models with no supported parameters as v2", () => {
+  const typed = (id: string, output: string) => openrouter.translateModel(openRouterModel({
+    id,
+    name: id,
+    hugging_face_id: null,
+    knowledge_cutoff: null,
+    context_length: 8_192,
+    architecture: { input_modalities: ["text"], output_modalities: [output] },
+    pricing: { prompt: "0.00000002", completion: "0" },
+    top_provider: { context_length: 8_192, max_completion_tokens: 7_372 },
+    supported_parameters: [],
+  }), {
+    existing: () => undefined,
+    authored: () => undefined,
+  })?.v2;
+
+  expect(typed("example/embed-1", "embeddings")).toMatchObject({
+    schema: 2,
+    v2_only: true,
+    type: "embedding",
+    description: "Text embedding model",
+    modalities: { input: ["text"], output: ["embedding"] },
+    cost: { text: { input: { price: 0.02 } } },
+    api: { embeddings: { base_url: "https://openrouter.ai/api/v1" } },
+    limit: { context: 8_192, output: 0 },
+  });
+  expect(typed("example/rerank-1", "rerank")).toMatchObject({
+    schema: 2,
+    v2_only: true,
+    type: "reranking",
+    description: "Reranking model",
+    modalities: { input: ["text"], output: ["reranking"] },
+    api: { rerank: { base_url: "https://openrouter.ai/api/v1" } },
+    limit: { context: 8_192, output: 0 },
+  });
+});
+
 test("factors OpenRouter decision models onto decision lab metadata without a chat description", () => {
   const translated = openrouter.translateModel(openRouterModel({
     id: "liquid/d1",
