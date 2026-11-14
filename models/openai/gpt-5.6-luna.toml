@@ -1,3 +1,5 @@
+# Sampling: live POST /v1/chat/completions 2026-11-13: temperature (0.2, 1.5) and top_p (0.5) return 200 with
+# reasoning_effort = "none"; with any other effort, or none given, temperature returns 400 "Only the default (1) value is supported".
 schema = 2
 name = "GPT-5.6 Luna"
 description = "Cost-efficient GPT-5.6 model for fast, high-volume workloads"
@@ -13,8 +15,8 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
-temperature = false
-top_p = false
+temperature = true
+top_p = true
 top_k = false
 
 [limit]

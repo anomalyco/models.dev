@@ -1,0 +1,40 @@
+# Sources (accessed 2026-11-08):
+# - Pricing, limits, precision (FP8): https://entrim.ai/ai-models/qwen/qwen3-8-27b-api and https://entrim.ai/pricing/
+# - Effort: reasoning_effort xhigh|medium|low documented (model page). Live 2026-11-08:
+#   reasoning_effort none disabled thinking (not documented on the page), low/medium/xhigh kept it
+#   on. thinking.type = disabled also disabled thinking live. enable_thinking and thinking_budget
+#   are documented by Entrim but were ignored live (enable_thinking=false left thinking on,
+#   thinking_budget=8 had no effect), so they are not authored.
+# - Default effort: thinking is on by default (model page); the level is copied from the lab's
+#   relay baseline (Alibaba Model Studio, default xhigh); not independently verified on Entrim.
+# - Output limit: Entrim's /v1/models reports 65,536 output tokens and a max_tokens=65536 request
+#   was accepted live; the lab file says 32,768.
+# - Probes live 2026-11-08: json_schema structured output works; tool calling works with auto,
+#   required and strict accepted; vision works (64x64 red square answered "Red"); implicit
+#   KV-cache hits.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[limit]
+output = 65_536
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "required"] }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = [
+  "none",
+  "low",
+  "medium",
+  "xhigh",
+] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.4

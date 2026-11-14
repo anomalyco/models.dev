@@ -1,0 +1,25 @@
+# Source (accessed 2026-10-25): https://inference.phala.com/v1/models
+# Off ignored on this host: reasoning.enabled=false and reasoning_effort=none returned non-empty reasoning_content and 256 reasoning tokens on 3/3 prompts (2026-10-25).
+# Limits: catalog context_length 202752, max_output_length 128000
+# Cache: catalog pricing.input_cache_read
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 202_752
+output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.21
+cache = { read = 0.6 }
+
+[cost.text.output]
+price = 4.2

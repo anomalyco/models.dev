@@ -39,8 +39,11 @@ import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
+import { hostingerRouter } from "./providers/hostinger-router.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
+import { keln } from "./providers/keln.js";
+import { kenari } from "./providers/kenari.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
@@ -52,16 +55,21 @@ import { nearai } from "./providers/nearai.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
+import { opencheap } from "./providers/opencheap.js";
 import { ofox } from "./providers/ofox.js";
+import { obscurify } from "./providers/obscurify.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
+import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
+import { tempr } from "./providers/tempr.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
+import { voidApi } from "./providers/void-api.js";
 import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 
@@ -204,8 +212,11 @@ export const providers: {
   "github-copilot": SyncProvider<any>;
   google: SyncProvider<any>;
   hyper: SyncProvider<any>;
+  "hostinger-router": SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
+  keln: SyncProvider<any>;
+  kenari: SyncProvider<any>;
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "llmgateway-providers": SyncProvider<any>;
@@ -216,18 +227,23 @@ export const providers: {
   "nano-gpt": SyncProvider<any>;
   nearai: SyncProvider<any>;
   "novita-ai": SyncProvider<any>;
+  obscurify: SyncProvider<any>;
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
+  opencheap: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
   prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
+  sambanova: SyncProvider<any>;
   morph: SyncProvider<any>;
+  tempr: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
+  "void-api": SyncProvider<any>;
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
@@ -251,8 +267,11 @@ export const providers: {
   "github-copilot": githubCopilot,
   google,
   hyper,
+  "hostinger-router": hostingerRouter,
   huggingface,
   inceptron,
+  keln,
+  kenari,
   kilo,
   llmgateway,
   "llmgateway-providers": llmgatewayProviders,
@@ -263,18 +282,23 @@ export const providers: {
   "nano-gpt": nanoGpt,
   nearai,
   "novita-ai": novitaAi,
+  obscurify,
   ofox,
   "ollama-cloud": ollamaCloud,
   openai,
+  opencheap,
   openrouter,
   ovhcloud,
   pioneer,
   prime,
   requesty,
+  sambanova: sambaNova,
   morph,
+  tempr,
   tinfoil,
   vercel,
   venice,
+  "void-api": voidApi,
   wandb,
   xai,
 };
@@ -285,8 +309,11 @@ export const groups = {
     "crossmodel",
     "edenai",
     "empiriolabs",
+    "hostinger-router",
     "huggingface",
     "inceptron",
+    "keln",
+    "kenari",
     "kilo",
     "llmgateway",
     "llmgateway-providers",
@@ -294,13 +321,16 @@ export const groups = {
     "nano-gpt",
     "novita-ai",
     "ofox",
+    "opencheap",
     "requesty",
+    "tempr",
     "openrouter",
     "prime",
     "vercel",
+    "void-api",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "ollama-cloud", "openai", "ovhcloud", "pioneer", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -337,6 +367,7 @@ export async function syncProvider<SourceModel>(
   const missingRemote = new Set<string>();
   const missingReasoning = new Map<string, string>();
   const translateNotices: string[] = [];
+  let nonTextLabs: Set<string> | undefined;
   for (const notice of provider.sourceNotices?.(sourceModels) ?? []) {
     translateNotices.push(notice);
     console.warn(notice);
@@ -424,9 +455,14 @@ export async function syncProvider<SourceModel>(
       resolvedReasoning,
       baseReasoningOptions,
     );
-    const withDescription = provider.preserveDescriptions === false
-      ? withReasoningOptions
-      : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored);
+    nonTextLabs ??= await readNonTextOutputLabs(provider.modelsDir);
+    const withDescription = capOutputAtContext(
+      provider.preserveDescriptions === false
+        ? withReasoningOptions
+        : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored),
+      translatedBase === undefined ? undefined : modelMetadata?.[translatedBase],
+      translatedBase !== undefined && nonTextLabs.has(translatedBase),
+    );
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
       ...preserveStructuredOutput(
@@ -751,6 +787,33 @@ function withBaseModalities<T extends z.infer<typeof SyncedAuthoredModel>>(
   };
 }
 
+// Output is carved out of the context window, so a synced or inherited output
+// above the resolved context (a host serving a smaller window than the lab) is
+// capped at the context. validate rejects an output above the context for
+// models that output text. The lab's own v2 modalities decide that
+// (`baseOutputsNoText`): the v1 metadata maps embedding, decision and reranking
+// outputs to "text", so it can't tell those models apart.
+export function capOutputAtContext<T extends SyncedModel>(
+  model: T,
+  base: Record<string, unknown> | undefined,
+  baseOutputsNoText = false,
+): T {
+  if (baseOutputsNoText) return model;
+  const baseLimit = base?.limit as { context?: unknown; output?: unknown } | undefined;
+  const limit = model.limit as { context?: number; output?: number } | undefined;
+  const outputs = (model.modalities as { output?: string[] } | undefined)?.output
+    ?? (base?.modalities as { output?: string[] } | undefined)?.output;
+  if (outputs !== undefined && !outputs.includes("text")) return model;
+  const context = limit?.context ?? (typeof baseLimit?.context === "number" ? baseLimit.context : undefined);
+  const output = limit?.output ?? (typeof baseLimit?.output === "number" ? baseLimit.output : undefined);
+  if (context === undefined || context <= 0 || output === undefined || output <= context) return model;
+  // A capped value equal to the lab's is inherited, not written.
+  const { output: _drop, ...rest } = limit ?? {};
+  const capped = baseLimit?.output === context ? rest : { ...rest, output: context };
+  const { limit: _limit, ...others } = model;
+  return (Object.keys(capped).length > 0 ? { ...others, limit: capped } : others) as T;
+}
+
 export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {
   if (existing?.base_model === undefined) return model;
   const translatedBase = "base_model" in model ? model.base_model : undefined;
@@ -946,6 +1009,19 @@ async function readModelMetadata(modelsDir: string) {
     result[modelID] = inheritableModelMetadata(labModelV2ToV1({ ...toml, id: modelID }, { modelPath }));
   }
 
+  return result;
+}
+
+async function readNonTextOutputLabs(modelsDir: string) {
+  const metadataDir = modelMetadataDir(modelsDir);
+  const result = new Set<string>();
+  for await (const modelPath of new Bun.Glob("**/*.toml").scan({ cwd: metadataDir, absolute: true, followSymlinks: true })) {
+    const toml = Bun.TOML.parse(await Bun.file(modelPath).text()) as { modalities?: { output?: string[] } };
+    const output = toml.modalities?.output;
+    if (output !== undefined && !output.includes("text")) {
+      result.add(path.relative(metadataDir, modelPath).split(path.sep).join("/").slice(0, -5));
+    }
+  }
   return result;
 }
 

@@ -1,0 +1,21 @@
+# Moneo catalog row (retrieved 2026-11-11): id/model=`gpt-oss-120b`, context_tokens=128000,
+# has_vision=false, has_tools=true, has_reasoning=false, input_per_1m_usd=0.07, output_per_1m_usd=0.28:
+# https://api.moneo.one/v1/models
+# The route reports has_reasoning=false; the sanitizer drops reasoning_effort and the response filter removes all reasoning fields.
+# Moneo also strips reasoning_content/reasoning/reasoning_details from every Chat Completions response.
+# Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = false }
+
+[limit]
+context = 128_000
+output = 128_000
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.28

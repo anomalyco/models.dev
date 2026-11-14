@@ -1,0 +1,17 @@
+# GET https://cheapllm.shop/v1/models lists deepseek-v4.1-flash-1017 (text + image input).
+# `reasoning_effort` accepts none|low|high|max ("none" turns reasoning off).
+# Pricing: free with no rate limit during the beta (https://cheapllm.shop/docs#free-tier,
+# accessed 2026-11-10). Published post-beta prices: $0.005 input / $0.001 cached input /
+# $0.14 output per MTok, plus a permanent free tier of 5,000 input + 1,000 output tokens per hour.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

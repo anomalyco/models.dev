@@ -1,0 +1,25 @@
+# Always reasons (reasoning_effort none is ignored). PDFs only work as image_url data URLs, not file parts, so PDF isn't listed.
+# Limits: GET https://api.lyceum.technology/openai/v1/models (2026-11-11) reports max_output_tokens 65,536; the context matches the lab file.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.31 }
+
+[cost.text.output]
+price = 4.5

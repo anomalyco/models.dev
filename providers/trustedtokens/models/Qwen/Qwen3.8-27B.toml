@@ -1,0 +1,27 @@
+# Catalog: https://api.trustedtokens.eu/v1/models (accessed 2026-10-30).
+# Pricing: the host publishes EUR per 1M tokens; omitted here rather than converted to USD.
+# Effort: reasoning_effort = none|low|medium|xhigh (/v1/models: supported_efforts =
+# ["xhigh","medium","low","none"], default_effort = "medium"). Live 2026-10-30: none 0,
+# low 497/523, medium 523/572, xhigh 229/319 reasoning_content chars; `high` returns 422
+# ("Unexpected reasoning effort high. Supported types are xhigh (default), medium, and low.").
+# Budget/toggle probe 2026-10-30: enable_thinking=false (1112 chars vs control 992),
+# thinking_budget=100 (836), chat_template_kwargs.enable_thinking=false (713) and
+# chat_template_kwargs.thinking_budget=100 (973) are accepted but leave reasoning on,
+# so the lab's thinking_budget/enable_thinking controls are not published; `none` is the off state.
+# Image input accepted; video_url returns 422, so the lab's video formats are omitted.
+# Cache: implicit prefix caching measured (repeat prompt reports cached_tokens); first request is cold.
+# Reasoning side channel: message.reasoning_content.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }

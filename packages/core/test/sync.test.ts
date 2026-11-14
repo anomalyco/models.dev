@@ -11,7 +11,7 @@ import {
   parseAnthropicPricing,
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
-import { buildCortecsModel, cortecs, type CortecsModel } from "../src/sync/providers/cortecs.js";
+import { buildCortecsModel, cortecs, exactModalities, type CortecsModel } from "../src/sync/providers/cortecs.js";
 import {
   buildCrossModel,
   crossmodel,
@@ -103,7 +103,7 @@ import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/provi
 import { buildVeniceModel, resolveVeniceBaseModel, veniceV2Set, withResponsesApi, type VeniceModel } from "../src/sync/providers/venice.js";
 import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, vercel, vercelCache, vercelMediaCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
-import { patchModelV2, sameV1Model } from "../src/model-file-v2.js";
+import { formatModelV2, patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
 import { generate } from "../src/generate.js";
 import { buildWandbModel, mergeReasoningOptions, type WandbModel } from "../src/sync/providers/wandb.js";
@@ -3469,6 +3469,20 @@ test("factors Eden AI models onto lab metadata and prices from list_pricing", ()
   expect(buildEdenAIModel(model)).not.toHaveProperty("reasoning");
 });
 
+test("Eden AI keeps an authored output cap", () => {
+  const model = edenAIModel({
+    id: "openai/gpt-5.6-terra",
+    model_name: "gpt-5.6-terra",
+    owned_by: "openai",
+    context_length: 128_000,
+    pricing: { input_cost_per_token: 0.0000013, output_cost_per_token: 0.0000078 },
+    list_pricing: { input_cost_per_token: 0.000002, output_cost_per_token: 0.000012 },
+  });
+  const authored: ExistingModel = { base_model: "openai/gpt-5.6-terra", limit: { context: 128_000, output: 16_384 } };
+  expect(buildEdenAIModel(model, authored, undefined, authored)).toMatchObject({ limit: { context: 128_000, output: 16_384 } });
+  expect(buildEdenAIModel(model)).not.toHaveProperty("limit.output");
+});
+
 test("takes Eden AI reasoning options from the model's own lab entry", () => {
   expect(reasoningOptionsFor("deepseek/deepseek-v4-pro")).toEqual([
     { type: "effort", values: ["none", "high", "max"] },
@@ -4387,6 +4401,71 @@ test("Cortecs linked files keep a display name and description that differ from 
   expect(model).not.toHaveProperty("description");
 });
 
+test("Cortecs ignores an output limit that repeats the context window", () => {
+  const hydrogen = cortecsModel({
+    id: "gemini-4-hydrogen",
+    context_size: 1_048_576,
+    max_output_tokens: 1_048_576,
+    supported_features: ["json_mode", "reasoning", "tools"],
+  });
+  const linked: ExistingModel = { base_model: "google/gemini-4-hydrogen" };
+  // No authored output: the lab's limit is inherited instead of a 1M override.
+  expect(buildCortecsModel(hydrogen, linked, linked)).not.toHaveProperty("limit.output");
+  // An authored output limit stays.
+  const authored: ExistingModel = { base_model: "google/gemini-4-hydrogen", limit: { context: 1_048_576, output: 32_000 } };
+  expect(buildCortecsModel(hydrogen, authored, authored)).toMatchObject({ limit: { output: 32_000 } });
+  // A cap below the window is the host's.
+  expect(buildCortecsModel({ ...hydrogen, max_output_tokens: 65_535 }, linked, linked)).toMatchObject({ limit: { output: 65_535 } });
+});
+
+test("Cortecs caps an inherited output limit at the served context", () => {
+  // The lab documents 262,144 output tokens; this route serves 256,000 of context.
+  const ministral = cortecsModel({
+    id: "ministral-3b-2512",
+    context_size: 256_000,
+    max_output_tokens: 256_000,
+    supported_features: ["json_mode", "tools"],
+  });
+  const linked: ExistingModel = { base_model: "mistral/ministral-3-3b-instruct-2512" };
+  expect(buildCortecsModel(ministral, linked, linked)).toMatchObject({ limit: { context: 256_000, output: 256_000 } });
+});
+
+test("Cortecs new files take the lab's MIME types for each listed kind", () => {
+  const hydrogen = cortecsModel({
+    id: "gemini-4-hydrogen",
+    input_modalities: ["text", "image", "audio", "file"] as unknown as CortecsModel["input_modalities"],
+  });
+  const result = exactModalities({ ...hydrogen, input_modalities: ["text", "image", "audio", "pdf"] });
+  expect(result?.modalities.input).toContain("image/png");
+  expect(result?.modalities.input).toContain("audio/wav");
+  expect(result?.modalities.input).toContain("application/pdf");
+  expect(result?.modalities.input.some((value) => value.startsWith("video/"))).toBe(false);
+  expect(result?.modalities.input).not.toContain("image");
+  // Every lab kind listed: inherited.
+  expect(exactModalities({
+    ...hydrogen,
+    input_modalities: ["text", "image", "audio", "video", "pdf"],
+  })).toBeUndefined();
+});
+
+test("Cortecs and Deep Infra skip new reasoning models until their controls are authored", () => {
+  const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  expect(() => cortecs.translateModel(cortecsModel({
+    id: "inkling-2-small",
+    supported_features: ["json_mode", "reasoning", "tools"],
+  }), context)).toThrow(MissingReasoningOptionsError);
+  expect(() => deepinfra.translateModel(
+    deepInfraModel("thinkingmachines/Inkling-2-Small", ["chat", "reasoning"]),
+    context,
+  )).toThrow(MissingReasoningOptionsError);
+  // Existing files are still patched.
+  const existing: ExistingModel = { base_model: "thinkingmachines/inkling-2-small" };
+  expect(cortecs.translateModel(cortecsModel({
+    id: "inkling-2-small",
+    supported_features: ["json_mode", "reasoning", "tools"],
+  }), { existing: () => existing, authored: () => existing })).toMatchObject({ id: "inkling-2-small" });
+});
+
 test("syncs OpenRouter reasoning efforts from model metadata", () => {
   const model = buildOpenRouterModel(openRouterModel({
     reasoning: {
@@ -4564,6 +4643,11 @@ test("resolves Venice Pro routes to canonical OpenAI metadata", () => {
     "anthropic/claude-opus-5",
     "anthropic/claude-opus-4-8",
   ]);
+});
+
+test("does not resolve Venice fine-tunes to the lab model they share an id with", () => {
+  expect(resolveVeniceBaseModel("qwen-3-6-plus", "Qwen 3.6 Plus Uncensored")).toBeUndefined();
+  expect(resolveVeniceBaseModel("qwen-3-6-plus", "Qwen 3.6 Plus")).toBe("alibaba/qwen3.6-plus");
 });
 
 function veniceModel(overrides: Partial<VeniceModel["model_spec"]> = {}): VeniceModel {
@@ -7859,6 +7943,88 @@ test("v2 sync patches keep legacy_shape", async () => {
     expect(doc.api).toEqual({
       responses: { base_url: "https://example.com/v2", sdk: { aisdk: "@ai-sdk/openai" }, legacy_shape: "responses" },
     });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+async function openRouterDecisionFixture(input: string[]) {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-openrouter-mime-"));
+  const modelsDir = path.join(root, "providers/openrouter/models");
+  await mkdir(path.join(modelsDir, "respan"), { recursive: true });
+  await mkdir(path.join(root, "models/respan"), { recursive: true });
+  await copyFile(
+    path.resolve(import.meta.dirname, "../../../models/respan/span-02.toml"),
+    path.join(root, "models/respan/span-02.toml"),
+  );
+  const file = path.join(modelsDir, "respan/span-02.toml");
+  const doc = {
+    schema: 2,
+    base_model: "respan/span-02",
+    modalities: { input, output: ["text"] },
+    capabilities: { reasoning: { supported: false }, structured_output: false },
+    limit: { output: 0 },
+    api: {
+      systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter" } },
+      decisions: { base_url: "https://openrouter.ai/api/alpha", sdk: { opencodeai: "none" } },
+    },
+    cost: { text: { input: { price: 0.01 }, output: { price: 0 } } },
+  };
+  await writeFile(file, formatModelV2(doc));
+  const source = openRouterModel({
+    id: "respan/span-02",
+    name: "Respan: Span-02",
+    knowledge_cutoff: null,
+    context_length: 131_072,
+    architecture: { input_modalities: ["text", "image"], output_modalities: ["decisions"] },
+    pricing: { prompt: "0.00000001", completion: "0" },
+    top_provider: { context_length: 131_072, max_completion_tokens: 117_964 },
+    supported_parameters: [],
+  });
+  const provider: SyncProvider<OpenRouterModel> = {
+    ...openrouter,
+    modelsDir,
+    async fetchModels() { return { data: [source] }; },
+  };
+  const read = async () => Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
+  return { root, file, doc, source, provider, read };
+}
+
+test("OpenRouter sync keeps a host's MIME override through factoring and repricing", async () => {
+  const fixture = await openRouterDecisionFixture(["text", "image/png", "image/jpeg", "image/webp", "image/gif"]);
+  const { root, file, doc, source, provider, read } = fixture;
+  try {
+    const original = await readFile(file, "utf8");
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1, notices: [] });
+    expect(await readFile(file, "utf8")).toBe(original);
+
+    source.pricing.prompt = "0.00000002";
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1, notices: [] });
+    let next = await read();
+    expect(next.modalities).toEqual(doc.modalities);
+    expect(next.cost.text.input.price).toBe(0.02);
+    expect(next.api).toEqual(doc.api);
+    expect(next.capabilities).toEqual(doc.capabilities);
+    expect(next.limit).toEqual(doc.limit);
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1, notices: [] });
+
+    // A removed source modality must still remove the host's old image formats.
+    source.architecture.input_modalities = ["text"];
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1, notices: [] });
+    next = await read();
+    expect(next.modalities).toEqual({ input: ["text"], output: ["text"] });
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1, notices: [] });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("OpenRouter sync drops a MIME block identical to the lab's formats", async () => {
+  const { root, provider, read } = await openRouterDecisionFixture(["text", "image/png", "image/jpeg"]);
+  try {
+    expect(await syncProvider(provider)).toMatchObject({ updated: 1, notices: [] });
+    expect(await read()).not.toHaveProperty("modalities");
+    expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1, notices: [] });
   } finally {
     await rm(root, { recursive: true, force: true });
   }

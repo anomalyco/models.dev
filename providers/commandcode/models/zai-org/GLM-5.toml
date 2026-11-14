@@ -1,0 +1,23 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: always on. GLM-5's native control is a thinking toggle, but this host rejects
+#   reasoning_effort = off and thinking.type = disabled is accepted without changing anything
+#   (the response carries no reasoning channel and 0 reasoning tokens either way), so there is
+#   no switch here. Graded levels cannot be told apart by volume and none are published.
+# Limit: the 200_000 context is the host's live catalog context_length (the lab serves 204_800).
+schema = 2
+base_model = "zhipuai/glm-5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 200_000
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.2

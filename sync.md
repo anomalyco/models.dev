@@ -28,6 +28,8 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync opencheap` syncs only OpenCheap prices.
+- `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -199,6 +201,15 @@ EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
 - A `cache` or `prompt_cache` feature sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet. Authored `implicit` / `explicit` details are kept.
 - `base_model` files never carry model facts (dates, `family`, `knowledge`, `open_weights`); they come from the lab. Only standalone files keep them.
 
+## Keln Notes
+
+- Run with `bun models:sync keln` or `bun keln:sync`. Registration enables the hourly provider-specific workflow; no API key or new workflow secret is required.
+- Source: the public `https://api.keln.ai/v1/models` endpoint (OpenRouter's shape). Prices are USD per token as decimal strings and convert exactly to USD per million tokens. `context_length`, `input_modalities` and the per-model `reasoning` object are API-authoritative.
+- Model IDs use the Hugging Face organisation; `deepseek-ai/` and `minimaxai/` map to the `deepseek` and `minimax` metadata labs, every other prefix resolves as published. Lab facts, release dates and output limits are inherited via `base_model`.
+- Reasoning options come from the published `reasoning` object: `supported_efforts` becomes an effort option (with `none` when thinking can be switched off), an on/off-only model gets a toggle, and an always-on model with no published levels gets `[]`. Each file's header names the wire field.
+- Only rows whose `output_modalities` include `text` sync. Keln also lists decision-output models (e.g. `cloudflare/clef`); they cannot serve chat, so they are filtered out at parse time and their files are removed like retired models.
+- Rows without a lab base or published controls are reported and keep their files; models absent from the API are removed. Empty, malformed and duplicate-ID inventories fail before writes.
+
 ## OpenRouter Notes
 
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
@@ -249,6 +260,7 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - Use a dedicated token scoped to Workers AI read access so sync automation does not share deploy credentials.
 - The endpoint is parsed as Cloudflare's OpenRouter-like Workers AI metadata.
 - Model IDs map directly to TOML paths under `providers/cloudflare-workers-ai/models`.
+- A `deprecation_date` (set once Cloudflare schedules a retirement) sets `status = "deprecated"`; otherwise an existing status is kept.
 - This target only manages Workers AI; the separate Cloudflare AI Gateway target handles proxied third-party models.
 
 ## Cloudflare AI Gateway Notes
@@ -368,6 +380,15 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - A live model with no lab entry is not created either, and opens a missing-model issue. `openai/privacy-filter` is skipped silently because the token-cost schema cannot describe it.
 - Absence removes a model, so the fetch refuses a response carrying fewer than twenty models: a truncated list that still parses would otherwise be indistinguishable from a mass retirement. A local entry the catalog cannot price is republished unchanged rather than dropped, because dropping it would delete a route that is still served.
 
+## Obscurify.ai Notes
+
+- Obscurify.ai is implemented in `packages/core/src/sync/providers/obscurify.ts`.
+- Source endpoint: the public `https://obscurify.ai/v1/models` (no API key).
+- Existing models are updated from per-token `pricing.prompt` and `pricing.completion`, scaled to per-1M prices. `pricing.input_cache_read` and `pricing.input_cache_write` are synced only into files that already declare that cache price: each model's caching is confirmed live before it is added.
+- `context_length` only ever lowers the inherited context limit; it can report the lab's window rounded up (1048576 for 1M). Output limits, reasoning controls and other capabilities stay hand-authored.
+- `tools = false` overrides the lab's tool calling. Display names are not synced: the endpoint prefixes the lab name (`Z.ai: GLM 5.3`). Decision models (`decisions = true`) are skipped.
+- New models are not created automatically (`skipCreates`) and open no missing-model issues (`trackMissingModels: false`): the endpoint lists hundreds of models the catalog does not carry. It lists only models serving at that moment, so local files missing from a response are kept (`deleteMissing: false`) and reported.
+
 ## OpenAI Notes
 
 - OpenAI is implemented in `packages/core/src/sync/providers/openai.ts`.
@@ -454,6 +475,28 @@ Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
 - Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
 - Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
 
+## Tempr Gateway Notes
+
+Tempr Gateway is implemented in `packages/core/src/sync/providers/tempr.ts`.
+
+- Run it with `bun models:sync tempr`.
+- Source endpoint: `https://api.temprhq.io/v1/catalog`; no auth required. It uses OpenRouter's model-list shape plus a `tempr` object (provider, model, type, status, `price_source`, `reasoning_forwarded`, `provider_kind`, `models_dev`, `reasoning_options`). Docs: https://temprhq.io/docs/gateway-reference#catalog
+- **Mirroring.** Tempr serves each provider's models on the caller's own key, so every catalog model names the models.dev entry it is (`tempr.models_dev`: `providers/<provider>/models/<model>.toml`). The Tempr entry copies that entry's overrides onto the same `base_model`.
+  - When the mirrored entry is the lab's full definition, the base is the lab file of the same id, found with `resolveCanonicalBaseModel` / `resolveModelMetadataBaseModel`, and only the fields that differ from it are kept.
+  - Request-surface fields (`provider`, `experimental`, `interleaved`, `reasoning_options`) and catalogue fields (description, dates, family, knowledge) are never copied.
+- **Prices.** Cost is Tempr's only where `price_source` is `"tempr"`: Tempr's copy of a host's whole catalog confirms the model at that price. The mirrored entry's `reasoning` and audio rates are kept, since the catalog doesn't publish them. Otherwise the mirrored entry's cost stands.
+- **Reasoning.** `reasoning_options` come from `tempr.reasoning_options` (the controls Tempr's API takes), written the way the mirrored entry writes "can be off". The leading comment names the request fields that set them on `/v1/chat/completions`, `/v1/messages` and `/v1/responses`.
+  - `reasoning_forwarded: false` (hosts Tempr sends no reasoning settings to) writes `[]` with a note.
+  - A reasoning model whose controls the catalog omits, or lists with values the schema doesn't know, keeps its authored controls. A new one raises `MissingReasoningOptionsError` instead of getting `[]`.
+- **Schema 2.** Mirrored provider and lab files are read through `readProviderModel` / `readLabModel`, so the adapter works on v1 fields and the runner writes schema 2.
+- **Comments.** Headers are authoritative but merged: an existing entry keeps every comment line the adapter doesn't write (the maintainers' notes) where it is, and only the reasoning block is regenerated. A new entry gets the block plus the bring-your-own-key prices note.
+- **Status.** `tempr.status` (`deprecated`, `beta` or `alpha`) is written to `status` whatever the mirrored file carries, so a deprecation the catalog states is never dropped.
+- **Safeguards.**
+  - Catalog ids are checked before they name a file read or written.
+  - A catalog of fewer than 100 models is treated as an outage and the sync stops.
+  - A model skipped for having no lab file is reported through `missingModelID`, so its existing entry is kept. Models absent from the catalog are retirements and are deleted.
+  - `preserveDescriptions` is `false` and headers are authoritative.
+
 ## Venice Notes
 
 Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
@@ -462,6 +505,7 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - `VENICE_API_KEY` is optional locally and includes models visible to that account when set.
 - Models missing from the API response are removed from the Venice catalog.
 - Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
+- A model whose ID or name says Uncensored, Abliterated or Heretic is Venice's own fine-tune and only matches metadata that names the same fine-tune, so `qwen-3-6-plus` ("Qwen 3.6 Plus Uncensored") stays a standalone file.
 - Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
 
 ## engy Notes
@@ -498,3 +542,16 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `preserveDescriptions` is off: the runner must not re-inject a pre-factor authored description when the translator leaves it unset, or a full-inline → factored transition would recreate a lab-identical override. Created files get a leading header from `translateModel` naming the single reasoning wire path (`reasoning_effort`, "none" = off). `toggle` and `budget_tokens` controls are parsed (so a feed that publishes one never aborts the run) but never written, from feed or authored file: ai& has no separate on/off or token-budget field, so they cannot be true of this host.
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
+
+## OpenCheap Notes
+
+OpenCheap is implemented in `packages/core/src/sync/providers/opencheap.ts`.
+
+- Run it with `bun models:sync opencheap` or `bun opencheap:sync`.
+- Source endpoint: `https://opencheap.si/api/prices` (the list the OpenCheap site and model pages read); no auth required. `ours` is the price OpenCheap bills per 1M tokens.
+- The list carries every model OpenCheap routes, but the catalog lists a hand-picked subset whose tools, reasoning and caching were checked live. The list has no capability data, so the sync only updates existing files: `skipCreates` is set, `trackMissingModels` is `false` (no issues for the rest) and `deleteMissing` is `false` (a truncated 200 must not delete checked files; missing files are retained and reported).
+- The list owns `cost.input` and `cost.output`. A model with no positive price on the list keeps its authored prices and is reported.
+- `cost.cache_read` is updated only where the file already lists one. Those files declare `cache = { implicit = true }` after cached tokens came back live; the list also prices a cache read on routes that report no cached tokens, so a cache price is never added by the sync.
+- `limit.context` follows `contextLength` only where the file already overrides the lab's window. Where the window is inherited, a list window below it is reported for a human to author.
+- Long-context prices on the list (`ours.longContext`) are reported, not authored.
+- Every other authored field is preserved: `base_model`, capabilities, `[api.*]` tables and the header.

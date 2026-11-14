@@ -1,0 +1,37 @@
+# Pricing (USD per 1M tokens): https://uncensuredai.com/api/pricing
+# Public Chat Completions QA (2026-11-13): https://uncensuredai.com/v1/chat/completions
+# Hosted model: https://uncensuredai.com/en/models/deepseek-v4.1-flash-abliterated
+# Client capabilities: https://uncensuredai.com/model-capabilities.json
+# The hosted model page lists DeepSeek V4.1 Flash 1017 as the base and
+# 131,072 tokens as Maximum output. The gateway capabilities entry for
+# this API ID publishes context_window = 1,000,000.
+# The gateway capabilities entry documents default_effort = low and reasoning_effort = off|low|high|max.
+# Public gateway QA: low, high, and max produced reasoning; off and none
+# returned answers without reasoning.
+# With high effort, the JSON message used reasoning_content and SSE deltas used
+# reasoning. Leave reasoning_field unset for detection because v1 cannot encode it.
+# Public gateway QA: Chat Completions rejected inline PNG with HTTP 400
+# (invalid_prepaid_media). The prepaid gateway media validator blocks file input
+# for this model. Both modality keys are required by the schema.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash Abliterated"
+description = "DeepSeek V4.1 Flash Abliterated served by UncensuredAI over Chat Completions."
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "low" } }
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.27
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.95

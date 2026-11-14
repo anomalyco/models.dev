@@ -1,0 +1,47 @@
+# Sources (accessed 2026-11-08):
+# - Pricing, limits, precision: https://entrim.ai/ai-models/glm/glm-5-3-flash-api and https://entrim.ai/pricing/
+# - Turbo is Entrim's NVFP4 serving mode: only the routed-expert weights (about 97% of the
+#   parameters) are stored in NVFP4; attention, routers, embeddings, the vision tower and all
+#   activations stay in higher precision (model page).
+# - Effort: reasoning_effort = low|high|max, thinking cannot be disabled (model page). Live
+#   2026-11-08: reasoning_effort none and thinking.type disabled were ignored, thinking stayed on.
+# - Probes live 2026-11-08: json_schema structured output works; tool calling works with auto and
+#   required, strict accepted (Entrim claims strict function calling); vision works (64x64 red
+#   square answered "Red"); implicit KV-cache hits.
+# - strict plus tool_choice required together make the model emit the tool call as text content
+#   instead of tool_calls (3/3 runs); each works alone.
+# - No PDF input on Entrim: their spec lists Text, Image and Video only (the lab file's PDF path
+#   is Z.AI-specific), so application/pdf is dropped from the inherited input list.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "video/mp4",
+  "video/x-matroska",
+  "video/quicktime",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "required"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = [
+  "low",
+  "high",
+  "max",
+] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.0175 }
+
+[cost.text.output]
+price = 0.35

@@ -1,3 +1,6 @@
+# Authenticated GET /v1/models, checked 2026-11-12:
+# metadata.capabilities.json_mode = true for this model ID.
+# Source: https://api.neuralwatt.com/v1/models
 # Flex-tier variant of glm-5.3: same model, context (1,048,560), and effort
 # ladder as the standard tier; requested via the `-flex` model ID or
 # service_tier="flex" and requires stream=true (non-streaming requests fall
@@ -13,7 +16,7 @@ name = "GLM 5.3 Flex"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"], budget = {} }
-structured_output = false
+structured_output = true
 
 [limit]
 context = 1_048_560

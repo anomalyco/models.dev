@@ -1,0 +1,42 @@
+# Sources (accessed 2026-11-09):
+# - Pricing (CNY per MTok): https://support.huaweicloud.com/price-maas/price-maas-0002.html (updated 2026-11-06)
+# - OpenAI-compatible API: https://support.huaweicloud.com/model-call-maas/model-call-021.html
+# - Live probe 2026-11-09 on api.modelarts-maas.com: GET /v1/models 200; exact-id probes: baseline 200 (reasoning 182 tok), thinking.type=disabled removes reasoning_content (reasoning_tokens 0), reasoning_effort=low accepted (reasoning 185 tok); sibling-id glm-5.2 (baseline/stream/thinking-toggle/reasoning-effort all 200)
+# CNY->USD rate: 6.67, 2026-11-09 (market range USD/CNY 6.6648-6.6755 that day)
+# List price: CNY 6/1.3/24 (input/cache-read/output per MTok, <32K tokens, peak 08:00-20:59 Beijing);
+#   >=32K tokens: CNY 8/2/28
+# Off-peak 21:00-07:59 Beijing (13:00-23:59 UTC) is 30% off in both tiers
+# Toggle: thinking.type = enabled|disabled (wire format now probed on this exact id 2026-11-09; earlier sibling-id glm-5.2 via the same
+# gateway; superseded by exact-id probe above). Native GLM-5.1 exposes toggle only, copied here.
+# tool_choice "auto" per Huawei docs tool-calling example; other values untested on this host
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+[capabilities]
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.89955
+cache = { read = 0.1949 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 32_000 } }
+price = 1.1994
+cache = { read = 0.29985 }
+
+[cost.text.output]
+price = 3.5982
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 32_000 } }
+price = 4.1979
+
+# Off-peak 21:00-07:59 Beijing = 13:00-23:59 UTC, 30% off (both tiers)
+[[cost.multipliers]]
+when = { utc_hours = { gte = "13:00" } }
+factor = 0.7

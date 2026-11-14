@@ -11,13 +11,13 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["none", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = false
 temperature = true
 
 [limit]
-context = 262_144
-output = 32_768
+context = 256_000
+output = 32_000
 
 [cost.text.input]
 price = 0.075
