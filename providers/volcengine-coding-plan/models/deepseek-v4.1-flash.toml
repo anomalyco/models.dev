@@ -1,0 +1,28 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-11-10). Subscription tier: no per-token price.
+# Toggle: thinking.type = enabled|disabled, POST /api/coding/v3/chat/completions.
+# Effort: reasoning_effort = low|high|max.
+# Baseline per relay convention: the first-party DeepSeek V4 lab entries
+# (providers/deepseek/models/deepseek-v4-flash.toml / -pro.toml: toggle +
+# low|high|max) agree with same-model V4.1 plan-relay peers
+# (alibaba-token-plan toggle + low|high|max, scnet-token-plan toggle +
+# high|max, openrouter effort none|low|high|max). Not re-measured on this
+# endpoint: the graded-effort collapse measured here was on the older V4
+# generation (deepseek-v4-flash / -pro, see provider.toml) and has never been
+# shown for V4.1.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

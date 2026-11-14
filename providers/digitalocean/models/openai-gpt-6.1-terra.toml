@@ -1,0 +1,45 @@
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+name = "OpenAI GPT-6.1 Terra"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+service_tier = ["priority"]
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 2
+cache = { read = 0.1 }
+
+[[cost.text.input.overrides]]
+when = { service_tier = { equals = "priority" }, context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" } }
+price = 10
+
+[[cost.text.output.overrides]]
+when = { service_tier = { equals = "priority" }, context = { gt = 272_000 } }
+price = 15

@@ -1,0 +1,10 @@
+# Bumo Router is a multi-model relay with an OpenAI-compatible Chat Completions
+# API, billed in USD. Models and prices are read from the public catalog
+# https://router.bumo.ai/api/v1/models (accessed 2026-11-02).
+# Docs: https://bumo.ai/docs/api
+name = "Bumo Router"
+env = ["BUMO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://router.bumo.ai/v1"
+doc = "https://bumo.ai/docs/api"

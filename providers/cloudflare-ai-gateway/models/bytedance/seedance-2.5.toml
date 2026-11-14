@@ -17,13 +17,13 @@ unit = "second"
 price = 0.2312
 
 [[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "480p" } }, { input_video = { equals = false } }] }
+price = 0.1028
+
+[[cost.video.output.overrides]]
 when = { all = [{ resolution = { equals = "480p" } }, { input_video = { equals = true } }] }
 price = 0.4304
 
 [[cost.video.output.overrides]]
 when = { all = [{ resolution = { equals = "720p" } }, { input_video = { equals = true } }] }
 price = 0.9676
-
-[[cost.video.output.overrides]]
-when = { all = [{ resolution = { equals = "480p" } }, { input_video = { equals = false } }] }
-price = 0.1028

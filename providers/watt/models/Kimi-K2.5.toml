@@ -1,0 +1,25 @@
+# Toggle: chat_template_kwargs.thinking true|false
+# (relay peers of this model author the toggle; the
+# retired Moonshot lab entry has no controls)
+# Pricing & limits: Watt catalog (2026-10-23), Kimi-K2.5 row:
+# 0.6/3 USD per MTok, context 271_360, output 180_224
+# (lab base: 262_144/262_144)
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 271_360
+output = 180_224
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.60
+
+[cost.text.output]
+price = 3.0

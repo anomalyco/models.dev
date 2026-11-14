@@ -1,0 +1,38 @@
+# Sources (accessed 2026-11-12): https://api.decisionmodels.io/v1/models (live registry), https://decisionmodels.io/models/reax-1.3 , https://huggingface.co/decisionmodels/REAX-1.3
+# Price is USD per 1M input tokens; output tokens are free. REAX 1.3 is offered on the EU tier only (S1-Region: eu, or a key whose
+#   default region is EU); the Peer-to-Peer tier does not serve it. EUR and USD prices are the same (0.40).
+# Model: REAX 1.3 by Decision Models, an ensemble of two parts that run in parallel on one GPU; each builds on a fine-tune trained by a
+#   REAX miner. Weights: decisionmodels/REAX-1.3 (Apache-2.0); lineage and notices are in the model card. One question per request.
+# Input billing counts both parts, so input_tokens is about twice the text length; the limit below is a billed-token limit.
+# release_date: 2026-11-03 is the date the weights and the hosted id were published.
+schema = 2
+type = "decision"
+name = "REAX 1.3"
+description = "Open decision model by Decision Models for text decisions: one typed noul, choice or score question per request, answered with probabilities"
+open_weights = true
+release_date = "2026-11-03"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 28_672
+output = 0
+
+[api.systemone]
+base_url = "https://api.decisionmodels.io/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.40
+
+[cost.text.output]
+price = 0

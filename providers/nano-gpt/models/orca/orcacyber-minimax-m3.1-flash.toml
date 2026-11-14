@@ -1,0 +1,27 @@
+schema = 2
+name = "OrcaCyber MiniMax M3.1 Flash Uncensored"
+description = "An abliterated / uncensored variant of MiniMax M3.1 Flash for authorized security research, coding, and tool use. Reasoning is always enabled, with selectable effort. Supports a 262K-token context window, up to 131K output tokens, tool calling, and structured output. Accepts text input. Offensive work is permitted only within an authorized security engagement."
+family = "minimax-m3"
+open_weights = false
+release_date = "2026-11-02"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 261_632
+input = 261_632
+output = 131_072
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 1.6

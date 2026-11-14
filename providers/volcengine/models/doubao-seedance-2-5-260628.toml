@@ -1,0 +1,58 @@
+# Sources (accessed 2026-11-12):
+# - Model ID and output specs: https://ark.volcengine.com/region:cn-beijing/docs/model-list.md#7571da3f
+# - CNY list prices (元/M token, online inference; offline/flex not offered for this model):
+#   https://ark.volcengine.com/region:cn-beijing/docs/model-pricing.md#2864f00a
+# - API: async POST https://ark.cn-beijing.volces.com/api/v3/contents/generations/tasks, then poll
+#   GET .../tasks/{id}: https://ark.volcengine.com/region:cn-beijing/docs/create-video-generation-task-api.md
+#   @ai-sdk/bytedance (https://www.npmjs.com/package/@ai-sdk/bytedance, 2.0.84) posts to contents/generations/tasks
+#   and reads ARK_API_KEY; its default base URL is BytePlus (https://ark.ap-southeast.bytepluses.com/api/v3),
+#   so base_url points at Ark Beijing.
+# - Opening the model needs an account balance of 200 CNY or a savings plan/resource pack:
+#   https://ark.volcengine.com/region:cn-beijing/docs/seedance-model-activation-usage-and-refund.md
+# CNY->USD rate: 6.685797, 2026-11-12, source: https://open.er-api.com/v6/latest/USD
+# Billed per million tokens; tokens ~= (input video seconds + output seconds) x width x height x fps / 1024,
+# exact count in usage.completion_tokens. With video input there is a minimum token charge, not modelled here.
+# Prices: 480p/720p 70 CNY (42 with input video), 1080p 77 CNY (46 with input video).
+# Output formats mp4 (default) and mov via output_format; mov is listed for Seedance 2.5 only. Keeps the lab's
+# generic audio entry for the synchronized sound track. input repeats the lab list only because the schema
+# requires input whenever [modalities] is overridden.
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/seedance-2.5"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/gif",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/quicktime",
+  "audio/wav",
+  "audio/mpeg",
+]
+output = ["video/mp4", "video/quicktime", "audio"]
+
+[api.videos]
+base_url = "https://ark.cn-beijing.volces.com/api/v3"
+sdk = { aisdk = "@ai-sdk/bytedance", opencodeai = "@opencode/ai/providers/volcengine/videos" }
+
+[cost.video.output]
+price = 10.46996
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 11.51695
+
+[[cost.video.output.overrides]]
+when = { resolution = { in = ["480p", "720p"] }, input_video = { equals = true } }
+price = 6.28197
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, input_video = { equals = true } }
+price = 6.88026

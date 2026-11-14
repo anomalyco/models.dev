@@ -16,7 +16,8 @@ reasoning = { supported = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
 
 [limit]
-output = 1_048_576
+context = 1_000_000
+output = 262_144
 
 [api.chat-completions]
 capabilities = { system_updates = true }
@@ -31,7 +32,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel
 
 [cost.text.input]
 price = 2
-cache = { read = 0.2, write = 2 }
+cache = { read = 0.2 }
 
 [cost.text.output]
 price = 10

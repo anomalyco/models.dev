@@ -1,20 +1,25 @@
-# Live metadata: levels none/low/medium/high, default medium, and
-# `can_disable=true` (accessed 2026-06-25).
-# https://api.code.umans.ai/v1/models/info
+# This alias routes to DeepSeek V4.1 Flash since 2026-10-28 and follows its
+# updates (it rode Qwen3.6-35B-A3B before; that model keeps its own id until it
+# retires on 2026-11-01). It serves the same weights and price as
+# umans-deepseek-v4.1-flash (the 1017 checkpoint).
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables)
+# Effort: reasoning_effort = low|high|max (default high). A number from 1 to 100
+# maps to the nearest mode: 1-62 low, 63-87 high, 88-100 max.
+# Live card, checked 2026-10-28: https://api.code.umans.ai/v1/models/info
+# (levels none/low/high/max, default high, can_disable true, supports_vision
+# true). The fast tier keeps the limits it advertised before the move:
+# context_window 262144, max_completion_tokens 262144, recommended 32768
+# (limit.output below), while umans-coder carries the full 1M context.
 schema = 2
-base_model = "alibaba/qwen3.6-35b-a3b"
+base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "Umans Flash"
 
-[modalities]
-input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
-output = ["text"]
-
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-temperature = false
 
 [limit]
+context = 262_144
 output = 32_768
 
 [api.chat-completions]
@@ -22,7 +27,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.15
-cache = { read = 0.05 }
+cache = { read = 0.028 }
 
 [cost.text.output]
-price = 1
+price = 0.6

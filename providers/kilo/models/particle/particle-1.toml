@@ -1,0 +1,26 @@
+schema = 2
+name = "Particle-1"
+description = "Particle-1 is Particle AI’s model for agentic coding and software engineering, post-trained on DeepSeek V4.1 Flash to complete tasks with fewer tokens. It supports text and image inputs, reasoning, tool use, and implicit prompt caching."
+open_weights = false
+release_date = "2026-10-28"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = false
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 0.125
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.5

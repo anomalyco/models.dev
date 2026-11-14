@@ -1,0 +1,28 @@
+# Effort: reasoning_effort = low|high|max (model-native tiers, matching providers/zhipuai/models/glm-5.3.toml)
+# Public 2026-11-11: GET /v1/models returns context_length/max_completion_tokens 1048576 and
+#   https://cloud.sambanova.ai/plans/pricing lists 2.80 input / 8.80 output / 0.14 cached input.
+# The gateway also accepts the generic medium/xhigh enum values (its 400 lists low|medium|high|xhigh|max),
+#   but those are not GLM-5.3 tiers, so only the three native levels are exposed here.
+# Live POST /v1/chat/completions: thinking_mode / thinking.type = disabled are ignored (thinking always on).
+# Caching: repeated 30k-token prompt reported cached_tokens 28672 on the third run (implicit prefix cache).
+# Structured output: response_format json_schema is enforced (schema-conformant object returned against
+#   a conflicting prompt); json_object also works.
+# Text-only: an image_url message is rejected as not allowed for text-only models.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 2.8
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 8.8
