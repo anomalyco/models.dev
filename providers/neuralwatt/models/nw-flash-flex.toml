@@ -3,6 +3,9 @@
 # stream=true and max_tokens=16 (HTTP 200, reasoning then content).
 # https://docs.neuralwatt.com/api/chat-completions#reasoning-token-budget
 # Budget: thinking_token_budget (integer reasoning tokens)
+# Lab: public GET /v1/models lists metadata.huggingface_id
+# deepseek-ai/DeepSeek-V4.1-Flash-1017 for this id (checked 2026-11-14).
+# Source: https://api.neuralwatt.com/v1/models
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "Neuralwatt Flash (flex)"
