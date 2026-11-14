@@ -95,3 +95,22 @@ test("generic input kinds take the lab's MIME entries, and match the lab list by
   expect(labMimeInput(["text", "audio"], lab)).toEqual(["text", "audio"]);
   expect(labMimeInput(["text"], undefined)).toEqual(["text"]);
 });
+
+test("headers state the reasoning wire fields each file uses", () => {
+  const header = trustedrouter.translateModel(model(), none)!.header!;
+  expect(header).toContain("# Toggle: reasoning.enabled = true|false\n");
+  expect(header).toContain("# Effort: reasoning.effort = low|high\n");
+  const mandatory = trustedrouter.translateModel(
+    model({ reasoning: { mandatory: true, supported_efforts: ["high"] } }),
+    none,
+  )!.header!;
+  expect(mandatory).not.toContain("# Toggle:");
+});
+
+test("a passed-through reasoning parameter does not make a non-reasoning lab model a reasoner", () => {
+  // Gemma 3 lists `reasoning` but publishes no controls; its lab file says it does not reason.
+  const gemma = model({ id: "google/gemma-3-12b-it", name: "Google: Gemma 3 12B", reasoning: undefined });
+  const translated = trustedrouter.translateModel(gemma, none)!.model as { reasoning?: boolean; reasoning_options?: unknown };
+  expect(translated.reasoning).not.toBe(true);
+  expect(translated.reasoning_options).toBeUndefined();
+});
