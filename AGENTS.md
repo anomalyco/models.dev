@@ -9,7 +9,7 @@ bun validate
 bun run v1:check
 ```
 
-Run both after every catalog change. `bun validate` must pass before a PR is mergeable; it rejects any model file without `schema = 2`, and any model whose resolved `limit.output` or `limit.input` is larger than its `limit.context` (after the `base_model` merge). When a host's context is smaller than the lab's output, set the host's own `limit.output` (its documented cap, or the context).
+Run both after every catalog change. `bun validate` must pass before a PR is mergeable; it rejects any model file without `schema = 2`, and any model with `"text"` in `modalities.output` whose resolved `limit.output` or `limit.input` is larger than its `limit.context` (after the `base_model` merge). Speech, image-only, video and embedding models are exempt: their audio, image or vector limits are separate from the text window. When a host's context is smaller than the lab's output, set the host's own `limit.output` (its documented cap, or the context).
 
 `bun run v1:check` (or `bun run v1:check <ref>`) protects the published v1 API (`api.json`, etc.), which is still generated from these files. It compares the v1 output with the merge-base of `origin/dev`, lists every changed field, every model added to or removed from v1, and changed files that still use generic modalities, and exits 1 if v1 changed.
 

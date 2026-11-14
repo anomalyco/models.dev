@@ -35,6 +35,7 @@ test("leaves a model alone when output fits or context is unknown", () => {
 test("leaves models that don't output text alone", () => {
   const tts = { ...model({ context: 8_192, output: 16_384 }), modalities: { input: ["text"], output: ["audio"] } };
   expect(capOutputAtContext(tts, undefined)).toBe(tts);
+  // Lab metadata reaches sync in v1 form, where an embedding's output is "text".
   const embed = model({ context: 512, output: 1_024 });
-  expect(capOutputAtContext(embed, { modalities: { output: ["embedding"] } })).toBe(embed);
+  expect(capOutputAtContext(embed, { modalities: { output: ["text"] } }, true)).toBe(embed);
 });
