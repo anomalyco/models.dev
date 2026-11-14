@@ -4,8 +4,10 @@
 # (price listing: https://openrouter.ai/api/v1/models/google/gemini-2.5-flash/endpoints, accessed 2026-10-16).
 # Toggle: reasoning.enabled = true|false (https://docs.standardcompute.com/reasoning)
 # Budget: reasoning.max_tokens (passed through as the upstream thinking budget)
+# Retired 2026-10-20: requests to this id are now served by google/gemini-3.5-flash-lite.
 schema = 2
 base_model = "google/gemini-2.5-flash"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24_576 } }
