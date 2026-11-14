@@ -1,0 +1,35 @@
+schema = 2
+name = "Ampersand v0.1"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "v0"
+open_weights = false
+release_date = "2026-11-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

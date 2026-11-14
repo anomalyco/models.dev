@@ -10,6 +10,7 @@
 # Cost: billed per model call in GitLab Credits ($1 each on demand; claude-opus-4.6: 1.1 calls per credit, https://docs.gitlab.com/subscriptions/gitlab_credits/).
 #   v2 has no per-request unit, so token prices stay 0 (calls draw on the subscription's credits).
 # Mid-conversation flags unset: GitLab documents none, and no live test (no GitLab token).
+# APIs: gitlab-ai-provider sends Claude to the AI gateway's /ai/v1/proxy/anthropic/v1/messages and OpenAI models to /ai/v1/proxy/openai/v1/chat/completions or /responses (sources in provider.toml).
 schema = 2
 base_model = "anthropic/claude-opus-4-6"
 name = "Agentic Chat (Claude Opus 4.6)"
@@ -17,6 +18,8 @@ description = "Flagship Claude model for deep reasoning, coding, and long-horizo
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+
+[api.messages]
 
 [cost.text.input]
 price = 0

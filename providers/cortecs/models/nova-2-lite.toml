@@ -10,12 +10,11 @@ input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-cache = { supported = false }
+cache = false
 structured_output = true
 temperature = false
-effort_updates = false
 
 [limit]
 output = 65_535

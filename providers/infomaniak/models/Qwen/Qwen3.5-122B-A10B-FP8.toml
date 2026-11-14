@@ -35,7 +35,7 @@ context = 200_000
 input = 200_000
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 0.5

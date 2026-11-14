@@ -7,15 +7,14 @@ name = "GPT-OSS 120B TEE"
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
-effort_updates = false
 
 [limit]
 input = 131_072
 output = 16_384
 
 [cost.text.input]
-price = 2
-cache = { read = 2 }
+price = 0.15
+cache = { read = 0.15 }
 
 [cost.text.output]
-price = 2
+price = 0.6

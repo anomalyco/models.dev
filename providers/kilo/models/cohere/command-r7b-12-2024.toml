@@ -6,9 +6,7 @@ base_model = "cohere/command-r7b-12-2024"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
 
 [capabilities]
-tools = { supported = false }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.0375

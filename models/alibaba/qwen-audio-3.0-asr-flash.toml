@@ -1,0 +1,40 @@
+# Exact-model synchronous formats: AAC, FLAC, M4A, MP3, Ogg and WAV, as audio MIME types.
+# The wav/16000 request below is an example, not a WAV-only restriction.
+# Video containers are not advertised as visual inputs to this transcription model.
+# https://docs.qwencloud.com/developer-guides/speech/speech-to-text-models
+# Qwen-Audio-3.0-ASR Flash: Bailing ASR updated June 2026 with seven Chinese dialect
+# systems, 20+ regional Mandarin accents, 30 languages, context support and up to
+# 5-minute transcription:
+# https://www.qwencloud.com/models/qwen-audio-3.0-asr-flash
+# https://www.qianwenai.com/models/qwen-audio-3.0-asr-flash
+# Sync DashScope route POST /api/v1/services/aigc/multimodal-generation/generation with
+# input_audio (format wav, sample_rate 16000); single file up to 10 MB / 5 minutes.
+# The async filetrans variant (file_urls, up to 12 h / 2 GB) is a separate model ID and
+# is not authored here:
+# https://www.alibabacloud.com/help/en/model-studio/non-realtime-speech-recognition-user-guide
+# Input formats: mainstream AAC, WAV and MP3; data-URL examples use audio/wav and audio/mpeg
+# (same guide). Hosted only; marketplace per-second prices are pay-as-you-go and are not
+# used for Token Plan credit billing.
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Qwen-Audio-3.0-ASR Flash"
+description = "Hosted speech recognition model with dialect and 30-language support for audio-to-text transcription up to 5 minutes"
+family = "qwen"
+open_weights = false
+release_date = "2026-06"
+
+[modalities]
+input = ["audio/aac", "audio/flac", "audio/mp4", "audio/mpeg", "audio/ogg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

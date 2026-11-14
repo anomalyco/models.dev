@@ -1,3 +1,4 @@
+# Pricing: the >200k price tier is not modeled: Vertex caps this model's context at 200,000 (https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/grok-4-3, accessed 2026-11-12), so it can't apply.
 # Sources:
 # - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/grok-4-3
 # - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/capabilities/reasoning
@@ -7,6 +8,7 @@
 # Image formats (jpg/jpeg, png): https://docs.x.ai/developers/models
 # Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
 # system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+# APIs: Chat Completions and Responses on the endpoints/openapi path (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/grok/responses).
 schema = 2
 base_model = "xai/grok-4.3"
 status = "beta"
@@ -16,12 +18,10 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 200_000
@@ -30,18 +30,13 @@ context = 200_000
 base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/google-vertex/chat" }
 
+[api.responses]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/google-vertex/responses" }
+
 [cost.text.input]
 price = 1.25
 cache = { read = 0.2 }
 
-[[cost.text.input.overrides]]
-when = { context = { gt = 200_000 } }
-price = 2.5
-cache = { read = 0.4 }
-
 [cost.text.output]
 price = 2.5
-
-[[cost.text.output.overrides]]
-when = { context = { gt = 200_000 } }
-price = 5

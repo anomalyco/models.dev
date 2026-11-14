@@ -14,7 +14,7 @@ base_model = "anthropic/claude-opus-4-6"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
-cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 structured_output = true
 
 [cost.text.input]

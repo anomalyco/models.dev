@@ -1,22 +1,7 @@
+# Source: https://www.morphllm.com/api/models/json?prices=list (accessed 2026-10-25). Lab metadata, including the
+# 262,144 context and 131,072 output limits, is models/morph/morph-v3-fast.toml.
 schema = 2
-name = "Morph v3 Fast"
-description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "morph"
-open_weights = false
-release_date = "2024-08-15"
-
-[modalities]
-input = ["text"]
-output = ["text"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
-
-[limit]
-context = 16_000
-output = 16_000
+base_model = "morph/morph-v3-fast"
 
 [cost.text.input]
 price = 0.8

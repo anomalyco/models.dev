@@ -10,10 +10,8 @@ base_model = "mistral/codestral-2508"
 name = "Codestral 2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [api.chat-completions]
 base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/mistralai/models"

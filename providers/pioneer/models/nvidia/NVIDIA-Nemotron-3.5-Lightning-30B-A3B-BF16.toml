@@ -13,10 +13,9 @@ schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 65_536

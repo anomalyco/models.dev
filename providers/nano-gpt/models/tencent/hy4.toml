@@ -1,0 +1,18 @@
+schema = 2
+base_model = "tencent/hy4"
+name = "Tencent Hy4"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+
+[limit]
+input = 1_048_576
+
+[cost.text.input]
+price = 0.417
+cache = { read = 0.021 }
+
+[cost.text.output]
+price = 1.2505

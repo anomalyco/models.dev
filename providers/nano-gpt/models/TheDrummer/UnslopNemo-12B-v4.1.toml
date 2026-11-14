@@ -1,3 +1,4 @@
+# Output limit: capped at the 8,192 context; no host cap is documented and the 26,214 from the base model or host listing is larger.
 # Included in subscription
 # effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
 schema = 2
@@ -14,12 +15,11 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 8_192
 input = 8_192
-output = 26_214
+output = 8_192
 
 [cost.text.input]
 price = 0.493

@@ -1,15 +1,16 @@
+# Output limit: capped at the 131,072 context; no host cap is documented and the 384,000 from the base model or host listing is larger.
 # Cache: DeepSeek caches automatically, no marker required (https://www.edenai.co/docs/v3/llms/prompt-caching).
 schema = 2
 base_model = "deepseek/deepseek-chat"
 
 [capabilities]
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 131_072
+output = 131_072
 
 [cost.text.input]
 price = 0.15

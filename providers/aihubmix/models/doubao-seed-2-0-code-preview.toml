@@ -13,7 +13,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-cache = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 256_000

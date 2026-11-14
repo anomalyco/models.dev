@@ -1,0 +1,24 @@
+# Sources:
+# - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# - https://docs.github.com/en/copilot/reference/ai-models/supported-models
+# - https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon
+# Pricing: Gemini 4 Carbon promo $2.00 input / $0.10 cached input / $10.00 output per 1M tokens until 2026-12-01; $4.00 / $0.20 / $20.00 after (docs page above, accessed 2026-11-10). Price is the promo; the 2026-12-01 step is not modeled.
+# Reasoning: effort low|medium|high (matches lab providers/google/models/gemini-4-carbon.toml + github-copilot gemini-3.7-flash / gemini-3.8-flash peers)
+# Input MIME types and limits: copied from the gemini-4-argon Copilot entry (same Copilot vision list); not read for Carbon itself (no Copilot token). Limits inherit the lab.
+schema = 2
+base_model = "google/gemini-4-carbon"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10

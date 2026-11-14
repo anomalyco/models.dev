@@ -1,0 +1,18 @@
+# Output limit: capped at the 32,768 context; no host cap is documented and the 262,144 from the base model or host listing is larger.
+schema = 2
+base_model = "mistral/ministral-14b"
+name = "Ministral 14B (Arkanecloud)"
+
+[capabilities]
+structured_output = false
+
+[limit]
+context = 32_768
+output = 32_768
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 0.15

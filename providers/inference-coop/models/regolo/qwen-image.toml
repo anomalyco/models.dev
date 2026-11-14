@@ -1,0 +1,19 @@
+# Sources (accessed 2026-11-02):
+# - https://git.inference.coop/co-op/docs/src/branch/main/models.md
+# - the gateway's authoritative LiteLLM config:
+#   https://git.inference.coop/code/litellm/src/branch/main/config.yaml
+# Text-to-image on the Regolo tier (EU hosting, zero data retention).
+# API: POST https://gateway.inference.coop/v1/images/generations (OpenAI images format;
+# returns base64-encoded JPEGs). Billed $1.74e-8 per generated pixel (config
+# input_cost_per_pixel, converted from EUR at the gateway's 1.16 peg), i.e. $0.0174 per
+# megapixel.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen-image"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.output]
+unit = "megapixel"
+price = 0.0174

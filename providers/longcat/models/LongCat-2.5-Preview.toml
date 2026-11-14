@@ -3,7 +3,10 @@
 # - Pricing https://longcat.chat/platform/docs/pricing/longcat-2.5: "Discounted Price (limited-time)": uncached input $0.30,
 #   cached input $0.006, output $1.20 per MTok (no end date published).
 # - Parameters https://longcat.chat/platform/docs/api/model-params: context 1,048,576, max_tokens up to 262,144, temperature fixed.
-# APIs on this host: OpenAI Chat Completions and Responses, Anthropic Messages, /v1/models.
+# APIs on this host (https://longcat.chat/platform/docs/api/chat, /api/responses, /api/messages, accessed 2026-10-23):
+#   POST /openai/v1/chat/completions, /openai/v1/responses and /anthropic/v1/messages; both models on all three.
+#   The Chat table keeps the provider's published base (https://api.longcat.chat/openai, v1 unchanged).
+# max_tokens_field: LongCat's Chat Completions API documents max_tokens and not max_completion_tokens (https://longcat.chat/platform/docs/api/chat, accessed 2026-10-24)
 schema = 2
 base_model = "meituan/longcat-2.5-preview"
 
@@ -15,7 +18,15 @@ context = 1_048_576
 output = 262_144
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+base_url = "https://api.longcat.chat/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.longcat.chat/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.3

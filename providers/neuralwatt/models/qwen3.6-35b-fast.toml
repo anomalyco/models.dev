@@ -1,3 +1,6 @@
+# Context verified with authenticated GET /v1/models on 2026-11-12.
+# metadata.limits.max_context_length = 262128.
+# Source: https://api.neuralwatt.com/v1/models
 schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B Fast"
@@ -12,7 +15,7 @@ reasoning = { supported = false }
 structured_output = true
 
 [limit]
-context = 131_056
+context = 262_128
 output = 131_056
 
 [cost.text.input]

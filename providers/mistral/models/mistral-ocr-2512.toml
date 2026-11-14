@@ -2,6 +2,10 @@
 #   GET https://api.mistral.ai/v1/models (mistral-ocr-2512; served on POST /v1/ocr)
 #   https://docs.mistral.ai/models/ocr-3-25-12 and https://docs.mistral.ai/inference/pricing ($2 per 1,000 pages, $3 per 1,000 annotated pages)
 # No [cost]: OCR is billed per page, which the cost schema has no unit for.
+# APIs: the /v1/models capabilities (completion_fim: POST /v1/fim/completions; moderation: /v1/moderations; ocr: /v1/ocr), https://docs.mistral.ai/api. No AI SDK or OpenCode package calls them.
 schema = 2
 v2_only = true
 base_model = "mistral/mistral-ocr-2512"
+
+[api.ocr]
+sdk = { aisdk = "none", opencodeai = "none" }

@@ -1,18 +1,18 @@
 # https://novita.ai/models/model-detail/inclusionai-ling-3.0-flash-fin
 # Toggle: thinking.type = enabled|disabled
 # system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+# max_tokens_field: this route ignores max_completion_tokens while max_tokens caps output (live probe 2026-10-24)
 schema = 2
 base_model = "inclusionai/ling-3.0-flash-fin"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
-effort_updates = false
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.075

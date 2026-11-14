@@ -1,0 +1,12 @@
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.014 }
+
+[cost.text.output]
+price = 0.7

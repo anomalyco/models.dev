@@ -1,0 +1,12 @@
+# ToAPIs OpenAI-compatible gateway (docs accessed 2026-11-07):
+# POST https://toapis.com/v1/chat/completions
+# GPT-5.6 family accepts reasoning_effort = none|low|medium|high|xhigh|max
+# https://docs.toapis.com/docs/cn/api-reference/chat/gpt-5.6/chat.md
+# Public model catalog: https://docs.toapis.com/docs/cn/api-reference/models.md
+# Mainland China base URL alternative: https://toapis.cn/v1
+name = "ToAPIs"
+env = ["TOAPIS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://toapis.com/v1"
+doc = "https://docs.toapis.com"

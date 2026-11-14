@@ -6,10 +6,9 @@ base_model = "zhipuai/glm-5-turbo"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 202_752

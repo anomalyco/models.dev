@@ -1,0 +1,19 @@
+schema = 2
+base_model = "openai/gpt-5.4-mini"
+name = "OpenAI: GPT 5.4 Mini (Fast)"
+description = "GPT-5.4 Mini brings the strengths of GPT-5.4 to a faster, more efficient model designed for high-volume workloads."
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 9

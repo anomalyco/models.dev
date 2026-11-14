@@ -27,7 +27,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = true, choice = ["auto", "required", "tool", "none"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [limit]
 context = 262_144

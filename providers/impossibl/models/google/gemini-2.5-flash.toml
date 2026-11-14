@@ -12,7 +12,7 @@ base_model = "google/gemini-2.5-flash"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24_576 } }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 
 [cost.text.input]

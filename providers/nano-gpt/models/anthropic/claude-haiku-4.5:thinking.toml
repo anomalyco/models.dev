@@ -8,16 +8,15 @@ name = "Claude Haiku 4.5 Thinking"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
+tools = { supported = true }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
 
 [limit]
 input = 200_000
 
 [cost.text.input]
 price = 1
-cache = { read = 0.1 }
+cache = { read = 0.1, write = 1.25 }
 
 [cost.text.output]
 price = 5

@@ -1,0 +1,24 @@
+# https://huggingface.co/ornith-ai/Ornith-1.5-122B
+# Sampling: open weights; generation_config.json sets temperature 1.0, top_p 0.95, top_k 20.
+schema = 2
+name = "Ornith 1.5 122B"
+description = "Mixture-of-experts coding-reasoning model for agentic software tasks, tool use, and image understanding"
+family = "ornith"
+open_weights = true
+release_date = "2026-10-20"
+license = "MIT"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768

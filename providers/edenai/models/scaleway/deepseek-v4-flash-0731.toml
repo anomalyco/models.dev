@@ -1,19 +1,20 @@
+# Output limit: capped at the 256,000 context; no host cap is documented and the 384,000 from the base model or host listing is larger.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 name = "DeepSeek V4 Flash 0731 (Scaleway)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 256_000
+output = 256_000
 
 [cost.text.input]
-price = 0.44936
-cache = { read = 0.089872 }
+price = 0.44208
+cache = { read = 0.088416 }
 
 [cost.text.output]
-price = 0.89872
+price = 0.88416

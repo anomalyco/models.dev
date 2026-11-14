@@ -6,12 +6,11 @@ schema = 2
 base_model = "meta/muse-spark-open"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 1_040_000

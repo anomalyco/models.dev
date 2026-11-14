@@ -1,0 +1,13 @@
+# The EU host processes each request in the EU (https://docs.munito.ai/regions).
+# Raw HTTP is POST /inference/v1/chat/completions. The reasoning is in message.reasoning and
+# delta.reasoning. reasoning_effort levels are per model; a level that a model does not list
+# moves to the nearest listed level, and none turns reasoning off. Prompt prefixes are cached
+# automatically, with no cache-write fee. The same key and model IDs also work on Responses and
+# on Anthropic Messages at https://api.eu.munito.ai/inference.
+# https://docs.munito.ai/reasoning, https://docs.munito.ai/prompt-caching (accessed 2026-10-24)
+name = "Munito AI (EU)"
+env = ["MUNITO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.eu.munito.ai/inference/v1"
+doc = "https://docs.munito.ai/regions"

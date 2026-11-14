@@ -1,0 +1,25 @@
+# Prices: China pricing page https://www.siliconflow.cn/pricing (SKU billing rows, CNY per 1M tokens, accessed 2026-10-31),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.669566, 2026-10-31,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 8, output 28, cache read 2
+# Catalog (same page, model row, 2026-10-31): contextLen 1048576, functionCallSupport, jsonModeSupport.
+# Effort: reasoning_effort = low|high|max, the lab's levels (providers/zhipuai) and the siliconflow GLM-5.3 peer.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.19947835
+cache = { read = 0.29986959 }
+
+[cost.text.output]
+price = 4.19817421

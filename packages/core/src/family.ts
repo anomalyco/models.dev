@@ -19,6 +19,7 @@ export const ModelFamilyValues = [
   "gpt-astra",
   "gpt-oss",
   "gpt-image",
+  "gpt-live",
 
   // OpenAI o-series (reasoning models)
   "o",

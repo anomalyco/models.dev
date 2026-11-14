@@ -1,14 +1,16 @@
+# Input limit: dropped, the base model's 991,808 is larger than this host's 991,000 context and the host documents none.
 # Toggle: enable_thinking = true|false
 # Budget: thinking_budget = integer reasoning tokens
 # Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
 # Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
 base_model = "alibaba/qwen3.7-flash"
+base_model_omit = ["limit.input"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { max = 262_144 } }
 structured_output = true
-cache = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 991_000

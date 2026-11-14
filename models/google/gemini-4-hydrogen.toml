@@ -1,0 +1,125 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-4-hydrogen
+# - https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-hydrogen (knowledge cutoff March 2026)
+# Benchmarks: Google's launch table (an image) in the blog post, high thinking default.
+# Input, thinking, and output share one 1,048,576-token window. A single
+# request returns at most 65,536 output tokens; longer outputs (up to 1M) need
+# long decode.
+schema = 2
+name = "Gemini 4 Hydrogen"
+description = "Google's Gemini 4 model for everyday coding and agentic workflows, with four thinking levels and a 1M-token context window"
+family = "gemini"
+open_weights = false
+knowledge = "2026-03"
+release_date = "2026-11-12"
+
+[modalities]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+  "audio/wav",
+  "audio/mp3",
+  "audio/aiff",
+  "audio/aac",
+  "audio/ogg",
+  "audio/flac",
+  "audio/mpeg",
+  "audio/m4a",
+  "audio/l16",
+  "audio/opus",
+  "audio/alaw",
+  "audio/mulaw",
+  "audio/webm",
+  "application/pdf",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[[benchmarks]]
+name = "SWE-sweep"
+score = 13.5
+metric = "%"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 57.0
+metric = "cheating-adjusted"
+version = "4.1"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 71.6
+metric = "score"
+version = "1.1"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+
+[[benchmarks]]
+name = "AutomationBench-AA"
+score = 76.1
+metric = "%"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+
+[[benchmarks]]
+name = "Vending-Bench"
+score = 14549
+metric = "bank balance (USD)"
+version = "2"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 77.6
+metric = "offline subset"
+version = "2.1"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+
+[[benchmarks]]
+name = "MKA"
+score = 53.4
+metric = "Climb WSR accuracy"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+
+[[benchmarks]]
+name = "Chartography"
+score = 66.6
+metric = "%"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+
+[[benchmarks]]
+name = "Terminal-Bench-Science"
+score = 51.4
+metric = "%"
+version = "0.1"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+
+[[benchmarks]]
+name = "HLE-Diamond"
+score = 58.8
+metric = "%"
+source = "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"

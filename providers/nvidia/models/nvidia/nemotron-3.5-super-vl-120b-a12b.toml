@@ -7,7 +7,7 @@ base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 system_updates = true
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

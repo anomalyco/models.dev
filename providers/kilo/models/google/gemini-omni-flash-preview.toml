@@ -1,0 +1,22 @@
+schema = 2
+base_model = "google/gemini-omni-flash-preview"
+name = "Google: Gemini Omni Flash Preview"
+description = "Gemini Omni Flash (Preview) is a multimodal model designed for video, image, and text tasks. It is optimized for video generation, offering video output alongside text responses in a single model."
+
+[modalities]
+input = ["text", "image", "application/pdf", "video"]
+output = ["text", "video"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 9

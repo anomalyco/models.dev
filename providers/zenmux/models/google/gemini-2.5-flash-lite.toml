@@ -10,7 +10,7 @@ description = "Low-latency Gemini model for high-volume multimodal and agent wor
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 512, max = 24_576 } }
-cache = { supported = true, implicit = true, explicit = true }
+cache = { implicit = true, explicit = true }
 
 [limit]
 context = 1_048_000

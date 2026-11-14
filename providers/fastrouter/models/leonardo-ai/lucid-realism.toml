@@ -3,7 +3,9 @@
 # Limits: context is the catalog's context_length (4096; max_completion_tokens 4096).
 # Input: text only per GET https://go.fastrouter.ai/api/v1/models (2026-10-21).
 # API: POST /api/v1/images/generations, async taskId (https://docs.fastrouter.ai/api-reference/image/image-generation.md).
+# Type: image generation only (same API page), so it is not a chat model.
 schema = 2
+type = "image"
 name = "Lucid Realism"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "lucid"

@@ -1,0 +1,22 @@
+schema = 2
+base_model = "google/gemini-decision-1"
+type = "decision"
+description = "Decision model for typed evaluation of shared state"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
+compatibility = { media_input = "state" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0
+
+[cost.web_search]
+price = 14
