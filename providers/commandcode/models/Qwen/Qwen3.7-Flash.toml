@@ -1,0 +1,57 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Deal pricing (https://commandcode.ai/docs/resources/pricing-limits, accessed 2026-10-21).
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning and reasoning_details
+#   (array), unlike the reasoning_content side channel of Qwen3.6-Plus/3.7-Plus on this gateway.
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
+#   max is accepted here (unlike Qwen3.6-Plus/3.7-Max/3.7-Plus, whose upstreams reject it).
+#   Repeated trials (n=5, easy prompt): reasoning tokens low {374-1024} / high {354-4291} /
+#   xhigh {349-651} / max {381-1595}; ranges overlap and do not establish a consistent level effect.
+#   Paired test (10 fixed prompts, low vs xhigh on the same prompt, 9 valid pairs): mean Δ +299
+#   reasoning tokens (8 higher, 1 lower), sign p = 0.039; this is weak evidence, not a repeatable
+#   control effect. CommandCode accepted reasoning_effort=medium and max, but the toggle/budget probes
+#   showed no usable effect and no peer publishes max, so no reasoning controls are listed.
+# Response field: reasoning_details (array). OpenCode replay has not been verified for
+#   this field; replay_reasoning=false keeps it out of the generated interleaved metadata.
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+# Context price bands (host pricing table, accessed 2026-10-21): <= 32K 0.03/0.13/0.006/0.038,
+#   <= 256K 0.10/0.40/0.02/0.125, > 256K 0.20/0.80/0.04/0.25 (input/output/cache read/cache write).
+# Separate controls (CommandCode chat API, 2026-10-22): enable_thinking=false returned 125/315/456
+# reasoning tokens across three short prompts; true returned 110/194/563. thinking_budget=64
+# returned 126/241/577 tokens; 1024 returned 124/380/350. Neither field showed a usable effect.
+schema = 2
+base_model = "alibaba/qwen3.7-flash"
+base_model_omit = ["limit.input"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.chat-completions]
+compatibility = { replay_reasoning = false }
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.006, write = 0.038 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.1
+cache = { read = 0.02, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.2
+cache = { read = 0.04, write = 0.25 }
+
+[cost.text.output]
+price = 0.13
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.8

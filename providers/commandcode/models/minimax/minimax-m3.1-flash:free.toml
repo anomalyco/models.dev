@@ -1,0 +1,34 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Free tier: https://commandcode.ai/docs/resources/pricing-limits#minimax-m3-1-flash-free
+#   ("free for a limited time, with no daily request limit"), accessed 2026-10-21. The deal card
+#   publishes "low, medium, high, xhigh, and max reasoning effort".
+# Live /chat/completions (2026-10-21): servable and identical in behaviour to minimax-m3.1-flash;
+#   reasoning returned in reasoning_content.
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option;
+#   low/medium/high/xhigh/max all accepted (HTTP 200).
+#   Repeated trials (n=3-5): reasoning tokens low {26-61} / medium {43-84} / high {35-57} /
+#   xhigh {17-55} / max {53-89}; max is the distinct top band, the documented ladder is listed
+#   as published.
+# Interleaved: reasoning_content, verified with an opencode tool round-trip 2026-10-21
+#   (read main.go, follow-up turn, no schema error).
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+# Lab prefix note: the catalog id is lowercase minimax/ (the existing entries use MiniMaxAI/);
+# both map to the canonical minimax/MiniMax-* lab model.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

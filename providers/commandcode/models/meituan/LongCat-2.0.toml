@@ -1,0 +1,34 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning_content.
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
+#   thinking.type=disabled, reasoning.enabled=false, chat_template_kwargs.enable_thinking=false
+#   -> HTTP 200, reasoning still returned.
+#   Repeated trials (n=3-5): reasoning tokens low {148-246} / medium {120-231} / high {155-252} -
+#   ranges overlap at every level; no level or switch changes the reasoning output.
+#   Paired test (10 fixed prompts, low vs high on the same prompt): mean Δ -308 reasoning tokens
+#   (2 higher, 8 lower; one prompt contributes -2758 of that mean), sign p = 0.11; no level effect.
+# Interleaved: reasoning_content, verified with an opencode tool round-trip 2026-10-21
+#   (read main.go, follow-up turn, no schema error).
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+# limit.context: host catalog publishes 1048576 (base is 1000000); output not published, inherited.
+schema = 2
+base_model = "meituan/longcat-2.0"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

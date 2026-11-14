@@ -1,0 +1,32 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Free tier + effort ladder: https://commandcode.ai/docs/resources/pricing-limits#beam-free
+#   ("Beam 1.0 is Reflection AI's reasoning model ... with a 1M token context and low, medium,
+#   high, xhigh, and max reasoning effort"), accessed 2026-10-21.
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning and reasoning_details (array).
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option;
+#   low/medium/high/xhigh/max all accepted (HTTP 200).
+#   Repeated trials (n=3-5): reasoning tokens low {55-129} / medium {86-250} / high {76-218} /
+#   xhigh {61-188} / max {196-206}; only max separates from low and xhigh - the low, medium, high
+#   and xhigh ranges overlap pairwise, so the trials show max differs and nothing more; the
+#   documented ladder is listed as published.
+# Response field: reasoning_details (array). OpenCode replay has not been verified for
+#   this field; replay_reasoning=false keeps it out of the generated interleaved metadata.
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+schema = 2
+base_model = "reflection/beam-1.0-501b-a23b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+compatibility = { replay_reasoning = false }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

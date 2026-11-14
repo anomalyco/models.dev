@@ -1,0 +1,36 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning_content.
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
+#   max -> HTTP 400 ('reasoning_effort' must be one of: none, minimal, low, medium, high, xhigh).
+#   Repeated trials (n=3-5, easy and hard prompts): reasoning tokens low {130-299} / high {137-775} /
+#   medium {133-397} / xhigh {99-990} - ranges overlap at every level (an early n=3 sample showed
+#   low {193-240} vs high {676-775} but that separation did not reproduce); no level changes the
+#   reasoning output.
+#   Paired test (10 fixed prompts, low vs xhigh on the same prompt; one pair reached the 8000-token
+#   cap on both sides): mean Δ -42 reasoning tokens (4 higher, 6 lower), sign p = 0.75; no level effect.
+# CommandCode accepts low|medium|high|xhigh; max is rejected. Tests found no repeatable effort
+#   effect, and enable_thinking=false did not turn reasoning off, so no control is listed.
+# Interleaved: reasoning_content, verified with an opencode tool round-trip 2026-10-21
+#   (read main.go, follow-up turn, no schema error).
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+# Separate control probe (CommandCode chat API, 2026-10-22): enable_thinking=false returned
+# 109/229/264 reasoning tokens across three short prompts; true returned 154/223/316. The field
+# did not disable reasoning on this host.
+schema = 2
+base_model = "alibaba/qwen3.7-max"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.5, write = 3.13 }
+
+[cost.text.output]
+price = 7.5

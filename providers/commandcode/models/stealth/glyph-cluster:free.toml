@@ -1,0 +1,47 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model docs: https://commandcode.ai/models/glyph-cluster-free and
+# https://commandcode.ai/docs/resources/pricing-limits#glyph-cluster-free (accessed 2026-10-21):
+#   "stealth reasoning model in early access", 256K context, released 2026-10-07, $0.00 input /
+#   output / cache read while the stealth preview lasts (100 requests a day per account).
+#   The deal card publishes "low, medium, high, and xhigh reasoning effort"; the maker stays
+#   anonymous for the preview, so there is no lab model to base_model (same treatment as the
+#   vercel and kilo stealth/glyph-cluster entries).
+# Live /chat/completions (2026-10-21): plain and streaming HTTP 200.
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option;
+#   low/medium/high/xhigh/max all accepted (HTTP 200). max is accepted but not documented, so it
+#   is not listed.
+#   Reasoning is returned as encrypted reasoning_details blobs (data/format objects, no text), so
+#   only usage reasoning tokens can be compared: mostly a ~12-token floor with occasional deep
+#   runs (high {12-2043}, low {12-253}, medium {1-12}, xhigh {12-15}); high produced the deepest
+#   runs in the trials.
+# Response field: reasoning_details (array). OpenCode replay has not been verified for
+#   this field; replay_reasoning=false keeps it out of the generated interleaved metadata.
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# limit.output: not published; capped at the host context window, as the vercel/kilo entries.
+schema = 2
+name = "Glyph Cluster"
+description = "Stealth reasoning model in early access for coding, analysis and tool use; its maker stays anonymous for the preview"
+open_weights = false
+release_date = "2026-10-07"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[limit]
+context = 256_000
+output = 256_000
+
+[api.chat-completions]
+compatibility = { replay_reasoning = false }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

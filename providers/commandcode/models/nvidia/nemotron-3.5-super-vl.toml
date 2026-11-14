@@ -1,0 +1,38 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Base model note: the catalog id drops the size suffix; the only canonical Nemotron 3.5 Super VL
+#   is nvidia/nemotron-3.5-super-vl-120b-a12b (https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16).
+# Toggle: omit reasoning_effort for off; set reasoning_effort = low (or any level) for on.
+#   Live /chat/completions (2026-10-21): omitted or thinking.type=disabled / reasoning.enabled=false /
+#   chat_template_kwargs.enable_thinking=false -> HTTP 200, 0 reasoning tokens, no reasoning fields.
+#   reasoning_effort = low/medium/high/xhigh/max -> HTTP 200 with reasoning in reasoning and
+#   reasoning_details (reasoning tokens 143-291). off -> HTTP 400 unsupported_value; none -> HTTP 400
+#   invalid option. Repeated trials (n=3): level ranges overlap (low {163-291} / medium {175-201} /
+#   high {143-218} / xhigh {161-230} / max {190-225}) - presence of effort is the only control, so a
+#   bare toggle, same as the nemotron-3-ultra sibling.
+# Response field: reasoning_details (array). OpenCode replay has not been verified for
+#   this field; replay_reasoning=false keeps it out of the generated interleaved metadata.
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+# Vision live 2026-10-21: image input works (solid red PNG -> "Red"); modalities inherited from
+#   base_model (text, image/jpeg, image/png, video/mp4).
+# limit.context: host catalog publishes 262144 (base is 1048576); output not published, inherited.
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 262_144
+
+[api.chat-completions]
+compatibility = { replay_reasoning = false }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.5

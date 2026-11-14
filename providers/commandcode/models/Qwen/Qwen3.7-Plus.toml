@@ -1,0 +1,46 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning_content.
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
+#   max -> HTTP 400 ('reasoning_effort' must be one of: none, minimal, low, medium, high, xhigh).
+#   Repeated trials (n=3-5, easy and hard prompts): reasoning tokens low {124-234} / high {128-244} /
+#   medium {128-128} / xhigh {126-130} - ranges overlap at every level (an easy prompt clamps the
+#   reasoning at ~128 tokens); no level changes the reasoning output.
+#   Paired test (10 fixed prompts, low vs xhigh on the same prompt): mean Δ -4 reasoning tokens
+#   (4 prompts higher, 5 lower), sign p = 1.0; the paired comparison finds no level effect.
+# Interleaved: reasoning_content, verified with an opencode tool round-trip 2026-10-21
+#   (read main.go, follow-up turn, no schema error).
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+# Context price bands (host pricing table, accessed 2026-10-21): <= 256K 0.40/1.60/0.08/0.50,
+#   > 256K 1.20/4.80/0.24/1.50 (input/output/cache read/cache write).
+# Separate control probe (CommandCode chat API, 2026-10-22): enable_thinking=false returned
+# 155/149/240 reasoning tokens across three short prompts; true returned 141/200/302. The field
+# did not disable reasoning on this host.
+# CommandCode accepts low|medium|high|xhigh; max is rejected. Tests found no repeatable effort
+#   effect, and enable_thinking=false did not turn reasoning off, so no control is listed.
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.08, write = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 1.2
+cache = { read = 0.24, write = 1.5 }
+
+[cost.text.output]
+price = 1.6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 4.8

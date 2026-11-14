@@ -1,0 +1,40 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-21)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Id change evidence (live 2026-10-21): inclusionai/ling-3.1-flash:free -> HTTP 403 FORBIDDEN
+#   "The free Ling 3.1 Flash tier has been retired. Ling 3.1 Flash is now a paid model - run /model
+#   and pick Ling 3.1 Flash (inclusionai/ling-3.1-flash) to keep going."; the live catalog lists
+#   only inclusionai/ling-3.1-flash, which serves (HTTP 200). The file is renamed accordingly and
+#   the cost switches from the free tier to the published rates
+#   (https://commandcode.ai/models, accessed 2026-10-21).
+# Live /chat/completions (2026-10-21): reasoning returned in reasoning_content.
+#   reasoning_effort = off -> HTTP 400 unsupported_value; none -> HTTP 400 invalid option.
+#   Repeated trials (n=3-5, easy and hard prompts): reasoning lengths low {132-692} /
+#   medium {111-1119} / high {152-1708} / xhigh {149-713} / max {169-320}; low is separated from
+#   high and xhigh on hard prompts. reasoning_effort = low/medium/high stay as previously recorded
+#   (max and xhigh are also accepted here).
+# Paired follow-up (2026-10-22; 10 fixed prompts, high vs xhigh/max): xhigh - high mean Δ +125
+#   completion tokens (4 higher, 6 lower; two-sided sign p = 0.753906); max - high mean Δ +154.4
+#   completion tokens (7 higher, 3 lower; p = 0.34375). The API returns reasoning_content but no
+#   separate reasoning-token count, so these comparisons use total completion_tokens as a proxy.
+#   They do not establish an incremental effect over high. No peer lists xhigh or max: Vercel and
+#   Nano-GPT list none/low/medium/high, Kilo lists none/high, and OpenRouter/Novita expose a toggle.
+# Interleaved: reasoning_content, verified with an opencode tool round-trip 2026-10-21
+#   (read main.go, follow-up turn, no schema error).
+# Tool call live 2026-10-21: HTTP 200, finish_reason=tool_calls, arguments parse as JSON.
+# Streaming live 2026-10-21: stream completes with data: [DONE].
+schema = 2
+base_model = "inclusionai/ling-3.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.9
