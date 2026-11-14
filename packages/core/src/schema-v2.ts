@@ -22,6 +22,9 @@ export const ModelTypeV2Values = [
   "extraction",
   // Non-speech audio generation (music, sound effects); text-to-speech is `speech`.
   "audio",
+  // Guardrail models that classify content as safe or unsafe (Llama Guard,
+  // Prompt Guard, gpt-oss-safeguard, moderation endpoints).
+  "moderation",
 ] as const;
 
 export const ModelTypeV2 = z.enum(ModelTypeV2Values);

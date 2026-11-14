@@ -79,15 +79,15 @@ export function providerTomlToV1(toml: Record<string, unknown>): Record<string, 
 
 // v1's `type` enum can't grow, so a type it doesn't know is v2-only: the model
 // must set `v2_only = true`, and v1 leaves the type out. `audio` (music, sound
-// effects) is the exception: those models were in v1 untyped before the type
-// existed, so v1 keeps publishing them untyped.
+// effects) and `moderation` (guardrails) are the exceptions: those models were
+// in v1 untyped before the type existed, so v1 keeps publishing them untyped.
 export function v1ModelType(
   type: string | undefined,
   v2Only: boolean | undefined,
   cause: Record<string, unknown> = {},
 ) {
   if (type === undefined || (MODEL_TYPES as readonly string[]).includes(type)) return type;
-  if (type === "audio") return undefined;
+  if (type === "audio" || type === "moderation") return undefined;
   if (v2Only !== true) {
     throw new Error(`Model type "${type}" isn't a v1 type, so the model must set \`v2_only = true\` (see AGENTS.md)`, {
       cause,
