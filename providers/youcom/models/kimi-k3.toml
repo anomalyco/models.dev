@@ -1,0 +1,18 @@
+# Context and prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
+# Effort: reasoning_effort = none|low|high|max
+# Moonshot's levels (low/high/max); none disables thinking (0 reasoning tokens). Tested live 2026-10-22.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 2.85
+cache = { read = 0.285 }
+
+[cost.text.output]
+price = 14.25
