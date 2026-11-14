@@ -1,0 +1,9 @@
+# Channel rates: https://pingcode.ai/en/pricing — PingCode prices in CNY with per-channel
+# multipliers (official 0.6x, discount 0.85x, Codex discount 0.7x), so USD cost is intentionally omitted.
+# Served through the Codex channel via the Responses API.
+schema = 2
+base_model = "openai/gpt-5.6-sol"
+
+[api.responses]
+base_url = "https://api.pingcode.ai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
