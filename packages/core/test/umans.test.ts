@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 
 import type { ExistingModel } from "../src/sync/index.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
   buildUmansModel,
   fetchUmansModels,
@@ -14,8 +15,8 @@ import {
   umansLimit,
 } from "../src/sync/providers/umans.js";
 
-function context(entries: Record<string, ExistingModel>, authored: Record<string, ExistingModel> = entries) {
-  return { existing: (id: string) => entries[id], authored: (id: string) => authored[id] };
+function context(authored: Record<string, ExistingModel>) {
+  return { existing: (id: string) => authored[id], authored: (id: string) => authored[id] };
 }
 
 // A trimmed mirror of one `GET /v1/models/info` card.
@@ -36,6 +37,11 @@ function card(overrides: Partial<UmansCard> = {}): UmansCard {
   };
 }
 
+function withReasoning(reasoning: UmansCard["capabilities"]["reasoning"]): UmansCard {
+  const base = card();
+  return { ...base, capabilities: { ...base.capabilities, reasoning } };
+}
+
 function source(info: Record<string, UmansCard>, past: Record<string, unknown> = {}) {
   return parseUmansModels({ info, past });
 }
@@ -48,6 +54,18 @@ const lineup = {
     pricing: { input: 0.15, output: 0.6, cache_read: 0.028, cache_write: 0 },
   }),
 };
+
+// The hand-authored umans-coder file before it moved off GLM-5.3-Flash.
+const coderOnGLM = {
+  base_model: "zhipuai/glm-5.3-flash",
+  reasoning_options: [{ type: "effort", values: ["low", "high", "max"] }],
+  cost: { input: 0.15, output: 0.5, cache_read: 0.03 },
+  limit: { output: 131_071 },
+} as unknown as ExistingModel;
+
+function listed(id: keyof typeof lineup | string, info: Record<string, UmansCard> = lineup) {
+  return source(info).find((model) => model.id === id)!;
+}
 
 test("maps a served checkpoint's Hugging Face repo to its lab entry", () => {
   expect(labModelID("https://huggingface.co/moonshotai/Kimi-K3.1-Pro")).toBe("moonshotai/kimi-k3.1-pro");
@@ -90,9 +108,34 @@ test("turns the card's levels into a toggle and efforts, none being the toggle",
 });
 
 test("gives an always-thinking model efforts without a toggle", () => {
-  const glm = card();
-  glm.capabilities.reasoning = { supported: true, can_disable: false, levels: ["low", "high", "max"] };
-  expect(reasoningOptions(glm)).toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
+  expect(reasoningOptions(withReasoning({ supported: true, can_disable: false, levels: ["low", "high", "max"] })))
+    .toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
+});
+
+test("sorts efforts low to high so a reordered card never rewrites files", () => {
+  expect(reasoningOptions(withReasoning({ supported: true, can_disable: true, levels: ["max", "none", "low", "high"] })))
+    .toEqual([{ type: "toggle" }, { type: "effort", values: ["low", "high", "max"] }]);
+});
+
+test("writes no caller control only when the card publishes an empty list", () => {
+  expect(reasoningOptions(withReasoning({ supported: true, can_disable: false, levels: [] }))).toEqual([]);
+});
+
+test("reads an omitted or unknown level list as unknown, not as no control", () => {
+  expect(reasoningOptions(withReasoning({ supported: true, can_disable: true }))).toBeUndefined();
+  expect(reasoningOptions(withReasoning({ supported: true, can_disable: true, levels: ["low", "turbo"] })))
+    .toBeUndefined();
+});
+
+test("keeps the authored controls when the card omits its levels", () => {
+  const coder = { ...lineup["umans-coder"], capabilities: { ...lineup["umans-coder"].capabilities, reasoning: { supported: true } } };
+  const model = buildUmansModel("umans-coder", coder, false, coderOnGLM) as Record<string, unknown>;
+  expect(model.reasoning_options).toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
+});
+
+test("routes a new reasoner without published levels to the missing-model flow", () => {
+  const unknown = withReasoning({ supported: true, can_disable: true });
+  expect(() => buildUmansModel("umans-kimi-k3.1-pro", unknown, false, undefined)).toThrow(MissingReasoningOptionsError);
 });
 
 test("refuses a truncated listing rather than retiring the lineup", () => {
@@ -105,59 +148,60 @@ test("fails the run rather than syncing from a degraded response", async () => {
 });
 
 test("skips a seat-gated lab most users cannot call", () => {
-  const [lab] = source({ ...lineup, "umans-kimi-k3.1-pro-lab": card({ stage: "playground" }) })
-    .filter((model) => model.id === "umans-kimi-k3.1-pro-lab");
-  expect(umansAI.translateModel(lab!, context({}))).toBeUndefined();
-  expect(umansAI.sourceID(lab!)).toBeUndefined();
+  const lab = listed("umans-kimi-k3.1-pro-lab", { ...lineup, "umans-kimi-k3.1-pro-lab": card({ stage: "playground" }) });
+  expect(umansAI.translateModel(lab, context({}))).toBeUndefined();
+  expect(umansAI.sourceID(lab)).toBeUndefined();
 });
 
 test("creates a new model as an overlay on its lab with the API's facts", () => {
-  const [kimi] = source(lineup).filter((model) => model.id === "umans-kimi-k3.1-pro");
-  const translated = umansAI.translateModel(kimi!, context({}));
-  expect(translated).toBeDefined();
+  const translated = umansAI.translateModel(listed("umans-kimi-k3.1-pro"), context({}));
   const model = (translated as { model: Record<string, unknown> }).model;
   expect(model.base_model).toBe("moonshotai/kimi-k3.1-pro");
   expect(model.cost).toEqual({ input: 2, output: 10, cache_read: 0.2 });
   expect(model.reasoning_options).toEqual([{ type: "toggle" }, { type: "effort", values: ["low", "high", "max"] }]);
-  // Only the narrowed input stays: text output is what the lab already says.
-  expect(model.modalities).toEqual({ input: ["text", "image"] });
+  // Vision keeps the lab's documented inputs, and nothing unsourced is asserted.
+  expect(model.modalities).toBeUndefined();
+  expect(model.structured_output).toBeUndefined();
   expect((translated as { header?: string }).header).toContain("# Toggle: thinking.type = enabled|disabled");
 });
 
+test("narrows a new model to text input only when the card says no vision", () => {
+  const textOnly = card({ capabilities: { ...card().capabilities, supports_vision: false } });
+  const model = buildUmansModel("umans-kimi-k3.1-pro", textOnly, false, undefined) as Record<string, unknown>;
+  expect(model.modalities).toEqual({ input: ["text"] });
+  const indirect = card({ capabilities: { ...card().capabilities, supports_vision: "via-handoff" } });
+  expect((buildUmansModel("umans-kimi-k3.1-pro", indirect, false, undefined) as Record<string, unknown>).modalities)
+    .toBeUndefined();
+});
+
 test("creates the same model at zero cost on the coding plan", () => {
-  const [kimi] = source(lineup).filter((model) => model.id === "umans-kimi-k3.1-pro");
-  const model = (umansAICodingPlan.translateModel(kimi!, context({})) as { model: Record<string, unknown> }).model;
+  const model = (umansAICodingPlan.translateModel(listed("umans-kimi-k3.1-pro"), context({})) as {
+    model: Record<string, unknown>;
+  }).model;
   expect(model.cost).toEqual({ input: 0, output: 0, cache_read: 0, cache_write: 0 });
 });
 
-test("moves an alias to the weights it now serves without carrying the old base's metadata", () => {
-  const coder = lineup["umans-coder"];
-  // The resolved view of the file still carries what the old base supplied.
-  const resolved = {
-    base_model: "zhipuai/glm-5.3-flash",
-    name: "GLM 5.3 Flash",
-    description: "Native multimodal GLM model for efficient coding and long-horizon agent tasks",
-    family: "glm-flash",
-    release_date: "2026-08-26",
-    reasoning: true,
-    reasoning_options: [{ type: "effort", values: ["low", "high", "max"] }],
-    tool_call: true,
-    cost: { input: 0.15, output: 0.5, cache_read: 0.03 },
-    limit: { context: 1_048_576, output: 131_071 },
-  } as unknown as ExistingModel;
-  // The file itself only points at the base and sets provider fields.
-  const authored = {
-    base_model: "zhipuai/glm-5.3-flash",
-    reasoning_options: [{ type: "effort", values: ["low", "high", "max"] }],
-    cost: { input: 0.15, output: 0.5, cache_read: 0.03 },
-    limit: { output: 131_071 },
-  } as unknown as ExistingModel;
-  const model = buildUmansModel(coder, false, resolved, authored) as Record<string, unknown>;
+test("moves an alias to the weights it now serves, factored from its own fields", () => {
+  const model = buildUmansModel("umans-coder", lineup["umans-coder"], false, coderOnGLM) as Record<string, unknown>;
   expect(model.base_model).toBe("deepseek/deepseek-v4.1-flash-1017");
   expect(model.description).toBeUndefined();
   expect(model.family).toBeUndefined();
   expect(model.release_date).toBeUndefined();
   expect(model.cost).toEqual({ input: 0.15, output: 0.6, cache_read: 0.028 });
+});
+
+test("keeps the authored price when the card publishes none", () => {
+  const unpriced = { ...lineup["umans-coder"], pricing: undefined };
+  const model = buildUmansModel("umans-coder", unpriced, false, coderOnGLM) as Record<string, unknown>;
+  expect(model.cost).toEqual({ input: 0.15, output: 0.5, cache_read: 0.03 });
+});
+
+test("keeps a curated status unless the card announces a retirement", () => {
+  const beta = { ...coderOnGLM, status: "beta" } as unknown as ExistingModel;
+  expect((buildUmansModel("umans-coder", lineup["umans-coder"], false, beta) as Record<string, unknown>).status)
+    .toBe("beta");
+  const retiring = { ...lineup["umans-coder"], deprecation: { sunset_date: "2026-12-01", replacement: "umans-flash" } };
+  expect((buildUmansModel("umans-coder", retiring, false, beta) as Record<string, unknown>).status).toBe("deprecated");
 });
 
 test("marks a retired id deprecated and leaves the rest of its file as authored", () => {

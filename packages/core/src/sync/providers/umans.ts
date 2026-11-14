@@ -4,6 +4,7 @@ import path from "node:path";
 import { z } from "zod";
 
 import type { ExistingModel, SyncedFullModel, SyncedModel, SyncProvider } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel } from "./openrouter.js";
 
 const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
@@ -31,6 +32,11 @@ const LAB_NAMESPACE: Record<string, string> = {
 // Precision suffixes on a served checkpoint's repo name that the lab id omits.
 const PRECISION_SUFFIX = /-(fp8|nvfp4|mxfp4|int4|int8|awq|gptq)$/;
 
+// Effort values the catalog schema knows, low to high. `none` is how the API
+// turns thinking off (the toggle), not an effort.
+const EFFORT_ORDER = ["minimal", "low", "medium", "high", "xhigh", "max"] as const;
+type Effort = (typeof EFFORT_ORDER)[number];
+
 const UmansReasoning = z.object({
   supported: z.boolean(),
   can_disable: z.boolean().optional(),
@@ -48,6 +54,8 @@ export const UmansCard = z.object({
     context_window: z.number().int().positive(),
     max_completion_tokens: z.number().int().positive(),
     recommended_max_tokens: z.number().int().positive().optional(),
+    // Older cards used a string ("via-handoff") for indirect vision: only an
+    // explicit boolean is treated as a statement about image input.
     supports_vision: z.union([z.boolean(), z.string()]).optional(),
     supports_tools: z.boolean().optional(),
     reasoning: UmansReasoning.optional(),
@@ -127,15 +135,23 @@ function labExists(modelID: string | undefined): modelID is string {
   return modelID !== undefined && existsSync(path.join(MODELS_DIR, `${modelID}.toml`));
 }
 
-// Effort values are the card's levels without `none`, which is how the API
-// turns thinking off (the toggle), not an effort.
+function isEffort(level: string): level is Effort {
+  return (EFFORT_ORDER as readonly string[]).includes(level);
+}
+
+// The controls the card publishes, or undefined when it publishes none (no
+// `levels` list) or a level the schema doesn't know: absence is not "no caller
+// control", so the caller keeps the authored controls. An explicit empty list
+// with no toggle is written as `[]`.
 export function reasoningOptions(card: UmansCard): SyncedFullModel["reasoning_options"] {
   const reasoning = card.capabilities.reasoning;
-  if (reasoning?.supported !== true) return undefined;
-  const effort = (reasoning.levels ?? []).filter((level) => level !== "none");
+  if (reasoning?.supported !== true || reasoning.levels === undefined) return undefined;
+  const efforts = reasoning.levels.filter((level) => level !== "none");
+  if (!efforts.every(isEffort)) return undefined;
+  const sorted = [...new Set(efforts)].sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
   return [
     ...(reasoning.can_disable === true ? [{ type: "toggle" as const }] : []),
-    ...(effort.length > 0 ? [{ type: "effort" as const, values: effort as never[] }] : []),
+    ...(sorted.length > 0 ? [{ type: "effort" as const, values: sorted }] : []),
   ];
 }
 
@@ -160,17 +176,20 @@ export function umansLimit(card: UmansCard): SyncedFullModel["limit"] {
   return { context, output: Math.min(recommended ?? cap - 1, cap - 1) };
 }
 
-// The fields this API is authoritative for. Everything else in an existing file
-// (name, modalities, API compatibility, comments) stays hand-authored.
-function ownedFields(card: UmansCard, plan: boolean, existing: ExistingModel | undefined) {
+// Only what the card states. A field it leaves out is not written, so the
+// file's own authored value (never the base-resolved one) stays.
+function ownedFields(card: UmansCard, plan: boolean) {
+  const { reasoning, supports_tools: tools } = card.capabilities;
   const options = reasoningOptions(card);
+  const cost = umansCost(card, plan);
   return {
-    reasoning: card.capabilities.reasoning?.supported === true,
-    reasoning_options: options,
-    tool_call: card.capabilities.supports_tools ?? existing?.tool_call ?? true,
-    cost: umansCost(card, plan) ?? existing?.cost,
+    ...(reasoning === undefined ? {} : { reasoning: reasoning.supported }),
+    ...(options === undefined ? {} : { reasoning_options: options }),
+    ...(tools === undefined ? {} : { tool_call: tools }),
+    ...(cost === undefined ? {} : { cost }),
     limit: umansLimit(card),
-    status: card.deprecation === undefined ? undefined : ("deprecated" as const),
+    // A curated status survives a card that announces no retirement.
+    ...(card.deprecation === undefined ? {} : { status: "deprecated" as const }),
   };
 }
 
@@ -186,20 +205,32 @@ export function header(card: UmansCard): string {
   ].map((line) => `# ${line}`).join("\n");
 }
 
+function missingControls(id: string, card: UmansCard) {
+  return new MissingReasoningOptionsError(
+    id,
+    "reasoning model whose /v1/models/info card publishes no schema-valid levels"
+      + ` (${JSON.stringify(card.capabilities.reasoning?.levels ?? null)}); author its reasoning_options by hand`,
+  );
+}
+
 export function buildUmansModel(
+  id: string,
   card: UmansCard,
   plan: boolean,
-  existing: ExistingModel | undefined,
-  authored: ExistingModel | undefined = existing,
+  authored: ExistingModel | undefined,
 ): SyncedModel | undefined {
   const served = labModelID(card.weights?.hf_url);
-  const owned = ownedFields(card, plan, existing);
+  const owned = ownedFields(card, plan);
+  const reasoner = card.capabilities.reasoning?.supported === true;
 
-  if (existing !== undefined) {
+  if (authored !== undefined) {
     // Start from the file's own fields, not the resolved model: when an alias
     // moves to new weights, values inherited from the old base must not turn
     // into overrides on the new one.
-    const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = authored ?? existing;
+    const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = authored;
+    if (reasoner && owned.reasoning_options === undefined && current.reasoning_options === undefined) {
+      throw missingControls(id, card);
+    }
     const values = { ...current, ...owned, limit: { ...current.limit, ...owned.limit } } as SyncedFullModel;
     // The card names the weights each id serves, so an alias that moves to new
     // weights moves its base_model with it.
@@ -208,16 +239,16 @@ export function buildUmansModel(
     return factorBaseModel(base, values, values.limit, base === baseModel ? baseModelOmit : undefined);
   }
 
-  // A new id needs a lab entry to base it on.
-  if (!labExists(served)) return undefined;
-  const vision = card.capabilities.supports_vision === true;
+  // A new id needs a lab entry to base it on and a price to publish.
+  if (!labExists(served) || owned.cost === undefined) return undefined;
+  if (reasoner && owned.reasoning_options === undefined) throw missingControls(id, card);
   const values = {
     ...owned,
-    // Chat completions return reasoning in `reasoning_content`, and every route
-    // accepts JSON schema output.
-    interleaved: owned.reasoning ? { field: "reasoning_content" as const } : undefined,
-    structured_output: true,
-    modalities: { input: vision ? ["text", "image"] : ["text"], output: ["text"] },
+    // Chat completions return reasoning in `reasoning_content` (the provider
+    // doc linked from providers/umans-ai/provider.toml).
+    ...(reasoner ? { interleaved: { field: "reasoning_content" as const } } : {}),
+    // Vision inherits the lab's documented inputs; only an explicit "no" narrows them.
+    ...(card.capabilities.supports_vision === false ? { modalities: { input: ["text"] } } : {}),
   } as SyncedFullModel;
   return factorBaseModel(served, values, values.limit);
 }
@@ -240,7 +271,7 @@ function umansProvider(id: string, name: string, plan: boolean) {
     skippedNotice(ids) {
       if (ids.length === 0) return [];
       return [
-        `${ids.length} Umans AI models have no lab entry under models/ to base them on: `
+        `${ids.length} Umans AI models have no lab entry under models/ or no published price: `
           + ids.map((modelID) => `\`${modelID}\``).join(", "),
       ];
     },
@@ -257,8 +288,7 @@ function umansProvider(id: string, name: string, plan: boolean) {
         if (authored === undefined) return undefined;
         return { id: model.id, model: { ...authored, status: "deprecated" } as SyncedModel };
       }
-      const existing = context.existing(model.id);
-      const built = buildUmansModel(model.card, plan, existing, context.authored(model.id));
+      const built = buildUmansModel(model.id, model.card, plan, context.authored(model.id));
       if (built === undefined) return undefined;
       // An existing header wins; files without one get the wire-path header.
       return { id: model.id, model: built, header: header(model.card) };
