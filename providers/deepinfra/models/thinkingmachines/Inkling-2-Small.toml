@@ -11,9 +11,6 @@ structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
 
-[limit]
-context = 262_144
-
 [cost.text.input]
 price = 0.3
 cache = { read = 0.03 }
