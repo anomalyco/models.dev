@@ -1,0 +1,14 @@
+# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
+# Messages effort: `reasoning_effort = none|minimal|low|medium|high|xhigh|max` (GPT OSS Messages peer baseline).
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.9
+

@@ -1,0 +1,19 @@
+# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
+# Media on this host: verified live with PNG images (2026-11-05); video is not expressible on the Anthropic Messages surface and Anthropic document (PDF) blocks are rejected with HTTP 400 (checked 2026-11-05), so they are omitted.
+# Effort: Messages `output_config.effort = low|high|max`. `thinking.type=disabled` did not suppress thinking in the live probe, so no toggle is advertised.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text","image/jpeg","image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1
+
