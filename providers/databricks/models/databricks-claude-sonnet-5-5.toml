@@ -1,0 +1,38 @@
+# Effort: Messages `output_config.effort` = low|medium|high|xhigh|max. query-reason-models doesn't list this endpoint, so Anthropic's own controls for this model are used (always-on adaptive thinking, no off switch); untested.
+# Models, inputs and lifecycle (accessed 2026-10-28): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Inputs: supported-models lists text only for this endpoint, so image and PDF input are dropped.
+# Reasoning (accessed 2026-10-28): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Pricing (accessed 2026-10-28): DBU rates from https://www.databricks.com/product/pricing/proprietary-foundation-model-serving x USD 0.070/DBU (`prop_model_serving` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json: Anthropic, Google, OpenAI and SpaceXAI on AWS Premium/Enterprise, every region).
+# Standard DBU per 1M input/output/cache-read/5m-write/1h-write tokens: 28.571/142.857/1.429/35.714/57.143.
+# The pricing page marks this model with a 10% DBU uplift when regional processing (data residency) is enabled: the 1.1x multiplier when region is not global.
+# Batch inference is billed per DBU-hour, not per token; not modeled.
+# Cache: `cache_control` on Databricks-hosted Claude (https://docs.databricks.com/aws/en/machine-learning/model-serving/score-foundation-models#prompt-caching); 5m and 1h write prices from the pricing page.
+# structured_output: Anthropic Messages `output_config.format` (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-anthropic-messages); Chat Completions `response_format` returns HTTP 400 for this model.
+# system_updates, effort_updates and tools.updates are undocumented on Databricks and untested (no Databricks key).
+# APIs: Anthropic Messages API at /serving-endpoints/anthropic/v1/messages only (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-anthropic-messages). supported-models describes tool use through the Messages API for this model, and its structured output works only there.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[api.messages]
+base_url = "https://${DATABRICKS_HOST}/serving-endpoints/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "5m" = 2.5, "1h" = 4 } }
+
+[cost.text.output]
+price = 10
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1
