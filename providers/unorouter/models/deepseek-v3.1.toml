@@ -1,0 +1,12 @@
+# Prices: list prices from https://api.unorouter.com/api/pricing (accessed 2026-11-08), before group discounts.
+schema = 2
+base_model = "deepseek/deepseek-v3.1"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.587
+
+[cost.text.output]
+price = 1.721

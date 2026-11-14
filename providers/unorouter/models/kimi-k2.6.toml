@@ -1,3 +1,4 @@
+# Prices: list prices from https://api.unorouter.com/api/pricing (accessed 2026-11-08), before group discounts.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
@@ -5,8 +6,11 @@ base_model = "moonshotai/kimi-k2.6"
 reasoning = { supported = true }
 structured_output = true
 
+[limit]
+output = 235_929
+
 [cost.text.input]
-price = 1.2675
+price = 0.95
 
 [cost.text.output]
-price = 5.3368
+price = 4

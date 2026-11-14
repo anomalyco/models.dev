@@ -1,3 +1,4 @@
+# Prices: list prices from https://api.unorouter.com/api/pricing (accessed 2026-11-08), before group discounts.
 schema = 2
 base_model = "google/gemini-3.5-flash"
 
@@ -6,7 +7,7 @@ reasoning = { supported = true }
 structured_output = true
 
 [cost.text.input]
-price = 0.1857
+price = 1.5
 
 [cost.text.output]
-price = 1.1142
+price = 9
