@@ -1,0 +1,19 @@
+# FX: Hubris bills in RUB. USD/MTok below = public RUB price (https://hubris.pw/models, read 2026-11-11) / Bank of Russia official rate 82.5486 RUB/USD (2026-11-11), rounded to 4 decimals.
+# RUB/MTok: input 1009.89, output 5049.46, cache read 25.25, cache write 1262.36 (5m) / 2019.78 (1h).
+# Reasoning controls: as providers/openrouter/models/anthropic/claude-fable-5.2.toml; Hubris takes the OpenRouter-style reasoning object (https://hubris.pw/docs/features/reasoning).
+# Effort: reasoning.effort (or top-level reasoning_effort) = low|medium|high|xhigh|max; always reasons, no off switch
+# Cache: explicit cache_control markers, ttl "5m" (default) or "1h" (https://hubris.pw/docs/features/prompt-caching).
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 12.2339
+cache = { read = 0.3059, write = { "5m" = 15.2923, "1h" = 24.4678 } }
+
+[cost.text.output]
+price = 61.1695

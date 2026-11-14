@@ -1,0 +1,21 @@
+# Effort: reasoning_effort = low|high|max (default max); thinking.type only accepts enabled
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-zai
+# 0.3000 / 0.0450 / 1.5000 CHF/MTok (input / cache / output), converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# Context: 262,144 tokens — the product page price table lists a 256k window
+# (https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-zai); lab native 1,000,000.
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_zai-org/GLM-5.3-Flash (gateway max_model_len 262144)
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.357
+cache = { read = 0.0536 }
+
+[cost.text.output]
+price = 1.785

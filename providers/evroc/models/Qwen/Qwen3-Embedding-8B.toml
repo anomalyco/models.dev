@@ -8,7 +8,7 @@ context = 40_960
 output = 4_096
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.115

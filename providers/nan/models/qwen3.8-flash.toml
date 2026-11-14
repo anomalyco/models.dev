@@ -1,9 +1,23 @@
-# Source: https://nan.builders/docs/models (accessed 2026-09-11)
-# Included in the membership, so no per-token price.
-# NaN reasoning table (checked 2026-10-21): reasoning_effort values none, minimal, low, medium,
-# high, xhigh, max; https://nan.builders/docs/models#controlling-reasoning
-# Update: on by default, none turns it off, minimal..max steer its depth (hints, not caps).
-# Context is now 1M tokens (1,048,576), max answer 131K.
+# Source: https://nan.builders/docs/models (accessed 2026-11-10)
+# 125B-6B MoE with vision, 1M context (1,048,576 tokens), "Max answer 131K" in
+# NaN's model card. max_tokens bounds only the visible answer;
+# max_completion_tokens caps reasoning plus answer.
+# Pricing: credits per 1M tokens from https://cloud.nan.builders/tokens (behind
+# login, accessed 2026-11-10): 7.50 input / 0.80 cached / 23.50 output. Converted
+# at the 1,000-credit pack list price (26 EUR) x 1.08, the EUR->USD factor the
+# page itself uses: 0.02808 USD per credit. Larger packs and the subscriber
+# discount are cheaper.
+# Cache: the price page lists a Cached input rate for this model, so prompt
+# caching is implicit; NaN documents no cache_control markers. Cached reads are
+# billed at 0.80 credits per 1M.
+# Reasoning: NaN's table says reasoning is on by default, "none turns it off,
+# minimal to max steer its depth (hints, not caps)", so those levels are kept;
+# off is effort=none, so no toggle.
+# Budget: thinking_budget or thinking_token_budget, "an integer from 1 to 32768
+# caps reasoning at that many tokens... 0 turns reasoning off... On NaN, a larger
+# value (or one that is not an integer) is lowered to 32768". Send either a budget
+# or reasoning_effort, not both.
+# https://nan.builders/docs/models#capping-reasoning-with-a-token-budget
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
@@ -12,14 +26,16 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"], budget = { min = 0, max = 32_768 } }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
 
 [cost.text.input]
-price = 0
+price = 0.2106
+cache = { read = 0.022464 }
 
 [cost.text.output]
-price = 0
+price = 0.65988

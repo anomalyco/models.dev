@@ -1,9 +1,14 @@
 # MiMo-V2.6-Pro on Neuralwatt (Xiaomi MOPD build, in public GET /v1/models).
 # Pricing, limits, and reasoning ladder from live GET /v1/models metadata
-# (checked 2026-10-08): $0.87/$1.74/$0.036, 1,048,560 context, 393,216 output.
+# Authenticated check 2026-11-12: $0.435/$0.87/$0.0036 per million.
+# Context: 1,048,560; output: 393,216.
 # Effort: reasoning_effort = none|high (default high, reasoning on by default;
 # aliases max/xhigh/medium/low -> high, minimal -> none) per metadata.reasoning
 # and the model page mapping. Off is effort=none, so no separate toggle.
+# metadata.pricing.cached_input_per_million = 0.0036 USD.
+# cached_input_is_default = false, so the host sets this price itself.
+# Public GET /v1/models rechecked 2026-11-14: same values.
+# Checked public and authenticated GET /v1/models on 2026-11-12.
 # Budget: thinking_token_budget (integer reasoning tokens) accepted on this host.
 # Neuralwatt serves text+image+audio input (capabilities vision + audio_input
 # true; video_url is rejected per chat-completions content-parts docs, so the
@@ -20,6 +25,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"], budget = {} }
+structured_output = true
 
 [limit]
 context = 1_048_560
@@ -29,8 +35,8 @@ output = 393_216
 legacy_interleaved = true
 
 [cost.text.input]
-price = 0.87
-cache = { read = 0.036 }
+price = 0.435
+cache = { read = 0.0036 }
 
 [cost.text.output]
-price = 1.74
+price = 0.87

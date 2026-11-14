@@ -1,0 +1,22 @@
+schema = 2
+base_model = "mistral/ministral-3b"
+name = "Mistral: Ministral 3B"
+description = "A compact, efficient model for on-device tasks like smart assistants and local analytics, offering low-latency performance."
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+structured_output = false
+
+[limit]
+context = 131_072
+output = 4_000
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.1

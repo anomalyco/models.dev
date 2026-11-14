@@ -9,7 +9,7 @@ output = ["embedding"]
 
 [api.embeddings]
 base_url = "https://ai-gateway.vercel.sh/v1"
-sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/embeddings" }
 
 [cost.text.input]
 price = 0.08

@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-10):
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/omni-1-2-flash.md.txt (model ID, limits, MIME types, APIs, global-only location)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (Gemini Omni, global: $1.50 input, $9.00 text output, $12.00 video output)
+# Interactions API only (GenerateContent is documented as not supported). Global location only.
+# opencodeai = "none": Omni outputs video, and @opencode/ai's Interactions client handles text output only.
+# Output: v1 output carries the video rate, like the google Omni files.
+schema = 2
+v2_only = true
+base_model = "google/gemini-omni-1.2-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/x-flv", "video/quicktime", "video/mpeg", "video/mpegs", "video/mpg", "video/mp4", "video/webm", "video/wmv", "video/3gpp"]
+output = ["video/mp4"]
+
+[capabilities]
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+output = 260_640
+
+[api.interactions]
+base_url = "https://aiplatform.googleapis.com/v1beta1/projects/${GOOGLE_VERTEX_PROJECT}/locations/global"
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 12
+
+[cost.video.output]
+price = 12

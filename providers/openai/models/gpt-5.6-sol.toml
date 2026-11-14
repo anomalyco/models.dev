@@ -6,6 +6,8 @@
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-5.6-sol
 # effort_updates (on [api.responses] only): a Responses `configuration_update` item between turns changes effort and keeps the cache (live 2026-10-19 and 2026-10-23; OpenAI's docs list only GPT-6).
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# Cache writes: 30m (default) is 1.25x input; 12h (Responses API) is 2.5x. https://developers.openai.com/api/docs/guides/prompt-caching
+# Regional processing (data residency) endpoints: +10% on token prices for models released on or after 2026-03-05 (FedRAMP endpoints also +10%, not modeled). Token-only factor so cost.web_search is unscaled. Source: https://developers.openai.com/api/docs/pricing (accessed 2026-11-12)
 schema = 2
 base_model = "openai/gpt-5.6-sol"
 
@@ -15,7 +17,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 structured_output = true
 system_updates = true
 store = true
-cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
 
@@ -27,12 +29,12 @@ sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
 
 [cost.text.input]
 price = 4
-cache = { read = 0.4, write = 5 }
+cache = { read = 0.4, write = { "30m" = 5, "12h" = 10 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 8
-cache = { read = 0.8, write = 10 }
+cache = { read = 0.8, write = { "30m" = 10, "12h" = 20 } }
 
 [cost.text.output]
 price = 20
@@ -52,9 +54,16 @@ factor = { text = 2 }
 when = { service_tier = { equals = "flex" } }
 factor = { text = 0.5 }
 
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = { text = 1.1 }
+
 [experimental.modes.fast]
 service_tier = "priority"
 body = { service_tier = "priority" }
+
+[experimental.modes.flex]
+body = { service_tier = "flex" }
 
 [experimental.modes.pro]
 body = { reasoning = { mode = "pro" } }

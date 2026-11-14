@@ -92,6 +92,13 @@ test("parses documented token-priced models, mode prices in USD/MTok, and contex
       .replace("### Muse Wonder", "### Muse Wonder {#muse-wonder}")
       .replace("### Muse Spark", "### Muse Spark {#muse-spark}"),
   })).toHaveLength(3);
+  const swapped = pricing
+    .replaceAll(
+      "| Usage | Standard mode (per 1M tokens) | Contributor mode (per 1M tokens) |",
+      "| Usage | Contributor mode (per 1M tokens) | Standard mode (per 1M tokens) |",
+    )
+    .replace(/^\| (Cached input|Input|Output) \| ([^|]+) \| ([^|]+) \|$/gm, "| $1 | $3 | $2 |");
+  expect(parseMetaModels({ ...source, pricing: swapped })).toEqual(parseMetaModels(source));
 });
 
 test("rejects incomplete or changed docs rather than guessing prices or limits", () => {
@@ -234,6 +241,66 @@ test("reads availability from each family's own page when models.md only links t
   const fetched = await fetchMetaModels(fetcher);
   expect(urls.slice(2).sort()).toEqual(["https://dev.meta.ai/docs/muse-spark.md", "https://dev.meta.ai/docs/muse-wonder.md"]);
   expect(parseMetaModels(fetched)).toEqual(parseMetaModels(source));
+});
+
+const emberPage = `# Muse Ember
+
+## At a glance
+
+| | |
+| :---- | :---- |
+| **Standard mode model ID** | \`muse-ember-1.0\` |
+| **Context window** | 1,048,576 tokens |
+
+## Availability
+
+| Model | Model API (pay-as-you-go) | Muse Code |
+| :---- | :---- | :---- |
+| Muse Ember (\`muse-ember-1.0\`) | Standard mode | Pay-as-you-go |
+`;
+
+const emberPricing = `${pricing}
+### Muse Ember
+
+Model: \`muse-ember-1.0\`, in Standard mode only.
+
+| Usage | Up to 200K input tokens (per 1M tokens) | Over 200K input tokens (per 1M tokens) |
+| :---- | :---- | :---- |
+| Cached input | $0.004 | $0.012 |
+| Input | $0.10 | $0.30 |
+| Output | $0.50 | $1.50 |
+`;
+
+test("parses long-context price tiers for Standard-mode families", () => {
+  const tiered = { ...source, pricing: emberPricing, families: [emberPage] };
+  expect(parseMetaModels(tiered).at(-1)).toEqual({
+    id: "muse-ember-1.0",
+    context: 1_048_576,
+    cost: {
+      input: 0.1,
+      output: 0.5,
+      cache_read: 0.004,
+      tiers: [{ input: 0.3, output: 1.5, cache_read: 0.012, tier: { type: "context", size: 200_000 } }],
+    },
+  });
+  for (const bad of [
+    { ...tiered, pricing: emberPricing.replace("Over 200K", "Over 100K") },
+    { ...tiered, pricing: emberPricing.replace("| $0.30 |", "| Not available |") },
+    { ...tiered, pricing: emberPricing.replace("| Output | $0.50 | $1.50 |", "") },
+    { ...tiered, families: [emberPage.replace("(`muse-ember-1.0`) | Standard mode", "Contributor (`muse-ember-1.0-contributor`) | Contributor mode")] },
+  ]) {
+    expect(() => parseMetaModels(bad)).toThrow();
+  }
+});
+
+test("syncs tiers from the docs and clears stale tiers on flat-priced families", () => {
+  const tiered = parseMetaModels({ ...source, pricing: emberPricing, families: [emberPage] });
+  const authored: ExistingModel = { base_model: "meta/muse-ember-1.0", cost: { input: 9, output: 9, cache_read: 9 } };
+  const context = { authored: () => authored, existing: () => authored };
+  expect(meta.translateModel(tiered.at(-1)!, context)?.model.cost).toEqual(tiered.at(-1)!.cost);
+  const stale: ExistingModel = { ...authored, cost: { ...tiered.at(-1)!.cost } };
+  const flat = meta.translateModel(tiered[0]!, { authored: () => stale, existing: () => stale })!;
+  expect(flat.model.cost?.tiers).toBeUndefined();
 });
 
 test("runner preserves inherited controls, retains absent models, and is idempotent", async () => {

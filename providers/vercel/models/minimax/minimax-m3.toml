@@ -10,11 +10,12 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, budget = {} }
+reasoning = { supported = true, toggle = true, budget = {} }
 cache = { implicit = true }
 
 [limit]
-context = 512_000
+context = 1_000_000
+output = 1_000_000
 
 [api.chat-completions]
 capabilities = { system_updates = true }
@@ -31,5 +32,14 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel
 price = 0.3
 cache = { read = 0.06 }
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 512_000 } }
+price = 1.2
+cache = { read = 0.24 }
+
 [cost.text.output]
 price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 512_000 } }
+price = 4.8

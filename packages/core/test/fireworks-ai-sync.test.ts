@@ -241,6 +241,25 @@ test("refuses destructive sync when either Fireworks source is empty", () => {
   ])).toThrow("empty active serverless inventory");
 });
 
+test("keeps hand-authored embedding files, including legacy models absent from both sources", () => {
+  const embedding = "accounts/fireworks/models/embed";
+  const sources = fireworksAi.parseModels({
+    serverless: {
+      object: "list",
+      data: [fireworksModel(), fireworksModel({ id: embedding, output_modalities: ["embeddings"] })],
+    },
+    inventory: [inventoryModel(), inventoryModel({ name: embedding, kind: "EMBEDDING_MODEL" })],
+  });
+  const v2 = { schema: 2, v2_only: true, base_model: "baai/bge-small-en-v1.5" };
+
+  for (const id of [embedding, "BAAI/bge-small-en-v1.5"]) {
+    const model = sources.find((source) => source.catalogId === id)!;
+    const context = { existing: () => undefined, authored: () => undefined };
+    expect(fireworksAi.translateModel(model, { ...context, v2: () => v2 })).toEqual({ id, v2 });
+    expect(fireworksAi.translateModel(model, { ...context, v2: () => undefined })).toBeUndefined();
+  }
+});
+
 test("preserves inventory-only models while enabling deletion for models absent from both sources", () => {
   const authored = {
     base_model: "example/example",

@@ -1,0 +1,23 @@
+# Catalog: https://cloud-api.near.ai/v1/models (2026-11-13): 1M context, 128K output, text and image
+# input, $8 / $40 per MTok, cache read $0.2 ($0.0000002 per token), reasoning in supported_features.
+# Reasoning: no caller control, like the Fable 5 and 5.1 routes here, where reasoning_effort and thinking.type
+# are rejected and reasoning.effort is a measured no-op (claude-fable-5-1.toml, live 2026-09-11). Not probed on
+# this route (no NEAR AI key); re-check when one is available.
+# Text and image only: the lab entry adds pdf, and a type: "file" content part fails schema
+# deserialisation on the other Fable routes here; /v1/models lists only text and image input.
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 40

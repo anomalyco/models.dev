@@ -1,0 +1,10 @@
+# CloudCode.ONE is a pay-as-you-go gateway for coding agents. Its OpenAI-compatible
+# Chat Completions endpoint serves every model below; prices are its public list at
+# https://cloudcode.one/models.json (accessed 2026-10-23). Each model file records
+# what the gateway itself accepts, measured live through the endpoint on 2026-10-23.
+name = "CloudCode.ONE"
+env = ["CLOUDCODE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.cloudcode.one/v1"
+doc = "https://cloudcode.one"

@@ -16,7 +16,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 system_updates = true
 cache = { implicit = true }
 

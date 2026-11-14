@@ -1,11 +1,15 @@
+# Live authenticated check 2026-11-12 on this model ID:
+# POST /v1/chat/completions accepted thinking_token_budget=1,
+# stream=true and max_tokens=16 (HTTP 200, reasoning then content).
+# https://docs.neuralwatt.com/api/chat-completions#reasoning-token-budget
 # Flex-tier variant of deepseek-v4.1-flash: same model, context (1,048,560),
 # vision, and effort ladder as the standard tier; requested via the `-flex`
 # model ID or service_tier="flex" and requires stream=true (non-streaming
-# requests fall through to the standard tier). Cost is the flex rate: 0.65x
-# of standard pricing (35% off) per the flex-tier guide, applied to the
-# standard rates advertised by GET /v1/models ($0.15/$0.6/$0.015, checked
-# 2026-09-18). thinking_token_budget is rejected with a 400 on the V4-Flash
-# generation and is not documented for V4.1-Flash, so it is not declared.
+# requests fall through to the standard tier). Public GET /v1/models on
+# 2026-11-12 reports input/output/cache-read prices in metadata.pricing:
+# $0.0975/$0.39/$0.00975 per million tokens, with the flex discount included.
+# Do not apply flex_discount_multiplier again.
+# Source: https://api.neuralwatt.com/v1/models
 # https://portal.neuralwatt.com/docs/guides/flex-tier
 # https://portal.neuralwatt.com/docs/api/chat-completions
 # Lab: GET /v1/models lists huggingface_id deepseek-ai/DeepSeek-V4.1-Flash-1017 for this id (checked 2026-10-21).
@@ -14,7 +18,7 @@ base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash Flex"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"], budget = {} }
 structured_output = true
 
 [limit]
