@@ -1,0 +1,22 @@
+# Source: https://infer.flow7.org/api/public/catalog (2026-11-14 UTC)
+# Exact selector: infer/gemini-3.1-pro-preview:official
+# Official API route at 1.25x Google's list price; it takes the lab's image, audio, video and PDF input.
+# Limits: Infer's published 199,999 context for the route; output is the lab's 65,536.
+# Reasoning controls copied from the lab's own entry, as AGENTS.md asks of relays.
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+name = "Gemini 3.1 Pro Preview (Official API)"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 199_999
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25, write = 0.46875 }
+
+[cost.text.output]
+price = 15
