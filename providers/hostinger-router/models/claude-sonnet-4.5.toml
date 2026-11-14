@@ -8,7 +8,7 @@ base_model = "anthropic/claude-sonnet-4-5"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"] } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 
 [limit]
 context = 1_000_000
