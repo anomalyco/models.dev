@@ -68,6 +68,10 @@ function listed(id: keyof typeof lineup | string, info: Record<string, UmansCard
   return source(info).find((model) => model.id === id)!;
 }
 
+function built(...args: Parameters<typeof buildUmansModel>) {
+  return buildUmansModel(...args)!.model as Record<string, unknown>;
+}
+
 test("maps a served checkpoint's Hugging Face repo to its lab entry", () => {
   expect(labModelID("https://huggingface.co/moonshotai/Kimi-K3.1-Pro")).toBe("moonshotai/kimi-k3.1-pro");
   expect(labModelID("https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017"))
@@ -148,7 +152,7 @@ test("reads an omitted or unknown level list as unknown, not as no control", () 
 
 test("keeps the authored controls when the card omits its levels", () => {
   const coder = { ...lineup["umans-coder"], capabilities: { ...lineup["umans-coder"].capabilities, reasoning: { supported: true } } };
-  const model = buildUmansModel("umans-coder", coder, false, coderOnGLM) as Record<string, unknown>;
+  const model = built("umans-coder", coder, false, coderOnGLM);
   expect(model.reasoning_options).toEqual([{ type: "effort", values: ["low", "high", "max"] }]);
 });
 
@@ -186,10 +190,10 @@ test("creates a new model as an overlay on its lab with the API's facts", () => 
 
 test("narrows a new model to text input only when the card says no vision", () => {
   const textOnly = card({ capabilities: { ...card().capabilities, supports_vision: false } });
-  const model = buildUmansModel("umans-kimi-k3.1-pro", textOnly, false, undefined) as Record<string, unknown>;
+  const model = built("umans-kimi-k3.1-pro", textOnly, false, undefined);
   expect(model.modalities).toEqual({ input: ["text"] });
   const indirect = card({ capabilities: { ...card().capabilities, supports_vision: "via-handoff" } });
-  expect((buildUmansModel("umans-kimi-k3.1-pro", indirect, false, undefined) as Record<string, unknown>).modalities)
+  expect(built("umans-kimi-k3.1-pro", indirect, false, undefined).modalities)
     .toBeUndefined();
 });
 
@@ -201,7 +205,7 @@ test("creates the same model at zero cost on the coding plan", () => {
 });
 
 test("moves an alias to the weights it now serves, factored from its own fields", () => {
-  const model = buildUmansModel("umans-coder", lineup["umans-coder"], false, coderOnGLM) as Record<string, unknown>;
+  const model = built("umans-coder", lineup["umans-coder"], false, coderOnGLM);
   expect(model.base_model).toBe("deepseek/deepseek-v4.1-flash-1017");
   expect(model.description).toBeUndefined();
   expect(model.family).toBeUndefined();
@@ -209,23 +213,51 @@ test("moves an alias to the weights it now serves, factored from its own fields"
   expect(model.cost).toEqual({ input: 0.15, output: 0.6, cache_read: 0.028 });
 });
 
+test("drops overrides authored for the old weights when an alias moves, and says so", () => {
+  // The GLM-era file narrowed inputs to the GLM checkpoint's (video included) and turned temperature off.
+  const glmEra = {
+    ...coderOnGLM,
+    name: "Umans Coder",
+    modalities: { input: ["text", "image", "video"], output: ["text"] },
+    temperature: false,
+  } as unknown as ExistingModel;
+  const result = buildUmansModel("umans-coder", lineup["umans-coder"], false, glmEra)!;
+  const model = result.model as Record<string, unknown>;
+  expect(model.base_model).toBe("deepseek/deepseek-v4.1-flash-1017");
+  expect(model.modalities).toBeUndefined();
+  expect(model.temperature).toBeUndefined();
+  // A host-level display name is not a checkpoint fact and survives the move.
+  expect(model.name).toBe("Umans Coder");
+  expect(result.notices).toEqual([
+    "umans-coder moved from `zhipuai/glm-5.3-flash` to `deepseek/deepseek-v4.1-flash-1017`;"
+      + " dropped overrides authored for the old weights (modalities, temperature), verify them on the new ones",
+  ]);
+});
+
+test("keeps a gated model's existing file as authored instead of reporting it missing", () => {
+  const lab = listed("umans-kimi-k3.1-pro-lab", { ...lineup, "umans-kimi-k3.1-pro-lab": card({ stage: "playground" }) });
+  const authored = { base_model: "moonshotai/kimi-k3.1-pro", cost: { input: 0, output: 0 } } as unknown as ExistingModel;
+  expect((umansAI.translateModel(lab, context({ "umans-kimi-k3.1-pro-lab": authored })) as { model: unknown }).model)
+    .toEqual(authored);
+});
+
 test("keeps the authored price when the card publishes none", () => {
   const unpriced = { ...lineup["umans-coder"], pricing: undefined };
-  const model = buildUmansModel("umans-coder", unpriced, false, coderOnGLM) as Record<string, unknown>;
+  const model = built("umans-coder", unpriced, false, coderOnGLM);
   expect(model.cost).toEqual({ input: 0.15, output: 0.5, cache_read: 0.03 });
 });
 
 test("keeps a curated status unless the card announces a retirement", () => {
   const beta = { ...coderOnGLM, status: "beta" } as unknown as ExistingModel;
-  expect((buildUmansModel("umans-coder", lineup["umans-coder"], false, beta) as Record<string, unknown>).status)
+  expect(built("umans-coder", lineup["umans-coder"], false, beta).status)
     .toBe("beta");
   const retiring = { ...lineup["umans-coder"], deprecation: { sunset_date: "2026-12-01", replacement: "umans-flash" } };
-  expect((buildUmansModel("umans-coder", retiring, false, beta) as Record<string, unknown>).status).toBe("deprecated");
+  expect(built("umans-coder", retiring, false, beta).status).toBe("deprecated");
 });
 
 test("clears a deprecated status when the id is listed again without a retirement", () => {
   const retired = { ...coderOnGLM, status: "deprecated" } as unknown as ExistingModel;
-  expect((buildUmansModel("umans-coder", lineup["umans-coder"], false, retired) as Record<string, unknown>).status)
+  expect(built("umans-coder", lineup["umans-coder"], false, retired).status)
     .toBeUndefined();
 });
 

@@ -37,6 +37,21 @@ const PRECISION_SUFFIX = /-(fp8|nvfp4|mxfp4|int4|int8|awq|gptq)$/;
 const EFFORT_ORDER = ["minimal", "low", "medium", "high", "xhigh", "max"] as const;
 type Effort = (typeof EFFORT_ORDER)[number];
 
+// Fields that describe a checkpoint rather than this host. When an alias moves
+// to other weights, an override authored against the old weights is dropped so
+// the new lab's value applies, and the move is reported for a hand check.
+const CHECKPOINT_FIELDS = [
+  "description",
+  "family",
+  "release_date",
+  "last_updated",
+  "knowledge",
+  "open_weights",
+  "modalities",
+  "attachment",
+  "temperature",
+] as const;
+
 const UmansReasoning = z.object({
   supported: z.boolean(),
   can_disable: z.boolean().optional(),
@@ -216,12 +231,17 @@ function missingControls(id: string, card: UmansCard) {
   );
 }
 
+export interface BuiltUmansModel {
+  model: SyncedModel;
+  notices: string[];
+}
+
 export function buildUmansModel(
   id: string,
   card: UmansCard,
   plan: boolean,
   authored: ExistingModel | undefined,
-): SyncedModel | undefined {
+): BuiltUmansModel | undefined {
   const served = labModelID(card.weights?.hf_url);
   const owned = ownedFields(card, plan);
   const reasoner = card.capabilities.reasoning?.supported === true;
@@ -230,10 +250,20 @@ export function buildUmansModel(
     // Start from the file's own fields, not the resolved model: when an alias
     // moves to new weights, values inherited from the old base must not turn
     // into overrides on the new one.
-    const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = authored;
-    if (reasoner && owned.reasoning_options === undefined && current.reasoning_options === undefined) {
+    const { base_model: baseModel, base_model_omit: baseModelOmit, ...authoredFields } = authored;
+    if (reasoner && owned.reasoning_options === undefined && authoredFields.reasoning_options === undefined) {
       throw missingControls(id, card);
     }
+    // The card names the weights each id serves, so an alias that moves to new
+    // weights moves its base_model with it.
+    const base = labExists(served) ? served : baseModel;
+    const moved = baseModel !== undefined && base !== baseModel;
+    const dropped = moved
+      ? CHECKPOINT_FIELDS.filter((field) => (authoredFields as Record<string, unknown>)[field] !== undefined)
+      : [];
+    const current = Object.fromEntries(
+      Object.entries(authoredFields).filter(([field]) => !(dropped as string[]).includes(field)),
+    ) as typeof authoredFields;
     // The API owns retirement: a listed card without one means active, so a
     // `deprecated` status clears (a curated alpha or beta stays).
     const status = owned.status ?? (current.status === "deprecated" ? undefined : current.status);
@@ -243,11 +273,19 @@ export function buildUmansModel(
       status,
       limit: { ...current.limit, ...owned.limit },
     } as SyncedFullModel;
-    // The card names the weights each id serves, so an alias that moves to new
-    // weights moves its base_model with it.
-    const base = labExists(served) ? served : baseModel;
-    if (base === undefined) return values;
-    return factorBaseModel(base, values, values.limit, base === baseModel ? baseModelOmit : undefined);
+    const notices = moved
+      ? [
+        `${id} moved from \`${baseModel}\` to \`${base}\``
+          + (dropped.length > 0
+            ? `; dropped overrides authored for the old weights (${dropped.join(", ")}), verify them on the new ones`
+            : ""),
+      ]
+      : [];
+    if (base === undefined) return { model: values, notices };
+    return {
+      model: factorBaseModel(base, values, values.limit, moved ? undefined : baseModelOmit),
+      notices,
+    };
   }
 
   // A new id needs a lab entry to base it on and a price to publish.
@@ -261,7 +299,7 @@ export function buildUmansModel(
     // Vision inherits the lab's documented inputs; only an explicit "no" narrows them.
     ...(card.capabilities.supports_vision === false ? { modalities: { input: ["text"] } } : {}),
   } as SyncedFullModel;
-  return factorBaseModel(served, values, values.limit);
+  return { model: factorBaseModel(served, values, values.limit), notices: [] };
 }
 
 function umansProvider(id: string, name: string, plan: boolean) {
@@ -305,7 +343,11 @@ function umansProvider(id: string, name: string, plan: boolean) {
       return parseUmansModels(raw);
     },
     translateModel(model, context) {
-      if (isGated(model)) return undefined;
+      if (isGated(model)) {
+        // Never created; a file that exists anyway is left as authored.
+        const authored = context.authored(model.id);
+        return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
+      }
       if (!model.listed) {
         const authored = context.authored(model.id);
         if (authored === undefined) return undefined;
@@ -314,7 +356,12 @@ function umansProvider(id: string, name: string, plan: boolean) {
       const built = buildUmansModel(model.id, model.card, plan, context.authored(model.id));
       if (built === undefined) return undefined;
       // An existing header wins; files without one get the wire-path header.
-      return { id: model.id, model: built, header: header(model.card) };
+      return {
+        id: model.id,
+        model: built.model,
+        header: header(model.card),
+        ...(built.notices.length > 0 ? { notices: built.notices } : {}),
+      };
     },
   } satisfies SyncProvider<UmansSourceModel>;
 }
