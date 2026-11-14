@@ -140,6 +140,7 @@ export const vercel = {
         }
         : {}),
       ...(cache === undefined ? {} : { "capabilities.cache": cache }),
+      ...languageImageCost(model, type),
     };
     return {
       id: model.id,
@@ -151,6 +152,22 @@ export const vercel = {
     };
   },
 } satisfies SyncProvider<VercelModel>;
+
+// Chat-style image models (Gemini image) list token prices plus per-image prices;
+// the per-image prices are the image output cost.
+function languageImageCost(model: VercelModel, type: string | undefined) {
+  if (model.type !== "language" || type !== "image") return {};
+  const pricing = (model.pricing ?? {}) as Record<string, unknown>;
+  if (pricing.image_dimension_quality_pricing === undefined && pricing.image === undefined) return {};
+  try {
+    const images = imagePrices(pricing);
+    if (images === undefined) return {};
+    return { "cost.image": { output: { unit: "image", ...conditionalPrice(images.entries, images.base) } } };
+  } catch (error) {
+    if (error instanceof Unrepresentable) return {};
+    throw error;
+  }
+}
 
 // A tool-calling model that lists `tool_choice` takes "auto", "none", "required"
 // and a named function, narrowed to the base model's own `choice` when its lab
@@ -309,11 +326,7 @@ export function buildVercelModel(
   return factorBaseModel(baseModel, {
     type: synced.type,
     name: synced.name,
-    // The lab describes the decision task; a generic gateway chat description
-    // must not override it when the provider file has no curated description.
-    description: model.type === "evaluation" && existing?.description === undefined
-      ? undefined
-      : synced.description,
+    description: existing?.description,
     attachment: synced.attachment,
     reasoning: synced.reasoning,
     reasoning_options: synced.reasoning_options,
@@ -935,6 +948,7 @@ const PRICE_FIELDS = new Set([
   "audio_input_token_cost",
   "audio_output_token_cost",
   "speech_input_character_cost",
+  "speech_output_cost_per_second",
   "transcription_duration_cost_per_second",
   "realtime_session_duration_cost_per_second",
   "image",
@@ -1030,6 +1044,14 @@ function mediaCost(pricing: Record<string, unknown>, type: MediaType): Doc | und
   } else if (type === "image" && output !== undefined) {
     // Image models' output tokens are image tokens (`text.output` keeps the v1 pair).
     set("image", "output", { price: perMillion(output) });
+  }
+
+  const speechSeconds = value("speech_output_cost_per_second");
+  if (speechSeconds !== undefined) {
+    if (type === "speech" && (cost.text?.output !== undefined || cost.audio?.output !== undefined)) {
+      throw new Unrepresentable("speech_output_cost_per_second next to an output token price");
+    }
+    set("audio", "output", { unit: "second", price: roundPrice(speechSeconds) });
   }
 
   const audioInput = value("audio_input_token_cost");

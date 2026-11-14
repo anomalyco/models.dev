@@ -1,0 +1,52 @@
+# Sources (accessed 2026-11-13):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 1_048_576, type image2text,
+#   input_cached_price_per_million_tokens = 0.06, use_cases include function_calling, reasoning, json_mode,
+#   responses_api)
+# - https://tokenfactory.nebius.com/endpoints/public/thinkingmachines%2FInkling-2-Small
+# Live checks 2026-11-13 against api.tokenfactory.nebius.com (/v1/chat/completions unless noted):
+# - Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max are all accepted (anything else is a 422).
+#   none turns thinking off (0 reasoning tokens, 2 fewer prompt tokens). Median reasoning tokens over 5 runs of a
+#   hard prompt: minimal 1454, low 1852, medium 2472, high 2466, xhigh 3461, max 3934, so every level is kept,
+#   matching the rendered effort ladder documented for Inkling on Together AI. Omitting it gave 2320, but the
+#   prompt is the same size for every non-none level, so no default is set.
+# - chat_template_kwargs.enable_thinking = false also turns thinking off (same as none); thinking.type and
+#   reasoning.enabled are ignored. Off is covered by effort none, so there is no toggle.
+# - Reasoning is returned in message.reasoning_content only.
+# - Responses (/v1/responses): returns reasoning + message items; reasoning.effort none..xhigh work, but max is
+#   rejected with 422 (the Responses schema stops at xhigh). Effort can't be set per API, so the Chat
+#   Completions list is kept. Function tools return a function_call item.
+# - Modalities: a PNG data URL is read correctly; video_url returns 400 "This model does not support video input";
+#   input_audio is a 422. Input is inherited from the lab entry (text + image).
+# - Tools: tool_choice auto|required|none|named function all behave as expected; multi-turn tool loops complete
+#   with reasoning sent back as reasoning_content, as reasoning, or not at all.
+# - structured_output: response_format json_schema (strict, enum field) and json_object are enforced.
+# - Cache: automatic prefix cache, no markers; a repeated ~12.6k-token prompt reports cached_tokens = 12544.
+# - Limit: max_tokens = 1_048_000 accepted; 1_048_577 rejected ("supports at most 1048576 completion tokens").
+# - Sampling: temperature and top_p are applied (temperature = 2.0 gives garbled text, top_p = 0.01 keeps it
+#   coherent; top_p = 0.0001 is deterministic). top_k is accepted but ignored (top_k = 1 at temperature 1 still gives
+#   3 different outputs in 3 runs, and top_k = 1 at temperature 2.0 is still garbled), so top_k stays false.
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+top_p = true
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1

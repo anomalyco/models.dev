@@ -1,0 +1,19 @@
+# Prices: GET https://www.runcrate.ai/api/models/catalog (accessed 2026-10-29), USD per 1M tokens as billed
+# (Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo): input 0.315, cached input 0.105, output 1.05.
+# context_length 262,144 and max_output_length 65,536 in GET https://api.runcrate.ai/v1/models, the
+# same as the lab entry.
+# Live 2026-10-24: a tool call round-tripped; a strict json_schema response validated; a repeated
+# 8,307-token prompt reported 8,288 cached_tokens; image input is refused with HTTP 400.
+schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.315
+cache = { read = 0.105 }
+
+[cost.text.output]
+price = 1.05

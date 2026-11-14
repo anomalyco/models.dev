@@ -1,0 +1,20 @@
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-opendatalab
+# 0.0200 / 0.0030 / 0.0600 CHF/MTok (input / cache / output), converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# Context 16k per the product page price table
+# (https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-opendatalab), matching
+# the lab (16,384 per the model card https://huggingface.co/opendatalab/MinerU2.5-2509-1.2B). The host publishes no
+# separate output cap; limit.output is required on the merged provider model (the lab omits it), so it is set
+# to the served 16,384-token window — an architectural max for this autoregressive VLM.
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_opendatalab/MinerU2.5-2509-1.2B (gateway max_model_len 16384; image input via chat completions)
+schema = 2
+base_model = "opendatalab/mineru2.5-2509-1.2b"
+
+[limit]
+output = 16_384
+
+[cost.text.input]
+price = 0.0238
+cache = { read = 0.0036 }
+
+[cost.text.output]
+price = 0.0714

@@ -1,0 +1,45 @@
+# Reasoning HTTP format (Watt Cloud, AU site):
+# Docs (https://www.watt-cloud.com/docs/inference/features/deep-thinking/)
+# document the thinking toggle via chat_template_kwargs.thinking
+# (cURL/Python/JS/Go examples send thinking = true) and
+# enumerate GLM-5.1/5/4.7 (hybrid, reasoning on by default)
+# and MiniMax-M2.x (thinking-only).
+# Controls in providers/watt/models follow the audited
+# same-surface peer baseline: toggle via
+# chat_template_kwargs.thinking, no reasoning_effort or
+# thinking_budget authored until a live POST shows this
+# host honors them.
+# TODO(live audit, WATT_API_KEY required): POST
+# https://api.watt-cloud.com/v1/chat/completions to confirm -
+# (a) whether reasoning_effort / thinking_budget are
+#     forwarded on the toggled IDs; if yes, author the
+#     lab levels per model (DeepSeek low|high|max,
+#     GLM-5.2 high|max, Kimi-K3 low|high|max, Qwen
+#     thinking_budget),
+# (b) GLM-5.3/GLM-5.3-Flash/Hy4-preview: the lab
+#     effort shapes are authored (no off switch in
+#     the lab templates); if thinking = false does
+#     disable thinking on Watt, switch them to the
+#     toggle,
+# (c) Kimi-K2.7-Code still reasons when thinking =
+#     false (authored always-on),
+# (d) reasoning is returned as reasoning_content,
+# (e) GET /v1/models requires auth (403 unauthenticated) -
+#     verify listed IDs and per-model limits against the
+#     catalog (Kimi-K2.5 271_360/180_224 and Hy4-preview
+#     1_048_576/131_072 override the lab values).
+# If the audit shows a control this host does not honor,
+# remove it with the observed behavior in the comment.
+# Pricing and limits in providers/watt/models are from the Watt
+# Cloud official catalog (2026-10-23), one cited row per model file.
+# Sources:
+# https://www.watt-cloud.com/
+# https://www.watt-cloud.com/docs/inference/features/deep-thinking/
+# https://www.watt-cloud.com/models/
+# https://api.watt-cloud.com/v1/models (auth required)
+name = "Watt Cloud"
+env = ["WATT_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.watt-cloud.com/v1"
+doc = "https://www.watt-cloud.com/docs/"

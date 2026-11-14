@@ -10,9 +10,6 @@ base_model = "openai/whisper-large-v3"
 name = "Whisper"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 
-[limit]
-output = 448
-
 [api.transcriptions]
 sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
 

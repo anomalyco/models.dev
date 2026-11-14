@@ -1,0 +1,25 @@
+# Effort: reasoning_effort is forwarded to OpenAI; none and minimal are sent as low
+# (the model cannot turn reasoning off).
+# Price: https://synthorai.io/api/pricing (read 2026-10-26), USD per million tokens.
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15

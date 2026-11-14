@@ -1,0 +1,16 @@
+# Pricing: https://jzstoken.com/model-pricing/kimi-k3 (2026-10-30).
+# Effort: reasoning_effort = low|high|max (default max); the model always thinks.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.95
+cache = { read = 0.1946, write = 1.95 }
+
+[cost.text.output]
+price = 9.73

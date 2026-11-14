@@ -1,0 +1,17 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: always on. Live 2026-10-29: reasoning_effort = off is rejected and omitting it
+#   already reasons (101 reasoning tokens, low 101, high 93), so there is no caller toggle.
+schema = 2
+base_model = "deepreinforce/ornith-1.5-122b"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.16
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.64

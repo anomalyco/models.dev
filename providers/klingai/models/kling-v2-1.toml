@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api-singapore.klingai.com/v1/images/generations with model_name = "kling-v2-1"
+#   (https://kling.ai/document-api/api/image/2-1/image-generation), and /v1/images/multi-image2image for multi-image to image
+#   (https://kling.ai/document-api/api/image/2-1/multi-image-to-image). resolution "1k" (default) or "2k"; n 1-9.
+# - Pricing: https://kling.ai/document-api/pricing/base/image ("Balance" tab), per image at 1K and 2K: text-to-image $0.014,
+#   image-to-image $0.028, multi-image to image $0.056. Prepaid resource packages (https://kling.ai/dev/pricing) are not recorded.
+# Cost conditions: input_images = reference images sent in the image field (image-to-image); mode = "multi-image2image" is
+#   the /v1/images/multi-image2image endpoint, which takes the last path segment as its name.
+# aisdk = "none": @ai-sdk/klingai only has video models. opencodeai = "none": @opencode/ai has no Kling package.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-image-v2.1"
+
+[api.images]
+base_url = "https://api-singapore.klingai.com/v1"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.output]
+unit = "image"
+price = 0.014
+
+[[cost.image.output.overrides]]
+when = { input_images = { gte = 1 } }
+price = 0.028
+
+[[cost.image.output.overrides]]
+when = { mode = { equals = "multi-image2image" } }
+price = 0.056

@@ -1,0 +1,43 @@
+# Sources (accessed 2026-10-29):
+# - Model card: https://huggingface.co/swiss-ai/Apertus-v1.5-8B (Apache 2.0; text/image/audio input,
+#   thinking mode activated via the enable_thinking chat-template kwarg, tool-use training; image formats
+#   jpg/png and audio mp3 per card examples). HF API: apache-2.0, apertus1p5 arch, image+audio tokens.
+# - Paper: https://arxiv.org/abs/2610.15542 (Apertus 1.5 technical report, submitted 2026-10-11)
+# - Release notes: https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes (release date 2026-10-15)
+# Hub repo createdAt 2026-07-24 is a staged page, not the release; actual release 2026-10-15.
+# Context: the model card's default window is 262,144.
+# Output: 8,192 follows the Apertus 8B/70B family entries; no separate native cap is published for v1.5.
+schema = 2
+name = "Apertus v1.5 8B"
+description = "Fully open 8B multilingual multimodal LLM from the Swiss AI Initiative (ETH Zurich, EPFL, CSCS) supporting 1,000+ languages, with weights, training data, and methods fully documented. Apache 2.0."
+open_weights = true
+release_date = "2026-10-15"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "audio/mpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/swiss-ai/Apertus-v1.5-8B"
+
+[[links]]
+label = "Paper"
+url = "https://arxiv.org/abs/2610.15542"
+type = "paper"
+
+[[links]]
+label = "Release notes"
+url = "https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes"
+type = "blog"
