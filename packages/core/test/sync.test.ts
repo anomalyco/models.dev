@@ -5244,15 +5244,17 @@ test("LLM Gateway linked files drop a description equal to the lab's", () => {
 });
 
 test("reads curation from v2 aggregated siblings", () => {
-  // providers/llmgateway/models/Qwen3.8-27B.toml is a v2 file whose effort
+  // providers/llmgateway/models/qwen3.8-27b.toml is a v2 file whose effort
   // list lives under [capabilities]; mapped deployments still inherit it.
+  // Read the list from the file, so catalog syncs do not break the test.
+  const sibling = Bun.TOML.parse(readFileSync(path.join(import.meta.dir, "../../../providers/llmgateway/models/qwen3.8-27b.toml"), "utf8")) as Record<string, any>;
   const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
     id: "novita/qwen3.8-27b",
     name: "Qwen3.8 27B (NovitaAI)",
     family: "alibaba",
     providers: [{ providerId: "novita", vision: false, tools: true, reasoning: true }],
   }), undefined);
-  expect(model!.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "xhigh"] }]);
+  expect(model!.reasoning_options).toEqual([{ type: "effort", values: sibling.capabilities.reasoning.effort }]);
 });
 
 test("factors perplexity entries without widening the shared prefix map", () => {
@@ -5353,7 +5355,8 @@ test("keeps the last LLM Gateway entry for case-insensitive duplicate IDs", () =
 test("syncs the last LLM Gateway case variant without mixing source records", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-llmgateway-case-"));
   const modelsDir = path.join(root, "providers", "llmgateway", "models");
-  await mkdir(modelsDir, { recursive: true });
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const base = "alibaba/qwen3.8-27b.toml";
   const first = llmGatewayModel({ id: "qwen3.8-27b", family: undefined });
   const last = llmGatewayModel({
     id: "Qwen3.8-27B",
@@ -5364,11 +5367,21 @@ test("syncs the last LLM Gateway case variant without mixing source records", as
   const provider = { ...llmgateway, modelsDir, fetchModels: async () => ({ data: [first, last] }) };
 
   try {
+    await mkdir(modelsDir, { recursive: true });
+    await mkdir(path.dirname(path.join(root, "models", base)), { recursive: true });
+    await copyFile(path.join(repo, "models", base), path.join(root, "models", base));
+    await copyFile(
+      path.join(repo, "providers", "llmgateway", "provider.toml"),
+      path.join(modelsDir, "..", "provider.toml"),
+    );
     await syncProvider({ ...provider, fetchModels: async () => ({ data: [first] }) });
     const result = await syncProvider(provider);
     expect(result).toMatchObject({ created: 1, updated: 0, deleted: 1 });
     expect(await Bun.file(path.join(modelsDir, `${first.id}.toml`)).exists()).toBe(false);
-    const written = Bun.TOML.parse(await readFile(path.join(modelsDir, `${last.id}.toml`), "utf8"));
+    const file = path.join(modelsDir, `${last.id}.toml`);
+    const doc = Bun.TOML.parse(await readFile(file, "utf8"));
+    expect(doc.schema).toBe(2);
+    const written = modelV2ToV1({ ...doc, id: last.id }, { modelPath: file });
     expect(written).toMatchObject({
       cost: { input: 0.41, output: 2.5 },
       limit: { context: 32_768 },
