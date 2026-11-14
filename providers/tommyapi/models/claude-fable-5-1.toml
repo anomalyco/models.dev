@@ -1,0 +1,12 @@
+# claude-fable-5-1 on TommyAPI serves anthropic/claude-fable-5-1 (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 10.0
+
+[cost.text.output]
+price = 50.0

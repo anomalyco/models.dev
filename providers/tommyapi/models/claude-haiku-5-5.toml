@@ -1,0 +1,12 @@
+# claude-haiku-5-5 on TommyAPI serves anthropic/claude-haiku-5-5 (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.13
+
+[cost.text.output]
+price = 0.65

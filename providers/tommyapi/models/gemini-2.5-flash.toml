@@ -1,0 +1,12 @@
+# gemini-2.5-flash on TommyAPI serves google/gemini-2.5-flash (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "google/gemini-2.5-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 0, max = 24576 } }
+
+[cost.text.input]
+price = 0.39
+
+[cost.text.output]
+price = 3.25

@@ -1,0 +1,12 @@
+# seed-2.0-mini on TommyAPI serves bytedance-seed/seed-2.0-mini (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "bytedance-seed/seed-2.0-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.13
+
+[cost.text.output]
+price = 0.52

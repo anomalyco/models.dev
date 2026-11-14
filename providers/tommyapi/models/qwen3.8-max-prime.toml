@@ -1,0 +1,12 @@
+# qwen3.8-max-prime on TommyAPI serves alibaba/qwen3.8-max-prime (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "alibaba/qwen3.8-max-prime"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 5.2
+
+[cost.text.output]
+price = 15.6

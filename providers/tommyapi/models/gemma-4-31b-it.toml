@@ -1,0 +1,12 @@
+# gemma-4-31b-it on TommyAPI serves google/gemma-4-31b-it (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.26
+
+[cost.text.output]
+price = 0.52

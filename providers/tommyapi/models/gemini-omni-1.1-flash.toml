@@ -1,0 +1,12 @@
+# gemini-omni-1.1-flash on TommyAPI serves google/gemini-omni-1.1-flash (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "google/gemini-omni-1.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+
+[cost.text.input]
+price = 1.95
+
+[cost.text.output]
+price = 11.7

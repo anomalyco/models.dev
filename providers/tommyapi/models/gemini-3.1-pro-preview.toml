@@ -1,0 +1,12 @@
+# gemini-3.1-pro-preview on TommyAPI serves google/gemini-3.1-pro-preview (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 2.6
+
+[cost.text.output]
+price = 15.6

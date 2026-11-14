@@ -1,0 +1,12 @@
+# qwen3.6-27b on TommyAPI serves alibaba/qwen3.6-27b (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "alibaba/qwen3.6-27b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.585
+
+[cost.text.output]
+price = 3.51

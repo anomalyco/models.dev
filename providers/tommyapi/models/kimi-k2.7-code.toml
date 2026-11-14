@@ -1,0 +1,12 @@
+# kimi-k2.7-code on TommyAPI serves moonshotai/kimi-k2.7-code (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 13.0
+
+[cost.text.output]
+price = 53.9994

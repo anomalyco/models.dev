@@ -1,0 +1,12 @@
+# nemotron-3-super-120b-a12b on TommyAPI serves nvidia/nemotron-3-super-120b-a12b (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium"] }
+
+[cost.text.input]
+price = 0.39
+
+[cost.text.output]
+price = 3.12

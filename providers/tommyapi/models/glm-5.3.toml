@@ -1,0 +1,12 @@
+# glm-5.3 on TommyAPI serves zhipuai/glm-5.3 (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 1.1648
+
+[cost.text.output]
+price = 3.6608

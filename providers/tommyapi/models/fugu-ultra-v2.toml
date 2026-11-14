@@ -1,0 +1,12 @@
+# fugu-ultra-v2 on TommyAPI serves sakana/fugu-ultra-v2 (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "sakana/fugu-ultra-v2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 6.5
+
+[cost.text.output]
+price = 39.0

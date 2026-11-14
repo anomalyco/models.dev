@@ -1,0 +1,12 @@
+# qwen3.7-flash on TommyAPI serves alibaba/qwen3.7-flash (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "alibaba/qwen3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { max = 262144 } }
+
+[cost.text.input]
+price = 0.039
+
+[cost.text.output]
+price = 0.169
