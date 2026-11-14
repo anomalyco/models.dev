@@ -1,0 +1,629 @@
+// The sync engine: turns a module's observations into file changes and gaps.
+
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+
+import { ZodError } from "zod";
+
+import { resolveProtocol } from "../generate-v2.js";
+import type { Model, Provider } from "../schema.js";
+
+import { formatModelV2 } from "../model-file-v2.js";
+import { modelV2ToV1, toV1Modality } from "../translate.js";
+import { applyWrites, inherited, Labs, type ModelFile, readProviderFiles, relativeModelPath, REPO_ROOT, resolved } from "./catalog.js";
+import { equal, getPath, isTable, leafPaths, mergeDeep, pruneEmpty, setPath, unsetPath, unsetPath as unsetFieldPath } from "./fields.js";
+import { classifyRisk } from "./risk.js";
+import type { AgentModule, Change, Doc, FieldChange, Gap, Observation, ObservedBatch, Owned, SyncModule, SyncResult } from "./types.js";
+
+// What a published model needs. A lab file always has these, so only a model
+// without a base_model can be missing them.
+export const REQUIRED = [
+  "name",
+  "description",
+  "release_date",
+  "open_weights",
+  "modalities.input",
+  "modalities.output",
+  "capabilities.tools.supported",
+  "capabilities.reasoning.supported",
+  "limit.context",
+  "limit.output",
+];
+
+export interface PlanOptions {
+  /** Repository root. Defaults to this checkout. */
+  root?: string;
+  /** Source data to use instead of calling `fetch()`. */
+  raw?: unknown;
+  /** Checked observations to apply instead of fetching. The only way to run an agent module. */
+  observed?: ObservedBatch;
+}
+
+export interface Plan {
+  result: SyncResult;
+  /** Repository-relative path to new content, or null to delete. */
+  writes: Map<string, string | null>;
+}
+
+export async function sync<Raw>(module: SyncModule<Raw> | AgentModule, options: PlanOptions & { dryRun?: boolean } = {}) {
+  const root = options.root ?? REPO_ROOT;
+  const { result, writes } = await plan(module, { ...options, root });
+  if (!options.dryRun) await applyWrites(root, module.id, writes);
+  return result;
+}
+
+export async function plan<Raw>(module: SyncModule<Raw> | AgentModule, options: PlanOptions = {}): Promise<Plan> {
+  const root = options.root ?? REPO_ROOT;
+  const { observed } = options;
+  if (module.kind === "agent" && observed === undefined) throw new Error(`${module.name} is an agent provider; it only runs from an observation file`);
+  const observations = observed?.observations ?? (module as SyncModule<Raw>).observe((options.raw ?? await (module as SyncModule<Raw>).fetch()) as Raw);
+  const files = await readProviderFiles(root, module.id);
+  const labs = new Labs(root);
+  const context: Context = { module, labs, defaultApi: defaultApi(root, module.id), changes: [], gaps: [], notices: [], writes: new Map() };
+
+  if (observations.length === 0 && module.policy.removals !== "keep") {
+    throw new Error(`${module.name} returned no models; refusing to treat every file as removed`);
+  }
+  const byLowerID = new Map([...files.values()].map((file) => [file.id.toLowerCase(), file]));
+  const docs: ReadonlyMap<string, Doc> = new Map([...files.values()].map((file) => [file.id, file.doc]));
+  const ignored = ignoredModels(root, module.id);
+  const seen = new Map<string, string>();
+  const skipped: string[] = [];
+
+  for (const observation of observations) {
+    const key = observation.id.toLowerCase();
+    if (seen.has(key)) throw new Error(`${module.name} lists ${observation.id} twice (or IDs differing only in case: ${seen.get(key)})`);
+    seen.set(key, observation.id);
+    const file = files.get(observation.id) ?? byLowerID.get(key);
+    if (file !== undefined && file.id !== observation.id) {
+      context.notices.push(`${module.name} lists \`${observation.id}\`, filed as \`${file.id}\`; matched to that file.`);
+    }
+    const refined = module.kind === "agent" || module.refine === undefined ? observation : module.refine(observation, file?.doc, docs);
+    if (refined.rebuild !== undefined && (file !== undefined || (!refined.updateOnly && module.policy.creates !== "never"))) rebuild(context, refined, file);
+    else if (file !== undefined) update(context, refined, file);
+    else if (refined.updateOnly || ignored.has(refined.id)) continue;
+    else if (module.policy.creates === "never") skipped.push(refined.id);
+    else create(context, refined);
+  }
+  if (skipped.length > 0) {
+    context.notices.push(`${skipped.length} models not in the catalog were skipped (creates: never): ${skipped.map((id) => `\`${id}\``).join(", ")}`);
+  }
+
+  // An observation file that doesn't list everything says nothing about the files it leaves out.
+  for (const file of observed?.complete === false ? [] : files.values()) {
+    if (seen.has(file.id.toLowerCase())) continue;
+    if (module.kind === "agent" ? module.scope?.(file.id, resolved(file.doc, labs)) === false : module.manages?.(file.id, file.doc) === false) continue;
+    remove(context, file);
+  }
+
+  const byPath = (a: { path: string }, b: { path: string }) => a.path.localeCompare(b.path);
+  const changes = context.changes.sort(byPath);
+  const gaps = context.gaps.sort((a, b) => a.model.localeCompare(b.model));
+  const risk = classifyRisk({ provider: module.id, before: files.size, changes, gaps, observedBy: observed?.by, review: module.policy.review });
+  const touched = new Set([...changes, ...gaps].map((item) => item.model.toLowerCase()));
+  const evidence = observed?.evidence.filter((item) => touched.has(item.model.toLowerCase()));
+  return {
+    result: { provider: module.id, changes, gaps, notices: context.notices, risk, ...(evidence === undefined ? {} : { evidence }) },
+    writes: context.writes,
+  };
+}
+
+interface Context {
+  module: Pick<SyncModule, "id" | "name" | "policy">;
+  labs: Labs;
+  defaultApi(model: Doc): string | undefined;
+  changes: Change[];
+  gaps: Gap[];
+  notices: string[];
+  writes: Map<string, string | null>;
+}
+
+function update(context: Context, observation: Observation, file: ModelFile) {
+  const { module, labs } = context;
+  const doc = structuredClone(file.doc);
+  const base = inherited(doc, labs);
+  const disagree = mismatches(doc, observation, module.policy.owns, base);
+  if (disagree.length > 0) {
+    const show = (value: unknown) => (value === undefined ? "unset" : JSON.stringify(value));
+    const detail = disagree.map((field) => `${field.path} is ${show(field.after)} at the source but ${show(field.before)} in the file`).join("; ");
+    context.gaps.push(gap(context, observation, "update", `${detail}; check it by hand`, disagree.map((field) => field.path)));
+    return;
+  }
+  const fields = patch(doc, observation, module.policy.owns, base, { defaultApi: context.defaultApi(resolved(file.doc, labs)) });
+  // With `headers: "replace"`, the source writes each file's leading comment.
+  const header = module.policy.headers === "replace" && observation.header !== undefined ? comments(observation.header, doc) : file.header;
+  if (fields.length === 0 && header === file.header) return;
+
+  const before = resolved(file.doc, labs);
+  const after = resolved(doc, labs);
+  if (supportsReasoning(after) && !supportsReasoning(before) && !hasControls(doc)) {
+    context.gaps.push(gap(context, observation, "update", "now reports reasoning, but the file has no reasoning controls", ["capabilities.reasoning"]));
+    return;
+  }
+  const content = render(context, file.id, doc, header, "update");
+  if (content === undefined) return;
+  if (file.symlink) {
+    context.notices.push(`${file.path} is a symlink, so it was not updated.`);
+    return;
+  }
+  context.writes.set(file.path, content);
+  context.changes.push({
+    kind: "update",
+    model: file.id,
+    path: file.path,
+    fields: header === file.header ? fields : [...fields, { path: "header", before: file.header, after: header }],
+    ...(reasoningChanged(before, after) ? { reasoning: true as const } : {}),
+  });
+}
+
+// A rebuilt file is the observation's body on the file's base_model (or the
+// first hint with a lab file) and the paths it keeps from the file. Nothing
+// else of the file stays, and owns don't apply.
+function rebuild(context: Context, observation: Observation, file: ModelFile | undefined) {
+  const { module, labs } = context;
+  const { id: _id, base: _base, header: _header, defaults: _defaults, updateOnly: _updateOnly, rebuild: options, ...body } = observation;
+  const doc: Doc = { schema: 2 };
+  const baseModel = typeof file?.doc.base_model === "string" ? file.doc.base_model : resolveBase(observation, labs);
+  if (baseModel !== undefined) doc.base_model = baseModel;
+  if (file?.doc.base_model_omit !== undefined && file.doc.base_model === baseModel) doc.base_model_omit = structuredClone(file.doc.base_model_omit);
+  const kept: Doc = {};
+  for (const path of options?.keep ?? []) {
+    const value = getPath(file?.doc, path);
+    if (value !== undefined) setPath(kept, path, structuredClone(value));
+  }
+  Object.assign(doc, withoutNulls(mergeDeep(kept, body as Doc)));
+  if (file === undefined) {
+    const merged = resolved(doc, labs);
+    const missing = REQUIRED.filter((path) => getPath(merged, path) === undefined);
+    if (baseModel === undefined && missing.length > 0) missing.unshift("base_model");
+    if (module.policy.creates === "gap" || missing.length > 0) {
+      context.gaps.push(gap(context, observation, "new", module.policy.creates === "gap" ? "new models are added by hand for this provider" : baseModel === undefined ? "no lab model to base it on" : "the source doesn't state every field a new file needs", missing));
+      return;
+    }
+    const content = render(context, observation.id, doc, comments(observation.header, doc), "new");
+    if (content === undefined) return;
+    const path = relativeModelPath(module.id, observation.id);
+    context.writes.set(path, content);
+    context.changes.push({ kind: "create", model: observation.id, path, fields: leafPaths(doc).filter((field) => field !== "schema").map((field) => ({ path: field, after: getPath(doc, field) })) });
+    return;
+  }
+  const header = module.policy.headers === "replace" && observation.header !== undefined ? comments(observation.header, doc) : file.header;
+  if (equal(doc, file.doc) && header === file.header) return;
+  const content = render(context, file.id, doc, header, "update");
+  if (content === undefined) return;
+  if (file.symlink) {
+    context.notices.push(`${file.path} is a symlink, so it was not updated.`);
+    return;
+  }
+  const paths = [...new Set([...leafPaths(file.doc), ...leafPaths(doc)])].filter((path) => !equal(getPath(file.doc, path), getPath(doc, path)));
+  context.writes.set(file.path, content);
+  context.changes.push({
+    kind: "update",
+    model: file.id,
+    path: file.path,
+    fields: [...paths.map((path) => ({ path, before: getPath(file.doc, path), after: getPath(doc, path) })), ...(header === file.header ? [] : [{ path: "header", before: file.header, after: header }])],
+    ...(reasoningChanged(resolved(file.doc, labs), resolved(doc, labs)) ? { reasoning: true as const } : {}),
+  });
+}
+
+function withoutNulls(doc: Doc): Doc {
+  return Object.fromEntries(Object.entries(doc).filter(([, value]) => value !== null && value !== undefined).map(([key, value]) => [key, isTable(value) ? withoutNulls(value) : value]));
+}
+
+function create(context: Context, observation: Observation) {
+  const { module, labs } = context;
+  const base = resolveBase(observation, labs);
+  const doc: Doc = { schema: 2 };
+  if (base !== undefined) doc.base_model = base;
+  const { defaults, header: _header, ...stated } = observation;
+  const observed = defaults === undefined ? observation : { ...(mergeDeep(defaults as Doc, stated as Doc) as Observation), id: observation.id };
+  patch(doc, observed, module.policy.owns, inherited(doc, labs), { defaultApi: context.defaultApi(resolved(doc, labs)), omitLabInput: module.policy.omitLabInput, creating: true });
+
+  const merged = resolved(doc, labs);
+  const missing = REQUIRED.filter((path) => getPath(merged, path) === undefined);
+  if (base === undefined && missing.length > 0) missing.unshift("base_model");
+  if (supportsReasoning(merged) && !hasControls(doc)) missing.push("capabilities.reasoning");
+
+  if (module.policy.creates === "gap") {
+    context.gaps.push(gap(context, observation, "new", "new models are added by hand for this provider", missing));
+    return;
+  }
+  if (missing.length > 0) {
+    const reason = base === undefined
+      ? "no lab model to base it on"
+      : missing.length === 1 && missing[0] === "capabilities.reasoning"
+        ? "a reasoning model, and the source doesn't state its reasoning controls"
+        : "the source doesn't state every field a new file needs";
+    context.gaps.push(gap(context, observation, "new", reason, missing));
+    return;
+  }
+  const content = render(context, observation.id, doc, comments(observation.header, doc), "new");
+  if (content === undefined) return;
+  const path = relativeModelPath(module.id, observation.id);
+  context.writes.set(path, content);
+  context.changes.push({
+    kind: "create",
+    model: observation.id,
+    path,
+    fields: leafPaths(doc).filter((field) => field !== "schema").map((field) => ({ path: field, after: getPath(doc, field) })),
+    ...(supportsReasoning(merged) ? { reasoning: true as const } : {}),
+  });
+}
+
+function remove(context: Context, file: ModelFile) {
+  const { module } = context;
+  if (file.symlink) {
+    context.notices.push(`${file.path} is a symlink missing from the source; it was left alone.`);
+    return;
+  }
+  if (module.policy.removals === "keep") {
+    context.gaps.push({ provider: module.id, model: file.id, kind: "removal", reason: `${module.name} no longer lists it`, missing: [] });
+    return;
+  }
+  if (module.policy.removals === "delete") {
+    context.writes.set(file.path, null);
+    context.changes.push({ kind: "remove", model: file.id, path: file.path, fields: [] });
+    return;
+  }
+  if (file.doc.status === "deprecated") return;
+  const doc = { ...structuredClone(file.doc), status: "deprecated" };
+  const content = render(context, file.id, doc, file.header, "removal");
+  if (content === undefined) return;
+  context.writes.set(file.path, content);
+  context.changes.push({
+    kind: "deprecate",
+    model: file.id,
+    path: file.path,
+    fields: [{ path: "status", before: file.doc.status, after: "deprecated" }],
+  });
+}
+
+export interface PatchOptions {
+  /** The API protocol a file without `[api.*]` tables is served on (from provider.toml). */
+  defaultApi?: string;
+  /** See `Policy.omitLabInput`. */
+  omitLabInput?: boolean;
+  /** The file is new, so `createOnly` fields are written. */
+  creating?: boolean;
+}
+
+/**
+ * Copies each owned field the observation states into `doc`. A value equal to
+ * the inherited lab value is left to inheritance. `null` removes the file's own
+ * value. Fields owned with `merge: "report"` are only compared (see
+ * `mismatches`). Returns what changed.
+ */
+export function patch(doc: Doc, observation: Observation, owns: Owned[], base: Doc | undefined, options: PatchOptions = {}): FieldChange[] {
+  const changes: FieldChange[] = [];
+  const original = structuredClone(doc);
+  // Tables a removal empties are dropped at the end, so a table emptied and
+  // filled again (reasoning turned on with a toggle) keeps its place.
+  const unset: string[] = [];
+  const unsetPath = (target: Doc, path: string) => {
+    unsetFieldPath(target, path, false);
+    unset.push(path);
+  };
+  for (const owned of owns) {
+    const { path, merge, only, addOnly, replaces, optional, standalone, createOnly } = typeof owned === "string"
+      ? { path: owned }
+      : { only: undefined, addOnly: undefined, replaces: undefined, optional: undefined, ...owned };
+    if (merge === "report") continue;
+    if (standalone && typeof doc.base_model === "string") continue;
+    if (createOnly && !options.creating) continue;
+    const observed = getPath(observation, path);
+    if (observed === undefined) continue;
+    if (merge === "seed" && (observed === null || statesCapability(original, path))) continue;
+    if (merge === "refresh" && !options.creating && getPath(original, path) === undefined) continue;
+    const own = getPath(doc, path);
+    const fromBase = getPath(base, path);
+    const current = own ?? fromBase;
+
+    // The source only says whether a model is deprecated, so it clears no other status.
+    if (merge === "deprecated" && observed !== "deprecated" && current !== "deprecated") continue;
+    if (observed === null && merge !== "bands") {
+      if (own === undefined) continue;
+      unsetPath(doc, path);
+      changes.push({ path, before: own, after: fromBase });
+      continue;
+    }
+    let next: unknown = observed ?? [];
+    // One write price speaks for the first cache TTL a file prices.
+    if (path.endsWith(".cache.write") && typeof next === "number" && isTable(current)) next = { ...current, [Object.keys(current)[0]!]: next };
+    if (merge === "min" && typeof next === "number" && typeof current === "number") next = Math.min(next, current);
+    // A 0 is often a placeholder: it updates a price the file has but never adds one.
+    if (merge === "nonzero" && next === 0 && current === undefined) continue;
+    if (merge === "kinds" && Array.isArray(next) && Array.isArray(current)) next = mergeKinds(current, next, fromBase, only, addOnly);
+    if (merge === "tables" && isTable(next)) next = mergeTables(current, next, path === "api" ? options.defaultApi : undefined);
+    if (merge === "bands" && Array.isArray(next)) {
+      next = mergeBands(current, next, replaces, optional && observed !== null);
+      if ((next as unknown[]).length === 0) {
+        if (own === undefined) continue;
+        unsetPath(doc, path);
+        changes.push({ path, before: own, after: undefined });
+        continue;
+      }
+    }
+    if (equal(current, next) || next === undefined) continue;
+    // Removing every table leaves none (an observed `{}` such as `budget = {}` is a value).
+    if (merge === "tables" && isTable(next) && Object.keys(next).length === 0 && isTable(observed) && Object.keys(observed).length > 0) {
+      if (own === undefined) continue;
+      unsetPath(doc, path);
+      changes.push({ path, before: own, after: undefined });
+      continue;
+    }
+    if (fromBase !== undefined && equal(fromBase, next)) unsetPath(doc, path);
+    else setPath(doc, path, structuredClone(next));
+    changes.push({ path, before: current, after: next });
+  }
+  for (const path of unset) pruneEmpty(doc, path);
+  changes.push(...switchedOff(doc, observation, owns));
+  if (changes.some((change) => change.path.startsWith("capabilities.reasoning."))) orderControls(doc);
+  keepSupported(doc, base);
+  bothModalities(doc, base);
+  orderLimit(doc);
+  if (options.omitLabInput) changes.push(...omitLabInput(doc, base));
+  return changes;
+}
+
+// Reasoning controls a patch changed are written supported, toggle, effort, budget.
+function orderControls(doc: Doc) {
+  const reasoning = getPath(doc, "capabilities.reasoning");
+  if (!isTable(reasoning)) return;
+  const order = ["supported", "toggle", "effort", "budget"];
+  setPath(doc, "capabilities.reasoning", Object.fromEntries(Object.entries(reasoning).sort(([a], [b]) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99))));
+}
+
+// [limit] keys are written context, input, output, wherever a patch added them.
+function orderLimit(doc: Doc) {
+  const limit = doc.limit;
+  if (!isTable(limit)) return;
+  const order = ["context", "input", "output"];
+  doc.limit = Object.fromEntries(Object.entries(limit).sort(([a], [b]) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99)));
+}
+
+// Whether the file itself states the capability a `seed` path belongs to.
+function statesCapability(doc: Doc, path: string) {
+  const table = getPath(doc, path.split(".").slice(0, -1).join("."));
+  return isTable(table) && Object.keys(table).length > 0 && table.supported !== false;
+}
+
+// A lab's input limit belongs to its context window. A file with its own,
+// different context doesn't inherit it (`base_model_omit = ["limit.input"]`).
+function omitLabInput(doc: Doc, base: Doc | undefined): FieldChange[] {
+  const context = getPath(doc, "limit.context");
+  if (base === undefined || context === undefined || getPath(doc, "limit.input") !== undefined) return [];
+  if (getPath(base, "limit.input") === undefined || equal(context, getPath(base, "limit.context"))) return [];
+  const before = doc.base_model_omit as string[] | undefined;
+  const after = [...(before ?? []), "limit.input"];
+  doc.base_model_omit = after;
+  return [{ path: "base_model_omit", before, after }];
+}
+
+// A provider file's [modalities] lists both sides; the side equal to the lab's is copied from it.
+// When a patch leaves one side and that side is the lab's too, the table goes.
+function bothModalities(doc: Doc, base: Doc | undefined) {
+  const modalities = doc.modalities;
+  if (!isTable(modalities)) return;
+  const sides = ["input", "output"].filter((side) => modalities[side] !== undefined);
+  if (sides.length === 1 && Object.keys(modalities).length === 1 && equal(modalities[sides[0]!], getPath(base, `modalities.${sides[0]}`))) {
+    delete doc.modalities;
+    return;
+  }
+  for (const side of ["input", "output"]) {
+    const inherited = getPath(base, `modalities.${side}`);
+    if (modalities[side] === undefined && inherited !== undefined) modalities[side] = structuredClone(inherited);
+  }
+  if (modalities.input !== undefined && modalities.output !== undefined) doc.modalities = { input: modalities.input, output: modalities.output, ...modalities };
+}
+
+// A capability table a provider file sets always names `supported`, even when
+// it equals the lab's: `reasoning = { supported = true, effort = [...] }`.
+function keepSupported(doc: Doc, base: Doc | undefined) {
+  for (const capability of ["capabilities.tools", "capabilities.reasoning"]) {
+    const table = getPath(doc, capability);
+    const supported = getPath(base, `${capability}.supported`);
+    if (isTable(table) && Object.keys(table).length > 0 && table.supported === undefined && supported !== undefined) {
+      setPath(doc, capability, { supported, ...table });
+    }
+  }
+}
+
+/** Owned `merge: "report"` fields where the source disagrees with the file. */
+export function mismatches(doc: Doc, observation: Observation, owns: Owned[], base: Doc | undefined): FieldChange[] {
+  const result: FieldChange[] = [];
+  for (const owned of owns) {
+    if (typeof owned === "string" || owned.merge !== "report") continue;
+    if (owned.standalone && typeof doc.base_model === "string") continue;
+    const observed = getPath(observation, owned.path);
+    if (observed === undefined) continue;
+    const current = getPath(doc, owned.path) ?? getPath(base, owned.path);
+    if (observed === null ? current === undefined : equal(current, observed)) continue;
+    result.push({ path: owned.path, before: current, after: observed ?? undefined });
+  }
+  return result;
+}
+
+// A capability the source turns off keeps no details: `tools` without
+// `strict` or `choice`, `reasoning` without controls.
+function switchedOff(doc: Doc, observation: Observation, owns: Owned[]): FieldChange[] {
+  const changes: FieldChange[] = [];
+  for (const capability of ["capabilities.tools", "capabilities.reasoning"]) {
+    const owned = owns.some((item) => (typeof item === "string" ? item : item.path) === `${capability}.supported`);
+    if (!owned || getPath(observation, `${capability}.supported`) !== false) continue;
+    const table = getPath(doc, capability);
+    if (!isTable(table)) continue;
+    for (const key of Object.keys(table)) {
+      if (key === "supported") continue;
+      changes.push({ path: `${capability}.${key}`, before: table[key], after: undefined });
+      unsetPath(doc, `${capability}.${key}`);
+    }
+  }
+  return changes;
+}
+
+// The source's modality kinds, keeping the file's exact formats for each kind
+// the file already has. A kind the file doesn't have takes the lab's formats
+// for it when the lab lists any. Same kinds: the file's list as is. With
+// `only`, the source speaks for those kinds alone: the file's other kinds stay
+// where they are, and a new kind goes at the end. With `addOnly`, the source
+// only adds kinds.
+function mergeKinds(current: unknown[], observed: unknown[], lab: unknown, only?: string[], addOnly?: boolean) {
+  const kind = (item: unknown) => toV1Modality(String(item));
+  const formats = (value: unknown) => {
+    const own = current.filter((item) => kind(item) === kind(value));
+    if (own.length > 0) return own;
+    const inherited = Array.isArray(lab) ? lab.filter((item) => kind(item) === kind(value)) : [];
+    return inherited.length > 0 ? inherited : [value];
+  };
+  const added = (kinds: unknown[]) => [...new Set(kinds.map(kind))]
+    .filter((value) => !current.some((own) => kind(own) === value))
+    .flatMap((value) => formats(observed.find((item) => kind(item) === value)));
+  if (addOnly) {
+    const extra = added(observed);
+    return extra.length === 0 ? current : [...current, ...extra];
+  }
+  if (only !== undefined) {
+    const spoken = new Set(only);
+    const stated = new Set(observed.map(kind).filter((value) => spoken.has(value)));
+    const kept = current.filter((item) => !spoken.has(kind(item)) || stated.has(kind(item)));
+    const extra = added(observed.filter((item) => stated.has(kind(item))));
+    return kept.length === current.length && extra.length === 0 ? current : [...kept, ...extra];
+  }
+  const kinds = (list: unknown[]) => [...new Set(list.map(kind))].sort();
+  if (equal(kinds(current), kinds(observed))) return current;
+  return [...new Set(observed.map(kind))].flatMap((value) => formats(observed.find((item) => kind(item) === value)));
+}
+
+// The source's context bands in place of the file's. A source band at the same
+// threshold as a file band (`gt` or `gte`) updates it: the file keeps its
+// operator and other keys, and one cache write price updates the first TTL a
+// band prices. File overrides with other conditions (time of day, service
+// tier) stay after the bands. With `replaces` or `optional`, overrides using a
+// `replaces` condition (at any depth of `all`/`any`/`not`) are the source's,
+// the file's bands stay when `optional` and the source lists none, and the
+// file's overrides that stay come first, in their order, then the source's.
+function mergeBands(current: unknown, observed: unknown[], replaces: string[] = [], optional = false) {
+  const file = Array.isArray(current) ? current : [];
+  const threshold = (item: unknown) => {
+    const when = isTable(item) ? item.when : undefined;
+    if (!isTable(when) || Object.keys(when).length !== 1 || !isTable(when.context)) return undefined;
+    const context = when.context;
+    return Object.keys(context).length === 1 ? (context.gt ?? context.gte) as number | undefined : undefined;
+  };
+  const bands = observed.map((band) => {
+    const match = file.find((item) => threshold(item) !== undefined && threshold(item) === threshold(band));
+    if (!isTable(match) || !isTable(band)) return structuredClone(band);
+    const { price: _price, reasoning: _reasoning, unit: _unit, cache: fileCache, ...rest } = structuredClone(match);
+    const { when: _when, cache, ...prices } = structuredClone(band);
+    const write = isTable(cache) ? cache.write : undefined;
+    const fileWrite = isTable(fileCache) ? fileCache.write : undefined;
+    const merged = isTable(cache) && typeof write === "number" && isTable(fileWrite)
+      ? { ...cache, write: { ...fileWrite, [Object.keys(fileWrite)[0]!]: write } }
+      : cache;
+    return { ...rest, ...prices, ...(merged === undefined ? {} : { cache: merged }) };
+  });
+  if (replaces.length === 0 && !optional) return [...bands, ...file.filter((item) => threshold(item) === undefined)];
+  const ownsBands = !optional || observed.some((item) => threshold(item) !== undefined);
+  const kept = file.filter((item) => threshold(item) !== undefined ? !ownsBands : !(isTable(item) && uses(item.when, replaces)));
+  return [...kept, ...bands];
+}
+
+function uses(when: unknown, keys: string[]): boolean {
+  if (Array.isArray(when)) return when.some((item) => uses(item, keys));
+  if (!isTable(when)) return false;
+  return Object.entries(when).some(([key, value]) => keys.includes(key) || (["all", "any", "not"].includes(key) && uses(value, keys)));
+}
+
+// The source's tables join the file's: a source key replaces the file's value
+// for that key, and the file's other keys and tables stay, in order. A file
+// with no API tables was served on the provider's default API, which stays first.
+function mergeTables(current: unknown, observed: Doc, defaultApi: string | undefined): unknown {
+  const own = isTable(current) && Object.keys(current).length > 0;
+  const file: Doc = own ? structuredClone(current) : defaultApi === undefined ? {} : { [defaultApi]: {} };
+  const [first] = Object.keys(file);
+  const joined: Doc = {};
+  for (const [key, value] of Object.entries(observed)) {
+    if (value !== null) joined[key] = isTable(value) && isTable(file[key]) ? mergeDeep(file[key], value) : structuredClone(value);
+  }
+  // The file's first table stays first, then the source's tables in its order, then the file's others.
+  const tables: Doc = {};
+  for (const key of [first, ...Object.keys(joined), ...Object.keys(file)]) {
+    if (key === undefined || key in tables || observed[key] === null) continue;
+    tables[key] = joined[key] ?? file[key];
+  }
+  // A lone empty default table says nothing a file without tables doesn't.
+  const keys = Object.keys(tables);
+  const lone = keys.length === 1 ? tables[keys[0]!] : undefined;
+  if (!own && keys[0] === defaultApi && isTable(lone) && Object.keys(lone).length === 0) return current;
+  return tables;
+}
+
+/** IDs in providers/<id>/sync-ignore.toml: models that don't belong in the catalog, never created or reported. */
+export function ignoredModels(root: string, provider: string): ReadonlySet<string> {
+  const file = path.join(root, "providers", provider, "sync-ignore.toml");
+  if (!existsSync(file)) return new Set();
+  const { models } = Bun.TOML.parse(readFileSync(file, "utf8")) as { models?: Record<string, unknown> };
+  return new Set(Object.keys(models ?? {}));
+}
+
+// The API a model without `[api.*]` tables is served on, as the generator resolves it.
+function defaultApi(root: string, provider: string) {
+  const file = path.join(root, "providers", provider, "provider.toml");
+  if (!existsSync(file)) return () => undefined;
+  const toml = { ...(Bun.TOML.parse(readFileSync(file, "utf8")) as Doc), id: provider } as unknown as Provider;
+  return (model: Doc) => (typeof toml.npm === "string" ? resolveProtocol({ ...model, id: "" } as unknown as Model, toml, toml.npm, undefined) : undefined);
+}
+
+/** The lab model a new file inherits from: the first hint with a file under models/. */
+export function resolveBase(observation: Observation, labs: Labs): string | undefined {
+  for (const hint of observation.base ?? []) {
+    const found = labs.find(hint);
+    if (found !== undefined) return found;
+  }
+  return undefined;
+}
+
+// The file as written, or undefined (with a gap or notice) when it wouldn't be valid.
+function render(context: Context, id: string, doc: Doc, header: string, kind: Gap["kind"]) {
+  try {
+    modelV2ToV1({ ...doc, id });
+  } catch (error) {
+    if (!(error instanceof ZodError)) throw error;
+    const missing = [...new Set(error.issues.map((issue) => issue.path.join(".")))];
+    context.gaps.push({ provider: context.module.id, model: id, kind, reason: "the patched file fails the schema", missing });
+    return undefined;
+  }
+  const content = header + formatModelV2(doc);
+  if (!equal(Bun.TOML.parse(content), doc)) {
+    context.notices.push(`${relativeModelPath(context.module.id, id)} has fields the writer can't reproduce; it was left alone.`);
+    return undefined;
+  }
+  return content;
+}
+
+function gap(context: Context, observation: Observation, kind: Gap["kind"], reason: string, missing: string[]): Gap {
+  return { provider: context.module.id, model: observation.id, kind, reason, missing, known: observation };
+}
+
+function supportsReasoning(model: Doc) {
+  return getPath(model, "capabilities.reasoning.supported") === true;
+}
+
+// Lab files only say whether a model reasons; the controls (toggle, effort,
+// budget) live in the provider file. A source saying only "it reasons" isn't
+// enough to publish one, since no controls would claim the caller has none.
+function hasControls(doc: Doc) {
+  const reasoning = getPath(doc, "capabilities.reasoning");
+  return reasoning !== null && typeof reasoning === "object" && Object.keys(reasoning).some((key) => key !== "supported");
+}
+
+function reasoningChanged(before: Doc, after: Doc) {
+  if (!supportsReasoning(before) && !supportsReasoning(after)) return false;
+  return !equal(getPath(before, "capabilities.reasoning"), getPath(after, "capabilities.reasoning"));
+}
+
+function comments(source: Observation["header"], doc: Doc) {
+  const header = typeof source === "function" ? source(doc) : source;
+  if (header === undefined || header.trim() === "") return "";
+  return `${header.trim().split("\n").map((line) => (line.startsWith("#") ? line : `# ${line}`)).join("\n")}\n`;
+}

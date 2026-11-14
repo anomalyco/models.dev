@@ -60,7 +60,7 @@ while IFS=$'\t' read -r meta path; do
 done <<< "$changed"
 
 # The sync job runs repository code and dependencies, so its safe flag is only trusted alongside these checks, which
-# mirror the limits in packages/core/src/sync/auto-merge.ts.
+# mirror the limits in packages/core/src/sync2/risk.ts.
 [ "$created" -le 10 ] || reasons+=("$created models created (limit 10)")
 [ "$deleted" -le 10 ] || reasons+=("$deleted models deleted (limit 10)")
 [ $((created + deleted)) -le 15 ] || reasons+=("$((created + deleted)) models created or deleted (limit 15)")

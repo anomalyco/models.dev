@@ -1,0 +1,233 @@
+import type { AuthoredModelV2 } from "../schema-v2.js";
+
+export type Doc = Record<string, unknown>;
+
+// Every key optional, and `null` anywhere means "the source says there is none".
+export type Observed<T> = T extends readonly unknown[]
+  ? T
+  : T extends object
+    ? { [K in keyof T]?: Observed<T[K]> | null }
+    : T;
+
+type ModelFields = Omit<AuthoredModelV2, "id" | "base_model" | "base_model_omit">;
+
+/**
+ * What a source states about one model, in v2 provider-file field names.
+ * Leave out anything the source doesn't say; use `null` when it says there is
+ * none (e.g. a flat-priced model has `overrides: null`).
+ */
+export type Observation = Observed<ModelFields> & {
+  /** The model ID on this host, which is also the file path. */
+  id: string;
+  /** Lab model IDs (`models/<lab>/<model>`) this model may be, best first. */
+  base?: string[];
+  /**
+   * Leading comment for a newly created file (and every file, with `headers:
+   * "replace"`). A function gets the file as it will be written.
+   */
+  header?: string | ((doc: Doc) => string);
+  /**
+   * Values a new file takes for owned fields the observation leaves out (a
+   * fallback output limit, `tools.supported = false`). Existing files keep
+   * their own.
+   */
+  defaults?: Observed<ModelFields>;
+  /**
+   * Only update a file that already exists: never create it or report it as a
+   * gap (e.g. an alias the source lists next to its canonical ID).
+   */
+  updateOnly?: boolean;
+  /**
+   * The observation is the whole file: the engine writes its body on the
+   * file's base_model (or the first `base` hint with a lab file) and the
+   * `keep` paths from the file, and nothing else of the file stays. Owns and
+   * merges don't apply; `null` leaves a field out. For media files a source
+   * generates whole.
+   */
+  rebuild?: { keep?: string[] };
+};
+
+/**
+ * A v2 field path the source is authoritative for, e.g. `cost.text.input.price`.
+ * A plain path replaces the file's value (a list or table whole). A merge rule
+ * changes that:
+ * - `min`: only lowers a number.
+ * - `nonzero`: a 0 updates a value the file has but never adds one (a placeholder price).
+ * - `kinds`: a modality list. The source decides the kinds (text, image, pdf, ...)
+ *   and the file keeps its own formats (`image/png`) for kinds it has. With
+ *   `only`, the source speaks for just those kinds and the file's others stay.
+ *   With `addOnly`, the source only adds kinds and never removes one.
+ * - `deprecated`: `status`. The source says "deprecated" or null; null only
+ *   clears a "deprecated" status, never another one.
+ * - `tables`: a table of tables (`api`). Each source table joins the file's
+ *   (its values win key by key at any depth, the file's other keys stay),
+ *   null removes one, and the file's other tables stay. Order: the file's first table, the source's, then
+ *   the file's others. A file with no `api` gets the provider's default first.
+ * - `report`: never written. When the source disagrees with the file, the model
+ *   is an update gap and its file is left alone.
+ * - `seed`: a capability detail (`capabilities.reasoning.toggle`) only written
+ *   while the file doesn't state that capability itself: its own table is
+ *   missing or says `supported = false`. Controls a file states are kept.
+ * - `refresh`: only updates a value the file itself sets (or writes it into a
+ *   new file); a file that inherits the field keeps inheriting it.
+ * - `bands`: a cost override list. The source's context bands replace the file's;
+ *   a band at a file band's threshold keeps the file's operator (`gt`/`gte`),
+ *   its other keys and its cache write TTLs (one write price updates the
+ *   first). Overrides with other conditions stay. null means no bands.
+ *   With `replaces`, overrides using those conditions (`service_tier`,
+ *   `utc_hours`) are the source's too. With `optional`, a source that lists
+ *   no bands keeps the file's.
+ * `standalone: true` limits a field to files without a base_model, and
+ * `createOnly: true` to new files.
+ */
+export type Owned =
+  | string
+  | (OwnedRule & { merge?: "min" | "nonzero" | "deprecated" | "tables" | "report" | "seed" | "refresh" })
+  | (OwnedRule & { merge: "bands"; replaces?: string[]; optional?: boolean })
+  | (OwnedRule & { merge: "kinds"; only?: string[]; addOnly?: boolean });
+
+interface OwnedRule {
+  path: string;
+  /** Only patched on files without a base_model; with one, the lab's value stands. */
+  standalone?: boolean;
+  /** Only written when the file is created; an existing file keeps its own value. */
+  createOnly?: boolean;
+}
+
+export interface Policy {
+  /** Fields the engine patches. Everything else in a file is left alone. */
+  owns: Owned[];
+  /** A model the catalog doesn't have: create it, report it as a gap, or ignore it. */
+  creates: "auto" | "gap" | "never";
+  /** A file the source no longer lists: delete it, mark it deprecated, or keep it and report a gap. */
+  removals: "delete" | "deprecate" | "keep";
+  /**
+   * A person reviews every change: set on a newly added module until its first runs have been checked, then removed.
+   */
+  review?: string;
+  /**
+   * A new file whose context window differs from its lab's doesn't inherit
+   * the lab's `limit.input`: it gets `base_model_omit = ["limit.input"]`.
+   */
+  omitLabInput?: boolean;
+  /**
+   * `"replace"`: the observation's `header` is each updated file's leading
+   * comment, so a changed header alone rewrites the file. By default a file
+   * keeps its own and `header` is only written into new files.
+   */
+  headers?: "replace";
+}
+
+export interface SyncModule<Raw = unknown> {
+  id: string;
+  name: string;
+  kind?: "api";
+  policy: Policy;
+  fetch(): Promise<Raw>;
+  /** Pure: raw source data to observations. Throw when the data looks wrong. */
+  observe(raw: Raw): Observation[];
+  /**
+   * Finishes an observation with what only the catalog knows: `file` is the
+   * file it will update (undefined for a new model), `files` every file of
+   * the provider by ID. For values that depend on a file, such as a price
+   * kept only while the file has none, or a price keyed by the file's cache
+   * TTLs. Pure; never writes.
+   */
+  refine?(observation: Observation, file: Doc | undefined, files: ReadonlyMap<string, Doc>): Observation;
+  /** Local files this source speaks for. Others are never removed. Default: all. */
+  manages?(id: string, file: Doc): boolean;
+}
+
+/**
+ * A host with no API good enough to sync from. An agent reads `sources` and
+ * writes an observation file (see `agent.ts`); the engine applies it like any
+ * other source.
+ */
+export interface AgentModule {
+  id: string;
+  name: string;
+  kind: "agent";
+  policy: Policy;
+  /** First-party pages the agent reads. Evidence URLs must be on these hosts. */
+  sources: AgentSource[];
+  /** A short brief for this host: ID conventions, what to skip. */
+  instructions: string;
+  /** IDs this host's files can have. A new ID that doesn't match rejects the batch. */
+  ids: RegExp;
+  /** Files the agent speaks for, given the published model (lab fields merged). Default: all. */
+  scope?(id: string, model: Doc): boolean;
+}
+
+export interface AgentSource {
+  url: string;
+  /** What the page is for: prices, IDs, limits, deprecations. */
+  what: string;
+}
+
+/** A checked observation file (`parseObservations` in `agent.ts`), ready for the engine. */
+export interface ObservedBatch {
+  observations: Observation[];
+  evidence: Evidence[];
+  /** The file lists every model the host serves, so files it leaves out count as dropped. */
+  complete: boolean;
+  by: "agent" | "file";
+}
+
+/** A quote from a page that backs some fields of one observation. */
+export interface Evidence {
+  model: string;
+  url: string;
+  quote: string;
+  fields: string[];
+}
+
+export interface FieldChange {
+  path: string;
+  before?: unknown;
+  after?: unknown;
+}
+
+export interface Change {
+  kind: "create" | "update" | "remove" | "deprecate";
+  model: string;
+  /** Repository-relative file path. */
+  path: string;
+  fields: FieldChange[];
+  /** The change touches a reasoning model's reasoning controls (or creates a reasoning model). */
+  reasoning?: true;
+}
+
+export interface Gap {
+  provider: string;
+  model: string;
+  kind: "new" | "update" | "removal";
+  reason: string;
+  /** Field paths a person has to fill in. */
+  missing: string[];
+  known?: Observation;
+}
+
+export interface Risk {
+  safe: boolean;
+  reasons: string[];
+  counts: {
+    before: number;
+    created: number;
+    updated: number;
+    deleted: number;
+    deprecated: number;
+    priceChanges: number;
+    reasoningChanges: number;
+    gaps: number;
+  };
+}
+
+export interface SyncResult {
+  provider: string;
+  changes: Change[];
+  gaps: Gap[];
+  notices: string[];
+  risk: Risk;
+  /** With an observation file: the evidence for every model changed or reported as a gap. */
+  evidence?: Evidence[];
+}

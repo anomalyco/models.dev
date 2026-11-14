@@ -17,7 +17,6 @@ import {
   withoutModeCosts,
 } from "../model-file-v2.js";
 import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from "../translate.js";
-import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
 import { aimlapi } from "./providers/aimlapi.js";
@@ -99,12 +98,9 @@ export interface SyncProvider<SourceModel> {
   id: string;
   name: string;
   modelsDir: string;
-  /**
-   * Do not create new local TOMLs for remote-only models. Instead open one
-   * deduped GitHub issue per missing model ID.
-   */
+  /** Do not create new local TOMLs for remote-only models; report them as missing instead. */
   skipCreates?: boolean;
-  /** Report remote-only models skipped by skipCreates as GitHub issues. */
+  /** Report remote-only models skipped by skipCreates as missing. */
   trackMissingModels?: boolean;
   deleteMissing?: boolean;
   preserveSymlinks?: boolean;
@@ -115,12 +111,12 @@ export interface SyncProvider<SourceModel> {
   missingNotice?(paths: string[]): string[];
   /**
    * Remote ID to report when translateModel skips a source model. Return
-   * undefined to skip silently (no notice, no missing-model issue).
+   * undefined to skip silently (no notice, not reported as missing).
    */
   sourceID?(model: SourceModel): string | undefined;
   /**
    * Return the ID when a source model skipped by translateModel needs a
-   * missing-model issue. Existing local metadata for that ID is preserved.
+   * hand-written entry (reported as missing). Existing local metadata for that ID is preserved.
    * Return undefined for intentional skips.
    */
   missingModelID?(model: SourceModel): string | undefined;
@@ -182,6 +178,8 @@ export interface SyncResult {
   unchanged: number;
   notices: string[];
   files: Array<{ status: "created" | "updated" | "deleted"; path: string }>;
+  /** Remote models that need a hand-authored entry. */
+  missing: Array<{ id: string; reason?: string }>;
 }
 
 export const providers: {
@@ -310,7 +308,6 @@ type ProviderID = keyof typeof providers;
 
 interface SyncOptions {
   dryRun?: boolean;
-  openIssues?: boolean;
   newOnly?: boolean;
 }
 
@@ -600,37 +597,15 @@ export async function syncProvider<SourceModel>(
     ...provider.missingNotice?.(missingLocal) ?? [],
   ];
 
-  const issueModels = [...new Set([
+  const missingModels = [...new Set([
     ...missingRemote.values(),
     ...(provider.skipCreates === true ? skippedRemote : []),
     ...missingReasoning.keys(),
   ])];
-  if (
-    provider.trackMissingModels !== false
-    && issueModels.length > 0
-    && options.openIssues === true
-  ) {
-    try {
-      notices.push(
-        ...await openMissingModelIssues(
-          { id: provider.id, name: provider.name, modelsDir: provider.modelsDir },
-          issueModels,
-          { dryRun: options.dryRun, reasons: Object.fromEntries(missingReasoning) },
-        ),
-      );
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      const notice = `Failed to open missing-model GitHub issues: ${message}`;
-      notices.push(notice);
-      console.error(notice);
-      // Surface as a workflow annotation: on no-change hours the notice never
-      // reaches a PR body, so a broken token or full dedupe window would
-      // otherwise disable issue opens silently while runs stay green.
-      if (process.env.GITHUB_ACTIONS === "true") console.log(`::error::${provider.id}: ${notice}`);
-    }
-  }
-
-  const result = summarize(provider, files, unchanged, notices);
+  const missing = provider.trackMissingModels === false
+    ? []
+    : [...missingModels].sort().map((id) => ({ id, ...(missingReasoning.has(id) ? { reason: missingReasoning.get(id) } : {}) }));
+  const result = summarize(provider, files, unchanged, notices, missing);
   console.log(
     `${options.dryRun ? "Dry run: " : ""}${result.created} created, ${result.updated} updated, ${result.deleted} removed, ${result.unchanged} unchanged`,
   );
@@ -1067,8 +1042,10 @@ function summarize(
   files: SyncResult["files"],
   unchanged: number,
   notices: string[],
+  missing: SyncResult["missing"],
 ): SyncResult {
   return {
+    missing,
     id: provider.id,
     name: provider.name,
     status: files.length > 0 ? "changed" : "unchanged",
@@ -1179,12 +1156,13 @@ export async function main(args = process.argv.slice(2)) {
   const results = await syncTargets(target, {
     dryRun: args.includes("--dry-run"),
     newOnly: args.includes("--new-only"),
-    // Only GitHub Actions opens issues by default; local needs --open-issues.
-    openIssues: args.includes("--open-issues")
-      || (process.env.GITHUB_ACTIONS === "true" && !args.includes("--no-issues")),
   });
 
   await writeReport(target, results);
+
+  // Machine-readable results for automation outside GitHub Actions (files changed, missing models, notices).
+  const resultOut = args.find((arg) => arg.startsWith("--result-out="))?.slice("--result-out=".length);
+  if (resultOut) await Bun.write(resultOut, `${JSON.stringify(results, null, 2)}\n`);
 
   console.log("\nSync summary");
   for (const result of results) {

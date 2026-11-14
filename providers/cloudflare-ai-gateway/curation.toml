@@ -161,6 +161,9 @@ skip = [
 # https://developers.cloudflare.com/ai/models/typesafe/jev/), so it is Jev 1.13, not the moving alias.
 [models."typesafe/jev"]
 base_model = "typesafe/jev-1.13.0"
+note = [
+  "Modalities: text only, Cloudflare's typesafe/jev input schema has no assets field and its page shows no image input, unlike typesafe/jev-1.14.0 (https://developers.cloudflare.com/ai/models/typesafe/jev/)",
+]
 
 # Muse Spark 1.x / Muse Wonder: the catalog schema's reasoning.effort enum (none..max) is the generic
 # Responses schema, not what the model accepts. Cloudflare's own validation error lists the values:
