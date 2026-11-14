@@ -3471,7 +3471,7 @@ test("factors Eden AI models onto lab metadata and prices from list_pricing", ()
 
 test("takes Eden AI reasoning options from the model's own lab entry", () => {
   expect(reasoningOptionsFor("deepseek/deepseek-v4-pro")).toEqual([
-    { type: "effort", values: ["none", "high", "max"] },
+    { type: "effort", values: ["none", "low", "high", "max"] },
   ]);
   expect(reasoningOptionsFor("openai/o1")).toEqual([
     { type: "effort", values: ["low", "medium", "high"] },
