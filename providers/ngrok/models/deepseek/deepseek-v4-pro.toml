@@ -1,0 +1,37 @@
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Effort: reasoning_effort = low|high|max
+# Source: ngrok.ai catalog, provider `deepseek` (default route for this ID), accessed 2026-11-12.
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# APIs: the surfaces the ngrok catalog lists for this route (chat-completions, responses, messages):
+# https://ngrok.com/docs/ai-gateway/reference/model-catalog#deepseek
+# DeepSeek through the gateway serves Chat Completions, Responses and Messages: https://ngrok.com/docs/ai-gateway/providers/deepseek
+# Peak hours: credits bill DeepSeek's off-peak price at every hour, so there is no peak multiplier:
+# https://ngrok.com/docs/ai-gateway/providers/deepseek#peak-and-off-peak-pricing
+# Reasoning, cache and compatibility markers from providers/deepseek (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.71
+cache = { read = 0.072 }
+
+[cost.text.output]
+price = 2.03

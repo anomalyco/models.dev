@@ -1,0 +1,17 @@
+name = "ngrok AI Gateway"
+env = ["NGROK_AI_GATEWAY_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# One access key (ng-xxxxx-g1-xxxxx) from https://app.ngrok.ai reaches every
+# built-in provider; requests paid with ngrok.ai credits need no provider account.
+# POST https://gateway.ngrok.ai/v1/chat/completions, /v1/responses and
+# /v1/messages. Models are addressed by full catalog ID (author/model); the
+# gateway routes to the model author's own provider first.
+# Env var matches ngrok's OpenCode guide:
+# https://ngrok.com/docs/ai-gateway/agents/opencode
+# Pricing: credits pay the provider's list price plus a $0.05 per million token
+# processing fee on request and response tokens (accessed 2026-11-12):
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# Catalog: https://ngrok.com/docs/ai-gateway/reference/model-catalog
+api = "https://gateway.ngrok.ai/v1"
+doc = "https://ngrok.com/docs/ai-gateway/reference/model-catalog"

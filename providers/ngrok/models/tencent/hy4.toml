@@ -1,0 +1,32 @@
+# Effort: reasoning_effort = none|high (default high). "none" is how thinking is turned off on
+# Source: ngrok.ai catalog, provider `tokenhub` (default route for this ID), accessed 2026-11-12.
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# APIs: the surfaces the ngrok catalog lists for this route (chat-completions, responses, messages):
+# https://ngrok.com/docs/ai-gateway/reference/model-catalog#tencent-tokenhub
+# Reasoning, cache and compatibility markers from providers/tencent-tokenhub (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.884
+
+[cost.text.output]
+price = 2.551

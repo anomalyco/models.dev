@@ -1,0 +1,31 @@
+# Toggle: thinking.type = enabled|disabled on /v1/messages
+# Effort: output_config.effort on /v1/messages (Chat Completions drops reasoning_effort)
+# Source: ngrok.ai catalog, provider `anthropic` (default route for this ID), accessed 2026-11-12.
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# APIs: the surfaces the ngrok catalog lists for this route (messages, chat-completions):
+# https://ngrok.com/docs/ai-gateway/reference/model-catalog#anthropic
+# Reasoning, cache and compatibility markers from providers/anthropic (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
+# Messages is listed first: the gateway forwards output_config on /v1/messages and strips
+# reasoning_effort on Chat Completions: https://ngrok.com/docs/ai-gateway/providers/anthropic#parameters-the-gateway-removes
+schema = 2
+base_model = "anthropic/claude-sonnet-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 2.05
+cache = { read = 0.25, write = { "5m" = 2.55, "1h" = 4.05 } }
+
+[cost.text.output]
+price = 10.05
