@@ -1,0 +1,20 @@
+# Sources (accessed 2026-11-05):
+# - Pricing: https://apimodels.app/models/claude-fable-5 and https://apimodels.app/pricing
+#   ($5.00 input / $25.00 output / $0.882 cache read / $8.824 cache write per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("claude-fable-5")
+# Served on the Anthropic Messages API (https://api.apimodels.app/v1/messages); thinking and output_config.effort are passed through unchanged.
+schema = 2
+base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.882, write = 8.824 }
+
+[cost.text.output]
+price = 25

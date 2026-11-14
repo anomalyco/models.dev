@@ -1,0 +1,20 @@
+# Sources (accessed 2026-11-05):
+# - Pricing: https://apimodels.app/models/claude-opus-5-5 and https://apimodels.app/pricing
+#   ($2.40 input / $12.00 output / $0.12 cache read / $3.00 cache write per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("claude-opus-5-5")
+# Served on the Anthropic Messages API (https://api.apimodels.app/v1/messages); thinking and output_config.effort are passed through unchanged.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.4
+cache = { read = 0.12, write = 3 }
+
+[cost.text.output]
+price = 12

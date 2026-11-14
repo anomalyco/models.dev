@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-05):
+# - Pricing: https://apimodels.app/models/gpt-6-sol and https://apimodels.app/pricing
+#   ($1.00 input / $5.00 output / $0.10 cache read per 1M tokens)
+#   Input above 272K tokens bills the whole request at 2x input and cache read, 1.5x output.
+# - Model ID: https://api.apimodels.app/v1/models ("gpt-6-sol")
+# Served on Chat Completions; reasoning_effort is forwarded unchanged.
+# Custom (freeform) tools have not been probed on this host, so `freeform` is left out.
+schema = 2
+base_model = "openai/gpt-6-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5
