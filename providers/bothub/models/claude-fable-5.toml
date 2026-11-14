@@ -1,0 +1,15 @@
+# Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
+# (checked 2026-11-12): 7.66 / 38.32 USD per 1M input / output tokens.
+# Price taken from ECO mode; PRO may differ.
+schema = 2
+base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 7.66
+
+[cost.text.output]
+price = 38.32

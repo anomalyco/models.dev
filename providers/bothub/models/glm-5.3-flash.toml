@@ -1,9 +1,10 @@
-# Pricing: https://bothub.ru/models lists 12,98 / 43,27 RUB per 1M input / output tokens
-# (checked 2026-10-21; the page shows a -22% badge and this is the displayed price).
-# RUB converted to USD at the CBR rate 82.8879 RUB/USD (2026-10-21), rounded to 4 decimals.
-# The per-model page (https://bothub.ru/<id>) shows prices about 6% higher.
-# Controls mirrored from the lab entry: GLM-5.3-Flash always reasons;
-# effort low|high|max with default max, no toggle.
+# Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
+# (checked 2026-11-12): 0.13 / 0.42 USD per 1M input / output tokens.
+# Price taken from ECO mode; PRO may differ.
+# Effort: reasoning_effort = low|high|max
+# Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
+# No published thinking.type / thinking_budget / enable_thinking controls on this host.
+# Levels: https://bothub.chat/glm-5.3-flash (checked 2026-11-12).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -15,7 +16,7 @@ structured_output = true
 legacy_interleaved = true
 
 [cost.text.input]
-price = 0.1566
+price = 0.13
 
 [cost.text.output]
-price = 0.522
+price = 0.42

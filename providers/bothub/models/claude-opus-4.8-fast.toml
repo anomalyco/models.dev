@@ -1,0 +1,16 @@
+# Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
+# (checked 2026-11-12): 11.27 / 56.36 USD per 1M input / output tokens.
+# Price taken from ECO mode; PRO may differ.
+schema = 2
+base_model = "anthropic/claude-opus-4-8"
+name = "Claude Opus 4.8 (Fast)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 11.27
+
+[cost.text.output]
+price = 56.36
