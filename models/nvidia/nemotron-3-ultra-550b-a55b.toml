@@ -25,6 +25,10 @@ top_k = true
 context = 1_000_000
 output = 128_000
 
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
+
 [[benchmarks]]
 name = "SWE-Bench Verified"
 score = 70.7

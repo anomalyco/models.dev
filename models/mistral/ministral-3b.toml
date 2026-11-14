@@ -1,11 +1,14 @@
 # Sources:
 # https://mistral.ai/news/ministraux/
 # https://ai.azure.com/catalog/models/Ministral-3B
+# Closed weights: the announcement lists Ministral 3B under the Mistral
+# Commercial License only and releases weights for Ministral 8B Instruct
+# alone. The mistralai Hugging Face org has no Ministral 3B 2410 repo.
 schema = 2
 name = "Ministral 3B"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 family = "ministral"
-open_weights = true
+open_weights = false
 knowledge = "2024-03"
 release_date = "2024-10-16"
 

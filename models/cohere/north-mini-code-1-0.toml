@@ -21,6 +21,10 @@ top_k = true
 context = 256_000
 output = 64_000
 
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/CohereLabs/North-Mini-Code-1.0"
+
 [[benchmarks]]
 name = "SWE-Bench Verified"
 score = 67.6

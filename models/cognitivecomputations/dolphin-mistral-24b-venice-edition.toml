@@ -1,8 +1,10 @@
 # Lab metadata carried over from providers/openrouter/models/cognitivecomputations/dolphin-mistral-24b-venice-edition.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
-# Weights: https://huggingface.co/cognitivecomputations/Dolphin-Mistral-24B-Venice-Edition (Apache-2.0)
+# Weights: https://huggingface.co/dphn/Dolphin-Mistral-24B-Venice-Edition (Apache-2.0)
+# The old cognitivecomputations/Dolphin-Mistral-24B-Venice-Edition URL
+# redirects here (HTTP 307, checked 2026-11-14).
 # Sampling: open weights; generation_config.json sets temperature 0.15
-# (https://huggingface.co/cognitivecomputations/Dolphin-Mistral-24B-Venice-Edition/blob/main/generation_config.json).
+# (https://huggingface.co/dphn/Dolphin-Mistral-24B-Venice-Edition/blob/main/generation_config.json).
 schema = 2
 name = "Uncensored"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
@@ -25,3 +27,7 @@ top_k = true
 [limit]
 context = 128_000
 output = 8_192
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/dphn/Dolphin-Mistral-24B-Venice-Edition"

@@ -24,6 +24,10 @@ top_k = true
 context = 1_000_000
 output = 131_072
 
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meituan-longcat/LongCat-2.0"
+
 [[benchmarks]]
 name = "SWE-Bench Pro"
 score = 59.5

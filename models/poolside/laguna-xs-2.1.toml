@@ -22,6 +22,10 @@ top_k = true
 context = 262_144
 output = 32_768
 
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/poolside/Laguna-XS-2.1"
+
 [[benchmarks]]
 name = "SWE-Bench Verified"
 score = 70.9

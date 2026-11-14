@@ -1,17 +1,21 @@
-# Announced in the Ornith 1.0 family but not yet published on Hugging Face as
-# of 2026-06-28 — no weights URL or benchmark scores available yet. Modalities
-# and context window are provisional, assumed consistent with the rest of the
-# family pending the public release.
+# Announced in the Ornith 1.0 family (9B, 31B, 35B, 397B), but the 31B
+# weights are not published. On 2026-11-12, the ornith-ai Hugging Face
+# org and its Ornith-1.0 collection have only 9B, 35B and 397B, so
+# open_weights is false until the 31B weights are released. The org was
+# named deepreinforce-ai: its URLs redirect to ornith-ai, and neither
+# name has an Ornith-1.0-31B repo. Modalities and context window are
+# provisional, assumed consistent with the family.
 # https://deep-reinforce.com/ornith_1_0.html
-# Sampling: open weights; the Ornith model cards use temperature=0.6, top_p=0.95, top_k=20
+# https://huggingface.co/ornith-ai
+# Sampling: the Ornith model cards use temperature=0.6, top_p=0.95, top_k=20
 #   (https://huggingface.co/ornith-ai/Ornith-1.0-9B, https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B).
 # Input: image input comes from the Qwen3.5 vision stack (config.json image_token_id). Neither the model card nor
 #   DeepReinforce (no first-party API) lists image formats, so input stays generic `image`.
 schema = 2
 name = "Ornith 1.0 31B"
-description = "Open coding-reasoning model for repository tasks and self-improving agents"
+description = "Coding-reasoning model for repository tasks and self-improving agents"
 family = "ornith"
-open_weights = true
+open_weights = false
 release_date = "2026-06-25"
 license = "MIT"
 

@@ -1,17 +1,16 @@
+# Base is Ministral 3 3B (2512). Live GET /v1/models on 2026-11-14
+# lists image input and $0.1/$0.1 prices, the same as Vercel's
+# mistral/ministral-3b and Mistral's ministral-3b-latest (2512).
+# Ministral 3B 24.10 was text-only and is retired at Mistral.
 schema = 2
-base_model = "mistral/ministral-3b"
+base_model = "mistral/ministral-3b-2512"
 name = "Mistral: Ministral 3B"
 description = "A compact, efficient model for on-device tasks like smart assistants and local analytics, offering low-latency performance."
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 structured_output = false
 
 [limit]
-context = 131_072
 output = 4_000
 
 [cost.text.input]
