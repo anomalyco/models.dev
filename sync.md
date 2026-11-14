@@ -28,6 +28,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync wiro` syncs only Wiro AI.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -351,6 +352,19 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Existing Morph models are updated from the feed's input, cached-input and output prices and its context and output limits.
 - Reasoning controls, input MIME types, standby tiers, Messages API support and mid-conversation flags stay hand-authored from live probes.
 - New models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue. OpenRouter alias IDs (`morph-dsv4flash-0731`) and entries with `is_ready: false` are skipped silently. Files absent from the feed, such as `auto`, are kept.
+
+## Wiro AI Notes
+
+- Wiro AI is implemented in `packages/core/src/sync/providers/wiro.ts`.
+- Source endpoint: `https://llm.wiro.ai/v1/models`; no authentication required, so the sync needs no secret. The module sends `WIRO_API_KEY` when one is set.
+- The catalog owns per-token USD prices (`pricing.prompt`, `completion`, `input_cache_read`, `input_cache_write`), the price bands in `x_wiro.pricing_tiers` (each band after the first becomes a context tier), `context_length`, `max_tokens`, and structured output: `structured_output_modes` listing `json_schema`. JSON mode alone (`json_object`) does not count.
+- The catalog quotes each model at the rate in force when it answers. The sync divides every quote by the file's multipliers in force at that moment (DeepSeek's peak hours, dated price changes), so files keep their base rates and their multipliers. A multiplier it can't evaluate, or one that starts or ends during the request, leaves that model's prices as they are and adds a notice.
+- Limits up to the lab's are published as quoted, and a limit equal to the lab's is inherited. A larger catalog limit is published only when the file already states it (checked by hand), and the catalog can still lower that value.
+- Rows without a per-token price (`pricing: null`: models billed by GPU time, and Grok, whose rates are on its model pages) keep the prices in their files.
+- When the catalog starts quoting a cache price, `capabilities.cache = { implicit = true }` is added unless the file already has cache details.
+- Reasoning controls, input formats, sampling flags, freeform tool formats, API tables, names and header comments are hand-authored and kept.
+- New catalog models are not created (`skipCreates`) and open no issues (`trackMissingModels: false`). They are listed in the sync report and added by PR once their reasoning controls are checked against the gateway.
+- Models absent from the catalog are removed. A response with fewer than 20 models, a `total_count` that differs from the rows, duplicate IDs, or a next-page link to another host fails the sync before anything is written.
 
 ## NEAR AI Cloud Notes
 

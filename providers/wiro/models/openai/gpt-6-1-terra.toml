@@ -1,0 +1,48 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-10), https://wiro.ai/models/openai/gpt-6-1-terra
+# and https://wiro.ai/docs/completions-api
+# Upstream: x_wiro.pricing_source.source_model = "openai/gpt-6.1-terra".
+# Prices: catalog pricing (USD per token) x 1,000,000.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (Chat Completions). reasoning.effort (Responses)
+# and output_config.effort (Messages) take the same levels.
+# These are the model's declared levels (the reasoning effort options on its model page). The gateway
+# moves an effort a model does not declare to the nearest declared one, upward first, and names the change
+# in the x-wiro-adjusted-parameters response header; none is rejected unless declared.
+# The same levels as providers/openai/models/gpt-6.1-terra.toml.
+# Custom tools (catalog custom_tools = true): Chat Completions and Responses reach the same upstream call,
+# so both list the same formats. Live 2026-11-08 at the default reasoning effort, with a prompt asking for
+# "hello", a regex grammar (ZZ[0-9]{3}) and the same Lark grammar each returned a matching value 2 times out
+# of 2 on both APIs.
+# Messages takes function tools only (Anthropic's custom type is a function tool).
+# Structured output: not listed for this model (catalog structured_outputs = false).
+# Modalities: text and image input (catalog capabilities.input_modalities), with the gateway's JPEG,
+# PNG, GIF and WebP within the lab's list; no document input, so no PDF. Live 2026-11-10, a PNG on
+# Chat Completions was read correctly.
+# Limits: context_length 1,050,000 and max_tokens 128,000 (catalog) match the lab file, so they are
+# inherited. The catalog's max_input_tokens (1,050,000) is the whole window, so the lab's input
+# limit (922,000, the window less the output) is kept.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 5

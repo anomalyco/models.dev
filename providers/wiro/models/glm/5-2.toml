@@ -1,0 +1,45 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-08), https://wiro.ai/models/glm/5-2
+# and https://wiro.ai/docs/completions-api
+# Upstream: x_wiro.pricing_source.source_model = "bytedance/glm-5-2-260617".
+# Prices: catalog pricing (USD per token) x 1,000,000.
+# Toggle: reasoning.enabled = true|false (Chat Completions) or thinking.type = enabled|disabled (Messages),
+# the model's thinking switch (enabled, disabled and auto on its model page). On Responses,
+# reasoning.effort = minimal turns it off and any other effort is served as high.
+# No graded effort: the model page offers reasoning_effort minimal and high. Live 2026-11-08 on this model,
+# minimal returned no reasoning on a two-part reasoning prompt (2 of 2 runs, like the toggle off), high
+# returned 354 and 653 reasoning tokens, and low answered with x-wiro-adjusted-parameters:
+# reasoning.effort=high. reasoning.enabled = false also returned 0 reasoning tokens. So this host only
+# switches reasoning on and off.
+# Structured output: not listed for this model (catalog structured_outputs = false).
+# Cache: the catalog prices cached input (input_cache_read) and no request field controls caching,
+# so cache = { implicit = true }. Cached tokens are billed at these catalog rates (checked live
+# 2026-11-08 with a repeated long prefix: the charged amount matched tokens x catalog prices).
+# Limits: context_length 1,048,576 and max_tokens 128,000 (catalog).
+# Sampling: top_k is not in the catalog's supported_parameters.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+top_k = false
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 128_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4
