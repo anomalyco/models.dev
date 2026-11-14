@@ -1,0 +1,20 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: always on. Qwen3.7 Flash reasons with reasoning_effort omitted (632 reasoning
+#   tokens) and rejects reasoning_effort = off. The lab's thinking switch is not forwarded
+#   (thinking.type = disabled 615 tokens, enable_thinking = false 691, thinking_budget = 32
+#   ignored at 648), and graded values make no consistent difference (low 664, medium
+#   713/804, xhigh 690/765), so no levels are published.
+schema = 2
+base_model = "alibaba/qwen3.7-flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.13
