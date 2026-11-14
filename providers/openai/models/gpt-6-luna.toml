@@ -68,5 +68,8 @@ factor = { text = 1.1 }
 service_tier = "priority"
 body = { service_tier = "priority" }
 
+[experimental.modes.flex]
+body = { service_tier = "flex" }
+
 [experimental.modes.pro]
 body = { reasoning = { mode = "pro" } }
