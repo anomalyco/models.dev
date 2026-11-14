@@ -1,0 +1,16 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "grok-4.6" in OpenAI protocol (/v1), $0.0297829/$0.0893488 per MTok input/output.
+# Cache read: $0.0074457 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/xai/models/grok-4.6.toml, exactly as authored there; no separate on/off field on this surface.
+schema = 2
+base_model = "xai/grok-4.6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 0.0297829
+cache = { read = 0.0074457 }
+
+[cost.text.output]
+price = 0.0893488

@@ -1,0 +1,17 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "deepseek-v4-flash" in OpenAI protocol (/v1), $0.0004/$0.0013 per MTok input/output.
+# Cache read: $0.00002 per MTok, same snapshot row.
+# Reasoning: on/off plus graded effort, copied from providers/deepseek/models/deepseek-v4-flash.toml; wire path below.
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.0004
+cache = { read = 0.00002 }
+
+[cost.text.output]
+price = 0.0013
