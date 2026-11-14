@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-14):
+# - https://api.synthetic.new/openai/v1/models (hf:moonshotai/Kimi-K3.1-Pro: context_length 524,288, max_output_length 65,536, $2 input / $0.2 cache read / $10 output per 1M tokens, reasoning_parameters.efforts low|high|max, text + image input, tools, structured outputs)
+# - Same reasoning field and sampling support as the Kimi-K3 entry on this host.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 524_288
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10
