@@ -100,7 +100,7 @@ export const neuralwatt = {
   missingNotice(paths) {
     if (paths.length === 0) return [];
     return [
-      `${paths.length} local Neuralwatt models were absent from the live API and were retained; a run cannot tell a retired model from a beta this account was never granted.`,
+      `${paths.length} local Neuralwatt models were absent from the public API and were retained; absence from the public catalog does not prove retirement, because a model can be a private grant to some accounts.`,
       `Retained local paths: ${paths.map((item) => `\`${item}\``).join(", ")}`,
     ];
   },
