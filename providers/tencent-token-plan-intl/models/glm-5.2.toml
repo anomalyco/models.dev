@@ -1,0 +1,19 @@
+# Tencent Token Plan International, Singapore. Credits subscription has no
+# per-token USD price. Host reasoning_effort supports none, minimal, low,
+# medium, high, xhigh, and max.
+# Sources: https://www.tencentcloud.com/document/product/1300/78934
+# https://www.tencentcloud.com/document/product/1300/80637
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["max", "xhigh", "high", "medium", "low", "minimal", "none"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

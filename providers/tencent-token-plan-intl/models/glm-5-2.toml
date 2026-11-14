@@ -1,0 +1,15 @@
+# Alias for glm-5.2 in Tencent Token Plan International.
+base_model = "zhipuai/glm-5.2"
+
+[[reasoning_options]]
+type = "effort"
+values = ["max", "xhigh", "high", "medium", "low", "minimal", "none"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

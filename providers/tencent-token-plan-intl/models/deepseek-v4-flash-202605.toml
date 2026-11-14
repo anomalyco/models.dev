@@ -1,0 +1,23 @@
+# Tencent Token Plan International alias for DeepSeek V4 Flash 0731 GA.
+# Credits subscription has no per-token USD price. The current Tencent
+# reasoning page documents low, high, and max for the V4 Flash family.
+# Sources: https://www.tencentcloud.com/document/product/1300/78934
+# https://www.tencentcloud.com/document/product/1300/80637
+# Toggle: thinking.type = enabled|disabled
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0

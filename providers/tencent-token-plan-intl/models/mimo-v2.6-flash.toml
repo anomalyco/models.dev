@@ -1,0 +1,25 @@
+# Tencent Token Plan International, Singapore. Credits subscription has no
+# per-token USD price. Tencent's generic reasoning page omits MiMo-V2.6-Flash;
+# Tencent's current MiMo guide documents thinking.type enabled|disabled, text,
+# image, and video input, text output, and structured output.
+# Sources: https://www.tencentcloud.com/document/product/1300/78934
+# https://intl.cloud.tencent.com/document/product/1300/84216
+# Toggle: thinking.type = enabled|disabled
+base_model = "xiaomi/mimo-v2.6-flash"
+
+structured_output = true
+
+[[reasoning_options]]
+type = "toggle"
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0
+output = 0
+cache_read = 0
+cache_write = 0
+
+[modalities]
+input = ["text", "image", "video"]
