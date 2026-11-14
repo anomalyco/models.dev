@@ -1,0 +1,19 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: always on. MiMo maps every effort level except none to "on", and this host
+#   rejects reasoning_effort = off, so there is no way to switch thinking off. thinking.type =
+#   disabled is not forwarded either (87/74 reasoning tokens). Graded levels only move the
+#   reported volume within noise (low 84/63, medium 94/89, high 110/84).
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

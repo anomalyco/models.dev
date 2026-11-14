@@ -1,3 +1,4 @@
+# Output limit: capped at the 256,000 context; no host cap is documented and the 262,144 from the base model or host listing is larger.
 schema = 2
 base_model = "nvidia/nemotron-3-super-120b-a12b"
 name = "Nemotron 3 Super 120B A12B (Arkanecloud)"
@@ -8,6 +9,7 @@ structured_output = false
 
 [limit]
 context = 256_000
+output = 256_000
 
 [cost.text.input]
 price = 0.4

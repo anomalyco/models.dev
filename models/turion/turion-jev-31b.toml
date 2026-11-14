@@ -1,0 +1,35 @@
+# Sources (accessed 2026-11-11):
+# - https://turion.ai/docs/guides/decision-models/#turion-jev-31b: Turion's own decision model, a Gemma 4 31B fine-tune
+#   with Apache-2.0 weights (https://huggingface.co/turion-ai/turion-jev-31b). Answers typed choice (up to 255 options),
+#   score (2 to 10 levels) and noul (yes/no) questions with probabilities; output tokens are always 0.
+# - https://turion.ai/docs/reference/rest-api/: on POST /v1/systemone `state` is a string, an object or an array, and no
+#   image input is documented; a deploy of the model has a 16,384-token context.
+# - Release: 2026-10-24, when Turion first listed the public turion-ai/turion-jev-31b weights.
+# Output: typed decision probabilities, no generated text, so there is nothing to sample (temperature/top_p/top_k false).
+schema = 2
+v2_only = true
+type = "decision"
+name = "Turion Jev 31B"
+description = "Open-weight System One decision model fine-tuned from Gemma 4 31B that returns probabilities for typed choice, yes/no and score questions about text or JSON"
+open_weights = true
+release_date = "2026-10-24"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 16_384
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/turion-ai/turion-jev-31b"

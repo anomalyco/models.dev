@@ -1,0 +1,15 @@
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+name = "OpenAI: GPT-6.1 Terra (Fast)"
+description = "GPT-6.1 Terra is OpenAI’s model for visual reasoning, precise computer use, and natural writing. It accepts text and images and generates text, with configurable reasoning effort, structured outputs, tool calling through the Responses API, and implicit and explicit prompt caching."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 10

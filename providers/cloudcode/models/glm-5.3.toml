@@ -1,0 +1,24 @@
+# Price: https://cloudcode.one/models.json (accessed 2026-10-23).
+# Effort: reasoning_effort = low|high|max (none is ignored, not a way to turn reasoning off)
+# Checked live through the Chat Completions endpoint on 2026-10-23:
+# - low cut reasoning to about a quarter of high on the same prompt.
+# - Caching is automatic: a repeated 16k-token prefix came back with 16,256 cached tokens from the third request.
+# - A strict json_schema response_format was not followed (JSON under another key), so no structured output.
+# - top_k is not applied.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.26
+cache = { read = 0.234 }
+
+[cost.text.output]
+price = 3.96

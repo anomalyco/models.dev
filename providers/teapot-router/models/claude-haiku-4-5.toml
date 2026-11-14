@@ -1,0 +1,24 @@
+# Prices: Teapot Router public pricing endpoint https://teapotrouter.com/api/pricing (retrieved 2026-11-07).
+# Standard account group: USD per million tokens = model_ratio x 2 x 0.35 standard group ratio;
+# output = input x completion_ratio. Prompt-cache pricing is not published, so none is declared.
+# Reasoning: passthrough of the upstream Anthropic Messages controls on the /v1/messages
+# surface declared below; chat-completions (provider default) does not expose them.
+# Toggle: $.thinking.type = "enabled"|"disabled"
+# Budget: integer $.thinking.budget_tokens
+# Live probe 2026-11-07 on https://api.teapotrouter.com/v1/messages: thinking.type="disabled"
+# accepted (HTTP 200, normal completion) — the toggle works on this host.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+
+[api.messages]
+base_url = "https://api.teapotrouter.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.35
+
+[cost.text.output]
+price = 1.75

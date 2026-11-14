@@ -1,0 +1,23 @@
+# Sources (accessed 2026-10-22):
+# https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
+# https://iteracompute.com/models/minimax-m2-5/ (host capabilities and pricing)
+# MiniMax M2.x thinking is always on; thinking.type=disabled is ignored.
+# No-control baseline: providers/minimax for the same model; https://platform.minimax.io/docs/api-reference/text-anthropic-api.
+# Exact host record (2026-10-23), /v1/models data[].id="minimax/minimax-m2.5": max_output_tokens=16384.
+# This is the published host cap; the lab's larger generation ceiling is not the host serving limit.
+schema = 2
+base_model = "minimax/MiniMax-M2.5"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+output = 16_384
+
+[cost.text.input]
+price = 0.27
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.03

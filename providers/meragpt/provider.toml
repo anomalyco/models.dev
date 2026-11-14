@@ -1,0 +1,9 @@
+name = "meraGPT"
+env = ["MERAGPT_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# APIs (https://meragpt.com/docs, accessed 2026-11-06): POST /v1/systemone (System One format) for Decider 1;
+# POST /v1/chat/completions (OpenAI format) for Restyler 1; GET /v1/models lists the models and prices
+# without a key. Bearer key in the Authorization header.
+api = "https://meragpt.com/v1"
+doc = "https://meragpt.com/docs/models"

@@ -1,0 +1,18 @@
+# First-party host. On the Unbiased API the `pareto` model ID points to the stable Pareto 26.10 release
+# (https://unbiased.ai/blog/pareto-26-10/), so this entry is based on unbiased/pareto-26.10.
+# Pricing (USD per 1M tokens, accessed 2026-10-30): https://unbiased.ai/pricing/ and https://unbiased.ai/pareto-26-10/
+#   ($0.80 input, $0.03 cached input, $3.20 output).
+# Cache: cached-input reads are billed, with no cache_control markers documented, so implicit.
+# Reasoning: no first-party toggle, effort or budget is documented, so it inherits false from the lab file.
+schema = 2
+base_model = "unbiased/pareto-26.10"
+
+[capabilities]
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 3.2

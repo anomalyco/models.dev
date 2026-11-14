@@ -1,0 +1,34 @@
+# Sources (accessed 2026-11-12):
+# - Released 2025-06-18: https://platform.minimax.io/docs/release-notes/models and https://www.minimax.io/news/minimax-hailuo-02
+# - Text-to-video, image-to-video and first & last frame (POST /v1/video_generation); input images JPG, JPEG, PNG, WebP:
+#   https://platform.minimax.io/docs/api-reference/video-generation-t2v
+#   https://platform.minimax.io/docs/api-reference/video-generation-i2v
+#   https://platform.minimax.io/docs/api-reference/video-generation-fl2v
+# - Output: an MP4 file (output_aigc.mp4): https://platform.minimax.io/docs/api-reference/video-generation-download
+schema = 2
+v2_only = true
+type = "video"
+name = "Hailuo 02"
+description = "Video model for 512P to 1080P clips of up to 10 seconds from text, a first-frame image or first and last frames"
+family = "minimax"
+open_weights = false
+release_date = "2025-06-18"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+url = "https://www.minimax.io/news/minimax-hailuo-02"
+type = "announcement"

@@ -1,0 +1,22 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api.minimax.cn/v1/images/generations and POST https://api.minimax.cn/v1/images/edits
+#   (https://platform.minimaxi.com/docs/guides/image-generation)
+# - Pricing: CNY per 1M tokens (https://platform.minimaxi.com/docs/pricing/overview#models/image) — text input 15, image input 20, image output 50
+# CNY→USD rate: 6.685797, 2026-11-12, source: https://open.er-api.com/v6/latest/USD
+# Not modeled: launch offer of 50% off the whole request for outputs of at least 16,600,000 pixels, ending 2026-11-18 00:00 Beijing time.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3-Image-Highspeed"
+
+[api.images]
+base_url = "https://api.minimax.cn/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.text.input]
+price = 2.2436
+
+[cost.image.input]
+price = 2.9914
+
+[cost.image.output]
+price = 7.4785
