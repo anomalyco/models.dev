@@ -1,0 +1,29 @@
+# Source: https://api.experientiallabs.ai/api/models/glm-5.3-flash
+# List prices in USD per million tokens; temporary promotions are excluded.
+# Reasoning baseline: https://api.experientiallabs.ai/api/models/glm-5.3-flash; intersected with published default-route efforts.
+# Effort: top-level reasoning_effort = low|high|max.
+# Host protocol: https://platform.experientiallabs.ai/docs/openai-compatibility
+# Cache: host docs describe provider prefix reuse; published cache prices establish support.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3 Flash"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = false
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+input = 917_504
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

@@ -34,6 +34,7 @@ import { digitalocean } from "./providers/digitalocean.js";
 import { edenai } from "./providers/edenai.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
 import { engy } from "./providers/engy.js";
+import { experiential } from "./providers/experiential.js";
 import { fireworksAi } from "./providers/fireworks-ai.js";
 import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
@@ -200,6 +201,7 @@ export const providers: {
   edenai: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
   engy: SyncProvider<any>;
+  experiential: SyncProvider<any>;
   "fireworks-ai": SyncProvider<any>;
   friendli: SyncProvider<any>;
   "github-copilot": SyncProvider<any>;
@@ -248,6 +250,7 @@ export const providers: {
   edenai,
   empiriolabs,
   engy,
+  experiential,
   "fireworks-ai": fireworksAi,
   friendli,
   "github-copilot": githubCopilot,
@@ -288,6 +291,7 @@ export const groups = {
     "crossmodel",
     "edenai",
     "empiriolabs",
+    "experiential",
     "huggingface",
     "inceptron",
     "kilo",
