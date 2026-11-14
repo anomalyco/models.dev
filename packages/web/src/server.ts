@@ -1,5 +1,6 @@
 import Index from "../index.html";
 import { getRenderedPage, Models, Providers, SearchIndexJson, renderDocument } from "./render";
+import { LabLogoSprite, ProviderLogoSprite } from "./logos";
 import {
   filterCatalogByModelType,
   filterModelsByModelType,
@@ -111,6 +112,18 @@ Bun.serve({
         },
       });
     },
+    ...Object.fromEntries(
+      [ProviderLogoSprite, LabLogoSprite].map((sprite) => [
+        sprite.path,
+        () =>
+          new Response(sprite.svg, {
+            headers: {
+              "Content-Type": "image/svg+xml",
+              "Cache-Control": "public, max-age=31536000, immutable",
+            },
+          }),
+      ]),
+    ),
     "/experimental/v2.0/api.json": () =>
       Response.json(ProvidersV2, {
         headers: {
