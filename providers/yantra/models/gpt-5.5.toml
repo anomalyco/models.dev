@@ -1,0 +1,16 @@
+# Yantra AI lists these models at its vendor cost plus a 15% margin. Prices are USD per 1M tokens, converted from the INR prices on
+# https://apikeys.in/models.html at 94.5 INR per USD. Yantra bills in INR, so the USD figure moves slightly if that rate changes.
+schema = 2
+base_model = "openai/gpt-5.5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 5.75
+
+[cost.text.output]
+price = 34.5
