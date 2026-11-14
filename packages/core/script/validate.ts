@@ -65,7 +65,7 @@ try {
   const labLimits: LimitEntry[] = [];
   for await (const file of new Bun.Glob("models/**/*.toml").scan({ cwd: rootDir, followSymlinks: true })) {
     const toml = await import(path.join(rootDir, file), { with: { type: "toml" } }).then((mod) => mod.default);
-    labLimits.push({ file, limit: toml.limit });
+    labLimits.push({ file, limit: toml.limit, modalities: toml.modalities });
   }
   const overLimit = limitErrors([
     ...labLimits,
@@ -73,6 +73,7 @@ try {
       Object.entries(provider.models).map(([id, model]) => ({
         file: `providers/${providerID}/models/${id}.toml`,
         limit: model.limit,
+        modalities: model.modalities,
       })),
     ),
   ]);

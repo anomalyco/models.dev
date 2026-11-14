@@ -18,6 +18,19 @@ test("flags an input larger than the context", () => {
   ]);
 });
 
+test("skips models that don't output text", () => {
+  expect(
+    limitErrors([
+      { file: "tts.toml", limit: { context: 8_192, output: 16_384 }, modalities: { output: ["audio/wav"] } },
+      { file: "embed.toml", limit: { context: 512, output: 1_024 }, modalities: { output: ["embedding"] } },
+      { file: "image.toml", limit: { context: 8_192, output: 16_384 }, modalities: { output: ["image/png"] } },
+    ]),
+  ).toEqual([]);
+  expect(
+    limitErrors([{ file: "chat.toml", limit: { context: 8_192, output: 16_384 }, modalities: { output: ["text", "image/png"] } }]),
+  ).toHaveLength(1);
+});
+
 test("skips entries without a positive context or without the other value", () => {
   expect(
     limitErrors([

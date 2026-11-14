@@ -1,4 +1,3 @@
-# Output limit: capped at the 131,072 context; no host cap is documented and the 260,640 from the base model or host listing is larger.
 schema = 2
 base_model = "google/gemini-omni-1.2-flash"
 description = "Omni-modal model for text, vision, audio, and multimodal agent tasks"
@@ -12,7 +11,7 @@ tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
-output = 131_072
+output = 260_640
 
 [api.chat-completions]
 

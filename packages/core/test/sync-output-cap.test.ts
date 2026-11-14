@@ -31,3 +31,10 @@ test("leaves a model alone when output fits or context is unknown", () => {
   const unknown = model({ output: 64_000 });
   expect(capOutputAtContext(unknown, undefined)).toBe(unknown);
 });
+
+test("leaves models that don't output text alone", () => {
+  const tts = { ...model({ context: 8_192, output: 16_384 }), modalities: { input: ["text"], output: ["audio"] } };
+  expect(capOutputAtContext(tts, undefined)).toBe(tts);
+  const embed = model({ context: 512, output: 1_024 });
+  expect(capOutputAtContext(embed, { modalities: { output: ["embedding"] } })).toBe(embed);
+});

@@ -1,4 +1,3 @@
-# Output limit: 0 like other embedding models; the 1,024 was the vector size.
 # Foundry models endpoint: POST https://<resource>.services.ai.azure.com/models/embeddings?api-version=2024-05-01-preview
 # with an OpenAI-shaped body (input, dimensions, encoding_format, model) and response (data[].embedding, usage).
 # https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-embeddings/get-embeddings
@@ -22,7 +21,7 @@ temperature = false
 
 [limit]
 context = 512
-output = 0
+output = 1_024
 
 [api.embeddings]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"

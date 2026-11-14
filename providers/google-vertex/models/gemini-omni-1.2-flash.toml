@@ -1,4 +1,3 @@
-# Output limit: capped at the 131,072 context; no host cap is documented and the 260,640 from the base model or host listing is larger.
 # Sources (accessed 2026-11-10):
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/omni-1-2-flash.md.txt (model ID, limits, MIME types, APIs, global-only location)
 # - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (Gemini Omni, global: $1.50 input, $9.00 text output, $12.00 video output)
@@ -18,7 +17,7 @@ reasoning = { supported = true }
 temperature = true
 
 [limit]
-output = 131_072
+output = 260_640
 
 [api.interactions]
 base_url = "https://aiplatform.googleapis.com/v1beta1/projects/${GOOGLE_VERTEX_PROJECT}/locations/global"

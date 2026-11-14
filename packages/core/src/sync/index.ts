@@ -759,13 +759,17 @@ function withBaseModalities<T extends z.infer<typeof SyncedAuthoredModel>>(
 
 // Output is carved out of the context window, so a synced or inherited output
 // above the resolved context (a host serving a smaller window than the lab) is
-// capped at the context. validate rejects an output above the context.
+// capped at the context. validate rejects an output above the context for
+// models that output text.
 export function capOutputAtContext<T extends SyncedModel>(
   model: T,
   base: Record<string, unknown> | undefined,
 ): T {
   const baseLimit = base?.limit as { context?: unknown; output?: unknown } | undefined;
   const limit = model.limit as { context?: number; output?: number } | undefined;
+  const outputs = (model.modalities as { output?: string[] } | undefined)?.output
+    ?? (base?.modalities as { output?: string[] } | undefined)?.output;
+  if (outputs !== undefined && !outputs.includes("text")) return model;
   const context = limit?.context ?? (typeof baseLimit?.context === "number" ? baseLimit.context : undefined);
   const output = limit?.output ?? (typeof baseLimit?.output === "number" ? baseLimit.output : undefined);
   if (context === undefined || context <= 0 || output === undefined || output <= context) return model;

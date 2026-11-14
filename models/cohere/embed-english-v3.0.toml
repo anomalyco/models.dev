@@ -1,4 +1,3 @@
-# Output: 0, as for other embedding models. The 1,024 here was the vector dimension, not a token limit.
 # Sources:
 # - Models: https://docs.cohere.com/docs/cohere-embed (modalities, dimensions, context length)
 # - Image MIME types: https://docs.cohere.com/reference/embed ("The image must be in either `image/jpeg`,
@@ -26,4 +25,4 @@ top_k = false
 
 [limit]
 context = 512
-output = 0
+output = 1_024

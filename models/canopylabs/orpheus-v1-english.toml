@@ -1,4 +1,3 @@
-# Output: capped at the 4,000 context. GroqCloud reports a 50,000 max_completion_tokens, which is larger than the whole window.
 # Canopy Labs publishes no weights or model card for this model; its only public documentation is the
 # GroqCloud model page https://console.groq.com/docs/model/canopylabs/orpheus-v1-english and
 # https://console.groq.com/docs/text-to-speech/orpheus (accessed 2026-10-21).
@@ -27,4 +26,4 @@ top_k = false
 
 [limit]
 context = 4_000
-output = 4_000
+output = 50_000
