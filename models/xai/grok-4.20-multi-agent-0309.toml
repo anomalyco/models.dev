@@ -1,0 +1,23 @@
+# Sources: https://docs.x.ai/developers/models/grok-4.20-multi-agent-0309, https://docs.x.ai/developers/models
+# Release date and limits match the first-party entry in providers/xai/models/grok-4.20-multi-agent-0309.toml.
+schema = 2
+name = "Grok 4.20 Multi-Agent"
+description = "Multiple Grok agents collaborate in parallel to perform deep research tasks"
+family = "grok"
+open_weights = false
+release_date = "2026-03-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 30_000

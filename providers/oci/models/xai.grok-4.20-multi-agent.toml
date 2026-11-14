@@ -1,0 +1,51 @@
+# OCI list price, pay as you go, USD per 1M tokens: Oracle's price list has no separate Multi-Agent
+# SKU, so the "Grok 4.2" parts apply (B111910/B111911/B112076-B112079, priority B112742/B112743/
+# B113299-B113302, accessed 2026-11-05); the higher band applies above 200K prompt tokens. xAI
+# prices this model identically to Grok 4.20. Model is hosted by xAI and called through OCI.
+# Facts from https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4-20-multi-agent.htm:
+# `xai.grok-4.20-multi-agent` is OCI's alias for `xai.grok-4.20-multi-agent-0309`; 1M context;
+# text and base64 JPG/PNG image input (PDF is not declared); structured outputs; cached input
+# tokens; priority processing; on-demand in us-ashburn-1, us-chicago-1, us-phoenix-1 only, and
+# only through the API (not the Console).
+# Responses only: OCI lists /v1/responses endpoints for this model and xAI's Chat Completions
+# rejects multi-agent requests (see providers/xai/models/grok-4.20-multi-agent-0309.toml).
+# Tools: OCI's page says "Function Calling: Yes, through the API", but xAI requires beta access
+# for client-side tools on this model and OCI relays to xAI, so tools stay off until verified live.
+# Reasoning: OCI rejects reasoning_effort (400) on the sibling Grok 4.20 reasoning model, so no
+# caller control is advertised here either.
+# Not verified live through the OCI endpoint (docs only, 2026-11-05).
+schema = 2
+base_model = "xai/grok-4.20-multi-agent-0309"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = true
+service_tier = ["priority"]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
