@@ -14,11 +14,15 @@ structured_output = true
 
 [limit]
 context = 1_000_000
+<<<<<<< HEAD
 output = 131_072
+=======
+output = 1_000_000
+>>>>>>> origin/dev
 
 [cost.text.input]
-price = 4.5
-cache = { read = 0.45 }
+price = 6
+cache = { read = 0.6 }
 
 [cost.text.output]
 price = 22.5

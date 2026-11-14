@@ -6,7 +6,6 @@
 # https://platform.kimi.ai/docs/guide/use-reasoning-effort
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). No per-turn effort or tool-change mechanism reaches this model on this API.
 # Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
-# Output limit: https://ai-gateway.vercel.sh/v1/models lists max_tokens 131072 (accessed 2026-11-13); the lab's raised cap would exceed this host's context.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Fast"
@@ -18,13 +17,13 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1_024 } }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 
 [limit]
 context = 1_000_000
-output = 131_072
+output = 1_000_000
 
 [api.chat-completions]
 capabilities = { system_updates = true }
@@ -38,8 +37,8 @@ base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
-price = 4.5
-cache = { read = 0.45 }
+price = 6
+cache = { read = 0.6 }
 
 [cost.text.output]
 price = 22.5
