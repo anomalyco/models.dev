@@ -1,0 +1,24 @@
+# Relay of the lab entry behind Fikra's OpenAI-compatible /v1 (prices: https://fikraapi.co.ke/pricing, verified 2026-10-19).
+# Control surface (live probe 2026-10-20, raw counts and p-values in the PR thread): the documented request whitelist
+# (https://fikraapi.co.ke/docs, verified 2026-10-19) covers only tools/tool_choice/n/seed/stop/penalties/response_format;
+# `thinking` and `reasoning_effort` return 200 and are accepted silently, and no response on any lane carries a
+# `reasoning_content` field (message keys: content/role only). reasoning_options stays empty until a control is shown to
+# change the wire; effort levels are indistinguishable from sampling noise (MWU n=10-16/level, all p >= 0.11).
+# Image request accepted (200) live (2026-10-20) but returned empty content; attachment inherits the lab.
+# Limits: host GET /v1/models `context_window`/`max_output_tokens` (fetched 2026-10-20).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1048576
+output = 393216
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.11
