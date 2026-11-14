@@ -1,0 +1,18 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.* per token x 1M), synced by packages/core/src/sync/providers/obscurify.ts. One flat price per model.
+# Effort: reasoning_effort = low|high|max
+# Controls follow providers/zhipuai/models/glm-5.3-flash.toml (thinking cannot be turned off).
+# Checked live on POST https://obscurify.ai/v1/chat/completions, 2026-10-23: low and max accepted, max reasoned about 17x longer.
+# Limits: GET https://obscurify.ai/v1/models reports context_length 1048576 (lab file: 1000000) and no max output. A prompt longer than the lab's window could not be verified here, so context and output are inherited from the lab.
+# Reasoning is returned in message.reasoning (checked live on POST /v1/chat/completions, 2026-11-11). reasoning_field = "reasoning" is valid in v2, but v1's interleaved.field only allows reasoning_content|reasoning_details, so no reasoning_field is set rather than a wrong one.
+# Cache: not declared. /v1/models lists pricing.input_cache_read, but the same 7k+ token prompt sent twice on POST /v1/chat/completions (two runs, 2026-11-11) never came back with cached tokens.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.05187
+
+[cost.text.output]
+price = 0.10192

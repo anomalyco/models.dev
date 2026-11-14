@@ -1,0 +1,23 @@
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+name = "MoonshotAI: Kimi K2.7 Code High Speed"
+description = "Kimi K2.7 Code HighSpeed is the high-speed version of Kimi K2.7 Code, the same model as Kimi K2.7 Code, but with an output speed of approximately 180 Tokens/s and up to 260 Tokens/s in short context scenarios, delivering a more extreme coding experience."
+
+[modalities]
+input = ["text", "image", "application/pdf", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+output = 32_768
+
+[cost.text.input]
+price = 1.9
+cache = { read = 0.38 }
+
+[cost.text.output]
+price = 8

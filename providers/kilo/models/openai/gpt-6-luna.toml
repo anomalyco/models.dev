@@ -9,6 +9,7 @@ description = "GPT-6 Luna is the fast, cost-efficient model in OpenAI's GPT-6 se
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+temperature = false
 
 [cost.text.input]
 price = 0.1

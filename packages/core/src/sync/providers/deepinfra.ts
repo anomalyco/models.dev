@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel } from "./openrouter.js";
 
 // Public DeepInfra deploy catalog. Richer than the OpenAI-compatible
 // `/v1/openai/models` endpoint: it exposes capability tags (tools,
@@ -112,6 +113,12 @@ export const deepinfra = {
     // existing entries are kept and marked instead.
     if (existing === undefined && isDeprecated(model)) return undefined;
 
+    // The catalog has no reasoning_effort levels, so a new reasoning model needs
+    // them researched before it's created.
+    if (existing === undefined && deepInfraReasons(model, baseModel)) {
+      throw new MissingReasoningOptionsError(id, "Deep Infra lists no reasoning controls; author them before creating this model");
+    }
+
     const built = buildDeepInfraModel(model, existing, baseModel, context.authored(id));
     return {
       id,
@@ -206,6 +213,13 @@ export async function fetchDeepInfraModels(
     throw new Error(`Deep Infra models request failed: ${response.status} ${response.statusText}`);
   }
   return DeepInfraResponse.parse(await response.json());
+}
+
+function deepInfraReasons(model: DeepInfraModel, baseModel: string | undefined) {
+  const tags = new Set(model.tags ?? []);
+  if (tags.has("non-reasoning")) return false;
+  if (tags.has("reasoning") || tags.has("can-disable-reasoning")) return true;
+  return baseModel !== undefined && modelMetadata(baseModel).reasoning === true;
 }
 
 function isDeprecated(model: DeepInfraModel) {

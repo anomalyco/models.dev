@@ -1,0 +1,15 @@
+# Effort: reasoning_effort (/v1/chat/completions).
+# Toggle: thinking.type = enabled|disabled (chat only; enabled is translated to adaptive when required).
+schema = 2
+base_model = "anthropic/claude-sonnet-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.1, write = 1.92 }
+
+[cost.text.output]
+price = 4

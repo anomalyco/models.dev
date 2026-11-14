@@ -1,0 +1,19 @@
+schema = 2
+base_model = "openai/gpt-5-codex"
+name = "OpenAI: GPT-5-Codex"
+description = "GPT-5-Codex is a version of GPT-5 optimized for agentic coding tasks in Codex or similar environments."
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 10

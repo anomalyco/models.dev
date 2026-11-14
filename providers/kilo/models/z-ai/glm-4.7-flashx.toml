@@ -1,0 +1,18 @@
+schema = 2
+base_model = "zhipuai/glm-4.7-flashx"
+name = "Z.ai: GLM 4.7 FlashX"
+description = "GLM-4.7-Flash balances high performance with efficiency, making it the perfect lightweight deployment option."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = false
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.4

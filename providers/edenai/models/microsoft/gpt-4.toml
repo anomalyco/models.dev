@@ -1,3 +1,4 @@
+# Output limit: capped at the 8,191 context; no host cap is documented and the 8,192 from the base model or host listing is larger.
 schema = 2
 base_model = "openai/gpt-4"
 name = "GPT-4 (Microsoft)"
@@ -7,6 +8,7 @@ structured_output = true
 
 [limit]
 context = 8_191
+output = 8_191
 
 [cost.text.input]
 price = 30

@@ -1,0 +1,18 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: always on. Live 2026-10-29: reasoning_effort = off is rejected, and omitting it
+#   already reasons (149 reasoning tokens, low 217, high 173). thinking.type = disabled still
+#   reasons (167) and thinking_budget = 32 is ignored (157), so there is no caller toggle.
+schema = 2
+base_model = "meituan/longcat-2.0"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

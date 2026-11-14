@@ -1,0 +1,34 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api.minimax.io/v2/video_generation (https://platform.minimax.io/docs/api-reference/video-generation-v2-create)
+# - Pricing: https://platform.minimax.io/docs/pricing/overview#models/video (USD per second of output and of input video;
+#   input images are billed per image after the first 2 per task)
+#   USD per second (read from the USD page, not converted from CNY): output 768P $0.08, 480P $0.05; input video 768P $0.143, 480P $0.0553; input image $0.074 each after the first 2
+# Not modeled: the free quota of 2 input images per task; audio input is free.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3-Max"
+
+[api.videos]
+base_url = "https://api.minimax.io"
+path = "/v2/video_generation"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/minimax/videos" }
+
+[cost.video.output]
+unit = "second"
+price = 0.08
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480P" } }
+price = 0.05
+
+[cost.video.input]
+unit = "second"
+price = 0.143
+
+[[cost.video.input.overrides]]
+when = { resolution = { equals = "480P" } }
+price = 0.0553
+
+[cost.image.input]
+unit = "image"
+price = 0.074

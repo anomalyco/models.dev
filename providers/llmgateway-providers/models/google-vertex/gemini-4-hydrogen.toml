@@ -1,0 +1,14 @@
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+name = "Gemini 4 Hydrogen (Google Vertex AI)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 7.5

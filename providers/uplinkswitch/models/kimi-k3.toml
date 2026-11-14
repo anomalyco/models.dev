@@ -1,0 +1,14 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog (accessed 2026-11-14), USD per million tokens.
+# Effort: reasoning_effort = low|high|max on Chat Completions, passed through by the gateway. Levels copied from providers/moonshotai for this model.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 4.5

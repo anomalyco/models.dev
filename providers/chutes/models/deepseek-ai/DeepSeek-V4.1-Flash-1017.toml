@@ -6,14 +6,22 @@ open_weights = true
 release_date = "2026-10-26"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
+tools = { supported = true }
+reasoning = { supported = true }
 temperature = true
+structured_output = true
 
 [limit]
-context = 0
-output = 0
+context = 1_000_000
+output = 393_216
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

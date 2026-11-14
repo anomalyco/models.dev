@@ -1,0 +1,25 @@
+# https://docs.fortytwo.network/docs/models
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+cache = { implicit = true }
+structured_output = true
+stream_usage = true
+
+[api.chat-completions]
+
+[limit]
+output = 235_929
+
+[cost.text.input]
+price = 0.425
+cache = { read = 0.085 }
+
+[cost.text.output]
+price = 2.55

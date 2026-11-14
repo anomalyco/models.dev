@@ -1,0 +1,7 @@
+# Live probe through https://api.steadyrouter.com/v1/chat/completions, 2026-11-06.
+# tools.freeform left out: with a custom tool forced by tool_choice, replies were plain text and said no tool was available (regex, lark, text), 2026-11-06. A function tool worked.
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }

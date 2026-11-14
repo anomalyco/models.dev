@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-12):
+# - https://kling.ai/document-api/guides/capability-map/video (Kling 4.0 Flash, API ID kling-4.0-flash: text, image and video input, 3-20s, 720P)
+# - https://kling.ai/document-api/api/video/4-0-flash/video-omni (images .jpg/.jpeg/.png; reference and edited videos .mp4/.mov)
+# Released 2026-11-04 ("Kling 4.0 Flash API Is Now Available"): https://kling.ai/document-api/updates/api
+# (Kling opened early access in its app to Ultra Yearly subscribers in late September 2026; no official date for that, so the API date is used.)
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling VIDEO 4.0 Flash"
+description = "Faster, lower-cost Kling 4.0 tier for 720P video up to 20 seconds with omni references, video editing and native audio"
+open_weights = false
+release_date = "2026-11-04"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
