@@ -57,6 +57,7 @@ import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
+import { privatemind } from "./providers/privatemind.js";
 import { requesty } from "./providers/requesty.js";
 import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
@@ -224,6 +225,7 @@ export const providers: {
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
   prime: SyncProvider<any>;
+  privatemind: SyncProvider<any>;
   requesty: SyncProvider<any>;
   sambanova: SyncProvider<any>;
   morph: SyncProvider<any>;
@@ -272,6 +274,7 @@ export const providers: {
   ovhcloud,
   pioneer,
   prime,
+  privatemind,
   requesty,
   sambanova: sambaNova,
   morph,
@@ -300,6 +303,7 @@ export const groups = {
     "requesty",
     "openrouter",
     "prime",
+    "privatemind",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
