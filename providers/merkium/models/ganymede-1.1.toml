@@ -1,29 +1,30 @@
-# Source: Merkium first-party API, https://chat.merkium.nl/api/v1/models (limits, pricing, tools, reasoning)
-# and https://merkium.nl/blog/ganymede-1-1-release (release). Live-tested Oct 20, 2026.
-# Reasoning: always on. reasoning_content is returned on every request; reasoning=false,
-# reasoning={enabled:false} and reasoning_effort are accepted but do not disable or grade it, so there is no caller control.
-name = "Ganymede 1.1"
-description = "Merkium's flagship model for cybersecurity, code and interface work, with a 1M-token context window"
-attachment = false
-reasoning = true
-reasoning_options = []
-tool_call = true
-temperature = true
-release_date = "2026-10-18"
-last_updated = "2026-10-18"
-open_weights = false
+# Source: Merkium first-party API, https://chat.merkium.nl/api/v1/models (is_free = true),
+# live-tested Oct 20, 2026.
+# Reasoning: always on, no caller control. reasoning_content is returned on every request;
+# reasoning=false, reasoning={enabled:false} and reasoning_effort are accepted but did not
+# disable or grade it in live tests.
+schema = 2
+base_model = "merkium/ganymede-1.1"
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+reasoning = { supported = true }
 
-[limit]
-context = 1_000_000
-output = 16_384
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.output]
+price = 0
+
+
+
+
+
+
+
+
+
+
+
