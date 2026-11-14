@@ -1,0 +1,9 @@
+# OpenAI-compatible Chat Completions at /v1/chat/completions, also /v1/responses and
+# Anthropic Messages at /v1/messages, one key for all three.
+# Docs and free tier: https://cheapllm.shop/docs (accessed 2026-11-10)
+name = "cheapllm.shop"
+env = ["CHEAPLLM_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+doc = "https://cheapllm.shop/docs"
+api = "https://cheapllm.shop/v1"
