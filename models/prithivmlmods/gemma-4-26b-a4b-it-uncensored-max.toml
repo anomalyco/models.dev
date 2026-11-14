@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/prithivMLmods/gemma-4-26B-A4B-it-Uncensored-MAX
+name = "gemma-4-26B-A4B-it-Uncensored-MAX"
+description = "No lecture layer. Answers the prompt you actually wrote."
+family = "gemma"
+release_date = "2026-04-04"
+last_updated = "2026-06-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/prithivMLmods/gemma-4-26B-A4B-it-Uncensored-MAX"

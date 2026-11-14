@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/prithivMLmods/Gliese-Qwen3.5-9B-Abliterated-Caption
+name = "Gliese-Qwen3.5-9B-Abliterated-Caption"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "qwen3.5"
+release_date = "2026-03-10"
+last_updated = "2026-06-01"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/prithivMLmods/Gliese-Qwen3.5-9B-Abliterated-Caption"

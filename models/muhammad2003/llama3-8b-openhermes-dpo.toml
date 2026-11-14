@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/Muhammad2003/Llama3-8B-OpenHermes-DPO
+name = "Llama3-8B-OpenHermes-DPO"
+description = "Nous Research finetune — steerable, honest, built for long conversations."
+family = "llama"
+release_date = "2024-04-18"
+last_updated = "2024-04-19"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 8192
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Muhammad2003/Llama3-8B-OpenHermes-DPO"

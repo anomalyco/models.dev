@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/TheDrummer/Moistral-11B-v2
+name = "Moistral-11B-v2"
+description = "TheDrummer special. RP community royalty."
+release_date = "2024-03-29"
+last_updated = "2024-04-28"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 8192
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/TheDrummer/Moistral-11B-v2"

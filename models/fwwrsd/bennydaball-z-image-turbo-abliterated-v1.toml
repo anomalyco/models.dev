@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/fwwrsd/bennydaball-z-image-turbo-abliterated-v1
+name = "bennydaball-z-image-turbo-abliterated-v1"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+release_date = "2026-06-12"
+last_updated = "2026-06-12"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 40960
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/fwwrsd/bennydaball-z-image-turbo-abliterated-v1"

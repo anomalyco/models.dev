@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/mncai/Mistral-7B-Dolphin-1k-ep4
+name = "Mistral-7B-Dolphin-1k-ep4"
+description = "Eric Hartford's uncensored line. Compliant, fast, no moralizing."
+family = "mistral"
+release_date = "2023-10-19"
+last_updated = "2023-10-19"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/mncai/Mistral-7B-Dolphin-1k-ep4"

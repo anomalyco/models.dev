@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/DreamFast/Qwen3.5-4B-Uncensored-HauhauCS-Aggressive-Safetensor-Benchmark
+name = "Qwen3.5-4B-Uncensored-HauhauCS-Aggressive-Safetensor-Benchmark"
+description = "No lecture layer. Answers the prompt you actually wrote."
+family = "qwen3.5"
+release_date = "2026-04-14"
+last_updated = "2026-07-17"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 262144
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/DreamFast/Qwen3.5-4B-Uncensored-HauhauCS-Aggressive-Safetensor-Benchmark"

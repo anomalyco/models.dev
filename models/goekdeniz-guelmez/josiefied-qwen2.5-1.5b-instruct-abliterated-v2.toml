@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/Goekdeniz-Guelmez/Josiefied-Qwen2.5-1.5B-Instruct-abliterated-v2
+name = "Josiefied-Qwen2.5-1.5B-Instruct-abliterated-v2"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "qwen"
+release_date = "2024-09-28"
+last_updated = "2024-09-28"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Goekdeniz-Guelmez/Josiefied-Qwen2.5-1.5B-Instruct-abliterated-v2"

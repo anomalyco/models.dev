@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/Bahushruth/gemma-4-E4B-it-abliterated
+name = "gemma-4-E4B-it-abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "gemma"
+release_date = "2026-07-26"
+last_updated = "2026-07-31"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Bahushruth/gemma-4-E4B-it-abliterated"

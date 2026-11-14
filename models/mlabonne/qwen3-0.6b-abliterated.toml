@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/mlabonne/Qwen3-0.6B-abliterated
+name = "Qwen3-0.6B-abliterated"
+description = "Refusal-trained out, capability left in. The uncensored finetune done properly."
+family = "qwen"
+release_date = "2025-04-29"
+last_updated = "2025-05-18"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 40960
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/mlabonne/Qwen3-0.6B-abliterated"

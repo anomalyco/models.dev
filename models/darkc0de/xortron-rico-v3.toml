@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/darkc0de/XORTRON-RICO-v3
+name = "XORTRON-RICO-v3"
+description = "Qwen 3.8 27B RICO merge on XORTRON criminal-computing SFT. Highest CEA-100 in its class."
+release_date = "2026-09-20"
+last_updated = "2026-09-25"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/darkc0de/XORTRON-RICO-v3"

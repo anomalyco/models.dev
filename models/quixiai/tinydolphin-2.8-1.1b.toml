@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/QuixiAI/TinyDolphin-2.8-1.1b
+name = "TinyDolphin-2.8-1.1b"
+description = "Niche community finetune with a cult following. Hard to find hosted anywhere else."
+family = "phi"
+release_date = "2024-01-21"
+last_updated = "2024-05-20"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 4096
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/QuixiAI/TinyDolphin-2.8-1.1b"

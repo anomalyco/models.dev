@@ -1,0 +1,21 @@
+# Source: https://huggingface.co/WarlordHermes/FAILED-Magidonia-24B-v4.3-creative-ORPO-v5
+name = "FAILED-Magidonia-24B-v4.3-creative-ORPO-v5"
+description = "Nous Research finetune — steerable, honest, built for long conversations."
+release_date = "2026-01-04"
+last_updated = "2026-01-04"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/WarlordHermes/FAILED-Magidonia-24B-v4.3-creative-ORPO-v5"

@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/artificialguybr/Qwen2.5-0.5B-OpenHermes2.5
+name = "Qwen2.5-0.5B-OpenHermes2.5"
+description = "Nous Research finetune — steerable, honest, built for long conversations."
+family = "qwen"
+release_date = "2024-10-15"
+last_updated = "2026-07-20"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 32768
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/artificialguybr/Qwen2.5-0.5B-OpenHermes2.5"

@@ -1,0 +1,22 @@
+# Source: https://huggingface.co/Greytechai/Gemma3-27B-it-vl-GLM-4.7-Uncensored-Heretic-Deep-Reasoning
+name = "Gemma3-27B-it-vl-GLM-4.7-Uncensored-Heretic-Deep-Reasoning"
+description = "Gemma 27B heretic abliteration with GLM-4.7 reasoning grafted in. Thinks long, refuses nothing."
+family = "gemma"
+release_date = "2026-03-17"
+last_updated = "2026-03-17"
+attachment = false
+reasoning = false
+temperature = true
+tool_call = false
+open_weights = true
+
+[limit]
+context = 131072
+output = 8192
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[[weights]]
+url = "https://huggingface.co/Greytechai/Gemma3-27B-it-vl-GLM-4.7-Uncensored-Heretic-Deep-Reasoning"
