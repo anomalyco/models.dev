@@ -1,0 +1,14 @@
+# Prices and limits: https://llm.wavespeed.ai/v1/models (USD per million tokens, accessed 2026-10-21)
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning_effort = high|max
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "toggle" }, { type = "effort", values = ["high", "max"] }]
+
+[cost]
+input = 1.4
+output = 4.4
+cache_read = 0.26
+
+[limit]
+context = 1048576
+output = 262144

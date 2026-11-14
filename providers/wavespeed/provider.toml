@@ -1,0 +1,9 @@
+# OpenAI Chat Completions POST /v1/chat/completions: `reasoning_effort`, or `reasoning`
+# with `effort` and `enabled`. Anthropic Messages POST /v1/messages is also served.
+# Authentication is `Authorization: Bearer <key>` only.
+# Prices: https://llm.wavespeed.ai/v1/models
+name = "WaveSpeed"
+env = ["WAVESPEED_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://llm.wavespeed.ai/v1"
+doc = "https://wavespeed.ai/docs/llm-service-overview"
