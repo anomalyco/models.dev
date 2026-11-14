@@ -1,11 +1,13 @@
 # Source: https://api.powerspring.eu/v1/models (accessed 2026-11-14): context_length 1048576,
-# max_output_tokens 1048576; images, tools, json_schema, reasoning, reasoning_off.
-# Effort: reasoning_effort = none|low|high on Chat Completions. "none" turns thinking off.
+# max_output_tokens 1048576; images, tools, json_schema, reasoning.
+# Effort: reasoning_effort = low|high on Chat Completions. "none" is not listed: it empties
+# reasoning_content, but GLM 5.3 Flash then reasons in its visible answer instead (checked live
+# 2026-11-14), so thinking can't really be switched off.
 # low|high follow the lab (providers/zhipuai/models/glm-5.3-flash.toml) and relay peers
 # (providers/cortecs/models/glm-5.3-flash.toml); "max" is left out because Powerspring rejects
 # it with 400.
 # Live check 2026-11-14 (Chat Completions, one short prompt): every listed level answered;
-# reasoning text per level: none 0, low 25 chars, high 41 chars.
+# reasoning text per level: low 25 chars, high 41 chars.
 # Reasoning text: Chat Completions returns it in message.reasoning_content.
 # Input: text and images only (no video or PDF); image types are the lab's.
 # Cache: automatic, billed at the cached input price (https://powerspring.eu/docs/billing).
@@ -21,7 +23,7 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high"] }
+reasoning = { supported = true, effort = ["low", "high"] }
 cache = { implicit = true }
 structured_output = true
 
