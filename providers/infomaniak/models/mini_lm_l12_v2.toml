@@ -1,4 +1,3 @@
-# Output limit: 0 like other embedding models; the 384 was the vector size.
 # Model id matches Infomaniak's API model name exactly: `mini_lm_l12_v2`
 # (snake_case; Infomaniak's display label is "All MiniLM L12 v2").
 # Identity corrected 2026-08-01: this is sentence-transformers/all-MiniLM-L12-v2, not
@@ -24,7 +23,6 @@ family = "text-embedding"
 
 [limit]
 input = 128
-output = 0
 
 [api.embeddings]
 sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }

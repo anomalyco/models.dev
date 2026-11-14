@@ -1,4 +1,3 @@
-# Output limit: capped at the 32,768 context; no host cap is documented and the 64,000 from the base model or host listing is larger.
 schema = 2
 base_model = "google/gemini-3-pro-image-preview"
 name = "gemini-3-pro-image-preview"
@@ -9,7 +8,6 @@ reasoning = { supported = false }
 
 [limit]
 context = 32_768
-output = 32_768
 
 [cost.text.input]
 price = 2
