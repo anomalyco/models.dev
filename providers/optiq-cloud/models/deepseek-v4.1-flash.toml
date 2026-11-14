@@ -1,0 +1,24 @@
+# Pricing, context window and max output: GET https://cloud.mlx-optiq.com/api/v1/models (accessed 2026-11-06)
+# Off is effort=none (or the :no-think suffix); graded levels, no toggle.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh. No effort set = full thinking.
+# Any other value, max included, is refused with a 400 before the model runs.
+# https://mlx-optiq.com/docs/cloud/api#reasoning
+# Cache: automatic, no markers needed; the same x-session-id header on every call of a task raises the hit rate.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_040_000
+output = 131_072
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5
