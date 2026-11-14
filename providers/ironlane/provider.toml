@@ -1,0 +1,9 @@
+name = "Ironlane"
+env = ["IRONLANE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.ironlane.ai/v1"
+# OpenAI-compatible gateway: POST /v1/chat/completions (streaming with stream_options.include_usage),
+# /v1/embeddings, /v1/audio/transcriptions, /v1/audio/speech and /v1/images/generations, with
+# Bearer auth ($IRONLANE_API_KEY). Model ids are <lab>/<model>, e.g. openai/gpt-5.5.
+doc = "https://ironlane.ai/docs#quickstart"

@@ -1,0 +1,20 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-04;
+# list prices of the default provider, USD per 1M tokens (or per stated unit).
+# Capabilities: Ironlane's POST /v1/chat/completions takes text messages with no tools, response_format or image/pdf parts.
+schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+
+[capabilities]
+tools = { supported = false }
+cache = { implicit = true }
+structured_output = false
+
+[limit]
+context = 106_000
+
+[cost.text.input]
+price = 0.325
+cache = { read = 0.1625 }
+
+[cost.text.output]
+price = 1.25
