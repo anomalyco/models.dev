@@ -193,6 +193,16 @@ Rules:
 
 **Reasoning controls (short):** classify first-party lab vs multi-model relay (not by npm). Copy the underlying model’s controls from the lab's provider entry and same-surface peers: often `effort = ["low", "medium", "high"]` on GPT-style relays, but DeepSeek V4 is `toggle = true` with `effort = ["low", "high", "max"]`, etc. Don't drop controls from uncertainty on relays. Full policy: `AGENTS.md`.
 
+**API-specific prices (v2 only):** the `api` cost condition supports `equals` or `in` with an `[api.<protocol>]` key from `ApiProtocolV2`, not a URL or path:
+
+```toml
+[[cost.text.output.overrides]]
+when = { api = { equals = "decisions" } }
+price = 0
+```
+
+Matching overrides merge field by field in file order, before multipliers. Put this rule after context overrides to keep Decisions output free at every context length. Consumers supply the selected protocol; this rule does not match without it. Consumers must recognize `api` to apply API-specific prices. The v1 API omits these rules and keeps base prices and pure-context tiers.
+
 #### 4. Submit a Pull Request
 
 1. Fork this repo

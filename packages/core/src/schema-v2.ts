@@ -527,6 +527,7 @@ function choiceCondition<T extends z.ZodTypeAny>(value: T) {
 }
 
 export const CostConditionKeyV2Values = [
+  "api",
   "context",
   "duration",
   "megapixels",
@@ -560,6 +561,8 @@ export type CostConditionKeyV2 = z.infer<typeof CostConditionKeyV2>;
 
 const CostConditionsV2 = z
   .object({
+    // The selected [api.<protocol>] key, not a URL or request path.
+    api: choiceCondition(ApiProtocolV2),
     context: CostConditionV2,
     duration: CostConditionV2,
     megapixels: CostConditionV2,
