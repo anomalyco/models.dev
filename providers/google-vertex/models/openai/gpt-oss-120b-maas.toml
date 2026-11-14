@@ -13,9 +13,6 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = false
 
-[limit]
-output = 131_072
-
 [api.chat-completions]
 base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/google-vertex/chat" }

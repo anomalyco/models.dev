@@ -1,5 +1,6 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/kimi-k3 (accessed 2026-09-18)
+# Output limit: https://docs.vivgrid.com/models/kimi-k3 lists max output 128,000 tokens (accessed 2026-11-13); the lab's raised cap would exceed this host's context.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
@@ -14,6 +15,7 @@ structured_output = true
 
 [limit]
 context = 1_000_000
+output = 128_000
 
 [cost.text.input]
 price = 3

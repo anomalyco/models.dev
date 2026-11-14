@@ -1,3 +1,4 @@
+# Output limit: 65,536 tokens, the cap its upstream documents (providers/groq/models/openai/gpt-oss-120b.toml); the lab's raised cap would exceed it.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Groq)"
@@ -6,6 +7,9 @@ name = "GPT OSS 120B (Groq)"
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+
+[limit]
+output = 65_536
 
 [cost.text.input]
 price = 0.15

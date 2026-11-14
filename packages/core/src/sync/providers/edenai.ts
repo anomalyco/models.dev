@@ -494,6 +494,7 @@ export function buildEdenAIModel(
   model: EdenAIModel,
   existing?: ExistingModel,
   firstParty: ReadonlySet<string> = firstPartyBaseModels,
+  authored?: ExistingModel,
 ): SyncedModel | undefined {
   const baseModel = resolveEdenAIBaseModel(model);
   // Eden AI relays other labs' models only, so an entry needs its lab metadata.
@@ -526,9 +527,11 @@ export function buildEdenAIModel(
     : undefined;
   if (reasoning && reasoningOptions === undefined) return undefined;
 
+  // The catalog reports no output limit, so a hand-set cap (for a route whose
+  // context is below the lab's output) stays.
   const limit =
     model.context_length != null && model.context_length > 0
-      ? { context: model.context_length }
+      ? { context: model.context_length, output: authored?.limit?.output }
       : undefined;
 
   return factorBaseModel(
@@ -584,7 +587,7 @@ export const edenai = {
     return models;
   },
   translateModel(model, context) {
-    const built = buildEdenAIModel(model, context.existing(model.id));
+    const built = buildEdenAIModel(model, context.existing(model.id), undefined, context.authored(model.id));
     if (built === undefined) return undefined;
     return { id: model.id, model: built };
   },
