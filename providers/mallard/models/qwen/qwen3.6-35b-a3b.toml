@@ -1,7 +1,7 @@
 # Sources (accessed 2026-10-25): https://mallardai.co.uk/pricing/, https://mallardai.co.uk/docs/,
 #   https://api.mallardai.co.uk/v1/models
-# Billed in GBP: £0.08 input / £0.06 cached input / £0.75 output per 1M tokens; converted at the ECB rate
-#   1 GBP = 1.3368 USD (2026-10-23).
+# Billed in GBP: £0.03 input / £0.01 cached input / £0.22 output per 1M tokens (launch price until 2027-01-31,
+#   https://mallardai.co.uk/pricing/); converted at the ECB reference rates of 2026-11-13: 1 GBP = 1.3227 USD.
 # Toggle: reasoning.enabled = true|false. reasoning_effort = "none" and chat_template_kwargs.enable_thinking = false
 #   also turn it off. There is no graded effort: reasoning_effort = "low" is accepted and reasoning stays on.
 # Reasoning is returned in message.reasoning. reasoning_field = "reasoning" is valid in v2 but v1's interleaved.field
@@ -32,8 +32,8 @@ stream_usage = true
 output = 235_929
 
 [cost.text.input]
-price = 0.106944
-cache = { read = 0.080208 }
+price = 0.03968
+cache = { read = 0.013227 }
 
 [cost.text.output]
-price = 1.0026
+price = 0.290985
