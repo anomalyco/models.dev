@@ -1,0 +1,17 @@
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 1_048_000
+output = 1_048_000
+
+[cost.text.input]
+price = 0.306
+cache = { read = 0.061 }
+
+[cost.text.output]
+price = 1.023
