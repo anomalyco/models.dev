@@ -1,0 +1,15 @@
+# Source: https://routerplex.com/api/models (accessed 2026-11-10).
+# Cost is the RouterPlex sell price (USD / 1M tokens), equal to what the gateway bills.
+# cache_read is listed only where cached prompt tokens bill below the input rate.
+schema = 2
+base_model = "anthropic/claude-opus-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.425 }
+
+[cost.text.output]
+price = 25
