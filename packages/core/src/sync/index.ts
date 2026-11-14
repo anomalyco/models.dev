@@ -340,6 +340,7 @@ export async function syncProvider<SourceModel>(
   const missingRemote = new Set<string>();
   const missingReasoning = new Map<string, string>();
   const translateNotices: string[] = [];
+  let nonTextLabs: Set<string> | undefined;
   for (const notice of provider.sourceNotices?.(sourceModels) ?? []) {
     translateNotices.push(notice);
     console.warn(notice);
@@ -427,11 +428,13 @@ export async function syncProvider<SourceModel>(
       resolvedReasoning,
       baseReasoningOptions,
     );
+    nonTextLabs ??= await readNonTextOutputLabs(provider.modelsDir);
     const withDescription = capOutputAtContext(
       provider.preserveDescriptions === false
         ? withReasoningOptions
         : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored),
       translatedBase === undefined ? undefined : modelMetadata?.[translatedBase],
+      translatedBase !== undefined && nonTextLabs.has(translatedBase),
     );
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
@@ -760,11 +763,15 @@ function withBaseModalities<T extends z.infer<typeof SyncedAuthoredModel>>(
 // Output is carved out of the context window, so a synced or inherited output
 // above the resolved context (a host serving a smaller window than the lab) is
 // capped at the context. validate rejects an output above the context for
-// models that output text.
+// models that output text. The lab's own v2 modalities decide that
+// (`baseOutputsNoText`): the v1 metadata maps embedding, decision and reranking
+// outputs to "text", so it can't tell those models apart.
 export function capOutputAtContext<T extends SyncedModel>(
   model: T,
   base: Record<string, unknown> | undefined,
+  baseOutputsNoText = false,
 ): T {
+  if (baseOutputsNoText) return model;
   const baseLimit = base?.limit as { context?: unknown; output?: unknown } | undefined;
   const limit = model.limit as { context?: number; output?: number } | undefined;
   const outputs = (model.modalities as { output?: string[] } | undefined)?.output
@@ -975,6 +982,19 @@ async function readModelMetadata(modelsDir: string) {
     result[modelID] = inheritableModelMetadata(labModelV2ToV1({ ...toml, id: modelID }, { modelPath }));
   }
 
+  return result;
+}
+
+async function readNonTextOutputLabs(modelsDir: string) {
+  const metadataDir = modelMetadataDir(modelsDir);
+  const result = new Set<string>();
+  for await (const modelPath of new Bun.Glob("**/*.toml").scan({ cwd: metadataDir, absolute: true, followSymlinks: true })) {
+    const toml = Bun.TOML.parse(await Bun.file(modelPath).text()) as { modalities?: { output?: string[] } };
+    const output = toml.modalities?.output;
+    if (output !== undefined && !output.includes("text")) {
+      result.add(path.relative(metadataDir, modelPath).split(path.sep).join("/").slice(0, -5));
+    }
+  }
   return result;
 }
 
