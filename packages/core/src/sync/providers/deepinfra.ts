@@ -138,8 +138,7 @@ export function deepInfraV2Set(
     ] as const
   ).filter((entry): entry is readonly ["priority" | "flex", number] => typeof entry[1] === "number" && entry[1] > 0);
 
-  const retention = Object.entries(pricing?.rate_per_explicit_cache_write_token ?? {})
-    .filter(([ttl, rate]) => /^\d+(ms|s|m|h|d)$/.test(ttl) && Number.isFinite(rate) && rate >= 0);
+  const retention = retentionRates(model);
   if (retention.length > 0 && (cost?.tiers?.length ?? 0) > 0) {
     // Retention write prices are a multiple of the input price; with context
     // tiers they would differ per tier, which the catalog doesn't spell out.
@@ -185,6 +184,9 @@ export function deepInfraV2Set(
   const set = Object.fromEntries(
     Object.entries(values).filter(([path, value]) => value !== undefined || valueAt(current, path) !== undefined),
   );
+  if (retentionPrices !== undefined && pricing?.rate_per_input_token_cache_write == null) {
+    set["cost.text.input.cache.write"] = undefined;
+  }
   return Object.keys(set).length > 0 ? set : undefined;
 }
 
@@ -238,6 +240,11 @@ function cacheCost(inputCost: number, rate: number | null | undefined) {
   return rate == null ? undefined : round(inputCost * rate);
 }
 
+function retentionRates(model: DeepInfraModel) {
+  return Object.entries(model.pricing?.rate_per_explicit_cache_write_token ?? {})
+    .filter(([ttl, rate]) => /^\d+(ms|s|m|h|d)$/.test(ttl) && Number.isFinite(rate) && rate >= 0);
+}
+
 function buildCost(
   model: DeepInfraModel,
   existing: ExistingModel | undefined,
@@ -272,7 +279,11 @@ function buildCost(
     output: outputCost,
     reasoning: existing?.cost?.reasoning,
     cache_read: cacheCost(inputCost, model.pricing?.rate_per_input_token_cached),
-    cache_write: cacheCost(inputCost, cacheWriteRate),
+    cache_write: cacheCost(inputCost, cacheWriteRate ?? (
+      model.pricing?.rate_per_input_token_cached == null
+        ? undefined
+        : retentionRates(model)[0]?.[1]
+    )),
     // API pricing is flat (or its tier string was unparseable): clear any stale
     // curated tiers rather than leaving obsolete thresholds active.
     tiers: undefined,
