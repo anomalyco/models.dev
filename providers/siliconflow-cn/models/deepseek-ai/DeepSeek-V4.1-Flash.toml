@@ -1,9 +1,10 @@
+# Effort: high|max copied from the same-host DeepSeek-V4-Flash entry and the lab; not probed on this model id.
 # Toggle: enable_thinking = true|false
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
