@@ -1,0 +1,31 @@
+# NVFP4 quantization of Qwen3.8 Flash Next, served by community workers.
+# Price: https://api.aipowergrid.io/v1/pricing (accessed 2026-11-13).
+# Context: the API refuses a request above 200,000 characters (HTTP 413), so the
+# usable window is far below the model's 262,144 tokens. 40,000 tokens is a
+# figure that stayed under that limit in live agent sessions; 45,000 did not always.
+# Input: PNG, JPEG and WebP data URLs read correctly in live requests on
+# 2026-11-13; video and the other image types were not tested and are left out.
+# Structured output: live request with response_format json_schema, 2026-11-13.
+schema = 2
+base_model = "alibaba/qwen3.8-flash-next"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium"] }
+structured_output = true
+
+[limit]
+context = 40_000
+output = 32_768
+
+[cost.text.input]
+price = 0.075
+
+[cost.text.output]
+price = 0.3
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

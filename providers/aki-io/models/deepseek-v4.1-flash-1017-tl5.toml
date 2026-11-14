@@ -1,0 +1,27 @@
+# attachment are for security reasons not supported on AKI.IO and are therefore disabled
+# Effort: reasoning_effort = none|low|high|max (verified live 2026-11-07: "none" disables
+# reasoning; the API accepts unknown values without error and ignores them, so this list
+# follows the lab baseline rather than probing)
+# Prices: https://aki.io/#pricing and GET /openai/v1/models (checked 2026-11-07) list EUR per
+# 1M tokens (net); converted to USD at the ECB reference rate of 1.1165 USD/EUR (2026-11-06).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 81_920
+
+[cost.text.input]
+price = 0.279125
+cache = { read = 0.11165 }
+
+[cost.text.output]
+price = 1.1165

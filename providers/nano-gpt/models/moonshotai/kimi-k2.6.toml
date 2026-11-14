@@ -9,7 +9,7 @@ input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true }
 structured_output = false
 tools = { supported = true }
 
@@ -18,8 +18,8 @@ input = 262_144
 output = 65_536
 
 [cost.text.input]
-price = 0.39
-cache = { read = 0.039 }
+price = 0.5
+cache = { read = 0.125 }
 
 [cost.text.output]
-price = 1.8
+price = 2.6

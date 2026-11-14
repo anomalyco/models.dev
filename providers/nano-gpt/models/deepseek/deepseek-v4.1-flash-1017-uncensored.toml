@@ -1,12 +1,12 @@
 schema = 2
 name = "DeepSeek V4.1 Flash 1017 Uncensored"
-description = "dealignai's uncensored release based on DeepSeek V4.1 Flash 1017, published October 18. This dated model stays separate from the September release, with text input, optional reasoning, and tool calling."
+description = "Uncensored DeepSeek V4.1 Flash with text and image input, optional reasoning, and tool calling. The date label is retained for compatibility. Served only by its own checkpoint; it may be unavailable while that host is down."
 family = "deepseek"
 open_weights = true
 release_date = "2026-10-27"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
@@ -17,11 +17,11 @@ structured_output = false
 [limit]
 context = 1_048_576
 input = 1_048_576
-output = 393_216
+output = 65_536
 
 [cost.text.input]
 price = 0.33
-cache = { read = 0.00825 }
+cache = { read = 0.011 }
 
 [cost.text.output]
 price = 1.32

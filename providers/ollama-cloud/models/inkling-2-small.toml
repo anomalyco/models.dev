@@ -1,0 +1,36 @@
+# Inkling 2 Small on Ollama Cloud (model ID `inkling-2-small`).
+# Sources (accessed 2026-11-14):
+# - https://ollama.com/library/inkling-2-small (1M context; Text, Image; vision, tools, thinking; $0.30 input, $0.03 cached, $1.00 output)
+# - https://ollama.com/pricing (inkling-2-small: $0.30 input, $0.03 cached input, $1.00 output per 1M tokens)
+# - https://ollama.com/api/show (2026-11-14: capabilities completion, thinking, tools, vision; inkling2.context_length 1048576; thinking.values [false, low, medium, high, max], default high)
+# Toggle: native POST /api/chat and /api/generate `think` = true|false. OpenAI POST /v1/chat/completions maps `reasoning_effort` / `reasoning.effort` = none to off (https://docs.ollama.com/capabilities/thinking).
+# Effort: named levels from thinking.values are low|medium|high|max. `false` is the off switch, not an effort name.
+# Modalities: the library page says Text, Image and names no image formats, so the modalities are inherited from the lab file.
+# Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, accessed 2026-10-21).
+# Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
+#   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
+# Mid-conversation flags unset: Ollama doesn't document them.
+# max_tokens_field: Ollama's OpenAI-compatible Chat API lists max_tokens, not max_completion_tokens (https://docs.ollama.com/api/openai-compatibility, accessed 2026-10-24); live probe 2026-10-24 ignored max_completion_tokens.
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "medium", "high", "max"] }
+structured_output = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1

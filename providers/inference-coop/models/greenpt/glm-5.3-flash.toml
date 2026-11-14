@@ -1,0 +1,23 @@
+# Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
+# served on the GreenPT tier, $0.11/$0.44 per 1M tokens with $0.022 cached input, 1M context.
+# The co-op serves this model text-only (the lab file lists image/video/pdf input), matching the
+# underlying host entry (providers/greenpt/models/glm-5.3-flash.toml).
+# Reasoning surface copied from that host entry: reasoning_effort = none|minimal|low|medium|high;
+# accepted by the gateway (probe, 2026-11-01).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.022 }
+
+[cost.text.output]
+price = 0.44

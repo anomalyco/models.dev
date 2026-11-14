@@ -1,0 +1,26 @@
+# Sources (accessed 2026-11-09):
+# - Pricing (CNY per MTok): https://support.huaweicloud.com/price-maas/price-maas-0002.html (updated 2026-11-06)
+# - OpenAI-compatible API: https://support.huaweicloud.com/model-call-maas/model-call-021.html
+# - Live probe 2026-11-09 on api.modelarts-maas.com: GET /v1/models 200; exact-id probes: baseline 200 (reasoning 16 tok), thinking.type=disabled REJECTED by host (ModelArts.81001 unsupported thinking type) — toggle NOT supported on this id, reasoning left toggle-less per native docs; reasoning_effort=low accepted (reasoning 16 tok)
+# CNY->USD rate: 6.67, 2026-11-09 (market range USD/CNY 6.6648-6.6755 that day)
+# List price: CNY 8/2/28 (input/cache-read/output per MTok, flat, no peak/valley tiers)
+# Effort: reasoning_effort = low|high|max (native GLM-5.3 docs: thinking.type only accepts enabled,
+# so no toggle copied; exact-id probe confirms host rejects disabled (ModelArts.81001))
+# tool_choice "auto" per Huawei docs tool-calling example; other values untested on this host
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.1994
+cache = { read = 0.29985 }
+
+[cost.text.output]
+price = 4.1979

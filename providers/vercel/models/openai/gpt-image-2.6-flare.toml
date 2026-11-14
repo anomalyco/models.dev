@@ -1,0 +1,26 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type image)
+# https://vercel.com/docs/ai-gateway/modalities/image-generation
+schema = 2
+v2_only = true
+base_model = "openai/gpt-image-2.6-flare"
+
+[modalities]
+input = ["text"]
+output = ["image/png", "image/jpeg", "image/webp", "image/svg+xml", "image/gif"]
+
+[capabilities]
+cache = { implicit = true }
+
+[api.images]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/images" }
+
+[cost.text.input]
+price = 5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 30
+
+[cost.image.output]
+price = 30

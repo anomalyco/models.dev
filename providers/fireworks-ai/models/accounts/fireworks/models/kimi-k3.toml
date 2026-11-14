@@ -13,6 +13,8 @@
 #   [cached/prompt tokens, control -> test: 8230/8231 -> 8192/8341]. A late system message was obeyed in the same run [8230/8231 -> 8192/8250].
 #   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested,
 #   so both flags sit on [api.chat-completions] only.
+# No budget: thinking.budget_tokens = 1024 still produced 16,456 reasoning tokens (finish stop) in a live Chat Completions test (2026-11-07);
+#   Fireworks rejects values under 1024 but doesn't cap reasoning, so no budget control is recorded.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -22,7 +24,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 

@@ -87,7 +87,26 @@ export type FireworksInventoryCatalogModel = {
   deprecated?: true;
 };
 
-type FireworksSourceModel = FireworksCatalogModel | FireworksInventoryCatalogModel;
+export type FireworksLegacyEmbeddingModel = {
+  catalogId: string;
+  legacyEmbedding: true;
+};
+
+type FireworksSourceModel = FireworksCatalogModel | FireworksInventoryCatalogModel | FireworksLegacyEmbeddingModel;
+
+// Legacy BERT embedding models still serve on serverless under their Hugging
+// Face IDs but are in neither source, so they're listed here to keep their files.
+// https://docs.fireworks.ai/guides/querying-embeddings-models ("BERT-based models (legacy)")
+const LEGACY_EMBEDDING_MODELS = [
+  "BAAI/bge-small-en-v1.5",
+  "thenlper/gte-base",
+  "BAAI/bge-base-en-v1.5",
+  "nomic-ai/nomic-embed-text-v1.5",
+  "nomic-ai/nomic-embed-text-v1",
+  "thenlper/gte-large",
+  "WhereIsAI/UAE-Large-V1",
+  "mixedbread-ai/mxbai-embed-large-v1",
+];
 
 export const fireworksAi = {
   id: "fireworks-ai",
@@ -118,9 +137,17 @@ export const fireworksAi = {
   },
   parseModels(raw) {
     const parsed = FireworksSyncResponse.parse(raw);
-    return mergeFireworksModels(parsed.serverless.data, parsed.inventory);
+    return [
+      ...mergeFireworksModels(parsed.serverless.data, parsed.inventory),
+      ...LEGACY_EMBEDDING_MODELS.map((catalogId): FireworksLegacyEmbeddingModel => ({ catalogId, legacyEmbedding: true })),
+    ];
   },
   translateModel(model, context) {
+    // Embedding models are hand-authored v2 files; keep them as written.
+    if ("legacyEmbedding" in model || ("output_modalities" in model && model.output_modalities.includes("embeddings"))) {
+      const v2 = context.v2?.(model.catalogId);
+      return v2 === undefined ? undefined : { id: model.catalogId, v2 };
+    }
     if (!supportsCatalogModel(model)) return undefined;
     const existing = context.existing(model.catalogId);
     if (existing === undefined) return undefined;
@@ -203,7 +230,7 @@ export function mergeFireworksModels(
   serverless: FireworksModel[],
   inventory: FireworksInventoryModel[],
   now = new Date(),
-): FireworksSourceModel[] {
+): Array<FireworksCatalogModel | FireworksInventoryCatalogModel> {
   if (serverless.length === 0 || inventory.length === 0) {
     throw new Error("Fireworks AI returned an empty serverless source; refusing destructive sync");
   }
@@ -272,12 +299,13 @@ export function expandFireworksModels(models: FireworksModel[]): FireworksCatalo
 
 // A deprecation date in List Models marks the model deprecated until it is
 // removed; a model whose date was withdrawn is no longer deprecated.
-function lifecycleStatus(model: FireworksSourceModel, status: ExistingModel["status"]): ExistingModel["status"] {
+function lifecycleStatus(model: FireworksCatalogModel | FireworksInventoryCatalogModel, status: ExistingModel["status"]): ExistingModel["status"] {
   if (model.deprecated === true) return "deprecated";
   return status === "deprecated" ? undefined : status;
 }
 
 function supportsCatalogModel(model: FireworksSourceModel) {
+  if ("legacyEmbedding" in model) return false;
   return "inventoryOnly" in model || model.output_modalities.includes("text");
 }
 

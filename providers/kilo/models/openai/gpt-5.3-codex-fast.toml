@@ -1,0 +1,15 @@
+schema = 2
+base_model = "openai/gpt-5.3-codex"
+name = "OpenAI: GPT 5.3 Codex (Fast)"
+description = "GPT-5.3-Codex advances both the frontier coding performance of GPT‑5.2-Codex and the reasoning and professional knowledge capabilities of GPT‑5.2, together in one model, which is also 25% faster. This enables it to take on long-running tasks that involve research, tool use, and complex execution."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 3.5
+cache = { read = 0.35 }
+
+[cost.text.output]
+price = 28

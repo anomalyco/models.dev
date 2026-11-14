@@ -1,0 +1,15 @@
+schema = 2
+base_model = "nace-ai/drex-v2.0"
+
+[limit]
+context = 262_144
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.03
+
+[cost.text.output]
+price = 0

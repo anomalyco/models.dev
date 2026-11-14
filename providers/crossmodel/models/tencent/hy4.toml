@@ -1,0 +1,14 @@
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.96
+cache = { read = 0.048, write = 0.96 }
+
+[cost.text.output]
+price = 2.88

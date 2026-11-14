@@ -1,0 +1,26 @@
+schema = 2
+name = "OrcaCyber K3.1 Pro Uncensored"
+description = "An abliterated / uncensored variant of Kimi K3.1 Pro for authorized security research, coding, and tool use. Accepts text and images, with reasoning enabled by default and an option to turn it off. Supports a 1M-token context window, up to 943K output tokens, tool calling, and structured output. Offensive work is permitted only within an authorized security engagement."
+open_weights = false
+release_date = "2026-11-05"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_064
+input = 1_048_064
+output = 943_718
+
+[cost.text.input]
+price = 4
+cache = { read = 0.35 }
+
+[cost.text.output]
+price = 20

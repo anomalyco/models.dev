@@ -9,7 +9,7 @@ on:
         options: [patch, minor, major]
         default: patch
   schedule:
-    # Daily data release, after the hourly model syncs have merged.
+    # Daily data release, after the scheduled model syncs have merged.
     - cron: "23 5 * * *"
 
 concurrency: publish-sdk

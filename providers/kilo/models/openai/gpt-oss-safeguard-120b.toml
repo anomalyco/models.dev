@@ -1,0 +1,18 @@
+schema = 2
+base_model = "openai/gpt-oss-safeguard-120b"
+name = "OpenAI: GPT OSS Safeguard 120B"
+description = "GPT OSS Safeguard 120B is OpenAI’s open-weight safety model for content moderation and guardrail enforcement. It helps teams evaluate content against custom safety policies and build scalable, adaptable protections for production AI applications."
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 128_000
+output = 16_000
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

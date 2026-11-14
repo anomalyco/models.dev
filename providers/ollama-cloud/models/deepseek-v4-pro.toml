@@ -6,9 +6,12 @@
 # Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
 # Cache: implicit. Ollama prices cached input (https://ollama.com/pricing) and reports `prompt_eval_cached_count` / `cached_input_tokens`
 #   (https://docs.ollama.com/api/usage); there is no request field, and Anthropic `cache_control` is unsupported (https://docs.ollama.com/api/anthropic-compatibility).
-# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
+# Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test them in the 2026-10-21 checks. Ollama Cloud serves Chat Completions,
 #   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
 # max_tokens_field: Ollama's OpenAI-compatible Chat API lists max_tokens and not max_completion_tokens (https://docs.ollama.com/api/openai-compatibility, accessed 2026-10-24); live probe 2026-10-24 ignored max_completion_tokens
+# Output: live probe 2026-11-04 — max_tokens 65537 rejected with "max_tokens (65537) exceeds model's maximum output
+#   tokens (65536)" (ref ff7665c4-6c45-452f-a1f8-6ab00e253760), max_tokens 65536 accepted; see #12589 and
+#   https://github.com/ollama/ollama/issues/19517.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 name = "deepseek-v4-pro"
@@ -21,7 +24,7 @@ cache = { implicit = true }
 
 [limit]
 context = 1_048_576
-output = 1_048_576
+output = 65_536
 
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }

@@ -1,0 +1,17 @@
+# Sources (accessed 2026-11-06):
+# - Price: https://meragpt.com/docs/models ($0.04 per million input tokens; output is not billed)
+# - API: https://meragpt.com/docs/decider (POST /v1/systemone, System One format; the typesafe-sdk works against it
+#   with TYPESAFE_BASE_URL=https://meragpt.com). Not served on /v1/chat/completions.
+# Media: text state only.
+schema = 2
+v2_only = true
+base_model = "meragpt/decider-1"
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0
