@@ -1,0 +1,40 @@
+# Sources (accessed 2026-10-15, re-verified on the live feed 2026-11-11):
+# - Model id, USD pricing and limits: https://synap402.com/v1/models?format=openrouter
+#   (cost_usd is per token: 0.00000004 prompt / 0.00000021 completion).
+# - limit.context 32,768: the deployment's running --max-model-len as declared by the live
+#   feed since 2026-11-09 (previously 131,072; below the lab model's 262k). limit.output is
+#   not overridden: the lab value (32,768) is inherited and equals the window.
+# - modalities input = ["text"]: live probe - a chat request with an image_url content part
+#   returns an upstream error while the same request with text only succeeds, so this
+#   deployment does not accept image input even though the lab model can.
+# - modalities output = ["text"]: text-only emission (no audio/image output declared);
+#   required by the schema-2 validator.
+# - reasoning = { supported = true, toggle = true }: re-probed 2026-11-12 on this host. Default
+#   request: no reasoning, completion_tokens_details.reasoning_tokens = 0. With
+#   chat_template_kwargs {"enable_thinking": true} (or reasoning_effort = "high") the reasoning
+#   arrives in a separate message.reasoning field (reasoning_tokens = 399 of 400). A
+#   "reasoning": {"enabled": true} request body does not enable it on this host. Off by default,
+#   caller-toggled; no effort levels.
+# - [api.chat-completions] compatibility replay_reasoning: the side channel is message.reasoning,
+#   which has no named v1 field, so the bare replay form is declared.
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.21
+
+[limit]
+context = 32_768
+
+[api.chat-completions]
+compatibility = { replay_reasoning = true }

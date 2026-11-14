@@ -1,0 +1,28 @@
+# Sources (accessed 2026-10-15, re-verified on the live feed 2026-11-11):
+# - Model id, USD pricing and limits: https://synap402.com/v1/models?format=openrouter
+#   (schema_version 2.4; cost_usd is per token: 0.000000017 prompt / 0.000000085 completion).
+# - limit.context 65,536: the deployment's running --max-model-len as declared by the live
+#   feed since 2026-11-09 (below the lab entry's 131,072). limit.output is not restated
+#   (lab value 32,768 inherited).
+# - tools + structured_output: live probe - a request carrying `tools` returns
+#   finish_reason "tool_calls" with a well-formed call, and response_format json_schema
+#   returns schema-conforming JSON (re-probed 2026-11-08). tools is inherited from the lab
+#   entry; structured_output is declared here because it is per-host in v2.
+# - reasoning: the lab model reasons; the feed advertises reasoning_effort and the live
+#   endpoint accepts reasoning_effort low|medium|high (HTTP 200), so the host exposes the
+#   native effort control.
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 65_536
+
+[cost.text.input]
+price = 0.017
+
+[cost.text.output]
+price = 0.085
