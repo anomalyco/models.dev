@@ -468,7 +468,7 @@ Neuralwatt is implemented in `packages/core/src/sync/providers/neuralwatt.ts`.
 - Interior (i.e., not in the header/top of the TOML file) comments are not preserved. Keep per-model wire notes in the leading comment block, which the runner does preserve.
 - The sync emits a `thinking_token_budget` note as a generated header for any model carrying a `budget_tokens` control.
 - Validation on 2026-11-12 against dev `a0401c46c`: 35 provider tests passed. A live public sync in a temporary checkout created 9 files, updated 11, and retained 9 absent entries. Catalog validation passed; a second dry run changed nothing. The generated catalog changed v1 data in 3 of 22 views (new models, prices, context limits, JSON-mode flags, and budget controls). The implementation check reported serialization-order differences in 21 views but no field changes. A separate comparison with sorted object keys confirmed equal catalog data. Catalog changes and source evidence are reviewed separately in #13486.
-- Budget exclusions include the older V4 Flash `-speed` tiers. Live authenticated checks on 2026-11-12 accepted `thinking_token_budget=1` on V4.1 Flash, Flex, Speed, `nw-flash`, and `nw-flash-flex` (HTTP 200 with reasoning followed by content). The existing V4.1 Flash headers contain the dated evidence; #13486 includes it for the new routes too.
+- Budget exclusions include the older V4 Flash `-speed` tiers. Live authenticated checks on 2026-11-12 accepted `thinking_token_budget=1` on V4.1 Flash, Flex, Speed, `nw-flash`, and `nw-flash-flex` (HTTP 200 with reasoning followed by content). #13486 adds this evidence and the budget control to all five routes.
 
 ## Requesty Notes
 
