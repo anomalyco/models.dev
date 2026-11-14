@@ -1,0 +1,13 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+schema = 2
+base_model = "morph/morph-v3-large"
+
+[limit]
+context = 81_920
+output = 81_920
+
+[cost.text.input]
+price = 1.215
+
+[cost.text.output]
+price = 2.565

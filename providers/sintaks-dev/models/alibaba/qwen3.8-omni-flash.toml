@@ -1,0 +1,13 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+# Effort: reasoning_effort = none|low|medium|xhigh (none disables thinking)
+schema = 2
+base_model = "alibaba/qwen3.8-omni-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 0.2025
+
+[cost.text.output]
+price = 0.6345

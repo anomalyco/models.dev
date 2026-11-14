@@ -1,0 +1,12 @@
+# Sintaks.dev is an OpenAI-compatible multi-model gateway. This catalog includes
+# chat, image and embedding models; other API surfaces are deferred pending
+# verification. Prices are from the public gateway catalog.
+# Sync updates reported prices and context windows on existing entries only;
+# missing and new models require manual review.
+# https://api.sintaks.dev/v1/models (accessed 2026-11-12)
+name = "Sintaks.dev (Indonesia AI Gateway)"
+env = ["SINTAKS_DEV_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.sintaks.dev/v1"
+doc = "https://docs.sintaks.dev"

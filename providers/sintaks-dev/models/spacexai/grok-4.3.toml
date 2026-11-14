@@ -1,0 +1,13 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+# Effort: reasoning_effort = none|low|medium|high|xhigh (none disables thinking)
+schema = 2
+base_model = "xai/grok-4.3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 3.375
+
+[cost.text.output]
+price = 6.75

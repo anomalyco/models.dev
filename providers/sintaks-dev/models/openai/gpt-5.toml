@@ -1,0 +1,15 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+# Freeform: unverified on the deployed chat-completions API; authenticated access needed.
+# Gateway source (sintaks-dev-core 0be077c, internal/adapters/httpapi/openai.go) rejects non-function tools.
+# Effort: reasoning_effort = minimal|low|medium|high
+schema = 2
+base_model = "openai/gpt-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.6875
+
+[cost.text.output]
+price = 13.5

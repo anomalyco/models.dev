@@ -1,0 +1,13 @@
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh
+schema = 2
+base_model = "meta/muse-spark-1.1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.6875
+
+[cost.text.output]
+price = 5.7375
