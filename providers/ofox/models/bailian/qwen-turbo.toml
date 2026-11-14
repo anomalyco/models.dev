@@ -8,10 +8,9 @@ schema = 2
 base_model = "alibaba/qwen-turbo"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 128_000

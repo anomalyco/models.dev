@@ -8,8 +8,7 @@ description = "NVIDIA’s open-weight 120B model (12B active) for reasoning, cod
 [capabilities]
 reasoning = { supported = true, effort = ["none", "medium", "high"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 context = 262_144

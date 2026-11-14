@@ -1,0 +1,52 @@
+# Sources (accessed 2026-10-24):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 1_048_576, type image2text,
+#   input_cached_price_per_million_tokens = 0.015)
+# - https://tokenfactory.nebius.com/endpoints?modals=endpoint-details&model-id=MiniMaxAI/MiniMax-M3.1-Flash
+# Modalities: catalog type image2text with use_cases text/image, so input is text + images; the lab's
+#   video input is not listed for this host. Live 2026-10-24: a PNG data URL is read correctly; video_url returns
+#   400 "This model does not support video input".
+# Other live checks 2026-10-24 (/v1/chat/completions unless noted):
+# - Tools: tool_choice auto|required|named function|none all behave as expected.
+# - structured_output: response_format json_schema (strict, enum field) and json_object are enforced.
+# - Cache: automatic prefix cache, no markers; repeating a ~9k-token prompt reports
+#   prompt_tokens_details.cached_tokens = 8960, so cache = { implicit = true }.
+# - Limit: max_tokens = 1_048_000 accepted; 1_048_577 rejected ("supports at most 1048576 completion tokens").
+# - Responses: returns reasoning + message output items; reasoning.effort = none returns message only.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (none = thinking off). Live probe 2026-10-24 on
+#   /v1/chat/completions: the gateway accepts none|minimal|low|medium|high|xhigh|max and rejects anything else
+#   with 422. none returns no reasoning_content (unlike the lab API, where disabling thinking is a 400).
+#   low..max all think; lengths were too noisy to separate on test prompts, so the lab's native ladder is
+#   kept. minimal is accepted but isn't a lab level and showed no distinct behavior, so it's left out.
+# Reasoning is returned in message.reasoning_content.
+# Served window: max_model_len = 1_048_576 with no separate output cap, so context and output both take the
+#   full served window.
+# Responses: POST https://api.tokenfactory.nebius.com/v1/responses (https://docs.tokenfactory.nebius.com/api-reference/inference/create-a-response);
+#   models_info lists "responses_api" in this model's use_cases.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

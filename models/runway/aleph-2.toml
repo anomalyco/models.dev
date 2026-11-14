@@ -1,18 +1,19 @@
-# Released in June 2026; on the Runway API since 2026-06-02: https://www.youtube.com/watch?v=mO5PAxbE5Cs,
-#   https://docs.dev.runwayml.com/api-details/api_changelog (Gen-4 Aleph users moved to aleph2)
-# Inputs: images JPEG, PNG or WebP; videos MP4 or MOV: https://docs.dev.runwayml.com/assets/inputs/
-# Output: MP4.
+# Released in June 2026 (https://www.youtube.com/watch?v=mO5PAxbE5Cs); on the Runway API 2026-06-02 as `aleph2`
+#   ("Aleph 2.0 is now available"; Gen-4 Aleph users moved to it): https://docs.dev.runwayml.com/api-details/api_changelog/
+# Inputs: images JPEG, PNG or WebP; videos MP4, QuickTime, Matroska, WebM, 3GPP or Ogg (the formats Runway lists
+#   as discouraged are left out): https://docs.dev.runwayml.com/assets/inputs/
+# Output: MP4 URLs: https://docs.dev.runwayml.com/assets/outputs/
 schema = 2
 v2_only = true
 type = "video"
 name = "Aleph 2.0"
-description = "In-context video editing model that applies text and keyframe edits across existing footage"
+description = "Video editing model that changes existing footage from a text prompt and optional keyframe images"
 family = "runway"
 open_weights = false
-release_date = "2026-06"
+release_date = "2026-06-02"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4", "video/quicktime"]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4", "video/quicktime", "video/x-matroska", "video/webm", "video/3gpp", "video/ogg"]
 output = ["video/mp4"]
 
 [capabilities]

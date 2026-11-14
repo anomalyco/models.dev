@@ -5,8 +5,7 @@ base_model = "alibaba/qwen3-32b"
 [capabilities]
 reasoning = { supported = true }
 structured_output = false
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [limit]
 output = 32_768

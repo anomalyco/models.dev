@@ -20,6 +20,7 @@ const Capabilities = z.object({
   supportsResponseSchema: z.boolean().optional(),
   supportsVideoInput: z.boolean().optional(),
   supportsVision: z.boolean().optional(),
+  supportsWebSearch: z.boolean().optional(),
 }).passthrough();
 
 const PricingTier = z.object({
@@ -116,9 +117,46 @@ export const venice = {
     return {
       id,
       model: buildVeniceModel(model, existing, resolvedBase ?? null),
+      v2Set: veniceV2Set(model),
     };
   },
 } satisfies SyncProvider<VeniceModel>;
+
+// POST /responses serves every Venice text model (OpenAI models natively, the rest translated
+// through Chat Completions), statelessly; E2EE models, which the sync skips, need Chat.
+// https://docs.venice.ai/guides/features/responses-api
+const RESPONSES_API = {
+  base_url: "https://api.venice.ai/api/v1",
+  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+};
+// Web search is $10.00 per 1K requests on models that support it.
+// https://docs.venice.ai/overview/pricing#web-search-and-scraping
+const WEB_SEARCH_PRICE = 10;
+
+export function veniceV2Set(model: VeniceModel): Record<string, unknown> {
+  return {
+    api: withResponsesApi,
+    "cost.web_search": model.model_spec.capabilities.supportsWebSearch === true
+      ? { price: WEB_SEARCH_PRICE }
+      : undefined,
+  };
+}
+
+// The file's API tables with Responses after them. The first table stays as it is (v1 reads it),
+// or is the provider's default Chat Completions API when the file has none. Hand-authored
+// per-API capabilities on Responses are kept.
+export function withResponsesApi(current: unknown) {
+  const tables = current !== null && typeof current === "object" && !Array.isArray(current)
+    ? current as Record<string, unknown>
+    : {};
+  const first = Object.keys(tables)[0] ?? "chat-completions";
+  const own = tables.responses;
+  const capabilities = own !== null && typeof own === "object" && !Array.isArray(own)
+    ? (own as Record<string, unknown>).capabilities
+    : undefined;
+  const responses = structuredClone(RESPONSES_API);
+  return { [first]: tables[first] ?? {}, ...tables, responses: capabilities === undefined ? responses : { ...responses, capabilities } };
+}
 
 export function buildVeniceModel(
   model: VeniceModel,

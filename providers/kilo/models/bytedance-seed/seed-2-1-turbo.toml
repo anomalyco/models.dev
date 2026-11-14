@@ -7,10 +7,9 @@ name = "ByteDance Seed: Seed 2.1 Turbo"
 description = "Seed 2.1 Turbo is a multimodal model from ByteDance Seed for coding and long-horizon agent workflows. It is suited for end-to-end software delivery, multi-step task execution, and understanding visual and..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 262_144

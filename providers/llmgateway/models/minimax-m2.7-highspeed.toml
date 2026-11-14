@@ -4,10 +4,9 @@ schema = 2
 base_model = "minimax/MiniMax-M2.7-highspeed"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
 price = 0.6

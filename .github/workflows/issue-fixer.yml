@@ -2,7 +2,7 @@ name: Issue Fixer
 
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
   repository_dispatch:
     types: [missing-model]
 
@@ -19,7 +19,18 @@ jobs:
       github.repository == 'anomalyco/models.dev'
       && !contains(github.event.issue.labels.*.name, 'provider:openai')
       && github.event.client_payload.provider != 'openai'
+      && (
+        github.event_name == 'repository_dispatch'
+        || (github.event.action == 'opened' && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association))
+        || (github.event.action == 'labeled' && github.event.label.name == 'fixer:run')
+      )
     runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
     env:
       GH_TOKEN: ${{ github.token }}
       ISSUE_NUMBER: ${{ github.event.issue.number || github.event.client_payload.issue_number }}
@@ -30,6 +41,20 @@ jobs:
         with:
           ref: dev
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::604439173067:role/github/models.dev-release
+          role-session-name: models.dev-issue-fixer-${{ github.run_id }}
+          aws-region: us-east-1
+
+      - name: Fetch secrets
+        uses: aws-actions/aws-secretsmanager-get-secrets@2297f9a879480a9e3af9b293ed15c70caf8e1c88 # v3.0.2
+        with:
+          secret-ids: |
+            OPENCODE_API_KEY,models.dev/release/OPENCODE_API_KEY
+          parse-json-secrets: false
+
       - name: Load issue
         run: |
           set -euo pipefail
@@ -38,12 +63,13 @@ jobs:
           echo "ISSUE_FILE=$ISSUE_FILE" >> "$GITHUB_ENV"
 
       - name: Install opencode
-        run: curl -fsSL https://opencode.ai/install | bash
+        run: curl -fsSL https://opencode.ai/install | bash -s -- --version 1.19.4
 
       - name: Run issue fixer
         env:
-          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_API_KEY: ${{ env.OPENCODE_API_KEY }}
           OPENCODE_PERMISSION: '{"bash":"deny"}'
+          OPENCODE_CONFIG_CONTENT: '{"snapshot":false}'
         run: |
           set -euo pipefail
           EVENTS_FILE="$RUNNER_TEMP/issue-fixer-events.jsonl"

@@ -10,15 +10,21 @@ base_model = "google/gemini-2.5-flash"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 1, min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 1, min_tokens = 1_024 } }
 
 [limit]
 output = 65_535
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.3
@@ -30,3 +36,10 @@ reasoning = 2.5
 
 [cost.image.input]
 price = 0.3
+
+[cost.audio.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.web_search]
+price = 14

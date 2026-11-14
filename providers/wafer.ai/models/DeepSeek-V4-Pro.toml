@@ -1,0 +1,30 @@
+# Sources (accessed 2026-11-06):
+# - Model list, limits, list prices, vision flag and reasoning efforts: GET https://pass.wafer.ai/v1/models
+#   (public, no key; the docs name it the source of truth: https://docs.wafer.ai/serverless/models)
+# - Reasoning fields: https://docs.wafer.ai/serverless/chat-completions#reasoning
+# - Prompt caching (automatic, cache_control not needed, no cache-write charge): https://docs.wafer.ai/serverless/usage#prompt-caching
+# Effort: reasoning_effort = none|low|high|max (default none); also reasoning.effort.
+#   Off is effort=none (thinking.type = disabled is the same switch); graded levels, no toggle.
+#   Wafer self-hosts the model. Its docs say none turns reasoning off and single out GLM-5.3 and
+#   GLM-5.3-Flash as models where none doesn't fully stop reasoning.
+# Reasoning text is returned in reasoning_content.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.28
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 3.96

@@ -11,17 +11,21 @@ base_model = "alibaba/qwen3.5-35b-a3b"
 name = "Qwen 3.5 35B A3B"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 
 [limit]
 context = 256_000
 output = 16_384
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.15
@@ -29,3 +33,6 @@ cache = { read = 0.05 }
 
 [cost.text.output]
 price = 1
+
+[cost.web_search]
+price = 10

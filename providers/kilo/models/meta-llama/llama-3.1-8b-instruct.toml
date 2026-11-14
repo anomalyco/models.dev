@@ -6,13 +6,12 @@ base_model = "meta/llama-3.1-8b-instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 131_072
-output = 117_964
+output = 16_384
 
 [cost.text.input]
 price = 0.02

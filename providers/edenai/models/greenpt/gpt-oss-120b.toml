@@ -1,18 +1,19 @@
+# Output limit: no host-specific cap is documented, so output is capped at the context served here (the lab's raised cap would exceed it).
 schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Greenpt)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 128_000
+output = 128_000
 
 [cost.text.input]
-price = 0.22468
+price = 0.22104
 
 [cost.text.output]
-price = 0.78638
+price = 0.77364

@@ -1,0 +1,15 @@
+schema = 2
+base_model = "openai/gpt-4o-mini-transcribe"
+name = "GPT-4o Mini Transcribe (Azure)"
+
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 5
+
+[cost.audio.input]
+price = 3

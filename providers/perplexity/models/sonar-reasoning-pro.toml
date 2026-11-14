@@ -13,8 +13,7 @@
 #   (https://web.archive.org/web/20260913155539/https://docs.perplexity.ai/docs/getting-started/pricing); the current
 #   pricing page no longer lists Sonar. A live POST /v1/sonar on 2026-10-21 still answered; usage.cost billed tokens at
 #   rates that differ from that table (request_cost 0), so the listed prices may be stale for reformulated requests.
-# Not representable in v2 (no per-request unit): request fee per 1,000 requests by search context size, $6 low /
-#   $10 medium / $14 high (archived pricing page).
+# Request fee (cost.web_search): per 1,000 requests by search context size, $6 low (the default) / $10 medium / $14 high (archived pricing page).
 schema = 2
 base_model = "perplexity/sonar-reasoning-pro"
 status = "deprecated"
@@ -27,3 +26,14 @@ price = 2
 
 [cost.text.output]
 price = 8
+
+[cost.web_search]
+price = 6
+
+[[cost.web_search.overrides]]
+when = { search_context_size = { equals = "medium" } }
+price = 10
+
+[[cost.web_search.overrides]]
+when = { search_context_size = { equals = "high" } }
+price = 14

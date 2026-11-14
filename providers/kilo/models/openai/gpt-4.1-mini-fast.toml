@@ -1,0 +1,14 @@
+schema = 2
+base_model = "openai/gpt-4.1-mini"
+name = "OpenAI: GPT-4.1 mini (Fast)"
+description = "GPT 4.1 mini provides a balance between intelligence, speed, and cost that makes it an attractive model for many use cases."
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.7
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 2.8

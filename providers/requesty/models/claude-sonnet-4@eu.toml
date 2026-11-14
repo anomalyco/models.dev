@@ -7,11 +7,9 @@ name = "Claude Sonnet 4 (latest) (EU)"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 1_000_000

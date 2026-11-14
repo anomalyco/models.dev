@@ -1,12 +1,15 @@
+# Output limit: 40,960 tokens, the cap its upstream documents (providers/cerebras/models/gpt-oss-120b.toml); the lab's raised cap would exceed it.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Cerebras)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
+
+[limit]
+output = 40_960
 
 [cost.text.input]
 price = 0.35

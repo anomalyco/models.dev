@@ -1,0 +1,26 @@
+# https://help.aliyun.com/zh/model-studio/embedding (dimensions 256-1024, up to 128,000 tokens per input row)
+# https://help.aliyun.com/en/model-studio/qwen3-7-text-embedding-flash (model info page)
+# Release: 2026-09-01 on https://help.aliyun.com/zh/model-studio/newly-released-models. Accessed 2026-11-08.
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Qwen3.7 Text Embedding Flash"
+description = "Lightweight multilingual Qwen3.7 text embedding model for cost and throughput sensitive workloads"
+family = "qwen"
+open_weights = false
+release_date = "2026-09-01"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 128_000
+output = 0

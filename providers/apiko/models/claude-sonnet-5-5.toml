@@ -1,0 +1,29 @@
+# Effort: output_config.effort is passed through to Anthropic unchanged, so the levels follow Anthropic's set.
+# Probed 2026-10-28 via api.apiko.app: low and max were accepted on POST /v1/messages; medium/high/xhigh were not
+# probed one by one. A tool call came back as tool_calls on POST /v1/chat/completions; thinking.type = enabled with
+# budget_tokens is rejected (400).
+# Cache: unmarked requests show cache_read_input_tokens; cache_control markers are accepted (cache_creation_input_tokens).
+# Price: https://apiko.app/api/public/models (2026-10-28), model page https://apiko.app/models/claude-sonnet-5-5
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+tools = { supported = true }
+cache = { implicit = true, explicit = true }
+
+[limit]
+output = 32_000
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://api.apiko.app/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.8543
+cache = { read = 0.0854 }
+
+[cost.text.output]
+price = 4.2713

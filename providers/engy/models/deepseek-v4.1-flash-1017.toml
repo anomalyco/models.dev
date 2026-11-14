@@ -9,10 +9,9 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576
@@ -23,8 +22,8 @@ output = 65_536
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.04
-cache = { read = 0.008 }
+price = 0.03
+cache = { read = 0.006 }
 
 [cost.text.output]
-price = 0.08
+price = 0.12

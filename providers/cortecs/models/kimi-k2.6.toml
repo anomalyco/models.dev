@@ -3,6 +3,7 @@
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
 # Cache: automatic prefix caching on every routed provider (inceptron). https://docs.cortecs.ai/routing/prompt-caching
 # Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
+# Output limit: the catalog's max_output_tokens equals its context_size (256,000), which is not a per-request cap; the lab's 262,144 would exceed the context served here, so output is capped at the context.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
@@ -12,11 +13,10 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 256_000

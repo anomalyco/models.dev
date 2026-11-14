@@ -1,3 +1,4 @@
+# Output limit: capped at the 262,144 context; no host cap is documented and the 1,010,000 from the base model or host listing is larger.
 schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
 
@@ -5,10 +6,9 @@ base_model = "alibaba/qwen3.8-2.4t-a95b"
 tools = { supported = false }
 reasoning = { supported = true }
 structured_output = false
-effort_updates = false
 
 [limit]
-output = 1_010_000
+output = 262_144
 
 [cost.text.input]
 price = 2.5

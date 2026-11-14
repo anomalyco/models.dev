@@ -1,0 +1,30 @@
+# https://huggingface.co/pfnet/plamo-embedding-1b (Apache-2.0; "Maximum Context Length: 4096 tokens",
+# "Embedding Dimensionality: 2048"). Repository created 2025-04-11 (Hugging Face API createdAt).
+schema = 2
+v2_only = true
+type = "embedding"
+name = "PLaMo Embedding 1B"
+description = "Japanese text embedding model from Preferred Networks producing 2048-dimensional vectors"
+family = "plamo"
+open_weights = true
+release_date = "2025-04-11"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 4_096
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/pfnet/plamo-embedding-1b"

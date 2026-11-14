@@ -1,0 +1,44 @@
+# Host-specific refusal-removed derivative, not the unmodified Qwen checkpoint.
+# https://near.ai/models/Qwen/Qwen3.8-27B-abliterated
+# https://near.ai/cybersecurity (generally available, no allowlist).
+# Release date, image input, context and USD/MTok: https://cloud-api.near.ai/v1/models (2026-10-29).
+# Weights for this derivative are not published; do not inherit the original's weights or benchmarks.
+# MIME types, sampling and conservative output cap follow the original Qwen3.8-27B
+# on this host (providers/nearai/models/Qwen/Qwen3.8-27B.toml).
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# https://docs.near.ai/cloud/reasoning-models and the original Qwen3.8-27B route on NEAR.
+# Controls follow the documented TEE passthrough and same-host peer; not live-probed for this derivative.
+# Cache: https://docs.near.ai/cloud/guides/prompt-caching
+schema = 2
+name = "Qwen3.8 27B Abliterated"
+description = "NEAR AI's refusal-removed Qwen3.8 27B for security research, with vision, reasoning and tool use inside a private TEE"
+family = "qwen"
+open_weights = false
+release_date = "2026-10-29"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+temperature = true
+top_p = true
+top_k = true
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 1.35

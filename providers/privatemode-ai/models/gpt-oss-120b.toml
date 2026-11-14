@@ -5,6 +5,7 @@
 # Cost: EUR list prices converted at 1 EUR = 1.1555 USD (Frankfurter 2026-08-10).
 # EUR/MTok: input 0.20 / output 0.65 / cached input 0.04
 # Effort: OpenAI-style reasoning_effort on this host (low|medium|high).
+# Output limit: no host-specific cap is documented, so output is capped at the context served here (the lab's raised cap would exceed it).
 schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "gpt-oss-120b"
@@ -15,6 +16,7 @@ structured_output = true
 
 [limit]
 context = 128_000
+output = 128_000
 
 [cost.text.input]
 price = 0.2311

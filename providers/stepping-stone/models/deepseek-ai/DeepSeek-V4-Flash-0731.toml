@@ -1,0 +1,22 @@
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-deepseek
+# 0.4500 / 0.0675 / 1.8000 CHF/MTok (input / cache / output), converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# Context: 524,288 tokens — the product page price table lists a 512k window
+# (https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-deepseek); lab native 1,000,000.
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_deepseek-ai/DeepSeek-V4-Flash-0731 (gateway max_model_len 524288)
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 524_288
+
+[cost.text.input]
+price = 0.5355
+cache = { read = 0.0803 }
+
+[cost.text.output]
+price = 2.142

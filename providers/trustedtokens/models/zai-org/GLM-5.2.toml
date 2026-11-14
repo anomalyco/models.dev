@@ -1,0 +1,19 @@
+# Catalog: https://api.trustedtokens.eu/v1/models (accessed 2026-10-30).
+# Pricing: the host publishes EUR per 1M tokens; omitted here rather than converted to USD.
+# Effort: reasoning_effort = none|high|max (/v1/models). `none` is off.
+# Measured 2026-10-30: none 0, high 825-872, max 635-863 reasoning_content chars.
+# No toggle: reasoning.enabled, thinking.type and chat_template_kwargs.enable_thinking
+# all leave reasoning on.
+# Text-only: image input returns 422 "Model only supports text".
+# Cache: implicit prefix caching measured (repeat prompt reports cached_tokens); first request is cold.
+# Reasoning side channel: message.reasoning_content.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
+cache = { implicit = true }

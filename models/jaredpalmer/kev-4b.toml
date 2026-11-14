@@ -1,0 +1,38 @@
+# Source (accessed 2026-10-25): https://huggingface.co/jaredpalmer/kev-4b
+# Kev 1.0: Apache-2.0 adapter/head on Qwen3.5-4B-Base, first published 2026-09-24.
+# Context: serves states up to 65536 tokens; validated length 8192.
+# Output: option probabilities in one forward pass, no generated text, tools, reasoning tokens or sampling.
+# OpenRouter: https://openrouter.ai/jaredpalmer/kev-4b (text-to-decisions; listed 2026-09-25).
+schema = 2
+v2_only = true
+type = "decision"
+name = "Kev 4B"
+description = "Jared Palmer's open-weight System One model, fine-tuned from Qwen3.5-4B-Base, that returns calibrated probabilities for typed choice, score and yes/no questions about shared text state"
+family = "qwen"
+open_weights = true
+release_date = "2026-09-24"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 65_536
+output = 0
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/jaredpalmer/kev-4b"
+type = "model_card"
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/jaredpalmer/kev-4b"

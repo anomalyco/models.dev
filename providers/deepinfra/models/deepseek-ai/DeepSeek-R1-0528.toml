@@ -10,13 +10,12 @@ description = "DeepSeek reasoning model for multi-step analysis, math, coding, a
 knowledge = "2024-07"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 service_tier = ["flex"]
-system_updates = false
 
 [limit]
 output = 64_000
