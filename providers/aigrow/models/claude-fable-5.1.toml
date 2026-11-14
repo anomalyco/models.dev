@@ -1,0 +1,28 @@
+# Prices: https://aigrow.gg/ai-api, figure "USD per million tokens", row "Claude Fable 5.1" (read 2026-11-12): input $4.00, output $20.00, cache read $0.25, cache write $8.00. These are the USD a buyer pays per 1M tokens, copied with no conversion. Every prompt-cache write on this host goes to the 1-hour cache whatever TTL the request names and bills at 2x the input rate, so the 5m and the 1h write cost the same.
+# APIs: Anthropic Messages (POST /v1/messages) and OpenAI Chat Completions (POST /v1/chat/completions) on the same key: https://aigrow.gg/ai-api/guide
+# Effort: output_config.effort (Messages) and reasoning_effort (Chat Completions) are forwarded unchanged; levels as on providers/anthropic; each level returned 200 on this host (2026-11-11).
+# Cache: cache_control breakpoints are forwarded on Messages; TTLs, breakpoints and minimum copied from providers/anthropic.
+# Mid-conversation flags and tool strict/search are left unset: not tested on this host.
+# Structured output: a JSON schema is enforced on Messages (output_config.format); on Chat Completions response_format returned JSON in a code fence, so the schema is not enforced there (probed 2026-11-11); the flag is per model and has to hold on every API listed, so it is false.
+# Input: a PNG image and a PDF were read on both APIs (probed 2026-11-11). Context: a 580K-token prompt was accepted and the limit error names 1,000,000 tokens.
+# Tools: a function tool returned a tool call with the right arguments on Chat Completions with tool_choice "auto" (probed 2026-11-11).
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.messages]
+base_url = "https://aigrow.gg/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 4
+cache = { read = 0.25, write = { "5m" = 8, "1h" = 8 } }
+
+[cost.text.output]
+price = 20

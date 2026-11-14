@@ -2,8 +2,14 @@
 # Effort: reasoning_effort = low|high|max
 # Live metadata: levels none/low/high/max, default max, and `can_disable=true`
 # (accessed 2026-07-28): https://api.code.umans.ai/v1/models/info
+# Deprecated 2026-11-09: unlisted from GET /v1/models. The id keeps serving,
+# answered by Kimi K3.1 Pro with the same request contract, and is billed at
+# Kimi K3.1 Pro's rates. Successor: umans-kimi-k3.1-pro.
+# limit.output is cap-1 on purpose: the Umans API 400s max_tokens >=
+# max_completion_tokens (131072), so 131071 is the largest value that serves.
 schema = 2
-base_model = "moonshotai/kimi-k3"
+base_model = "moonshotai/kimi-k3.1-pro"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
@@ -13,12 +19,16 @@ output = ["text"]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
+[limit]
+context = 1_048_576
+output = 131_071
+
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 3
-cache = { read = 0.3 }
+price = 2
+cache = { read = 0.2 }
 
 [cost.text.output]
-price = 15
+price = 10

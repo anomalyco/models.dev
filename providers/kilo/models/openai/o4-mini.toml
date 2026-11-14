@@ -1,0 +1,19 @@
+schema = 2
+base_model = "openai/o4-mini"
+name = "OpenAI: o4-mini"
+description = "OpenAI's o4-mini delivers fast, cost-efficient reasoning with exceptional performance for its size, particularly excelling in math (best-performing on AIME benchmarks), coding, and visual tasks."
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.275 }
+
+[cost.text.output]
+price = 4.4

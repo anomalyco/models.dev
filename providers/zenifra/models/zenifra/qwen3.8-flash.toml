@@ -1,0 +1,28 @@
+# Served as `zenifra/qwen3.8-flash` (the ID clients send). Source: GET https://ai.zenifra.com/v1/models
+# (public, no auth, accessed 2026-11-09): name "Qwen3.8 Flash", context_length 1000000, max_output_tokens 131072.
+# Toggle: enable_thinking = true|false on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: enable_thinking=false -> 0 reasoning tokens, default -> 121 reasoning tokens).
+# Budget: thinking_budget on /v1/chat/completions (live 2026-11-09 on POST https://ai.zenifra.com/v1/chat/completions, uncached, unique prompt per call: thinking_budget=20 -> exactly 20 reasoning tokens).
+# Effort: reasoning_effort = low|medium|xhigh (default xhigh), from capabilities.reasoning.effort_levels.
+# structured_output = true: capabilities.response_schema = true, structured_outputs = true.
+# Cache: capabilities.prompt_caching = true, billed as cache_read_input; cache_min_input_tokens = 1024.
+# Prices: Zenifra lists BRL per 1M tokens (pricing): input BRL 0.6, output BRL 2, cache read BRL 0.1.
+# USD = BRL / 5.5146, the Banco Central do Brasil PTAX selling rate for 2026-11-09 (closing bulletin):
+# https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='11-09-2026'&$format=json
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1088
+cache = { read = 0.0181 }
+
+[cost.text.output]
+price = 0.3627

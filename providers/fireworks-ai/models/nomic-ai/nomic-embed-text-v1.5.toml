@@ -1,0 +1,17 @@
+# Legacy BERT embedding model on Fireworks Serverless, called by its Hugging Face ID (nomic-ai/nomic-embed-text-v1.5, 137M parameters).
+# Not in the Model Library or the serverless feed; listed as serverless-only in "BERT-based models (legacy)":
+#   https://docs.fireworks.ai/guides/querying-embeddings-models (accessed 2026-11-08)
+# Pricing: 137M is in the "up to 150M" bucket, $0.008/MTok input: https://docs.fireworks.ai/serverless/pricing#embeddings
+# Live POST https://api.fireworks.ai/inference/v1/embeddings returned vectors (2026-11-08).
+schema = 2
+v2_only = true
+base_model = "nomic-ai/nomic-embed-text-v1.5"
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/fireworks/embeddings" }
+
+[cost.text.input]
+price = 0.008
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,48 @@
+# Sources (accessed 2026-11-09 to 2026-11-12):
+# - Model ID: deepseek/deepseek-v4.1-flash, the literal "id" in GET https://api.logits.com/v1/models.
+# - Prompt cache: https://logits.com/docs says usage reports
+#   prompt_tokens_details.cached_tokens and cached input is billed at the cached
+#   rate. It documents no cache markers, so the cache is implicit.
+# - Price, USD per 1M tokens: $0.15 input, $0.003 cached input, $0.60 output.
+#   https://logits.com/pricing and the price list JSON at https://api.logits.com/models
+#   (prompt 0.00000015, cached_prompt 0.000000003 per token; same rate for image tokens).
+# - Context window (1048576) and max output (393216): https://logits.com/pricing and
+#   GET https://api.logits.com/v1/models
+# - Image input: PNG, JPEG, WebP, GIF, BMP, TIFF and PPM, up to 120 images, URL or
+#   base64 (https://api.logits.com/models). PPM has no standard MIME type and is left out.
+# - Reasoning: Logits serves this model on its own engine, not as a relay of the
+#   DeepSeek API, and its effort scale differs from the lab's. Proof is the public
+#   GET https://api.logits.com/v1/models entry for deepseek/deepseek-v4.1-flash:
+#   default_reasoning_level "high", and supported_reasoning_levels
+#   none "Disable reasoning.", minimal "Alias for low reasoning effort (50).",
+#   low "Use reasoning effort 50.", medium "Use reasoning effort 60.",
+#   high "Use reasoning effort 75.", xhigh "Alias for high reasoning effort (75).",
+#   max "Use reasoning effort 100."
+#   So medium sends effort 60, distinct from high (75); minimal and xhigh are the
+#   only aliases. none turns reasoning off, so there is no separate toggle.
+#   Request field: "reasoning_effort" on /v1/chat/completions.
+# - Tools and structured output: the parameter table at https://logits.com/docs lists
+#   tools as supported, tool_choice auto/none/required/named function, and
+#   response_format json_object and strict json_schema as supported.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "image/bmp", "image/tiff"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], default = { type = "effort", value = "high" } }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.60

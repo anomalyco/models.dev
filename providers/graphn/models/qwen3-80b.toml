@@ -1,0 +1,20 @@
+# Served as Qwen/Qwen3-Next-80B-A3B-Instruct, instruct-only: no thinking mode and no
+# reasoning_content (live 2026-10-21). Pricing (https://graphn.ai/pricing, checked
+# 2026-10-27) marks this row "Billed as input" — no cache hits are reported; confirmed
+# live on 2026-10-27 with repeated ~10K-token prompts (cached_tokens = 0 on every call,
+# no created_cache_tokens), so no cache capability or cache.read price is authored.
+schema = 2
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
+name = "Qwen3 80B"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.6

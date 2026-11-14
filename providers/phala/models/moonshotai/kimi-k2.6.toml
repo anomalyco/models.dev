@@ -1,0 +1,26 @@
+# Source (accessed 2026-10-25): https://inference.phala.com/v1/models
+# Toggle: reasoning.enabled = true|false (gateway src/middleware/reasoning.rs; live-tested 2026-10-25)
+# Effect: reasoning tokens low/medium/high/max 1024/1024/1024/1024 (max_tokens 1024, 2026-10-25).
+# Modalities: catalog input_modalities text,image (no video/pdf listed).
+# Cache: catalog pricing.input_cache_read
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.09
+cache = { read = 0.37 }
+
+[cost.text.output]
+price = 4.6

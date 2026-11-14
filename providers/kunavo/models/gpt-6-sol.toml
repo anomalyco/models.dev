@@ -1,0 +1,30 @@
+# Price: https://kunavo.com/pricing.json (read 2026-10-24), USD per 1M tokens.
+# Cache: read 0.1x and write 1.25x input, the vendor's structure at Kunavo's rate.
+# Long context: past 272_000 input tokens the whole request bills at
+# 2x input (cache too) and 1.5x output, as the vendor bills it.
+# Effort: reasoning_effort on /v1/chat/completions is sent on as
+# reasoning.effort, value for value: https://kunavo.com/docs/chat#reasoning.
+# Measured 2026-09-30 on the service Kunavo routes this id to: "none" answered
+# 200 with 0 reasoning tokens, "max" 200 with reasoning tokens on the same
+# prompt, and a value outside the set 400 naming none|minimal|low|medium|high|xhigh|max.
+schema = 2
+base_model = "openai/gpt-6-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.08, write = 1 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.6
+cache = { read = 0.16, write = 2 }
+
+[cost.text.output]
+price = 4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 6

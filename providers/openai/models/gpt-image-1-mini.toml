@@ -1,3 +1,4 @@
+# Pricing (accessed 2026-11-12): https://developers.openai.com/api/docs/pricing (Images, standard tier)
 # Status: deprecated, shutdown 2026-12-01: https://developers.openai.com/api/docs/deprecations
 # Image output MIME types: https://developers.openai.com/api/docs/guides/image-generation#output-format (output_format: png, jpeg, webp)
 schema = 2
@@ -25,3 +26,14 @@ output = 0
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/providers/openai/images" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.image.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.image.output]
+price = 8

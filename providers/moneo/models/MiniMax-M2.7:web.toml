@@ -1,0 +1,22 @@
+# Moneo catalog row (retrieved 2026-11-11): id/model=`MiniMax-M2.7:web`, context_tokens=198000,
+# has_vision=false, has_tools=true, has_reasoning=false, input_per_1m_usd=0.35, output_per_1m_usd=1.50:
+# https://api.moneo.one/v1/models
+# `:web` is therefore part of the exact wire ID. Search is bundled into token prices; no separate search fee is published.
+# The route reports has_reasoning=false; the sanitizer drops native thinking controls and the response filter removes all reasoning fields.
+# Tool choice and structured output are omitted as unverified on this host; HTTP 200 alone did not prove enforcement.
+# Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
+name = "MiniMax M2.7 (Web)"
+
+[capabilities]
+reasoning = { supported = false }
+
+[limit]
+context = 198_000
+
+[cost.text.input]
+price = 0.35
+
+[cost.text.output]
+price = 1.50

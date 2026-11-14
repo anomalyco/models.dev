@@ -1,0 +1,27 @@
+# Source: https://infer.flow7.org/api/public/catalog (2026-10-29 UTC)
+# Exact selector: infer/gpt-6.1-sol:low-cost
+# Low cost route: text and tool calls. Image and file input need the model's :official route.
+# Limits: Infer's published figures for the model; the route publishes none of its own.
+# Reasoning controls copied from the lab's own entry, as AGENTS.md asks of relays.
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+base_model_omit = ["limit.input"]
+name = "GPT-6.1 Sol (Low cost)"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 271_999
+
+[cost.text.input]
+price = 0.24
+cache = { read = 0.02, write = 0.3 }
+
+[cost.text.output]
+price = 0.89

@@ -1,0 +1,44 @@
+# Sources (accessed 2026-10-24):
+# - Model card, limits (1M context, 262,144 max output), capabilities, DeepSeek-V4.1-Flash-1017 base:
+#   https://docs.abliteration.ai/models
+# - Reasoning modes and per-endpoint request fields:
+#   https://docs.abliteration.ai/capabilities/thinking
+# - Image MIME types and limits: https://docs.abliteration.ai/capabilities/images
+# - Pricing ($1 per 1M tokens input, $2 per 1M output, $0.10 per 1M cached input):
+#   https://docs.abliteration.ai/pricing
+#   https://abliteration.ai/pricing#api-pricing
+# - Launch announcement (DeepSeek-V4.1-Flash-1017 base, cheaper alternative to
+#   the GLM-5.3-based Large v2):
+#   https://x.com/abliteration_ai/status/2113655358942278072
+# Four distinct reasoning depths: none, low, high (default), max. Off is
+# effort=none, so there is no separate toggle option. Other ladder values are
+# accepted aliases: minimal -> low, medium -> high, xhigh -> high.
+# effort: API: {"reasoning_effort": "<value>"} on /v1/chat/completions
+schema = 2
+name = "Abliterated Model Large Flash"
+description = "DeepSeek-V4.1-Flash model abliterated and finetuned for cyber, ML red teaming, and agent testing"
+open_weights = false
+release_date = "2026-10-23"
+last_updated = "2026-10-24"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 262_144
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2

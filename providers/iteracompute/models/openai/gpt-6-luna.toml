@@ -1,0 +1,41 @@
+# Above-272K prompt rates rechecked in /v1/models pricing.parameters on 2026-10-28.
+# Sources (accessed 2026-10-22):
+# https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
+# https://iteracompute.com/models/gpt-6-luna/ (host capabilities and pricing)
+# Toggle wire path: reasoning = true|false; reasoning.enabled = true|false is also accepted.
+# Effort wire path: reasoning_effort = low|medium|high|xhigh; reasoning.effort is also accepted.
+# Host capability recheck (2026-10-23), exact /v1/models data[].id = "openai/gpt-6-luna":
+# reasoning.mandatory=false, supports_enable_disable=true,
+# supported_efforts=["low","medium","high","xhigh"].
+# Author the public contract: separate boolean off plus the four advertised graded efforts.
+# The model page also shows a compatibility off alias (reasoning_effort=none); it is not an advertised effort level.
+# No max level is added because this exact host supported_efforts list excludes it.
+# Model-page mapping (2026-10-23): full context=1_050_000; Gateway input=922_000; output=128_000.
+# /v1/models context_window=922000 matches the page's input budget, not its full model context.
+# Inherit the lab's combined window and distinct input/output ceilings.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.008, write = 0.1 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.16
+cache = { read = 0.016, write = 0.2 }
+
+[cost.text.output]
+price = 0.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.6

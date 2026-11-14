@@ -12,9 +12,6 @@ reasoning = { supported = true, toggle = true, effort = ["none", "minimal", "low
 structured_output = true
 tools = { supported = true }
 
-[limit]
-output = 1_048_576
-
 [cost.text.input]
 price = 3
 cache = { read = 0.3 }

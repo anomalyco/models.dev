@@ -1,0 +1,25 @@
+# Model ID from BytePlus ModelArk model list: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-list
+# USD pricing from BytePlus ModelArk pricing page: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-pricing
+# BytePlus ModelArk is the overseas brand of Volcengine Ark: same Ark API surface,
+# different base URL (ark.ap-southeast.bytepluses.com) and API key.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = minimal|low|medium|high
+# (same model ID and same Ark API as the volcengine Ark entry, which measured these levels)
+# top_k: the Ark Chat API takes only temperature and top_p, so the lab's top_k = true is overridden.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+top_k = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

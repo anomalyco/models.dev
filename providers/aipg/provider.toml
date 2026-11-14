@@ -1,0 +1,19 @@
+# AI Power Grid: a network of independent GPU operators behind one
+# OpenAI-compatible API. Sources (accessed 2026-11-13):
+# https://aipowergrid.io/docs/integrations (base URL, AIPG_API_KEY)
+# https://api.aipowergrid.io/v1/status/models (models with a worker online)
+# https://api.aipowergrid.io/v1/pricing (list prices, USD)
+# Reasoning: POST /v1/chat/completions takes top-level `reasoning_effort`. The
+# API passes `low` and `medium` on, turns `none`/`minimal` into `low` and drops
+# every other value so the serving backend uses its default
+# (grid_api/routers/_passthrough.py in https://github.com/AIPowerGrid/grid-core).
+# Reasoning text comes back in choices[].message.reasoning_content (live request).
+# Limits: a request above 200,000 characters is refused with HTTP 413
+# (MAX_REQUEST_CHARS in grid_api/routers/openai.py) and max_tokens above 32,768
+# with HTTP 422 (MAX_OUTPUT_TOKENS in _passthrough.py), whatever the model holds.
+name = "AI Power Grid"
+env = ["AIPG_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.aipowergrid.io/v1"
+doc = "https://aipowergrid.io/docs/integrations"

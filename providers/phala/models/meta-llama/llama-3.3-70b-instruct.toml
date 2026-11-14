@@ -1,0 +1,18 @@
+# Source (accessed 2026-10-25): https://inference.phala.com/v1/models
+# Limits: catalog context_length 131072, max_output_length 16384
+# Structured output: catalog supported_parameters lists structured_outputs.
+schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 131_072
+output = 16_384
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 2

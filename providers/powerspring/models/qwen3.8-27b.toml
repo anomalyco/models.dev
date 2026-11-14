@@ -1,0 +1,42 @@
+# Source: https://api.powerspring.eu/v1/models (accessed 2026-11-14): context_length 1000000,
+# max_output_tokens 500000; images, tools, json_schema, reasoning, reasoning_off.
+# Effort: reasoning_effort = none|low|medium|xhigh on Chat Completions. "none" turns thinking off.
+# low|medium|xhigh follow the lab (providers/alibaba/models/qwen3.8-27b.toml) and relay peers
+# (providers/scaleway/models/qwen3.8-27b.toml, providers/kilo/models/qwen/qwen3.8-27b.toml).
+# Live check 2026-11-14 (Chat Completions, one short prompt): every listed level answered;
+# reasoning text per level: none 0, low 362 chars, medium 300 chars, xhigh 169 chars.
+# Reasoning text: Chat Completions returns it in message.reasoning_content.
+# Input: text and images only (no video); image types are the lab's.
+# Cache: automatic, billed at the cached input price (https://powerspring.eu/docs/billing).
+# Prices: USD per million tokens, converted from Powerspring's EUR prices at the ECB reference
+# rate of 2026-11-13 (1 EUR = 1.1052 USD).
+# Lowest price shown; a request goes to the cheapest available server and can cost up to
+# USD 0.696276 input / USD 3.829518 output per million tokens.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 500_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.1044414
+cache = { read = 0.04177656 }
+
+[cost.text.output]
+price = 0.41660514

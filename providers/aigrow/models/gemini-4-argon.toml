@@ -1,0 +1,28 @@
+# Prices: https://aigrow.gg/ai-api, figure "USD per million tokens", row "Gemini 4 Argon" (read 2026-11-12): input $1.00, output $5.00, cache read $0.05, cache write $1.25. These are the USD a buyer pays per 1M tokens, copied with no conversion. One flat rate, with no date-based change on this host; cache writes bill at 1.25x the input rate.
+# API: OpenAI Chat Completions only (POST /v1/chat/completions); the Messages endpoint does not serve this model.
+# Effort: reasoning_effort is forwarded unchanged; levels as on providers/google; each level returned 200 on this host (2026-11-11). No default is stated: this host's default was not confirmed.
+# Cache, and the 32,768-token output limit per request, copied from providers/google.
+# Structured output: response_format with a JSON schema returned JSON in a code fence, so it is off (probed 2026-11-11).
+# Input: a PNG image and a PDF were read (probed 2026-11-11). Audio and video are left out because this host does not read them from the parts a Chat Completions client sends (probed 2026-11-11): an input_audio part (wav, mp3), a video_url part and a file part with an mp4 were ignored (the model answered that it received none), and a file part with a wav returned a different wrong answer on each of three runs. They were read only as a base64 data URL inside an image_url part, a shape outside the Chat Completions spec: a spoken four-digit code came back from wav, mp3, ogg and m4a, and a four-digit number shown on screen from mp4, webm and mov.
+# Tools: a function tool returned a tool call with the right arguments on Chat Completions with tool_choice "auto" (probed 2026-11-11).
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
+cache = { implicit = { min_tokens = 4_096 } }
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
+output = ["text"]
+
+[limit]
+output = 32_768
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[cost.text.output]
+price = 5
