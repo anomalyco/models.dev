@@ -1,0 +1,14 @@
+# Pricing: https://flatkey.ai/models (accessed 2026-10-21), USD per 1M tokens; "Cache" column = cache read.
+# Effort: reasoning_effort on /v1/chat/completions; levels match the same-surface peer providers/openrouter/models/anthropic/claude-sonnet-5.5.toml.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1.6
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 8
