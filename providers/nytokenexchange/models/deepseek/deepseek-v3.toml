@@ -1,0 +1,15 @@
+schema = 2
+base_model = "deepseek/deepseek-v3"
+
+[capabilities]
+structured_output = true
+temperature = false
+
+[limit]
+context = 163_840
+
+[cost.text.input]
+price = 0.30173
+
+[cost.text.output]
+price = 0.93895

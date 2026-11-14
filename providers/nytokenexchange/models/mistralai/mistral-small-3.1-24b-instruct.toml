@@ -1,0 +1,17 @@
+schema = 2
+base_model = "mistral/mistral-small-3.1-24b-instruct"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = false
+temperature = false
+
+[cost.text.input]
+price = 0.370305
+
+[cost.text.output]
+price = 0.585525
