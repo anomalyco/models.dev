@@ -6,6 +6,8 @@
 # aliases max/xhigh/medium/low -> high, minimal -> none) per metadata.reasoning
 # and the model page mapping. Off is effort=none, so no separate toggle.
 # metadata.pricing.cached_input_per_million = 0.0036 USD.
+# cached_input_is_default = false, so the host sets this price itself.
+# Public GET /v1/models rechecked 2026-11-14: same values.
 # Checked public and authenticated GET /v1/models on 2026-11-12.
 # Budget: thinking_token_budget (integer reasoning tokens) accepted on this host.
 # Neuralwatt serves text+image+audio input (capabilities vision + audio_input
