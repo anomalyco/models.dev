@@ -1,0 +1,20 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
+# GLM-5.3 always reasons; effort low|high|max with default max.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.26
+cache = { read = 0.234 }
+
+[cost.text.output]
+price = 3.96

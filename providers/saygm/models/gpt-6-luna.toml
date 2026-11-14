@@ -1,0 +1,33 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-10-23).
+# Routed over the Responses API: OpenAI rejects function tools combined with
+# reasoning_effort on /v1/chat/completions for this model.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+
+[api.responses]
+base_url = "https://api.saygm.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.009, write = 0.1125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.18
+cache = { read = 0.018, write = 0.225 }
+
+[cost.text.output]
+price = 0.45
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.675
