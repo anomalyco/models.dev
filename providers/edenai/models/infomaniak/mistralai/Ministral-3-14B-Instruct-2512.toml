@@ -1,3 +1,4 @@
+# Output limit: capped at the 100,000 context; no host cap is documented and the 262,144 from the base model or host listing is larger.
 schema = 2
 base_model = "mistral/ministral-3-14b-instruct-2512"
 name = "Ministral 3 14B (Infomaniak)"
@@ -8,6 +9,7 @@ structured_output = true
 
 [limit]
 context = 100_000
+output = 100_000
 
 [cost.text.input]
 price = 0.33156
