@@ -1,0 +1,12 @@
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.114
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.4

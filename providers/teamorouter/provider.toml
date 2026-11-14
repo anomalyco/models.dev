@@ -1,0 +1,10 @@
+name = "TeamoRouter"
+env = ["TEAMOROUTER_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# Relay provider: TeamoRouter proxies multi-vendor lab endpoints (Anthropic, OpenAI,
+# Google, DeepSeek, Zhipu, Moonshot, Alibaba, xAI) behind one OpenAI-compatible
+# endpoint. Model ids and per-million prices come from the public price list
+# https://teamorouter.com/pricing (retrieved 2026-11-10).
+doc = "https://teamorouter.com/docs"
+api = "https://api.teamorouter.com/v1"

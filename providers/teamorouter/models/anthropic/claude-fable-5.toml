@@ -1,0 +1,12 @@
+schema = 2
+base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 10.0
+cache = { read = 1.0 }
+
+[cost.text.output]
+price = 50.0
