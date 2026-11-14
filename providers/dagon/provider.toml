@@ -1,0 +1,14 @@
+# Dagon Inference: metered gateway (operated by Inkwell Finance, Inc. d/b/a Dagon) in front of
+# upstream hosts of abliterated open-weight models (abliteration.ai, Refuseless, Experiential Labs,
+# Lutheos, Silk Compute). Each request goes to the cheapest healthy upstream serving the model id.
+# Sources (accessed 2026-11-08):
+# - Live catalog, limits and prices (no auth): https://inference.dagon.so/v1/models
+# - Chat Completions forwarded fields (tools, tool_choice, reasoning_effort, temperature, top_p,
+#   response_format, prompt_cache_key; top_k is not forwarded): https://inference.dagon.so/docs/chat-completions
+# - Auth: Authorization: Bearer gk_... prepaid key: https://inference.dagon.so/docs/authentication
+name = "Dagon Inference"
+env = ["DAGON_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://inference.dagon.so/v1"
+doc = "https://inference.dagon.so/docs"

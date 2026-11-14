@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-08):
+# - Limits, input types, prices (cheapest upstream route plus 10% markup; prices float with the
+#   routed upstream): https://inference.dagon.so/v1/models
+# - Model page: https://inference.dagon.so/models/abliterated-model-large
+# - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
+#   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
+# Deprecated upstream; still accepted by Dagon for existing integrations (deprecated: true in /v1/models).
+# Live probe 2026-11-08 (POST /v1/chat/completions, abliteration.ai route, 8000 max_tokens, 2 runs each):
+# "none" does not disable reasoning (8000/8000 tokens, finish_reason=length); high 2643/3859; max 8000/8000.
+# So effort is high|max with no off-switch.
+schema = 2
+base_model = "abliteration-ai/abliterated-model-large"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+cache = { implicit = true }
+top_k = false
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 3.3
+cache = { read = 0.33 }
+
+[cost.text.output]
+price = 5.5
