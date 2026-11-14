@@ -1,0 +1,14 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 0.042/0 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "typesafe/jev-1.14.0"
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0
+
+# TokenRouter id omits the vendor patch suffix; maps to typesafe/jev-1.14.0

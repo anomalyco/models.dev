@@ -1,0 +1,16 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 1/6, cache read 0.2, cache write 0.008333 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/seed-2.0-pro"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2, write = 0.008333 }
+
+[cost.text.output]
+price = 6

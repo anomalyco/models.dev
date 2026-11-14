@@ -1,0 +1,12 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 5/47 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "microsoft/mai-image-2.5"
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 47

@@ -1,0 +1,15 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 0.5/3 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.1-flash-image-preview"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 3
