@@ -1,0 +1,29 @@
+# Model id, prices and limits: UberLLM's catalog, GET https://api.uberllm.dev/v1/models (2026-11-12).
+# Prices are the listed price: it follows the market and is refreshed every 5 minutes; a call is billed what the serving provider charged.
+# limit: the host's cap from the same catalog, where it is below the lab's.
+# Off is effort=none; graded levels, no toggle.
+# Effort: reasoning_effort = none|low|high|max (Moonshot's levels plus none, as on OpenRouter). Live on /v1/chat/completions,
+#   a counting prompt, 3 runs per value (2026-11-12): none 0 / 0 / 0 reasoning tokens and no reasoning_content;
+#   low 97 / 133 / 156; high 137 / 281 / 329. max: 166 reasoning tokens (2026-10-30).
+# cache: implicit. A ~7k-token prompt sent 3 times in a row, twice (live 2026-11-04): the repeats reported
+#   prompt_tokens_details.cached_tokens = 7,168 of 7,660.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.01152
+cache = { read = 0.01092 }
+
+[cost.text.output]
+price = 0.96

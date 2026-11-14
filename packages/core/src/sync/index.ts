@@ -67,6 +67,7 @@ import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
 import { tempr } from "./providers/tempr.js";
 import { tinfoil } from "./providers/tinfoil.js";
+import { uberllm } from "./providers/uberllm.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { voidApi } from "./providers/void-api.js";
@@ -241,6 +242,7 @@ export const providers: {
   morph: SyncProvider<any>;
   tempr: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
+  uberllm: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   "void-api": SyncProvider<any>;
@@ -296,6 +298,7 @@ export const providers: {
   morph,
   tempr,
   tinfoil,
+  uberllm,
   vercel,
   venice,
   "void-api": voidApi,
@@ -326,6 +329,7 @@ export const groups = {
     "tempr",
     "openrouter",
     "prime",
+    "uberllm",
     "vercel",
     "void-api",
   ],
