@@ -1,4 +1,5 @@
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Output limit: lab cap unsourced; keeping the host's catalog value.
 schema = 2
 base_model = "mistral/ministral-8b-2512"
 description = "Ministral 3 8B is a balanced, efficient multimodal model offering strong text and vision capabilities, optimized for edge and local deployment."
@@ -10,6 +11,7 @@ temperature = false
 
 [limit]
 context = 256_000
+output = 256_000
 
 [cost.text.input]
 price = 0.179
