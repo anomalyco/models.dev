@@ -1,0 +1,40 @@
+# Liquid AI LFM3-VL-2B. Model card: https://huggingface.co/LiquidAI/LFM3-VL-2B
+#   LFM3 backbone + hybrid vision encoder; ~1.92B total (1.73B LM + 164M vision + 25M projector);
+#   text/image/video in, text out; 128K context; first LFM vision model with video; LFM Open License v1.0; released 2026-10-27.
+# Announcement: https://www.liquid.ai/blog/lfm3
+schema = 2
+name = "LFM3-VL-2B"
+description = "Open-weight vision-language model with video input for on-device visual understanding and reasoning"
+family = "lfm3"
+open_weights = true
+release_date = "2026-10-27"
+license = "LFM Open License v1.0"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 128_000
+output = 128_000
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LiquidAI/LFM3-VL-2B"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/LiquidAI/LFM3-VL-2B"
+type = "model_card"
+
+[[links]]
+label = "Introducing LFM3"
+url = "https://www.liquid.ai/blog/lfm3"
+type = "announcement"
