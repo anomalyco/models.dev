@@ -1,0 +1,11 @@
+# Green Compute (https://www.green-compute.com), Bittensor subnet 110: GPU rental and inference on
+# miners that prove their power is clean (biogas, solar, hydro, wind, geothermal).
+# OpenAI-compatible chat completions with streaming and tool calling
+# (https://www.green-compute.com/docs/inference.md). Keys at
+# https://www.green-compute.com/settings; prices: https://api.green-compute.com/platform/pricing
+name = "Green Compute"
+env = ["GREEN_COMPUTE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.green-compute.com/v1"
+doc = "https://www.green-compute.com/docs/inference.md"
