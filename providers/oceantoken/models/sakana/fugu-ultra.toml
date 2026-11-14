@@ -1,0 +1,20 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+# Effort: reasoning_effort on POST /v1/chat/completions
+base_model = "sakana/fugu-ultra"
+reasoning_options = [
+  { type = "effort", values = ["high", "xhigh", "max"] },
+]
+
+[cost]
+input = 5
+output = 30
+cache_read = 0.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 10
+output = 45
+cache_read = 1
+
+[limit]
+output = 128_000

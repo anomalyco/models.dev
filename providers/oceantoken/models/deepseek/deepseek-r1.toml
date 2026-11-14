@@ -1,0 +1,11 @@
+# Price and limits: https://api.oceantoken.ai/public/model_hub (accessed 2026-10-18), USD per 1M tokens.
+base_model = "deepseek/deepseek-r1"
+reasoning_options = []
+
+[cost]
+input = 0.7
+output = 2.5
+
+[limit]
+context = 64_000
+output = 16_000
