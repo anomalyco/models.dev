@@ -2,9 +2,13 @@
 # output cap (393,216), vision+audio input, and none|high effort ladder as the
 # standard tier; requested via the `-flex` model ID or service_tier="flex" and
 # requires stream=true (non-streaming requests fall through to the standard
-# tier). Cost is the flex rate: 0.65x of standard pricing (35% off) per the
-# flex-tier guide, applied to the standard rates advertised by live
-# GET /v1/models ($0.87/$1.74/$0.036, checked 2026-10-08).
+# tier). Authenticated GET /v1/models, checked 2026-11-12, reports
+# flex input/output/cache-read prices of $0.28275/$0.5655/$0.00234
+# per million tokens. These prices already include the flex discount.
+# metadata.pricing.cached_input_per_million = 0.00234 USD.
+# cached_input_is_default = false; flex_discount_multiplier = 0.65.
+# Public GET /v1/models rechecked 2026-11-14: same values.
+# Checked public and authenticated GET /v1/models on 2026-11-12.
 # Budget: thinking_token_budget (integer reasoning tokens)
 # https://docs.neuralwatt.com/api/models#list-models
 # https://portal.neuralwatt.com/models/mimo-v2.6-pro
@@ -19,6 +23,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"], budget = {} }
+structured_output = true
 
 [limit]
 context = 1_048_560
@@ -28,8 +33,8 @@ output = 393_216
 legacy_interleaved = true
 
 [cost.text.input]
-price = 0.5655
-cache = { read = 0.0234 }
+price = 0.28275
+cache = { read = 0.00234 }
 
 [cost.text.output]
-price = 1.131
+price = 0.5655

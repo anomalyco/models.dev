@@ -1,0 +1,23 @@
+# Source: https://infer.flow7.org/api/public/catalog (2026-10-29 UTC)
+# Exact selector: infer/claude-fable-5-1:low-cost
+# Low cost route: text and tool calls. Image and file input need the model's :official route.
+# Limits: the lab's, which match Infer's published figures for the model.
+# Reasoning controls copied from the lab's own entry, as AGENTS.md asks of relays.
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+name = "Claude Fable 5.1 (Low cost)"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 4.91
+cache = { read = 0.13, write = 6.14 }
+
+[cost.text.output]
+price = 24.53

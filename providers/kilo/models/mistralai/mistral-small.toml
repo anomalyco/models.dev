@@ -1,0 +1,27 @@
+schema = 2
+name = "Mistral: Mistral Small"
+description = "Mistral Small currently runs Mistral Small 4, a multimodal model combining instruction following, reasoning, and coding with a 262,144-token context window."
+family = "mistral-small"
+open_weights = false
+release_date = "2024-09-17"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 4_000
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

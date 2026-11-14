@@ -28,6 +28,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -137,23 +138,23 @@ Prefer small, provider-specific PRs when adding a provider. If the provider has 
 
 ## Automation
 
-`.github/workflows/sync-models.yml` runs on an hourly schedule and manually through `workflow_dispatch`.
+`.github/workflows/sync-models.yml` runs every six hours and manually through `workflow_dispatch`.
 
 The workflow:
 
 - Checks out `dev`.
 - Installs dependencies with Bun.
 - Discovers sync providers with `bun models:sync --list-providers`.
-- Runs one provider per matrix job with `bun models:sync ${{ matrix.provider }}`.
-- Runs `bun validate`.
-- Uploads the provider's catalog changes, if any, as a patch. These jobs never see the app's key. Their built-in token can open missing-model issues and dispatch the issue fixer, but can't change `dev` or workflows.
+- Syncs every provider in one job, running `bun models:sync <provider>` for each in turn. Each provider starts from a clean `dev` so its patch contains only its own changes. A provider that fails to sync or validate is dropped and reported; the rest still sync and publish.
+- Runs `bun validate` after each provider that changed the catalog.
+- Uploads the changed providers' catalog changes as patches in one artifact. This job never sees the app's key. Its built-in token can open missing-model issues and dispatch the issue fixer, but can't change `dev` or workflows.
 - Runs one `publish` job with a token from the `models.dev automation` GitHub App, whose key is in the `automation` environment. It runs only the scripts in `.github/sync-models/`, not repository code, and creates or updates a provider-specific sync PR for each patch that changes only catalog TOML files. It enables auto-merge only when the sync job marked the change safe and the patch itself passes the same limits: every file is in that provider's `models/` folder, at most 10 models created, at most 10 deleted, at most 15 of both, no more than half of the provider's models deleted, and at least one model left.
 - Uses `.sync/model-sync-report.md` as the PR body.
 - Auto-merges syncs that `bun sync:auto-merge` marks safe. The app's PRs run `Validate Models` and its merges run `Deploy` as usual.
 
-Each provider writes to a fixed provider branch like `automation/sync-models-openrouter`. If that provider's sync PR is already open, later scheduled runs force-update the same branch and edit the existing PR instead of creating another one. Provider jobs do not share unmerged changes with each other; OpenRouter only uses `base_model` for model metadata entries already present on `dev`.
+Each provider writes to a fixed provider branch like `automation/sync-models-openrouter`. If that provider's sync PR is already open, later scheduled runs force-update the same branch and edit the existing PR instead of creating another one. Providers do not share unmerged changes with each other; OpenRouter only uses `base_model` for model metadata entries already present on `dev`.
 
-CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get an hourly provider-specific sync job, branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
+CI automatically picks up providers registered in `providers` in `packages/core/src/sync/index.ts`. Adding a new sync provider there is enough to get a provider-specific sync branch, labels, title, and PR naming convention. The workflow only needs manual updates when a new provider requires new secrets or other environment variables.
 
 Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 
@@ -209,6 +210,7 @@ OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
 - API prices are per-token strings and are converted to per-1M-token numbers.
 - `structured_output` comes from `supported_parameters.includes("structured_outputs")` only.
 - Existing `status`, `interleaved`, `knowledge`, `limit.input`, and `cost.tiers` may be preserved when OpenRouter is not authoritative enough for those fields.
+- Chat models that also output video (Gemini Omni) get `cost.video.output` per second from the video catalog (`/api/v1/videos/models`), like video-only models.
 - Canonical OpenRouter model IDs should emit `base_model` references to model metadata when a matching `models/` entry exists.
 
 ## Kilo Gateway Notes
@@ -248,6 +250,7 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - Use a dedicated token scoped to Workers AI read access so sync automation does not share deploy credentials.
 - The endpoint is parsed as Cloudflare's OpenRouter-like Workers AI metadata.
 - Model IDs map directly to TOML paths under `providers/cloudflare-workers-ai/models`.
+- A `deprecation_date` (set once Cloudflare schedules a retirement) sets `status = "deprecated"`; otherwise an existing status is kept.
 - This target only manages Workers AI; the separate Cloudflare AI Gateway target handles proxied third-party models.
 
 ## Cloudflare AI Gateway Notes
@@ -367,6 +370,15 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - A live model with no lab entry is not created either, and opens a missing-model issue. `openai/privacy-filter` is skipped silently because the token-cost schema cannot describe it.
 - Absence removes a model, so the fetch refuses a response carrying fewer than twenty models: a truncated list that still parses would otherwise be indistinguishable from a mass retirement. A local entry the catalog cannot price is republished unchanged rather than dropped, because dropping it would delete a route that is still served.
 
+## Obscurify.ai Notes
+
+- Obscurify.ai is implemented in `packages/core/src/sync/providers/obscurify.ts`.
+- Source endpoint: the public `https://obscurify.ai/v1/models` (no API key).
+- Existing models are updated from per-token `pricing.prompt` and `pricing.completion`, scaled to per-1M prices. `pricing.input_cache_read` and `pricing.input_cache_write` are synced only into files that already declare that cache price: each model's caching is confirmed live before it is added.
+- `context_length` only ever lowers the inherited context limit; it can report the lab's window rounded up (1048576 for 1M). Output limits, reasoning controls and other capabilities stay hand-authored.
+- `tools = false` overrides the lab's tool calling. Display names are not synced: the endpoint prefixes the lab name (`Z.ai: GLM 5.3`). Decision models (`decisions = true`) are skipped.
+- New models are not created automatically (`skipCreates`) and open no missing-model issues (`trackMissingModels: false`): the endpoint lists hundreds of models the catalog does not carry. It lists only models serving at that moment, so local files missing from a response are kept (`deleteMissing: false`) and reported.
+
 ## OpenAI Notes
 
 - OpenAI is implemented in `packages/core/src/sync/providers/openai.ts`.
@@ -453,6 +465,28 @@ Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
 - Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
 - Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
 
+## Tempr Gateway Notes
+
+Tempr Gateway is implemented in `packages/core/src/sync/providers/tempr.ts`.
+
+- Run it with `bun models:sync tempr`.
+- Source endpoint: `https://api.temprhq.io/v1/catalog`; no auth required. It uses OpenRouter's model-list shape plus a `tempr` object (provider, model, type, status, `price_source`, `reasoning_forwarded`, `provider_kind`, `models_dev`, `reasoning_options`). Docs: https://temprhq.io/docs/gateway-reference#catalog
+- **Mirroring.** Tempr serves each provider's models on the caller's own key, so every catalog model names the models.dev entry it is (`tempr.models_dev`: `providers/<provider>/models/<model>.toml`). The Tempr entry copies that entry's overrides onto the same `base_model`.
+  - When the mirrored entry is the lab's full definition, the base is the lab file of the same id, found with `resolveCanonicalBaseModel` / `resolveModelMetadataBaseModel`, and only the fields that differ from it are kept.
+  - Request-surface fields (`provider`, `experimental`, `interleaved`, `reasoning_options`) and catalogue fields (description, dates, family, knowledge) are never copied.
+- **Prices.** Cost is Tempr's only where `price_source` is `"tempr"`: Tempr's copy of a host's whole catalog confirms the model at that price. The mirrored entry's `reasoning` and audio rates are kept, since the catalog doesn't publish them. Otherwise the mirrored entry's cost stands.
+- **Reasoning.** `reasoning_options` come from `tempr.reasoning_options` (the controls Tempr's API takes), written the way the mirrored entry writes "can be off". The leading comment names the request fields that set them on `/v1/chat/completions`, `/v1/messages` and `/v1/responses`.
+  - `reasoning_forwarded: false` (hosts Tempr sends no reasoning settings to) writes `[]` with a note.
+  - A reasoning model whose controls the catalog omits, or lists with values the schema doesn't know, keeps its authored controls. A new one raises `MissingReasoningOptionsError` instead of getting `[]`.
+- **Schema 2.** Mirrored provider and lab files are read through `readProviderModel` / `readLabModel`, so the adapter works on v1 fields and the runner writes schema 2.
+- **Comments.** Headers are authoritative but merged: an existing entry keeps every comment line the adapter doesn't write (the maintainers' notes) where it is, and only the reasoning block is regenerated. A new entry gets the block plus the bring-your-own-key prices note.
+- **Status.** `tempr.status` (`deprecated`, `beta` or `alpha`) is written to `status` whatever the mirrored file carries, so a deprecation the catalog states is never dropped.
+- **Safeguards.**
+  - Catalog ids are checked before they name a file read or written.
+  - A catalog of fewer than 100 models is treated as an outage and the sync stops.
+  - A model skipped for having no lab file is reported through `missingModelID`, so its existing entry is kept. Models absent from the catalog are retirements and are deleted.
+  - `preserveDescriptions` is `false` and headers are authoritative.
+
 ## Venice Notes
 
 Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
@@ -461,6 +495,7 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - `VENICE_API_KEY` is optional locally and includes models visible to that account when set.
 - Models missing from the API response are removed from the Venice catalog.
 - Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
+- A model whose ID or name says Uncensored, Abliterated or Heretic is Venice's own fine-tune and only matches metadata that names the same fine-tune, so `qwen-3-6-plus` ("Qwen 3.6 Plus Uncensored") stays a standalone file.
 - Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
 
 ## engy Notes

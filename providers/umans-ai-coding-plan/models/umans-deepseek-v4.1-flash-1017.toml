@@ -9,7 +9,7 @@
 # Live card, checked 2026-10-21: https://api.code.umans.ai/v1/models/info
 # (levels none/low/high/max, default high, can_disable true, supports_vision
 # true, context_window 1048576, max_completion_tokens 393216).
-# limit.output is cap-1 on purpose: the gateway 400s max_tokens >=
+# limit.output is cap-1 on purpose: the Umans API 400s max_tokens >=
 # max_completion_tokens (393216), so 393215 is the largest value that serves
 # (its advertised recommended_max_tokens).
 schema = 2

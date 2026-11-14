@@ -1,0 +1,63 @@
+# Sources (accessed 2026-11-11):
+# - https://ai.google.dev/gemini-api/docs/decisions-api: POST /v1beta/decisions answers typed questions (`noul`, `choice`,
+#   `score`) about a shared `input` with calibrated probabilities; nothing is generated (output tokens are always 0).
+#   Input blocks: text; image (png, jpeg, webp, heic, heif, gif, bmp, tiff); audio (wav, mp3, mpeg, aiff, aac, ogg, flac,
+#   m4a, opus, webm, l16, alaw, mulaw); video (mp4, mpeg, mov, avi, webm, wmv, x-flv, 3gpp); document (pdf).
+#   Context window: 262,144 tokens across the shared input and all questions. No sampling parameters.
+# - GET https://generativelanguage.googleapis.com/v1beta/models/gemini-decision-1: inputTokenLimit 262144,
+#   supportedGenerationMethods ["createDecision"].
+schema = 2
+v2_only = true
+type = "decision"
+name = "Gemini Decision 1"
+description = "Google's decision model that returns calibrated probabilities for typed yes/no, choice and score questions about text, images, audio, video and PDFs"
+family = "gemini"
+open_weights = false
+release_date = "2026-11-11"
+
+[modalities]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "image/gif",
+  "image/bmp",
+  "image/tiff",
+  "audio/wav",
+  "audio/mp3",
+  "audio/mpeg",
+  "audio/aiff",
+  "audio/aac",
+  "audio/ogg",
+  "audio/flac",
+  "audio/m4a",
+  "audio/opus",
+  "audio/webm",
+  "audio/l16",
+  "audio/alaw",
+  "audio/mulaw",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/webm",
+  "video/wmv",
+  "video/x-flv",
+  "video/3gpp",
+  "application/pdf",
+]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 0

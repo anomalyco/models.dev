@@ -1,0 +1,37 @@
+# Sources (accessed 2026-10-29):
+# - Paper: https://arxiv.org/abs/2510.19817 (olmOCR 2: Unit Test Rewards for Document OCR, submitted 2026-10-22)
+# - https://github.com/allenai/olmocr (Apache 2.0; README serves it with `vllm serve --max-model-len 16384`)
+# - HF (not gated): https://huggingface.co/allenai/olmOCR-2-7B-1025 (apache-2.0, Qwen2.5-VL based, 7B;
+#   FP8 variant at allenai/olmOCR-2-7B-1025-FP8)
+# Input images: PDF, PNG, JPEG documents per the README; PDFs are rendered to page images first.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host
+#   (the olmocr pipeline tunes temperature for sampling).
+schema = 2
+name = "olmOCR 2 7B"
+description = "Vision-language OCR model from Ai2 (Allen Institute for AI) that extracts text from documents where tables, equations, and poor-quality scans defeat traditional OCR"
+open_weights = true
+release_date = "2025-10-22"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 16_384
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/allenai/olmOCR-2-7B-1025"
+
+[[links]]
+label = "Paper"
+url = "https://arxiv.org/abs/2510.19817"
+type = "paper"

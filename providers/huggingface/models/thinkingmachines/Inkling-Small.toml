@@ -1,3 +1,4 @@
+# Output limit: capped at the 524,288 context; no host cap is documented and the 1,048,576 from the base model or host listing is larger.
 # Modalities: the router catalog lists ["text","image"]; exact types are the lab's (thinkingmachines/inkling-small).
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
@@ -14,6 +15,7 @@ reasoning = { supported = true }
 
 [limit]
 context = 524_288
+output = 524_288
 
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }

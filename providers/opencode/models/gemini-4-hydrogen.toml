@@ -1,0 +1,27 @@
+# Pricing: https://ai.google.dev/gemini-api/docs/pricing#gemini-4-hydrogen
+# $1.50 / $7.50 / $0.075 cache read per 1M, flat across the 1M-token context window (no introductory discount).
+# Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high|xhigh, default high (https://ai.google.dev/gemini-api/docs/models/gemini-4-hydrogen).
+# Cache: implicit only (explicit caching is not supported).
+# Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes; Zen passes requests through.
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.generate-content]
+base_url = "https://opencode.ai/inference/google/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 7.5
+
+[cost.audio.input]
+price = 1.5

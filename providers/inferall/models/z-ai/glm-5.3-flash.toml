@@ -1,0 +1,25 @@
+# Served through NVIDIA NIM. $0 per token (see provider.toml).
+# Thinking is always on. Effort: top-level reasoning_effort = low|high|max. Live 2026-10-22
+# through api.inferall.ai: all three accepted (200); reasoning returned in
+# message.reasoning_content. Tool calls, strict json_schema output and a PNG image input
+# verified live. Input list as the NVIDIA NIM entry (same upstream: video and PDF are not
+# accepted there); JPEG and WebP were not re-tested through this host.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

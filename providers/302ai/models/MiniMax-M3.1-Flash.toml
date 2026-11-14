@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max (none rejected; minimal is accepted but indistinguishable from low, so it is not published)
+# Limit: the catalog reports max_completion_tokens 80000, but that is not an enforced cap — max_tokens up to 524288 is accepted, matching the lab cap, and 302.AI itself overrides the same catalog 80000 to 128000 for MiniMax-M1/M2.
+# Cost: 302.AI catalog https://api.302ai.cn/v1/models (retrieved 2026-10-26): input $0.18, output $0.72, cache read $0.018 per MTok. No cache-write price: neither chat-completions nor messages ever report cache_creation tokens.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.18
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 0.72

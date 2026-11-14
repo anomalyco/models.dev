@@ -5,7 +5,8 @@
 # reasoning: "none"/"minimal" are accepted but still reason, and
 # reasoning.enabled=false / thinking.type="disabled" are ignored — hence no
 # "none" in values and no toggle.
-# Pricing: https://wallabytoken.com/pricing.json (accessed 2026-09-14), USD per 1M tokens.
+# Pricing: https://wallabytoken.com/pricing.json (accessed 2026-11-05), USD per 1M tokens.
+# 2026-11-05: standing price changed to 15% off the official list.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -17,8 +18,8 @@ structured_output = true
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 2.7
-cache = { read = 0.27 }
+price = 2.55
+cache = { read = 0.255 }
 
 [cost.text.output]
-price = 13.5
+price = 12.75

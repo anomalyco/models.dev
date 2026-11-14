@@ -1,3 +1,4 @@
+# Output limit: capped at the 524,288 context; no host cap is documented and the 1,048,576 from the base model or host listing is larger.
 schema = 2
 base_model = "thinkingmachines/inkling-small"
 name = "Inkling Small (Deep Infra)"
@@ -9,6 +10,7 @@ structured_output = true
 
 [limit]
 context = 524_288
+output = 524_288
 
 [cost.text.input]
 price = 0.45

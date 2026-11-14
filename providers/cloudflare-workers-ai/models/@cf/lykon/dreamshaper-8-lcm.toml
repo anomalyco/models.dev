@@ -3,9 +3,12 @@
 # Request: JSON { prompt, negative_prompt, width, height, num_steps, guidance, seed, image_b64, strength }; response is
 #   the raw PNG (schema output image/png). img2img via image_b64 accepts PNG, JPEG and WebP (live check 2026-10-25).
 # No [cost]: neither the pricing page nor the models search API lists a price.
+# Deprecated: Workers AI retires this model on 2026-11-20; requests then return HTTP 410 Gone.
+# https://developers.cloudflare.com/changelog/post/2026-11-05-planned-model-deprecations/
 schema = 2
 v2_only = true
 base_model = "lykon/dreamshaper-8-lcm"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp"]

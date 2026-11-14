@@ -1,0 +1,26 @@
+# Prices: https://zro.moonmath.ai/pricing (API tab, USD per 1M tokens, list price).
+# Limits and modalities: https://zro.moonmath.ai/models (context 1,048,576 tokens on every Zro model).
+# Cache: repeated prompt prefixes are cached automatically, no cache_control markers.
+# Effort: reasoning_effort = low|high|max on /v1/chat/completions; thinking is always on, no off level.
+# Host output cap is 131,000 tokens (lab 131,072).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 131_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.40
+cache = { read = 0.30 }
+
+[cost.text.output]
+price = 4.20
