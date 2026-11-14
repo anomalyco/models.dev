@@ -1,11 +1,17 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/gpt-6-astra (accessed 2026-09-18)
+# APIs: Responses and Chat Completions. https://docs.vivgrid.com/models/gpt-6-astra (accessed 2026-10-23)
 schema = 2
 base_model = "openai/gpt-6-astra"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 
 [cost.text.input]
 price = 10

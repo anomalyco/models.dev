@@ -6,9 +6,8 @@ schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-effort_updates = false
 cache = { explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
 
 [api.messages]

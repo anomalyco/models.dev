@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { formatModelV2, formatTomlValue, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
-import { modelV2ToV1, readLabMetadata } from "../src/translate.js";
+import { explicitFalseFlags, modelV2ToV1, readLabMetadata } from "../src/translate.js";
 
 test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the lab", () => {
   const doc = {
@@ -35,16 +35,16 @@ test("patchModelV2 keeps v2 reasoning data when sync inherits reasoning from the
 test("a model's own API round-trips through v2 as an [api.<protocol>] table", () => {
   const v1 = {
     base_model: "openai/gpt-oss-120b",
-    provider: { npm: "@ai-sdk/amazon-bedrock/mantle", api: "https://bedrock-mantle.us-east-1.api.aws/v1", shape: "responses" },
+    provider: { npm: "@ai-sdk/openai", api: "https://example.com/v1", shape: "completions" },
     interleaved: { field: "reasoning_content" },
     cost: { input: 1, output: 2 },
   };
-  const doc = providerModelToV2(v1, "chat-completions");
+  const doc = providerModelToV2(v1, "responses");
 
   expect(doc.api).toEqual({
-    responses: {
-      base_url: "https://bedrock-mantle.us-east-1.api.aws/v1",
-      sdk: { aisdk: "@ai-sdk/amazon-bedrock/mantle" },
+    "chat-completions": {
+      base_url: "https://example.com/v1",
+      sdk: { aisdk: "@ai-sdk/openai" },
       compatibility: { reasoning_field: "reasoning_content" },
     },
   });
@@ -72,6 +72,15 @@ test("a v1 shape that repeats the SDK default round-trips as legacy_shape", () =
   expect(providerModelToV2({ ...v1, provider }, "responses").api).toEqual({
     responses: { base_url: "https://example.com/v1", sdk: { aisdk: "@ai-sdk/openai" } },
   });
+});
+
+test("a bare v1 interleaved round-trips as legacy_interleaved", () => {
+  const v1 = { base_model: "moonshotai/kimi-k2", interleaved: true, cost: { input: 1, output: 2 } };
+  const doc = providerModelToV2(v1, "chat-completions");
+
+  expect(doc.api).toEqual({ "chat-completions": { legacy_interleaved: true } });
+  const back = modelV2ToV1({ ...(Bun.TOML.parse(formatModelV2(doc)) as Record<string, unknown>), id: "m" });
+  expect(back.interleaved).toBe(true);
 });
 
 test("an API table without its own aisdk takes the provider's npm for its v1 shape", () => {
@@ -224,6 +233,39 @@ test('patchModelV2 keeps aisdk = "none" when sync rewrites the first table', () 
   });
 });
 
+test("patchModelV2 keeps the first table's path when sync rewrites it", () => {
+  const api = { systemone: { base_url: "https://example.com/v1", path: "/decisions" } };
+  const doc = { schema: 2, base_model: "typesafe/jev-1.13", api, cost: { text: { input: { price: 1 }, output: { price: 2 } } } };
+  const before = modelV2ToV1({ ...doc, id: "m" });
+  expect(before.provider).toEqual({ api: "https://example.com/v1" });
+  const { id: _id, ...after } = { ...before, provider: { api: "https://example.com/v2" } };
+  expect(Object.entries(patchModelV2(doc, before, after).api.systemone)).toEqual([
+    ["base_url", "https://example.com/v2"],
+    ["path", "/decisions"],
+  ]);
+});
+
+test("patchModelV2 keeps the first table's capabilities when sync rewrites it", () => {
+  const api = { messages: { base_url: "https://example.com/v1", capabilities: { effort_updates: true } } };
+  const doc = { schema: 2, base_model: "anthropic/claude-opus-5-5", api, cost: { text: { input: { price: 1 }, output: { price: 2 } } } };
+  const before = modelV2ToV1({ ...doc, id: "m" });
+  const { id: _id, ...after } = { ...before, provider: { ...before.provider, api: "https://example.com/v2" } };
+  expect(patchModelV2(doc, before, after).api.messages).toEqual({
+    base_url: "https://example.com/v2",
+    capabilities: { effort_updates: true },
+  });
+});
+
+test("v1 cache_write falls back to the explicit write price", () => {
+  const doc = {
+    schema: 2,
+    base_model: "alibaba/qwen-plus",
+    cost: { text: { input: { price: 0.4, cache: { read: 0.08, explicit: { read: 0.04, write: 0.5 } } }, output: { price: 1.2 } } },
+  };
+  const v1 = modelV2ToV1({ ...doc, id: "m" });
+  expect(v1.cost).toMatchObject({ cache_read: 0.08, cache_write: 0.5 });
+});
+
 test("web search prices are written to v2 files, kept by patches, and left out of v1", () => {
   const doc = {
     schema: 2,
@@ -292,9 +334,76 @@ test("readLabMetadata reads a v2 lab.toml and rejects v1 or unknown fields", () 
   try {
     expect(readLabMetadata(write("v2.toml", 'schema = 2\ndescription = "A lab."\n'))).toEqual({ description: "A lab." });
     expect(() => readLabMetadata(write("v1.toml", 'description = "A lab."\n'))).toThrow("schema = 2");
-    expect(() => readLabMetadata(write("extra.toml", 'schema = 2\ndescription = "A lab."\nname = "Lab"\n'))).toThrow();
+    expect(readLabMetadata(write("name.toml", 'schema = 2\nname = "Lab AI"\n'))).toEqual({ name: "Lab AI" });
+    expect(() => readLabMetadata(write("extra.toml", 'schema = 2\ndescription = "A lab."\nwebsite = "https://lab.ai"\n'))).toThrow();
     expect(() => readLabMetadata(write("empty.toml", 'schema = 2\ndescription = ""\n'))).toThrow();
+    expect(() => readLabMetadata(write("blank-name.toml", 'schema = 2\nname = ""\n'))).toThrow();
+    expect(() => readLabMetadata(write("bare.toml", "schema = 2\n"))).toThrow();
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test("explicitFalseFlags reports false mid-conversation flags, top-level and per API", () => {
+  const toml = Bun.TOML.parse(`schema = 2
+base_model = "lab/model"
+
+[capabilities]
+system_updates = true
+effort_updates = false
+tools = { supported = true, updates = false }
+
+[api.messages]
+capabilities = { system_updates = false, tools = { updates = true } }
+`) as Record<string, unknown>;
+  expect(explicitFalseFlags(toml)).toEqual([
+    "capabilities.effort_updates",
+    "capabilities.tools.updates",
+    "api.messages.capabilities.system_updates",
+  ]);
+  expect(explicitFalseFlags({ schema: 2, capabilities: { tools: { supported: true } } })).toEqual([]);
+});
+
+test("a type v1 doesn't know needs v2_only, and v1 leaves it out", () => {
+  const model = {
+    id: "extractor",
+    type: "extraction",
+    name: "Extractor",
+    description: "Fills typed fields",
+    open_weights: false,
+    release_date: "2026-10-14",
+    modalities: { input: ["text"], output: ["text"] },
+    capabilities: { tools: { supported: false }, reasoning: { supported: false } },
+    limit: { context: 65_536, output: 65_536 },
+  };
+  expect(() => modelV2ToV1({ schema: 2, ...model })).toThrow(
+    'Model type "extraction" isn\'t a v1 type, so the model must set `v2_only = true`',
+  );
+  expect(modelV2ToV1({ schema: 2, v2_only: true, ...model }).type).toBeUndefined();
+});
+
+test("an audio model stays in v1 untyped, without v2_only", () => {
+  const model = {
+    schema: 2,
+    id: "music",
+    type: "audio",
+    name: "Music",
+    description: "Generates music",
+    open_weights: false,
+    release_date: "2026-10-14",
+    modalities: { input: ["text"], output: ["text", "audio/mp3"] },
+    capabilities: { tools: { supported: false }, reasoning: { supported: false } },
+    limit: { context: 65_536, output: 65_536 },
+  };
+  const v1 = modelV2ToV1(model);
+  expect(v1.type).toBeUndefined();
+  expect("type" in v1).toBe(false);
+  expect(modelV2ToV1({ ...model, v2_only: true }).type).toBeUndefined();
+});
+
+test("patchModelV2 keeps a type that v1 can't carry", () => {
+  const doc = { schema: 2, v2_only: true, type: "extraction", name: "Extractor", cost: { text: { input: { price: 1 } } } };
+  const next = patchModelV2(doc, { name: "Extractor", cost: { input: 1 } }, { name: "Extractor", cost: { input: 2 } });
+  expect(next.type).toBe("extraction");
+  expect(next.v2_only).toBe(true);
 });

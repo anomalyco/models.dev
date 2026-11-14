@@ -7,8 +7,7 @@ base_model = "anthropic/claude-sonnet-4-6"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
 
 [limit]
@@ -17,7 +16,7 @@ output = 128_000
 
 [cost.text.input]
 price = 3
-cache = { read = 0.3 }
+cache = { read = 0.3, write = 3.75 }
 
 [cost.text.output]
 price = 15

@@ -8,8 +8,7 @@ schema = 2
 base_model = "alibaba/qwen3-coder-plus"
 
 [capabilities]
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 cache = { implicit = true }
 
 [cost.text.input]

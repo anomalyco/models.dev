@@ -9,16 +9,16 @@ family = "gemma"
 open_weights = true
 release_date = "2026-04-13"
 last_updated = "2026-06-11"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-system_updates = false
 
 [limit]
 context = 256_000

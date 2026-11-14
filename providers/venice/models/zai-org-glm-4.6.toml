@@ -11,11 +11,9 @@ base_model = "zhipuai/glm-4.6"
 name = "GLM 4.6"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

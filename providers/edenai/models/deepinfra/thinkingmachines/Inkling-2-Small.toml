@@ -1,0 +1,17 @@
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+name = "Inkling 2 Small (Deep Infra)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1

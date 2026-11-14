@@ -14,11 +14,10 @@ input = ["audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audi
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

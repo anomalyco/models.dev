@@ -4,10 +4,9 @@ schema = 2
 base_model = "minimax/minimax-m1-80k"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 40_000

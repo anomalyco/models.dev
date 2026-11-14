@@ -2,18 +2,21 @@
 # - https://huggingface.co/baselabs/elephant-1 (MIT; created 2026-10-19; post-trained from Qwen3.5-9B, text only,
 #   max sequence length 16,384 tokens; returns a calibrated probability for every option, no generated text)
 # - https://docs.baseten.co/inference/model-apis/decision-models (POST /v1/systemone with a state and typed questions)
+# Images: GET https://inference.baseten.co/v1/models lists input_modalities ["text", "image"]; System One takes
+#   base64 PNG, JPEG or WebP data URLs (https://docs.baseten.co/reference/inference-api/system-one#image-inputs).
+#   The Hugging Face card says text only, but Baseten's image example (decision-models#evaluate-images) uses elephant-1.
 # Sampling: GET https://inference.baseten.co/v1/models lists no supported sampling parameters.
 schema = 2
 v2_only = true
 type = "decision"
 name = "elephant-1"
-description = "Base Labs' 9B open-weight decision model on Qwen3.5-9B that returns calibrated probabilities for typed choice, score and yes/no questions about text"
+description = "Base Labs' 9B open-weight decision model on Qwen3.5-9B that returns calibrated probabilities for typed choice, score and yes/no questions about text and images"
 open_weights = true
 release_date = "2026-10-19"
 license = "MIT"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["decision"]
 
 [capabilities]

@@ -6,10 +6,9 @@ base_model = "google/gemini-3.7-flash"
 description = "Gemini 3.7 Flash is a multimodal model from Google for fast agentic workflows, coding, and complex multi-step reasoning. It is designed for tasks that require responsive performance and reliable multi-step..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.75

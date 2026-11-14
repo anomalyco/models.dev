@@ -1,11 +1,9 @@
-# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=amazon%2Fnova-pro-v1&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "amazon/nova-pro-v1"
 
 [capabilities]
 structured_output = false
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [cost.text.input]
 price = 0.8464

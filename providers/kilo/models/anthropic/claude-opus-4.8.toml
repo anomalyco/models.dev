@@ -7,10 +7,9 @@ base_model = "anthropic/claude-opus-4-8"
 description = "Claude Opus 4.8 is Anthropic's most capable generally available model in the Opus family. It supports text, image, and file inputs with text output, with reasoning support and a 1M-token..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
 cache = { implicit = true }
 
 [cost.text.input]

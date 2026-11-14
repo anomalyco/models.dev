@@ -4,10 +4,9 @@ schema = 2
 base_model = "baidu/cobuddy"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

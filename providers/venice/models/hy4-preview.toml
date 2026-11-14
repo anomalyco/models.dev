@@ -10,11 +10,9 @@ name = "Hy4 Preview"
 description = "Preview model for early access evaluation, prototyping, and compatibility testing"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

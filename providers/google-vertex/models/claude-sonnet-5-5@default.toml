@@ -12,11 +12,14 @@
 # Cache hit is $0.10 per 1M on the Vertex pricing page (global; $0.11 non-global), matching Anthropic's first-party price.
 # Web search: $10 per 1,000 searches: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (supported models: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/web-search)
 # Token-only multipliers (object factor, so cost.web_search is unscaled): non-global regional premium: Vertex lists one web search price ($10 per 1,000 searches) for every endpoint, a separate SKU the regional premium doesn't scale (https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models).
+# tools.strict: strict tool use on Claude 4.5 and later: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/structured-outputs
+# tools.choice: Messages tool_choice auto/any/tool/none; Opus 5.5, Sonnet 5.5 and Fable 5.1 reject any/tool: https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
+# tools.search: left out. Claude on Google Cloud supports client tools, not server tools (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/use-claude), and the tool search tool isn't documented here.
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none"], updates = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true

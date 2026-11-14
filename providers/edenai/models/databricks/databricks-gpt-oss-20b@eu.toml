@@ -3,14 +3,13 @@ base_model = "openai/gpt-oss-20b"
 name = "GPT OSS 20B (Databricks, EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
 price = 0.07
 cache = { read = 0.007, write = 0.07 }
 
 [cost.text.output]
-price = 0.30002
+price = 0.3

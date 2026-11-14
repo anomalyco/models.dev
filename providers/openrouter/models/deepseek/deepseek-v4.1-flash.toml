@@ -8,10 +8,9 @@ base_model = "deepseek/deepseek-v4.1-flash"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_048_576
@@ -26,8 +25,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.165
+price = 0.3
 cache = { read = 0.006 }
 
 [cost.text.output]
-price = 0.66
+price = 1.2

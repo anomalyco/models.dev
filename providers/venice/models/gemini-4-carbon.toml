@@ -1,0 +1,29 @@
+schema = 2
+base_model = "google/gemini-4-carbon"
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 1_000_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 12.5
+
+[cost.web_search]
+price = 10

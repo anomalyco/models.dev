@@ -33,14 +33,13 @@ input = ["text", "audio/wav", "audio/mpeg", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
 top_p = true
 top_k = false
 system_updates = true
-effort_updates = false
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = { min_tokens = 64 } }

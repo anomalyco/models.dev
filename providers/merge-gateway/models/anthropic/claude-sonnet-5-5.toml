@@ -5,8 +5,7 @@ base_model = "anthropic/claude-sonnet-5-5"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = { implicit = true, explicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]

@@ -11,7 +11,7 @@ temperature = false
 cache = { explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 2

@@ -10,12 +10,11 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

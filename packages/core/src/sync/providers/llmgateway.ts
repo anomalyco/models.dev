@@ -478,7 +478,13 @@ export function buildLLMGatewayModel(
   // gateway's capability/modality data is too noisy to author standalone.
   const canonical = resolveLLMGatewayBaseModel(model);
   if (canonical !== undefined) {
-    const factoredLimit = { context, input: undefined, output: undefined };
+    const factoredLimit = {
+      context,
+      input: undefined,
+      // Inherit the base's output; fall back to context only when the base
+      // declares none (output is required downstream).
+      output: canonicalOutputLimit(canonical) !== undefined ? undefined : context,
+    };
     return factorBaseModel(canonical, {
       name: model.name,
       reasoning_options: reasoningOptions,

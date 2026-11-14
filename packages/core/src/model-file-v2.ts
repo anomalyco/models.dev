@@ -97,7 +97,7 @@ function apiEntry(model: Record<string, any>, fallback: string | undefined, prov
   const entry: Doc = {};
   if (provider?.api !== undefined) entry.base_url = provider.api;
   if (provider?.npm !== undefined) entry.sdk = { aisdk: provider.npm };
-  if (interleaved === true) entry.compatibility = { replay_reasoning: true };
+  if (interleaved === true) entry.legacy_interleaved = true;
   else if (interleaved !== undefined) entry.compatibility = { reasoning_field: interleaved.field };
   // A shape v1 would drop as the SDK's default stays as the legacy field.
   if (shape !== undefined && toV1Shape(protocol, provider?.npm ?? providerNpm) === undefined) entry.legacy_shape = shape;
@@ -126,6 +126,8 @@ export function patchModelV2(
       return stable(before[key]) === stable(after[key]);
     });
 
+  // A type v1 doesn't know (Clairic's `extraction`) has no v1 value, so an unchanged type keeps the file's.
+  if (doc.type !== undefined && same("type")) next.type = doc.type;
   if (doc.modalities !== undefined) {
     if (same("modalities")) next.modalities = doc.modalities;
     else if (next.modalities !== undefined) {
@@ -196,11 +198,19 @@ function patchApis(first: Doc | undefined, current: Doc) {
   if (protocol === undefined) return first;
   const { opencodeai, aisdk } = current[protocol]?.sdk ?? {};
   const v2Only = { ...(opencodeai !== undefined ? { opencodeai } : {}), ...(aisdk === "none" ? { aisdk } : {}) };
+  const path = current[protocol]?.path;
+  const capabilities = current[protocol]?.capabilities;
   let head = first;
-  if (Object.keys(v2Only).length > 0 || rest.length > 0) {
+  if (Object.keys(v2Only).length > 0 || path !== undefined || capabilities !== undefined || rest.length > 0) {
     const [key, entry] = Object.entries<Doc>(first ?? { [protocol]: {} })[0]!;
-    const keep = Object.keys(v2Only).length > 0 && key === protocol;
-    head = { [key]: keep ? { ...entry, sdk: { ...v2Only, ...entry.sdk } } : entry };
+    const same = key === protocol;
+    const { base_url, ...others } = entry;
+    const withPath =
+      same && path !== undefined ? { ...(base_url !== undefined ? { base_url } : {}), path, ...others } : entry;
+    const withSdk = same && Object.keys(v2Only).length > 0 ? { ...withPath, sdk: { ...v2Only, ...entry.sdk } } : withPath;
+    head = {
+      [key]: same && capabilities !== undefined ? { ...withSdk, capabilities } : withSdk,
+    };
   }
   if (rest.length === 0) return head;
   return {

@@ -13,11 +13,10 @@ schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 cache = { implicit = true }
 structured_output = true
-effort_updates = false
 prompt_cache_key = true
 
 [limit]

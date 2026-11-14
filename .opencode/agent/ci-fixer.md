@@ -6,6 +6,13 @@ model: opencode/glm-5.2
 color: "#E07A5F"
 permission:
   bash: deny
+  task: deny
+  read:
+    "*": allow
+    ".git": deny
+    ".git/**": deny
+    "*.env": deny
+    "*.env.*": deny
   external_directory: deny
   edit:
     "*": deny
@@ -17,6 +24,10 @@ permission:
     "sst.config.ts": allow
     "sst-env.d.ts": allow
     "tsconfig.json": allow
+    ".git": deny
+    ".git/**": deny
+    "**/.git": deny
+    "**/.git/**": deny
 ---
 
 You are the automated dev CI fixer for models.dev.

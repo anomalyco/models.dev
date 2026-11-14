@@ -1,4 +1,4 @@
-# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
+# Mid-conversation (@ai-sdk/gateway): no per-turn effort or tool-change mechanism reaches this model on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "mistral/ministral-14b"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
@@ -9,7 +9,6 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

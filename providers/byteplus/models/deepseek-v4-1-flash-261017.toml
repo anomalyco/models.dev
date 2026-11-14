@@ -1,0 +1,33 @@
+# Model ID from BytePlus ModelArk model list: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-list
+# USD pricing from BytePlus ModelArk pricing page: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-pricing
+# BytePlus ModelArk is the overseas brand of Volcengine Ark: same Ark API surface,
+# different base URL (ark.ap-southeast.bytepluses.com) and API key.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# (DeepSeek V4 baseline: the Ark API maps minimal->low and medium/xhigh->high,
+#  so only these three levels are distinct)
+# top_k: the Ark Chat API takes only temperature and top_p, so the lab's top_k = true is overridden.
+# Pricing: the listed price is off-peak. Peak hours are 2x, Mon-Fri (UTC+8) 09:00-12:00 and
+# 14:00-18:00, i.e. UTC 01:00-04:00 and 06:00-10:00; every other time is off-peak.
+# The BytePlus pricing page defines no public-holiday exclusion.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
+
+[cost.text.output]
+price = 0.6

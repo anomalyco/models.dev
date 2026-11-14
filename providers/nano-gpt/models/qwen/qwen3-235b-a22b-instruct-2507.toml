@@ -6,15 +6,14 @@ name = "Qwen 3 235b A22B 2507"
 
 [capabilities]
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 262_144
 
 [cost.text.input]
-price = 0.0875
-cache = { read = 0.0175 }
+price = 0.09495
+cache = { read = 0.047475 }
 
 [cost.text.output]
-price = 0.35
+price = 0.58025

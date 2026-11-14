@@ -8,8 +8,7 @@ name = "GLM 5.1 Thinking TEE"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 context = 202_752
@@ -17,8 +16,8 @@ input = 202_752
 output = 65_535
 
 [cost.text.input]
-price = 0.7
-cache = { read = 0.18 }
+price = 0.9
+cache = { read = 0.09 }
 
 [cost.text.output]
-price = 2.5
+price = 2.9

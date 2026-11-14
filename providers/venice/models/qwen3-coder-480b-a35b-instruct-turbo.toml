@@ -16,10 +16,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-system_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

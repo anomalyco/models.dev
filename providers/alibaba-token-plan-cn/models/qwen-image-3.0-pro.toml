@@ -16,7 +16,7 @@ base_model = "alibaba/qwen-image-3.0-pro"
 
 [api.images]
 base_url = "https://token-plan.maas.qianwenaiapi.com/api/v1"
-sdk = { aisdk = "none", opencodeai = "none" }
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/alibaba/images" }
 
 [cost.image.output]
 price = 0

@@ -5,11 +5,10 @@ schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { implicit = { ttl = ["5m"] }, explicit = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 10

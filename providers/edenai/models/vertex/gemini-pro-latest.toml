@@ -5,11 +5,10 @@ base_model = "google/gemini-4-argon"
 name = "Gemini Pro Latest (Gemini 4 Argon, Vertex AI)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { explicit = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 4

@@ -1,11 +1,9 @@
-# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=cohere%2Fcommand-r-08-2024&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "cohere/command-r-08-2024"
 name = "Command R (08-2024)"
 
 [capabilities]
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [cost.text.input]
 price = 0.1587

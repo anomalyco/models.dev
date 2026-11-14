@@ -5,13 +5,12 @@ schema = 2
 base_model = "minimax/MiniMax-M2.5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
+context = 198_000
 output = 32_768
 
 [api.chat-completions]

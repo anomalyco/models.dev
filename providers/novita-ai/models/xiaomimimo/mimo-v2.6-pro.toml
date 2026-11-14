@@ -4,11 +4,10 @@ schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

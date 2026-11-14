@@ -5,11 +5,13 @@ schema = 2
 base_model = "minimax/MiniMax-M2.7"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 structured_output = false
-system_updates = false
-effort_updates = false
+
+[limit]
+context = 196_608
+output = 176_947
 
 [api.chat-completions]
 
@@ -20,8 +22,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.3
-cache = { read = 0.06 }
+price = 0.21
+cache = { read = 0.042 }
 
 [cost.text.output]
-price = 1.2
+price = 0.84

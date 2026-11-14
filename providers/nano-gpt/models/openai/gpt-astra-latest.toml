@@ -13,7 +13,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { implicit = true }

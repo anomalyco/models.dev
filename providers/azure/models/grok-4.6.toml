@@ -1,18 +1,15 @@
 # Source: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-grok
 # Pricing: https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/grok/
-# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
-# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
 # API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
 schema = 2
 base_model = "xai/grok-4.6"
 status = "beta"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 200_000

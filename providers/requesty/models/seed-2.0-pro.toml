@@ -4,11 +4,10 @@ schema = 2
 base_model = "bytedance-seed/seed-2.0-pro"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = false
 system_updates = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.5

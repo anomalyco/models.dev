@@ -8,10 +8,9 @@ schema = 2
 base_model = "alibaba/qwen-plus"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-effort_updates = false
 cache = { implicit = true }
 
 [cost.text.input]

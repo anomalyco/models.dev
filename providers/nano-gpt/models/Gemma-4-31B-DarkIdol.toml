@@ -14,10 +14,9 @@ input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 262_144

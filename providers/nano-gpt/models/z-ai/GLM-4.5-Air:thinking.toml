@@ -7,16 +7,15 @@ name = "GLM 4.5 Air (Thinking)"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 context = 128_000
 input = 128_000
 
 [cost.text.input]
-price = 0.12
-cache = { read = 0.06 }
+price = 0.13
+cache = { read = 0.025 }
 
 [cost.text.output]
-price = 0.8
+price = 0.85

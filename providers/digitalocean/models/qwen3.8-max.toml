@@ -11,11 +11,9 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 cache = { implicit = true }
-system_updates = false
-effort_updates = false
 prompt_cache_key = true
 
 [limit]

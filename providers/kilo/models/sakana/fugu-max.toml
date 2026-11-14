@@ -6,10 +6,9 @@ base_model = "sakana/fugu-max"
 description = "Fugu Max is the cost-performance model in Sakana AI's Fugu family. Rather than a single monolithic model, Fugu is a learned multi-agent orchestration system: a language model trained to route..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 2

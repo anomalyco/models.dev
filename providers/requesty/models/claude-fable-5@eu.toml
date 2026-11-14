@@ -5,11 +5,10 @@ base_model = "anthropic/claude-fable-5"
 name = "Claude Fable 5 (EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [cost.text.input]
 price = 11

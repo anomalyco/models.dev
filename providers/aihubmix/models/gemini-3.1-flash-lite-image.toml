@@ -16,10 +16,10 @@ structured_output = false
 cache = { implicit = true, explicit = true }
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.text.input]
 price = 0.25

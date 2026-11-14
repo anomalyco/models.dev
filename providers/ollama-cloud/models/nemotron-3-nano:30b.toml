@@ -2,6 +2,7 @@
 # Structured output: false. "Ollama's cloud currently does not support structured outputs" (https://docs.ollama.com/capabilities/structured-outputs, 2026-10-21).
 # Mid-conversation flags unset: Ollama doesn't document them and there was no OLLAMA_API_KEY to test. Ollama Cloud serves Chat Completions,
 #   Responses (stateless) and Completions under /v1, Anthropic Messages at /v1/messages, and native /api/chat and /api/generate.
+# max_tokens_field: Ollama's OpenAI-compatible Chat API lists max_tokens and not max_completion_tokens (https://docs.ollama.com/api/openai-compatibility, accessed 2026-10-24); live probe 2026-10-24 ignored max_completion_tokens
 schema = 2
 base_model = "nvidia/nemotron-3-nano-30b-a3b"
 name = "nemotron-3-nano:30b"
@@ -15,6 +16,7 @@ context = 1_048_576
 output = 131_072
 
 [api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

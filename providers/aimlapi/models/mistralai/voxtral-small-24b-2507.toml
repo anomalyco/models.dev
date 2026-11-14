@@ -1,10 +1,8 @@
-# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=mistralai%2Fvoxtral-small-24b-2507&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "mistral/voxtral-small-24b-2507"
 
 [capabilities]
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [limit]
 context = 32_000

@@ -6,9 +6,11 @@ base_model = "mistral/mistral-small-3.2-24b-instruct"
 description = "Efficient Mistral model for fast chat, extraction, and production assistants"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
-effort_updates = false
+
+[limit]
+output = 26_214
 
 [api.chat-completions]
 
@@ -19,7 +21,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.075
+price = 0.1
+cache = { read = 0.01 }
 
 [cost.text.output]
-price = 0.2
+price = 0.3

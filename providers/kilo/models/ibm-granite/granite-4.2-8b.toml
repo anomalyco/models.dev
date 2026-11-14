@@ -7,14 +7,13 @@ name = "IBM: Granite 4.2 8B"
 description = "Granite 4.2 8B is a dense reasoning model from IBM. It is suited for mathematics, code generation, multilingual dialogue, and agentic workflows that need multi-step reasoning. It supports full, low-effort,..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.06
 cache = { read = 0.015 }
 
 [cost.text.output]
-price = 0.25
+price = 0.15

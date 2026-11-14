@@ -4,10 +4,9 @@ schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = false
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 131_000

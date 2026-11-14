@@ -4,11 +4,10 @@ schema = 2
 base_model = "google/gemma-4-31b-it"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 cache = false
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 262_000

@@ -1,0 +1,27 @@
+schema = 2
+name = "GLM 5.3"
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
+family = "glm"
+open_weights = true
+release_date = "2026-10-26"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 1.225
+cache = { read = 0.245 }
+
+[cost.text.output]
+price = 3.85

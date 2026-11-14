@@ -1,0 +1,32 @@
+schema = 2
+type = "decision"
+name = "d1.1"
+description = "Decision model for typed evaluation of shared state"
+family = "liquid"
+open_weights = false
+release_date = "2026-10-27"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 65_536
+output = 0
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
+compatibility = { media_input = "state" }
+
+[cost.text.input]
+price = 0.02
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,25 @@
+# https://www.alibabacloud.com/help/en/model-studio/embedding (Qwen3-Embedding series, dimensions 64-2048, 8,192 tokens per input row)
+# Release: 2025-06-05 on https://www.alibabacloud.com/help/en/model-studio/newly-released-models. Accessed 2026-11-08.
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Text Embedding v4"
+description = "Multilingual Qwen3-based text embedding model with 64 to 2,048 dimensions"
+family = "qwen"
+open_weights = false
+release_date = "2025-06-05"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0

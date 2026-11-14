@@ -6,11 +6,10 @@ name = "mistral-small-2503"
 description = "Combines advanced text and vision capabilities with 24 billion parameters, supporting multilingual tasks and long contexts up to 131k tokens, making it versatile for various applications without sacrificing performance."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = false
 structured_output = true
 temperature = false
-effort_updates = false
 
 [limit]
 output = 128_000

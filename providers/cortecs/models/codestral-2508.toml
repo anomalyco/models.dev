@@ -5,10 +5,9 @@ base_model = "mistral/codestral-2508"
 description = "Mistral coding model for code completion, generation, and developer workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 256_000

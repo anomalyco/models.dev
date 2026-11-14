@@ -3,14 +3,13 @@ base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (Databricks, EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
-price = 0.15001
-cache = { read = 0.015001, write = 0.15001 }
+price = 0.15
+cache = { read = 0.015, write = 0.15 }
 
 [cost.text.output]
-price = 0.59997
+price = 0.6

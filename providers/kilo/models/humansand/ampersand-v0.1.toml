@@ -1,0 +1,26 @@
+schema = 2
+name = "Ampersand v0.1"
+description = "Ampersand v0.1 is a collaborator model from Humans& for shared goals, group conversations, and long-running collaboration. Its Responses API supports text, reasoning, client-side function tools, and implicit prompt caching."
+family = "v0"
+open_weights = false
+release_date = "2026-11-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+structured_output = false
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
