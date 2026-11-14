@@ -29,6 +29,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync uberllm` syncs only UberLLM.
+- `bun models:sync opencheap` syncs only OpenCheap prices.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -200,6 +201,15 @@ EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
 - `deprecated = true` sets `status = "deprecated"`; otherwise an existing status is kept.
 - A `cache` or `prompt_cache` feature sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet. Authored `implicit` / `explicit` details are kept.
 - `base_model` files never carry model facts (dates, `family`, `knowledge`, `open_weights`); they come from the lab. Only standalone files keep them.
+
+## Keln Notes
+
+- Run with `bun models:sync keln` or `bun keln:sync`. Registration enables the hourly provider-specific workflow; no API key or new workflow secret is required.
+- Source: the public `https://api.keln.ai/v1/models` endpoint (OpenRouter's shape). Prices are USD per token as decimal strings and convert exactly to USD per million tokens. `context_length`, `input_modalities` and the per-model `reasoning` object are API-authoritative.
+- Model IDs use the Hugging Face organisation; `deepseek-ai/` and `minimaxai/` map to the `deepseek` and `minimax` metadata labs, every other prefix resolves as published. Lab facts, release dates and output limits are inherited via `base_model`.
+- Reasoning options come from the published `reasoning` object: `supported_efforts` becomes an effort option (with `none` when thinking can be switched off), an on/off-only model gets a toggle, and an always-on model with no published levels gets `[]`. Each file's header names the wire field.
+- Only rows whose `output_modalities` include `text` sync. Keln also lists decision-output models (e.g. `cloudflare/clef`); they cannot serve chat, so they are filtered out at parse time and their files are removed like retired models.
+- Rows without a lab base or published controls are reported and keep their files; models absent from the API are removed. Empty, malformed and duplicate-ID inventories fail before writes.
 
 ## OpenRouter Notes
 
@@ -546,3 +556,16 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `preserveDescriptions` is off: the runner must not re-inject a pre-factor authored description when the translator leaves it unset, or a full-inline → factored transition would recreate a lab-identical override. Created files get a leading header from `translateModel` naming the single reasoning wire path (`reasoning_effort`, "none" = off). `toggle` and `budget_tokens` controls are parsed (so a feed that publishes one never aborts the run) but never written, from feed or authored file: ai& has no separate on/off or token-budget field, so they cannot be true of this host.
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
+
+## OpenCheap Notes
+
+OpenCheap is implemented in `packages/core/src/sync/providers/opencheap.ts`.
+
+- Run it with `bun models:sync opencheap` or `bun opencheap:sync`.
+- Source endpoint: `https://opencheap.si/api/prices` (the list the OpenCheap site and model pages read); no auth required. `ours` is the price OpenCheap bills per 1M tokens.
+- The list carries every model OpenCheap routes, but the catalog lists a hand-picked subset whose tools, reasoning and caching were checked live. The list has no capability data, so the sync only updates existing files: `skipCreates` is set, `trackMissingModels` is `false` (no issues for the rest) and `deleteMissing` is `false` (a truncated 200 must not delete checked files; missing files are retained and reported).
+- The list owns `cost.input` and `cost.output`. A model with no positive price on the list keeps its authored prices and is reported.
+- `cost.cache_read` is updated only where the file already lists one. Those files declare `cache = { implicit = true }` after cached tokens came back live; the list also prices a cache read on routes that report no cached tokens, so a cache price is never added by the sync.
+- `limit.context` follows `contextLength` only where the file already overrides the lab's window. Where the window is inherited, a list window below it is reported for a human to author.
+- Long-context prices on the list (`ours.longContext`) are reported, not authored.
+- Every other authored field is preserved: `base_model`, capabilities, `[api.*]` tables and the header.
