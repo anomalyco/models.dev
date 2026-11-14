@@ -1,0 +1,7 @@
+# 1min.ai catalog id `o3` (GET /models, 2026-10-31); metadata inherited from openai/o3.
+# Custom/grammar tools are rejected (400 "expected \"function\"", live 2026-10-31), so no freeform formats.
+schema = 2
+base_model = "openai/o3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
