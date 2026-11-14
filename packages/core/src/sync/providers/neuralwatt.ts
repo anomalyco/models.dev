@@ -178,7 +178,9 @@ export function buildNeuralwattModel(
 ): SyncedModel {
   const { capabilities, limits } = model.metadata;
   const baseModel = baseModelFor(model, authored);
-  const baseLimit = baseModel === undefined ? undefined : modelMetadata(baseModel).limit;
+  const baseLimit = baseModel === undefined
+    ? undefined
+    : modelMetadata(baseModel).limit as { context?: number; output?: number } | undefined;
 
   const context = limits.max_context_length ?? model.max_model_len ?? existing?.limit?.context ?? baseLimit?.context;
   if (context === undefined || context <= 0) {

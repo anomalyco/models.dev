@@ -214,13 +214,13 @@ test("uses the exact checkpoint published by the API", () => {
   const source = sourceModel("deepseek-v4.1-flash", {
     huggingface_id: "deepseek-ai/DeepSeek-V4.1-Flash-1017",
   });
-  expect(buildNeuralwattModel(source, undefined, undefined).base_model)
-    .toBe("deepseek/deepseek-v4.1-flash-1017");
+  expect(buildNeuralwattModel(source, undefined, undefined))
+    .toHaveProperty("base_model", "deepseek/deepseek-v4.1-flash-1017");
 });
 
 test("inherits the lab output limit when the API reports no limit", () => {
   const model = buildNeuralwattModel(sourceModel("kimi-k3.1-pro"), undefined, undefined);
-  expect(model.base_model).toBe("moonshotai/kimi-k3.1-pro");
+  expect(model).toHaveProperty("base_model", "moonshotai/kimi-k3.1-pro");
   expect(model.limit).not.toHaveProperty("output");
 });
 
@@ -292,7 +292,7 @@ test("inherits context when the API omits it", () => {
   });
   source.max_model_len = undefined;
   const model = buildNeuralwattModel(source, undefined, undefined);
-  expect(model.base_model).toBe("moonshotai/kimi-k3.1-pro");
+  expect(model).toHaveProperty("base_model", "moonshotai/kimi-k3.1-pro");
   expect(model.limit?.context).toBeUndefined();
 });
 
