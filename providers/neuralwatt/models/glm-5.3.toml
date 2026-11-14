@@ -1,3 +1,6 @@
+# Authenticated GET /v1/models, checked 2026-11-12:
+# metadata.capabilities.json_mode = true for this model ID.
+# Source: https://api.neuralwatt.com/v1/models
 # Exited preview 2026-09-10; the preview-parity list price ($1.45/$4.5/$0.145)
 # was confirmed as the launch price per GET /v1/models (checked 2026-09-18).
 # Reasoning cannot be disabled (reasoning.mandatory = true), so there is no
@@ -11,7 +14,7 @@ name = "GLM 5.3"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"], budget = {} }
-structured_output = false
+structured_output = true
 
 [limit]
 context = 1_048_560
