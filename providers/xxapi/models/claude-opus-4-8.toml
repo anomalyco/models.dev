@@ -1,0 +1,24 @@
+# Prices: https://xxapi.ai/pricing (per-model rates under each plan's details), checked 2026-10-28.
+# xxapi bills in site credits shown as "$". On the recommended Claude plan this model costs 2.5x its list rate in credits.
+# Credits are sold at 6.5 per US$, charged in HKD at USD/HKD 7.8451 (2026-10-28): HK$1.2069 per credit.
+# USD per 1M tokens = list rate x 2.5 / 6.5, rounded to 4 significant digits.
+# List rate (credits per 1M tokens): input 5, cache read 0.5, cache write 6.25 (5m) / 10 (1h), output 25.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) left unset: xxapi does not document them.
+# API: Anthropic Messages at https://xxapi.ai/v1/messages; prompt caching uses cache_control (5m and 1h).
+# Effort: output_config.effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "anthropic/claude-opus-4-8"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.923
+cache = { read = 0.1923, write = { "5m" = 2.404, "1h" = 3.846 } }
+
+[cost.text.output]
+price = 9.615
