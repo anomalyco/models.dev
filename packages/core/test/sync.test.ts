@@ -6433,6 +6433,31 @@ test("Vercel sync accepts evaluation and unknown future model types", () => {
   expect(buildVercelModel(future!, undefined).type).toBeUndefined();
 });
 
+test("Vercel sync states the model type for non-language models", () => {
+  const route = (id: string, type: string) => ({
+    id,
+    name: id,
+    created: 1_755_815_280,
+    context_window: 8_192,
+    max_tokens: 0,
+    type,
+  });
+  for (const type of ["embedding", "image", "video", "reranking", "transcription", "speech", "realtime"]) {
+    const [model] = vercel.parseModels({ data: [route(`example/${type}`, type)] });
+    expect(vercel.translateModel(model!, translateContext)?.v2).toMatchObject({
+      schema: 2,
+      v2_only: true,
+      type,
+    });
+  }
+
+  for (const type of ["language", "something-new", "evaluation"]) {
+    const [model] = vercel.parseModels({ data: [route(`example/${type}`, type)] });
+    expect(vercel.translateModel(model!, translateContext)?.model.type)
+      .toBe(type === "evaluation" ? "decision" : undefined);
+  }
+});
+
 test("Vercel sync skips batch routes", () => {
   const route = (id: string) => ({
     id,
