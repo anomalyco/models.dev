@@ -5246,13 +5246,15 @@ test("LLM Gateway linked files drop a description equal to the lab's", () => {
 test("reads curation from v2 aggregated siblings", () => {
   // providers/llmgateway/models/qwen3.8-27b.toml is a v2 file whose effort
   // list lives under [capabilities]; mapped deployments still inherit it.
+  // Read the list from the file, so catalog syncs do not break the test.
+  const sibling = Bun.TOML.parse(readFileSync(path.join(import.meta.dir, "../../../providers/llmgateway/models/qwen3.8-27b.toml"), "utf8")) as Record<string, any>;
   const model = buildLLMGatewayMappedModel(llmGatewayMappedModel({
     id: "novita/qwen3.8-27b",
     name: "Qwen3.8 27B (NovitaAI)",
     family: "alibaba",
     providers: [{ providerId: "novita", vision: false, tools: true, reasoning: true }],
   }), undefined);
-  expect(model!.reasoning_options).toEqual([{ type: "effort", values: ["none", "low", "medium", "high", "xhigh"] }]);
+  expect(model!.reasoning_options).toEqual([{ type: "effort", values: sibling.capabilities.reasoning.effort }]);
 });
 
 test("factors perplexity entries without widening the shared prefix map", () => {
