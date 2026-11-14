@@ -1,0 +1,18 @@
+# Limit: max_input_tokens 1048576, max_tokens 262144 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+output = 262_144
+
+[cost.text.input]
+price = 0.216
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 0.647

@@ -1,0 +1,18 @@
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.325 }
+
+[cost.text.output]
+price = 5.5

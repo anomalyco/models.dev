@@ -1,0 +1,21 @@
+# Limit: max_input_tokens 262144, max_tokens 32768 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 32_768
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1

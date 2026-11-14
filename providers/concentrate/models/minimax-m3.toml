@@ -1,0 +1,28 @@
+# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+cache = { implicit = { min_tokens = 512 } }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 512_000 } }
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 512_000 } }
+price = 2.4

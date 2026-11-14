@@ -1,0 +1,28 @@
+# Custom tools: regex grammar ZZ[0-9]{3} enforced on Responses (live probe 2026-11-13)
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = { "30m" = 0.125 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 272_000 } }
+price = 0.2
+cache = { read = 0.02, write = { "30m" = 0.25 } }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 272_000 } }
+price = 0.75
+
+[cost.web_search]
+price = 14

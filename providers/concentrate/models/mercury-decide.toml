@@ -1,0 +1,15 @@
+schema = 2
+v2_only = true
+base_model = "inception/mercury-decide"
+
+[capabilities]
+structured_output = true
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0

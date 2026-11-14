@@ -1,0 +1,21 @@
+schema = 2
+base_model = "cloudflare/clef"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+temperature = false
+top_p = false
+top_k = false
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.24
+
+[cost.text.output]
+price = 0

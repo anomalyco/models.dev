@@ -1,0 +1,18 @@
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = { min_tokens = 512 } }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

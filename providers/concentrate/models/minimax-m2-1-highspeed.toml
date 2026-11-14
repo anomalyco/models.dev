@@ -1,0 +1,21 @@
+# Limit: max_input_tokens 204800, max_tokens 51200 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "minimax/MiniMax-M2.1"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = { min_tokens = 512 }, explicit = true }
+
+[limit]
+output = 51_200
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.03, write = 0.375 }
+
+[cost.text.output]
+price = 2.4

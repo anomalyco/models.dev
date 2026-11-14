@@ -1,0 +1,21 @@
+schema = 2
+base_model = "google/gemini-4-carbon"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = { min_tokens = 4_096 } }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10
+
+[cost.web_search]
+price = 14

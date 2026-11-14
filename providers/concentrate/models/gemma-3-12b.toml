@@ -1,0 +1,21 @@
+# Limit: max_input_tokens 128000, max_tokens 8192 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "google/gemma-3-12b-it"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+structured_output = true
+
+[limit]
+context = 128_000
+output = 8_192
+
+[cost.text.input]
+price = 0.09
+
+[cost.text.output]
+price = 0.29
