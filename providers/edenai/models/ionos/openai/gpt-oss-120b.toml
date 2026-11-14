@@ -1,3 +1,4 @@
+# Output limit: no host-specific cap is documented, so output is capped at the context served here (the lab's raised cap would exceed it).
 schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (IONOS)"
@@ -9,6 +10,7 @@ structured_output = true
 
 [limit]
 context = 128_000
+output = 128_000
 
 [cost.text.input]
 price = 0.16578
