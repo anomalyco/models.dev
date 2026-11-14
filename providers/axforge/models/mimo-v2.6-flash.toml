@@ -1,0 +1,16 @@
+# Served by AxForge as mimo-v2.6-flash: https://api.axforge.ai/v1/public/models (read 2026-11-14).
+# Context 262,144 tokens on our servers (the engine's max_model_len, read 2026-11-14); our API caps an answer at 65,536 tokens. Text only on our servers.
+# No cost: our prices are in EUR, https://axforge.ai/pricing/
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 262_144
+output = 65_536

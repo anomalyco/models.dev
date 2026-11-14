@@ -81,6 +81,8 @@ Pioneer and Ofox track remote-only chat models as missing-model issues. Their AP
 
 Ollama Cloud tracks every remote-only ID from its public `/v1/models` endpoint as a missing-model issue. Existing provider TOMLs and entries absent from the endpoint are preserved because the inventory does not provide enough metadata to author complete entries or determine removals safely.
 
+AxForge tracks every remote-only chat model from its public `/v1/public/models` endpoint as a missing-model issue and leaves the list's other kinds (embeddings, OCR, speech) out. Entries absent from the endpoint are preserved: a model reloading at sync time is never removed, and AxForge removes a retired model by its own pull request.
+
 OpenAI also sets `trackMissingModels: false`: `/v1/models` is scoped to the automation account and mixes public models with legacy, internal experiment, dated snapshot, and non-catalog IDs without lifecycle metadata. Existing OpenAI TOMLs are still preserved by the availability sync.
 
 Google sets `trackMissingModels: false`: `/v1beta/models` does not expose lifecycle metadata and can retain shut-down models, superseded snapshots, moving aliases, and EAP IDs. Existing Google TOMLs are still updated from API-authoritative fields.

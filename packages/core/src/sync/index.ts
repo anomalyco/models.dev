@@ -53,6 +53,7 @@ import { modular } from "./providers/modular.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { nearai } from "./providers/nearai.js";
 import { novitaAi } from "./providers/novita-ai.js";
+import { axforge } from "./providers/axforge.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
 import { opencheap } from "./providers/opencheap.js";
@@ -230,6 +231,7 @@ export const providers: {
   "novita-ai": SyncProvider<any>;
   obscurify: SyncProvider<any>;
   ofox: SyncProvider<any>;
+  "axforge": SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
   opencheap: SyncProvider<any>;
@@ -286,6 +288,7 @@ export const providers: {
   "novita-ai": novitaAi,
   obscurify,
   ofox,
+  "axforge": axforge,
   "ollama-cloud": ollamaCloud,
   openai,
   opencheap,
@@ -334,7 +337,7 @@ export const groups = {
     "void-api",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "axforge", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

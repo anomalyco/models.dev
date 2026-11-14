@@ -1,0 +1,10 @@
+# AxForge: open models served from our own hardware in Stockholm (eu-se-1), one OpenAI-compatible API.
+# Prices are in EUR, without VAT, and change with our price sheet, so they are left out here: https://axforge.ai/pricing/
+# The model list, readable without a key: https://api.axforge.ai/v1/public/models (the sync module in
+# packages/core/src/sync/providers/axforge.ts follows it).
+name = "AxForge"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["AXFORGE_API_KEY"]
+api = "https://api.axforge.ai/v1"
+doc = "https://dev.axforge.ai/docs/connect/opencode/"
