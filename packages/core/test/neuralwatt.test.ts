@@ -369,3 +369,10 @@ test("clears a deprecated status the API no longer reports", () => {
   expect(model.status).toBeUndefined();
   expect(beta.status).toBe("beta");
 });
+
+test("factored models inherit open_weights from the lab", () => {
+  const source = sourceModel("gpt-4.1-mini", { capabilities: { tools: true, json_mode: true, vision: false, reasoning: false } });
+  const result = neuralwatt.translateModel(source, context(undefined, { base_model: "openai/gpt-4.1-mini" }));
+
+  expect(result?.model).not.toHaveProperty("open_weights");
+});

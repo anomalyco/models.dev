@@ -209,8 +209,9 @@ export function buildNeuralwattModel(
     tool_call: capabilities.tools,
     structured_output: capabilities.json_mode,
     knowledge: existing?.knowledge,
-    // Neuralwatt serves open models only; huggingface_id is often null anyway.
-    open_weights: existing?.open_weights ?? true,
+    // Factored models inherit the lab's flag. Standalone ones default to
+    // true: Neuralwatt serves open models, and huggingface_id is often null.
+    open_weights: baseModel === undefined ? existing?.open_weights ?? true : undefined,
     // A revived model clears the flag; hand-authored beta/alpha stays.
     status: model.metadata.deprecated === true
       ? "deprecated"
