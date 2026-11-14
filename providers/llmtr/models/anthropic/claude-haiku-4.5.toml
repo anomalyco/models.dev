@@ -1,0 +1,16 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-10-22).
+# Measured: no reasoning by default; thinking = { type = "enabled", budget_tokens = 1024 } is accepted
+# but returns no reasoning; reasoning_effort and reasoning.effort -> 400 "does not expose a thinking mode".
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 5
