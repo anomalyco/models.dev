@@ -13,7 +13,11 @@ name = "GitHub Copilot"
 # Cost: USD per 1M tokens billed in AI credits ($0.01 each) beyond the plan allowance:
 # https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing. Legacy annual plans bill
 # per-request multipliers instead, which these files don't carry.
-env = ["GITHUB_TOKEN"]
+# GitHub's Copilot CLI reads a fine-grained token with the "Copilot Requests" permission from COPILOT_GITHUB_TOKEN
+# (then GH_TOKEN, GITHUB_TOKEN). Only the dedicated name is listed: GITHUB_TOKEN is usually set for git and Actions
+# without that permission, so treating it as a Copilot key enabled Copilot for anyone who had it set.
+# https://docs.github.com/en/copilot/how-tos/set-up/install-copilot-cli
+env = ["COPILOT_GITHUB_TOKEN"]
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"
 doc = "https://docs.github.com/en/copilot"
