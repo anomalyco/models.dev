@@ -1,0 +1,40 @@
+# Prices, context and output cap: GET https://api.telnyx.com/v2/ai/models (accessed 2026-10-28):
+# $2.70 input, $0.27 cached input, $13.50 output per 1M; context 1,000,000; max_completion_tokens 64,000.
+# max_tokens = 64,001 is still accepted, so the cap comes from the catalog and is not enforced.
+# Toggle: reasoning_effort = "none" turns reasoning off (no reasoning_content); any other value, or leaving
+# the field out, leaves it on (live 2026-10-28). The levels are not clearly graded: median reasoning_content
+# length over 4 runs (2 prompts, 2 runs each) was low 1200, high 1136, max 1796 and default 1528 characters,
+# so only on/off is authored.
+# reasoning.enabled = false, chat_template_kwargs.enable_thinking = false and thinking.type = disabled
+# still returned reasoning_content (2 of 2 each), so there is no toggle.
+# Inputs: text only. /v2/ai/models lists is_vision_supported = true, but PNG image requests failed with
+# HTTP 422 "Internal server error" on every attempt (4 of 4, live 2026-10-28), so the lab's image and video
+# inputs are removed.
+# structured_output is left unset: with reasoning on (the default), a strict json_schema request returned
+# content = null (the JSON, if any, lands in reasoning_content); with reasoning_effort = none it returned
+# valid JSON (live 2026-10-28). Tool calls returned tool_calls.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+description = "Kimi K3 with 1M context and graded reasoning effort for long-horizon agent work, served text-only on Telnyx"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.7
+cache = { read = 0.27 }
+
+[cost.text.output]
+price = 13.5

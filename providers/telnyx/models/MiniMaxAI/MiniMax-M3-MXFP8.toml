@@ -1,0 +1,36 @@
+# Prices and context: GET https://api.telnyx.com/v2/ai/models (accessed 2026-10-28):
+# $0.27 input, $0.08 cached input, $1.10 output per 1M; context 1,000,000; max_completion_tokens not published.
+# Toggle: reasoning_effort = "none" turns reasoning off (no reasoning_content); any other value, or leaving
+# the field out, leaves it on (live 2026-10-28). The levels are not graded: median reasoning_content length
+# over 4 runs (2 prompts, 2 runs each) was low 1105, high 742, max 807 and default 792 characters, so there
+# is no effort list. reasoning.enabled, chat_template_kwargs.enable_thinking and thinking.type = disabled
+# do not turn reasoning off.
+# Inputs: text only. Image requests fail with HTTP 422 "Received multimodal data but multimodal processing
+# is not enabled" (live 2026-10-28), so the lab's image and video inputs are removed.
+# structured_output is left unset: a strict json_schema returned valid JSON with reasoning default or none,
+# but with reasoning_effort = low or high the schema was ignored and prose came back (live 2026-10-28).
+# Tool calls returned tool_calls (live 2026-10-28).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+description = "MiniMax M3 for long-context coding and agent planning, served text-only on Telnyx"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.27
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 1.1

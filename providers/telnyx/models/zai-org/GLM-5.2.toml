@@ -1,0 +1,29 @@
+# Prices, context and output cap: GET https://api.telnyx.com/v2/ai/models (accessed 2026-10-28):
+# $1.00 input, $0.20 cached input, $4.00 output per 1M; context 1,000,000; max_completion_tokens 131,072.
+# Effort: reasoning_effort = none|high|max. Live 2026-10-28, "none" returns no reasoning_content (0 reasoning
+# tokens) and high and max return it. low, minimal, medium and xhigh also return HTTP 200 and reasoning, but
+# low did not reason less than high (median completion tokens over 4 runs: low 1075, high 626, max 1110),
+# so the levels other than high and max are not authored.
+# reasoning.enabled, chat_template_kwargs.enable_thinking and thinking.type = disabled do not turn
+# reasoning off (live 2026-10-28), so there is no toggle.
+# Inputs: text only. An image_url part is accepted but ignored ("Unable to determine the color without an
+# image", live 2026-10-28), matching /v2/ai/models is_vision_supported = false.
+# Structured output: strict response_format json_schema returned valid JSON in message.content with
+# reasoning off, default, high and max (live 2026-10-28). Tool calls returned tool_calls.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.0
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 4.0
