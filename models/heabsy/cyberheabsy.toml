@@ -1,0 +1,26 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# Name, description, limits and capabilities from the curated provider entries in this repo (provider fields
+# stripped). Sampling: the serving API, NanoGPT, documents temperature, top_p and top_k (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion);
+# the model card names no base model.
+# Source: https://huggingface.co/heabsy/CyberHeabsy
+schema = 2
+name = "CyberHeabsy"
+description = "A low-refusal text model for authorized security research, roleplay, and creative writing. It preserves tool calling after refusal removal, supports optional reasoning, and has a 1M-token context window."
+open_weights = false
+release_date = "2026-09-27"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 65_536

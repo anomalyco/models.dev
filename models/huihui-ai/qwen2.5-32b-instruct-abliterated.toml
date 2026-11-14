@@ -1,0 +1,25 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Source: https://huggingface.co/huihui-ai/Qwen2.5-32B-Instruct-abliterated
+schema = 2
+name = "Qwen 2.5 32B Abliterated"
+description = "Uncensored version of Qwen 2.5 32B Instruct with restrictions removed."
+family = "qwen"
+open_weights = true
+release_date = "2025-01-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+input = 32_768
+output = 8_192

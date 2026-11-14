@@ -1,0 +1,20 @@
+# Served by Open Uncensored through venice. Price as
+# listed on https://openuncensored.com/models/venice-uncensored-role-play
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/venice/models/venice-uncensored-role-play.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+base_model = "venice/venice-uncensored-role-play"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 2

@@ -1,0 +1,25 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# taken from the existing curated entry providers/venice/models/olafangensan-glm-4.7-flash-heretic.toml; provider fields stripped.
+# Source: olafangensan's Heretic build, as named by Venice's entry
+schema = 2
+name = "GLM 4.7 Flash Heretic"
+description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
+family = "glm"
+open_weights = true
+release_date = "2026-02-04"
+last_updated = "2026-06-11"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 200_000
+output = 24_000

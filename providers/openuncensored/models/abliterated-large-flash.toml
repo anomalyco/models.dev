@@ -1,0 +1,22 @@
+# Served by Open Uncensored through abliteration-ai, venice, nanogpt. Price as
+# listed on https://openuncensored.com/models/abliterated-large-flash
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/venice/models/abliteration-abliterated-model-large-flash.toml
+# Accepts image input: the router passes images through for this model.
+# Reasoning: reasoning_effort, passed through to the host unmodified. abliteration.ai serves this model
+# first and documents its levels for it as "Off, low, high, max"
+# (https://docs.abliteration.ai/capabilities/thinking). Probed through https://api.openuncensored.com/v1,
+# answered by abliteration.ai: none returns no reasoning (2026-11-08); low, high and max all reason, and
+# max used more reasoning tokens than high on the same prompt (212 and 250 vs 150, 2026-11-12).
+schema = 2
+base_model = "abliteration-ai/abliterated-model-large-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 2

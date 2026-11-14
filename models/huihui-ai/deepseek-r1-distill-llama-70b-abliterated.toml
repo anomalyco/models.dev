@@ -1,0 +1,26 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# carried over from the existing curated provider entries in this repo; provider fields stripped.
+# Source: https://huggingface.co/huihui-ai/DeepSeek-R1-Distill-Llama-70B-abliterated
+schema = 2
+name = "DeepSeek R1 Llama 70B Abliterated"
+description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
+family = "deepseek"
+open_weights = true
+release_date = "2024-01-01"
+last_updated = "2025-01-20"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 16_384
+input = 16_384
+output = 8_192

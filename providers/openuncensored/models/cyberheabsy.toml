@@ -1,0 +1,17 @@
+# Served by Open Uncensored through nanogpt. Price as
+# listed on https://openuncensored.com/models/cyberheabsy
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/heabsy/cyberheabsy.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+base_model = "heabsy/cyberheabsy"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = false
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 4.5

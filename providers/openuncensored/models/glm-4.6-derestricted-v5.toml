@@ -1,0 +1,33 @@
+# Served by Open Uncensored through nanogpt. Price as
+# listed on https://openuncensored.com/models/glm-4.6-derestricted-v5
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/GLM-4.6-Derestricted-v5.toml
+# Input is text only: the router replaces image parts with a note for text models.
+# Standalone (no base_model): the hosts serving this model do not say whose weights it is, and
+# several unrelated Hugging Face repos share the name, so there is no lab identity to point to.
+schema = 2
+name = "GLM 4.6 Derestricted v5"
+description = "Compact GPT model for low-latency assistance and high-volume workloads"
+family = "glm"
+open_weights = true
+release_date = "2025-12-23"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+
+[limit]
+context = 131_072
+input = 131_072
+output = 8_192
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 1.5
