@@ -1,0 +1,15 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-10-26, accessed 2026-10-26). Video prices are USD per generated second.
+# AIsa bills generated 768p video per second; this is not a text-token rate.
+# Base video rate: 768p / standard; other resolutions use the published overrides.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3"
+
+[api.videos]
+path = "/video/generations"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+price = 0.04
+unit = "second"

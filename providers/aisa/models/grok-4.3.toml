@@ -1,0 +1,20 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-10-26, accessed 2026-10-26). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+# Per-model route evidence: name=grok-4.3; routes=POST /v1/chat/completions (openai).
+# Source: https://aisa.one/api/pricing/models (cached 2026-10-26 02:20:40 UTC).
+# This model ID advertises Chat Completions only; no Responses endpoint is listed.
+schema = 2
+base_model = "xai/grok-4.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 2.5

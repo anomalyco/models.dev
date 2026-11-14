@@ -1,0 +1,14 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-10-26, accessed 2026-10-26). Token prices are USD per 1M tokens.
+schema = 2
+v2_only = true
+base_model = "typesafe/jev-latest"
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0
