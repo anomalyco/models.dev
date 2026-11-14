@@ -240,12 +240,38 @@ export const ExplicitCacheV2 = z.union([
 
 export type ExplicitCacheV2 = z.infer<typeof ExplicitCacheV2>;
 
+// Measured cache lifetime on this host. Documented TTLs are minimums ("may retain entries longer"), and
+// some hosts document none, so clients that keep caches warm or plan around expiry need what was seen.
+// Each check primes a fresh prefix once, waits `age`, sends it again, and counts as warm when the cache
+// covered the prefix. Raw counts, so clients choose their own threshold.
+export const ObservedCacheCheckV2 = z
+  .object({
+    age: DurationStringV2,
+    warm: z.number().int().min(0),
+    total: z.number().int().min(1),
+  })
+  .strict()
+  .refine((check) => check.warm <= check.total, { message: "warm can't exceed total" });
+
+export type ObservedCacheCheckV2 = z.infer<typeof ObservedCacheCheckV2>;
+
+export const ObservedCacheV2 = z
+  .object({
+    date: DateString,
+    source: z.string().url(),
+    checks: z.array(ObservedCacheCheckV2).min(1),
+  })
+  .strict();
+
+export type ObservedCacheV2 = z.infer<typeof ObservedCacheV2>;
+
 export const CacheSupportV2 = z.union([
   z.literal(false),
   z
     .object({
       implicit: ImplicitCacheV2.optional(),
       explicit: ExplicitCacheV2.optional(),
+      observed: ObservedCacheV2.optional(),
     })
     .strict()
     .refine((cache) => cache.implicit !== undefined || cache.explicit !== undefined, {
