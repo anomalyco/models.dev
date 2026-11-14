@@ -1,12 +1,31 @@
-name = "IO.NET"
-env = ["IOINTELLIGENCE_API_KEY"]
-npm = "@ai-sdk/openai-compatible"
-opencodeai = "@opencode/ai/providers/openai-compatible"
+# IO Intelligence (io.net) is a multi-model relay: every model under models/ is a third-party model served
+# behind one OpenAI-compatible endpoint, so the entries use base_model and only override what io.net changes.
+# The model list, prices, context/output limits, modalities and the supports_tools / supports_reasoning /
+# supports_prompt_cache flags come from the public catalogue endpoint
+# https://api.intelligence.io.solutions/api/v1/models (read 2026-10-26). Prices there are USD per token and
+# are multiplied by 1e6 here.
 # Reasoning HTTP format (accessed 2026-06-25): POST /api/v1/chat/completions uses
 # `reasoning.effort` = none, low, medium, or high; none disables and omission uses
 # the model default. Legacy top-level `reasoning_effort` accepts low, medium, or
 # high. Always-reasoning models may reject or ignore none. No token budget field
 # is documented; response reasoning is `choices[0].message.reasoning_content`.
 # https://io.net/docs/guides/intelligence/reasoning-for-chat-completions
+# Which controls each model actually honours was verified live per model on 2026-10-13 (the two models
+# io.net added since, Beam 1.0 and Nemotron 3.5 Super VL, on 2026-10-26):
+#   Toggle: reasoning.enabled = true|false; reasoning.effort = "none" also switches thinking off and is the
+#           form every toggle-able model honours (three deployments ignore reasoning.enabled - see their files).
+#   Effort: reasoning.effort = low|medium|high (max and xhigh are accepted too). A level is only listed on a
+#           model where it measurably changed usage.completion_tokens_details.reasoning_tokens; on the others
+#           it is accepted but has no effect, so only the on/off control is listed. Always-on models reject
+#           both fields with HTTP 400.
+#   How forwarding was measured: one fixed prompt ("How many positive integers n with 1 <= n <= 1000 satisfy:
+#           n^2 + n + 1 is divisible by 7? Think it through, then give only the final number.") at temperature 0.7,
+#           max_tokens 8000, two to five samples per level, reading usage.completion_tokens_details.reasoning_tokens.
+#           A level is listed only where the samples ordered cleanly with no overlap between levels; each model file
+#           carries its measured ranges so the check can be repeated with any IO Intelligence key.
+name = "IO.NET"
+env = ["IOINTELLIGENCE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 doc = "https://io.net/docs/guides/intelligence/io-intelligence"
 api = "https://api.intelligence.io.solutions/api/v1"
