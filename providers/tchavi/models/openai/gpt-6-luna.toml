@@ -1,0 +1,23 @@
+# Source: GET https://tchavi.com/api/v1/models (accessed 2026-11-09), the same
+# endpoint a buyer reads. Converted from Tchavi's credit price: 1 credit =
+# 0.3333 XOF, 600 XOF per USD. No promotion runs on this model today.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+# Reasoning efforts: every value except `minimal`, which this model refuses.
+# Derived from Tchavi's provider compatibility table (model-compat.ts), whose
+# entries were probed against the live API.
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 0.1222
+cache = { read = 0.0122, write = 0.1528 }
+
+[cost.text.output]
+price = 0.611
+
+[limit]
+context = 1_050_000
+output = 128_000

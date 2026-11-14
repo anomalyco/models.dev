@@ -1,0 +1,21 @@
+# Source: GET https://tchavi.com/api/v1/models (accessed 2026-11-09), the same
+# endpoint a buyer reads. Converted from Tchavi's credit price: 1 credit =
+# 0.3333 XOF, 600 XOF per USD. No promotion runs on this model today.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+# Reasoning: Tchavi refuses no effort value on this model (model-compat.ts).
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+
+[cost.text.input]
+price = 0.1222
+cache = { read = 0.0122, write = 0.1528 }
+
+[cost.text.output]
+price = 0.611
+
+[limit]
+context = 1_000_000
+output = 128_000
