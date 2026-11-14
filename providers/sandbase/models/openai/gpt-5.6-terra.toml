@@ -1,0 +1,18 @@
+# Source: https://www.sandbase.ai/docs/api-reference/models/get
+# Prices: SandBase model detail API, checked 2026-11-14.
+# Live request check 2026-11-14: Responses API accepted each listed reasoning.effort value.
+schema = 2
+base_model = "openai/gpt-5.6-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 12
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
