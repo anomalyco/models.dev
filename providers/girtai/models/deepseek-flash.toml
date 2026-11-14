@@ -1,0 +1,53 @@
+# Sources checked 2026-11-11:
+# - GirtAI model IDs, endpoints and public-beta status: https://www.girtai.com/zh/docs/
+# - Same upstream model versions and request-start billing: https://www.girtai.com/zh/faq/
+# - GirtAI USD / million token prices: https://www.girtai.com/zh/pricing/
+# - Upstream alias/version and peak windows: https://api-docs.deepseek.com/quick_start/pricing/
+# GirtAI's operator confirms upstream capability and limit parity, except pricing.
+# This entry uses that confirmation and upstream documentation, not live API probes.
+# deepseek-flash currently serves DeepSeek-V4.1-Flash-1017, including vision.
+# Toggle: thinking.type = enabled|disabled; effort: reasoning_effort = low|high|max
+# (default high). Messages uses thinking.type and output_config.effort.
+# https://api-docs.deepseek.com/guides/thinking_mode/
+# https://api-docs.deepseek.com/guides/anthropic_api/
+# Exact limits and max_tokens field match providers/deepseek/models/deepseek-flash.toml
+# and https://api-docs.deepseek.com/api/create-chat-completion/ (384K = 393216).
+# Cache is implicit; reasoning tokens use the output rate. GirtAI pricing defers
+# peak/off-peak periods to the linked official DeepSeek pricing page, including
+# its weekday windows and Chinese-holiday exclusion. Peak prices are the base
+# so v1 clients (which omit time multipliers) never understate the peak rate.
+# Off-peak applies at every other time: half the peak input/cache/output prices.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.messages]
+base_url = "https://girtai.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.60
+reasoning = 0.60
+
+[[cost.multipliers]]
+when = { not = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, not = { holiday = { equals = "CN" } }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] } }
+factor = 0.5
