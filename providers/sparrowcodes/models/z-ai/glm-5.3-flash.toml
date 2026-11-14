@@ -4,15 +4,13 @@
 # reasoning_effort is forwarded unchanged; low/high are the values both this gateway and the model accept.
 # Cache: upstream prompt caching is automatic (no markers); cache reads are reported in
 # usage.prompt_tokens_details.cached_tokens and billed at the cache read price below.
+# Limits: context is inherited from the lab entry (the gateway's context_length listing rounds up past the lab's documented window).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
 cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "high"] }
-
-[limit]
-context = 1_048_576
 
 [api.chat-completions]
 

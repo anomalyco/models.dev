@@ -4,7 +4,9 @@
 # price, so no fixed cost is listed. The response's `model` field names the model that answered.
 # Image input: when a request has images, the router only picks models whose input_modalities include image
 # (internal/gateway/auto_router.go), so image tasks go to the Claude models.
-# Reasoning: a caller's reasoning_effort (gateway accepts minimal/low/medium/high) is forwarded to the chosen model.
+# Reasoning: a caller's reasoning_effort is forwarded unchanged to the chosen model (no per-model mapping or clamping).
+# Only low/high are listed because those are the values every routed model with graded effort accepts
+# (DeepSeek V4.1 Flash takes low/high only); on Qwen3.7 Plus and Qwen3 Coder 30B effort has no documented effect.
 schema = 2
 name = "Sparrow Auto"
 description = "Router that picks a low-cost or stronger model per coding task and keeps it for the task so prompt caching holds"
@@ -17,7 +19,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, effort = ["low", "high"] }
 temperature = false
 top_p = false
 top_k = false
