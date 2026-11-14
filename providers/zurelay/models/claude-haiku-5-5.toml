@@ -1,0 +1,34 @@
+# API: Anthropic Messages, POST https://api.zurelay.com/v1/messages with x-api-key; cache_control, thinking
+# and output_config pass through (https://zurelay.com/docs/anthropic, accessed 2026-11-03).
+# Caching tested 2026-11-03 on /v1/messages: a 12,656-token system block with cache_control was written (ephemeral_5m) and read back on the next request.
+# No toggle listed: with thinking.type = disabled this host still returned a thinking block (tested 2026-11-03), so only effort is listed.
+# Effort: output_config.effort = low|medium|high|xhigh|max on POST /v1/messages (Zurelay maps reasoning_effort the same way).
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/claude-haiku-5-5 (USD per 1M tokens, accessed 2026-11-03).
+# Prompts over 100,000 tokens: 5x every input price, 5x output, as the lab bills them.
+# Cache writes: 1.25x input for 5 minutes, 2x for 1 hour (https://zurelay.com/docs/anthropic#prompt-caching).
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.004, write = { "5m" = 0.05, "1h" = 0.08 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.2
+cache = { read = 0.02, write = { "5m" = 0.25, "1h" = 0.4 } }
+
+[cost.text.output]
+price = 0.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 1

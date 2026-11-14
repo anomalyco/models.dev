@@ -1,0 +1,24 @@
+# Inputs on this host: text, images, video, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# Thinking is switched with reasoning_effort on this host; the lab's enable_thinking / thinking_budget fields aren't part of Zurelay's documented API.
+# Effort: reasoning_effort = none|low|medium|xhigh on POST /v1/chat/completions; default xhigh.
+# none turns thinking off (tested 2026-11-03: no reasoning came back with none, and it did without).
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/qwen3.8-omni-flash (USD per 1M tokens, accessed 2026-11-03).
+schema = 2
+base_model = "alibaba/qwen3.8-omni-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"], default = { type = "effort", value = "xhigh" } }
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4", "video/quicktime"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 0.235

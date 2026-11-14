@@ -1,0 +1,22 @@
+# API: Anthropic Messages, POST https://api.zurelay.com/v1/messages with x-api-key; cache_control, thinking
+# and output_config pass through (https://zurelay.com/docs/anthropic, accessed 2026-11-03).
+# Effort: output_config.effort = low|medium|high|xhigh|max on POST /v1/messages (Zurelay maps reasoning_effort the same way).
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
+# Prices: https://zurelay.com/models/claude-sonnet-5-5 (USD per 1M tokens, accessed 2026-11-03).
+# Cache writes: 1.25x input for 5 minutes, 2x for 1 hour (https://zurelay.com/docs/anthropic#prompt-caching).
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.79
+cache = { read = 0.079, write = { "5m" = 0.9875, "1h" = 1.58 } }
+
+[cost.text.output]
+price = 3.95
