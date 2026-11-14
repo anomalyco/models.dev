@@ -1,0 +1,28 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/anthropic/claude-sonnet-5 (snapshot 2026-11-11): prices, limits and the serving provider (anthropic).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Anthropic Messages (POST /v1/messages) is this model's native protocol on OhMyGPT. The request body and anthropic-* headers reach Anthropic as sent (https://www.ohmygpt.com/docs/api/messages#claude), so reasoning controls, prompt caching and structured output are Anthropic's: providers/anthropic/models/claude-sonnet-5.toml.
+# Effort: output_config.effort = low|medium|high|xhigh|max
+# Toggle: thinking.type = adaptive|disabled
+# Checked live 2026-11-11 on POST /v1/messages with x-api-key: output_config.effort accepts exactly the listed levels (Anthropic returns 400 for the others), and thinking.budget_tokens is accepted only where a budget is listed.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) are left out: not checked on this host.
+# Limits: none overridden. The catalog's figures for this model (context 1,000,000, output 128,000) are the lab file's.
+schema = 2
+base_model = "anthropic/claude-sonnet-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.2
+cache = { read = 0.22, write = { "5m" = 2.75, "1h" = 4.4 } }
+
+[cost.text.output]
+price = 11
+
+[cost.web_search]
+price = 11

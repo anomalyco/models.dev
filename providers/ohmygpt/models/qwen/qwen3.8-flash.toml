@@ -1,0 +1,29 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/qwen/qwen3.8-flash (snapshot 2026-11-11): prices, limits and the serving provider (alibaba).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT and Alibaba Cloud (alibaba) is its only serving provider, so the request body reaches the vendor as sent and vendor fields work as the vendor documents them (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models). Reasoning controls follow providers/alibaba/models/qwen3.8-flash.toml.
+# Toggle: enable_thinking true|false (hybrid)
+# Effort: reasoning_effort = low|medium|xhigh (not yet in the API reference; see
+# the Qwen3.8-Flash-Next release blog)
+# Budget: thinking_budget (Max Reasoning 262K)
+# Cache: the catalog prices implicit cache reads and an explicit cache (its own read and write prices).
+# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
+cache = { implicit = true, explicit = true }
+
+[limit]
+input = 991_808
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.113
+cache = { read = 0.014, explicit = { read = 0.014, write = 0.177 } }
+
+[cost.text.output]
+price = 0.382

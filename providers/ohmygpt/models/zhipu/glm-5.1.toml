@@ -1,0 +1,41 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/zhipu/glm-5.1 (snapshot 2026-11-11): prices, limits and the serving providers (chatglm, alibaba).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT; the request is forwarded to the serving provider (Zhipu AI (ChatGLM), Alibaba Cloud (Model Studio Intl)) without protocol conversion (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Checked live 2026-11-11 with each serving provider pinned as `<provider>:zhipu/glm-5.1` (https://www.ohmygpt.com/docs/provider-routing): with no thinking field the answer carried reasoning_content; thinking.type = disabled returned none, on every serving provider.
+# The creator's own entry is providers/zhipuai/models/glm-5.1.toml; only what held on every serving provider is listed.
+# top_k = false: providers/zhipuai excludes top_k for this model, so it does not hold on every serving provider. A request that sends it still returns 200 on each of them (live 2026-11-11), so acceptance alone does not show support.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+# Prices: the catalog's headline price, which is its lowest-priced serving provider (Alibaba Cloud (Model Studio Intl)). The gateway tries the cheaper provider first; a request served by another provider is billed at that provider's rate, up to 1.46x on input (catalog providers[].pricing).
+# Prices: the catalog's lower band includes a prompt of exactly 32,000 input tokens (tier bound 32,001, exclusive), so the band above it uses gt. providers/zhipuai/models/glm-5.1.toml starts that band one token earlier (gte).
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[limit]
+output = 128_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.132 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.88
+cache = { read = 0.176 }
+
+[cost.text.output]
+price = 2.6408
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.0808

@@ -1,0 +1,30 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/openai/gpt-5.4-mini (snapshot 2026-11-11): prices, limits and the serving providers (azure, openai).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions and Responses are both native protocols for this model on OhMyGPT (native: true in the catalog); the request body reaches OpenAI as sent (https://www.ohmygpt.com/docs/api/protocols#native-protocol).
+# Effort: reasoning_effort (Chat Completions) or reasoning.effort (Responses) = none|low|medium|high|xhigh, as on providers/openai/models/gpt-5.4-mini.toml. Checked live 2026-11-11: both APIs accept exactly these levels.
+# tools.freeform: checked live 2026-11-11 on /v1/chat/completions and /v1/responses. Both accepted custom tools as text, lark, regex and enforced the grammars: asked to pass `hello`, the regex ZZ[0-9]{3} and the equivalent lark grammar each returned ZZ plus three digits.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: none overridden. The catalog's figures for this model (context 400,000, output 128,000) are the lab file's.
+schema = 2
+base_model = "openai/gpt-5.4-mini"
+
+[capabilities]
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.675
+cache = { read = 0.0675 }
+
+[cost.text.output]
+price = 4.05
+
+[cost.web_search]
+price = 12.6

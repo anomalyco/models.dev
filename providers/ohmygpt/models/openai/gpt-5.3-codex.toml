@@ -1,0 +1,30 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/openai/gpt-5.3-codex (snapshot 2026-11-11): prices, limits and the serving providers (azure, openai).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Responses is this model's native protocol on OhMyGPT; Chat Completions requests are converted to it, reasoning_effort included (https://www.ohmygpt.com/docs/api/protocols#other-protocols, https://www.ohmygpt.com/docs/api/thinking#other-models).
+# Effort: reasoning_effort (Chat Completions) or reasoning.effort (Responses) = none|low|medium|high|xhigh, as on providers/openai/models/gpt-5.3-codex.toml. Checked live 2026-11-11: every listed level is accepted on both APIs.
+# tools.freeform on [api.responses] only: checked live 2026-11-11. /v1/responses accepted custom tools as text, lark, regex and enforced the grammars (asked to pass `hello`, the regex ZZ[0-9]{3} and the equivalent lark grammar each returned ZZ plus three digits). On /v1/chat/completions the custom tool did not reach the model on this host: with tool_choice required it answered in text that it has no such tool.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: none overridden. The catalog's figures for this model (context 400,000, output 128,000) are the lab file's.
+schema = 2
+base_model = "openai/gpt-5.3-codex"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+
+[cost.text.input]
+price = 1.575
+cache = { read = 0.1575 }
+
+[cost.text.output]
+price = 12.6
+
+[cost.web_search]
+price = 12.6

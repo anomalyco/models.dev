@@ -1,0 +1,22 @@
+# OhMyGPT is a multi-model gateway (relay). One key and one base URL serve every chat model on four
+# protocols: Chat Completions, Responses, Anthropic Messages and Gemini generateContent (https://www.ohmygpt.com/docs/api/protocols).
+# Each model has a native protocol, marked `native: true` in GET https://api.ohmygpt.com/v1/models. On it the
+# request body reaches the vendor unchanged; on the others OhMyGPT converts the request and the answer.
+# Raw HTTP reasoning controls (https://www.ohmygpt.com/docs/api/thinking, accessed 2026-11-11):
+# Chat POST /v1/chat/completions: `reasoning_effort` = none|minimal|low|medium|high|xhigh, or
+# `thinking` = {type: enabled, budget_tokens} | {type: adaptive} | {type: disabled}; on a chat-native model
+# the vendor's own fields pass through.
+# Responses POST /v1/responses: `reasoning.effort`.
+# Messages POST /v1/messages: `thinking` and `output_config.effort`, passed to Claude as sent.
+# Gemini POST /v1/models/{model}:generateContent: `generationConfig.thinkingConfig`.
+# Prices are charged in Coins, OhMyGPT's billing unit: 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs; the API and that
+# page name the unit "credits", as in `price_credits`). Model files convert them to USD.
+# Sync: no sync module yet; one is planned as the follow-up PR. GET /v1/models does not enumerate the served set: it marks
+# every entry available, including a model that is not callable yet and models scheduled for retirement, so it cannot
+# decide which files to create or delete. Scheduled price changes it announces are already in the model files as dated rules.
+name = "OhMyGPT"
+env = ["OHMYGPT_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.ohmygpt.com/v1"
+doc = "https://www.ohmygpt.com/docs"

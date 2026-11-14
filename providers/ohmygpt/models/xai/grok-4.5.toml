@@ -1,0 +1,42 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/xai/grok-4.5 (snapshot 2026-11-11): prices, limits and the serving provider (xai).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions and Responses are both native protocols for this model on OhMyGPT (native: true in the catalog); the request body reaches xAI as sent (https://www.ohmygpt.com/docs/api/protocols#native-protocol).
+# Effort: reasoning_effort (Chat Completions) or reasoning.effort (Responses) = low|medium|high|xhigh, as on providers/xai/models/grok-4.5.toml. Checked live 2026-11-11: every listed level is accepted on both APIs.
+# Responses uses @ai-sdk/xai: xAI rejects the item_reference items @ai-sdk/openai sends on the second step of a tool loop (422, live 2026-11-11).
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+# Prices: the catalog's lower band includes a prompt of exactly 200,000 input tokens (tier bound 200,001, exclusive), so the band above it uses gt. providers/xai/models/grok-4.5.toml starts that band one token earlier (gte).
+schema = 2
+base_model = "xai/grok-4.5"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 128_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/xai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 2.2
+cache = { read = 0.33 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4.4
+cache = { read = 0.66 }
+
+[cost.text.output]
+price = 6.6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 13.2
+
+[cost.web_search]
+price = 5.5

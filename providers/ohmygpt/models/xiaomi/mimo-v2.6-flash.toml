@@ -1,0 +1,26 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/xiaomi/mimo-v2.6-flash (snapshot 2026-11-11): prices, limits and the serving provider (tencent).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT; the request is forwarded to the serving provider (Tencent Cloud TokenHub) without protocol conversion (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Checked live 2026-11-11 with each serving provider pinned as `<provider>:xiaomi/mimo-v2.6-flash` (https://www.ohmygpt.com/docs/provider-routing): with no thinking field the answer carried reasoning_content; thinking.type = disabled returned none, on every serving provider.
+# The creator's own entry is providers/xiaomi/models/mimo-v2.6-flash.toml; only what held on every serving provider is listed.
+# top_k: accepted by every serving provider (live 2026-11-11), and none of their own models.dev entries excludes it.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: none overridden. The catalog's figures for this model (context 1,048,576, output 131,072) are the lab file's.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1606
+cache = { read = 0.003212 }
+
+[cost.text.output]
+price = 0.3212

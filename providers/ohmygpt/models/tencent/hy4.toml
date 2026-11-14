@@ -1,0 +1,33 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/tencent/hy4 (snapshot 2026-11-11): prices, limits and the serving provider (tencent).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT and Tencent Cloud (tencent) is its only serving provider, so the request body reaches the vendor as sent and vendor fields work as the vendor documents them (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models). Reasoning controls follow providers/tencent-tokenhub/models/hy4.toml.
+# Effort: reasoning_effort = none|high (default high). "none" is how thinking is turned off on
+#   this id, so per AGENTS.md there is no separate toggle entry.
+# Reasoning text arrives in reasoning_content (live 2026-11-11); providers/tencent-tokenhub/models/hy4.toml sets no reasoning_field.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+# Prices: the catalog schedules a price change (valid_from); it is written as a dated rule below.
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+
+[limit]
+input = 960_000
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.438
+cache = { read = 0.0219 }
+
+[cost.text.output]
+price = 1.314
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = { text = 2 }

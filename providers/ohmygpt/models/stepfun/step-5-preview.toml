@@ -1,0 +1,30 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/stepfun/step-5-preview (snapshot 2026-11-11): prices, limits and the serving provider (tencent).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT; the request is forwarded to the serving provider (Tencent Cloud TokenHub) without protocol conversion (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
+# Effort: reasoning_effort = low|medium|high
+# Checked live 2026-11-11 with each serving provider pinned as `<provider>:stepfun/step-5-preview` (https://www.ohmygpt.com/docs/provider-routing): each level was accepted; reasoning_content came back under every setting, thinking.type = disabled included, so there is no toggle.
+# The creator's own entry is providers/stepfun/models/step-5-preview.toml; only what held on every serving provider is listed.
+# top_k: accepted by every serving provider (live 2026-11-11), and none of their own models.dev entries excludes it.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+# Limits: the catalog shows context 1,048,576, above the creator's own entry (1,000,000). A relay cannot widen the upstream's window, so the creator's figure stands.
+schema = 2
+base_model = "stepfun/step-5-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 1.1242
+cache = { read = 0.056212 }
+
+[cost.text.output]
+price = 3.212

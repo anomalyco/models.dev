@@ -1,0 +1,36 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/deepseek/deepseek-v4-pro-0813 (snapshot 2026-11-11): prices, limits and the serving providers (deepseek, alibaba).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT; the request is forwarded to the serving provider (DeepSeek, Alibaba Cloud (Model Studio Intl)) without protocol conversion (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# Checked live 2026-11-11 with each serving provider pinned as `<provider>:deepseek/deepseek-v4-pro-0813` (https://www.ohmygpt.com/docs/provider-routing): thinking.type = disabled returned no reasoning_content on every serving provider, and reasoning_effort low, high and max were accepted on every one.
+# The creator's own entry is providers/deepseek/models/deepseek-v4-pro.toml; only what held on every serving provider is listed.
+# top_k = false: providers/alibaba, providers/alibaba-cn, providers/deepseek exclude top_k for this model, so it does not hold on every serving provider. A request that sends it still returns 200 on each of them (live 2026-11-11), so acceptance alone does not show support.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: none overridden. The catalog's figures for this model (context 1,000,000, output 384,000) are the lab file's.
+# Prices: base prices are off-peak. The catalog prices 01:00-04:00 and 06:00-10:00 UTC on weekdays at 2x, written as a multiplier below.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0.657
+cache = { read = 0.0219 }
+
+[cost.text.output]
+price = 1.971
+
+[cost.web_search]
+price = 0.732
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = { text = 2 }
