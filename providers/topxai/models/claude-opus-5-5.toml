@@ -1,0 +1,30 @@
+# APIs: Chat Completions (listed first, so v1 is unchanged) and native Messages,
+# https://api.topxai.xyz/docs/api-reference (checked 2026-11-13).
+# Explicit caching holds on both: Messages forwards cache_control as sent, and the
+# Chat Completions conversion to Claude Messages keeps cache_control, ttl included,
+# on system, message and tool blocks. The host prices 5m and 1h cache writes.
+# Effort only, as the lab and peers author this model: $.output_config.effort on
+# /v1/messages, $.reasoning_effort on /v1/chat/completions, both forwarded unchanged.
+# https://api.topxai.xyz/docs/api-reference (accessed 2026-10-23)
+# Shared-pool price, 50% of Anthropic's list on every lane; cache writes for the 5m and
+# 1h TTLs from the same table.
+# https://api.topxai.xyz/pricing/claude-opus-5-5 (accessed 2026-10-23)
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+cache = { explicit = { ttl = ["5m", "1h"] } }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "5m" = 2.5, "1h" = 4 } }
+
+[cost.text.output]
+price = 10

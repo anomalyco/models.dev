@@ -1,0 +1,52 @@
+# Sampling: temperature and top_p work on this deployment; top_k is not
+# a documented host capability, so support is not advertised here.
+# https://api.topxai.xyz/docs/deepseek-flash-abliterated (checked 2026-11-09).
+# DeepSeek V4.1 Flash 1017 with its refusal alignment removed (abliterated), served from
+# TopxAI's private deployment, not DeepSeek's official API. Defined inline because this
+# variant does not have the official model's weights/benchmarks.
+# Launched 2026-10-24; replaces the retired deepseek-flash ID with no forwarding alias.
+# https://api.topxai.xyz/blog/deepseek-flash-abliterated
+# Effort: reasoning_effort = none|low|high|max on Chat Completions (default low).
+# none disables reasoning, so there is no additional toggle. Text/image input,
+# limits, protocols and prices: https://api.topxai.xyz/docs/deepseek-flash-abliterated
+# and https://api.topxai.xyz/api/pricing (accessed 2026-11-10).
+# Fixed prices at every hour and context length; automatic cache reads, no separate
+# cache-write charge. Official DeepSeek comparison prices and peak hours do not apply.
+# Responses is stateless; send the full conversation. Messages converts to Chat.
+schema = 2
+name = "DeepSeek Flash Abliterated"
+description = "Abliterated DeepSeek V4.1 Flash on a private TopxAI deployment with text and image input, 1M context and optional reasoning"
+family = "deepseek-flash"
+open_weights = false
+release_date = "2026-10-24"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+temperature = true
+top_p = true
+top_k = false
+tools = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.42
+cache = { read = 0.105 }
+
+[cost.text.output]
+price = 1.5

@@ -1,0 +1,48 @@
+# Default prompt caching is implicit. Explicit breakpoints are not claimed:
+# forwarding a cache option or listing a write price does not establish support.
+# https://api.topxai.xyz/changelog#gpt-6-sol (checked 2026-11-09).
+# Effort: $.reasoning.effort on /v1/responses, $.reasoning_effort on /v1/chat/completions,
+# forwarded unchanged; the lab's and peers' level set for this model.
+# Shared-pool price, 50% of OpenAI's list. Requests whose input, cache tokens included,
+# reaches 272,001 tokens bill the whole request at the override below.
+# https://api.topxai.xyz/pricing/gpt-6-astra and https://api.topxai.xyz/api/pricing (accessed 2026-10-23)
+# APIs: Chat Completions and Responses, https://api.topxai.xyz/docs/api-reference
+# (checked 2026-11-13; a live /v1/responses request returned 200 the same day).
+# Structured output: response_format json_schema (strict) and json_object return valid JSON on
+# /v1/chat/completions (checked live 2026-10-16), and a strict text.format json_schema
+# returns valid JSON on /v1/responses (checked live 2026-11-13).
+# Custom tools, live 2026-11-13: /v1/responses enforced regex ZZ[0-9]{3} and the equivalent
+# lark grammar (asked to submit 42, both returned the custom tool call ZZ042), so
+# [api.responses] sets freeform = lark and regex; the unconstrained text format was not
+# tested. /v1/chat/completions returned HTTP 400 invalid_request ("The request was
+# rejected. Check the parameters and try again.") for a request with one regex custom
+# tool, so no freeform format is set there.
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["lark", "regex"] } }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 10
+cache = { read = 1, write = 12.5 }
+
+[cost.text.output]
+price = 25
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 37.5
