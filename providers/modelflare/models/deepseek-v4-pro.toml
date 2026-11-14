@@ -1,0 +1,10 @@
+# Modelflare ID "deepseek-v4-pro" from GET https://modelflare.dev/v1/models (2026-10-15).
+# Effort: $.reasoning_effort on /v1/chat/completions; matches first-party providers/deepseek effort set; reasoning_effort accepted live.
+# Cost: list price from https://modelflare.dev/api/pricing (2026-10-15): input_price=1.28571 USD/MTok, output = input_price * completion_ratio (3.0), cache_read = input_price * cache_ratio (0.0333333).
+base_model = "deepseek/deepseek-v4-pro"
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 1.28571
+output = 3.85714
+cache_read = 0.0428571
