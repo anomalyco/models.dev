@@ -1,0 +1,11 @@
+name = "InferAll"
+env = ["INFERALL_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# OpenAI-compatible gateway: one key for open models and relayed paid models.
+# Catalog: GET https://api.inferall.ai/v1/models. Models below list Chat Completions only.
+# Pricing: https://inferall.ai/pricing (accessed 2026-10-22). The open models listed here are
+# $0 per input and output token. New accounts get 25 free calls, then 25 a day; a one-time
+# $5 activation raises that to 50 chat calls a day and becomes account balance.
+# Only open models are listed for now: relayed paid model prices follow the upstream lab.
+doc = "https://inferall.ai/docs"
+api = "https://api.inferall.ai/v1"

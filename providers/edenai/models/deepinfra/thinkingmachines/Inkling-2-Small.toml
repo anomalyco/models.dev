@@ -6,9 +6,6 @@ name = "Inkling 2 Small (Deep Infra)"
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "max"] }
 structured_output = true
 
-[limit]
-context = 262_144
-
 [cost.text.input]
 price = 0.3
 cache = { read = 0.03 }
