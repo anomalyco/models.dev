@@ -1,4 +1,6 @@
 # Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+# Freeform: unverified on the deployed chat-completions API; authenticated access needed.
+# Gateway source (sintaks-dev-core 0be077c, internal/adapters/httpapi/openai.go) rejects non-function tools.
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max
 schema = 2
 base_model = "openai/gpt-6.1-terra"
