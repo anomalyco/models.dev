@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = none|low|high
+# Cost, limits, input parts and reasoning levels: PopNow model table https://popnow.ai/docs/chat and the model schema from GET https://api.popnow.ai/api/v1/models/{model} (retrieved 2026-11-05).
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.32
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 3.96
