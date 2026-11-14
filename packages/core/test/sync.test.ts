@@ -7195,6 +7195,195 @@ test("preserves the authored header comment block when rewriting a changed model
   }
 });
 
+test("retains a skipped remote model's file when deleteMissing is on", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-skip-retain-"));
+  const modelsDir = path.join(dir, "models");
+  await mkdir(modelsDir, { recursive: true });
+  await Bun.write(path.join(modelsDir, "kept-skip.toml"), [
+    "schema = 2",
+    'name = "Kept Skip"',
+    'description = "Hand-authored entry for a provider skip"',
+    'release_date = "2026-01-01"',
+    "open_weights = false",
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
+    "",
+    "[limit]",
+    "context = 1_000",
+    "output = 100",
+    "",
+    "[cost.text.input]",
+    "price = 1",
+    "",
+    "[cost.text.output]",
+    "price = 2",
+    "",
+  ].join("\n"));
+
+  const provider: SyncProvider<{ id: string }> = {
+    id: "example",
+    name: "Example",
+    modelsDir,
+    deleteMissing: true,
+    retainSkipped: true,
+    async fetchModels() {
+      return [{ id: "kept-skip" }];
+    },
+    parseModels(raw) {
+      return raw as { id: string }[];
+    },
+    sourceID(model) {
+      return model.id;
+    },
+    translateModel() {
+      return undefined;
+    },
+  };
+
+  try {
+    const result = await syncProvider(provider);
+    expect(result.deleted).toBe(0);
+    expect(await Bun.file(path.join(modelsDir, "kept-skip.toml")).exists()).toBe(true);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("deletes a skipped remote model's file when retainSkipped is off", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-skip-delete-"));
+  const modelsDir = path.join(dir, "models");
+  await mkdir(modelsDir, { recursive: true });
+  await Bun.write(path.join(modelsDir, "gone-skip.toml"), [
+    "schema = 2",
+    'name = "Gone Skip"',
+    'description = "Tracked entry for a provider skip"',
+    'release_date = "2026-01-01"',
+    "open_weights = false",
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
+    "",
+    "[limit]",
+    "context = 1_000",
+    "output = 100",
+    "",
+    "[cost.text.input]",
+    "price = 1",
+    "",
+    "[cost.text.output]",
+    "price = 2",
+    "",
+  ].join("\n"));
+
+  const provider: SyncProvider<{ id: string }> = {
+    id: "example",
+    name: "Example",
+    modelsDir,
+    deleteMissing: true,
+    async fetchModels() {
+      return [{ id: "gone-skip" }];
+    },
+    parseModels(raw) {
+      return raw as { id: string }[];
+    },
+    sourceID(model) {
+      return model.id;
+    },
+    translateModel() {
+      return undefined;
+    },
+  };
+
+  try {
+    const result = await syncProvider(provider);
+    expect(result.deleted).toBe(1);
+    expect(await Bun.file(path.join(modelsDir, "gone-skip.toml")).exists()).toBe(false);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("refuses an implausibly small source relative to the catalog", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-delete-floor-"));
+  const modelsDir = path.join(dir, "models");
+  await mkdir(modelsDir, { recursive: true });
+  const toml = (name: string) => [
+    "schema = 2",
+    `name = "${name}"`,
+    `description = "Tracked model ${name}"`,
+    'release_date = "2026-01-01"',
+    "open_weights = false",
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
+    "",
+    "[limit]",
+    "context = 1_000",
+    "output = 100",
+    "",
+    "[cost.text.input]",
+    "price = 1",
+    "",
+    "[cost.text.output]",
+    "price = 2",
+    "",
+  ].join("\n");
+  for (const id of ["a", "b", "c", "d"]) {
+    await Bun.write(path.join(modelsDir, `${id}.toml`), toml(id));
+  }
+
+  const provider: SyncProvider<{ id: string }> = {
+    id: "example",
+    name: "Example",
+    modelsDir,
+    deleteMissing: true,
+    minSourceFraction: 0.5,
+    async fetchModels() {
+      return [{ id: "a" }];
+    },
+    parseModels(raw) {
+      return raw as { id: string }[];
+    },
+    translateModel() {
+      return undefined;
+    },
+  };
+
+  try {
+    await expect(syncProvider(provider)).rejects.toThrow(/refusing to sync/);
+    for (const id of ["a", "b", "c", "d"]) {
+      expect(await Bun.file(path.join(modelsDir, `${id}.toml`)).exists()).toBe(true);
+    }
+
+    const plausible: SyncProvider<{ id: string }> = {
+      ...provider,
+      async fetchModels() {
+        return [{ id: "a" }, { id: "b" }, { id: "c" }];
+      },
+    };
+    const result = await syncProvider(plausible);
+    expect(result.deleted).toBe(4);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 test("retains authored data when OpenRouter reports an unavailable stub", () => {
   const authored = {
     name: "Claude Fable Latest",

@@ -1,0 +1,27 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM reasoning: /v1/models exposes only `thinking`; the provider API has no
+# toggle, effort or budget request field (provider.toml audit, 2026-06-25).
+# RouteLLM input_modalities: ["text","image","audio","video"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 1048576
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.00000125
+# RouteLLM output_token_rate: 0.00000425
+# RouteLLM cached_input_token_rate: 0.00000015
+# RouteLLM thinking: None
+schema = 2
+base_model = "meta/muse-spark-1.3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "audio/mpeg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

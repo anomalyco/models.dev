@@ -9,6 +9,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 ## Commands
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
+- `bun models:sync abacus` syncs only Abacus.
 - `bun models:sync aiand` syncs only ai&.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
@@ -49,12 +50,12 @@ Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR
 - Formats TOML consistently for all synced providers.
 - Compares authored TOML shapes before writing so existing factored TOMLs stay factored instead of being expanded.
 - Replaces symlinked files safely by removing the symlink before writing.
-- Removes existing files that are no longer present in the desired synced set.
+- Removes existing files that are no longer present in the desired synced set. `deleteMissing: false` keeps all of them; `retainSkipped: true` keeps the local files for source ids the provider deliberately skips through `sourceID`; `minSourceFraction` refuses the run before anything is written when the source has fewer than that fraction of the local catalog's models.
 - Writes `.sync/model-sync-report.md` for GitHub Actions.
 - When `skipCreates` is set and issue opens are enabled, opens one deduped GitHub issue per remote model missing from the local catalog (via `gh`).
 - When a provider selectively skips only some models, `missingModelID` can preserve existing metadata and mark those skips for the same deduped issue flow without disabling safe automatic creates.
 
-Because the runner removes files missing from the desired set, a provider module should only skip source models when deleting existing local files for those skipped IDs is intentional.
+Because the runner removes files missing from the desired set by default, a provider module should only skip source models when deleting existing local files for those skipped IDs is intentional. A provider that needs to keep hand-authored files for skipped source ids sets `retainSkipped: true` (Abacus does this for `route-llm` and its media/transcription skips), and a deletion-authoritative provider can set `minSourceFraction` so a truncated source cannot become a mass deletion.
 
 ## Missing-model GitHub issues
 
@@ -498,3 +499,15 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `preserveDescriptions` is off: the runner must not re-inject a pre-factor authored description when the translator leaves it unset, or a full-inline → factored transition would recreate a lab-identical override. Created files get a leading header from `translateModel` naming the single reasoning wire path (`reasoning_effort`, "none" = off). `toggle` and `budget_tokens` controls are parsed (so a feed that publishes one never aborts the run) but never written, from feed or authored file: ai& has no separate on/off or token-budget field, so they cannot be true of this host.
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
+
+## Abacus Notes
+
+- Endpoint: `GET https://routellm.abacus.ai/v1/models` (public, no auth). `ABACUS_MODELS_URL` overrides it for staging dry runs.
+- Only `model_type = "text_generation"` is synced. RouteLLM also lists image, video, audio and classification SKUs, which the Abacus catalog has never carried. The four transcription ids it files under `text_generation` are intentional skips, not missing models.
+- RouteLLM is authoritative for rates (per-token strings), context/output limits, input/output modality kinds, and the `thinking` and `tools` flags. Rates are converted by x1e6 to USD per million tokens: the RouteLLM rate matches the first-party USD price for the same model every time it can be checked (gemini-3.7-flash 0.75/3.75, gpt-5.6-sol 4/20, claude-sonnet-5 2/10; accessed 2026-10-29).
+- `base_model` comes from the authored TOML when present, else from the lab metadata tree: the full id, then the id without its vendor prefix. The fast serving tier resolves through an explicit override (`claude-opus-5-5-fast` → `anthropic/claude-opus-5-5`) and gets a curated display name. The `muse-spark-1.3-contributor` tier was retired from the feed on 2026-11-12; its `BASE_MODEL_OVERRIDES`, `CURATED_LABELS` and `HEADER_NOTES` entries remain so the id recreates with the curated label and training-data disclosure if it returns. `route-llm` is an intentional skip: its local entry is complete and full-inline, so the sync neither rewrites it nor opens a missing-model issue; `retainSkipped: true` keeps the file when deletions are enabled. A new id with no lab entry is skipped from `missingModelID`, so the issue-fixer authors the full definition instead of the sync inventing dates or weights.
+- Lab-owned fields are never asserted from the feed; the module passes only the authored deltas and the two curated tier labels above. `reasoning` follows `thinking: true` and otherwise keeps the authored value. RouteLLM exposes no toggle, effort or budget request field: `/v1/models` publishes only `thinking`, and the provider audit (2026-06-25) documents no reasoning parameter. A reasoner on this host is therefore always-on with no caller control, so controls are never invented (an explicit authored `[]` is kept).
+- Host limit overrides are written only when the feed value is below the lab's documented cap; a feed value at or above the cap is treated as the API parameter ceiling and ignored, so the lab value is inherited and any older authored host limit is cleared. Only a feed that is silent for a field preserves the authored limit. An id whose lab documents an extensible window keeps the larger feed value: `Qwen/Qwen3.8-Flash-Next` publishes the advertised 1,000,000 context (native 262,144, extensible to 1M). This drops the oversized Qwen3.8-27B output (131,072 vs 32,768) and GLM-5.3/GLM-5.3-Flash context (1,048,576 vs 1,000,000). `qwen3.8-max` keeps its smaller 262,144 host cap.
+- RouteLLM Chat Completions accepts only `type: "function"` tools and documents no custom/freeform or grammar field, so GPT-5+ files publish no `tools.freeform` and record that evidence in their headers (accessed 2026-11-12).
+- Input modalities are the lab's MIME list filtered to the kinds RouteLLM accepts, so a narrower RouteLLM surface does not widen the model or fall back to generic `image`. An empty feed fails the run rather than deleting the local catalog.
+- The feed is authoritative for availability: ids it no longer lists are deleted, including the 40 ids #10776 had marked `status = "deprecated"` for manual review. An empty feed fails the run, and `minSourceFraction: 0.5` refuses a feed with fewer than half the local catalog's models before writing anything, so a truncated but schema-valid response cannot become a mass deletion. The 108 -> 79 migration passes because the live feed has 87 rows.
