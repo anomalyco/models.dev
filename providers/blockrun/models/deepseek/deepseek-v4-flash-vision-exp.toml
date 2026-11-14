@@ -1,0 +1,17 @@
+# BlockRun catalog 2026-09-29T23:31:20.524862+00:00 (source/catalog.json); upstream model facts inherited.
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[cost]
+input = 0.44
+output = 1.32
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[[reasoning_options]]
+type = "toggle"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "high", "max"]
