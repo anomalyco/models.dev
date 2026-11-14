@@ -1,0 +1,16 @@
+# XingChen-AGI — new provider declaration (OpenAI-compatible endpoint,
+# same pattern as providers/deepseek/provider.toml).
+name = "XingChen-AGI"
+# No first-party AI SDK package: an OpenAI-compatible provider requires npm + api.
+npm = "@ai-sdk/openai-compatible"
+# OpenCode AI entry point for the generic OpenAI-compatible transport
+# (same as every other OpenAI-compatible provider without its own package).
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# Public OpenAI-compatible endpoint (auth: standard Authorization: Bearer API key).
+api = "https://api-maas.teleai.com.cn/v1"
+# Environment variable users set their API key in.
+env = ["XINGCHEN_API_KEY"]
+# Public docs link: the provider's official OpenAI-compatible API documentation
+# (source cited by the model file headers). Page content is served from the
+# release date (2026-11-18) onward.
+doc = "https://www.teleai.com.cn/doc/SIZe8LfKHe3O01qwv9wk/CVP4v5gGODr9tzGyNvuI"

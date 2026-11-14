@@ -1,0 +1,54 @@
+# Xing4.1-Preview @ XingChen-AGI — provider model file, overrides only
+# (fields identical to the lab file are inherited via base_model).
+#
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default: true)
+#   Source: provider's official OpenAI-compatible API docs. The response carries
+#   the chain of thought in message.reasoning_content. Top-level reasoning_effort
+#   is not supported on this endpoint.
+#
+# Pricing (USD per 1M tokens):
+#   Off-peak: input $0.11 / cache read $0.0022 / output $0.45.
+#   Peak:     input $0.22 / cache read $0.0045 / output $0.90 (published USD).
+#   RMB rate card (published separately): off-peak 0.75 / 0.015 / 3, peak
+#   1.5 / 0.03 / 6 per 1M.
+#   The rate card publishes the USD list prices directly; the USD figures above
+#   are as published, not a conversion of the RMB figures (RMB 0.03 at ~6.7
+#   CNY/USD ≈ $0.0045, matching the published USD cache read).
+#   Input and output scale exactly 2x at peak; the published USD cache read is
+#   $0.0045 (not a clean 2x of $0.0022), so the peak multipliers below apply a
+#   factor of 2 to input/output and 0.0045/0.0022 (= 45/22) to cache read, so the
+#   effective figures match the rate card exactly.
+#   Peak window is defined in Beijing time (UTC+8): Mon-Fri 00:00-11:00. Cost
+#   conditions only accept fixed UTC, so it is encoded as the two non-overlapping
+#   rules below — Sun-Thu 16:00-24:00 UTC and Mon-Fri 00:00-03:00 UTC. Beijing
+#   time has no daylight saving, so the mapping is exact year-round.
+#
+# Caching: provider docs confirm implicit caching (explicit caching unsupported).
+#   No minimum-token threshold is published, so it is declared bare per AGENTS.md.
+schema = 2
+base_model = "xingchen-agi/xing4.1-preview"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.0022 }
+
+[cost.text.output]
+price = 0.45
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+# Beijing Mon-Fri 00:00-08:00 == UTC Sun-Thu 16:00-24:00.
+[[cost.multipliers]]
+when = { utc_days = { in = ["sun", "mon", "tue", "wed", "thu"] }, utc_hours = { gte = "16:00" } }
+factor = { text = { input = { price = 2, cache = { read = 2.045454545454545 } }, output = 2 } }
+
+# Beijing Mon-Fri 08:00-11:00 == UTC Mon-Fri 00:00-03:00.
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, utc_hours = { lt = "03:00" } }
+factor = { text = { input = { price = 2, cache = { read = 2.045454545454545 } }, output = 2 } }
