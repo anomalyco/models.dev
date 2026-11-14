@@ -6,9 +6,6 @@ base_model = "xai/grok-4.6"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 
-[limit]
-context = 500_000
-
 [cost.text.input]
 price = 2.7
 

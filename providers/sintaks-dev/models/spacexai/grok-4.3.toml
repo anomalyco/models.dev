@@ -6,9 +6,6 @@ base_model = "xai/grok-4.3"
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low", "medium", "high", "xhigh"] }
 
-[limit]
-context = 1_000_000
-
 [cost.text.input]
 price = 3.375
 

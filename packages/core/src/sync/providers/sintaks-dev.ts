@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { SyncProvider } from "../index.js";
+import { modelMetadata } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.sintaks.dev/v1/models";
 
@@ -46,12 +47,20 @@ export const sintaksDev = {
       if (entry !== undefined && price !== undefined) entry.price = price;
     }
     if (model.context_window !== undefined) {
+      const base = typeof v2.base_model === "string" ? modelMetadata(v2.base_model) : undefined;
+      const baseLimit = base?.limit as { context?: number } | undefined;
+      const baseContext = baseLimit?.context;
+      const contextWindow = baseContext === undefined
+        ? model.context_window
+        : Math.min(model.context_window, baseContext);
       const limit = (v2.limit ??= {}) as Record<string, unknown>;
-      limit.context = model.context_window;
+      if (contextWindow === baseContext) delete limit.context;
+      else limit.context = contextWindow;
       // A completion cannot exceed its total context. Keep a smaller existing
       // output cap, but never publish an inherited cap above the host limit.
       const output = typeof limit.output === "number" ? limit.output : resolved?.limit?.output;
-      if (output !== undefined && output > model.context_window) limit.output = model.context_window;
+      if (output !== undefined && output > contextWindow) limit.output = contextWindow;
+      if (Object.keys(limit).length === 0) delete v2.limit;
     }
     return { id: model.id, v2 };
   },

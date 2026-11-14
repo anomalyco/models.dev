@@ -26,7 +26,7 @@ test("updates reported prices and context while preserving authored metadata", (
   expect(result?.v2).toEqual({
     ...current,
     cost: { text: { input: { price: 3, cache: { read: 0.1 } }, output: { price: 4 } } },
-    limit: { context: 400_000, output: 100 },
+    limit: { output: 100 },
   });
   expect(current.cost.text.input.price).toBe(1);
 });
@@ -53,6 +53,43 @@ test("clamps an inherited output limit that exceeds the gateway context", () => 
     v2: () => ({ ...current, limit: undefined }),
   });
   expect(result?.v2.limit).toEqual({ context: 80, output: 80 });
+});
+
+test("factors equal and oversized gateway contexts against the lab, even with stale overrides", () => {
+  for (const reported of [400_000, 500_000]) {
+    const result = sintaksDev.translateModel({ ...row, context_window: reported }, {
+      ...context,
+      existing: () => ({ limit: { context: 600_000, output: 100 } }),
+      v2: () => ({ ...current, limit: { context: 600_000, output: 100 } }),
+    });
+    expect(result?.v2.limit).toEqual({ output: 100 });
+  }
+  const result = sintaksDev.translateModel({ ...row, context_window: 400_000 }, {
+    ...context, v2: () => ({ ...current, limit: { context: 400_000 } }),
+  });
+  expect(result?.v2.limit).toBeUndefined();
+});
+
+test("retains lower gateway context and clamps output against the final context", () => {
+  const result = sintaksDev.translateModel({ ...row, context_window: 80 }, {
+    ...context,
+    existing: () => ({ limit: { context: 600_000, output: 100 } }),
+    v2: () => ({ ...current, limit: { context: 600_000, output: 100 } }),
+  });
+  expect(result?.v2.limit).toEqual({ context: 80, output: 80 });
+  const repeated = sintaksDev.translateModel({ ...row, context_window: 80 }, {
+    ...context, v2: () => result!.v2,
+  });
+  expect(repeated?.v2).toEqual(result?.v2);
+});
+
+test("clamps output against the lab when the gateway reports a larger context", () => {
+  const result = sintaksDev.translateModel({ ...row, context_window: 500_000 }, {
+    ...context,
+    existing: () => ({ limit: { context: 500_000, output: 450_000 } }),
+    v2: () => ({ ...current, limit: { context: 500_000 } }),
+  });
+  expect(result?.v2.limit).toEqual({ output: 400_000 });
 });
 
 test("rejects empty, duplicate, and invalid inventories", () => {
