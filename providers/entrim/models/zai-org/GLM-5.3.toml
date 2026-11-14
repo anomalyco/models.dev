@@ -1,0 +1,24 @@
+# https://entrim.ai/ai-models/glm/glm-5-3-api (pricing, accessed 2026-10-28)
+# Limits from GET https://api.entrim.ai/v1/models: max_input_tokens 1048576, max_output_tokens 131072.
+# Effort: reasoning_effort = low|high|max (default max); thinking cannot be turned off.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2
