@@ -2,6 +2,7 @@
 # structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (model lists per region, 1,024-token minimum, explicit: cache_control ephemeral, 5-minute TTL, up to 4 markers on system/user/assistant/tool messages; tool definitions count as part of the system message, so changing tools changes the prefix).
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache.
 # Tools: Function Calling unsupported for role-playing models per https://www.alibabacloud.com/help/en/model-studio/text-generation-model
+# max_tokens_field: ignores max_completion_tokens, max_tokens caps output (live probe 2026-10-24); Model Studio lists it outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions)
 schema = 2
 name = "Qwen Plus Character (Japanese)"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
@@ -21,13 +22,15 @@ temperature = true
 top_p = true
 top_k = true
 system_updates = true
-effort_updates = false
 stream_usage = true
-cache = { supported = true, implicit = { min_tokens = 1_024 }, explicit = false }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]
 context = 8_192
 output = 512
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.5

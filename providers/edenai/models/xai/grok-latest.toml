@@ -3,10 +3,9 @@ base_model = "xai/grok-4.7"
 name = "Grok Latest (Grok 4.7)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 2

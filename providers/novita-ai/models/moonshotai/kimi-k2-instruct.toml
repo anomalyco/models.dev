@@ -4,12 +4,16 @@ schema = 2
 base_model = "moonshotai/kimi-k2-instruct"
 
 [capabilities]
-tools = { supported = true, updates = false }
-system_updates = false
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 output = 98_304
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.57

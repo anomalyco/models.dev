@@ -1,19 +1,15 @@
-# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
-# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
-# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
 base_model = "openai/o3-mini"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
+name = "OpenAI: o3-mini"
+description = "o3-mini is OpenAI's most recent small reasoning model, providing high intelligence at the same cost and latency targets of o1-mini."
 
 [modalities]
 input = ["text", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["high"] }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 1.1

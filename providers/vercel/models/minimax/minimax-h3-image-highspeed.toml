@@ -1,0 +1,18 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type image)
+# https://vercel.com/docs/ai-gateway/modalities/image-generation
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3-Image-Highspeed"
+
+[api.images]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/images" }
+
+[cost.text.input]
+price = 2.3
+
+[cost.text.output]
+price = 7.6
+
+[cost.image.output]
+price = 7.6

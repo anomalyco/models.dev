@@ -7,7 +7,7 @@ description = "Fast Gemini model balancing multimodal reasoning, tool use, and c
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = true, explicit = true }
+cache = { implicit = true, explicit = true }
 
 [cost.text.input]
 price = 0.5

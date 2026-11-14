@@ -1,0 +1,28 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-25); prices are USD per token there, per MTok here.
+# Not represented: web search $0.005 per request (no v2 per-request field).
+# Effort: reasoning_effort = low|medium|high|xhigh
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-25): supported_parameters lists reasoning_effort; published enum reasoning_effort = low|medium|high|xhigh.
+#   Baseline: lab providers/xai grok-4.7 = effort low|medium|high|xhigh; peer providers/openrouter x-ai/grok-4.7 = effort low|medium|high|xhigh.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_000 } }
+price = 12

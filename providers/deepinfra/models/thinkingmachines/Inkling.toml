@@ -1,3 +1,4 @@
+# Output limit: capped at the 524,288 context; no host cap is documented and the 1,048,576 from the base model or host listing is larger.
 # Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
 #   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 11136/11275 -> None/11291; 11136/11275 -> None/11291]
 #   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 10880/10987 -> None/11029; 10880/10987 -> None/11029]
@@ -6,15 +7,15 @@ base_model = "thinkingmachines/inkling"
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
-system_updates = false
 
 [limit]
 context = 524_288
+output = 524_288
 
 [cost.text.input]
 price = 0.95

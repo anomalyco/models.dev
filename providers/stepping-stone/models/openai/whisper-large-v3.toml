@@ -1,0 +1,14 @@
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-openai
+# 0.0020 CHF per audio second = 0.12 CHF per audio minute, converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_openai/whisper-large-v3 (POST /v1/audio/transcriptions)
+schema = 2
+v2_only = true
+base_model = "openai/whisper-large-v3"
+
+[api.transcriptions]
+base_url = "https://llm.stoney-cloud.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.1428

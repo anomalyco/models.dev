@@ -1,0 +1,31 @@
+# Sources (accessed 2026-11-07):
+# - https://docs.morphllm.com/models/reflex and https://docs.morphllm.com/api-reference/endpoint/systemone: "Morph's decision
+#   model, trained to read a state and answer typed questions about it"; POST /v1/systemone; noul, choice and score questions;
+#   65,536-token context; images as base64 data URLs in PNG, JPEG or WebP (remote URLs, audio and video return 422); output_tokens
+#   is always 0. Requests sent as `d3-ultra`, its launch name, still work.
+# - https://x.com/morphllm/status/2118040767478526460: "a 27B decision model based on Qwen 3.5".
+# - Release: first listed 2026-11-03 (https://openrouter.ai/api/v1/models, morph/reflex, created 1793741446).
+# Sampling: the SystemOneRequest schema takes only model, state, images, questions and instructions.
+schema = 2
+v2_only = true
+type = "decision"
+name = "Reflex"
+description = "Morph's 27B decision model that returns probabilities for typed choice, yes/no and score questions about text, JSON or images"
+family = "morph"
+open_weights = false
+release_date = "2026-11-03"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 65_536
+output = 0

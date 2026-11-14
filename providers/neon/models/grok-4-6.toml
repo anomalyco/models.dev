@@ -18,15 +18,14 @@ base_model = "xai/grok-4.6"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-cache = { supported = true, implicit = true }
-
-[limit]
-output = 524_288
+cache = { implicit = true }
 
 [api.responses]
 base_url = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
 legacy_shape = "responses"
+
+[api.chat-completions]
 
 [cost.text.input]
 price = 2

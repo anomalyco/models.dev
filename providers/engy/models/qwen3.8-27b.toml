@@ -10,14 +10,13 @@ schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
 [modalities]
-input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 1_001_536

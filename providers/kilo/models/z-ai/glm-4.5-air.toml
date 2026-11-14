@@ -6,14 +6,13 @@ base_model = "zhipuai/glm-4.5-air"
 description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
-price = 0.13
-cache = { read = 0.025 }
+price = 0.2
+cache = { read = 0.03 }
 
 [cost.text.output]
-price = 0.85
+price = 1.1

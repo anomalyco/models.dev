@@ -5,9 +5,8 @@ base_model = "mistral/mistral-small-24b-instruct-2501"
 name = "Mistral Small 24B"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = false
-effort_updates = false
 
 [limit]
 input = 32_768

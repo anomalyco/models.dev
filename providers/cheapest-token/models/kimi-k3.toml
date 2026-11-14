@@ -1,0 +1,32 @@
+# CheapestToken relay of moonshotai/kimi-k3 (routed via digitalocean: openai/kimi-k3).
+# Override-only file: identity/description/dates/limits inherit from the base_model lab entry
+# (the digitalocean peer also sets no limits, so the lab 1_048_576 / 131_072 inherit).
+# Prices: our billed reseller USD per 1M from GET https://api.cheapest-token.com/api/v1/models
+# (input 4 / our output 12 / cached 1) — our reseller prices, intentionally different from
+# moonshot list prices (3 / 15) and the DO peer's (3 / 15).
+# Effort: reasoning_effort = none|low|high|max, live on our /v1: low/high/max → 200 with
+# reasoning (2026-10-31); none → 200 with reasoning off (2026-10-31, 3/3 runs; re-probed
+# 2026-11-01 A/B on the same prompt: none → 0 reasoning tokens, no reasoning_content, ~1.4s;
+# unset → 39 reasoning tokens, ~3.5s). none is the off switch, so it is authored even though
+# moonshot native and the DO peer exclude the level: it works reliably on our route.
+# Modalities: input = text + images (no video) — matches the DO same-surface peer
+# (providers/digitalocean/models/kimi-k3.toml:13-15), which serves Kimi K3 text/image only;
+# the lab video/* MIME list is not served on this route.
+# Tools: plain tool-call round trip verified live on our /v1 2026-10-31.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[cost.text.input]
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 12

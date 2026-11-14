@@ -11,7 +11,7 @@ base_model = "alibaba/qwen3-8b"
 [capabilities]
 tools = { supported = true, choice = ["auto", "required", "tool", "none"] }
 reasoning = { supported = true, toggle = true }
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.195

@@ -10,16 +10,11 @@
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 1_113_088

@@ -1,0 +1,26 @@
+# Source (accessed 2026-10-25): https://inference.phala.com/v1/models; cache: pricing.input_cache_read.
+# Toggle: reasoning.enabled = true|false (off verified); reasoning_effort=none: 0 tokens; default/xhigh: 193/193 (2026-10-25).
+# Effort: reasoning_effort = low|medium|xhigh (accepted 2026-10-25)
+# Budget: reasoning.max_tokens (positive only; gateway rejects 0, reasoning.rs:30–31); 64 returned 2 reasoning tokens (2026-10-25); bounds not verified on this host.
+# Limits: catalog context_length 1000000; catalog max_output_length 262144 (a separate field from the native thinking_budget).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 2.5

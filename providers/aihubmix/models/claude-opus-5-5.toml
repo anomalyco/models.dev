@@ -13,10 +13,10 @@ base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
+cache = { explicit = { ttl = ["5m", "1h"], targets = ["tools", "system", "messages"] } }
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 4

@@ -19,16 +19,24 @@
 # Pricing: $2.50/$10 per 1M as added on launch day (2026-06-09, models.dev commit 7b65a7c6d by Cohere's team).
 #   Open question: https://cohere.com/pricing lists Command A+ under "Free" ("API key" $0, "Model download" $0)
 #   since launch (Wayback captures 2026-06-14 through 2026-10-07); unchanged until Cohere confirms.
+# APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
+# Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes and wasn't checked for it.
 schema = 2
 base_model = "cohere/command-a-plus-05-2026"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { min = 1 } }
 structured_output = true
-system_updates = true
-effort_updates = false
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
+
+[api.cohere-chat]
+capabilities = { system_updates = true }
+
+[api.chat-completions]
+base_url = "https://api.cohere.ai/compatibility/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/cohere/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 2.5

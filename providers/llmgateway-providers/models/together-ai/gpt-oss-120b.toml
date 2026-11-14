@@ -6,6 +6,9 @@ name = "GPT OSS 120B (Together AI)"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
 
+[limit]
+output = 32_768
+
 [cost.text.input]
 price = 0.15
 

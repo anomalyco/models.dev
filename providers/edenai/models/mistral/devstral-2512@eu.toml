@@ -1,0 +1,17 @@
+schema = 2
+base_model = "mistral/devstral-2512"
+name = "Devstral 2 (EU)"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.44
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 2.2

@@ -1,0 +1,30 @@
+# Budget: thinking_token_budget (integer reasoning tokens)
+# Lab: public GET /v1/models lists metadata.huggingface_id
+# Qwen/Qwen3.8-27B-FP8 for this id (checked 2026-11-14).
+# This is an FP8 build of Qwen3.8-27B.
+# Source: https://api.neuralwatt.com/v1/models
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+name = "Neuralwatt Small (flex)"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"], budget = {} }
+structured_output = true
+
+[limit]
+context = 262_128
+output = 131_072
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.2925
+cache = { read = 0.1625 }
+
+[cost.text.output]
+price = 2.08

@@ -1,0 +1,26 @@
+# Model ID from BytePlus ModelArk model list: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-list
+# USD pricing from BytePlus ModelArk pricing page: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-pricing
+# BytePlus ModelArk is the overseas brand of Volcengine Ark: same Ark API surface,
+# different base URL (ark.ap-southeast.bytepluses.com) and API key.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# (lab baseline for this base_model, providers/deepseek/models/deepseek-v4-pro.toml.
+#  The Ark April-generation peer declares the toggle only.)
+# top_k: the Ark Chat API takes only temperature and top_p, so the lab's top_k = true is overridden.
+# structured_output: the BytePlus model list marks this model "No" for structured output.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+top_k = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.32
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 3.96

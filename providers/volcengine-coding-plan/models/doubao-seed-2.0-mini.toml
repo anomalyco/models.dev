@@ -1,0 +1,33 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-11-10). Subscription tier: no per-token price.
+# Effort: reasoning_effort = none|low|high, POST /api/coding/v3/chat/completions.
+# Copied per relay convention from the measured doubao-seed peers on this
+# endpoint (doubao-seed-evolving, see provider.toml for the n=4-6 measurements);
+# not re-measured here. The console description says the model defaults to
+# thinking and supports disabling it, which 'none' covers; the pay-as-you-go
+# host (providers/volcengine) measured that none/minimal are the off switch and
+# exposes the full 7-level set on /api/v3.
+# Output limit: the lab default is 32_000, but the Ark model list
+# (https://www.volcengine.com/docs/82379/1330310, accessed 2026-11-10) states
+# 最大回答 128k for doubao-seed-2-0-mini-260428, and the pay-as-you-go entry for
+# the same snapshot measured max_tokens=131072 accepted on this backend.
+# Overridden below.
+schema = 2
+base_model = "bytedance-seed/seed-2.0-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

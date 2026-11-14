@@ -6,11 +6,7 @@ base_model = "respan/span-01"
 structured_output = false
 
 [api.systemone]
-sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter" }
-
-[api.decisions]
-base_url = "https://openrouter.ai/api/alpha"
-sdk = { opencodeai = "none" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
 
 [cost.text.input]
 price = 0.02

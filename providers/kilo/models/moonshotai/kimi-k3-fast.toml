@@ -1,0 +1,24 @@
+# Output limit: https://api.kilo.ai/api/gateway/models lists max_completion_tokens 131072 (accessed 2026-11-13); the lab's raised cap would exceed this host's context.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+name = "MoonshotAI: Kimi K3 Fast"
+description = "Fast version of Kimi’s flagship model for long-horizon coding and end-to-end knowledge work, with a 1M-token context window."
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[cost.text.input]
+price = 6
+cache = { read = 0.6 }
+
+[cost.text.output]
+price = 22.5

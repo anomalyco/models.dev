@@ -1,0 +1,35 @@
+schema = 2
+name = "LFM3-1.7B"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+family = "liquid"
+open_weights = true
+release_date = "2026-11-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 8_192
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.2

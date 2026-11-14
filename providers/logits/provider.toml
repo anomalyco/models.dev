@@ -1,0 +1,12 @@
+# Sources (accessed 2026-11-09):
+# - API base URL: Logits API docs, https://logits.com/docs
+# - Key variable: LOGITS_API_KEY. Keys start with "logits_live_" (https://logits.com/docs).
+# - Public model list: GET https://api.logits.com/v1/models (no authentication)
+# Chat Completions is the default API. /v1/responses also exists; it is not
+# listed per model until it is checked live for each model.
+name = "Logits"
+env = ["LOGITS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.logits.com/v1"
+doc = "https://logits.com/docs"

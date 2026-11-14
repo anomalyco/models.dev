@@ -12,7 +12,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"] } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 structured_output = true
 
 [limit]

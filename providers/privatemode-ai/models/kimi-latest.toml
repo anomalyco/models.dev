@@ -1,3 +1,4 @@
+# Output limit: capped at the 256,000 context; no host cap is documented and the 262,144 from the base model or host listing is larger.
 # Sources (accessed 2026-09-16):
 # Alias routes to the latest available Kimi model (currently Kimi K2.6):
 # https://docs.privatemode.ai/models/overview/#kimi-k26
@@ -21,6 +22,7 @@ structured_output = true
 
 [limit]
 context = 256_000
+output = 256_000
 
 [cost.text.input]
 price = 1.791

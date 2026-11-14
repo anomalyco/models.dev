@@ -1,0 +1,13 @@
+schema = 2
+base_model = "mistral/codestral-latest"
+name = "Codestral (latest) (EU)"
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.033 }
+
+[cost.text.output]
+price = 0.99

@@ -1,0 +1,31 @@
+# Source: https://api.sparrowcodes.com/v1/models (accessed 2026-11-11): pricing_usd, context_length,
+# max_output_tokens and input_modalities. Served on Chat Completions only.
+# Gateway validation: reasoning_effort must be minimal, low, medium or high (anything else, e.g. max or none, is a 400).
+# reasoning_effort is forwarded, but this model only has on/off thinking upstream and the gateway has no
+# off value, so no caller control is listed.
+# Modalities: input_modalities lists text only for this model on this host.
+# Cache: upstream prompt caching is automatic (no markers); cache reads are reported in
+# usage.prompt_tokens_details.cached_tokens and billed at the cache read price below.
+# Limits: context is inherited from the lab entry (the gateway's context_length listing rounds up past the lab's documented window).
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true }
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.28

@@ -2,10 +2,9 @@ schema = 2
 base_model = "zhipuai/glm-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 202_752

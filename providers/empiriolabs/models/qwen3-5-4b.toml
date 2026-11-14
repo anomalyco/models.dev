@@ -13,7 +13,7 @@ description = "Qwen3.5 4B is a low-cost multimodal reasoning model with 256K con
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1_024, max = 32_768 } }
 structured_output = true
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [limit]
 output = 32_768

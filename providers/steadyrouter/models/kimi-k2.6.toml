@@ -1,0 +1,11 @@
+# Toggle: thinking.type = enabled|disabled
+# Live probe through https://api.steadyrouter.com/v1/chat/completions, 2026-11-06.
+# Control copied from the lab entry. Both values were accepted on 2026-11-06, but those replies carried no reasoning_content either way, so the effect was not confirmed there. The 2026-11-02 probe did return reasoning_content.
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

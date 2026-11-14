@@ -1,0 +1,30 @@
+# https://huggingface.co/nomic-ai/nomic-embed-text-v1.5 (Apache-2.0; 8192-token input, 768 dimensions with Matryoshka truncation)
+# Context: max_seq_length 8192 (https://huggingface.co/nomic-ai/nomic-embed-text-v1.5/blob/main/sentence_bert_config.json).
+# Repository created 2024-02-10 (Hugging Face API createdAt).
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Nomic Embed Text v1.5"
+description = "Long-context open text embedding model with resizable output dimensions"
+open_weights = true
+release_date = "2024-02-10"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nomic-ai/nomic-embed-text-v1.5"

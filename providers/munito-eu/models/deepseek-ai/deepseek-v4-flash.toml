@@ -1,0 +1,27 @@
+# Sources (accessed 2026-10-24):
+# Prices, context and maximum output: https://docs.munito.ai/models/deepseek-ai-deepseek-v4-flash
+# Reasoning: https://docs.munito.ai/reasoning. The reasoning is in message.reasoning and delta.reasoning,
+# and the API reads reasoning_content (or reasoning) in the history.
+# Cache: automatic prefix cache, no cache_control markers, no cache-write fee (https://docs.munito.ai/prompt-caching).
+# Off is reasoning_effort = none (or chat_template_kwargs.thinking = false). Graded levels, no toggle.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.022 }
+
+[cost.text.output]
+price = 0.28

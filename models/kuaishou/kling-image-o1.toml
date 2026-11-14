@@ -1,0 +1,34 @@
+# Sources (accessed 2026-11-12):
+# - https://kling.ai/document-api/guides/capability-map/image (Kling Image O1, API ID kling-image-o1: text and image input,
+#   1K/2K output, single image generation and multi-image to image; the map marks series generation as not supported)
+# - https://kling.ai/document-api/api/image/o1/image-generation (image_list: .jpg/.jpeg/.png, up to 10 reference images and
+#   elements combined)
+# Released 2025-12-15 ("Image Generation | Omni-Image model launched"): https://kling.ai/document-api/updates/api
+#   Kling's API changelog is the only official dated source found; the app may have shipped it a few days earlier.
+# Output: the API returns image URLs and doesn't document the file format, so output stays generic.
+schema = 2
+v2_only = true
+type = "image"
+name = "Kling IMAGE O1"
+description = "Unified Kling image model for generation and editing from text and up to 10 reference images"
+open_weights = false
+release_date = "2025-12-15"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+url = "https://kling.ai/document-api/api/image/o1/image-generation"
+type = "docs"

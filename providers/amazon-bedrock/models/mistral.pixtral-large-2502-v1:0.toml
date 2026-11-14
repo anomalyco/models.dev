@@ -12,10 +12,8 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = false
-system_updates = false
-effort_updates = false
 
 [cost.text.input]
 price = 2

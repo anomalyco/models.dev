@@ -8,7 +8,7 @@ description = "Fast Claude model for responsive assistance, classification, and 
 
 [capabilities]
 reasoning = { supported = true, budget = { min = 1_024 } }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"

@@ -1,15 +1,16 @@
+# Output limit: capped at the 256,000 context; no host cap is documented and the 262,144 from the base model or host listing is larger.
 schema = 2
 base_model = "moonshotai/kimi-k2-thinking"
 name = "Kimi K2 Thinking (Amazon Bedrock)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 256_000
+output = 256_000
 
 [cost.text.input]
 price = 0.6

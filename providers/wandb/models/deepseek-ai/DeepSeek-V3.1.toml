@@ -5,18 +5,17 @@ name = "DeepSeek V3.1"
 description = "A large hybrid model that supports both thinking and non-thinking modes via prompt templates."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 161_000
 output = 161_000
 
 [cost.text.input]
-price = 0.55
-cache = { read = 0.55 }
+price = 0.5
+cache = { read = 0.2 }
 
 [cost.text.output]
-price = 1.65
+price = 1.5

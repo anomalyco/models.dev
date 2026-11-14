@@ -10,11 +10,10 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
 temperature = true
-effort_updates = false
 
 [limit]
 context = 101_072

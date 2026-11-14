@@ -1,5 +1,6 @@
 # Modalities: Sonar image formats PNG, JPEG, WEBP, GIF, https://docs.perplexity.ai/docs/sonar/media
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-23): A mid-conversation system message is accepted and the prefix stays cached (9501 vs warm 9521, 2 trials), though Sonar didn't switch to French. This host lists no cached-input price, so there is no cache to lose and system_updates stays true; effort_updates and tools.updates need a cache and stay off.
+# Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
 schema = 2
 name = "Sonar"
 description = "Sonar search model for current answers, retrieval, and citation-backed chat"
@@ -13,15 +14,24 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 temperature = true
-system_updates = true
-effort_updates = false
 
 [limit]
 context = 127_000
 output = 8_000
+
+[api.chat-completions]
+capabilities = { system_updates = true }
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
 price = 0.25

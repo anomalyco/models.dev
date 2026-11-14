@@ -15,7 +15,7 @@ base_model = "thinkingmachines/inkling"
 
 [capabilities]
 reasoning = { supported = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = false
 
 [limit]
@@ -23,6 +23,12 @@ output = 262_144
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 1.2

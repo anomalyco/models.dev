@@ -1,0 +1,44 @@
+# Source: GET https://api.isoquant.ai/v1/models (accessed 2026-11-10).
+# Pricing (nano-USD per token -> USD per million): 70/25/150 = $0.07/$0.025/$0.15
+# input/cached input/output. Prompt caching is automatic with no write price.
+# Reasoning: the host publishes exactly `low|high|max` (default max) on all three APIs:
+# chat `reasoning_effort`, messages `output_config.effort`, responses `reasoning.effort`.
+# It exposes no off switch.
+# Chat Completions returns the trace in `reasoning_content`.
+# Tools: the host reports `strict_tools: true` and tool_choice auto/none/required/tool on all
+# three APIs (named maps to tool); its docs state "Strict function tools are supported."
+# Output: the host reports `output_limit.policy = remaining_context` with no numeric cap, so
+# the lab's 131,072 output limit stands rather than inventing a number.
+# Modalities: the host advertises text+image only; the lab's video and PDF inputs are not
+# advertised, so only the lab's JPEG/PNG image formats remain.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.15

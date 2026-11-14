@@ -1,3 +1,4 @@
+# Output limit: capped at the 131,072 context; no host cap is documented and the 131,702 from the base model or host listing is larger.
 # Toggle: reasoning.enabled = true|false
 # Ambient request schema: https://api.ambient.xyz/openapi.json
 # Model controls: https://huggingface.co/MiniMaxAI/MiniMax-M3 (thinking on/off; no effort or budget)
@@ -11,14 +12,13 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
 
 [limit]
-context = 262_144
-output = 262_144
+context = 131_072
+output = 131_072
 
 [cost.text.input]
 price = 0.23
