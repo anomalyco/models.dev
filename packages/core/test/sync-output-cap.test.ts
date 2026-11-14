@@ -1,6 +1,10 @@
 import { expect, test } from "bun:test";
 
-import { capOutputAtContext } from "../src/sync/index";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+
+import { capOutputAtContext, syncProvider } from "../src/sync/index";
 
 const model = (limit?: { context?: number; input?: number; output?: number }) =>
   ({ id: "m", base_model: "lab/m", ...(limit ? { limit } : {}) }) as any;
@@ -38,4 +42,68 @@ test("leaves models that don't output text alone", () => {
   // Lab metadata reaches sync in v1 form, where an embedding's output is "text".
   const embed = model({ context: 512, output: 1_024 });
   expect(capOutputAtContext(embed, { modalities: { output: ["text"] } }, true)).toBe(embed);
+});
+
+const lab = (output: string, limit: string) => `schema = 2
+name = "Lab Model"
+description = "Test model"
+open_weights = false
+release_date = "2026-01-01"
+
+[modalities]
+input = ["text"]
+output = ["${output}"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+${limit}
+`;
+
+async function syncHost(labOutput: string, labLimit: string) {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-output-cap-"));
+  try {
+    const modelsDir = path.join(root, "providers", "host", "models");
+    await mkdir(modelsDir, { recursive: true });
+    await mkdir(path.join(root, "models", "acme"), { recursive: true });
+    await Bun.write(path.join(root, "providers", "host", "provider.toml"), 'name = "Host"\nnpm = "@ai-sdk/openai-compatible"\nenv = ["HOST_API_KEY"]\napi = "https://example.com/v1"\ndoc = "https://example.com"\n');
+    await Bun.write(path.join(root, "models", "acme", "m.toml"), lab(labOutput, labLimit));
+    await syncProvider(
+      {
+        id: "host",
+        name: "Host",
+        modelsDir,
+        async fetchModels() {
+          return [{ id: "m" }];
+        },
+        parseModels: (raw) => raw as { id: string }[],
+        translateModel: (source) => ({
+          id: source.id,
+          model: { base_model: "acme/m", limit: { context: 512, output: 1_024 } } as any,
+        }),
+      },
+      { openIssues: false },
+    );
+    return await readFile(path.join(modelsDir, "m.toml"), "utf8");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+}
+
+test("sync keeps an output above the context when the lab outputs no text", async () => {
+  const written = await syncHost("embedding", "context = 8_192\noutput = 0");
+  expect(written).toContain("context = 512");
+  expect(written).toContain("output = 1_024");
+});
+
+test("sync caps an output above the context when the lab outputs text", async () => {
+  const written = await syncHost("text", "context = 8_192\noutput = 4_096");
+  expect(written).toContain("context = 512");
+  expect(written).toContain("output = 512");
+  expect(written).not.toContain("output = 1_024");
 });
