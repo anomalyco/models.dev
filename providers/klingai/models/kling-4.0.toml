@@ -15,7 +15,7 @@ base_model = "kuaishou/kling-v4.0"
 
 [api.videos]
 base_url = "https://api-singapore.klingai.com"
-sdk = { aisdk = "none", opencodeai = "none" }
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/klingai/videos" }
 
 [cost.video.output]
 unit = "second"
