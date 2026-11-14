@@ -1,0 +1,19 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: R1-0528 reasons always-on with no request field (huggingface, meganova entries agree).
+# kilo maps a single 'high' level; left out as unverified.
+schema = 2
+base_model = "deepseek/deepseek-r1-0528"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.57
+cache = { read = 0.23 }
+
+[cost.text.output]
+price = 2.29

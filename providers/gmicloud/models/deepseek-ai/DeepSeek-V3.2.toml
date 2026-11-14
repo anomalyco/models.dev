@@ -1,0 +1,19 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: relay baseline (zenmux, llmgateway).
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 163_840
+
+[cost.text.input]
+price = 0.29
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.43

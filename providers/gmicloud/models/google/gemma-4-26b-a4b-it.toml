@@ -1,0 +1,20 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: none. Affirmative evidence, not uncertainty: same-surface OpenAI-gateway relays do not
+# forward gemma reasoning controls (providers/aimlapi probe: reasoning_effort is ignored, invalid values
+# return 200, and toggle/budget keys are dropped by the gateway; providers/cortecs agrees), and the lab
+# entry is supported-only. Toggle claims require an exact GMI wire path, which does not exist here.
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 256_000
+
+[cost.text.input]
+price = 0.13
+
+[cost.text.output]
+price = 0.4
