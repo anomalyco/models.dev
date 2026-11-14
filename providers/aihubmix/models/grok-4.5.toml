@@ -1,3 +1,4 @@
+# Output limit: capped at the 500,000 context; no host cap is documented and the 1,000,000 from the base model or host listing is larger.
 # Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
 # Cache: https://docs.aihubmix.com/cn/practices/prompt-caching.md
 schema = 2
@@ -9,7 +10,7 @@ structured_output = true
 cache = { implicit = true }
 
 [limit]
-output = 1_000_000
+output = 500_000
 
 [cost.text.input]
 price = 2.2

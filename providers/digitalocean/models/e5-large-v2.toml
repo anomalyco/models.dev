@@ -1,3 +1,4 @@
+# Output limit: capped at the 512 context; the vector size it listed is not a token limit, and the sync caps it the same way.
 # Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/embeddings)
 # Prices: https://docs.digitalocean.com/products/inference/details/pricing/
 schema = 2
@@ -5,7 +6,7 @@ base_model = "intfloat/e5-large-v2"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 
 [limit]
-output = 1_024
+output = 512
 
 [api.embeddings]
 sdk = { opencodeai = "@opencode/ai/providers/digitalocean/embeddings" }

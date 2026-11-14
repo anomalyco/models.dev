@@ -1,3 +1,4 @@
+# Output limit: capped at the 2,048 context; the vector size it listed is not a token limit, and the sync caps it the same way.
 # Source: https://api-gateway.merge.dev/v1/models?model=google%2Fgemini-embedding-001 (accessed 2026-07-21)
 # Embeddings: POST /v1/ai-sdk/embeddings (merge-gateway-ai-sdk-provider embedding model)
 schema = 2
@@ -7,7 +8,7 @@ base_model = "google/gemini-embedding-001"
 structured_output = false
 
 [limit]
-output = 4_096
+output = 2_048
 
 [api.embeddings]
 sdk = { opencodeai = "none" }

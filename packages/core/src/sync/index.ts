@@ -427,9 +427,12 @@ export async function syncProvider<SourceModel>(
       resolvedReasoning,
       baseReasoningOptions,
     );
-    const withDescription = provider.preserveDescriptions === false
-      ? withReasoningOptions
-      : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored);
+    const withDescription = capOutputAtContext(
+      provider.preserveDescriptions === false
+        ? withReasoningOptions
+        : preserveDescription(withReasoningOptions, existing.get(relativePath)?.authored),
+      translatedBase === undefined ? undefined : modelMetadata?.[translatedBase],
+    );
     const parsed = SyncedAuthoredModel.safeParse(stripUndefined({
       id: translated.id,
       ...preserveStructuredOutput(
@@ -752,6 +755,25 @@ function withBaseModalities<T extends z.infer<typeof SyncedAuthoredModel>>(
       output: modalities.output ?? base?.output,
     },
   };
+}
+
+// Output is carved out of the context window, so a synced or inherited output
+// above the resolved context (a host serving a smaller window than the lab) is
+// capped at the context. validate rejects an output above the context.
+export function capOutputAtContext<T extends SyncedModel>(
+  model: T,
+  base: Record<string, unknown> | undefined,
+): T {
+  const baseLimit = base?.limit as { context?: unknown; output?: unknown } | undefined;
+  const limit = model.limit as { context?: number; output?: number } | undefined;
+  const context = limit?.context ?? (typeof baseLimit?.context === "number" ? baseLimit.context : undefined);
+  const output = limit?.output ?? (typeof baseLimit?.output === "number" ? baseLimit.output : undefined);
+  if (context === undefined || context <= 0 || output === undefined || output <= context) return model;
+  // A capped value equal to the lab's is inherited, not written.
+  const { output: _drop, ...rest } = limit ?? {};
+  const capped = baseLimit?.output === context ? rest : { ...rest, output: context };
+  const { limit: _limit, ...others } = model;
+  return (Object.keys(capped).length > 0 ? { ...others, limit: capped } : others) as T;
 }
 
 export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | undefined): SyncedModel {

@@ -1,3 +1,4 @@
+# Output limit: capped at the 500,000 context; no host cap is documented and the 524,288 from the base model or host listing is larger.
 # Effort: Chat Completions `reasoning_effort` and Responses `reasoning.effort`.
 # Native dialect is openai-responses: POST /openai/v1/responses returns 200.
 # Chat Completions also returns 200 and accepts `reasoning_effort`.
@@ -21,7 +22,7 @@ structured_output = true
 cache = { implicit = true }
 
 [limit]
-output = 524_288
+output = 500_000
 
 [api.responses]
 base_url = "${NEON_AI_GATEWAY_BASE_URL}/openai/v1"

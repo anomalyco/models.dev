@@ -1,3 +1,4 @@
+# Output limit: capped at the 16,384 context; no host cap is documented and the 65,536 from the base model or host listing is larger.
 schema = 2
 base_model = "alibaba/qwen3.6-27b"
 
@@ -6,6 +7,7 @@ reasoning = { supported = true }
 
 [limit]
 context = 16_384
+output = 16_384
 
 [cost.text.input]
 price = 0.15

@@ -1,3 +1,4 @@
+# Output limit: capped at the 256,000 context; no host cap is documented and the 384,000 from the base model or host listing is larger.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash 1017 (Scaleway)"
@@ -8,6 +9,7 @@ structured_output = false
 
 [limit]
 context = 256_000
+output = 256_000
 
 [cost.text.input]
 price = 0.66312

@@ -1,3 +1,4 @@
+# Output: capped at the 8,192 context. The Models API reports outputTokenLimit 16,384 for audio tokens, which is larger than the context.
 # Sources:
 # - https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash-lite-tts
 # - https://ai.google.dev/gemini-api/docs/speech-generation
@@ -25,4 +26,4 @@ top_k = true
 
 [limit]
 context = 8_192
-output = 16_384
+output = 8_192

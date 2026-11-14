@@ -4,6 +4,7 @@ import { generate } from "../src/generate";
 import { generateV2 } from "../src/generate-v2";
 import { explicitFalseFlags, isSchemaV2, readLabMetadata } from "../src/translate";
 import { logoErrors } from "../src/logo";
+import { limitErrors, type LimitEntry } from "../src/limits";
 import path from "path";
 import { ZodError } from "zod";
 
@@ -60,7 +61,28 @@ try {
     readLabMetadata(path.join(rootDir, file));
   }
   const result = await generate(providersDir);
-  await generateV2(providersDir);
+  const v2 = await generateV2(providersDir);
+  const labLimits: LimitEntry[] = [];
+  for await (const file of new Bun.Glob("models/**/*.toml").scan({ cwd: rootDir, followSymlinks: true })) {
+    const toml = await import(path.join(rootDir, file), { with: { type: "toml" } }).then((mod) => mod.default);
+    labLimits.push({ file, limit: toml.limit });
+  }
+  const overLimit = limitErrors([
+    ...labLimits,
+    ...Object.entries(v2).flatMap(([providerID, provider]) =>
+      Object.entries(provider.models).map(([id, model]) => ({
+        file: `providers/${providerID}/models/${id}.toml`,
+        limit: model.limit,
+      })),
+    ),
+  ]);
+  if (overLimit.length > 0) {
+    console.error(
+      "A model's output and input limits can't be larger than its context (resolved after base_model merge):\n" +
+        overLimit.map((error) => `  ${error}`).join("\n"),
+    );
+    process.exit(1);
+  }
   // OpenCode inference serves each protocol under its own path, so the
   // provider-level `api` only works for OpenAI-format models.
   const missing = ["opencode", "opencode-go"].flatMap((providerID) =>
