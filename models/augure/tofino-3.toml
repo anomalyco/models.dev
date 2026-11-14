@@ -1,0 +1,27 @@
+# Augure (Toronto) builds this model. Lab facts only; hosts set prices and APIs.
+# Sources (accessed 2026-11-04): https://augureai.ca/docs/models (256K context, 16,384 output cap;
+#   thinking always off), https://augureai.ca/docs/api (image_url and PDF file parts on every
+#   model; temperature and top_p, no top_k; tools), https://augureai.ca/docs/changelog
+#   (launched 2026-08-20).
+# Facts cross-checked against Augure's own provider files in models.dev PR #11786.
+# Knowledge cutoff is not published by Augure.
+schema = 2
+name = "Tofino 3"
+description = "Augure's fast everyday model for bilingual drafting, translation, extraction and classification, with no thinking phase"
+open_weights = false
+release_date = "2026-08-20"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 262_144
+output = 16_384

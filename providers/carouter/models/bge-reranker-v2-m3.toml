@@ -1,0 +1,17 @@
+# CARouter routes this model to CARouter Cloud (Ottawa, ON; Canadian-owned, on by default).
+# Price: Free plan CAD 0.0115 in / 0.0 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# POST /v1/rerank in Cohere's and Jina's shape (query, documents, top_n); billed on input tokens. No
+#   AI SDK reranking provider has been checked against it, so no SDK is named.
+schema = 2
+base_model = "baai/bge-reranker-v2-m3"
+
+[api.rerank]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.0082
+
+[cost.text.output]
+price = 0

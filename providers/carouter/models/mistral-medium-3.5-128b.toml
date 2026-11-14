@@ -1,0 +1,25 @@
+# CARouter routes this model to Scaleway (Paris, FR; foreign-owned, off by default).
+# Price: Free plan CAD 2.7754 in / 13.8768 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# Same model Scaleway serves as mistral-medium-3.5-128b (base mistral/mistral-medium-2604). Effort:
+#   reasoning_effort passes through: none|high
+#   (providers/scaleway/models/mistral-medium-3.5-128b.toml). Context 180,000 per CARouter's
+#   catalog.
+schema = 2
+base_model = "mistral/mistral-medium-2604"
+name = "Mistral Medium 3.5 128B"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[limit]
+context = 180_000
+output = 16_384
+
+[cost.text.input]
+price = 1.988
+
+[cost.text.output]
+price = 9.9397
