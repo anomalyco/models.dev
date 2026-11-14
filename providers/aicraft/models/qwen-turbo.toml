@@ -1,0 +1,15 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+# Toggle: enable_thinking true|false.
+# Budget: thinking_budget (integer reasoning tokens).
+schema = 2
+base_model = "alibaba/qwen-turbo"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+
+[cost.text.input]
+price = 0.048
+
+[cost.text.output]
+price = 0.4804

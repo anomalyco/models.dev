@@ -1,0 +1,23 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+# Images: POST /v1/images/generations (route present: an unauthenticated POST returns 401,
+# unknown routes return 404; checked 2026-11-14).
+schema = 2
+base_model = "google/gemini-3.1-flash-image-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "high"] }
+
+[api.chat-completions]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.text.input]
+price = 0.5525
+
+[cost.text.output]
+price = 66.3
+
+[cost.image.output]
+price = 66.3

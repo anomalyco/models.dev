@@ -1,0 +1,13 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+
+[cost.text.input]
+price = 1.105
+
+[cost.text.output]
+price = 5.525

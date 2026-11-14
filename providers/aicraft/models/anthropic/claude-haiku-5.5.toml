@@ -1,0 +1,23 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+# Toggle: thinking.type = adaptive|disabled.
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.1105
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5525
+
+[cost.text.output]
+price = 0.5525
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.7625

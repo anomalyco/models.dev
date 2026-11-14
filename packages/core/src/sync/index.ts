@@ -20,6 +20,7 @@ import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from 
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
+import { aicraft } from "./providers/aicraft.js";
 import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
@@ -186,6 +187,7 @@ export interface SyncResult {
 
 export const providers: {
   aiand: SyncProvider<any>;
+  aicraft: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
   anthropic: SyncProvider<any>;
@@ -234,6 +236,7 @@ export const providers: {
   xai: SyncProvider<any>;
 } = {
   aiand,
+  aicraft,
   aimlapi,
   ambient,
   anthropic,
@@ -284,6 +287,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "aicraft",
     "aimlapi",
     "crossmodel",
     "edenai",
