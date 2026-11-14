@@ -1,7 +1,8 @@
-# Source: https://infer.flow7.org/api/public/catalog (2026-10-29 UTC)
+# Source: https://infer.flow7.org/api/public/catalog (2026-11-14 UTC)
 # Exact selector: infer/grok-4.7:low-cost
 # Low cost route: text and tool calls. Image and file input need the model's :official route.
-# Limits: Infer's published figures for the model; the route publishes none of its own.
+# Limits: context is Infer's published 199,999 for the model (the route publishes none of its own). Infer
+# publishes a 450,000 output cap, above that context, so limit.output is capped at the context.
 # Reasoning controls copied from the lab's own entry, as AGENTS.md asks of relays.
 schema = 2
 base_model = "xai/grok-4.7"
