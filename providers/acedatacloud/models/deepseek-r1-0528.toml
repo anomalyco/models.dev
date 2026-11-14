@@ -1,0 +1,23 @@
+# Public catalog: https://platform.acedata.cloud/models/deepseek-r1-0528
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/f416edc1-a771-4a31-90e7-b14ca3a3d674
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# Always-on reasoning; no caller effort control
+# Preserve this host's existing 128k limit and unverified structured-output status
+# when inheriting the newer shared lab metadata.
+base_model = "deepseek/deepseek-r1-0528"
+base_model_omit = ["structured_output"]
+reasoning_options = []
+
+[limit]
+context = 128_000
+
+[interleaved]
+field = "reasoning_content"
+
+[cost]
+input = 0.328232975
+output = 1.3069637
+
+[provider]
+api = "https://api.acedata.cloud/deepseek"

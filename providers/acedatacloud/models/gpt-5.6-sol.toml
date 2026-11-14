@@ -1,0 +1,24 @@
+# Public catalog: https://platform.acedata.cloud/models/gpt-5.6-sol
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/c9969b66-effb-4753-b504-a82c4d16f83f
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort (Chat Completions), or reasoning.effort (Responses)
+# cache_write is the default 5-minute cache TTL.
+base_model = "openai/gpt-5.6-sol"
+reasoning_options = [{ type = "effort", values = ["none", "low", "medium", "high", "xhigh", "max"] }]
+
+[modalities]
+input = ["text", "image"]
+
+[cost]
+input = 1.47173145
+output = 7.35865725
+cache_read = 0.147173075
+cache_write = 1.839664225
+
+[[cost.tiers]]
+tier = { type = "context", size = 272000 }
+input = 2.9434629
+output = 11.037985875
+cache_read = 0.294346325
+cache_write = 3.679328625
