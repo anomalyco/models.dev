@@ -1,0 +1,8 @@
+# Terms must be accepted by the user before model discovery or inference:
+# https://evren.ssyz.org.tr/llm/models (GET /v1/terms/text, POST /v1/terms/accept).
+name = "EVREN LLM"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://evren-llmapi.ssyz.org.tr/v1"
+env = ["EVREN_LLM_API_KEY"]
+doc = "https://evren.ssyz.org.tr/llm/models"
