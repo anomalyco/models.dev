@@ -41,6 +41,7 @@ import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
+import { keln } from "./providers/keln.js";
 import { kenari } from "./providers/kenari.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
@@ -212,6 +213,7 @@ export const providers: {
   hyper: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
+  keln: SyncProvider<any>;
   kenari: SyncProvider<any>;
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
@@ -265,6 +267,7 @@ export const providers: {
   hyper,
   huggingface,
   inceptron,
+  keln,
   kenari,
   kilo,
   llmgateway,
@@ -305,6 +308,7 @@ export const groups = {
     "empiriolabs",
     "huggingface",
     "inceptron",
+    "keln",
     "kenari",
     "kilo",
     "llmgateway",
