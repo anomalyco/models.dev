@@ -234,6 +234,14 @@ test("drops overrides authored for the old weights when an alias moves, and says
   ]);
 });
 
+test("leaves an alias moving to uncataloged weights untouched and reports it missing", () => {
+  const ahead = { ...lineup["umans-coder"], weights: { hf_url: "https://huggingface.co/deepseek-ai/DeepSeek-V9-Flash" } };
+  expect(buildUmansModel("umans-coder", ahead, false, coderOnGLM)).toBeUndefined();
+  const model = listed("umans-coder", { ...lineup, "umans-coder": ahead });
+  expect(umansAI.translateModel(model, context({ "umans-coder": coderOnGLM }))).toBeUndefined();
+  expect(umansAI.missingModelID(model)).toBe("umans-coder");
+});
+
 test("keeps a gated model's existing file as authored instead of reporting it missing", () => {
   const lab = listed("umans-kimi-k3.1-pro-lab", { ...lineup, "umans-kimi-k3.1-pro-lab": card({ stage: "playground" }) });
   const authored = { base_model: "moonshotai/kimi-k3.1-pro", cost: { input: 0, output: 0 } } as unknown as ExistingModel;

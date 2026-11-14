@@ -254,6 +254,12 @@ export function buildUmansModel(
     if (reasoner && owned.reasoning_options === undefined && authoredFields.reasoning_options === undefined) {
       throw missingControls(id, card);
     }
+    // Weights not cataloged under models/ yet: keep the file as it is and let
+    // the runner open a missing-model issue, rather than pricing the new
+    // checkpoint on top of the old one's metadata.
+    if (baseModel !== undefined && served !== undefined && served !== baseModel && !labExists(served)) {
+      return undefined;
+    }
     // The card names the weights each id serves, so an alias that moves to new
     // weights moves its base_model with it.
     const base = labExists(served) ? served : baseModel;
