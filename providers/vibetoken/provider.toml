@@ -1,0 +1,12 @@
+# VibeToken (vibetoken.cn): OpenAI-compatible Chat Completions API
+# (POST /v1/chat/completions).
+# Chat runs through PPIO (Novita's China platform), Volcengine Ark (DeepSeek) and
+# MiniMax China. Model list, limits and prices come from the public, keyless endpoints
+# GET https://vibetoken.cn/v1/models and /api/models/{id}/pricing; prices are billed
+# in CNY and published here in USD (rate noted in each model file).
+name = "VibeToken"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["VIBETOKEN_API_KEY"]
+api = "https://vibetoken.cn/v1"
+doc = "https://docs.vibetoken.cn/zh"

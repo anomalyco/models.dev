@@ -1,0 +1,21 @@
+# Prices: GET https://vibetoken.cn/api/models/moonshotai/kimi-k3.1-pro/pricing (2026-10-30), what the host charges:
+# input/output = list x (1 - discount); cache reads and writes bill at list.
+# CNY converted to USD at 1 CNY = 0.15011 USD (ECB reference rate, 2026-10-29).
+# Same upstream controls as providers/novita-ai/models/moonshotai/kimi-k3.1-pro.toml (VibeToken forwards them unchanged):
+# Toggle: thinking.type = enabled|disabled (live 2026-10-25: disabled returns no reasoning; reasoning_effort = none still reasons)
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.95143
+cache = { read = 0.195143 }
+
+[cost.text.output]
+price = 10.20748

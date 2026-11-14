@@ -1,0 +1,19 @@
+# Prices: GET https://vibetoken.cn/api/models/minimax/minimax-m2.5/pricing (2026-10-30), what the host charges:
+# input/output = list x (1 - discount); cache reads and writes bill at list.
+# CNY converted to USD at 1 CNY = 0.15011 USD (ECB reference rate, 2026-10-29).
+# Same upstream controls as providers/novita-ai/models/minimax/minimax-m2.5.toml (VibeToken forwards them unchanged):
+schema = 2
+base_model = "minimax/MiniMax-M2.5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.283708
+cache = { read = 0.031523, write = 0.394039 }
+
+[cost.text.output]
+price = 1.134832
