@@ -1,0 +1,24 @@
+# Sources:
+# - https://openrouter.ai/liquid/lfm-2.5-24b-a2b
+# - https://www.liquid.ai/ (LFM 2.5 family)
+schema = 2
+name = "LFM2.5-24B-A2B"
+description = "Liquid AI reasoning model for deliberate analysis, multi-step problem solving, coding, and tool use"
+family = "liquid"
+open_weights = true
+release_date = "2026-10-13"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 128_000
+output = 8_192

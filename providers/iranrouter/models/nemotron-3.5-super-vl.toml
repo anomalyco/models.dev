@@ -1,0 +1,27 @@
+# Toggle: reasoning.enabled = true|false
+# Same-surface relay peer: providers/openrouter/models/nvidia/nemotron-3.5-super-vl.toml
+# (NVIDIA-direct uses chat_template_kwargs.enable_thinking; not this host).
+# Live 2026-11-10 IranRouter Chat Completions: response is OpenRouter-shaped
+# (message.reasoning + reasoning_details). chat_template_kwargs and reasoning.enabled
+# both accepted (HTTP 200); wire comment matches the OpenRouter peer for this relay
+# surface. reasoning_field left unset like OpenRouter (v1 interleaved only allows
+# reasoning_content|reasoning_details).
+# Sources:
+# - https://iranrouter.net/docs
+# - https://iranrouter.net/models
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million + context_length)
+# Host dump 2026-11-10 GET /api/v1/models id=`nemotron-3.5-super-vl`: context_length=1_048_576; pricing_per_million prompt=0.15 completion=0.5 (USD/MTok).
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.5
