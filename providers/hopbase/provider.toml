@@ -1,0 +1,13 @@
+# OpenAI-compatible Chat Completions: POST https://api.hop-base.com/v1/chat/completions,
+# Bearer auth. Model availability is scoped to the API key (GET /v1/models, authenticated);
+# public catalog: https://hop-base.com/models
+# Reasoning HTTP format (Chat Completions): `reasoning_effort`; DeepSeek and GLM also take
+# `thinking.type` = enabled|disabled. Plaintext reasoning, where returned, is in
+# `choices[].message.reasoning_content` / `delta.reasoning_content`.
+# Machine-readable integration contract: https://hop-base.com/llms.txt
+name = "HopBase"
+env = ["HOPBASE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.hop-base.com/v1"
+doc = "https://hop-base.com/en/docs"

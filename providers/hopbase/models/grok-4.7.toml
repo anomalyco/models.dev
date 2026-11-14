@@ -1,0 +1,43 @@
+# Verified live 2026-10-31 against POST https://api.hop-base.com/v1/chat/completions with this exact
+# model ID: non-streaming, streaming (stream_options.include_usage returns usage), and a
+# tool call (tool_choice auto) that returned a well-formed function call.
+# Limits: 500K context (https://hop-base.com/llms.txt), matching the lab file.
+# Effort: reasoning_effort = low|medium|high|xhigh accepted (reasoning tokens 51/52/89/99 on a short
+# prompt); none returns HTTP 400 "does not support reasoning_effort value none", max and unknown
+# values return HTTP 400 "Invalid reasoning effort". Relative effort was not benchmarked.
+# Reasoning text is returned in message.reasoning_content and delta.reasoning_content.
+# Images: a red PNG data URL returned "Red.". Structured output: json_schema with strict = true
+# returned an enum-valid object. Cache: cached_tokens = 1152 on repeated requests.
+# tool_choice none|required|named all honoured.
+# Also checked through @ai-sdk/openai-compatible 1.0.60 (generateText, streamText, tool round trip).
+# Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt).
+# Long-context tier: HopBase applies it when input (including cached) is strictly greater than
+# 200,000 tokens, so `gt` rather than xAI's `gte`.
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.3 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.4
+cache = { read = 0.6 }
+
+[cost.text.output]
+price = 3.6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 7.2

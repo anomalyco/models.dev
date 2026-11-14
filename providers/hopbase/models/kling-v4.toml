@@ -1,0 +1,23 @@
+# Model ID listed in the public catalog https://hop-base.com/models (category video) and in
+# https://api.hop-base.com/api/v1/models/pricing (checked 2026-10-31). No generation was run for
+# this listing.
+# API: asynchronous task. POST https://api.hop-base.com/v1/video/generate, then poll
+# GET /v1/video/tasks/{task_id} (https://hop-base.com/llms.txt, Video Generation). No AI SDK or
+# @opencode/ai package speaks this task format, so both are "none".
+# Inputs on this host: text prompt and a first-frame image; reference-image mode is not offered.
+# Pricing: HopBase price in its public video group, USD per second of output; audio on or off bills the same.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v4"
+
+[api.videos]
+path = "/video/generate"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.1324
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.1986

@@ -1,0 +1,45 @@
+# Sources (accessed 2026-10-31):
+# - Snapshot ID doubao-seed-2-1-pro-260915 (YYMMDD suffix = 2026-09-15), the newer Seed 2.1 Pro
+#   snapshot on Volcengine Ark: https://www.volcengine.com/docs/82379/1330310
+# - Limits: 1M context, up to 256K output; the earlier 260628 snapshot is 256K context
+#   (bytedance-seed/seed-2.1-pro).
+# - Image/video formats: same Ark image and video understanding tables as seed-2.1-pro:
+#   https://www.volcengine.com/docs/82379/1362931, https://www.volcengine.com/docs/82379/1895586
+# - Sampling: the Ark Chat API takes temperature and top_p and has no top_k: https://www.volcengine.com/docs/82379/1494384
+schema = 2
+name = "Seed 2.1 Pro 0915"
+description = "September 2026 snapshot of ByteDance's flagship Seed 2.1 Pro with a 1M context window for multimodal reasoning, coding, and agents"
+family = "seed"
+open_weights = false
+release_date = "2026-09-15"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/x-icon",
+  "image/x-icns",
+  "image/sgi",
+  "image/jp2",
+  "image/heic",
+  "video/mp4",
+  "video/x-msvideo",
+  "video/quicktime",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 262_144
