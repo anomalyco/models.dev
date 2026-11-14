@@ -1,0 +1,14 @@
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+name = "Gemini 4 Hydrogen (EU)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.65
+cache = { read = 0.0825, write = 1.65 }
+
+[cost.text.output]
+price = 8.25
