@@ -1,0 +1,13 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: Rp 1500 per 1,000 input characters (pricing_lines output_audio), / 17,500 IDR per USD.
+# Speech: POST /v1/audio/speech (https://kenari.id/en/docs/audio-speech)
+schema = 2
+v2_only = true
+base_model = "minimax/speech-2.8-hd"
+
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
+
+[cost.text.input]
+unit = "character"
+price = 85.71428571

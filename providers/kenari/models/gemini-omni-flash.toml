@@ -1,0 +1,28 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: per second of output video (360p Rp 350/s, 720p Rp 750/s, 1080p Rp 900/s), / 17,500 IDR per USD.
+#   kenari defaults `resolution` to the first tier a model lists, so the base price is that
+#   tier and the other tiers are overrides.
+# Reasoning: the base model thinks, and kenari exposes no effort levels, so this host has no
+#   caller control; the same shape as the lab's own entry
+#   (providers/google/models/gemini-omni-flash-preview.toml).
+# Videos: POST /v1/videos/generations (https://kenari.id/en/docs/videos)
+schema = 2
+base_model = "google/gemini-omni-flash-preview"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.02
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" } }
+price = 0.04285714
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.05142857

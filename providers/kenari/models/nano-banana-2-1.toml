@@ -1,0 +1,18 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: per generated image (pricing_lines output_image, Rp 300), / 17,500 IDR per USD.
+# Reasoning: the catalog lists no reasoning fields for this id. With no listed levels kenari
+#   sends the requested reasoning_effort unchanged, so the effort list is the native one
+#   (providers/google/models/gemini-nano-banana-2.1.toml: minimal|medium|high). No toggle: reasoning_toggle is false.
+# Images: POST /v1/images/generations (https://kenari.id/en/docs/images)
+schema = 2
+base_model = "google/gemini-nano-banana-2.1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "medium", "high"] }
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.01714286

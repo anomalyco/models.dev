@@ -1,0 +1,12 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: per second of output video (720p Rp 500/s), / 17,500 IDR per USD.
+# Videos: POST /v1/videos/generations (https://kenari.id/en/docs/videos)
+schema = 2
+base_model = "google/veo-3.1-lite-generate-preview"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.02857143

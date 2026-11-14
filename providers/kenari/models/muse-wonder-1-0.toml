@@ -1,0 +1,21 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: PAYG per token, micro-IDR per 1M / 1e6 / 17,500 IDR per USD (usd_idr_rate in /api/public/pricing), rounded to 8 decimals.
+# Reasoning: catalog reasoning_options ["minimal", "low", "medium", "high", "xhigh", "max"], reasoning_toggle false (https://kenari.id/en/docs/reasoning).
+# Effort: reasoning_effort (Chat completions), reasoning.effort (Responses), output_config.effort (Messages).
+schema = 2
+base_model = "meta/muse-wonder-1.0"
+
+[limit]
+# catalog context_length for this id is 1_007_997 (/v1/models); the base says 1_048_576
+context = 1_007_997
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 20
