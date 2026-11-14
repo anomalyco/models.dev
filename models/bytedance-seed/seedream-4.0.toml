@@ -1,0 +1,24 @@
+# https://seed.bytedance.com/en/seedream
+schema = 2
+v2_only = true
+type = "image"
+name = "Seedream 4.0"
+description = "Seedream 4.0 is a next-generation AI image generation and editing model developed by ByteDance Seed, unifying text-to-image synthesis, image editing, and multi-image composition in a single architecture for high-resolution outputs up to 4K."
+family = "seed"
+open_weights = false
+release_date = "2025-09-09"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

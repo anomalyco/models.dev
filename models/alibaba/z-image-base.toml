@@ -1,0 +1,28 @@
+# https://huggingface.co/Tongyi-MAI/Z-Image
+schema = 2
+v2_only = true
+type = "image"
+name = "Z-Image Base"
+description = "Z-Image is the foundation model of the Z-Image family, engineered for good quality, robust generative diversity, broad stylistic coverage, and precise prompt adherence."
+open_weights = true
+license = "Apache 2.0"
+release_date = "2025-07-31"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Tongyi-MAI/Z-Image"

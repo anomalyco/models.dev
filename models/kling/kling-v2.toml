@@ -1,0 +1,23 @@
+# https://ir.kuaishou.com/news-releases/news-release-details/kling-ai-advances-20-era-empowering-everyone-tell-great-stories
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling V2"
+description = "Kling 2.0 (2024) was Kling's image/video model aimed at cinematic output."
+open_weights = false
+release_date = "2025-04-15"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

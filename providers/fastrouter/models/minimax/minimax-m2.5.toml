@@ -1,0 +1,22 @@
+# No caller reasoning control (thinking is always on):
+# Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning,
+#   reasoning_effort and include_reasoning with empty schemas (no enum, no toggle, no budget).
+# First-party MiniMax M2.5 thinking is always on and thinking.type = disabled is accepted and ignored
+#   (providers/minimax MiniMax-M2.5), and FastRouter's reasoning table lists no MiniMax control, so the
+#   reasoning parameter is dropped for this route rather than forwarded.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
+# Peers: providers/fastrouter minimax-m2.7 and minimax-m2.7-highspeed [];
+#   providers/openrouter minimax-m2.5 has no effort or toggle.
+# Limit: context_length 196608, max_completion_tokens 196608
+base_model = "minimax/MiniMax-M2.5"
+reasoning_options = []
+
+[cost]
+input = 0.3
+output = 1.2
+cache_read = 0.03
+cache_write = 0.375
+
+[limit]
+context = 196_608
+output = 196_608

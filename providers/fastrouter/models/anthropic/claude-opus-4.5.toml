@@ -1,0 +1,23 @@
+# Toggle: reasoning.enabled = true|false (reasoning.effort = none also disables)
+# Budget: reasoning.max_tokens (extended-thinking budget_tokens, 1,024 minimum)
+#   FastRouter sends Claude 4.5 and earlier extended thinking with budget_tokens; reasoning.effort on
+#   these models is converted into a budget by ratio, not forwarded as a native effort level.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-21)
+# Live GET https://api.fastrouter.ai/api/v1/models (2026-10-21): supported_parameters lists reasoning and
+#   include_reasoning (schemas empty, no enum); context_length 200000, max_completion_tokens 32000.
+# Peers: providers/fastrouter claude-opus-4.1 and claude-sonnet-4 budget_tokens min 1024;
+#   providers/openrouter claude-opus-4.5 toggle; providers/anthropic claude-opus-4-5 budget min 1024.
+base_model = "anthropic/claude-opus-4-5"
+reasoning_options = [
+  { type = "toggle" },
+  { type = "budget_tokens", min = 1_024 },
+]
+
+[cost]
+input = 5
+output = 25
+cache_read = 0.5
+cache_write = 6.25
+
+[limit]
+output = 32_000

@@ -1,0 +1,23 @@
+# https://klingai.com
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling V3"
+description = "Kling V3 is Kuaishou's latest AI video generation model, delivering high-quality, physics-accurate video synthesis with improved motion consistency, lighting realism, and creative control."
+open_weights = false
+release_date = "2026-02-05"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

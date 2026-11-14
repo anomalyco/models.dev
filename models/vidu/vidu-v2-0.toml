@@ -1,0 +1,23 @@
+# https://www.vidu.com
+schema = 2
+v2_only = true
+type = "video"
+name = "Vidu V2.0"
+description = "Vidu 2.0 is an improved model (early 2024) that focuses on image-to-video generation."
+open_weights = false
+release_date = "2025-01-15"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

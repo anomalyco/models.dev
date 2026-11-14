@@ -1,0 +1,24 @@
+# https://ai.google.dev/gemini-api/docs/video
+schema = 2
+v2_only = true
+type = "video"
+name = "Veo 2"
+description = "Google DeepMind video model for generating videos from text prompts or image references."
+family = "veo"
+open_weights = false
+release_date = "2025-04-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
