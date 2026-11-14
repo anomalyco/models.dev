@@ -1,9 +1,10 @@
-# Liquid Auto ranks live seller offers for each request and routes to the cheapest eligible one,
-# so the underlying model and price vary per request. No fixed price is published.
-# Model list and limits: GET https://router.inference.ai.exchange/v1/models (accessed 2026-10-20)
+# Liquid Auto compares a published score for each model with the estimated charge, then runs the
+# auction, so the underlying model and price vary per request. No fixed price is published.
+# Docs: https://inference.ai.exchange/docs/auto
+# Model list and limits: GET https://router.inference.ai.exchange/v1/models (accessed 2026-11-04)
 schema = 2
 name = "Liquid Auto"
-description = "Routes each request to the lowest-priced eligible offer on the Liquid Inference exchange"
+description = "Chooses a model for each request by comparing its published score with the estimated charge on the Liquid Inference exchange"
 family = "auto"
 open_weights = false
 release_date = "2026-10-20"
@@ -19,5 +20,5 @@ structured_output = true
 temperature = true
 
 [limit]
-context = 10_000_000
+context = 2_000_000
 output = 1_048_576
