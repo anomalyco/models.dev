@@ -1,0 +1,23 @@
+# Pricing: https://bettertoken.ai/api/pricing (public, accessed 2026-10-15).
+# BetterToken bills official list price x group ratio 0.68 (GPT group); values below are effective USD per 1M tokens.
+# Endpoint: POST https://bettertoken.ai/v1/chat/completions (also openai).
+# Reasoning wire (BetterToken new-api fork, relay/channel/claude/relay-claude.go + dto/openai_request.go): Chat accepts reasoning_effort and
+# OpenRouter-style reasoning={enabled,effort,max_tokens} and renders them to the upstream's native controls; option set mirrors providers/openrouter/models/openai/gpt-6-astra.toml.
+base_model = "openai/gpt-6-astra"
+
+[[reasoning_options]]
+type = "effort"
+values = ["low", "medium", "high", "xhigh", "max"]
+
+[cost]
+input = 6.8
+output = 34.0
+cache_read = 0.68
+cache_write = 8.5
+
+[[cost.tiers]]
+tier = { type = "context", size = 272_000 }
+input = 13.6
+output = 51.0
+cache_read = 1.36
+cache_write = 17.0

@@ -1,0 +1,8 @@
+name = "BetterToken"
+npm = "@ai-sdk/openai-compatible"
+env = ["BETTERTOKEN_API_KEY"]
+# OpenAI-compatible base URL verified 2026-10-15: docs (https://docs.bettertoken.ai/llms-full.txt) use
+# https://bettertoken.ai/v1; /v1/chat/completions, /v1/responses, /v1/messages, /v1/models answer 401 without a key.
+# Public price list: https://bettertoken.ai/api/pricing
+api = "https://bettertoken.ai/v1"
+doc = "https://docs.bettertoken.ai"

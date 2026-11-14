@@ -1,0 +1,13 @@
+# Pricing: https://bettertoken.ai/api/pricing (public, accessed 2026-10-15).
+# BetterToken bills official list price x group ratio 0.68 (Claude group); values below are effective USD per 1M tokens.
+# Endpoint: POST https://bettertoken.ai/v1/chat/completions (also openai, anthropic).
+# Reasoning wire: reasoning={enabled,max_tokens} on /v1/chat/completions is rendered to Claude thinking.budget_tokens by BetterToken's relay.
+base_model = "anthropic/claude-haiku-4-5-20251001"
+
+reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024 }]
+
+[cost]
+input = 0.68
+output = 3.4
+cache_read = 0.068
+cache_write = 0.85

@@ -1,0 +1,20 @@
+# Pricing: https://bettertoken.ai/api/pricing (public, accessed 2026-10-15).
+# BetterToken bills official list price x group ratio 0.58 (MiniMax group); values below are effective USD per 1M tokens.
+# Endpoint: POST https://bettertoken.ai/v1/chat/completions (also openai, anthropic).
+# Reasoning wire (BetterToken new-api fork, relay/channel/claude/relay-claude.go + dto/openai_request.go): Chat accepts reasoning_effort and
+# OpenRouter-style reasoning={enabled,effort,max_tokens} and renders them to the upstream's native controls; option set mirrors providers/openrouter/models/minimax/minimax-m3.toml.
+base_model = "minimax/MiniMax-M3"
+
+[[reasoning_options]]
+type = "toggle"
+
+[cost]
+input = 0.174
+output = 0.696
+cache_read = 0.0348
+
+[[cost.tiers]]
+tier = { type = "context", size = 512_000 }
+input = 0.348
+output = 1.392
+cache_read = 0.0696
