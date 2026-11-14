@@ -146,6 +146,9 @@ function isEffort(level: string): level is Effort {
 export function reasoningOptions(card: UmansCard): SyncedFullModel["reasoning_options"] {
   const reasoning = card.capabilities.reasoning;
   if (reasoning?.supported !== true || reasoning.levels === undefined) return undefined;
+  // `none` is the off switch: a card listing it without `can_disable`
+  // contradicts itself, so its controls are unknown.
+  if (reasoning.levels.includes("none") && reasoning.can_disable !== true) return undefined;
   const efforts = reasoning.levels.filter((level) => level !== "none");
   if (!efforts.every(isEffort)) return undefined;
   const sorted = [...new Set(efforts)].sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
@@ -193,14 +196,14 @@ function ownedFields(card: UmansCard, plan: boolean) {
   };
 }
 
+// States exactly the controls written to the file.
 export function header(card: UmansCard): string {
-  const reasoning = card.capabilities.reasoning;
-  const effort = (reasoning?.levels ?? []).filter((level) => level !== "none");
+  const options = reasoningOptions(card) ?? [];
+  const toggle = options.some((option) => option.type === "toggle");
+  const effort = options.flatMap((option) => (option.type === "effort" ? [option.values] : []))[0];
   return [
-    ...(reasoning?.can_disable === true
-      ? ['Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables)']
-      : []),
-    ...(effort.length > 0 ? [`Effort: reasoning_effort = ${effort.join("|")}`] : []),
+    ...(toggle ? ['Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables)'] : []),
+    ...(effort === undefined ? [] : [`Effort: reasoning_effort = ${effort.join("|")}`]),
     `Synced from ${API_BASE}/models/info (limits, reasoning levels, served weights, price).`,
   ].map((line) => `# ${line}`).join("\n");
 }
@@ -267,6 +270,15 @@ function umansProvider(id: string, name: string, plan: boolean) {
     },
     missingModelID(model) {
       return model.listed && !isGated(model) ? model.id : undefined;
+    },
+    // Kept files the API lists nowhere: the trigger for removing them by hand.
+    missingNotice(paths) {
+      if (paths.length === 0) return [];
+      return [
+        `${paths.length} Umans AI files are in neither /v1/models/info nor /v1/models/past and were kept;`
+          + " remove them once the API no longer serves them: "
+          + paths.map((file) => `\`${file}\``).join(", "),
+      ];
     },
     skippedNotice(ids) {
       if (ids.length === 0) return [];

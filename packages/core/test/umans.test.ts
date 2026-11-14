@@ -5,6 +5,7 @@ import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-opti
 import {
   buildUmansModel,
   fetchUmansModels,
+  header,
   labModelID,
   parseUmansModels,
   reasoningOptions,
@@ -119,6 +120,24 @@ test("sorts efforts low to high so a reordered card never rewrites files", () =>
 
 test("writes no caller control only when the card publishes an empty list", () => {
   expect(reasoningOptions(withReasoning({ supported: true, can_disable: false, levels: [] }))).toEqual([]);
+});
+
+test("reads none without a toggle as a contradiction, not as no off control", () => {
+  expect(reasoningOptions(withReasoning({ supported: true, can_disable: false, levels: ["none", "low", "high"] })))
+    .toBeUndefined();
+});
+
+test("writes a header that states exactly the controls in the file", () => {
+  const reordered = withReasoning({ supported: true, can_disable: true, levels: ["max", "none", "low", "high"] });
+  expect(header(reordered)).toContain("# Effort: reasoning_effort = low|high|max");
+  const unknown = withReasoning({ supported: true, can_disable: true, levels: ["low", "turbo"] });
+  expect(header(unknown)).not.toContain("Effort:");
+  expect(header(unknown)).not.toContain("Toggle:");
+});
+
+test("lists kept files the API names nowhere in the sync report", () => {
+  expect(umansAI.missingNotice(["umans-old.toml"])[0]).toContain("`umans-old.toml`");
+  expect(umansAI.missingNotice([])).toEqual([]);
 });
 
 test("reads an omitted or unknown level list as unknown, not as no control", () => {
