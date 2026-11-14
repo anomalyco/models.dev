@@ -439,6 +439,37 @@ Chutes is implemented in `packages/core/src/sync/providers/chutes.ts`.
 - `attachment` is derived from non-text `input_modalities`, and all models are `open_weights`.
 - `release_date`/`last_updated` default to the API `created` timestamp but preserve existing hand-authored dates; `knowledge`, `family`, `status`, `interleaved`, and `limit.input` are preserved when present.
 
+## Neuralwatt Notes
+
+Neuralwatt is implemented in `packages/core/src/sync/providers/neuralwatt.ts`.
+
+- Run it with `bun models:sync neuralwatt`; it is also in the `direct` group.
+- Source endpoint: `https://api.neuralwatt.com/v1/models`.
+- The sync sends no credentials and requires `scope = "public"`. It rejects customer-scoped responses, which can include private grants. The [endpoint documentation](https://docs.neuralwatt.com/api/models#list-models) documents scopes but no per-model availability status. This prevents private account grants from creating public catalog entries.
+- `deleteMissing: false`: absence alone does not prove retirement. Missing entries are retained and reported for review.
+- The endpoint reports final prices for each model ID, including the discounted flex prices. The sync uses those prices without an additional multiplier.
+- Verified on 2026-11-12: Kimi K3.1 Pro reports input/output/cache-read prices of 2/10/0.2; its flex entry reports 1.3/6.5/0.13. MiMo reports 0.435/0.87/0.0036 and flex 0.28275/0.5655/0.00234. All are USD per million tokens. The [models documentation](https://docs.neuralwatt.com/api/models#metadatapricing) states that `flex_discount_multiplier` is already applied. Older catalog headers that describe undiscounted endpoint prices are historical; #13486 updates the MiMo notes.
+- The API is authoritative for pricing, the context window, vision, tool calling, JSON mode, the reasoning flag, deprecation, and the `reasoning_effort` array. `metadata.reasoning` is optional, because a model with no reasoning has no effort ladder to report; every other metadata block is required, so an upstream change there fails the sync.
+- When `max_output_tokens` is null, `limit.output` uses the authored cap, the lab limit, or the context window, in that order. `limit.input` is preserved.
+- Missing context limits fall back to the authored or lab context. A model without a usable context fails validation; the sync never writes zero. Output limits are capped at the served context.
+- Prices are never coerced to zero. `pricing_tbd`, a null input price, or a null output price all keep the existing `[cost]`, and a model that has no local `[cost]` to keep is skipped instead of published as free.
+- Input modalities include text, plus image when `vision` is true and audio when `audio_input` is true.
+- Models without authored input overrides inherit matching lab modalities. If the host serves fewer input kinds, the sync uses the lab MIME types for those kinds. Existing input overrides keep their authored formats through the shared patcher.
+- `created` is always `0`, and the endpoint carries no lifecycle or provenance metadata, so `release_date`, `last_updated`, `knowledge`, `family`, `temperature`, `open_weights`, names, and descriptions are preserved when a model already has them. `status` is preserved too, except that the API deprecation flag sets `status = "deprecated"` and clears it again once the flag goes away.
+- `reasoning_options` combines three sources. The effort ladder comes from `metadata.reasoning.supported_efforts`; a `budget_tokens` control is added from the provider docs, which state `thinking_token_budget` is accepted on every model except `deepseek-v4-flash` and `gemma-4-31b`; authored `min`/`max` bounds on that control are carried over. A missing `metadata.reasoning` block is read as silence, not as "no effort levels", so an authored ladder is kept rather than deleted.
+- A non-reasoning model gets no `reasoning_options`. Lab files do not declare reasoning controls, and the shared sync runner removes stale controls when reasoning is false.
+- The sync first tries the exact Hugging Face checkpoint, then its name without quantization suffixes, then the model ID without serving tiers. This keeps dated checkpoints when the API identifies them.
+- When no exact slug matches, the sync retries against a canonical ID carrying an MoE active-parameter suffix the slug might not have, which is how `qwen3.6-35b` links to `alibaba/qwen3.6-35b-a3b`. Both passes require a unique match, so an ambiguous slug resolves to nothing.
+- An authored `base_model` is used when resolution finds no match.
+- A factored model inherits `family`, the description, and the other intrinsic fields; only the served facts stay in the provider file.
+- New models are only created when they resolve a `base_model`. The endpoint supplies no description, dates, knowledge cutoff or temperature, so an unknown ID has nothing to author from and is reported through `skippedNotice` instead. Add a `models/<lab>/<model>.toml` entry and the next run picks it up. Models that already have a full inline TOML keep being updated in place.
+- A created model has no `knowledge` or `temperature`, and inherits its dates from `base_model`.
+- Every model Neuralwatt serves is open weights, and reasoning traces always return on a `reasoning` field, so `interleaved` is set for reasoning models.
+- Interior (i.e., not in the header/top of the TOML file) comments are not preserved. Keep per-model wire notes in the leading comment block, which the runner does preserve.
+- The sync emits a `thinking_token_budget` note as a generated header for any model carrying a `budget_tokens` control.
+- Validation on 2026-11-12 against dev `a0401c46c`: 35 provider tests passed. A live public sync in a temporary checkout created 9 files, updated 11, and retained 9 absent entries. Catalog validation passed; a second dry run changed nothing. The generated catalog changed v1 data in 3 of 22 views (new models, prices, context limits, JSON-mode flags, and budget controls). The implementation check reported serialization-order differences in 21 views but no field changes. A separate comparison with sorted object keys confirmed equal catalog data. Catalog changes and source evidence are reviewed separately in #13486.
+- Budget exclusions include the older V4 Flash `-speed` tiers. Live authenticated checks on 2026-11-12 accepted `thinking_token_budget=1` on V4.1 Flash, Flex, Speed, `nw-flash`, and `nw-flash-flex` (HTTP 200 with reasoning followed by content). #13486 adds this evidence and the budget control to all five routes.
+
 ## Requesty Notes
 
 Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.

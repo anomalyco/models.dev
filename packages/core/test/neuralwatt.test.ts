@@ -1,0 +1,378 @@
+import { expect, spyOn, test } from "bun:test";
+
+import { AuthoredModel } from "../src/schema.js";
+import { groups, providers } from "../src/sync/index.js";
+import { buildNeuralwattModel, neuralwatt, type NeuralwattModel } from "../src/sync/providers/neuralwatt.js";
+
+function sourceModel(id: string, metadata: Record<string, unknown> = {}): NeuralwattModel {
+  return {
+    id,
+    max_model_len: 1_048_560,
+    metadata: {
+      display_name: "GLM 5.2",
+      description: "upstream blurb",
+      huggingface_id: null,
+      pricing: { input_per_million: 1.45, output_per_million: 4.5, cached_input_per_million: 0.145 },
+      capabilities: { tools: true, json_mode: false, vision: false, reasoning: true },
+      reasoning: { supported_efforts: ["max", "high", "none"] },
+      limits: { max_context_length: 1_048_560, max_output_tokens: null },
+      deprecated: false,
+      ...metadata,
+    },
+  };
+}
+
+function context(existing?: Record<string, unknown>, authored = existing) {
+  return { existing: () => existing, authored: () => authored } as Parameters<
+    typeof neuralwatt.translateModel
+  >[1];
+}
+
+test("Neuralwatt sync is registered for direct runs", () => {
+  expect(providers.neuralwatt).toBe(neuralwatt);
+  expect(groups.direct).toContain("neuralwatt");
+});
+
+test("fetches the public catalog without credentials", async () => {
+  const fetcher = spyOn(globalThis, "fetch").mockResolvedValue(
+    Response.json({ scope: "public", data: [] }),
+  );
+  try {
+    await neuralwatt.fetchModels();
+    expect(fetcher).toHaveBeenCalledWith("https://api.neuralwatt.com/v1/models");
+  } finally {
+    fetcher.mockRestore();
+  }
+});
+
+test("refuses customer-scoped catalogs", () => {
+  const model = sourceModel("kimi-k3.1-pro");
+  expect(neuralwatt.parseModels({ scope: "public", data: [model] })).toHaveLength(1);
+  expect(() => neuralwatt.parseModels({ scope: "customer", data: [model] })).toThrow();
+  expect(() => neuralwatt.parseModels({ data: [model] })).toThrow();
+});
+
+test("keeps the discounted flex prices reported by the API", () => {
+  const source = sourceModel("glm-5.2-flex", {
+    pricing: { input_per_million: 0.9425, output_per_million: 2.925, cached_input_per_million: 0.09425 },
+  });
+  const model = buildNeuralwattModel(source, undefined, undefined);
+
+  expect(model.cost).toEqual({ input: 0.9425, output: 2.925, cache_read: 0.09425 });
+});
+
+test("keeps standard pricing on standard model IDs", () => {
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), undefined, undefined);
+
+  expect(model.cost).toEqual({ input: 1.45, output: 4.5, cache_read: 0.145 });
+});
+
+test("includes advertised audio input without requiring vision", () => {
+  const source = sourceModel("glm-5.2", {
+    capabilities: { tools: true, json_mode: false, vision: false, audio_input: true, reasoning: true },
+  });
+  const model = buildNeuralwattModel(source, undefined, undefined);
+
+  expect(model.attachment).toBe(true);
+  expect(model.modalities?.input).toEqual(["text", "audio"]);
+});
+
+test("syncs the effort ladder and keeps authored budget bounds", () => {
+  const authored = { reasoning_options: [{ type: "budget_tokens" as const, max: 32_000 }] };
+
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), undefined, authored);
+
+  expect(model.reasoning_options).toEqual([
+    { type: "effort", values: ["none", "high", "max"] },
+    { type: "budget_tokens", max: 32_000 },
+  ]);
+});
+
+test("declares the budget control the API never describes", () => {
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), undefined, undefined);
+
+  expect(model.reasoning_options).toEqual([
+    { type: "effort", values: ["none", "high", "max"] },
+    { type: "budget_tokens" },
+  ]);
+});
+
+test("omits the budget control on the models that reject it", () => {
+  const flash = buildNeuralwattModel(sourceModel("deepseek-v4-flash"), undefined, undefined);
+  const flex = buildNeuralwattModel(sourceModel("deepseek-v4-flash-flex"), undefined, undefined);
+  // Gemma only links to canonical metadata through its repacked repo name.
+  const gemma = buildNeuralwattModel(
+    sourceModel("gemma-4-31b", { huggingface_id: "nvidia/Gemma-4-31B-IT-NVFP4" }),
+    undefined,
+    undefined,
+  );
+
+  for (const model of [flash, flex, gemma]) {
+    expect(model.reasoning_options).toEqual([{ type: "effort", values: ["none", "high", "max"] }]);
+  }
+});
+
+test("gives a budget-only model its single control", () => {
+  const source = sourceModel("kimi-k2.7-code", { reasoning: { supported_efforts: [] } });
+
+  const model = buildNeuralwattModel(source, undefined, undefined);
+
+  expect(model.reasoning_options).toEqual([{ type: "budget_tokens" }]);
+});
+
+test.each(["deepseek-v4-flash-speed", "deepseek-v4-flash-speed-flex"])(
+  "omits budgets for the older V4 serving tier %s", (id) => {
+    const model = buildNeuralwattModel(sourceModel(id), undefined, undefined);
+    expect(model.reasoning_options?.some((option) => option.type === "budget_tokens")).toBe(false);
+  },
+);
+
+test.each([
+  "deepseek-v4.1-flash", "deepseek-v4.1-flash-flex",
+  "deepseek-v4.1-flash-speed", "nw-flash", "nw-flash-flex",
+])("keeps verified budget support on %s", (id) => {
+  const source = sourceModel(id, { huggingface_id: "deepseek-ai/DeepSeek-V4.1-Flash-1017" });
+  const model = buildNeuralwattModel(source, undefined, undefined);
+  expect(model.reasoning_options).toContainEqual({ type: "budget_tokens" });
+});
+
+test("keeps the authored ladder when the API sends no reasoning block", () => {
+  const source = sourceModel("glm-5.2", { reasoning: undefined });
+  const authored = {
+    reasoning_options: [{ type: "effort" as const, values: ["none" as const, "high" as const] }],
+  };
+
+  const model = buildNeuralwattModel(source, undefined, authored);
+
+  expect(model.reasoning_options).toEqual([
+    { type: "effort", values: ["none", "high"] },
+    { type: "budget_tokens" },
+  ]);
+});
+
+test("prefers authored catalog metadata over the API blurb and missing dates", () => {
+  const existing = {
+    description: "authored blurb",
+    release_date: "2026-06-17",
+    last_updated: "2026-06-17",
+    limit: { context: 1_048_560, output: 1_048_560 },
+  };
+
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), existing, undefined);
+
+  expect(model.description).toBe("authored blurb");
+  expect(model.release_date).toBe("2026-06-17");
+  // The API reports no output cap for models that can fill the context.
+  expect(model.limit?.output).toBe(1_048_560);
+});
+
+test("skips an unknown ID rather than inventing a standalone definition", () => {
+  expect(neuralwatt.translateModel(sourceModel("glm-6"), context())).toBeUndefined();
+  expect(neuralwatt.sourceID(sourceModel("glm-6"))).toBe("glm-6");
+  expect(neuralwatt.skippedNotice(["glm-6"]).join(" ")).toContain("glm-6");
+});
+
+test("keeps writing a pre-existing standalone definition", () => {
+  const existing = {
+    name: "GLM 5.2",
+    description: "authored blurb",
+    release_date: "2026-06-17",
+    last_updated: "2026-06-17",
+  };
+
+  const translated = neuralwatt.translateModel(sourceModel("glm-6"), context(existing));
+
+  expect(AuthoredModel.safeParse({ id: "glm-6", ...translated?.model }).success).toBe(true);
+  expect(translated?.model.release_date).toBe("2026-06-17");
+});
+
+test("factors onto canonical metadata once the serving tier is stripped", () => {
+  const model = buildNeuralwattModel(sourceModel("kimi-k3-flex"), undefined, undefined);
+
+  expect(model).toMatchObject({ base_model: "moonshotai/kimi-k3" });
+  // The canonical blurb and dates are inherited rather than invented.
+  expect(model.description).toBeUndefined();
+  expect(model.release_date).toBeUndefined();
+  expect(model.last_updated).toBeUndefined();
+});
+
+test("factors onto a canonical ID whose MoE suffix the served ID drops", () => {
+  const model = buildNeuralwattModel(sourceModel("qwen3.6-35b-fast"), undefined, undefined);
+
+  expect(model).toMatchObject({ base_model: "alibaba/qwen3.6-35b-a3b" });
+});
+
+test("prefers a resolved base over a stale authored pointer", () => {
+  const authored = { base_model: "moonshotai/kimi-k2.6" };
+
+  const model = buildNeuralwattModel(sourceModel("kimi-k3"), undefined, authored);
+
+  expect(model).toMatchObject({ base_model: "moonshotai/kimi-k3" });
+});
+
+test("uses the exact checkpoint published by the API", () => {
+  const source = sourceModel("deepseek-v4.1-flash", {
+    huggingface_id: "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+  });
+  expect(buildNeuralwattModel(source, undefined, undefined))
+    .toHaveProperty("base_model", "deepseek/deepseek-v4.1-flash-1017");
+});
+
+test("inherits the lab output limit when the API reports no limit", () => {
+  const model = buildNeuralwattModel(sourceModel("kimi-k3.1-pro"), undefined, undefined);
+  expect(model).toHaveProperty("base_model", "moonshotai/kimi-k3.1-pro");
+  expect(model.limit).not.toHaveProperty("output");
+});
+
+test("new models retain lab MIME types for advertised inputs", () => {
+  const source = sourceModel("kimi-k3.1-pro", {
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: true },
+  });
+  const model = neuralwatt.translateModel(source, context());
+  const input = model?.v2Set?.["modalities.input"];
+  expect(input).toContain("image/jpeg");
+  expect(input).not.toContain("image");
+  expect(input?.some((format) => format.startsWith("video/"))).toBe(false);
+});
+
+test("existing vision models keep inherited lab modalities", () => {
+  const source = sourceModel("deepseek-v4.1-flash", {
+    huggingface_id: "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: true },
+  });
+  const authored = { base_model: "deepseek/deepseek-v4.1-flash-1017" };
+  const existing = { ...authored, modalities: { input: ["text", "image"], output: ["text"] } };
+  const result = neuralwatt.translateModel(source, context(existing, authored));
+
+  expect(result?.model.modalities).toBeUndefined();
+  expect(result?.v2Set).toBeUndefined();
+});
+
+test("new vision models omit modalities identical to the lab", () => {
+  const source = sourceModel("deepseek-v4.1-flash", {
+    huggingface_id: "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: true },
+  });
+  const result = neuralwatt.translateModel(source, context());
+
+  expect(result?.model.modalities).toBeUndefined();
+  expect(result?.v2Set).toBeUndefined();
+});
+
+test("existing models without input overrides use lab MIME types for a subset", () => {
+  const source = sourceModel("kimi-k3.1-pro", {
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: true },
+  });
+  const authored = { base_model: "moonshotai/kimi-k3.1-pro" };
+  const result = neuralwatt.translateModel(source, context(authored));
+  const input = result?.v2Set?.["modalities.input"];
+
+  expect(input).toContain("image/jpeg");
+  expect(input).not.toContain("image");
+  expect(input?.some((format) => format.startsWith("video/"))).toBe(false);
+});
+
+test("existing model input overrides are left to the MIME-preserving patcher", () => {
+  const source = sourceModel("kimi-k3.1-pro", {
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: true },
+  });
+  const authored = {
+    base_model: "moonshotai/kimi-k3.1-pro",
+    modalities: { input: ["text", "image"], output: ["text"] },
+  };
+  const result = neuralwatt.translateModel(source, context(authored));
+
+  expect(result?.model.modalities?.input).toEqual(["text", "image"]);
+  expect(result?.v2Set).toBeUndefined();
+});
+
+test("inherits context when the API omits it", () => {
+  const source = sourceModel("kimi-k3.1-pro", {
+    limits: { max_context_length: null, max_output_tokens: null },
+  });
+  source.max_model_len = undefined;
+  const model = buildNeuralwattModel(source, undefined, undefined);
+  expect(model).toHaveProperty("base_model", "moonshotai/kimi-k3.1-pro");
+  expect(model.limit?.context).toBeUndefined();
+});
+
+test("caps fallback output at the served context", () => {
+  const source = sourceModel("kimi-k3.1-pro", {
+    limits: { max_context_length: 4096, max_output_tokens: null },
+  });
+  expect(buildNeuralwattModel(source, undefined, undefined).limit)
+    .toMatchObject({ context: 4096, output: 4096 });
+});
+
+test("rejects a missing context without a lab or authored limit", () => {
+  const source = sourceModel("unknown", {
+    limits: { max_context_length: null, max_output_tokens: null },
+  });
+  source.max_model_len = undefined;
+  expect(() => buildNeuralwattModel(source, undefined, undefined)).toThrow("no usable context limit");
+});
+
+test("carries no reasoning options onto a non-reasoning variant", () => {
+  const source = sourceModel("kimi-k3-fast", {
+    capabilities: { tools: true, json_mode: true, vision: true, reasoning: false },
+    reasoning: { supported_efforts: ["none"] },
+  });
+
+  const model = buildNeuralwattModel(source, undefined, undefined);
+
+  expect(model.reasoning).toBe(false);
+  expect(model.reasoning_options).toBeUndefined();
+  // No reasoning means no reasoning trace to interleave.
+  expect(model.interleaved).toBeUndefined();
+});
+
+test("documents the budget control in a header the runner re-attaches", () => {
+  const budget = neuralwatt.translateModel(sourceModel("glm-5.2"), context());
+  const none = neuralwatt.translateModel(sourceModel("deepseek-v4-flash"), context());
+
+  expect(budget?.header).toBe("# Budget: thinking_token_budget (integer reasoning tokens)\n");
+  expect(none?.header).toBeUndefined();
+});
+
+test("keeps the authored cost when upstream pricing is still tbd", () => {
+  const source = sourceModel("glm-5.2", {
+    pricing: { input_per_million: null, output_per_million: null, pricing_tbd: true },
+  });
+  const existing = { cost: { input: 1.45, output: 4.5 } };
+
+  const model = buildNeuralwattModel(source, existing, undefined);
+
+  expect(model.cost).toEqual({ input: 1.45, output: 4.5 });
+});
+
+test("never publishes a free rate from a partial pricing payload", () => {
+  const source = sourceModel("glm-5.2", {
+    pricing: { input_per_million: 1.45, output_per_million: null },
+  });
+  const existing = { cost: { input: 1.45, output: 4.5 } };
+
+  expect(buildNeuralwattModel(source, existing, undefined).cost).toEqual({ input: 1.45, output: 4.5 });
+  // A new model with no usable price is skipped rather than priced at zero.
+  expect(neuralwatt.translateModel(source, context())).toBeUndefined();
+});
+
+test("marks deprecated models", () => {
+  const model = buildNeuralwattModel(sourceModel("glm-5.2", { deprecated: true }), undefined, undefined);
+
+  expect(model.status).toBe("deprecated");
+});
+
+test("clears a deprecated status the API no longer reports", () => {
+  const model = buildNeuralwattModel(sourceModel("glm-5.2"), { status: "deprecated" }, undefined);
+  const beta = buildNeuralwattModel(sourceModel("glm-5.2"), { status: "beta" }, undefined);
+
+  expect(model.status).toBeUndefined();
+  expect(beta.status).toBe("beta");
+});
+
+test("factored models inherit open_weights from the lab", () => {
+  const source = sourceModel("gpt-4.1-mini", { capabilities: { tools: true, json_mode: true, vision: false, reasoning: false } });
+  const result = neuralwatt.translateModel(source, context(undefined, { base_model: "openai/gpt-4.1-mini" }));
+
+  expect(result?.model).not.toHaveProperty("open_weights");
+});
