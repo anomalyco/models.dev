@@ -6,7 +6,7 @@ base_model = "moonshotai/kimi-k2.7-code"
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
-structured_output = false
+structured_output = true
 system_updates = true
 
 [cost.text.input]
