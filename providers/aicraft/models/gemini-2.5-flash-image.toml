@@ -6,6 +6,13 @@ base_model = "google/gemini-2.5-flash-image"
 [capabilities]
 reasoning = { supported = false }
 
+[api.chat-completions]
+
+# Images: POST /v1/images/generations (route present on aicraftapi.net:
+# unauthenticated POST returns 401, while unknown routes return 404, 2026-11-14).
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
 [cost.text.input]
 price = 0.3315
 

@@ -6,7 +6,7 @@ schema = 2
 base_model = "alibaba/qwen3.7-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, budget = {} }
+reasoning = { supported = true, toggle = true, budget = { max = 262_144 } }
 
 [cost.text.input]
 price = 0.032

@@ -7,7 +7,7 @@ schema = 2
 base_model = "alibaba/qwen3.8-max"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0 } }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
 
 [cost.text.input]
 price = 1.9217

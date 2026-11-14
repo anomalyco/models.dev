@@ -4,7 +4,7 @@ schema = 2
 base_model = "xai/grok-4.1-fast-reasoning"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [cost.text.input]
 price = 0.221

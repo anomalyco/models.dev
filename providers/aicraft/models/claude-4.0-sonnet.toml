@@ -4,7 +4,7 @@ schema = 2
 base_model = "anthropic/claude-sonnet-4-0"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
+reasoning = { supported = true, budget = { min = 1_024 } }
 
 [cost.text.input]
 price = 3.315
