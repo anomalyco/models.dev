@@ -59,7 +59,6 @@ import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { morph } from "./providers/morph.js";
-import { sintaksDev } from "./providers/sintaks-dev.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -226,7 +225,6 @@ export const providers: {
   prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
   morph: SyncProvider<any>;
-  "sintaks-dev": SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -274,7 +272,6 @@ export const providers: {
   prime,
   requesty,
   morph,
-  "sintaks-dev": sintaksDev,
   tinfoil,
   vercel,
   venice,
@@ -298,7 +295,6 @@ export const groups = {
     "novita-ai",
     "ofox",
     "requesty",
-    "sintaks-dev",
     "openrouter",
     "prime",
     "vercel",
