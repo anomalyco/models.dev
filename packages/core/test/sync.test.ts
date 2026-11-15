@@ -1777,6 +1777,41 @@ test("syncs existing DigitalOcean image models with catalog output limits", () =
   });
 });
 
+test("DigitalOcean uses explicit text prices next to image prices", () => {
+  const [source] = parseDigitalOceanModels({
+    models: [digitalOceanModel({
+      id: "openai-gpt-image-2",
+      modalities: { input: ["text", "image"], output: ["text", "image"] },
+      pricing: undefined,
+    })],
+    catalog: [{
+      model_id: "openai-gpt-image-2",
+      name: "OpenAI GPT Image 2",
+      creator: "OpenAI",
+      availability: ["serverless"],
+      modalities: { input: ["text", "image"], output: ["text", "image"] },
+      pricing: {
+        input_price_per_million: 0.000008,
+        output_price_per_million: 0.00003,
+        text_input_price_per_million: 0.000005,
+        text_cache_read_input_price_per_million: 0.00000125,
+        image_input_price_per_million: 0.000008,
+        image_output_price_per_million: 0.00003,
+        image_cache_read_input_price_per_million: 0.000002,
+      },
+    }],
+  });
+  const existing = { cost: { input: 5, output: 0, cache_read: 1.25 } } as any;
+
+  expect(source?.pricing).toMatchObject({ input: 5, cacheRead: 1.25, image: { input: 8, output: 30, cacheRead: 2 } });
+  expect(source?.pricing?.output).toBeUndefined();
+  expect(buildDigitalOceanModel(source!, existing).cost).toEqual(existing.cost);
+  expect(digitalOceanV2Set(source!)["cost.image"]).toEqual({
+    input: { price: 8, cache: { read: 2 } },
+    output: { price: 30 },
+  });
+});
+
 test("filters unmanaged DigitalOcean models and joins catalog data by ID", () => {
   const models = parseDigitalOceanModels({
     models: [
@@ -7014,13 +7049,17 @@ test("Vercel media prices map to CostV2 units with conditional overrides", () =>
       },
     },
   });
-  // Image output tokens: `text.output` keeps the v1 pair.
+  // Image output tokens don't invent a separate text output price.
   expect(cost("image", {
     input: "0.000005",
     output: "0.000038",
     image_dimension_quality_pricing: [{ operation: "web-grounding", cost: "0.014" }],
   })).toEqual({
-    cost: { text: { input: { price: 5 }, output: { price: 38 } }, image: { output: { price: 38 } } },
+    cost: { text: { input: { price: 5 } }, image: { output: { price: 38 } } },
+  });
+  // A real per-image price can coexist with the catalog's text token rates.
+  expect(cost("image", { input: "0.000002", output: "0.000012", image: "0.1344" })).toEqual({
+    cost: { text: { input: { price: 2 }, output: { price: 12 } }, image: { output: { unit: "image", price: 0.1344 } } },
   });
   expect(cost("image", { image: "0.04", image_dimension_quality_pricing: [{ operation: "upscale", cost: "0.1" }] }).cost)
     .toBeUndefined();
