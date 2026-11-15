@@ -1,0 +1,35 @@
+# Sources (accessed 2026-11-15):
+# - https://huggingface.co/inclusionAI/Ling-3.1-flash-1019 (model card: 560B total / 25B active,
+#   1M-token context, MIT licence, weights uploaded 2026-10-27)
+# - https://www.llms.blog/posts/ling-3-1-flash-1019-upgrade-base-model (weights uploaded 2026-10-27;
+#   "1019" is the checkpoint name, not its publication date)
+# The card advertises a 1M-token context while the repository config sets max_position_embeddings to
+#   262,144; the advertised window is recorded here, as on the host.
+# Output ceiling follows the Ling 3.1 family (32,768); the card publishes no maximum generation limit.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
+name = "Ling 3.1 Flash 1019"
+description = "Upgraded Ling 3.1 Flash checkpoint with stronger scientific and agentic reasoning"
+family = "ling"
+open_weights = true
+release_date = "2026-10-27"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/Ling-3.1-flash-1019"
