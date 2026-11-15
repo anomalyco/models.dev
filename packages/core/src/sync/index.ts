@@ -55,7 +55,6 @@ import { nearai } from "./providers/nearai.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
-import { opencheap } from "./providers/opencheap.js";
 import { ofox } from "./providers/ofox.js";
 import { obscurify } from "./providers/obscurify.js";
 import { openrouter } from "./providers/openrouter.js";
@@ -65,12 +64,9 @@ import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
-import { tempr } from "./providers/tempr.js";
 import { tinfoil } from "./providers/tinfoil.js";
-import { uberllm } from "./providers/uberllm.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
-import { voidApi } from "./providers/void-api.js";
 import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 
@@ -232,7 +228,6 @@ export const providers: {
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
-  opencheap: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
@@ -240,12 +235,9 @@ export const providers: {
   requesty: SyncProvider<any>;
   sambanova: SyncProvider<any>;
   morph: SyncProvider<any>;
-  tempr: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
-  uberllm: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
-  "void-api": SyncProvider<any>;
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
@@ -288,7 +280,6 @@ export const providers: {
   ofox,
   "ollama-cloud": ollamaCloud,
   openai,
-  opencheap,
   openrouter,
   ovhcloud,
   pioneer,
@@ -296,12 +287,9 @@ export const providers: {
   requesty,
   sambanova: sambaNova,
   morph,
-  tempr,
   tinfoil,
-  uberllm,
   vercel,
   venice,
-  "void-api": voidApi,
   wandb,
   xai,
 };
@@ -324,14 +312,10 @@ export const groups = {
     "nano-gpt",
     "novita-ai",
     "ofox",
-    "opencheap",
     "requesty",
-    "tempr",
     "openrouter",
     "prime",
-    "uberllm",
     "vercel",
-    "void-api",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
   direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
