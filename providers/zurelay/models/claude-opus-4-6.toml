@@ -1,11 +1,17 @@
 # API: Anthropic Messages, POST https://api.zurelay.com/v1/messages with x-api-key; cache_control, thinking
-# and output_config pass through (https://zurelay.com/docs/anthropic, accessed 2026-11-03).
+# and output_config pass through (https://zurelay.com/docs/anthropic, accessed 2026-11-15).
+# Only Messages is listed. Zurelay also takes Claude on /v1/chat/completions, but documents cache_control
+# caching (5m/1h writes) only on Messages, and the explicit cache below doesn't hold on chat completions.
+# Live 2026-11-15: a 10,125-token system prompt with cache_control, sent twice, read 4,582 cached tokens on
+# /v1/chat/completions with no cache write or TTL reported; on /v1/messages it was written, then read (10,105 tokens).
 # Inputs on this host: text, images, in the formats Zurelay takes
-# (https://zurelay.com/docs/multimodal, accessed 2026-11-03).
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-15).
 # No budget listed: thinking = { type = "enabled", budget_tokens = 1024 } returned no thinking block on this host (tested 2026-11-03), so only effort is listed.
-# Effort: output_config.effort = low|medium|high|max on POST /v1/messages (Zurelay maps reasoning_effort the same way).
-# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-03)
-# Prices: https://zurelay.com/models/claude-opus-4-6 (USD per 1M tokens, accessed 2026-11-03).
+# Effort: output_config.effort = low|medium|high|max on POST /v1/messages.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-15)
+# Prices: https://zurelay.com/models/claude-opus-4-6 (USD per 1M tokens, accessed 2026-11-15).
+# Cache read: 0.24 = cached_input_per_1m in https://zurelay.com/prices.json (accessed 2026-11-15). Zurelay sets
+# its own cached price, so it isn't always the lab's ratio to input (here 10% of the 2.4 input price).
 # Cache writes: 1.25x input for 5 minutes, 2x for 1 hour (https://zurelay.com/docs/anthropic#prompt-caching).
 schema = 2
 base_model = "anthropic/claude-opus-4-6"
