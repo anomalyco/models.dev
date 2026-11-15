@@ -1,6 +1,6 @@
 # Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
 # Effort: reasoning_effort = low|high|max
-# Output is capped at the gateway context; the host does not report an output limit.
+# Output is capped conservatively at 131,072; the host does not report an output limit.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Fast"
@@ -10,7 +10,7 @@ reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [limit]
 context = 1_000_000
-output = 1_000_000
+output = 131_072
 
 [cost.text.input]
 price = 4.95
