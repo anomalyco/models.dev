@@ -5,6 +5,9 @@
 # Live check 2026-11-14 (Chat Completions, one short prompt): every listed level answered;
 # reasoning text per level: none 0, low 129 chars, medium 520 chars, high 591 chars.
 # Reasoning text: Chat Completions returns it in message.reasoning_content.
+# Thinking off, live check 2026-11-15 (one short question): "none" on Chat Completions and
+# thinking = {"type": "disabled"} on Messages each answered in 6 output tokens, with
+# reasoning_tokens 0 and no reasoning in the visible answer.
 # Cache: not listed. Our public price list gives these models no cached-input discount, and
 # caching depends on the server (https://powerspring.eu/docs/billing), so we don't claim it.
 # Prices: USD per million tokens, converted from Powerspring's EUR prices at the ECB reference
