@@ -1,5 +1,8 @@
 # Available at https://dashboard.wylon.cn/models (read 2026-11-15).
 # The dashboard declares text input; do not inherit the lab's image-editing inputs.
+# Only modalities.input differs from the lab. Its output is repeated because
+# AuthoredModelV2 requires both keys in an authored modalities table; the v2
+# generator uses that complete table rather than merging individual modality keys.
 # The public price page does not list this model, so no unverified price is authored.
 # Image API: https://portal.wylon.cn/zh/api-image-generations.html
 schema = 2

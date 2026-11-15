@@ -4,6 +4,9 @@
 # API: https://portal.wylon.cn/zh/api-video-generation-tasks.html
 # Wylon's async content tasks use an Ark-compatible JSON body, not OpenAI Videos.
 # No verified SDK adapter for this host's task lifecycle; both SDKs are explicitly none.
+# Only modalities.input differs from the lab. Its output is repeated because
+# AuthoredModelV2 requires both keys in an authored modalities table; the v2
+# generator uses that complete table rather than merging individual modality keys.
 # Ref2VA route: text plus at least one reference image/video, optional audio.
 # Up to nine images, three videos and three audio clips; output 768p, 5-15 sec.
 # CNY 0.20/input image, 0.50/input video sec, free input audio, 0.50/output sec.
