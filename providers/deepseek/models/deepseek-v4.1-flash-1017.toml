@@ -1,0 +1,41 @@
+# The canonical catalogue entry for deepseek/deepseek-v4.1-flash-1017, referenced as `canonical_model_id` by 140 listings.
+# Models & pricing (https://api-docs.deepseek.com/quick_start/pricing, accessed 2026-11-15): the
+# Flash rate is $0.15 / $0.6 per 1M input (cache miss) / output, and $0.003 per 1M cached input,
+# off-peak; the peak multiplier below doubles those. `deepseek-flash` and `deepseek-v4-flash` are
+# the served API names for this model version and keep pointing here as deprecated aliases.
+# Sources otherwise match deepseek-flash.toml (thinking mode, Chat Completions + Anthropic
+# Messages, caching, tool-call limits; api-docs.deepseek.com, accessed 2026-10-19..2026-11-15).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+capabilities = { system_updates = true }
+
+[api.messages]
+base_url = "https://api.deepseek.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6
+reasoning = 0.6
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, not = { holiday = { equals = "CN" } }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
