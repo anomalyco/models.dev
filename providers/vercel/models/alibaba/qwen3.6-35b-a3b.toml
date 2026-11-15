@@ -8,7 +8,7 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, toggle = true }
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 cache = { implicit = true }
 

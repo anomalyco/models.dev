@@ -1,0 +1,43 @@
+# Sources: GET https://router.inference.ai.exchange/v1/models and
+#   GET https://router.inference.ai.exchange/v1/exchange/book (accessed 2026-11-04 UTC).
+# Prices are USD per million tokens. The auction selects an offer for each request, so the charge varies.
+# The 2 independent sellers with tools quote median rates of input 2.073284961,
+#   cache read 1.1740155075 and output 5.195941407. The prices below add the exchange fee:
+#   https://inference.ai.exchange/docs/fees
+# One offer also has a fixed request fee of USD 0.005727898 before the exchange fee.
+# The registry cannot express this request fee. The token prices are a guide, not a complete quote.
+# Cache: the exchange plans the cache for each job without a buyer parameter:
+#   https://inference.ai.exchange/docs/caching
+# Effort: reasoning_effort = low|high|max. The seller receives the value without a change.
+# The native API always reasons and has no off toggle:
+#   https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart
+# Chat Completions dispatch sends only reasoning_effort and drops other reasoning controls.
+# Neither offer declares reasoning.budget_tokens. The host returns reasoning, which v1 cannot express.
+# Neither offer declares video input. The model list declares text and image input only.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/heic",
+  "image/heif",
+]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2.18
+cache = { read = 1.23 }
+
+[cost.text.output]
+price = 5.46

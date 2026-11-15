@@ -1,0 +1,30 @@
+# Toggle: chat_template_kwargs.thinking = true|false
+# Prices and context: https://api.engy.ai/v1/models and https://engy.ai/pricing?model=kimi-k3.1-pro (2026-11-07; launch
+# price, shown as "30% off" on the pricing page). Context 1,113,088 is max_input + max_output, the same window as
+# engy's kimi-k3; the split is kimi-k3's measured 1,047,552 + 65,536 (the authed https://engy.ai/api/v1/models was not re-read).
+# Reasoning: Kimi K3.1 Pro ships the same encoding_k3.py chat template as Kimi K3, with the `thinking` switch
+# (https://huggingface.co/moonshotai/Kimi-K3.1-Pro/blob/main/encoding_k3.py), so it takes engy's kimi-k3 controls:
+# chat_template_kwargs.thinking toggles reasoning, and reasoning_effort was inert on kimi-k3 (live 2026-08-30).
+# Mid-conversation: engy serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://engy.ai/pricing
+# Input: engy's catalog lists text, image and video (https://api.engy.ai/v1/models) without formats, so the lab's MIME list is kept.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 1_113_088
+input = 1_047_552
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 7

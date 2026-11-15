@@ -1,3 +1,4 @@
+# Limits and retail cache-write price rechecked 2026-10-22 against /v1/models and the model page.
 # Sources (accessed 2026-10-10):
 # https://api.iteracompute.com/v1/models (available ID and reasoning capabilities)
 # https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
@@ -18,7 +19,7 @@ structured_output = true
 temperature = true
 
 [limit]
-output = 999_999
+output = 1_048_576
 
 [cost.text.input]
 price = 2.35

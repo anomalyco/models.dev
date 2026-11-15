@@ -1,0 +1,33 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Stealth preview with no lab entry, so this is a standalone definition. Facts follow the same
+#   model on Vercel AI Gateway (providers/vercel/models/stealth/glyph-cluster.toml).
+# Reasoning: graded effort, live 2026-10-29 (reasoning tokens low 83, medium 94, high 113).
+schema = 2
+name = "Glyph Cluster"
+description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
+open_weights = false
+release_date = "2026-10-07"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+tools = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 256_000
+output = 256_000
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

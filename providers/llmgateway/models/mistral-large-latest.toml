@@ -1,3 +1,4 @@
+# Output limit: capped at the 128,000 context; no host cap is documented and the 262,144 from the base model or host listing is larger.
 # structured_output = false: /v1/models structured_outputs, strict json_schema (https://docs.llmgateway.io/learn/structured-outputs)
 # effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
@@ -9,6 +10,7 @@ structured_output = false
 
 [limit]
 context = 128_000
+output = 128_000
 
 [cost.text.input]
 price = 4

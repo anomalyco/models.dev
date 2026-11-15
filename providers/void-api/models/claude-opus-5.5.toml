@@ -1,0 +1,14 @@
+# Effort: reasoning_effort (/v1/chat/completions).
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.1338, write = 1.8618 }
+
+[cost.text.output]
+price = 6

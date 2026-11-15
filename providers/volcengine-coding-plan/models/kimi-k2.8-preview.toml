@@ -1,0 +1,33 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-11-10). Subscription tier: no per-token price.
+# Effort mirrors the live-probed kimi-for-coding entry on kimi-code-plan-cn
+# (kimi-for-coding is served by K2.8 Preview) and the Kimi Code docs effort
+# mapping (https://www.kimi.com/code/docs/en/kimi-code/models.html, accessed
+# 2026-11-10): reasoning_effort = low|high|max, default max; off is effort
+# none -- K2.8 Preview requests with thinking disabled are served by K2.8
+# Preview without thinking, so no separate thinking.type toggle is authored.
+# Not re-measured on this endpoint; adjust if wire probing shows the levels
+# collapsing as they do on kimi-k2.7-code (see that file).
+# Output limit: the Kimi Code docs only specify context (1M); 32_768 is the
+# value kept by the K2.8-backed kimi-for-coding entries on Kimi's own coding
+# relays (kimi-code-plan-cn / -global). The v1 catalog requires limit.output,
+# so it is overridden here rather than left unset.
+schema = 2
+base_model = "moonshotai/kimi-k2.8-preview"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

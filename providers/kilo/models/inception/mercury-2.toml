@@ -1,0 +1,27 @@
+schema = 2
+name = "Mercury 2 (retires Nov 15)"
+description = "A diffusion-based reasoning LLM that generates text via parallel refinement (not token-by-token), delivering real-time latency with ~1k tokens/sec plus 128K context and built-in tool/JSON support."
+family = "mercury"
+open_weights = false
+release_date = "2026-02-24"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 128_000
+output = 128_000
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.75

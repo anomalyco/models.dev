@@ -1,0 +1,25 @@
+# Sources (accessed 2026-11-14):
+# - https://router.huggingface.co/v1/models (thinkingmachines/Inkling-2-Small: deepinfra live, context_length 1,048,576, $0.3 input / $1 output per 1M tokens, tools and structured output supported, input text + image)
+# - https://huggingface.co/docs/inference-providers/tasks/chat-completion
+# Reasoning: reasoning_effort = none|minimal|low|medium|high|max, copied from the Deep Infra Inkling 2 Small entry, which serves this route (https://docs.deepinfra.com/chat/reasoning), and the OpenRouter peer. None turns reasoning off, so no toggle.
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (thinkingmachines/inkling-2-small).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1

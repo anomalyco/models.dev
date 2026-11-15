@@ -1,3 +1,4 @@
+# Limits: 131,072 context window and 131,072 max output tokens (https://developers.openai.com/api/docs/models/gpt-oss-120b, accessed 2026-11-13).
 # Knowledge cutoff: June 2024 (gpt-oss model card §2.4, https://openai.com/index/gpt-oss-model-card/; https://developers.openai.com/api/docs/models/gpt-oss-120b).
 schema = 2
 name = "GPT OSS 120B"
@@ -20,7 +21,7 @@ top_k = true
 
 [limit]
 context = 131_072
-output = 32_768
+output = 131_072
 
 [[weights]]
 label = "Hugging Face"

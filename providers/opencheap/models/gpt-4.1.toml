@@ -1,0 +1,16 @@
+# Prices are USD per million tokens: our price on the public list https://opencheap.si/api/prices (no key), kept current by `bun models:sync opencheap`.
+# They can change at any time (https://docs.opencheap.si/models).
+# Tool calls checked live on 2026-10-28, streaming and non-streaming.
+# Cache: no cache_control needed; a repeated ~4k-token prompt came back with usage.prompt_tokens_details.cached_tokens (live, 2026-11-11).
+schema = 2
+base_model = "openai/gpt-4.1"
+
+[capabilities]
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 8

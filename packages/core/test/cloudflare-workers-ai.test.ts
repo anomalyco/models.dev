@@ -167,6 +167,24 @@ test("keeps the file's own API address, which search does not report", () => {
   expect(buildWorkersAiModel(source!, undefined).provider).toBeUndefined();
 });
 
+test("marks a model deprecated once search schedules its retirement", () => {
+  // The flat shape search returns with format=openrouter.
+  const row = {
+    id: "@cf/test/retiring",
+    name: "Retiring",
+    created: 1_782_777_600,
+    context_length: 65_536,
+    pricing: { prompt: "0.000001", completion: "0.000002" },
+  };
+  const [retiring] = cloudflareWorkersAi.parseModels({ data: [{ ...row, deprecation_date: "2026-11-20" }] });
+  expect(buildWorkersAiModel(retiring!, undefined).status).toBe("deprecated");
+  expect(buildWorkersAiModel(retiring!, { status: "beta" }).status).toBe("deprecated");
+
+  const [current] = cloudflareWorkersAi.parseModels({ data: [row] });
+  expect(buildWorkersAiModel(current!, { status: "beta" }).status).toBe("beta");
+  expect(buildWorkersAiModel(current!, undefined).status).toBeUndefined();
+});
+
 test("adds Clef Omni's audio and video inputs, which search leaves out", () => {
   const row = searchRow("@cf/cloudflare/clef-omni", 65_536);
   const [source] = cloudflareWorkersAi.parseModels({

@@ -1,0 +1,33 @@
+# Source: https://huggingface.co/Qwen/Qwen-Image (accessed 2026-11-02): 20B MMDiT
+# text-to-image model, open-sourced under Apache-2.0; announced 2025-08-19.
+# Diffusion image model: no temperature/top_p/top_k sampling and no token output
+# budget, following the qwen-image family convention (models/alibaba/qwen-image-2.1.toml);
+# output PNG; 8,192-token prompt budget.
+schema = 2
+v2_only = true
+type = "image"
+name = "Qwen-Image"
+description = "Open-weight Qwen image model for prompt-driven generation and visual design workflows"
+family = "qwen"
+open_weights = true
+release_date = "2025-08-19"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen-Image"

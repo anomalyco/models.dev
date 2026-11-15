@@ -1,0 +1,30 @@
+# Sources (accessed 2026-11-11):
+# - Model ID and direct per-million-token rates: https://outerlabs.ai/docs ("Models & rates").
+# - Outer Labs rates (40% below direct on every token type, on every account) and prompt-length bands:
+#   https://outerlabs.ai/pricing.
+# - Capabilities: live requests on production, 2026-11-11, on POST /v1/chat/completions and POST /v1/messages
+#   (base https://api.outerlabs.ai/v1). Claude family tested with claude-fable-5-2, plus claude-opus-5-5, claude-sonnet-5-5 and
+#   claude-haiku-5-5 for tool choice: tool calls and results, JSON-schema structured output, thinking controls
+#   (thinking blocks returned, thinking tokens reported) and cache_control caching (creation then read of 20,484
+#   tokens) all pass through. Tool choice and reasoning controls mirror what Anthropic accepts for this model.
+#   Only what those tests confirmed is declared; mid-conversation update flags, strict tools and search are left out.
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 6
+cache = { read = 0.15, write = { "5m" = 7.5, "1h" = 12 } }
+
+[cost.text.output]
+price = 30
