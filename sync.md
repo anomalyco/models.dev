@@ -31,6 +31,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync uberllm` syncs only UberLLM.
 - `bun models:sync opencheap` syncs only OpenCheap prices.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
+- `bun models:sync phala` syncs only Phala.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
