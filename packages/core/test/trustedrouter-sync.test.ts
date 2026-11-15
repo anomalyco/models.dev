@@ -1,8 +1,10 @@
 import { expect, test } from "bun:test";
 
 import { syncProviderMatrix } from "../src/sync/index.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
   fetchTrustedRouterModels,
+  isGpt5Plus,
   labMimeInput,
   trustedrouter,
   TrustedRouterResponse,
@@ -113,4 +115,71 @@ test("a passed-through reasoning parameter does not make a non-reasoning lab mod
   const translated = trustedrouter.translateModel(gemma, none)!.model as { reasoning?: boolean; reasoning_options?: unknown };
   expect(translated.reasoning).not.toBe(true);
   expect(translated.reasoning_options).toBeUndefined();
+});
+
+test("a reasoner without stated controls is left for hand authoring, never written as always-on", () => {
+  // No `reasoning` object: TrustedRouter states nothing (e.g. dashed Claude aliases OpenRouter has no metadata for).
+  const alias = model({ id: "anthropic/claude-opus-4-7", name: "Anthropic: Claude Opus 4.7", reasoning: undefined });
+  expect(() => trustedrouter.translateModel(alias, none)).toThrow(MissingReasoningOptionsError);
+  // Mandatory with no efforts while the row still takes reasoning_effort (o3): contradictory, not always-on.
+  const o3 = model({
+    id: "openai/o3",
+    name: "OpenAI: o3",
+    supported_parameters: ["tools", "reasoning", "reasoning_effort", "include_reasoning"],
+    reasoning: { mandatory: true, supported_efforts: [] },
+  });
+  expect(() => trustedrouter.translateModel(o3, none)).toThrow("accepts reasoning_effort");
+});
+
+test("mandatory reasoning with no efforts on a row that refuses effort is an affirmative always-on claim", () => {
+  const r1 = model({
+    id: "deepseek/deepseek-r1-0528",
+    name: "DeepSeek: R1 0528",
+    supported_parameters: ["tools", "reasoning", "include_reasoning"],
+    reasoning: { mandatory: true, supported_efforts: [] },
+  });
+  const translated = trustedrouter.translateModel(r1, none)!;
+  // No controls from the module; the runner writes `reasoning = { supported = true }`.
+  expect((translated.model as { reasoning_options?: unknown[] }).reasoning_options ?? []).toEqual([]);
+  expect(translated.header).toContain("# Always-on: the object marks reasoning mandatory with no efforts");
+  expect(translated.header).not.toContain("# Toggle:");
+});
+
+test("GPT-5+ files leave freeform out and say so in the header; other models carry no such note", () => {
+  expect(isGpt5Plus("openai/gpt-5")).toBe(true);
+  expect(isGpt5Plus("openai/gpt-5.4-mini")).toBe(true);
+  expect(isGpt5Plus("openai/gpt-6.1-sol")).toBe(true);
+  expect(isGpt5Plus("openai/gpt-4.1")).toBe(false);
+  expect(isGpt5Plus("openai/gpt-oss-120b")).toBe(false);
+  expect(isGpt5Plus("anthropic/claude-sonnet-4-5")).toBe(false);
+
+  const gpt = trustedrouter.translateModel(model({
+    id: "openai/gpt-5.4",
+    name: "OpenAI: GPT-5.4",
+    reasoning: { mandatory: false, supported_efforts: ["xhigh", "high", "medium", "low", "none"] },
+  }), none)!;
+  expect(gpt.header).toContain("# Custom tools: freeform is left out;");
+  expect(JSON.stringify(gpt.model)).not.toContain("freeform");
+  expect(trustedrouter.translateModel(model(), none)!.header).not.toContain("freeform");
+});
+
+test("rows that price cache reads publish the cache kind, Anthropic as explicit", () => {
+  const anthropic = trustedrouter.translateModel(model(), none)!;
+  expect(anthropic.v2Set?.["capabilities.cache"]).toEqual({ explicit: true });
+  expect(anthropic.header).toContain("# Cache: explicit;");
+
+  const gpt = trustedrouter.translateModel(model({
+    id: "openai/gpt-5.4",
+    name: "OpenAI: GPT-5.4",
+    reasoning: { mandatory: false, supported_efforts: ["high", "low"] },
+  }), none)!;
+  expect(gpt.v2Set?.["capabilities.cache"]).toEqual({ implicit: true });
+  expect(gpt.header).toContain("# Cache: implicit;");
+
+  const uncached = trustedrouter.translateModel(
+    model({ pricing: { prompt: "0.000003", completion: "0.000015" } }),
+    none,
+  )!;
+  expect(uncached.v2Set?.["capabilities.cache"]).toBeUndefined();
+  expect(uncached.header).not.toContain("# Cache:");
 });

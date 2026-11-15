@@ -3,6 +3,7 @@
 # Toggle: reasoning.enabled = true|false
 # Reasoning controls are TrustedRouter's published `reasoning` object (OpenRouter's request shape): OpenRouter's
 # efforts for the model, narrowed to what the gateway honors on every route (https://trustedrouter.com/docs).
+# Cache: implicit; the selected provider caches prompt prefixes automatically (https://trustedrouter.com/docs/prompt-caching).
 # Mid-conversation: system_updates, effort_updates and tools.updates are unset; TrustedRouter documents none of them.
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
@@ -16,6 +17,7 @@ output = ["text"]
 reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
+cache = { implicit = true }
 
 [limit]
 output = 235_929

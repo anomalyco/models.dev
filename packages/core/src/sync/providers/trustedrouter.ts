@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { SyncProvider } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
@@ -34,8 +35,9 @@ export const TrustedRouterModel = z.object({
     max_completion_tokens: z.number().nullable(),
   }).passthrough(),
   supported_parameters: z.array(z.string()),
-  // Published only where every route honors reasoning controls: absent means
-  // no caller control, an empty list means on/off without graded efforts.
+  // Published only where OpenRouter has reasoning metadata for the id and every
+  // route honors reasoning controls. Absent does not mean "no caller control":
+  // it means TrustedRouter states nothing. An empty list means on/off only.
   reasoning: z.object({
     mandatory: z.boolean(),
     supported_efforts: Efforts.nullable().optional(),
@@ -99,13 +101,58 @@ function toOpenRouterShape(model: TrustedRouterModel, baseModel: string): OpenRo
       context_length: model.top_provider.context_length,
       max_completion_tokens: model.top_provider.max_completion_tokens ?? labOutput,
     },
-    // A model that publishes no reasoning controls and whose lab says it does
-    // not reason only passes `reasoning` through; it is not a reasoner.
-    supported_parameters: model.reasoning === undefined && labDoesNotReason(baseModel)
-      ? model.supported_parameters.filter((name) => !["reasoning", "include_reasoning", "reasoning_effort"].includes(name))
-      : model.supported_parameters,
+    supported_parameters: supportedParameters(model, baseModel),
     reasoning,
   };
+}
+
+const REASONING_PARAMETERS = ["reasoning", "include_reasoning", "reasoning_effort"];
+
+// A model that publishes no reasoning controls and whose lab says it does not
+// reason only passes `reasoning` through; it is not a reasoner.
+function supportedParameters(model: TrustedRouterModel, baseModel: string) {
+  return model.reasoning === undefined && labDoesNotReason(baseModel)
+    ? model.supported_parameters.filter((name) => !REASONING_PARAMETERS.includes(name))
+    : model.supported_parameters;
+}
+
+// The OpenRouter builder reads a model as a reasoner when it takes either field.
+function takesReasoning(model: TrustedRouterModel, baseModel: string) {
+  const params = supportedParameters(model, baseModel);
+  return params.includes("reasoning") || params.includes("include_reasoning");
+}
+
+// Why a reasoner's controls are not stated affirmatively, or undefined when they
+// are. A row without a `reasoning` object states nothing. A mandatory object
+// with no efforts is an always-on claim only when the row also refuses an
+// effort; one that takes `reasoning_effort` (o3, Gemini 2.5 Pro) contradicts it.
+export function unstatedReasoningControls(model: TrustedRouterModel, baseModel: string) {
+  if (!takesReasoning(model, baseModel)) return undefined;
+  if (model.reasoning === undefined) {
+    return "TrustedRouter publishes no reasoning controls for this reasoning model; manual authoring is needed";
+  }
+  if (model.reasoning.mandatory && !model.reasoning.supported_efforts?.length
+    && model.supported_parameters.includes("reasoning_effort")) {
+    return "TrustedRouter lists no efforts but accepts reasoning_effort, so always-on is not established; manual authoring is needed";
+  }
+  return undefined;
+}
+
+// OpenAI GPT-5 and later (not gpt-oss), whose custom-tool formats AGENTS.md asks
+// every host file to state.
+export function isGpt5Plus(baseModel: string) {
+  const major = /^openai\/gpt-(\d+)/.exec(baseModel)?.[1];
+  return major !== undefined && Number(major) >= 5;
+}
+
+// TrustedRouter's prompt-caching guide: providers cache prompt prefixes
+// automatically, and Anthropic content-block cache_control is preserved.
+// A row that prices cache reads caches; Anthropic models cache only with
+// explicit markers, as on other relays.
+const CACHE_DOCS = "https://trustedrouter.com/docs/prompt-caching";
+export function trustedRouterCache(model: TrustedRouterModel, baseModel: string) {
+  if (model.pricing.input_cache_read === undefined) return undefined;
+  return baseModel.startsWith("anthropic/") ? { explicit: true } : { implicit: true };
 }
 
 export const trustedrouter = {
@@ -142,20 +189,39 @@ export const trustedrouter = {
     const existing = context.existing(model.id);
     const baseModel = existing?.base_model ?? resolveModelMetadataBaseModel(model.id) ?? openRouterBaseModel(model.id);
     if (baseModel === undefined) return undefined;
+    // Writing no controls claims always-on, so a reasoner is left for hand
+    // authoring (an authored file is kept as written) unless TrustedRouter states
+    // its controls affirmatively.
+    const unstated = unstatedReasoningControls(model, baseModel);
+    if (unstated !== undefined) throw new MissingReasoningOptionsError(model.id, unstated);
     const labInput = labMimeList(baseModel);
     const built = buildOpenRouterModel(toOpenRouterShape(model, baseModel), existing, baseModel);
     const options = built.reasoning_options ?? [];
     const efforts = options.find((option) => option.type === "effort");
+    const cache = trustedRouterCache(model, baseModel);
     return {
       id: model.id,
       model: built,
-      v2Set: { "modalities.input": (current: unknown) => labMimeInput(current, labInput) },
+      v2Set: {
+        "modalities.input": (current: unknown) => labMimeInput(current, labInput),
+        "capabilities.cache": cache,
+      },
       header: "# Generated by bun models:sync trustedrouter from https://api.trustedrouter.com/v1/models.\n"
         + "# Prices are USD per million tokens; lab facts are inherited via base_model.\n"
         + (options.some((option) => option.type === "toggle") ? "# Toggle: reasoning.enabled = true|false\n" : "")
         + (efforts && "values" in efforts ? `# Effort: reasoning.effort = ${efforts.values.join("|")}\n` : "")
-        + "# Reasoning controls are TrustedRouter's published `reasoning` object (OpenRouter's request shape): OpenRouter's\n"
-        + "# efforts for the model, narrowed to what the gateway honors on every route (https://trustedrouter.com/docs).\n"
+        + (model.reasoning === undefined ? "" :
+          "# Reasoning controls are TrustedRouter's published `reasoning` object (OpenRouter's request shape): OpenRouter's\n"
+          + "# efforts for the model, narrowed to what the gateway honors on every route (https://trustedrouter.com/docs).\n")
+        + (model.reasoning?.mandatory && options.length === 0 && takesReasoning(model, baseModel)
+          ? "# Always-on: the object marks reasoning mandatory with no efforts, and the row does not take reasoning_effort.\n"
+          : "")
+        + (cache === undefined ? "" : "explicit" in cache
+          ? `# Cache: explicit; Anthropic cache_control breakpoints pass through to the provider (${CACHE_DOCS}).\n`
+          : `# Cache: implicit; the selected provider caches prompt prefixes automatically (${CACHE_DOCS}).\n`)
+        + (isGpt5Plus(baseModel)
+          ? "# Custom tools: freeform is left out; TrustedRouter documents no custom-tool (text/lark/regex) support and none was probed.\n"
+          : "")
         + "# Mid-conversation: system_updates, effort_updates and tools.updates are unset; TrustedRouter documents none of them.\n",
     };
   },

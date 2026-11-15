@@ -2,6 +2,8 @@
 # Prices are USD per million tokens; lab facts are inherited via base_model.
 # Reasoning controls are TrustedRouter's published `reasoning` object (OpenRouter's request shape): OpenRouter's
 # efforts for the model, narrowed to what the gateway honors on every route (https://trustedrouter.com/docs).
+# Always-on: the object marks reasoning mandatory with no efforts, and the row does not take reasoning_effort.
+# Cache: implicit; the selected provider caches prompt prefixes automatically (https://trustedrouter.com/docs/prompt-caching).
 # Mid-conversation: system_updates, effort_updates and tools.updates are unset; TrustedRouter documents none of them.
 schema = 2
 base_model = "xai/grok-build-0.1"
@@ -14,6 +16,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 230_400

@@ -3,6 +3,8 @@
 # Effort: reasoning.effort = none|low|medium|high|xhigh|max
 # Reasoning controls are TrustedRouter's published `reasoning` object (OpenRouter's request shape): OpenRouter's
 # efforts for the model, narrowed to what the gateway honors on every route (https://trustedrouter.com/docs).
+# Cache: implicit; the selected provider caches prompt prefixes automatically (https://trustedrouter.com/docs/prompt-caching).
+# Custom tools: freeform is left out; TrustedRouter documents no custom-tool (text/lark/regex) support and none was probed.
 # Mid-conversation: system_updates, effort_updates and tools.updates are unset; TrustedRouter documents none of them.
 schema = 2
 base_model = "openai/gpt-6-sol"
@@ -15,6 +17,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 2.11

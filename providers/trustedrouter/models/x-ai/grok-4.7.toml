@@ -3,6 +3,7 @@
 # Effort: reasoning.effort = low|medium|high|xhigh
 # Reasoning controls are TrustedRouter's published `reasoning` object (OpenRouter's request shape): OpenRouter's
 # efforts for the model, narrowed to what the gateway honors on every route (https://trustedrouter.com/docs).
+# Cache: implicit; the selected provider caches prompt prefixes automatically (https://trustedrouter.com/docs/prompt-caching).
 # Mid-conversation: system_updates, effort_updates and tools.updates are unset; TrustedRouter documents none of them.
 schema = 2
 base_model = "xai/grok-4.7"
@@ -15,6 +16,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 450_000
