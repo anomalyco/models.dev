@@ -1,10 +1,15 @@
 # Modelflare ID "qwen3.8-max" from GET https://modelflare.dev/v1/models (2026-10-15).
 # Effort: $.reasoning_effort on /v1/chat/completions; matches lab/first-party effort set; reasoning_effort accepted live.
 # Cost: list price from https://modelflare.dev/api/pricing (2026-10-15): input_price=1.71429 USD/MTok, output = input_price * completion_ratio (3.0), cache_read = input_price * cache_ratio (0.125).
+schema = 2
 base_model = "alibaba/qwen3.8-max"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "xhigh"] }]
 
-[cost]
-input = 1.71429
-output = 5.14286
-cache_read = 0.214286
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 1.71429
+cache = { read = 0.214286 }
+
+[cost.text.output]
+price = 5.14286
