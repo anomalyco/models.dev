@@ -1,0 +1,26 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-11-15)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Claude is served on /messages only (provider.toml), through @ai-sdk/anthropic.
+# Capabilities follow the same model on the Anthropic host
+#   (providers/anthropic/models/claude-fable-5-2.toml): effort low|medium|high|xhigh|max, forced
+#   tool choice rejected, mid-conversation system and effort updates, and tool_addition/tool_removal.
+# Cache write is the published 5m rate; the host publishes no 1h rate.
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+tools = { supported = true, updates = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+system_updates = true
+effort_updates = true
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = 10 }
+
+[cost.text.output]
+price = 40

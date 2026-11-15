@@ -1,0 +1,21 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-11-15)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: the three graded levels this host publishes for the Gemini 4 peers
+#   (providers/commandcode/models/google/gemini-4-argon.toml).
+schema = 2
+base_model = "google/gemini-4-carbon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10

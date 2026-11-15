@@ -1,0 +1,18 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-11-15)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: the five graded levels this host publishes for the Muse peers
+#   (providers/commandcode/models/meta/muse-spark-1.3.toml); none and minimal are rejected here
+#   (provider.toml).
+schema = 2
+base_model = "meta/muse-ember-1.0"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.004 }
+
+[cost.text.output]
+price = 0.5

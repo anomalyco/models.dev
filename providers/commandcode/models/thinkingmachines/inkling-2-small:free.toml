@@ -1,0 +1,17 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-11-15)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Free tier: 200 requests a day while it lasts (https://commandcode.ai/docs/provider).
+# Reasoning: the four graded levels this host publishes for Inkling Small
+#   (providers/commandcode/models/thinkingmachines/inkling-small.toml).
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
