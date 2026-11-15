@@ -1,17 +1,27 @@
+# Effort: Cortecs "accepts: 'reasoning_effort': 'low' | 'medium' | 'high'" (https://docs.cortecs.ai/routing/reasoning, "Controlling Reasoning").
+# Mapping: Gemini 2.5 and later, "Provided efforts are converted into a reasoning budget similar to Anthropic" (the Anthropic table: low 1024 | medium 2048 | high 4096), same page.
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: automatic prefix caching on every routed provider (google). https://docs.cortecs.ai/routing/prompt-caching
+# Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
+schema = 2
 base_model = "google/gemini-3.5-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+output = ["text"]
 
-[cost]
-input = 1.649
-output = 9.899
-cache_read = 0.165
-cache_write = 1
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
+structured_output = true
 
 [limit]
 output = 65_535
 
-[modalities]
-input = ["text", "image", "audio"]
+[cost.text.input]
+price = 1.649
+cache = { read = 0.165, write = 1 }
+
+[cost.text.output]
+price = 9.899

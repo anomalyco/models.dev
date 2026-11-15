@@ -1,0 +1,25 @@
+schema = 2
+name = "ScaleDown: Extract-1"
+description = "ScaleDown Extract-1 is a task-specific language model for extracting structured data from unstructured text using a custom JSON schema. It identifies domain-specific entities with confidence scores, character offsets, and surrounding context, and supports nested objects and arrays for workflows such as invoice processing, contract analysis, and record parsing."
+open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,70 @@
+# Sources (accessed 2026-10-29):
+# - Variant identity and integration: https://withhopper.com/cyber
+# - Model ID, context window, and USD-per-million-token prices:
+#   https://withhopper.com/mcp, tools/call list_models (no authentication required).
+# - Served limits: live POST https://api.withhopper.com/v1/chat/completions and
+#   https://api.withhopper.com/v1/messages, using this exact model ID, thinking off,
+#   and "Reply with exactly READY." (10 input tokens). On both APIs:
+#   max_tokens=1048576 -> HTTP 200 (3 output tokens); 1048577 -> HTTP 400,
+#   "max_tokens=1048577 cannot be greater than max_model_len=1048576".
+# - Actual input-window test, 2026-10-29, same Chat Completions URL and model ID:
+#   max_tokens=64, temperature=0, chat_template_kwargs.thinking=false;
+#   1048053 prompt tokens + 25 completion tokens = 1048078 total -> HTTP 200.
+#   cached_tokens=0; response.model matched this exact abliterated ID. The model
+#   correctly returned distinct markers at the start, middle, and end of the input.
+#   Fixture: 1048000 repetitions of " a", split around the middle marker;
+#   reproduction and the captured response are in the PR description.
+#   Increasing to 1048600 repetitions -> HTTP 400 with param=input_tokens:
+#   "This model's maximum context length is 1048576 tokens. However, your prompt
+#   contains at least 1048577 input tokens, which exceeds this limit even without
+#   any output tokens." This verifies the input window, not just max_tokens parsing.
+#   Public catalog metadata corrected and rechecked on 2026-10-29:
+#   MCP contextTokens and GET /v1/models max_model_len both report 1048576,
+#   matching the actual near-window input and over-window rejection above.
+#   Output records the accepted request cap and shares context with the prompt;
+#   no separate lower output cap observed. Full-length output generation not tested.
+# Hopper hosts an abliterated variant of the shared DeepSeek base model.
+# Chat Completions toggle: chat_template_kwargs.thinking = true|false.
+# Effort: reasoning_effort = low|high|max, matching Hopper's shared DeepSeek API;
+# all three verified live on this variant; an unknown value returns HTTP 400.
+# max also returns thinking blocks through Messages output_config.effort.
+# Relative effort was not benchmarked.
+# Messages toggle: thinking.type = enabled|disabled; effort: output_config.effort.
+# Live image checks: JPEG/PNG/GIF/WebP data URLs each returned "Red" for a red
+# image, with 184 image tokens. Other checks: text, tool/result round trips,
+# streaming usage, implicit cache hits, and strict JSON schemas on both APIs.
+# Messages accepts x-api-key auth and returns thinking blocks (empty signatures).
+# Same-endpoint comparison at high effort: this variant returned 133 chars only
+# in message.reasoning; standard returned 162 chars in both reasoning and
+# reasoning_content, plus reasoning_details. These are per-model wire differences.
+# As with Nebius, leave reasoning_field unset: v1 only accepts
+# reasoning_content|reasoning_details. No hard budget or mid-conversation flags.
+# top_k is omitted by Hopper's Messages adapter, so disable the inherited flag.
+# Keep Chat Completions first for v1 compatibility; both APIs share /v1.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Abliterated"
+description = "Abliterated variant of DeepSeek V4.1 Flash 1017 hosted by Hopper."
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+stream_usage = true
+structured_output = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 0.30
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.20
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

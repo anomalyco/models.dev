@@ -1,13 +1,17 @@
+schema = 2
 base_model = "google/gemini-flash-latest"
 
-[interleaved]
-field = "reasoning_details"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+tools = { supported = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_details" }
 
-[cost]
-input = 2.0631
-output = 12.3786
-cache_read = 0.20631
+[cost.text.input]
+price = 1.587
+cache = { read = 0.1587, write = 0.088167 }
+
+[cost.text.output]
+price = 9.522

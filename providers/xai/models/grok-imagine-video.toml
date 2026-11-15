@@ -1,18 +1,43 @@
+# Image and video MIME types: https://docs.x.ai/developers/rest-api-reference/inference/videos (image inputs JPEG, PNG or WebP; video inputs and generated videos are .mp4)
+# API: POST https://api.x.ai/v1/videos/generations (https://docs.x.ai/developers/rest-api-reference/inference/videos.md).
+# Pricing (accessed 2026-11-12): https://docs.x.ai/developers/pricing lists the base per-second price; resolution tiers follow the same prices
+# that Cloudflare AI Gateway (no-markup passthrough of the xAI catalog where it carries the model), OpenRouter and Vercel publish for this model.
+# Input image (image-to-video) fee: as published by OpenRouter for this model (xAI's pricing page does not list it).
+# GET https://api.x.ai/v1/video-generation-models (queried 2026-11-12) returns no pricing fields, so the passthrough sourcing above stands.
+schema = 2
+type = "video"
 name = "Grok Imagine Video"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 family = "grok"
-release_date = "2026-01-28"
-last_updated = "2026-01-28"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
 open_weights = false
+release_date = "2026-01-28"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 1_024
 output = 0
 
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["video"]
+[api.videos]
+sdk = { opencodeai = "@opencode/ai/providers/xai/videos" }
+
+[cost.video.output]
+unit = "second"
+price = 0.05
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" } }
+price = 0.07
+
+[cost.image.input]
+unit = "image"
+price = 0.002

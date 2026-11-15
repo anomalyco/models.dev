@@ -1,10 +1,18 @@
 # No caller control: reasoning_effort is validated (invalid value -> 400) but low/high
 # do not order reasoning tokens; toggle/budget fields are dropped by the gateway.
+# Cache: the chat-completions catalog row prices cache writes at 5m (cache_write) and 1h (cache_write_1h), and the request schema takes cache_control { type: ephemeral, ttl: 5m | 1h }. https://api.aimlapi.com/v1/models?include=pricing,modalities
+schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 name = "Claude 4.5 Haiku"
-reasoning_options = []
 
-[cost]
-input = 1.3754
-output = 6.877
-cache_read = 0.13754
+[capabilities]
+reasoning = { supported = true }
+tools = { supported = true }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 1.058
+cache = { read = 0.1058, write = { "5m" = 1.3225, "1h" = 2.116 } }
+
+[cost.text.output]
+price = 5.29

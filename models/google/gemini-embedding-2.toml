@@ -1,19 +1,32 @@
+schema = 2
+type = "embedding"
 name = "Gemini Embedding 2"
 description = "Multimodal embedding model mapping text, images, video, audio, and PDFs into a unified embedding space"
 family = "gemini"
-release_date = "2026-04-22"
-last_updated = "2026-04-22"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-knowledge = "2025-11"
 open_weights = false
+knowledge = "2025-11"
+release_date = "2026-04-22"
+
+[modalities]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "audio/mp3",
+  "audio/wav",
+  "video/mp4",
+  "video/mov",
+  "application/pdf",
+]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 8_192
 output = 3_072
-
-[modalities]
-input = ["text", "image", "audio", "video", "pdf"]
-output = ["text"]

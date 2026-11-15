@@ -1,0 +1,27 @@
+# First released as Universal-3.5 Pro Realtime on 2026-06-15, async on 2026-07-06: https://www.assemblyai.com/changelog
+# https://www.assemblyai.com/docs/pre-recorded-audio/universal-3-5-pro
+# Input formats: the common list in OpenRouter's speech-to-text docs (the lab lists none here):
+#   https://openrouter.ai/docs/guides/overview/multimodal/stt
+# temperature "only takes effect on the Universal-3.5 Pro model": https://www.assemblyai.com/docs/api-reference/transcripts/submit
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Universal-3.5 Pro"
+description = "Speech-to-text model with code switching, contextual prompting, and speaker diarization"
+open_weights = false
+release_date = "2026-06-15"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/mp4", "audio/ogg", "audio/webm", "audio/aac"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

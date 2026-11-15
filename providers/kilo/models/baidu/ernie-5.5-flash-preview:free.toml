@@ -1,0 +1,26 @@
+schema = 2
+name = "Baidu: ERNIE-5.5-Flash-Preview (free)"
+description = "ERNIE 5.5 Flash Preview is the latest foundation model in the ERNIE family, with comprehensive improvements in coding, agentic capabilities, knowledge work, and deep research. It has 280 billion total..."
+family = "ernie"
+open_weights = false
+release_date = "2026-11-10"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_024_000
+output = 921_600
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,16 +1,35 @@
+# Serverless: $1.00 input, $0.17 cached input, $4.05 output per 1M; context 524,288 (accessed 2026-10-21):
+# https://docs.together.ai/docs/serverless-models
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max (live 2026-10-21, rendered
+# prompt "Thinking effort level": 0, 0.1, 0.2, 0.7, 0.9, 0.99, 0.99; the default is 0.9). `none`
+# returns no reasoning; reasoning.enabled, thinking.type and chat_template_kwargs have no effect.
+# Reasoning is returned in `reasoning` (live 2026-10-21).
+# Inputs (live 2026-10-21): PNG, JPEG, GIF and WebP images and WAV audio are read; video is rejected.
+# Mid-conversation (live 2026-10-21, rendered prompt): a late system message stays in place after
+# the earlier turns (and was followed, keeping the cache); the effort line and the tool list are
+# rendered before the first user turn.
+schema = 2
 base_model = "thinkingmachines/inkling"
-structured_output = true
-reasoning_options = [{ type = "effort", values = ["max", "xhigh", "high", "medium", "low", "none"] }]
 
-[cost]
-input = 1.00
-cache_read = 0.17
-output = 4.05
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
 
 [limit]
 context = 524_288
 output = 131_072
 
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 1
+cache = { read = 0.17 }
+
+[cost.text.output]
+price = 4.05

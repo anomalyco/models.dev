@@ -1,24 +1,28 @@
-name = "Qwen2.5 Coder 32B Instruct"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates unset: live probes showed no cache signal, so placement is unknown
+# effort_updates = false: no per-turn effort control
+schema = 2
+base_model = "alibaba/qwen2.5-coder-32b-instruct"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-release_date = "2024-11-11"
-last_updated = "2024-11-11"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
-structured_output = false
-knowledge = "2024-06-30"
-open_weights = true
 
-[cost]
-input = 0.66
-output = 1
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 32_768
 output = 29_491
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.66
+
+[cost.text.output]
+price = 1

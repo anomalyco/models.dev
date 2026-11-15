@@ -1,0 +1,11 @@
+# Synced from https://openrouter.ai/api/v1/models?output_modalities=rerank
+# No [cost]: the models API reports "0" for priced rerank models (the model pages show per-search
+# and per-token prices), so only free routes get a price.
+# https://openrouter.ai/docs/api/api-reference/rerank/submit-a-rerank-request
+schema = 2
+v2_only = true
+base_model = "voyageai/rerank-3"
+
+[api.rerank]
+base_url = "https://openrouter.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/cohere", opencodeai = "none" }

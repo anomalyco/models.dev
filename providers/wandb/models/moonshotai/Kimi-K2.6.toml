@@ -1,13 +1,21 @@
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
+# Input MIME types: the lab's image list; CoreWeave's catalog reports image input without formats (https://trace.wandb.ai/inference/modelsdev/models).
+schema = 2
 base_model = "moonshotai/kimi-k2.6"
 description = "Kimi K2.6 is a multimodal Mixture-of-Experts language model featuring 32 billion activated parameters and a total of 1 trillion parameters."
-release_date = "2026-04-20"
-last_updated = "2026-04-20"
-reasoning_options = []
-
-[cost]
-input = 0.65
-output = 3.41
-cache_read = 0.15
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.65
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.41

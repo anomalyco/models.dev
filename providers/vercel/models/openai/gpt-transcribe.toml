@@ -1,0 +1,17 @@
+# Synced from https://ai-gateway.vercel.sh/v1/models (type transcription)
+# https://vercel.com/docs/ai-gateway/modalities/speech-to-text
+schema = 2
+v2_only = true
+base_model = "openai/gpt-transcribe"
+name = "GPT Transcribe"
+
+[capabilities]
+temperature = false
+
+[api.transcriptions]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }
+
+[cost.audio.input]
+unit = "second"
+price = 0.000075

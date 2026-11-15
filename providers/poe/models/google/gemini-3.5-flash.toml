@@ -11,14 +11,21 @@
 # returns 200 but its reasoning_tokens overlap baseline/low and do not scale as a
 # distinct level, so it is not filed as an extra effort value (see provider.toml:
 # forwarding is best-effort; acceptance alone is not an effective control).
+schema = 2
 base_model = "google/gemini-3.5-flash"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "high"] }]
 name = "Gemini-3.5-Flash"
 
-[cost]
-input = 1.5152
-output = 9.0909
-cache_read = 0.1515
-
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5152
+cache = { read = 0.1515 }
+
+[cost.text.output]
+price = 9.0909

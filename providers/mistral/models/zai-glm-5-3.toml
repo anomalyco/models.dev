@@ -1,16 +1,35 @@
-# Source: https://docs.mistral.ai/models/zai-glm-5-3 (accessed 2026-09-17)
-# Effort: reasoning_effort = low|high|max; GLM-5.3 native effective levels
-# (unlike 5.2, low is a real level), served unmodified by Mistral.
+# Source: https://docs.mistral.ai/models/zai-glm-5-3 (accessed 2026-10-19; API IDs zai-glm-5-3, zai-glm-5, zai-glm-latest;
+# $1.4 input / $0.14 cached input / $4.4 output).
+# Effort: reasoning_effort = low|high|max (https://docs.mistral.ai/studio/conversations/reasoning: "Supported values
+# are low, high, and max"; none returns 400). GLM-5.3 native levels, served unmodified by Mistral. It reasons
+# when reasoning_effort is omitted (live).
+# Mistral API (api.mistral.ai), docs and live checks 2026-10-19:
+# - Prompt caching: https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic prefix
+#   cache in 64-token blocks, no write price, optional prompt_cache_key). Usage is reported when streaming.
+# - Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named
+#   function; function.strict). All five tool_choice forms worked live.
+# - Structured output: json_schema response_format returned schema-valid JSON live (model page lists it).
+# - Mid-conversation (live): a system message after the first assistant turn is accepted in place,
+#   keeps the cached prefix and is obeyed. Adding or removing tools between requests
+#   drops the cache after the system prompt (live 2026-10-22). Switching reasoning_effort between turns drops it (cached_tokens 0 after each switch).
+schema = 2
 base_model = "zhipuai/glm-5.3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.14
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+stream_usage = true
+prompt_cache_key = true
+cache = { implicit = { min_tokens = 64 } }
 
 [limit]
 context = 1_048_576
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

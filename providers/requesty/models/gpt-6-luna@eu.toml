@@ -1,19 +1,27 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 base_model = "openai/gpt-6-luna"
 name = "GPT-6 Luna (EU)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "max"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
 
-[cost]
-input = 0.12
-output = 0.6
-cache_read = 0.012
-cache_write = 0.15
+[cost.text.input]
+price = 0.12
+cache = { read = 0.012, write = 0.15 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 0.24
-output = 0.9
-cache_read = 0.024
-cache_write = 0.3
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.24
+cache = { read = 0.024, write = 0.3 }
+
+[cost.text.output]
+price = 0.6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.9

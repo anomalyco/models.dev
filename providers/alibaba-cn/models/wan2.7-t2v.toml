@@ -1,0 +1,29 @@
+# Sources (accessed 2026-11-12):
+# - Pricing (China (Beijing), CNY): https://help.aliyun.com/zh/model-studio/model-pricing
+#   per second of output video: 1080P ¥1, 720P ¥0.6
+#   base price is 1080P, the default resolution in the API reference below
+# CNY→USD rate: 6.685797, 2026-11-12, source: https://open.er-api.com/v6/latest/USD
+# - API: POST https://dashscope.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis with `X-DashScope-Async: enable`,
+#   then poll GET /api/v1/tasks/{task_id} (https://www.alibabacloud.com/help/en/model-studio/text-to-video-api-reference)
+# - Inputs: audio WAV or MP3; output MP4 (H.264)
+# base_url is passed as @ai-sdk/alibaba's videoBaseURL. No @opencode/ai package covers this API.
+schema = 2
+v2_only = true
+base_model = "alibaba/wan2.7"
+name = "Wan2.7 Text-to-Video"
+
+[modalities]
+input = ["text", "audio/wav", "audio/mpeg"]
+output = ["video/mp4"]
+
+[api.videos]
+base_url = "https://dashscope.aliyuncs.com"
+sdk = { aisdk = "@ai-sdk/alibaba", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.1496
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" } }
+price = 0.0897

@@ -1,0 +1,26 @@
+# Released 2026-05-14 with the V4.1 family, including the Utility tiers (docs pricing table lists V4.1 Utility Vector): https://www.recraft.ai/docs/recraft-models/recraft-v4-1
+#   Inputs PNG, JPG or WEBP; raster output lossless WebP (default) or PNG, vector output SVG:
+#   https://www.recraft.ai/docs/api-reference/endpoints
+schema = 2
+v2_only = true
+type = "image"
+name = "Recraft V4.1 Utility Vector"
+description = "Recraft V4.1 Utility model that generates editable SVG images for mockups"
+family = "recraft"
+open_weights = false
+release_date = "2026-05-14"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/svg+xml"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

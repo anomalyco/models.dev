@@ -1,22 +1,26 @@
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+schema = 2
 name = "QwQ 32B"
 description = "Open reasoning model from the Qwen team for math, coding, and step-by-step problem solving"
 family = "qwen"
-release_date = "2025-03-05"
-last_updated = "2025-03-05"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-04"
 open_weights = true
-
-[limit]
-context = 131_072
-output = 8_192
+knowledge = "2024-04"
+release_date = "2025-03-05"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 8_192
 
 [[weights]]
 label = "Hugging Face"

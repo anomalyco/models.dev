@@ -1,26 +1,25 @@
+# Toggle: thinking.type = enabled|disabled (lab-mapped, not probed on 302.AI)
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
+schema = 2
+base_model = "zhipuai/glm-5"
 name = "glm-5"
-description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-02-12"
-last_updated = "2026-02-12"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
-[cost]
-input = 0.600
-output = 2.600
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[limit]
-context = 204_800
-output = 131_072
+[cost.text.input]
+price = 0.6
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.9
+
+[cost.text.output]
+price = 2.6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.2

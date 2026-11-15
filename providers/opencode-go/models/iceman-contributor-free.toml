@@ -1,0 +1,27 @@
+schema = 2
+name = "Iceman Contributor Free"
+description = "Stealth model, free for a limited time"
+open_weights = false
+release_date = "2026-10-24"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+
+[limit]
+context = 262_144
+output = 131_072
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

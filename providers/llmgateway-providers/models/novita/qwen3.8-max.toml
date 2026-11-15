@@ -1,15 +1,14 @@
+schema = 2
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen3.8 Max (NovitaAI)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"], budget = {} }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 2
-output = 6
-cache_read = 0.25
+[cost.text.output]
+price = 6

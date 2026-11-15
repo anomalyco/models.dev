@@ -3,10 +3,20 @@
 # - https://docs.z.ai/guides/overview/pricing (Z.AI list: $1/$3.2/M, cached input $0.2/M)
 # - https://docs.z.ai/api-reference/llm/chat-completion (thinking.type enabled|disabled; reasoning_effort is GLM-5.2+)
 # Toggle: thinking.type = enabled|disabled
+# Mid-conversation (Ofox Chat Completions, https://ofox.ai/docs/api/openai/chat-completions): reasoning and tools are per-request fields with no per-turn change mechanism (effort_updates = false, tools.updates = false).
+# system_updates unset: Ofox relays to the upstream cloud and doesn't document where a later system message goes.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/glm).
+schema = 2
 base_model = "zhipuai/glm-5"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 1.0
-output = 3.2
-cache_read = 0.2
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.2

@@ -1,0 +1,28 @@
+schema = 2
+type = "decision"
+name = "Joey-1"
+description = "Joey-1 is a 2B decision model from Baseten's Base Labs for classification, routing, and scoring. It evaluates text context against choice, yes/no, and ordered scoring questions, returning answer probabilities and confidence in a single forward pass without generating free-form text."
+open_weights = false
+release_date = "2026-10-29"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 16_384
+output = 0
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

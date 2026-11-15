@@ -1,10 +1,22 @@
 # Sources:
 # https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-tts-preview
 # https://ai.google.dev/gemini-api/docs/pricing
+# Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
+schema = 2
 base_model = "google/gemini-3.1-flash-tts-preview"
-reasoning = true
-reasoning_options = []
 
-[cost]
-input = 1
-output = 20
+[capabilities]
+reasoning = { supported = true }
+cache = false
+
+[api.speech]
+sdk = { opencodeai = "@opencode/ai/protocols/google-speech" }
+
+[api.interactions]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 20

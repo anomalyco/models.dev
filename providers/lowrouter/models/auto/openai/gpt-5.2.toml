@@ -11,13 +11,16 @@
 # disclosed as rejected_by_provider and served without the parameter: minimal;
 # max is refused by LowRouter itself with 400 'reasoning_effort "max" is not valid (expected one of: none,
 # minimal, low, medium, high, xhigh)'.
+schema = 2
 base_model = "openai/gpt-5.2"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
 
-[cost]
-input = 1.75
-output = 14
-cache_read = 0.175
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14

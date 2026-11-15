@@ -1,33 +1,29 @@
 ---
 name: audit-reasoning-options
-description: Audit or write models.dev reasoning_options in provider TOML files and reasoning-option PRs. Use when verifying toggle, effort, budget_tokens, provider reasoning controls, or citations.
+description: Audit or write models.dev reasoning controls (capabilities.reasoning) in provider TOML files and reasoning-control PRs. Use when verifying toggle, effort, budget, provider reasoning controls, or citations.
 ---
 
 # Audit Reasoning Options
 
-`AGENTS.md` → **Reasoning options** is authoritative. This skill is the workflow.
+`AGENTS.md` → **Reasoning controls** is authoritative. This skill is the workflow.
 
 Provider capability = this host’s HTTP request surface (not the npm package, SDK types, or UI).
 
 ## Schema shapes
 
+Controls live in the provider model file (never in `models/`):
+
 ```toml
-[[reasoning_options]]
-type = "toggle"
+schema = 2
+base_model = "…"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-max = 32_000
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"], budget = { min = 1_024, max = 32_000 } }
 ```
 
-- `effort` values may include `null`, `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`, `default` — **never dump the full enum**.
-- `budget_tokens` = reasoning tokens only, not `max_tokens`. Bounds only when verified.
-- `[]` = model reasons, **no** caller control. Omitted = not authored (invalid once `reasoning = true`).
+- `effort` values may include `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`, `default`, sorted low to high — **never dump the full enum**.
+- `budget` = reasoning tokens only, not `max_tokens`. Use `budget = {}` when bounds aren't verified.
+- `reasoning = { supported = true }` with no `toggle` / `effort` / `budget` = model reasons, **no** caller control. A relay file that leaves controls out silently inherits that, so only do it on purpose.
 
 ## Step 1 — classify the host (role, not npm)
 
@@ -38,7 +34,7 @@ max = 32_000
 
 **Critical:** `npm = "@ai-sdk/openai-compatible"` is used by **both** labs (DeepSeek, Alibaba) and relays. It does **not** mean “apply GPT L/M/H gateway defaults.”
 
-- DeepSeek first-party: `thinking.type` + `reasoning_effort` `high`|`max`
+- DeepSeek first-party: `thinking.type` + `reasoning_effort` `low`|`high`|`max`
 - Alibaba first-party: `enable_thinking` + often `thinking_budget`; Responses API may use `reasoning.effort`
 - A random relay of GPT-5.4: usually passthrough `reasoning_effort` with GPT-like levels
 
@@ -53,7 +49,7 @@ Never compare a native Anthropic Messages route to an OpenAI chat-completions re
    - Effort values from native/peers (may be `high`/`max` only, or `low`/`medium`/`high`, or include `none`/`xhigh`, …)
    - Toggle if native/peers have a real on/off **and** this host forwards it
    - Budget only if a reasoning-budget field exists on this path
-5. On relays: if native/peers have caller controls, **do not** write `[]` from uncertainty.
+5. On relays: if native/peers have caller controls, **do not** leave them out from uncertainty.
 6. On labs: match that lab; do not paste another lab’s enum.
 
 ### What “baseline” means
@@ -65,23 +61,23 @@ It is **not** “always `low`/`medium`/`high`.” That triple is only the usual 
 | Example | Typical options |
 | --- | --- |
 | GPT-5.4 on a relay | `effort` `none`/`low`/`medium`/`high`/`xhigh` as peers/native show |
-| DeepSeek V4 on DeepSeek or a faithful relay | `toggle` + `effort` `high`/`max` |
-| Qwen3.5 Plus on Alibaba | `toggle` + `budget_tokens` (chat path) |
-| Always-on thinking model | `[]` |
+| DeepSeek V4 on DeepSeek or a faithful relay | `toggle` + `effort` `low`/`high`/`max` |
+| Qwen3.5 Plus on Alibaba | `toggle` + `budget` (chat path) |
+| Always-on thinking model | no controls |
 
 ## Step 3 — toggle rules
 
 | Situation | Shape |
 | --- | --- |
 | `none` ∈ effort **and** other graded levels | `effort` only — **no** `toggle` |
-| Separate on/off field + graded effort (no `none` in effort) | `toggle` + `effort` |
-| Binary on/off only | `toggle` |
+| Separate on/off field + graded effort (no `none` in effort) | `toggle = true` + `effort` |
+| Binary on/off only | `toggle = true` |
 
 Toggle requires a **leading top-of-file** wire comment, e.g.:
 
 ```toml
 # Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = high|max
+# Effort: reasoning_effort = low|high|max
 ```
 
 ```toml
@@ -105,15 +101,15 @@ Not toggle: split model IDs; UI-only; `effort=low` as “off”; pairing `toggle
 | Effort/toggle/budget matching first-party lab entry on that lab | Lab docs or existing lab TOML |
 | Same options on a relay | Lab + peer relays, or this host docs/test; no contradiction |
 | Extra levels beyond lab/peers | This host docs or live meaningful effect |
-| `[]` | Affirmative no control — not “I didn’t check” |
+| No controls | Affirmative no control — not “I didn’t check” |
 
 ## Anti-patterns
 
 - Treating every `@ai-sdk/openai-compatible` host as a GPT L/M/H gateway
 - Forcing `low`/`medium`/`high` onto DeepSeek V4 (or any narrower native set)
-- `[]` on a relay of a controlled reasoner from uncertainty
+- No controls on a relay of a controlled reasoner from uncertainty
 - Full schema effort enum dumps
-- Bogus `budget_tokens` / bounds from output limits
+- Bogus `budget` / bounds from output limits
 - `toggle` + `none` inside the same effort list
 - Wrong wire comments in examples or files
 
@@ -122,7 +118,7 @@ Not toggle: split model IDs; UI-only; `effort=low` as “off”; pairing `toggle
 1. Classify host: first-party lab vs multi-model relay.
 2. List changed models and proposed options.
 3. For each: lab entry + peers → expected shape.
-4. Fix invented L/M/H, false `[]`, dual none+toggle, bad budgets.
+4. Fix invented L/M/H, false no-control entries, dual none+toggle, bad budgets.
 5. `bun validate` when authoring.
 6. PR body: host kind, wire fields, why this option set.
 

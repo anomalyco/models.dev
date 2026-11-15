@@ -1,0 +1,23 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Input: the formats the schema's file field documents, else the lab's. Prices: catalog provider_details, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+# xAI's speech-to-text endpoint (POST /v1/stt, streaming wss://api.x.ai/v1/stt) serves its default model, Grok Voice Transcribe 2.0: https://docs.x.ai/developers/model-capabilities/audio/speech-to-text
+schema = 2
+v2_only = true
+base_model = "xai/grok-voice-transcribe-2.0"
+name = "Grok STT"
+
+[modalities]
+input = ["audio/flac", "audio/mpeg", "audio/mp4", "audio/x-matroska", "audio/ogg", "audio/wav", "audio/aac", "audio/pcm", "audio/basic", "audio/alaw"]
+output = ["text"]
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.001667
+
+[[cost.audio.input.overrides]]
+when = { websocket = { equals = true } }
+price = 0.003334

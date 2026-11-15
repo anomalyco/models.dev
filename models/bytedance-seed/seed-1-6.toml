@@ -1,22 +1,48 @@
 # Sources (accessed 2026-08-14):
 # - https://seed.bytedance.com/en/seed2
 # - https://www.volcengine.com/docs/82379/1330310
+# Image and video input: the Ark doubao-seed-1.6 model card lists input 文本, 图像, 视频 (text, image, video)
+#   (https://www.volcengine.com/docs/82379/1593702, archived https://web.archive.org/web/20260121161120/https://www.volcengine.com/docs/82379/1593702).
+# Video formats: Ark video understanding, 视频格式说明 table (MP4 video/mp4, AVI video/x-msvideo, MOV video/quicktime):
+#   https://www.volcengine.com/docs/82379/1895586
+# Image formats: Volcengine Ark image understanding, 图片格式说明 table, Content Type column as written
+#   (JPEG, PNG, GIF, WEBP, BMP, TIFF, ICO, DIB, ICNS, SGI, JPEG2000, HEIC/HEIF; DIB is image/bmp, HEIF is image/heic):
+#   https://www.volcengine.com/docs/82379/1362931
+# Sampling: the Ark Chat API takes temperature and top_p and has no top_k: https://www.volcengine.com/docs/82379/1494384
+schema = 2
 name = "Seed 1.6"
 description = "ByteDance Seed model for long-context reasoning, instruction following, and tool-assisted tasks"
 family = "seed"
-release_date = "2025-10-15"
-last_updated = "2025-10-15"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2025-10-15"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/x-icon",
+  "image/x-icns",
+  "image/sgi",
+  "image/jp2",
+  "image/heic",
+  "video/mp4",
+  "video/x-msvideo",
+  "video/quicktime",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 256_000
 output = 64_000
-
-[modalities]
-input = ["text"]
-output = ["text"]

@@ -1,23 +1,13 @@
-name = "GPT OSS 120B"
-description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-open_weights = true
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Reasoning: the catalog lists `reasoning`, `reasoning_effort` in supported_parameters; the control set is unchanged from v1 (not re-tested, no API key).
+schema = 2
+base_model = "openai/gpt-oss-120b"
 
-[cost]
-input = 0.15
-output = 0.60
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[limit]
-context = 131_072
-output = 32_768
+[cost.text.input]
+price = 0.09
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 0.36

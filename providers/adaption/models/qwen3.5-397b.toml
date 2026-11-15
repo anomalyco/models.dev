@@ -1,0 +1,25 @@
+# Toggle: reasoning_effort = none (off) | any other value (on)
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.55
+cache = { read = 0.225 }
+
+[cost.text.output]
+price = 3.5

@@ -1,24 +1,20 @@
-name = "GPT OSS 120B"
+# Catalog: GET https://api.synthetic.new/openai/v1/models (accessed 2026-10-21).
+# Effort: reasoning_effort (reasoning_parameters.efforts in the catalog).
+# Lists reasoning efforts none|low|medium|high, max_output_length 65536 and
+# input_cache_reads $0.00000002.
+schema = 2
+base_model = "openai/gpt-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = true
-tool_call = true
-open_weights = true
 
-[cost]
-input = 0.10
-output = 0.10
-cache_read = 0.10
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
-context = 131_072
-output = 32_768
+output = 65_536
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.1

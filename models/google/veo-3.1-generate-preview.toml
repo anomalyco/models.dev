@@ -2,22 +2,29 @@
 # - https://ai.google.dev/gemini-api/docs/models/veo-3.1-generate-preview
 # - https://ai.google.dev/gemini-api/docs/veo
 # - https://developers.googleblog.com/introducing-veo-3-1-and-new-creative-capabilities-in-the-gemini-api
-
+# Video formats: https://ai.google.dev/gemini-api/docs/veo (generated and extension videos are video/mp4).
+# Image MIME types: the Veo API takes image/jpeg or image/png for image, lastFrame and referenceImages:
+# https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/veo-video-generation
+schema = 2
+type = "video"
 name = "Veo 3.1 Preview"
 description = "Video model for prompt-guided generation, editing, and motion workflows"
 family = "veo"
+open_weights = false
 release_date = "2025-10-15"
 last_updated = "2026-01"
-attachment = true
-reasoning = false
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = false
-tool_call = false
-open_weights = false
+top_p = false
+top_k = false
 
 [limit]
 context = 1_024
 output = 1
-
-[modalities]
-input = ["text", "image"]
-output = ["video"]

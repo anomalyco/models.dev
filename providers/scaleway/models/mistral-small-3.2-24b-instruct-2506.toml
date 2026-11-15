@@ -1,10 +1,14 @@
+# Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-21)
+# Billed in EUR: €0.15 input / €0.35 output per 1M tokens; converted at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
+schema = 2
 base_model = "mistral/mistral-small-2506"
 name = "Mistral Small 3.2 24B Instruct (2506)"
-last_updated = "2026-03-17"
-
-[cost]
-input = 0.15
-output = 0.35
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 0.168225
+
+[cost.text.output]
+price = 0.392525

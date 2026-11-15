@@ -1,9 +1,13 @@
+schema = 2
 base_model = "mistral/mistral-small-2506"
 name = "Mistral Small 3.2 (Mistral AI)"
-attachment = true
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
 structured_output = false
 
-[cost]
-input = 0.1
-output = 0.3
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.3

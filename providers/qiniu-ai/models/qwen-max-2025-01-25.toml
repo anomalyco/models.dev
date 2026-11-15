@@ -1,18 +1,20 @@
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-05-30 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+schema = 2
+base_model = "alibaba/qwen-max"
 name = "Qwen2.5-Max-2025-01-25"
-description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
-open_weights = false
+status = "deprecated"
+
+[capabilities]
+structured_output = true
 
 [limit]
 context = 128_000
 output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.34782609
+
+[cost.text.output]
+price = 1.39130435

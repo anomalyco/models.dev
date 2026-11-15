@@ -1,0 +1,27 @@
+# Perplexity Agent API (accessed 2026-10-21): https://docs.perplexity.ai/docs/agent-api/models.md (USD per MTok: input,
+#   output, cache read). reasoning.effort = minimal|low|medium|high|xhigh|max (https://docs.perplexity.ai/api-reference/agent-post.md);
+#   the model's own levels within that enum are listed. Images: PNG, JPEG, WEBP, GIF; documents via input_file.
+# Agent API tool fees (https://docs.perplexity.ai/docs/getting-started/pricing#tool-pricing, accessed 2026-10-22): web_search
+#   with search_type "web" is $2.50 per 1,000 invocations (cost.web_search). Not representable in v2 (no per-call field or
+#   search type condition): web_search with search_type fast $0.001, image_search $0.0025, fetch_url $0.0005,
+#   people_search and finance_search $0.005, sandbox $0.03 per session.
+schema = 2
+base_model = "google/gemini-3.6-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5
+
+[cost.web_search]
+price = 2.5

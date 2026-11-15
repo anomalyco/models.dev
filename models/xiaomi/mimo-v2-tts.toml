@@ -1,0 +1,32 @@
+# Sources (Xiaomi MiMo docs, accessed 2026-10-21):
+# - Release 2026-03-18: https://mimo.mi.com/static/docs/updates/model.md and
+#   https://mimo.mi.com/static/docs/news/previous-news/v2-tts-release.md
+# - Context 8K, max output 8K (pricing page archived 2026-05-08):
+#   https://web.archive.org/web/20260508062910/https://platform.xiaomimimo.com/static/docs/pricing.md
+# - Retired from the MiMo API on 2026-06-30 (requests routed to mimo-v2.5-tts from 2026-06-27):
+#   https://mimo.mi.com/static/docs/updates/deprecate.md
+# Formats: generic audio kept; no archived page lists this model's output formats.
+# Weights: not released (API only; the XiaomiMiMo Hugging Face organization has no TTS repository,
+#   https://huggingface.co/api/models?author=XiaomiMiMo, checked 2026-10-21).
+schema = 2
+type = "speech"
+name = "MiMo-V2-TTS"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+family = "mimo"
+open_weights = false
+release_date = "2026-03-18"
+
+[modalities]
+input = ["text"]
+output = ["audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 8_192

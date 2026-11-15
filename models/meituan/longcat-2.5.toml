@@ -1,0 +1,25 @@
+# https://longcat.ai/platform/docs/change-log (2026-11-02: LongCat-2.5, native multimodality with visual understanding)
+# https://longcat.ai/platform/docs/ (1M context window, 256K max output)
+# Sampling: https://longcat.ai/platform/docs/api/model-params fixes temperature and accepts top_p and top_k, as for LongCat-2.5-Preview.
+# Modalities: image input is documented but LongCat's docs list no image formats, so input keeps the generic image.
+schema = 2
+name = "LongCat-2.5"
+description = "Meituan's multimodal reasoning model for long-horizon coding and agent tasks, with visual understanding and a 1M-token context window"
+family = "longcat"
+open_weights = false
+release_date = "2026-11-02"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 262_144

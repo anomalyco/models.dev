@@ -61,12 +61,18 @@ export const CrossModelModel = z
     capabilities: z
       .object({
         json: z.boolean().optional(),
+        structured_output: z
+          .object({ json_schema: z.boolean().nullish() })
+          .passthrough()
+          .nullish(),
+        context: z.object({ caching: z.boolean().nullish() }).passthrough().nullish(),
         reasoning: ReasoningCapability.optional(),
       })
       .passthrough()
       .nullable()
       .optional(),
     status: z.string().optional(),
+    identity: z.object({ release_stage: z.string().nullish() }).passthrough().nullish(),
     currency: z.string().nullable().optional(),
     pricing: z.object({ tiers: z.array(PriceTier).nullable() }).nullable().optional(),
   })
@@ -115,7 +121,12 @@ export const crossmodel = {
     const existing = context.existing(model.id);
     const built = buildCrossModel(model, existing);
     if (built === undefined) return undefined;
-    return { id: model.id, model: built };
+    // The catalog says whether a model caches prompts but not how (implicit or
+    // explicit, TTLs), so a file's cache kinds are kept and otherwise assumed implicit.
+    const v2Set = model.capabilities?.context?.caching === true
+      ? { "capabilities.cache": (current: unknown) => (current !== null && typeof current === "object" ? current : { implicit: true }) }
+      : undefined;
+    return { id: model.id, model: built, v2Set };
   },
 } satisfies SyncProvider<CrossModelModel>;
 
@@ -171,8 +182,11 @@ function reasoningOptions(model: CrossModelModel): SyncedModel["reasoning_option
   if (reasoning === undefined || reasoning.supported === false) return undefined;
   const options: NonNullable<SyncedModel["reasoning_options"]> = [];
   if (reasoning.toggle === true) options.push({ type: "toggle" });
-  if (reasoning.effort !== undefined) {
-    if (reasoning.effort.length > 0) options.push({ type: "effort", values: reasoning.effort });
+  if (reasoning.effort !== undefined && reasoning.effort.length > 0) {
+    const values = [...reasoning.effort].sort(
+      (a, b) => REASONING_EFFORTS.indexOf(a) - REASONING_EFFORTS.indexOf(b),
+    );
+    options.push({ type: "effort", values });
   }
   if (reasoning.budget_tokens !== undefined) {
     const budget: { type: "budget_tokens"; min?: number; max?: number } = { type: "budget_tokens" };
@@ -240,7 +254,8 @@ export function buildCrossModel(
 
   // Curated capability fields stay inherited from the base model (undefined here);
   // we only drive the volatile cost/limit/modalities plus the gateway-specific
-  // reasoning_options.
+  // reasoning_options, structured output and lifecycle. Model facts (knowledge,
+  // dates, family) always come from the base model.
   return factorBaseModel(
     baseModel,
     {
@@ -248,8 +263,11 @@ export function buildCrossModel(
       reasoning: existing?.reasoning,
       temperature: existing?.temperature,
       tool_call: existing?.tool_call,
-      structured_output: model.capabilities?.json ?? existing?.structured_output,
-      knowledge: existing?.knowledge,
+      structured_output:
+        model.capabilities?.json
+        ?? model.capabilities?.structured_output?.json_schema
+        ?? existing?.structured_output,
+      status: model.identity?.release_stage === "deprecated" ? "deprecated" : existing?.status,
       modalities: modality,
       reasoning_options,
       limit,

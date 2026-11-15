@@ -1,8 +1,15 @@
+# Retired 2026-10-04 (rerouted to its replacement): https://docs.tensorx.ai/api-reference/model-deprecation (accessed 2026-10-21).
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.5
-output = 2.8
-cache_read = 0.125
-cache_write = 0.625
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.125, write = 0.625 }
+
+[cost.text.output]
+price = 2.8

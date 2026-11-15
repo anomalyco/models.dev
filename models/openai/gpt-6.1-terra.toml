@@ -1,0 +1,25 @@
+# Sampling: live POST /v1/chat/completions 2026-11-13: temperature (0.3) and top_p (0.5) return 200 with
+# reasoning_effort = "none"; /v1/responses with reasoning.effort = "none" also returns 200 (checked on 5.5, 5.6 Luna, 6 Sol, 6.1 Terra).
+schema = 2
+name = "GPT-6.1 Terra"
+description = "Fast, efficient model for visual reasoning, precise computer use, and clear, natural writing."
+family = "gpt-terra"
+open_weights = false
+knowledge = "2026-06-01"
+release_date = "2026-10-26"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_050_000
+input = 922_000
+output = 128_000

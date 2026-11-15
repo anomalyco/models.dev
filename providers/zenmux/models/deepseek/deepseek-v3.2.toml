@@ -1,23 +1,20 @@
-name = "DeepSeek V3.2"
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Toggle: Chat Completions reasoning.enabled = true|false (https://docs.zenmux.ai/guide/advanced/reasoning.html).
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-release_date = "2025-12-05"
-last_updated = "2025-12-05"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = false
 
-[cost]
-input = 0.28
-output = 0.43
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
 
 [limit]
-context = 128_000
-output = 64_000
+output = 8_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.293
+cache = { read = 0.0293 }
+
+[cost.text.output]
+price = 0.4395

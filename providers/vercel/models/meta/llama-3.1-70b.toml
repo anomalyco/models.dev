@@ -1,23 +1,26 @@
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19): routed to Amazon Bedrock Converse, which rejects system-role messages for this model (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html), so the gateway cannot keep them in place. No per-turn effort or tool-change mechanism reaches this model on this API.
+schema = 2
+base_model = "meta/llama-3.1-70b-instruct"
 name = "Llama 3.1 70B Instruct"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-release_date = "2024-07-23"
-last_updated = "2024-07-23"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2023-12"
-open_weights = false
 
-[cost]
-input = 0.72
-output = 0.72
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [limit]
-context = 128_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.72
+
+[cost.text.output]
+price = 0.72

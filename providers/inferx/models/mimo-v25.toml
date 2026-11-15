@@ -1,10 +1,17 @@
 # limit.output confirmed working at 100_000 via live test
-name = "mimo-v25"
+schema = 2
 base_model = "xiaomi/mimo-v2.5"
-reasoning_options = []
+name = "mimo-v25"
+
+[capabilities]
+reasoning = { supported = true }
+
 [limit]
 context = 1_000_000
 output = 100_000
-[cost]
-input = 0
-output = 0
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

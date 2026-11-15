@@ -1,23 +1,17 @@
+# Prices: https://submodel.gitbook.io/docs/instagen/overview-1/available-models (USD per 1M tokens, checked 2026-10-21).
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
 name = "Qwen3 235B A22B Thinking 2507"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-family = "qwen"
-release_date = "2025-08-23"
-last_updated = "2025-08-23"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = true
 
-[cost]
-input = 0.20
-output = 0.60
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
-context = 262_144
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.6

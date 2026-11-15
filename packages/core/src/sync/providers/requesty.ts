@@ -4,9 +4,10 @@ import path from "node:path";
 import { z } from "zod";
 
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
-import type { SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import {
     factorBaseModel,
+    modelMetadata,
     resolveModelMetadataBaseModel,
 } from "./openrouter.js";
 
@@ -78,7 +79,13 @@ export type RequestyModel = z.infer<typeof RequestyModel>;
 // Util functions
 // ========================================
 
-export function buildRequestyModel(model: RequestyModel): SyncedModel {
+// A file linked to its lab by hand keeps that base_model when the resolver has
+// no match for the catalog ID. A curated status is kept: the catalog's
+// `retires` date is not synced.
+export function buildRequestyModel(
+    model: RequestyModel,
+    existing?: Pick<ExistingModel, "base_model" | "status" | "name">,
+): SyncedModel {
     const toolCall = model.supports_tool_calling;
     const structuredOutput = model.supports_output_json_schema;
     const context = model.context_window;
@@ -90,20 +97,33 @@ export function buildRequestyModel(model: RequestyModel): SyncedModel {
     const cost = buildCost(model);
     const reasoning = model.supports_reasoning;
 
-    const canonical = resolveRequestyBaseModel(model.id);
+    const resolved = resolveRequestyBaseModel(model.id);
+    const canonical = resolved ?? existing?.base_model;
     if (canonical !== undefined) {
+        // A catalog output limit of 0 means unknown: inherit the lab's output
+        // instead of the context-window fallback, unless the lab's exceeds the
+        // context this route serves.
+        const labOutput = (modelMetadata(canonical).limit as { output?: number } | undefined)?.output;
+        const factoredLimit = model.max_output_tokens <= 0 && labOutput !== undefined && labOutput <= context
+            ? { context }
+            : limit;
         return factorBaseModel(
             canonical,
             {
-                name: regionVariantName(model.id, canonical),
+                // A hand-linked route keeps its curated display name (e.g. a
+                // context-limited variant); factorBaseModel drops it when it
+                // equals the lab's.
+                name: regionVariantName(model.id, canonical)
+                    ?? (resolved === undefined ? existing?.name : undefined),
                 reasoning,
                 reasoning_options: reasoningOptions(reasoning),
                 tool_call: toolCall,
                 structured_output: structuredOutput,
+                status: existing?.status,
                 cost,
-                limit,
+                limit: factoredLimit,
             },
-            limit,
+            factoredLimit,
         );
     }
 
@@ -124,6 +144,7 @@ export function buildRequestyModel(model: RequestyModel): SyncedModel {
         tool_call: toolCall,
         structured_output: structuredOutput,
         open_weights: false,
+        status: existing?.status,
         cost,
         limit,
         modalities: { input, output },
@@ -265,10 +286,10 @@ export const requesty = {
     parseModels(raw) {
         return RequestyResponse.parse(raw).data;
     },
-    translateModel(model) {
+    translateModel(model, context) {
         return {
             id: model.id,
-            model: buildRequestyModel(model),
+            model: buildRequestyModel(model, context.existing(model.id)),
         };
     },
 } satisfies SyncProvider<RequestyModel>;

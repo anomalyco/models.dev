@@ -1,0 +1,15 @@
+schema = 2
+base_model = "openai/o3"
+name = "OpenAI: o3 (Fast)"
+description = "OpenAI's o3 is their most powerful reasoning model, setting new state-of-the-art benchmarks in coding, math, science, and visual perception. It excels at complex queries requiring multi-faceted analysis, with particular strength in analyzing images, charts, and graphics."
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 3.5
+cache = { read = 0.875 }
+
+[cost.text.output]
+price = 14

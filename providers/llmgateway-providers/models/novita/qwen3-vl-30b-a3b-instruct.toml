@@ -1,22 +1,15 @@
+schema = 2
+base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
 name = "Qwen3 VL 30B A3B Instruct (NovitaAI)"
-description = "Multimodal model for analyzing text, images, documents, and rich media"
-release_date = "2025-10-05"
-last_updated = "2025-10-05"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
-open_weights = false
 
-[cost]
-input = 0.2
-output = 0.7
+[capabilities]
+structured_output = false
 
 [limit]
 context = 131_072
-output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.7

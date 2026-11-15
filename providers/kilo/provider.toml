@@ -1,6 +1,7 @@
 name = "Kilo Gateway"
 env = ["KILO_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Reasoning HTTP formats (accessed 2026-06-25): Kilo accepts POST
 # /api/gateway/chat/completions, /responses, and /messages (also under /v1).
 # Chat uses `reasoning.enabled` = true|false, `reasoning.effort` = none, minimal,

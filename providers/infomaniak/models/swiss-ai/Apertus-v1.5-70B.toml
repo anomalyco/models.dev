@@ -23,26 +23,30 @@
 #   https://www.infomaniak.com/en/hosting/ai-services/prices
 #   https://developer.infomaniak.com/docs/api/post/2/ai/{product_id}/openai/v1/chat/completions
 #   https://huggingface.co/swiss-ai/Apertus-v1.5-70B
+schema = 2
 name = "Apertus v1.5 70B"
 description = "Open, ethically-sourced Swiss AI model for multilingual, multimodal chat and instruction following"
+open_weights = true
 release_date = "2026-07-24"
 last_updated = "2026-08-01"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
 status = "beta"
 
-[cost]
-input = 0.87
-output = 3.10
+[modalities]
+input = ["text", "image", "audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 100_000
 input = 100_000
 output = 8_192
 
-[modalities]
-input = ["text", "image", "audio"]
-output = ["text"]
+[cost.text.input]
+price = 0.87
+
+[cost.text.output]
+price = 3.1

@@ -1,9 +1,15 @@
 # https://novita.ai/models/model-detail/baidu-ernie-4.5-21B-a3b
+schema = 2
 base_model = "baidu/ernie-4.5-21b-a3b"
 
-[cost]
-input = 0.07
-output = 0.28
+[capabilities]
+tools = { supported = true }
 
 [limit]
 context = 120_000
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.28

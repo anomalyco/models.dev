@@ -1,0 +1,55 @@
+# Sources (accessed 2026-11-10):
+# - https://seed.bytedance.com/en/seed2
+# - https://www.volcengine.com/docs/82379/1330310 (doubao-seed-2-1-lite-260915: 深度思考, 文本生成,
+#   多模态理解, GUI 任务处理, 工具调用, 结构化输出; 上下文窗口 1024k, 最大回答 256k)
+# Image formats: Volcengine Ark image understanding, 图片格式说明 table, Content Type column as written
+#   (JPEG, PNG, GIF, WEBP, BMP, TIFF, ICO, DIB, ICNS, SGI, JPEG2000, HEIC/HEIF; DIB is image/bmp, HEIF is image/heic):
+#   https://www.volcengine.com/docs/82379/1362931
+# Video formats: Volcengine Ark video understanding, 视频格式说明 table (MP4 video/mp4, AVI video/x-msvideo,
+#   MOV video/quicktime): https://www.volcengine.com/docs/82379/1895586
+# Audio formats: Volcengine Ark audio understanding, 音频格式说明, 纯音频格式
+#   (mp3 audio/mpeg, wav audio/wav, aac audio/aac, m4a audio/x-m4a):
+#   https://www.volcengine.com/docs/82379/1362907; doubao-seed-2-1-lite-260915 is listed under
+#   音频理解能力 in the model list above.
+# Sampling: the Ark Chat API takes temperature and top_p and has no top_k: https://www.volcengine.com/docs/82379/1494384
+schema = 2
+name = "Seed 2.1 Lite"
+description = "Omnimodal ByteDance Seed 2.1 model with native text, vision, and audio understanding, 1M context, and improved coding and agent task completion"
+family = "seed"
+open_weights = false
+release_date = "2026-09-15"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/x-icon",
+  "image/x-icns",
+  "image/sgi",
+  "image/jp2",
+  "image/heic",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/aac",
+  "audio/x-m4a",
+  "video/mp4",
+  "video/x-msvideo",
+  "video/quicktime",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_024_000
+output = 256_000

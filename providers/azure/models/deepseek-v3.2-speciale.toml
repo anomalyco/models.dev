@@ -1,24 +1,33 @@
+# Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
+# (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-23, Chat Completions) a system message between turns
+# is accepted but followed only 1 of 4 times (the reply stays English reasoning), and Azure returns no usage, so it can't be confirmed; system_updates stays false.
+# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+schema = 2
 name = "DeepSeek-V3.2-Speciale"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 family = "deepseek"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-knowledge = "2024-07"
-tool_call = false
 open_weights = true
+knowledge = "2024-07"
+release_date = "2025-12-01"
 
-[cost]
-input = 0.58
-output = 1.68
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 128_000
 output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 0.58
+
+[cost.text.output]
+price = 1.68

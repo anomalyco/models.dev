@@ -1,27 +1,28 @@
-name = "Mistral Small 3.2 24B Instruct 2506"
-description = "Efficient Mistral model for fast chat, extraction, and production assistants"
-family = "mistral-small"
-release_date = "2025-10-01"
-last_updated = "2025-10-01"
-attachment = false
-reasoning = true
 # Berget documents no meaningful toggle, effort subset, or budget for this model.
 # https://api.berget.ai/openapi.json
-reasoning_options = []
-temperature = true
+# Prices: https://api.berget.ai/v1/models lists EUR per 1M tokens (public, checked 2026-10-21);
+# EUR 0.30 / 0.30; the old values used an unrecorded 1.10 rate.
+# converted to USD at the ECB reference rate of 1.1215 USD/EUR (2026-10-20).
+# knowledge is an unsourced provider value, kept so v1 does not change.
+schema = 2
+base_model = "mistral/mistral-small-3.2-24b-instruct"
+name = "Mistral Small 3.2 24B Instruct 2506"
 knowledge = "2025-09"
-tool_call = true
-structured_output = true
-open_weights = true
 
-[cost]
-input = 0.33
-output = 0.33
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 32_000
 output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.33645
+
+[cost.text.output]
+price = 0.33645

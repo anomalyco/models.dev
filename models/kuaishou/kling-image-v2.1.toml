@@ -1,0 +1,35 @@
+# Sources (accessed 2026-11-12):
+# - https://kling.ai/document-api/guides/capability-map/image (Kling Image 2.1, API ID kling-v2-1: text and image input,
+#   1K/2K output, multi-image to image, subject control)
+# - https://kling.ai/document-api/api/image/2-1/image-generation (one reference image, .jpg/.jpeg/.png, with optional
+#   subject or face reference)
+# - https://kling.ai/document-api/api/image/2-1/multi-image-to-image (up to 4 subject images plus one scene and one style
+#   image, .jpg/.jpeg/.png)
+# Released 2025-07-30 ("Image Generation | Support V2.1 model"): https://kling.ai/document-api/updates/api
+# Output: the API returns image URLs and doesn't document the file format, so output stays generic.
+schema = 2
+v2_only = true
+type = "image"
+name = "Kling IMAGE 2.1"
+description = "Kling image model for text-to-image, image-to-image with subject or face reference, and multi-image composition"
+open_weights = false
+release_date = "2025-07-30"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+url = "https://kling.ai/document-api/api/image/2-1/image-generation"
+type = "docs"

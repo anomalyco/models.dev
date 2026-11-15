@@ -1,15 +1,17 @@
+schema = 2
 base_model = "google/gemini-4-argon"
 name = "Gemini 4 Argon (Google AI Studio)"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
-
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
-cache_write = 0.375
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
 
 [limit]
 output = 1_048_576
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 0.375 }
+
+[cost.text.output]
+price = 20

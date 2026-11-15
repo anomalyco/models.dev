@@ -1,25 +1,30 @@
+# Lab identity: https://deepinfra.com/Qwen/Qwen3.6-35B-A3B (Hugging Face repo Qwen/Qwen3.6-35B-A3B)
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
 name = "Qwen3.6 35B A3B"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
-release_date = "2026-04-01"
-last_updated = "2026-04-01"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
-reasoning_options = []
 
-[cost]
-input = 0.1
-output = 0.95
-cache_read = 0.1
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
 
 [limit]
-context = 262_144
 output = 81_920
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 0.95
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

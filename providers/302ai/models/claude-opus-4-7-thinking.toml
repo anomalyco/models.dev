@@ -1,7 +1,12 @@
+schema = 2
 base_model = "anthropic/claude-opus-4-7"
 name = "claude-opus-4-7-thinking"
-reasoning_options = []
 
-[cost]
-input = 5.0
-output = 25.0
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 25

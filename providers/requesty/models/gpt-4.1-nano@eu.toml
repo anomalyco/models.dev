@@ -1,7 +1,17 @@
+# system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
+schema = 2
 base_model = "openai/gpt-4.1-nano"
 name = "GPT-4.1 nano (EU)"
 
-[cost]
-input = 0.11
-output = 0.44
-cache_read = 0.0275
+[capabilities]
+tools = { supported = true }
+structured_output = true
+system_updates = true
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.0275 }
+
+[cost.text.output]
+price = 0.44

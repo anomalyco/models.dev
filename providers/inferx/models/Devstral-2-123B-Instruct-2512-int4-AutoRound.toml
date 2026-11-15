@@ -1,8 +1,13 @@
-name = "Devstral-2-123B-Instruct-2512-int4-AutoRound"
+schema = 2
 base_model = "mistral/devstral-2512"
+name = "Devstral-2-123B-Instruct-2512-int4-AutoRound"
+
 [limit]
 context = 128_000
 output = 128_000
-[cost]
-input = 0
-output = 0
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

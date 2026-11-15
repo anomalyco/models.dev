@@ -1,0 +1,28 @@
+# https://openrouter.ai/api/v1/models?output_modalities=text,decisions
+# OpenRouter is a relay: supported_parameters = [] advertises no reasoning controls.
+# Host image formats: https://openrouter.ai/docs/guides/overview/multimodal/image-understanding
+# Keep the relay's PNG/JPEG/WebP/GIF inputs separately from the self-hosted lab's PNG/JPEG inputs.
+# Decision answers generate no text here.
+schema = 2
+base_model = "respan/span-02"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+output = 0
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
+compatibility = { media_input = "state" }
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

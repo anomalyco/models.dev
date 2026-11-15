@@ -1,0 +1,51 @@
+# DeepSeek V4.1 Flash 1017 on Fireworks Serverless: accounts/fireworks/models/deepseek-v4p1-flash-1017
+# Pricing Standard $0.30 / $0.006 / $1.20 and Priority $0.375 / $0.0075 / $1.50, Ready state, Created Oct 17 2026:
+# https://app.fireworks.ai/models/fireworks/deepseek-v4p1-flash-1017 (accessed 2026-10-18)
+# Serverless pricing table DeepSeek V4.1 Flash row: https://docs.fireworks.ai/serverless/pricing (accessed 2026-10-18)
+# Lab identity, minor update to V4.1 Flash: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = low|high|max (same surface as sibling deepseek-v4p1-flash, verified 2026-09-10)
+# Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Native DeepSeek Flash effort set low|high|max: https://api-docs.deepseek.com/guides/thinking_mode/ (accessed 2026-09-10)
+# Released on Fireworks Serverless API 2026-10-17.
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-10-21).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
+#   system_updates = true: after a system message sent after the first turn, 7502 of 7653 prompt tokens still came from the cache, so it stays in place.
+#   effort_updates = false: changing reasoning_effort low → high on the last turn left 0/0 cached tokens in 2 trials.
+#   tools.updates = false: adding a second tool on the last turn left 152/152 cached tokens in 2 trials (tools render before the messages).
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }

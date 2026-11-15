@@ -1,11 +1,18 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
 base_model = "deepseek/deepseek-r1-0528"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
 
-[[reasoning_options]]
-type = "effort"
-values = ["high"]
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
 
-[cost]
-input = 0.7
-output = 2.5
-cache_read = 0.35
+[cost.text.input]
+price = 0.5
+cache = { read = 0.35 }
+
+[cost.text.output]
+price = 2.15

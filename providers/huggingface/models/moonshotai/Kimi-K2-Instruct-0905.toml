@@ -1,23 +1,26 @@
+# Lab identity: https://huggingface.co/moonshotai/Kimi-K2-Instruct-0905
+# knowledge: kept from the earlier Hugging Face file; unsourced (no cutoff in the model card or lab docs, checked 2026-10-20).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+schema = 2
+base_model = "moonshotai/kimi-k2-0905"
 name = "Kimi-K2-Instruct-0905"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
-family = "kimi-k2"
-release_date = "2025-09-04"
-last_updated = "2025-09-04"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 knowledge = "2024-10"
-open_weights = true
 
-[cost]
-input = 1
-output = 3
+[capabilities]
+tools = { supported = true }
 
 [limit]
-context = 262_144
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3

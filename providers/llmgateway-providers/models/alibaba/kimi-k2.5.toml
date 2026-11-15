@@ -1,17 +1,19 @@
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
 name = "Kimi K2.5 (Alibaba Cloud)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = false
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.574
-output = 3.011
 
 [limit]
 output = 98_304
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.574
+
+[cost.text.output]
+price = 3.011

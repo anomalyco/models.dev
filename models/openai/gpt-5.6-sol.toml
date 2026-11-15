@@ -1,24 +1,28 @@
+# Sampling: live POST /v1/chat/completions 2026-11-13: temperature (0.3) and top_p (0.5) return 200 with
+# reasoning_effort = "none"; /v1/responses with reasoning.effort = "none" also returns 200 (checked on 5.5, 5.6 Luna, 6 Sol, 6.1 Terra).
+schema = 2
 name = "GPT-5.6 Sol"
 description = "Frontier GPT-5.6 model for complex professional work, coding, and agentic workflows"
 family = "gpt-sol"
-release_date = "2026-07-09"
-last_updated = "2026-07-09"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-02-16"
 open_weights = false
+knowledge = "2026-02-16"
+release_date = "2026-07-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 1_050_000
 input = 922_000
 output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
 
 [[benchmarks]]
 name = "SWE-Bench Pro"

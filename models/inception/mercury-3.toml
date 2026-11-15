@@ -1,0 +1,30 @@
+# Sources (accessed 2026-10-21):
+# - https://docs.inceptionlabs.ai/get-started/models (Mercury 3: 1M context, 131,072 max output, text, tool calling,
+#   structured outputs)
+# - https://www.inceptionlabs.ai/blog/introducing-mercury-3 (public launch post, 2026-10-19)
+# - Release date: first listed on OpenRouter 2026-10-16 (https://openrouter.ai/api/v1/models, inception/mercury-3).
+# - Text input only: https://docs.inceptionlabs.ai/resources/faq ("Do Mercury models support image or vision input?")
+# Sampling: temperature 0.5-1 is the only sampling parameter on the chat completions API, no top_p or top_k
+# (https://api.inceptionlabs.ai/openapi.json, ChatCompletionRequest).
+schema = 2
+name = "Mercury 3"
+description = "Inception's diffusion reasoning model for chat, multi-step problem solving, and tool use"
+family = "mercury"
+open_weights = false
+release_date = "2026-10-16"
+last_updated = "2026-10-20"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 131_072

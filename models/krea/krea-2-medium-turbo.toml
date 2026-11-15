@@ -1,0 +1,29 @@
+# Released 2026-06-03: https://www.krea.ai/blog/krea-2-turbo; API endpoint krea-2/medium-turbo:
+#   https://www.krea.ai/docs/api-reference/krea/krea-2-turbo. Weights: https://huggingface.co/krea/Krea-2-Turbo (custom license).
+#   Output image/png through OpenRouter's Images API (2026-10-20).
+schema = 2
+v2_only = true
+type = "image"
+name = "Krea 2 Turbo"
+description = "8-step distilled Krea 2 Medium image model for fast iteration"
+open_weights = true
+release_date = "2026-06-03"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/krea/Krea-2-Turbo"

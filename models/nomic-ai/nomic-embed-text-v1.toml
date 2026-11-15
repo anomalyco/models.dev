@@ -1,0 +1,29 @@
+# https://huggingface.co/nomic-ai/nomic-embed-text-v1 (Apache-2.0; 8192-token input, 768 dimensions)
+# Repository created 2024-01-31 (Hugging Face API createdAt). Technical report: https://arxiv.org/abs/2402.01613
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Nomic Embed Text v1"
+description = "Long-context open text embedding model for retrieval and semantic similarity"
+open_weights = true
+release_date = "2024-01-31"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nomic-ai/nomic-embed-text-v1"

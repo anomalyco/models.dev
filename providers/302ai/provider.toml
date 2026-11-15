@@ -1,6 +1,7 @@
 name = "302.AI"
 env = ["302AI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Relay provider: 302.AI proxies multi-model lab endpoints (OpenAI, Anthropic, Google, GLM, Qwen, xAI, Moonshot, Xiaomi, MiniMax, etc.).
 # Reasoning controls verified live against POST https://api.302.ai/v1/chat/completions (2026-09-08):
 # - OpenAI / GPT: `reasoning_effort` (parsed upstream; invalid values rejected with 400)

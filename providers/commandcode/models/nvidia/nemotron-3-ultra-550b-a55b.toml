@@ -1,0 +1,19 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Toggle: omit reasoning_effort for off; set reasoning_effort = low for on.
+# Live /chat/completions checks (2026-10-14), same prompt and temperature=0:
+#   omitted reasoning tokens: 0/0/0
+#   low reasoning tokens: 11/13/13
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 2.4

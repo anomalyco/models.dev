@@ -1,6 +1,7 @@
 name = "Charm Hyper"
 env = ["HYPER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Raw HTTP endpoint map (source accessed 2026-07-21): Hyper uses POST
 # `/v1/chat/completions` for OpenAI-compatible models, `/v1/responses` for
 # OpenAI Responses, and `/v1/messages` for Anthropic-compatible models.

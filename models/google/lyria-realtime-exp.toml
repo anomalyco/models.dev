@@ -1,0 +1,29 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/lyria-realtime-exp (input: weighted text prompts; output: raw 16-bit PCM)
+# - https://ai.google.dev/gemini-api/docs/realtime-music-generation (48 kHz stereo PCM; MusicGenerationConfig takes
+#   temperature, top_k and seed, no top_p)
+# - https://ai.google.dev/gemini-api/docs/deprecations (released 2025-05-20, experimental, no shutdown date)
+# - https://generativelanguage.googleapis.com/v1beta/models (limits; bidiGenerateMusic only)
+schema = 2
+v2_only = true
+type = "realtime"
+name = "Lyria RealTime"
+description = "Experimental streaming music generation model steered in real time by weighted text prompts"
+family = "lyria"
+open_weights = false
+release_date = "2025-05-20"
+
+[modalities]
+input = ["text"]
+output = ["audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 65_536

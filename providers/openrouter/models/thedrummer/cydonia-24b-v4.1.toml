@@ -1,24 +1,27 @@
-name = "Cydonia 24B V4.1"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Parasail)
+# effort_updates = false: no per-turn effort control
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+schema = 2
+base_model = "thedrummer/cydonia-24b-v4.1"
 description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
-release_date = "2025-09-27"
-last_updated = "2025-09-27"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 structured_output = true
-knowledge = "2024-04-30"
-open_weights = true
 
-[cost]
-input = 0.3
-output = 0.5
-cache_read = 0.15
+[api.chat-completions]
+capabilities = { system_updates = true }
 
-[limit]
-context = 131_072
-output = 117_964
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 0.5

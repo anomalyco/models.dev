@@ -1,29 +1,34 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; this alias redirects to the latest GPT Luna, and every current GPT Luna model in the lab catalog lists the same formats. OpenAI image inputs PNG, JPEG, WEBP, non-animated GIF: https://platform.openai.com/docs/guides/images-vision
+schema = 2
 name = "OpenAI: GPT Luna Latest"
 description = "This model always redirects to the latest model in the OpenAI GPT Luna family."
 family = "gpt-luna"
-release_date = "2026-09-11"
-last_updated = "2026-09-11"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-09-11"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[modalities]
+input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp", "text"]
+output = ["text"]
 
-[cost]
-input = 0.1
-output = 0.5
-cache_read = 0.01
-cache_write = 0.125
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
 
 [limit]
 context = 1_050_000
 output = 128_000
 
-[modalities]
-input = ["pdf", "image", "text"]
-output = ["text"]
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[cost.text.output]
+price = 0.5
+
+[cost.web_search]
+price = 10

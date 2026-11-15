@@ -1,0 +1,27 @@
+schema = 2
+name = "Nex N2.6"
+description = "Nex N2.6 is Nex AGI's agentic model for coding and long-running tasks that use tools. It accepts text and images, produces text, and supports tool calling and structured output within a 262,144-token context window. Reasoning is always enabled, with medium and high effort levels."
+family = "agi"
+open_weights = false
+release_date = "2026-11-10"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["medium", "high"] }
+structured_output = true
+
+[limit]
+context = 262_144
+input = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

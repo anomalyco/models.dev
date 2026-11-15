@@ -1,26 +1,21 @@
+# Deprecated: no longer listed by GET https://api.intelligence.io.solutions/api/v1/models (2026-10-21)
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
 name = "Qwen 3 235B Thinking"
 description = "Qwen reasoning model for deliberate problem solving, math, and coding"
-family = "qwen"
-release_date = "2025-07-01"
-last_updated = "2025-07-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
 knowledge = "2024-12"
-open_weights = true
+status = "deprecated"
 
-[cost]
-input = 0.11
-output = 0.6
-cache_read = 0.055
-cache_write = 0.22
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
-context = 262144
-output = 4096
+output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.11
+cache = { read = 0.055, write = 0.22 }
+
+[cost.text.output]
+price = 0.6

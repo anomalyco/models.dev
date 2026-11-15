@@ -1,0 +1,30 @@
+# https://huggingface.co/shibing624/text2vec-base-chinese (Apache-2.0; CoSENT-trained Chinese sentence embedding model, 768 dimensions)
+# Context: max_seq_length 128 (https://huggingface.co/shibing624/text2vec-base-chinese/blob/main/sentence_bert_config.json).
+# Released 2022-01-23: initial commit of the model repository (https://huggingface.co/shibing624/text2vec-base-chinese/commits/main)
+schema = 2
+v2_only = true
+type = "embedding"
+name = "text2vec-base-chinese"
+description = "Chinese sentence embedding model for semantic similarity and retrieval"
+open_weights = true
+release_date = "2022-01-23"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 128
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/shibing624/text2vec-base-chinese"

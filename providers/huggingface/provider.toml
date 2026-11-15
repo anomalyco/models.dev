@@ -1,11 +1,20 @@
 name = "Hugging Face"
 env = ["HF_TOKEN"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Reasoning HTTP format (accessed 2026-06-25): POST /v1/chat/completions accepts
 # top-level `reasoning_effort`; common values are none, minimal, low, medium,
 # high, and xhigh. Support, defaults, and meaningful values depend on both the
 # selected model and the inference provider chosen by HF routing. No shared
 # toggle field or numeric reasoning-budget field is documented.
 # https://huggingface.co/docs/inference-providers/en/tasks/chat-completion
+# effort_updates = false, tools.updates = false on chat models: `reasoning_effort` and `tools`
+# are per request on Chat Completions; there is no per-turn effort or tool-change message.
+# system_updates is unset: where a mid-conversation system message ends up depends on the
+# inference provider the router picks, and no HF_TOKEN was available to probe (2026-10-20).
+# Exact MIME types: the router catalog lists modality kinds only (text, image); files take the
+# lab's types of each kind. https://router.huggingface.co/v1/models
+# Chat models are also served on POST /v1/responses (beta; "All Inference Providers chat completion models
+# should be compatible with the Responses API"): https://huggingface.co/docs/inference-providers/guides/responses-api
 api = "https://router.huggingface.co/v1"
 doc = "https://huggingface.co/docs/inference-providers"

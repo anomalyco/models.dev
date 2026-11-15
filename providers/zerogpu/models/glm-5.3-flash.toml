@@ -1,0 +1,29 @@
+# Pricing: https://docs.zerogpu.ai/docs/model-catalog (accessed 2026-10-12)
+# Effort: reasoning_effort = low|high|max; thinking cannot be disabled.
+# Image and PDF input are accepted; video is not.
+# Verified against https://api.zerogpu.ai/v1/chat/completions (2026-10-12);
+# strict json_schema response_format verified 2026-11-03.
+# Cache: none. A ~5.4k-token system prefix sent four times, with the same and then a new
+#   user message, returned usage.prompt_tokens_details.cached_tokens = 0 every time
+#   (live 2026-11-05, three runs).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = false
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.35

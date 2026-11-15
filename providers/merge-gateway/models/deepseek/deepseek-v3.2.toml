@@ -1,10 +1,17 @@
+schema = 2
 base_model = "deepseek/deepseek-v3.2"
-reasoning_options = []
 
-[cost]
-input = 0.28
-output = 0.4
-cache_read = 0.13
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+tools = { supported = true }
 
 [limit]
 output = 32_768
+
+[cost.text.input]
+price = 0.28
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 0.4

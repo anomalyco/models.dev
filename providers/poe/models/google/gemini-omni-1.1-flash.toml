@@ -11,13 +11,18 @@
 #   "thought" step) but Poe's bot exposes no thinking_level / effort control — its
 #   /v1/models entry lists only task, resolution and aspect_ratio parameters.
 #   [] = reasons with no caller control, not "unchecked".
+schema = 2
 base_model = "google/gemini-omni-1.1-flash"
 name = "Gemini-Omni-1.1-Flash"
-reasoning_options = []
+
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
 context = 131_072
 
-[cost]
-input = 1.5152
-output = 9.0909
+[cost.text.input]
+price = 1.5152
+
+[cost.text.output]
+price = 9.0909

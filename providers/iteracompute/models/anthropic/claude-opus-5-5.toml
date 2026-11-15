@@ -1,0 +1,27 @@
+# Cache write TTL prices rechecked in the public /v1/models pricing parameters on 2026-10-28.
+# Sources (accessed 2026-10-22):
+# https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
+# https://iteracompute.com/models/claude-opus-5-5/ (host capabilities and pricing)
+# Effort wire path: reasoning_effort = low|medium|high|xhigh|max; reasoning.effort is also accepted.
+# Host capability recheck (2026-10-23), exact /v1/models data[].id = "anthropic/claude-opus-5-5":
+# reasoning.mandatory=false, supports_enable_disable=true,
+# supported_efforts=["low","medium","high","xhigh","max"].
+# Host /v1/models advertises a toggle, but its generation effect is unverified on this route.
+# Keep effort-only controls for this listing pending host-specific effect evidence.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "5m" = 2.5, "1h" = 4 } }
+
+[cost.text.output]
+price = 10

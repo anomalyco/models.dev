@@ -1,12 +1,17 @@
+schema = 2
 base_model = "google/gemma-3-4b-it"
 name = "Gemma 3 4B"
-tool_call = false
-structured_output = false
 
-[cost]
-input = 0.04
-output = 0.08
+[capabilities]
+tools = { supported = false }
+structured_output = false
 
 [limit]
 context = 128_000
 output = 8_192
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.08

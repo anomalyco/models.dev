@@ -1,23 +1,16 @@
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+schema = 2
+base_model = "moonshotai/kimi-k2-0905"
 name = "Kimi K2 0905"
-description = "Kimi model for long-context chat, coding, and agentic reasoning"
-family = "kimi-k2"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-open_weights = true
 
-[cost]
-input = 0.6
-output = 2.5
+[capabilities]
+structured_output = true
 
 [limit]
-context = 262144
-output = 262144
+output = 100_352
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.5

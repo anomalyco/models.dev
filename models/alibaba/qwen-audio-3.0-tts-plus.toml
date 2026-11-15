@@ -1,0 +1,27 @@
+# Released July 2026, hosted only: https://www.marktechpost.com/2026/07/20/alibabas-tongyi-lab-releases-qwen-audio-3-0-tts-a-hosted-text-to-speech-model-in-flash-and-plus-tiers-across-16-languages/
+# https://help.aliyun.com/en/model-studio/qwen-audio-tts-voice-list
+# Output formats: mp3 and pcm, as documented for OpenRouter's speech API (the lab lists none here):
+#   https://openrouter.ai/docs/guides/overview/multimodal/tts
+schema = 2
+v2_only = true
+type = "speech"
+name = "Qwen-Audio-3.0-TTS Plus"
+description = "Quality-first hosted text-to-speech model"
+family = "qwen"
+open_weights = false
+release_date = "2026-07"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

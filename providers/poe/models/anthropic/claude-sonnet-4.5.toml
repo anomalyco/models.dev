@@ -1,25 +1,21 @@
+# Budget: extra_body.thinking_budget = number (default 0)
+# Reasoning fields: https://api.poe.com/v1/models parameters (2026-10-21).
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-5"
 name = "Claude-Sonnet-4.5"
-description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
-family = "claude-sonnet"
-release_date = "2025-09-26"
-last_updated = "2025-09-26"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 0, max = 31_999 }]
-temperature = false
-open_weights = false
-tool_call = true
 
-[cost]
-input = 2.6
-output = 13
-cache_read = 0.26
-cache_write = 3.2
+[capabilities]
+reasoning = { supported = true, budget = { min = 0, max = 31_999 } }
+temperature = false
 
 [limit]
 context = 983_040
 output = 32_768
 
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 2.5758
+cache = { read = 0.2576, write = 3.2197 }
+
+[cost.text.output]
+price = 12.8788

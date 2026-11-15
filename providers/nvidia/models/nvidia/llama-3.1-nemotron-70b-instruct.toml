@@ -1,8 +1,15 @@
 # Sources (accessed 2026-07-25):
 # - https://build.nvidia.com/nvidia/llama-3_1-nemotron-70b-instruct
 # - https://integrate.api.nvidia.com/v1/models id: nvidia/llama-3.1-nemotron-70b-instruct
+# Deprecated: no longer in the build.nvidia.com catalog (https://build.nvidia.com/models.md, accessed 2026-10-21)
+# and POST /v1/chat/completions returns 404 "Function ...: Not found for account" (probed 2026-10-21 against
+# integrate.api.nvidia.com).
+schema = 2
 base_model = "nvidia/llama-3.1-nemotron-70b-instruct"
+status = "deprecated"
 
-[cost]
-input = 0.0
-output = 0.0
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

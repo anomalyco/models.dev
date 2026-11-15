@@ -1,10 +1,18 @@
+# Output limit: capped at the 128,000 context; no host cap is documented and the 131,072 from the base model or host listing is larger.
+schema = 2
 base_model = "google/gemma-3-4b-it"
 name = "Gemma 3 4B IT (Amazon Bedrock)"
-structured_output = false
 
-[cost]
-input = 0.04
-output = 0.08
+[capabilities]
+tools = { supported = true }
+structured_output = false
 
 [limit]
 context = 128_000
+output = 128_000
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.08

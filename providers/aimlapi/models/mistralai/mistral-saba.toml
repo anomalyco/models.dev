@@ -1,6 +1,13 @@
+schema = 2
 base_model = "mistral/mistral-saba"
 
-[cost]
-input = 0.27508
-output = 0.82524
-cache_read = 0.027508
+[capabilities]
+structured_output = true
+tools = { supported = true }
+
+[cost.text.input]
+price = 0.2116
+cache = { read = 0.02116 }
+
+[cost.text.output]
+price = 0.6348

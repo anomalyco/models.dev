@@ -1,16 +1,31 @@
+# Sources (accessed 2026-10-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 1_048_576, type text2text)
+# - https://tokenfactory.nebius.com/model-catalog.md (cached input is priced only through the optional
+#   input_cached_price_per_million_tokens field, which this model doesn't have)
+# - https://docs.tokenfactory.nebius.com/api-reference/inference/create-chat-completion (reasoning_effort)
+# Effort: reasoning_effort = low|medium|high (carried over; not re-probed, no key).
+# Cost: $1.40 in / $4.40 out. No discounted prompt-cache tier is published, so cache_read = input (same
+#   rationale as GLM-5.3 / Kimi-K3 on this host).
+# Served window: max_model_len = 1_048_576 with no separate output cap, so output takes the full window.
+# Cache read (2026-10-22): https://tokenfactory.nebius.com/api/public/models_info now lists input_cached_price_per_million_tokens = 0.14
+#   for this model, which replaces the earlier cache_read = input rule described above.
+schema = 2
 base_model = "zhipuai/glm-5.2"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.4
-output = 4.4
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
 
 [limit]
 context = 1_048_576
 output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

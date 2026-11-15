@@ -1,27 +1,29 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+# Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
+schema = 2
 name = "Ternary Bonsai 2 27B"
 description = "Ternary Bonsai 2 27B is a 27B-parameter reasoning model from PrismML derived from Qwen3.8-27B. It supports coding, mathematics, tool calling, and image understanding with a 262K-token context window."
-release_date = "2026-09-18"
-last_updated = "2026-09-18"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2026-09-18"
 
-[[reasoning_options]]
-type = "effort"
-values = ["medium", "xhigh"]
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
 
-[cost]
-input = 0.075
-output = 0.5
-cache_read = 0.0375
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["medium", "xhigh"] }
+structured_output = true
 
 [limit]
 context = 262_144
 input = 262_144
 output = 32_768
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.075
+cache = { read = 0.0375 }
+
+[cost.text.output]
+price = 0.5
