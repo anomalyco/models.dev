@@ -1,19 +1,19 @@
-# Pricing: https://bettertoken.ai/api/pricing (public, accessed 2026-10-15).
-# BetterToken describes deepseek-pro as an alias of deepseek/deepseek-v4-pro (pricing description field).
-# BetterToken bills official list price x group ratio 0.78 (DeepSeek group); values below are effective USD per 1M tokens.
-# Endpoint: POST https://bettertoken.ai/v1/chat/completions (also openai, anthropic).
-# Reasoning wire (BetterToken new-api fork, relay/channel/claude/relay-claude.go + dto/openai_request.go): Chat accepts reasoning_effort and
-# OpenRouter-style reasoning={enabled,effort,max_tokens} and renders them to the upstream's native controls; option set mirrors providers/openrouter/models/deepseek/deepseek-v4-pro.toml.
+# Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
+# Effective USD per 1M tokens: official list price × DeepSeek group ratio 0.78.
+# Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
+# Relay accepts reasoning_effort and reasoning={enabled,effort,max_tokens} and maps them to the upstream controls.
+# Pricing description: BetterToken ID deepseek-pro is DeepSeek V4 Pro (upstream deepseek-v4-pro and deepseek-v4-pro-0813).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 
-[[reasoning_options]]
-type = "effort"
-values = ["high", "xhigh"]
+[cost.text.input]
+price = 1.0296
+cache = { read = 0.03432 }
 
-[cost]
-input = 1.0296
-output = 3.0888
-cache_read = 0.03432
+[cost.text.output]
+price = 3.0888

@@ -1,15 +1,17 @@
-# Pricing: https://bettertoken.ai/api/pricing (public, accessed 2026-10-15).
-# BetterToken bills official list price x group ratio 0.75 (GLM group); values below are effective USD per 1M tokens.
-# Endpoint: POST https://bettertoken.ai/v1/chat/completions (also openai, anthropic).
-# Reasoning wire (BetterToken new-api fork, relay/channel/claude/relay-claude.go + dto/openai_request.go): Chat accepts reasoning_effort and
-# OpenRouter-style reasoning={enabled,effort,max_tokens} and renders them to the upstream's native controls; option set mirrors providers/openrouter/models/z-ai/glm-5.3.toml.
+# Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
+# Effective USD per 1M tokens: official list price × GLM group ratio 0.75.
+# Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
+# Relay accepts reasoning_effort and reasoning={enabled,effort,max_tokens} and maps them to the upstream controls.
+# Effort: reasoning_effort = low|high|max (thinking.type only accepts enabled; no toggle)
+schema = 2
 base_model = "zhipuai/glm-5.3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 
-[cost]
-input = 1.05
-output = 3.3
-cache_read = 0.195
+[cost.text.input]
+price = 1.05
+cache = { read = 0.195 }
+
+[cost.text.output]
+price = 3.3

@@ -1,23 +1,26 @@
-# Pricing: https://bettertoken.ai/api/pricing (public, accessed 2026-10-15).
-# BetterToken bills official list price x group ratio 0.68 (GPT group); values below are effective USD per 1M tokens.
-# Endpoint: POST https://bettertoken.ai/v1/chat/completions (also openai).
-# Reasoning wire (BetterToken new-api fork, relay/channel/claude/relay-claude.go + dto/openai_request.go): Chat accepts reasoning_effort and
-# OpenRouter-style reasoning={enabled,effort,max_tokens} and renders them to the upstream's native controls; option set mirrors providers/openrouter/models/openai/gpt-6-luna.toml.
+# Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
+# Effective USD per 1M tokens: official list price × GPT group ratio 0.68.
+# Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
+# Relay accepts reasoning_effort and reasoning={enabled,effort,max_tokens} and maps them to the upstream controls.
+# Off is effort=none; graded levels, no toggle
+schema = 2
 base_model = "openai/gpt-6-luna"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 
-[cost]
-input = 0.068
-output = 0.34
-cache_read = 0.0068
-cache_write = 0.085
+[cost.text.input]
+price = 0.068
+cache = { read = 0.0068, write = 0.085 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 272_000 }
-input = 0.136
-output = 0.51
-cache_read = 0.0136
-cache_write = 0.17
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.136
+cache = { read = 0.0136, write = 0.17 }
+
+[cost.text.output]
+price = 0.34
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.51

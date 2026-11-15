@@ -1,16 +1,17 @@
-# Pricing: https://bettertoken.ai/api/pricing (public, accessed 2026-10-15).
-# BetterToken bills official list price x group ratio 0.68 (Claude group); values below are effective USD per 1M tokens.
-# Endpoint: POST https://bettertoken.ai/v1/chat/completions (also anthropic, openai).
-# Reasoning wire (BetterToken new-api fork, relay/channel/claude/relay-claude.go + dto/openai_request.go): Chat accepts reasoning_effort and
-# OpenRouter-style reasoning={enabled,effort,max_tokens} and renders them to the upstream's native controls; option set mirrors providers/openrouter/models/anthropic/claude-opus-5.5.toml.
+# Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
+# Effective USD per 1M tokens: official list price × Claude group ratio 0.68.
+# Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
+# Relay accepts reasoning_effort and reasoning={enabled,effort,max_tokens} and maps them to the upstream controls.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (adaptive thinking always enabled; no toggle)
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
-[cost]
-input = 2.72
-output = 13.6
-cache_read = 0.136
-cache_write = 3.4
+[cost.text.input]
+price = 2.72
+cache = { read = 0.136, write = { "5m" = 3.4, "1h" = 5.44 } }
+
+[cost.text.output]
+price = 13.6
