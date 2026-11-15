@@ -1,0 +1,17 @@
+# Effort: reasoning_effort = low|medium|high
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-openai
+# 0.4000 / 0.0600 / 1.6000 CHF/MTok (input / cache / output), converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# Context: the product page price table lists a 128k window for gpt-oss-120b, matching the lab's 131,072
+# (https://wiki.stoney-cloud.com/wiki/AI_on_demand:_openai/gpt-oss-120b, gateway max_model_len 131072) — no override.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.476
+cache = { read = 0.0714 }
+
+[cost.text.output]
+price = 1.904

@@ -1,0 +1,14 @@
+schema = 2
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (Tsystems)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.22104
+cache = { read = 0.033156 }
+
+[cost.text.output]
+price = 0.71838

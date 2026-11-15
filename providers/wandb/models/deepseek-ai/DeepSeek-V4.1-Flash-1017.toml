@@ -1,0 +1,18 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+description = "DeepSeek V4.1 Flash 1017 is a multimodal MoE model for coding, reasoning, and faster agentic workflows with 1M context."
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

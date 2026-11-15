@@ -1,0 +1,30 @@
+# Sources (accessed 2026-11-10):
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-8-flash-tts.md.txt (model ID, limits, APIs, global/us/eu locations)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (Gemini 3.8 Flash TTS: text input $0.50, audio output $9.00 per 1M tokens through 2026-12-31, $1.00 and $18.00 from 2027-01-01)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/docs/release-notes (Preview 2026-09-28, GA 2026-10-26)
+# Same cost shape as the gemini-3.8-flash-tts file under google: audio output is priced as the output rate.
+# GenerateContent is the only API; Interactions, Live and Chat Completions are listed as not supported.
+# Introductory prices are delivered as 50% credits back through 2026-12-31 and double from 2027-01-01.
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.8-flash-tts"
+
+[capabilities]
+structured_output = false
+cache = false
+
+[api.speech]
+sdk = { opencodeai = "@opencode/ai/protocols/google-speech" }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 9
+
+[cost.audio.output]
+price = 9
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = 2

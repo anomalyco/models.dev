@@ -1,0 +1,27 @@
+schema = 2
+name = "Nex AGI: Nex-N2.6"
+description = "Nex-N2.6 is an agentic model from Nex AGI, built on [GLM-5.3-Flash](https://huggingface.co/zai-org/GLM-5.3-Flash-BF16) with about 321B parameters. It is suited for computer use, coding, and long-horizon tasks that involve tools. Compared with..."
+family = "agi"
+open_weights = false
+release_date = "2026-11-10"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 235_929
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

@@ -1,0 +1,13 @@
+# Toggle: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Live probe through https://api.steadyrouter.com/v1/chat/completions, 2026-11-06.
+# Live 2026-11-06: enable_thinking false returned no reasoning; true and reasoning_effort returned it in reasoning_content.
+# budget left out: thinking_budget = 32 was accepted and replies still had 154 and 145 reasoning tokens, so it does not cap reasoning here.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

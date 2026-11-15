@@ -45,6 +45,19 @@ describe("catalog generation", () => {
     });
   });
 
+  test("leaves a provider whose models are all v2_only out of v1", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/v2/provider.toml", providerToml("V2"));
+      await write(root, "models/lab/model.toml", modelMetadataToml());
+      await write(root, "providers/v2/models/model.toml", 'schema = 2\nv2_only = true\nbase_model = "lab/model"\n\n[capabilities]\nreasoning = { supported = true }\n');
+
+      const catalog = await generateCatalog(root);
+      expect(catalog.providers.v2).toBeUndefined();
+      const v2 = await generateV2(path.join(root, "providers"));
+      expect(Object.keys(v2.v2?.models ?? {})).toEqual(["model"]);
+    });
+  });
+
   test("base_model publishes canonical identity with the provider model", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));

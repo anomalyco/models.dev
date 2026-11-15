@@ -1,6 +1,11 @@
 # Sources:
 # https://developers.openai.com/api/docs/models/omni-moderation-latest
 # https://developers.openai.com/api/docs/changelog
+# OpenAI publishes no token limit for this model: not on the model page, the moderation guide
+# (https://developers.openai.com/api/docs/guides/moderation) or the model card
+# (https://cdn.openai.com/API/docs/omni_moderation_information_for_developers.pdf). The 32,768 that
+# third-party catalogs list has no OpenAI source, and live 2026-11-09 POST /v1/moderations accepted
+# ~280k tokens of text, so there is no enforced window to record. Zero denotes not published.
 schema = 2
 v2_only = true
 name = "omni-moderation"

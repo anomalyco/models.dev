@@ -1,3 +1,4 @@
+# Pricing: the >200k price tier is not modeled: Vertex caps this model's context at 200,000 (https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/grok-4-3, accessed 2026-11-12), so it can't apply.
 # Sources:
 # - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/grok-4-3
 # - https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/grok/capabilities/reasoning
@@ -37,14 +38,5 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/google-ve
 price = 1.25
 cache = { read = 0.2 }
 
-[[cost.text.input.overrides]]
-when = { context = { gt = 200_000 } }
-price = 2.5
-cache = { read = 0.4 }
-
 [cost.text.output]
 price = 2.5
-
-[[cost.text.output.overrides]]
-when = { context = { gt = 200_000 } }
-price = 5

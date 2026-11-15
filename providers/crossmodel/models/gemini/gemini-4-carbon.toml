@@ -1,0 +1,18 @@
+schema = 2
+base_model = "google/gemini-4-carbon"
+
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2 }
+
+[cost.text.output]
+price = 10

@@ -1,0 +1,45 @@
+# Sources (accessed 2026-11-12):
+# - Model ID kling-v2-6 (Kling 2.6): https://kling.ai/document-api/guides/capability-map/video
+# - API: POST https://api-singapore.klingai.com/text-to-video/kling-2.6, /image-to-video/kling-2.6 and /motion-control/kling-2.6
+#   (https://kling.ai/document-api/api/video/2-6/image-to-video, https://kling.ai/document-api/api/video/motion-control);
+#   the legacy /v1/videos/* endpoints take model_name = "kling-v2-6".
+#   Resolution 720p (default) or 1080p; audio off (default) or native, and native audio is 1080p only.
+# - Pricing: https://kling.ai/document-api/pricing/base/video ("Balance" tab, USD per second of output). Prepaid
+#   resource packages (https://kling.ai/dev/pricing) bill in units at a lower effective rate and are not recorded.
+#   voice_control is a native-audio request that references a voice.
+# Cost conditions: resolution uses the API's own values ("720p", "1080p");
+#   generate_audio = audio "native"; voice_control = a voice item referenced in the prompt; mode = "motion-control" is
+#   the /motion-control/<model> endpoint.
+# Combinations: motion control is 720p or 1080p and its audio is "original" or "off" (no native audio), so it has
+#   no audio price. No 4K on Kling 2.6.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v2.6"
+
+[api.videos]
+base_url = "https://api-singapore.klingai.com"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.042
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.07
+
+[[cost.video.output.overrides]]
+when = { generate_audio = { equals = true } }
+price = 0.14
+
+[[cost.video.output.overrides]]
+when = { generate_audio = { equals = true }, voice_control = { equals = true } }
+price = 0.168
+
+[[cost.video.output.overrides]]
+when = { mode = { equals = "motion-control" } }
+price = 0.07
+
+[[cost.video.output.overrides]]
+when = { mode = { equals = "motion-control" }, resolution = { equals = "1080p" } }
+price = 0.112

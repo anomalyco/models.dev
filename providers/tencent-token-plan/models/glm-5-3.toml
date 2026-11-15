@@ -1,0 +1,32 @@
+# Exact documented IDs: glm-5.3 and glm-5-3.
+# Both share a Model ID cell in General Token Plan > Available models:
+# https://cloud.tencent.com/document/product/1823/130060 (checked 2026-11-02)
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-02.
+# https://cloud.tencent.com/document/product/1823/133811
+# Input/output/cache-read: 160/560/40 points per million tokens.
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.660856.
+# FX: USD 1 = CNY 6.660856, 2026-11-02, https://open.er-api.com/v6/latest/USD
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
+# Specifications: https://cloud.tencent.com/document/product/1823/130051
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# Cached-input deductions: pricing source above; no separate cache-write rate published.
+# API: https://cloud.tencent.com/document/product/1823/132061
+# Effort: reasoning_effort = low|high|max; thinking cannot be disabled.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.20104683
+cache = { read = 0.30026171 }
+
+[cost.text.output]
+price = 4.20366391

@@ -1,0 +1,29 @@
+# Sources (accessed 2026-11-12):
+# - https://kling.ai/document-api/guides/capability-map/video (Kling 4.0, API ID kling-4.0: text, image and video input, 3-30s)
+# - https://kling.ai/document-api/api/video/4-0/video-omni (images .jpg/.jpeg/.png; reference and edited videos .mp4/.mov;
+#   voices are voice_id references to preset or custom voices, not audio files, so no audio input is listed)
+# Released 2026-10-15: https://ir.kuaishou.com/news-releases/news-release-details/kling-ai-officially-launches-next-generation-kling-40-raising
+# (the API followed on 2026-10-28: https://kling.ai/document-api/updates/api)
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling VIDEO 4.0"
+description = "Kling video model with native 30-second generation, multi-keyframe control, omni references, video editing and native audio"
+open_weights = false
+release_date = "2026-10-15"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

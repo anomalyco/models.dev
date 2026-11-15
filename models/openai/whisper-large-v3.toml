@@ -1,3 +1,4 @@
+# Output: the decoder's 448 positions (max_target_positions in config.json, https://huggingface.co/openai/whisper-large-v3) bound a transcript, so output is the 448 context, not 4,096.
 # Audio MIME types: OpenAI's audio API file formats (flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm), as in whisper-1:
 # https://developers.openai.com/api/reference/resources/audio/subresources/transcriptions/methods/create
 # The open-source whisper package decodes audio with ffmpeg and publishes no narrower list.
@@ -24,4 +25,4 @@ top_k = false
 
 [limit]
 context = 448
-output = 4_096
+output = 448

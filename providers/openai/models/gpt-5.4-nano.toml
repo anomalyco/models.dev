@@ -3,6 +3,7 @@
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Flex (https://developers.openai.com/api/docs/guides/flex-processing).
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-5.4-nano
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# Regional processing (data residency) endpoints: +10% on token prices for models released on or after 2026-03-05 (FedRAMP endpoints also +10%, not modeled). Token-only factor so cost.web_search is unscaled. Source: https://developers.openai.com/api/docs/pricing (accessed 2026-11-12)
 schema = 2
 name = "GPT-5.4 nano"
 description = "Cheapest GPT-5.4 lane for simple routing, extraction, and bulk automation"
@@ -50,6 +51,10 @@ price = 10
 [[cost.multipliers]]
 when = { service_tier = { equals = "flex" } }
 factor = { text = 0.5 }
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = { text = 1.1 }
 
 [experimental.modes.flex]
 body = { service_tier = "flex" }

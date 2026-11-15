@@ -7,6 +7,7 @@
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/openai/models/gpt-6.1-sol.toml (Zen passes requests through).
 #   Surface: Responses carries the in-history messages (configuration_update for effort_updates; additional_tools for tools.updates, add only).
 # Tools follow OpenAI's Responses API: https://developers.openai.com/api/docs/guides/function-calling (strict, tool_choice, custom tools with text, lark or regex format), tool_search per model page https://developers.openai.com/api/docs/models; Zen passes requests through.
+# Responses cache writes: 30m at 1.25x input, 12h at 2.5x. https://developers.openai.com/api/docs/guides/prompt-caching
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
@@ -24,12 +25,12 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/re
 
 [cost.text.input]
 price = 2
-cache = { read = 0.1, write = 2.5 }
+cache = { read = 0.1, write = { "30m" = 2.5, "12h" = 5 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 4
-cache = { read = 0.2, write = 5 }
+cache = { read = 0.2, write = { "30m" = 5, "12h" = 10 } }
 
 [cost.text.output]
 price = 10

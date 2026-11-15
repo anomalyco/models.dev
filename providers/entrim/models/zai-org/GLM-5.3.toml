@@ -1,0 +1,34 @@
+# Sources (accessed 2026-11-08):
+# - Pricing, limits, precision: https://entrim.ai/ai-models/glm/glm-5-3-api and https://entrim.ai/pricing/
+# - Status: beta (model page and library badge "Beta"; /v1/models returns "status":"beta","beta":true)
+# - Turbo is Entrim's NVFP4 serving mode: only the linear-operator weights and activations inside
+#   the MoE transformer blocks are stored in NVFP4, the rest stays in higher precision (model page).
+# - Effort: reasoning_effort = low|high|max, defaulting to max (model page). Live 2026-11-08:
+#   reasoning_effort none and thinking.type disabled were ignored (no non-thinking mode), low
+#   produced a direct answer, high and max kept thinking on.
+# - Probes live 2026-11-08: json_schema structured output works; tool calling works with auto,
+#   required and strict; text-only (images rejected with "This model accepts only text"); implicit
+#   KV-cache hits.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+status = "beta"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "required"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = [
+  "low",
+  "high",
+  "max",
+] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2

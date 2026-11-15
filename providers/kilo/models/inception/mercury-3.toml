@@ -1,12 +1,9 @@
-# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
-# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
-# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
-name = "Inception: Mercury 3"
-description = "Mercury 3 is a diffusion-based language model from Inception, and the lab's most capable model to date. It is suited for agentic workflows and real-time applications where latency compounds, such..."
+name = "Mercury 3"
+description = "Mercury 3 is Inception’s most capable model for agentic workflows and real-time applications. It is one of the world’s fastest models, powered by diffusion."
 family = "mercury"
 open_weights = false
-release_date = "2026-10-16"
+release_date = "2026-10-19"
 
 [modalities]
 input = ["text"]
@@ -14,7 +11,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true
 
@@ -23,8 +20,8 @@ context = 1_000_000
 output = 131_072
 
 [cost.text.input]
-price = 0.2
-cache = { read = 0.02 }
+price = 0.1
+cache = { read = 0.01 }
 
 [cost.text.output]
-price = 0.7
+price = 0.35

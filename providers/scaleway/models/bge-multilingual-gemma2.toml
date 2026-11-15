@@ -8,7 +8,7 @@ base_model = "baai/bge-multilingual-gemma2"
 context = 8_191
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.11215
