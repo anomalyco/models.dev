@@ -1,0 +1,38 @@
+# Sources (accessed 2026-11-15):
+# - https://uncensoredchats.com/v1/models for this ID: context_length 1048576, supports_tools true, supports_reasoning true,
+#   USD per 1M tokens input 0.30 / cached input 0.20 / output 1.00.
+# - https://uncensoredchats.com/models/ (the same prices and context, per model) and https://uncensoredchats.com/docs/ (the API).
+# - Live requests to POST /v1/chat/completions on 2026-11-15: tool calls returned as tool_calls; response_format json_schema
+#   returned JSON matching the schema; reasoning arrives in message.reasoning; a stream ends with a usage chunk whether or
+#   not stream_options.include_usage is sent; max_tokens values up to 1048576 are accepted.
+# Weights: an uncensored build of GLM 5.3 Flash, trained to answer instead of refusing.
+# Input is listed as text only. Image input is not listed until each image type has been checked against this ID.
+# Thinking-only: {"thinking": {"type": "disabled"}} is refused with 400 "always reasons, so reasoning cannot be turned off".
+# Effort: reasoning_effort = low|high|max. Every other ladder value is accepted and answers 200.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash Uncensored"
+description = "Uncensored GLM 5.3 Flash: an open-weight build trained to answer instead of refusing, served by Uncensored Chats"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 1

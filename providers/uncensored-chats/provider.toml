@@ -1,0 +1,11 @@
+# API base, endpoints and model ids: https://uncensoredchats.com/llms.txt and https://uncensoredchats.com/docs/ (accessed 2026-11-15)
+# OpenAI-compatible Chat Completions at https://uncensoredchats.com/v1; Anthropic Messages at https://uncensoredchats.com/v1/messages.
+# Authentication: Authorization: Bearer <key>. Keys start with sk-uc- and are made in the dashboard.
+# Live model list with prices: https://uncensoredchats.com/v1/models
+# Logo: the Uncensored Chats mark, same path data as the site favicon, drawn in currentColor.
+name = "Uncensored Chats"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["UNCENSORED_CHATS_API_KEY"]
+api = "https://uncensoredchats.com/v1"
+doc = "https://uncensoredchats.com/models/"
