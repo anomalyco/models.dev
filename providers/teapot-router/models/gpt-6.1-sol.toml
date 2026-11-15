@@ -1,6 +1,7 @@
 # Prices: Teapot Router public pricing endpoint https://teapotrouter.com/api/pricing (retrieved 2026-11-15).
 # Standard account group: USD per million tokens = model_ratio x 2 x 0.065 standard group ratio (codex);
 # output = input x completion_ratio. Prompt-cache reads are billed at the endpoint's cache_ratio; cache writes bill as regular input.
+# Cache: automatic (OpenAI-style) prompt caching; cached tokens bill at the published cache_ratio.
 # Reasoning: $.reasoning_effort passthrough on /v1/chat/completions, same as the upstream OpenAI API.
 # Ratios from https://teapotrouter.com/api/pricing (retrieved 2026-11-15): model_ratio=1, completion_ratio=5 —
 # the standard-group list price now follows the official 5x output ratio (previously billed at a 2x ratio).
@@ -14,6 +15,7 @@ base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.13

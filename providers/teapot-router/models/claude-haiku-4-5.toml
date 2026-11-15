@@ -1,6 +1,8 @@
 # Prices: Teapot Router public pricing endpoint https://teapotrouter.com/api/pricing (retrieved 2026-11-15).
 # Standard account group: USD per million tokens = model_ratio x 2 x 0.34 standard group ratio (claudecode);
 # output = input x completion_ratio. Prompt-cache reads are billed at the endpoint's cache_ratio; cache writes bill as regular input.
+# Cache: explicit Anthropic-style caching — cache_control markers pass through on /v1/messages;
+# upstream-reported cached tokens bill at the published cache_ratio (see pricing header above).
 # Reasoning: passthrough of the upstream Anthropic Messages controls on the /v1/messages
 # surface declared below; chat-completions (provider default) does not expose them.
 # Toggle: $.thinking.type = "enabled"|"disabled"
@@ -12,6 +14,7 @@ base_model = "anthropic/claude-haiku-4-5"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = {} }
+cache = { explicit = true }
 
 [api.messages]
 base_url = "https://api.teapotrouter.com/v1"
