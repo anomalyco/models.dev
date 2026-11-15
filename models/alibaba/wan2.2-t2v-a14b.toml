@@ -1,0 +1,32 @@
+# Model card: https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B/blob/main/README.md
+# Released 2025-07-28; Apache-2.0; text-to-video MoE supporting 480p and 720p.
+# Output MP4: https://github.com/Wan-Video/Wan2.2/blob/main/generate.py
+# Diffusion pipeline, without temperature/top_p/top_k. Token-window limits are
+# not applicable to video output; zero follows the non-token media convention.
+schema = 2
+v2_only = true
+type = "video"
+name = "Wan2.2-T2V-A14B"
+description = "Open-weight mixture-of-experts text-to-video model supporting 480p and 720p video generation"
+open_weights = true
+release_date = "2025-07-28"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B"

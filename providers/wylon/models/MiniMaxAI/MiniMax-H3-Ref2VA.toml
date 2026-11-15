@@ -1,0 +1,45 @@
+# Prices: https://portal.wylon.cn/zh/pricing.html (accessed 2026-11-15).
+# CNY -> USD: divide by 6.689676 CNY/USD, dated 2026-11-15,
+# source: https://open.er-api.com/v6/latest/USD; rounded to six decimals.
+# API: https://portal.wylon.cn/zh/api-video-generation-tasks.html
+# Wylon's async content tasks use an Ark-compatible JSON body, not OpenAI Videos.
+# No verified SDK adapter for this host's task lifecycle; both SDKs are explicitly none.
+# Ref2VA route: text plus at least one reference image/video, optional audio.
+# Up to nine images, three videos and three audio clips; output 768p, 5-15 sec.
+# CNY 0.20/input image, 0.50/input video sec, free input audio, 0.50/output sec.
+# Same H3 lab identity, separate host invocation ID and input contract.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3"
+name = "MiniMax H3 Ref2VA"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
+output = ["video/mp4", "audio"]
+
+[limit.image]
+max_per_request = 9
+min_width = 300
+min_height = 300
+max_width = 5_760
+max_height = 5_760
+
+[api.videos]
+path = "/contents/generations/tasks"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.input]
+unit = "image"
+price = 0.029897
+
+[cost.video.output]
+unit = "second"
+price = 0.074742
+
+[cost.video.input]
+unit = "second"
+price = 0.074742
+
+[cost.audio.input]
+unit = "second"
+price = 0

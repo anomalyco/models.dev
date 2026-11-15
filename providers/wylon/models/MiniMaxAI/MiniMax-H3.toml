@@ -1,0 +1,36 @@
+# Prices: https://portal.wylon.cn/zh/pricing.html (accessed 2026-11-15).
+# CNY -> USD: divide by 6.689676 CNY/USD, dated 2026-11-15,
+# source: https://open.er-api.com/v6/latest/USD; rounded to six decimals.
+# API: https://portal.wylon.cn/zh/api-video-generation-tasks.html
+# Wylon's async content tasks use an Ark-compatible JSON body, not OpenAI Videos.
+# No verified SDK adapter for this host's task lifecycle; both SDKs are explicitly none.
+# FL2VA: text plus up to two first/last-frame images; 768p, 5-15 seconds.
+# Input image formats/limits: API page above. Output includes synchronized audio.
+# CNY 0.20 per input image and 0.50 per output second; no first-five-images-free
+# allowance is advertised by Wylon (do not copy MiniMax's first-party discount).
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif"]
+output = ["video/mp4", "audio"]
+
+[limit.image]
+max_per_request = 2
+min_width = 300
+min_height = 300
+max_width = 5_760
+max_height = 5_760
+
+[api.videos]
+path = "/contents/generations/tasks"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.input]
+unit = "image"
+price = 0.029897
+
+[cost.video.output]
+unit = "second"
+price = 0.074742

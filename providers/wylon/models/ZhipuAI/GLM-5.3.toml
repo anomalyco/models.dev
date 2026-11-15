@@ -1,0 +1,34 @@
+# Prices: https://portal.wylon.cn/zh/pricing.html (accessed 2026-11-15).
+# CNY -> USD: divide by 6.689676 CNY/USD, dated 2026-11-15,
+# source: https://open.er-api.com/v6/latest/USD; rounded to six decimals.
+# API: https://portal.wylon.cn/zh/api-chat-completions.html
+# https://portal.wylon.cn/zh/api-messages.html
+# Limits: https://dashboard.wylon.cn/models (read 2026-11-15).
+# Implicit system-level context cache: https://portal.wylon.cn/zh/docs-inference-chat.html
+# List prices: CNY 8 input / 2 cache read / 28 output per million tokens.
+# Effort baseline: reasoning_effort = low|high|max, from the first-party
+# zhipuai/glm-5.3 entry and same-surface synthorai/glm-5.3 peer.
+# Wylon's individual effort levels have not been live-probed.
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 1.195873
+cache = { read = 0.298968 }
+
+[cost.text.output]
+price = 4.185554
