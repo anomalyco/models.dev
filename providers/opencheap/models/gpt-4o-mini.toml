@@ -9,8 +9,8 @@ base_model = "openai/gpt-4o-mini"
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.014
-cache = { read = 0.0068 }
+price = 0.03
+cache = { read = 0.015 }
 
 [cost.text.output]
-price = 0.054
+price = 0.12
