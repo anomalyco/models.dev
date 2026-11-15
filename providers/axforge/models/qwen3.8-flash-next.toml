@@ -1,7 +1,11 @@
 # Served by AxForge as qwen3.8-flash-next: https://api.axforge.ai/v1/public/models (read 2026-11-14).
 # Reads pictures; videos are not served. Context 500,000 tokens on our servers (the engine's max_model_len, read
 # 2026-11-14); our API caps an answer at 65,536 tokens.
-# No cost: our prices are in EUR, https://axforge.ai/pricing/
+# Toggle: chat_template_kwargs.enable_thinking = true|false (off by default on our servers)
+# Effort: reasoning_effort = low|medium|high (any of them turns thinking on)
+# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16: no reasoning_content by default,
+# present with enable_thinking = true or a reasoning_effort level.
+# No cost: our prices are in EUR and follow a live price sheet, https://axforge.ai/pricing/
 schema = 2
 base_model = "alibaba/qwen3.8-flash-next"
 
@@ -10,7 +14,7 @@ input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 500_000

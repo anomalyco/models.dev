@@ -1,8 +1,11 @@
 # Served by AxForge as glm-5.3-flash: https://api.axforge.ai/v1/public/models (read 2026-11-14).
 # Context 500,000 tokens on our servers (the engine's max_model_len, read 2026-11-14); our API caps an answer at
 # 65,536 tokens.
-# Text only: a picture in the request is refused with 400 on our servers. Reasoning effort tried: low and high.
-# No cost: our prices are in EUR, https://axforge.ai/pricing/
+# Text only: a picture in the request is refused with 400 on our servers.
+# Effort: reasoning_effort = none|low|high|max (thinks by default; none turns thinking off)
+# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16: reasoning_content present by default
+# and at low, high and max, absent at none.
+# No cost: our prices are in EUR and follow a live price sheet, https://axforge.ai/pricing/
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -11,7 +14,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 
 [limit]
 context = 500_000

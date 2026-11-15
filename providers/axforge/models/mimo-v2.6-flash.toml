@@ -1,6 +1,9 @@
 # Served by AxForge as mimo-v2.6-flash: https://api.axforge.ai/v1/public/models (read 2026-11-14).
 # Context 262,144 tokens on our servers (the engine's max_model_len, read 2026-11-14); our API caps an answer at 65,536 tokens. Text only on our servers.
-# No cost: our prices are in EUR, https://axforge.ai/pricing/
+# Effort: reasoning_effort = none|low|medium|high (thinking off by default; low and up turn it on)
+# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16: no reasoning_content by default or at
+# none, present at low, medium and high. thinking.type = enabled does not turn it on here.
+# No cost: our prices are in EUR and follow a live price sheet, https://axforge.ai/pricing/
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
 
@@ -9,7 +12,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "medium", "high"] }
 
 [limit]
 context = 262_144
