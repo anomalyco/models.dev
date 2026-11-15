@@ -1,0 +1,27 @@
+# Public catalog: https://platform.acedata.cloud/models/deepseek-v4.1-flash
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/f416edc1-a771-4a31-90e7-b14ca3a3d674
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# Toggle: thinking.type = enabled|disabled; effort: reasoning_effort = low|high|max (native baseline)
+# API billing rechecked 2026-11-16 against this endpoint's per-model Credit formula at 0.175 USD/Credit; no uniform lab-price multiplier is assumed.
+# Input scope: reviewed OpenAI-compatible text/image path, intersected with lab JPEG/PNG/GIF/WebP.
+# No model-specific PDF/audio/video contract is established here; those formats are not advertised.
+# Cached-token usage is conditionally billed and normalized by this API.
+# Cache policy/controls are not documented on this surface: implicit support only, not a hit/TTL guarantee.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.1618904
+cache = { read = 0.005151125 }
+
+[cost.text.output]
+price = 0.485671375
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/deepseek"
+compatibility = { reasoning_field = "reasoning_content" }

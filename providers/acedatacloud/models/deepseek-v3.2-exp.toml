@@ -1,0 +1,21 @@
+# Public catalog: https://platform.acedata.cloud/models/deepseek-v3.2-exp
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/f416edc1-a771-4a31-90e7-b14ca3a3d674
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# Toggle: thinking.type = enabled|disabled
+# API billing rechecked 2026-11-16 against this endpoint's per-model Credit formula at 0.175 USD/Credit; no uniform lab-price multiplier is assumed.
+schema = 2
+base_model = "deepseek/deepseek-v3.2-exp"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.161132475
+
+[cost.text.output]
+price = 0.656465775
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/deepseek"
+compatibility = { reasoning_field = "reasoning_content" }

@@ -1,0 +1,23 @@
+# https://x.ai/news/grok-3
+# Schema v2 sampling flags follow the current same-family lab record models/xai/grok-4.5.toml.
+schema = 2
+name = "Grok 3"
+description = "Grok chat model for instruction following, coding, and tool use"
+family = "grok"
+release_date = "2025-02-19"
+open_weights = false
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+temperature = true
+reasoning = { supported = false }
+top_p = true
+top_k = true
+
+[limit]
+context = 131072
+output = 131072

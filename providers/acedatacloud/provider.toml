@@ -1,0 +1,10 @@
+# Maintained from API-specific billing rules, not the public service-price projection.
+# Generic catalog sync cannot infer model-specific caller controls, cache/context rules,
+# or safe retirement from display-list absence. Keep the reviewed scope curated;
+# pricing provenance and first-match contract samples are described in the PR.
+name = "Ace Data Cloud"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["ACEDATACLOUD_API_KEY"]
+api = "https://api.acedata.cloud/openai"
+doc = "https://platform.acedata.cloud/models"
