@@ -1,0 +1,21 @@
+# Catalog (accessed 2026-11-08): https://api.deepinfra.com/models/list (type "embeddings", not deprecated); model page https://deepinfra.com/google/embeddinggemma-2
+#   price $0.02/MTok input, max_tokens 8192.
+# API: OpenAI-compatible POST https://api.deepinfra.com/v1/openai/embeddings, "supports the OpenAI embeddings API for all embedding models" (https://docs.deepinfra.com/apis/embeddings.md).
+# Input: DeepInfra tags the model multimodal/input-audio/input-video but documents media content parts on this
+#   route only for the Nemotron 3.5 Embed models, so only text is listed here.
+schema = 2
+v2_only = true
+base_model = "google/embeddinggemma-2"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/deepinfra/embeddings" }
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0

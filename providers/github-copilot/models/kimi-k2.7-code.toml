@@ -1,16 +1,24 @@
+# Deprecated: retired from Copilot on 2026-10-02 (https://docs.github.com/en/copilot/reference/ai-models/supported-models#model-retirement-history).
+schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0.95
-output = 4.0
-cache_read = 0.19
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 256_000
 input = 224_000
 output = 32_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4

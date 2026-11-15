@@ -1,20 +1,25 @@
 # limit.output confirmed working at 100_000 via live test (300_000 was
 # rejected with a generic 400, exact ceiling between 100k-300k unknown)
+schema = 2
 name = "Agents-A1"
 description = "35B MoE agentic model built for long-horizon search, engineering, and scientific reasoning tasks"
-release_date = "2026-06-26"
-last_updated = "2026-06-26"
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
 open_weights = true
-[limit]
-context = 262_000
-output = 100_000
-[cost]
-input = 0
-output = 0
+release_date = "2026-06-26"
+
 [modalities]
 input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+
+[limit]
+context = 262_000
+output = 100_000
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

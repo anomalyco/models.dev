@@ -3,28 +3,30 @@
 # Source: NeoSmith's first-party rate card — the per-tier table shown to every
 # customer on their billing dashboard. There is no public pricing page yet; the
 # `doc` URL in provider.toml is product documentation, not a price list.
+schema = 2
 name = "NeoSmith NeoLite"
 description = "Sealed single-model budget tier. 512K context, text and images, tool use, and no escalation of any kind."
+open_weights = false
 release_date = "2026-06-20"
 last_updated = "2026-08-03"
-open_weights = false
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 structured_output = false
 temperature = true
-
-[cost]
-input = 0.6
-output = 2.4
-cache_read = 0.08
-cache_write = 0.0
 
 [limit]
 context = 512_000
 output = 64_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.6
+cache = { read = 0.08, write = 0 }
+
+[cost.text.output]
+price = 2.4

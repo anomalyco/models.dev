@@ -4,25 +4,33 @@
 # https://docs.mistral.ai/api/endpoint/chat
 # Native params specify 32768 positions, matching the card's 32k context.
 # Output is this shared-window ceiling: prompt + max_tokens must fit; no separate native output cap is published.
+# Audio formats: Mistral's docs list none for chat audio input (the known-limitations page lists WAV, MP3, FLAC, OGG and
+#   WEBM for /v1/audio/transcriptions only; the Hugging Face card and mistral-common, which decodes through libsndfile,
+#   list none). Mistral's chat API rejects other files with "Failed to load audio file. Verify that the given file is
+#   valid mp3 or wav." (live 2026-10-19 on voxtral-small-2507: WAV and MP3 transcribed, OGG and WEBM rejected, FLAC
+#   also decoded but is not in that list).
+schema = 2
 name = "Voxtral Small 24B 2507"
 description = "Open audio-language model for speech transcription, audio understanding, and voice-driven tool use"
 family = "voxtral"
-release_date = "2025-07-15"
-last_updated = "2025-07-15"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = true
+release_date = "2025-07-15"
 license = "Apache 2.0"
+
+[modalities]
+input = ["text", "audio/wav", "audio/mpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 32_768
 output = 32_768
-
-[modalities]
-input = ["text", "audio"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

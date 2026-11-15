@@ -1,21 +1,29 @@
+# Type speech: text in, audio out "in wav format" (https://build.nvidia.com/nvidia/magpie-tts-zeroshot); the zero-shot
+# voice prompt is a 16-bit mono WAV (https://docs.nvidia.com/nim/speech/latest/tts/voice-cloning.html).
+# Description from the catalog entry (https://build.nvidia.com/models.md, accessed 2026-10-21).
+schema = 2
+type = "speech"
 name = "magpie-tts-zeroshot"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
+description = "Expressive text-to-speech that clones a voice from a short audio sample"
+open_weights = true
 release_date = "2025-05-22"
 last_updated = "2025-06-12"
-attachment = true
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
 
-[cost]
-input = 0.0
-output = 0.0
+[modalities]
+input = ["text", "audio/wav"]
+output = ["audio/wav"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
 
 [limit]
 context = 0
 output = 4_096
 
-[modalities]
-input = ["text", "audio"]
-output = ["audio"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

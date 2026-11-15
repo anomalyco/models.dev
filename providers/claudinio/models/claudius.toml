@@ -1,23 +1,25 @@
+schema = 2
 name = "Claudius"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-release_date = "2026-05-12"
-last_updated = "2026-05-12"
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
 open_weights = false
 knowledge = "2026-05"
+release_date = "2026-05-12"
 
-[cost]
-input = 3.00
-output = 8.00
-cache_read = 0.900
+[modalities]
+input = ["text", "image", "audio", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 
 [limit]
 context = 256_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
+[cost.text.input]
+price = 3
+cache = { read = 0.9 }
+
+[cost.text.output]
+price = 8

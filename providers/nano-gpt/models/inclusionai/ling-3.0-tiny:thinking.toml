@@ -1,0 +1,19 @@
+schema = 2
+base_model = "inclusionai/ling-3.0-tiny"
+name = "Ling 3.0 Tiny Thinking"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
+structured_output = false
+
+[limit]
+context = 262_144
+input = 262_144
+
+[cost.text.input]
+price = 0.015
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.045

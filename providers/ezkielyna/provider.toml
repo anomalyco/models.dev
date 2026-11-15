@@ -1,0 +1,10 @@
+# Ezkielyna is an independent OpenAI- and Anthropic-compatible API gateway (prepaid credit from $0.5,
+# paid with QRIS, e-wallets, USDT or Binance Pay). One key works across labs; GPT and Grok need a key
+# in the Auto or Premium group (1.5x), the other listed models work with a Standard key (1x).
+# Public price list: https://api.ezkielyna.store/api/pricing  Status: https://api.ezkielyna.store/status
+name = "Ezkielyna"
+env = ["EZKIELYNA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.ezkielyna.store/v1"
+doc = "https://ezkielyna.store/models"

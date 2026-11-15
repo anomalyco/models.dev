@@ -1,0 +1,24 @@
+# Released 2026-06-23 (s2.1-pro-free is the same model): https://docs.fish.audio/developer-guide/getting-started/changelog
+# Output formats (mp3, wav, pcm, opus): https://docs.fish.audio/api-reference/endpoint/openapi-v1/text-to-speech
+schema = 2
+v2_only = true
+type = "speech"
+name = "S2.1 Pro"
+description = "Production text-to-speech model improving on S2 Pro in quality, latency, and throughput"
+open_weights = false
+release_date = "2026-06-23"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/wav", "audio/pcm", "audio/opus"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

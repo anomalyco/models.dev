@@ -1,0 +1,14 @@
+schema = 2
+base_model = "nvidia/nemotron-nano-9b-v2"
+name = "NVIDIA: Nvidia Nemotron Nano 9B V2"
+description = "NVIDIA-Nemotron-Nano-9B-v2 is a large language model (LLM) trained from scratch by NVIDIA, and designed as a unified model for both reasoning and non-reasoning tasks. It responds to user queries and tasks by first generating a reasoning trace and then concluding with a final response. The model's reasoning capabilities can be controlled via a system prompt. If the user prefers the model to provide its final answer without intermediate reasoning traces, it can be configured to do so.\\"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+structured_output = false
+
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.23

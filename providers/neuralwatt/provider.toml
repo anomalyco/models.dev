@@ -1,6 +1,7 @@
 name = "Neuralwatt"
 env = ["NEURALWATT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Raw HTTP is POST `/v1/chat/completions`. Reasoning models accept top-level
 # `thinking_token_budget` (no bounds or disable sentinel documented). Native
 # toggles use `chat_template_kwargs.enable_thinking = true|false`; GLM-5.2 also

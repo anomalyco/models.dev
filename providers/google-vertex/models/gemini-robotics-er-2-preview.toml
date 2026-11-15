@@ -1,0 +1,36 @@
+# Sources (accessed 2026-11-10):
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/robotics-er-2.md.txt (model ID, limits, capabilities, APIs, global-only location)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/thinking.md.txt (thinking levels MINIMAL/LOW/MEDIUM/HIGH, default HIGH)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (Gemini Robotics ER 2.0: $1.00 input, $0.10 cached input, $5.00 output through 2026-12-31; doubles from 2027-01-01)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/docs/release-notes (Preview 2026-10-27)
+# Introductory prices are delivered as 50% credits back through 2026-12-31. Global location only, standard PayGo.
+# Mid-conversation updates: false. Vertex takes system instructions, thinking config and tools only as request-level fields.
+# GenerateContent only: Interactions and Chat Completions are listed as not supported.
+# Grounding with Google Search: $14 per 1,000 grounding queries (https://cloud.google.com/vertex-ai/generative-ai/pricing); the model page lists Google Search as supported.
+# Token-only multiplier (object factor, so cost.web_search is unscaled).
+# tools.strict/choice: function_calling_config modes AUTO, ANY, NONE and VALIDATED: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/tools/function-calling#function-calling-modes
+schema = 2
+v2_only = true
+base_model = "google/gemini-robotics-er-2-preview"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true, explicit = true }
+
+[api.generate-content]
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 5
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = { text = 2 }

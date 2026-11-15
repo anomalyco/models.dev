@@ -1,0 +1,13 @@
+schema = 2
+base_model = "mistral/mixtral-8x7b-instruct-v0.1"
+name = "Mixtral 8x7B Instruct v0.1 (Deep Infra)"
+
+[capabilities]
+tools = { supported = true }
+structured_output = false
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 0.4

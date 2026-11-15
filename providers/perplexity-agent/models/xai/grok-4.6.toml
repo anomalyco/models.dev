@@ -1,19 +1,32 @@
 # Pricing per Perplexity Agent API docs:
 # https://docs.perplexity.ai/docs/agent-api/models#xai
 # Context-based tiers: <=200k / >200k.
+# Agent API tool fees (https://docs.perplexity.ai/docs/getting-started/pricing#tool-pricing, accessed 2026-10-22): web_search
+#   with search_type "web" is $2.50 per 1,000 invocations (cost.web_search). Not representable in v2 (no per-call field or
+#   search type condition): web_search with search_type fast $0.001, image_search $0.0025, fetch_url $0.0005,
+#   people_search and finance_search $0.005, sandbox $0.03 per session.
+schema = 2
 base_model = "xai/grok-4.6"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "xhigh"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
 
-[cost]
-input = 2.00
-output = 6.00
-cache_read = 0.50
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 4.00
-output = 12.00
-cache_read = 1.00
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12
+
+[cost.web_search]
+price = 2.5

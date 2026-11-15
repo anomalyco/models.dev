@@ -4,22 +4,28 @@
 # Field values mirror Perplexity's own first-party host entry in this repo
 # (providers/perplexity/models/sonar-deep-research.toml); host-scoped keys
 # (cost, reasoning_options) are intentionally left to the provider files.
+# Sampling: temperature stays off for this model as before; top_p follows it, and the Sonar reference documented
+#   no top_k (https://web.archive.org/web/20260804172333/https://docs.perplexity.ai/api-reference/sonar-post).
+schema = 2
 name = "Sonar Deep Research"
 description = "Sonar search model for autonomous research and citation-backed long-form reports"
 family = "sonar"
+open_weights = false
+knowledge = "2025-01"
 release_date = "2025-02-01"
 last_updated = "2025-09-01"
-attachment = false
-reasoning = true
-temperature = false
-tool_call = false
-knowledge = "2025-01"
-open_weights = false
-
-[limit]
-context = 128_000
-output = 32_768
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 128_000
+output = 32_768

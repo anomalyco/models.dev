@@ -1,16 +1,21 @@
 # Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
 # No pool-wide effort control: at least one member does not forward reasoning_effort.
+schema = 2
 base_model = "openai/gpt-oss-20b"
 
-reasoning_options = []
-
-[cost]
-input = 0.11622
-output = 0.488124
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
-context = 128000
-output = 8192
+context = 128_000
+output = 8_192
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.11622
+
+[cost.text.output]
+price = 0.488124

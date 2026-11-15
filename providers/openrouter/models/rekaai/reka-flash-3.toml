@@ -1,25 +1,26 @@
-name = "Reka Flash 3"
+# Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded in place (live: cache prefix kept on Reka)
+# effort_updates = false: no per-turn effort control
+# Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+schema = 2
+base_model = "rekaai/reka-flash-3"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "reka"
-release_date = "2025-03-12"
-last_updated = "2025-03-12"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = false
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
 structured_output = true
-knowledge = "2025-01-31"
-open_weights = true
-reasoning_options = []
 
-[cost]
-input = 0.1
-output = 0.2
+[api.chat-completions]
+capabilities = { system_updates = true }
 
-[limit]
-context = 65_536
-output = 58_982
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.2

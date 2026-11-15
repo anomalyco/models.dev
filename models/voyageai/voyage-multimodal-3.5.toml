@@ -1,0 +1,25 @@
+# Released 2026-01-15: https://blog.voyageai.com/2026/01/15/voyage-multimodal-3-5/
+# Formats (image/png, image/jpeg, image/webp, image/gif, video/mp4): https://docs.voyageai.com/reference/multimodal-embeddings-api
+schema = 2
+v2_only = true
+type = "embedding"
+name = "voyage-multimodal-3.5"
+description = "Multimodal embedding model for text, images, video, and interleaved content"
+family = "voyage"
+open_weights = false
+release_date = "2026-01-15"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_000
+output = 0

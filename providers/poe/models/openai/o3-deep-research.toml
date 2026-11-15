@@ -1,24 +1,18 @@
-name = "o3-deep-research"
-description = "Research model for long-horizon investigation, synthesis, and analytical reports"
-family = "o"
-release_date = "2025-06-27"
-last_updated = "2025-06-27"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = false
-open_weights = false
-tool_call = true
-
-[cost]
-input = 9
-output = 36
-cache_read = 2.2
-
-[limit]
-context = 200_000
-output = 100_000
+# Status: https://poe.com/o3-deep-research is titled "o3-deep-research_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "openai/o3-deep-research"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 9
+cache = { read = 2.2 }
+
+[cost.text.output]
+price = 36

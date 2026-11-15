@@ -1,0 +1,20 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize
+# https://developers.openai.com/api/docs/pricing
+# https://developers.openai.com/api/docs/deprecations
+schema = 2
+v2_only = true
+base_model = "openai/gpt-4o-transcribe-diarize"
+status = "deprecated"
+
+[api.transcriptions]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10
+
+[cost.audio.input]
+price = 2.5

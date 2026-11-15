@@ -1,15 +1,14 @@
 # Reasoning controls verified against https://modelishub.com/v1 on 2026-08-02.
 #   Effort:        {"reasoning_effort": "<value>"}
 #   Toggle:        {"reasoning": {"enabled": true|false}}
+schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], toggle = true }
 
-[[reasoning_options]]
-type = "toggle"
+[cost.text.input]
+price = 3
 
-[cost]
-input = 3
-output = 15
+[cost.text.output]
+price = 15

@@ -1,0 +1,18 @@
+# Pricing: https://docs.zerogpu.ai/docs/audio (accessed 2026-10-12)
+# $0.01 per minute of generated audio, rounded up with a one-minute minimum (minimum not expressible in v2).
+# Endpoint: POST /v1/audio/speech (input up to 2,000 characters, English only;
+# response_format mp3, wav or opus).
+schema = 2
+v2_only = true
+base_model = "resemble-ai/chatterbox-nano"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/wav", "audio/opus"]
+
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
+
+[cost.audio.output]
+unit = "minute"
+price = 0.01

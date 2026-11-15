@@ -1,6 +1,7 @@
 name = "routing.run"
 env = ["ROUTING_RUN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 api = "https://api.routing.run/v1"
 # Per-model `cost` and `limit` are taken from the live catalog endpoint
 # GET https://api.routing.run/v1/models (accessed 2026-07-09), which returns

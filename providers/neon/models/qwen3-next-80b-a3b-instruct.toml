@@ -1,11 +1,19 @@
-base_model = "alibaba/qwen3-next-80b-a3b-instruct"
-structured_output = true
-
-[cost]
-input = 0.15
-output = 1.2
-
 # The Neon gateway caps output below the upstream entry: `max_tokens` one above
 # 10_000 returns 400. Measured at the boundary 2026-08-08. `context` is inherited.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+# Context: Neon lists 131K (docs overview table) and limit.context = 131072 (models.json); the lab has 262_144.
+schema = 2
+base_model = "alibaba/qwen3-next-80b-a3b-instruct"
+
+[capabilities]
+structured_output = true
+
 [limit]
+context = 131_072
 output = 10_000
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 1.2

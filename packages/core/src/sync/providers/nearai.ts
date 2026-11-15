@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { z } from "zod";
 
-import type { ExistingModel, SyncedFullModel, SyncedModel, SyncProvider } from "../index.js";
+import type { ExistingModel, SyncedFullModel, SyncedModel, SyncedV2Model, SyncProvider } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel, modelMetadata } from "./openrouter.js";
 
@@ -33,6 +33,7 @@ const NearAIPricing = z.object({
   input: z.number().nonnegative(),
   output: z.number().nonnegative(),
   input_cache_read: z.string().optional(),
+  image: z.string().optional(),
 }).passthrough();
 
 export const NearAIModel = z.object({
@@ -86,7 +87,13 @@ export const nearai = {
     if (existing === undefined) return createNearAIModel(model);
     if (existing.cost === undefined) {
       const authored = context.authored(model.id);
-      return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
+      if (authored === undefined) return undefined;
+      const imageCost = perImageCost(model);
+      return {
+        id: model.id,
+        model: authored as SyncedModel,
+        ...(imageCost === undefined ? {} : { v2Set: { "cost.image": imageCost } }),
+      };
     }
     return {
       id: model.id,
@@ -133,6 +140,14 @@ export function createNearAIModel(model: NearAIModel) {
         + " controls for; probe the route and author its reasoning_options by hand",
     );
   }
+  const imageCost = perImageCost(model);
+  if (imageCost !== undefined) {
+    // An image model's price has no v1 per-token form, so it is a v2-only file.
+    return {
+      id: model.id,
+      v2: { schema: 2, v2_only: true, base_model: baseModel, cost: { image: imageCost } },
+    } satisfies SyncedV2Model;
+  }
   const cacheRead = perMillion(model.pricing.input_cache_read);
   return {
     id: model.id,
@@ -145,6 +160,17 @@ export function createNearAIModel(model: NearAIModel) {
       },
     } as SyncedModel,
   };
+}
+
+// `pricing.image` is NEAR's per-image price (`costPerImage` on near.ai/models).
+// For a model whose output is images it is what a generation is billed ("billed
+// per image", docs.near.ai/cloud/guides/specialized-endpoints); its per-token
+// input/output are not.
+function perImageCost(model: NearAIModel) {
+  if (!model.output_modalities.includes("image")) return undefined;
+  const parsed = Number(model.pricing.image);
+  if (model.pricing.image === undefined || !Number.isFinite(parsed) || parsed <= 0) return undefined;
+  return { output: { unit: "image", price: price(parsed) } };
 }
 
 function atMost(current: number | undefined, reported: number | undefined): number | undefined {

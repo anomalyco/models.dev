@@ -11,17 +11,17 @@
 # Toggle: chat_template_kwargs.enable_thinking = true|false (default false)
 # Effort: chat_template_kwargs.reasoning_effort = low|medium|xhigh
 # Request-level kwargs override the server defaults; default-off is not no control.
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
-attachment = false
 status = "beta"
-
-reasoning_options = [
-  { type = "toggle" },
-  { type = "effort", values = ["low", "medium", "xhigh"] },
-]
-
-[limit]
-context = 131_072
 
 [modalities]
 input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 131_072

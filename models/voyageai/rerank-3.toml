@@ -1,0 +1,25 @@
+# Released 2026-09-30: https://blog.voyageai.com/2026/09/30/rerank-3/
+# Context length: https://docs.voyageai.com/docs/reranker
+schema = 2
+v2_only = true
+type = "reranking"
+name = "rerank-3"
+description = "Reranker optimized for retrieval quality, successor to rerank-2.5"
+family = "voyage"
+open_weights = false
+release_date = "2026-09-30"
+
+[modalities]
+input = ["text"]
+output = ["reranking"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_000
+output = 0

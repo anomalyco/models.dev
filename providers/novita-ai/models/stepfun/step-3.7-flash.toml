@@ -1,16 +1,25 @@
 # https://novita.ai/models/model-detail/stepfun-step-3.7-flash
 # Effort: reasoning_effort = low|medium|high (native baseline); thinking.type=disabled does not suppress reasoning.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
 base_model = "stepfun/step-3.7-flash"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.2
-output = 1.15
-cache_read = 0.04
+system_updates = true
 
 [limit]
 context = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.15

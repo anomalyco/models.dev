@@ -1,0 +1,15 @@
+schema = 2
+base_model = "ibm/granite-4.2-8b"
+name = "Granite 4.2 8B (Deep Infra)"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = false
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.25

@@ -1,28 +1,29 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+# tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
+schema = 2
 name = "GLM 5.3 Uncensored"
 description = "An experimental uncensored version of the full GLM 5.3 reasoning model for chat, creative writing, coding, and tool use. It may show unusual behavior or inconsistent response quality."
 family = "glm"
-release_date = "2026-09-26"
-last_updated = "2026-09-26"
-attachment = false
-reasoning = true
-tool_call = true
-structured_output = false
 open_weights = true
+release_date = "2026-09-26"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 1.25
-output = 2.25
-cache_read = 0.3
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = false
 
 [limit]
 context = 1_048_576
 input = 1_048_576
 output = 131_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1.25
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 2.25

@@ -1,0 +1,38 @@
+# Sources (accessed 2026-10-29):
+# - Model card: https://huggingface.co/lightonai/LightOnOCR-2-1B (apache-2.0, 1B mistral3-based VLM,
+#   createdAt 2026-01-16) — flagship LightOnOCR-2 variant, RLVR-trained for maximum accuracy
+# - Paper: https://arxiv.org/abs/2601.14251 (LightOnOCR: A 1B End-to-End Multilingual Vision-Language Model
+#   for State-of-the-Art OCR)
+# - Blog: https://huggingface.co/blog/lightonai/lightonocr-2
+# Input images: JPEG/PNG per card examples (pixtral-style vision encoder, image_size 1540);
+#   PDFs are rendered to page images first. Native context 16,384 = text_config.max_position_embeddings
+#   in config.json.
+schema = 2
+name = "LightOnOCR 2 1B"
+description = "End-to-end 1B-parameter vision-language OCR model from the French company LightOn that converts documents (PDFs, scans, images) into clean, naturally ordered text without a brittle OCR pipeline"
+open_weights = true
+release_date = "2026-01-16"
+license = "apache-2.0"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 16_384
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/lightonai/LightOnOCR-2-1B"
+
+[[links]]
+label = "Paper"
+url = "https://arxiv.org/abs/2601.14251"
+type = "paper"

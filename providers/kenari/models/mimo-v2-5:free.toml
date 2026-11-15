@@ -1,7 +1,17 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Retired: absent from GET /v1/models and /api/public/pricing ("every model that is for sale") on 2026-10-21;
+#   removed before the changes feed's first entry (2026-10-11).
+# Price: :free models cost Rp 0 (https://kenari.id/en/docs/free-models).
+schema = 2
 base_model = "xiaomi/mimo-v2.5"
 name = "MiMo-V2.5 (Free)"
-reasoning_options = []
+status = "deprecated"
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

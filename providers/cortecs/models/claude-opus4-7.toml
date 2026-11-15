@@ -1,17 +1,21 @@
+# Effort: reasoning_effort = low|medium|high, mapped by Cortecs to Claude output_config.effort (https://docs.cortecs.ai/routing/reasoning).
+# No budget: this model supports adaptive thinking only and rejects thinking.type = "enabled" with budget_tokens
+# (https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting#supported-models, linked from the Cortecs reasoning docs).
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: explicit `cache_control` breakpoints (Claude on Amazon Bedrock / Google Vertex). https://docs.cortecs.ai/routing/prompt-caching
+schema = 2
 base_model = "anthropic/claude-opus-4-7"
 description = "Flagship Claude model for deep reasoning, coding, and long-horizon agents"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { explicit = true }
 structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "high"]
+[cost.text.input]
+price = 5.437
+cache = { read = 0.544, write = 6.797 }
 
-[[reasoning_options]]
-type = "budget_tokens"
-min = 1_024
-
-[cost]
-input = 5.437
-output = 27.186
-cache_read = 0.544
-cache_write = 6.797
+[cost.text.output]
+price = 27.186

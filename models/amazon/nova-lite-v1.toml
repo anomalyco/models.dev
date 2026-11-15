@@ -1,22 +1,28 @@
 # Lab metadata carried over from providers/openrouter/models/amazon/nova-lite-v1.toml (curated catalogue data already in this repo),
 # with provider-specific fields (cost, reasoning_options, status) stripped.
+# Formats: https://docs.aws.amazon.com/nova/latest/userguide/modalities.html (images PNG, JPG, JPEG, GIF, WebP;
+#   video MP4, MOV, MKV, WebM, FLV, MPEG, MPG, WMV, 3GP; media documents PDF, DOCX), as MIME types
+# Sampling: temperature, topP and topK are inferenceConfig fields:
+#   https://docs.aws.amazon.com/nova/latest/userguide/complete-request-schema.html
+schema = 2
 name = "Nova Lite 1.0"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
 family = "nova-lite"
-release_date = "2024-12-05"
-last_updated = "2024-12-05"
-knowledge = "2024-10-31"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
 open_weights = false
-
-[limit]
-context = 300000
-output = 5120
+knowledge = "2024-10-31"
+release_date = "2024-12-05"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 300_000
+output = 5_120

@@ -1,11 +1,16 @@
 # Cost: converted from GreenPT's EUR list price at 1.14 USD/EUR (rate captured 2026-07-24).
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
+# Deprecated: end of life 1 September 2026; requests return 400 Unsupported model (https://docs.greenpt.ai/model-cards, accessed 2026-10-21).
+schema = 2
 base_model = "mistral/devstral-2512"
-
-[cost]
-input = 0.57
-output = 2.736
+status = "deprecated"
 
 [limit]
 context = 200_000
 output = 16_384
+
+[cost.text.input]
+price = 0.57
+
+[cost.text.output]
+price = 2.736

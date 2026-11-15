@@ -1,24 +1,28 @@
+# Formats: https://docs.aws.amazon.com/nova/latest/nova2-userguide/using-multimodal-models.html (Nova 2: images PNG, JPEG, GIF, WebP; video MP4, MOV, MKV, WebM, FLV, MPEG, MPG, WMV, 3GP; documents include PDF), as MIME types.
+schema = 2
 name = "Nova 2 Pro"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "nova-pro"
+open_weights = false
 release_date = "2025-12-03"
 last_updated = "2026-01-03"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = false
 
-[cost]
-input = 0.0
-output = 0.0
-reasoning = 0.0
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "video/mp4", "video/quicktime", "video/x-matroska", "video/webm", "video/x-flv", "video/mpeg", "video/x-ms-wmv", "video/3gpp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 64_000
 
-[modalities]
-input = ["text", "image", "video", "pdf"]
-output = ["text"]
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
+reasoning = 0

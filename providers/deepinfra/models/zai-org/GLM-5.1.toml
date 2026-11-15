@@ -1,34 +1,35 @@
 # https://deepinfra.com/zai-org/GLM-5.1
 # https://deepinfra.com/docs/advanced/max_tokens_limit
-name = "GLM-5.1"
+# Lab identity: https://deepinfra.com/zai-org/GLM-5.1 (Hugging Face repo zai-org/GLM-5.1)
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+# knowledge: the host's value, unsourced; the lab's model card and docs state no cutoff. Kept so v1 doesn't lose it.
+schema = 2
+base_model = "zhipuai/glm-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-04-07"
-last_updated = "2026-04-07"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 knowledge = "2025-04"
-open_weights = true
 status = "deprecated"
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "toggle"
-
-[cost]
-input = 1.05
-output = 3.5
-cache_read = 0.205
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+service_tier = ["flex"]
 
 [limit]
 context = 202_752
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.05
+cache = { read = 0.205 }
+
+[cost.text.output]
+price = 3.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

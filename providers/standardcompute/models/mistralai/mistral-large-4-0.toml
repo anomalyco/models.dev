@@ -1,0 +1,27 @@
+# Model ID mistralai/mistral-large-4-0. Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits, accessed 2026-10-16). Costs are the current price
+# of the endpoint Standard Compute routes this model to, as charged against the budget
+# (price listing: https://openrouter.ai/api/v1/models/mistralai/mistral-large-4-0/endpoints, accessed 2026-10-16).
+# Includes a 50% launch promotion (end date not published); regular $1.36 / $4.18, cache read
+# $0.14 (https://docs.mistral.ai/models/mistral-large-4-0).
+schema = 2
+base_model = "mistral/mistral-large-4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[limit]
+input = 850_000
+output = 50_000
+
+[api.chat-completions]
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "@opencode/ai/providers/openrouter" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[cost.text.input]
+price = 0.68
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 2.09

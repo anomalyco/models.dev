@@ -1,0 +1,13 @@
+# Model IDs: https://elevenlabs.io/docs/overview/models; listed by live GET /v1/models (2026-11-08).
+# API: POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id} (https://elevenlabs.io/docs/api-reference/text-to-speech/convert).
+# Pricing: https://elevenlabs.io/pricing/api (accessed 2026-11-08): $0.04 per 1K characters, billed in USD = $40 per 1M characters.
+schema = 2
+v2_only = true
+base_model = "elevenlabs/eleven_v4_turbo"
+
+[api.speech]
+base_url = "https://api.elevenlabs.io"
+
+[cost.text.input]
+unit = "character"
+price = 40

@@ -1,10 +1,15 @@
 # Toggle: reasoning.enabled = true|false
+schema = 2
 base_model = "zhipuai/glm-5"
-reasoning_options = [{ type = "toggle" }]
 
-[cost]
-input = 0.40
-output = 1.75
+[capabilities]
+reasoning = { supported = true, toggle = true }
 
 [limit]
 context = 202_752
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 1.75

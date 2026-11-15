@@ -1,0 +1,27 @@
+# Launched in Meta AI on 2026-07-07; on Meta Model API since 2026-08-25:
+#   https://developer.meta.com/ai/resources/blog/build-with-muse-Image/, https://dev.meta.ai/docs/models
+# Output: output_format webp (default), png or jpeg; inputs are any image/* URL or data URL (png and webp in the examples):
+#   https://dev.meta.ai/docs/image-generation
+schema = 2
+v2_only = true
+type = "image"
+name = "Muse Image"
+description = "Agentic image generation and editing model that plans, searches and refines before rendering"
+family = "muse"
+open_weights = false
+release_date = "2026-07-07"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/webp", "image/png", "image/jpeg"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

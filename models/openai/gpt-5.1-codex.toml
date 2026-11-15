@@ -1,21 +1,23 @@
+schema = 2
 name = "GPT-5.1 Codex"
 description = "Codex GPT for repository edits, code review, and practical software agents"
 family = "gpt-codex"
-release_date = "2025-11-13"
-last_updated = "2025-11-13"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2024-09-30"
 open_weights = false
+knowledge = "2024-09-30"
+release_date = "2025-11-13"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 400_000
 input = 272_000
 output = 128_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

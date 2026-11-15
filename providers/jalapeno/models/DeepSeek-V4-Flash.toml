@@ -1,15 +1,23 @@
 # Toggle: chat_template_kwargs.thinking true|false
 # Pricing: Jalapeno Cloud USD per million tokens (marketplace / plugin catalog)
 # Limits: GET https://api.jalapeno-cloud.ai/v1/models id=DeepSeek-V4-Flash (2026-08-17)
+# Prices: GET https://www.jalapeno-cloud.ai/token-api/v1/models/<modelId> priceRows (USD per 1M, 2026-10-21)
+schema = 2
 base_model = "deepseek/deepseek-v4-flash"
-reasoning_options = [{ type = "toggle" }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.14
-output = 0.28
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
 
 [limit]
 context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.028 }
+
+[cost.text.output]
+price = 0.28

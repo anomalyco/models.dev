@@ -1,0 +1,32 @@
+# https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+# Released 2021-08-30: initial commit of the model repository (https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/commits/main)
+# Trained during Hugging Face's Community week using JAX/Flax for NLP & CV (model card)
+# Context: max_seq_length 256 (https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/blob/main/sentence_bert_config.json);
+#   384-dimensional output.
+schema = 2
+v2_only = true
+type = "embedding"
+name = "all-MiniLM-L6-v2"
+description = "Sentence and short-paragraph embedding model for clustering and semantic search"
+open_weights = true
+release_date = "2021-08-30"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 256
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"

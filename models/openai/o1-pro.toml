@@ -1,20 +1,22 @@
+schema = 2
 name = "o1-pro"
 description = "O-series reasoning model for hard analysis, math, coding, and planning"
 family = "o-pro"
-release_date = "2025-03-19"
-last_updated = "2025-03-19"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2023-09"
 open_weights = false
+knowledge = "2023-09"
+release_date = "2025-03-19"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 200_000
 output = 100_000
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]

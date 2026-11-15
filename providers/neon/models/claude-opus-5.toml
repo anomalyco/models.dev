@@ -1,12 +1,26 @@
+# Toggle: {"thinking": {"type": "adaptive"|"disabled"}}
+# Effort: {"thinking": {"type": "adaptive"}, "output_config": {"effort": <v>}}
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+# Cache: explicit. POST /anthropic/v1/messages forwards `cache_control` unchanged and caching "works exactly as described"
+# in Anthropic's docs (https://neon.com/docs/ai-gateway/anthropic-messages#prompt-caching); breakpoints, targets and
+# min_tokens follow providers/anthropic. Only 5m is listed because Neon publishes a single cache_write price.
+schema = 2
 base_model = "anthropic/claude-opus-5"
-structured_output = true
-reasoning_options = [
-  { type = "toggle" },                                                   # API: {"thinking": {"type": "adaptive"|"disabled"}}
-  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }, # API: {"thinking": {"type": "adaptive"}, "output_config": {"effort": <v>}}
-]
 
-[cost]
-input = 5
-output = 25
-cache_read = 0.5
-cache_write = 6.25
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25

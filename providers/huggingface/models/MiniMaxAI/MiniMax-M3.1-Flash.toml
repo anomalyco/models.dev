@@ -1,0 +1,32 @@
+# Router listing: https://router.huggingface.co/v1/models (accessed 2026-10-26): only inference provider is novita (live,
+#   0.15 input / 0.6 output USD/MTok, context 1,000,000, supports_tools true, supports_structured_output false); modalities ["text","image"].
+# Modalities: exact image types are the lab's (minimax/MiniMax-M3.1-Flash); the router lists no video input.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (always-on, no toggle). HF Chat Completion documents top-level
+#   reasoning_effort with provider- and model-dependent support (https://huggingface.co/docs/inference-providers/tasks/chat-completion);
+#   the router forwards it to Novita, whose MiniMax M3.1 Flash takes these levels (providers/novita-ai/models/minimax/minimax-m3.1-flash.toml).
+#   MiniMax's own API has the same levels and thinking cannot be disabled (https://platform.minimax.io/docs/api-reference/text-anthropic-api).
+#   Live on api.novita.ai, 2026-10-26: low/medium/high/xhigh/max accepted; none and unknown values return 400.
+# Reasoning text comes back in message.reasoning_content (Novita, live 2026-10-26).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

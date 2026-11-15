@@ -1,23 +1,15 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+schema = 2
+base_model = "aion-labs/aion-rp-llama-3.1-8b"
 name = "AionLabs: Aion-RP 1.0 (8B)"
-description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
-family = "llama"
-release_date = "2025-02-04"
-last_updated = "2025-02-04"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = false
+
+[capabilities]
 structured_output = false
-open_weights = false
 
-[cost]
-input = 0.8
-output = 1.6
+[cost.text.input]
+price = 0.8
 
-[limit]
-context = 32_768
-output = 29_491
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1.6

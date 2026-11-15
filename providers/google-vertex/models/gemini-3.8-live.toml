@@ -1,0 +1,50 @@
+# Sources (accessed 2026-11-10):
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-8-live.md.txt (model ID, limits, capabilities, APIs, regions, GA 2026-09-24)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (Gemini 3.8 Live API, non-global rows)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/live-api/start-manage-session (WebSocket endpoint)
+# Live API only: the model page lists Gemini Live API and GenerateContent as supported, Interactions as not supported.
+# The model page lists Thinking as not supported, so reasoning is off here even though the lab file has it on.
+# Pay-as-you-go runs in us-central1 and the us and eu multi-regions, not global; the WebSocket host is
+# {location}-aiplatform.googleapis.com. No @opencode/ai entry point speaks the Live API, so opencodeai = "none".
+# Video output (Live Avatar) is Vertex-only: the model page lists Video "Input and output" and the pricing page has an "Output: video (avatar)" row.
+# [modalities] restates input because the schema requires both arrays when the table is present.
+# Prices are the same in every listed location.
+# Context caching, structured output, Chat Completions and Count Tokens are listed as not supported.
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.8-live"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video", "audio/pcm"]
+output = ["text", "audio/pcm", "video"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+cache = false
+
+[api.bidi-generate-content]
+base_url = "wss://${GOOGLE_VERTEX_LOCATION}-aiplatform.googleapis.com/ws/google.cloud.aiplatform.v1.LlmBidiService"
+path = "/BidiGenerateContent"
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.75
+
+[cost.text.output]
+price = 4.5
+
+[cost.audio.input]
+price = 3
+
+[cost.audio.output]
+price = 12
+
+[cost.image.input]
+price = 1
+
+[cost.video.input]
+price = 1
+
+[cost.video.output]
+price = 1

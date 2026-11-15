@@ -1,8 +1,8 @@
 /** @jsx jsx */
 /** @jsxImportSource hono/jsx */
 
-import { generateCatalog } from "@models.dev/core";
-import type { Model, ModelMetadata, Provider } from "@models.dev/core";
+import { generateCatalog, logoErrors, readLabMetadata } from "@models.dev/core";
+import type { LabMetadataV2, Model, ModelMetadata, Provider } from "@models.dev/core";
 import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import { existsSync, readFileSync, readdirSync } from "fs";
@@ -95,18 +95,6 @@ interface SearchIndexItem {
   api?: string;
   updated?: string;
 }
-
-const LAB_NAME_OVERRIDES: Record<string, string> = {
-  alibaba: "Alibaba",
-  meta: "Meta",
-  minimax: "MiniMax",
-  moonshotai: "Moonshot AI",
-  openai: "OpenAI",
-  perplexity: "Perplexity",
-  stepfun: "StepFun",
-  xai: "xAI",
-  zhipuai: "Zhipu AI",
-};
 
 const DEFAULT_PAGE_METADATA: PageMetadata = {
   title: "Models.dev - An open-source database of AI models",
@@ -1592,7 +1580,7 @@ function countLinkedProviderEntries() {
 }
 
 function loadLabMetadata(root: string) {
-  const result = new Map<string, { description?: string }>();
+  const result = new Map<string, LabMetadataV2>();
   const labsPath = path.join(root, "labs");
   if (!existsSync(labsPath)) return result;
 
@@ -1600,18 +1588,7 @@ function loadLabMetadata(root: string) {
     const metadataPath = path.join(labsPath, labId, "lab.toml");
     if (!existsSync(metadataPath)) continue;
 
-    const metadata = Bun.TOML.parse(readFileSync(metadataPath, "utf8")) as Record<
-      string,
-      unknown
-    >;
-    if (
-      metadata.description !== undefined &&
-      (typeof metadata.description !== "string" || metadata.description.length === 0)
-    ) {
-      throw new Error(`Invalid lab description in ${metadataPath}`);
-    }
-
-    result.set(labId, { description: metadata.description });
+    result.set(labId, readLabMetadata(metadataPath));
   }
 
   return result;
@@ -1627,8 +1604,8 @@ function minDefined(values: Array<number | undefined>) {
 }
 
 function labName(labId: string) {
-  const override = LAB_NAME_OVERRIDES[labId];
-  if (override) return override;
+  const name = LabMetadata.get(labId)?.name;
+  if (name) return name;
 
   const providerName = Providers[labId]?.name;
   if (providerName) return providerName;
@@ -1668,10 +1645,8 @@ function providerLogoSvg(providerId: string) {
   if (cached) return cached;
 
   const logoPath = path.join(root, "providers", providerId, "logo.svg");
-  const defaultLogoPath = path.join(root, "providers", "logo.svg");
-  const rawSvg = readFileSync(
-    existsSync(logoPath) ? logoPath : defaultLogoPath,
-    "utf8",
+  const rawSvg = readLogo(
+    existsSync(logoPath) ? logoPath : path.join(root, "providers", "logo.svg"),
   );
   const svg = rawSvg
     .replace(/<svg\b([^>]*)>/i, (_, attributes: string) => {
@@ -1690,10 +1665,8 @@ function labLogoSvg(labId: string) {
   if (cached) return cached;
 
   const logoPath = path.join(root, "labs", labId, "logo.svg");
-  const defaultLogoPath = path.join(root, "providers", "logo.svg");
-  const rawSvg = readFileSync(
-    existsSync(logoPath) ? logoPath : defaultLogoPath,
-    "utf8",
+  const rawSvg = readLogo(
+    existsSync(logoPath) ? logoPath : path.join(root, "providers", "logo.svg"),
   );
   const svg = rawSvg
     .replace(/<svg\b([^>]*)>/i, (_, attributes: string) => {
@@ -1704,5 +1677,12 @@ function labLogoSvg(labId: string) {
     .replace(/\sstroke="(?!none)[^"]*"/gi, ' stroke="currentColor"');
 
   LabLogoSvgs.set(labId, svg);
+  return svg;
+}
+
+function readLogo(file: string) {
+  const svg = readFileSync(file, "utf8");
+  const errors = logoErrors(svg);
+  if (errors.length > 0) throw new Error(`Unsafe logo ${file}: ${errors.join(", ")}`);
   return svg;
 }

@@ -1,11 +1,21 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types.
+schema = 2
 base_model = "moonshotai/kimi-k2.5"
 name = "Kimi K2.5 (Deep Infra)"
-reasoning_options = []
-
-[cost]
-input = 0.45
-output = 2.25
-cache_read = 0.07
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 2.25

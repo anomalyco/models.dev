@@ -4,16 +4,16 @@
 # - Public hub $3.00/$15.00: https://www.tokengo.com/models
 # - Exact console rates incl. cache $3.00/$15.00/$0.30 (TokenGo model table ratios)
 # TokenGo OpenAI-compatible extra_body; same controls as typical Kimi K3 openai-compat peers.
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
 
-[cost]
-input = 3.0
-output = 15.0
-cache_read = 0.3
+[cost.text.output]
+price = 15

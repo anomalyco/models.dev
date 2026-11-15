@@ -1,0 +1,26 @@
+# FLUX Video Edit [fast]: https://bfl.ai/video-edit, https://docs.bfl.ml/flux_tools/flux_video_edit
+# Released in September 2026 (https://layer.ai/models/bfl-flux-3-edit); BFL's release notes don't date it.
+# Input: an MP4 clip ("Input videos should be MP4"); output follows the source clip as MP4.
+schema = 2
+v2_only = true
+type = "video"
+name = "FLUX Video Edit [fast]"
+description = "Prompt-based video editing model that adds, removes or replaces elements while keeping motion and timing"
+family = "flux"
+open_weights = false
+release_date = "2026-09"
+
+[modalities]
+input = ["text", "video/mp4"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

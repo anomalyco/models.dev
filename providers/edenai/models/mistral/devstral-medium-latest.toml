@@ -1,6 +1,12 @@
+schema = 2
 base_model = "mistral/devstral-medium-latest"
+
+[capabilities]
+tools = { supported = true }
 structured_output = true
 
-[cost]
-input = 0.4
-output = 2
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 2

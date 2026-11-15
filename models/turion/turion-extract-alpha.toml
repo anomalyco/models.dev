@@ -1,0 +1,39 @@
+# Sources (accessed 2026-11-11):
+# - https://turion.ai/docs/guides/extract-models/: Turion Extract alpha, by Turion AI, Apache-2.0, an early version: a LoRA
+#   adapter plus small extraction heads on Gemma 4 12B (https://huggingface.co/turion-ai/turion-extract-alpha). One
+#   forward pass returns one typed value (text, number, date, time, datetime, duration or list) or null per requested
+#   field, with p_null and confidence; nothing is generated (output tokens are always 0). Field specs are the same as
+#   Cloudflare's Clairic. 16,384 tokens per request (document and fields together). Text only: no images or PDFs.
+# - API: Turion serves it on POST https://api.turion.ai/v1/extract with a {model, state, fields, reference_date} body at
+#   $0.05 per 1M input tokens (https://turion.ai/docs/reference/rest-api/#post-v1extract,
+#   https://turion.ai/docs/guides/usage/#pricing). No `[api.*]` protocol fits that body yet, so there is no provider file.
+# - Release: 2026-10-25, when Turion first listed it with the turion-ai/turion-extract-alpha weights.
+# type = "extraction" isn't a v1 type, so the model is v2_only (as on Cloudflare's Clairic).
+# Output: typed values, no generated text, so there is nothing to sample (temperature/top_p/top_k false).
+schema = 2
+v2_only = true
+type = "extraction"
+name = "Turion Extract alpha"
+description = "Open-weight extraction model on Gemma 4 12B (LoRA plus extraction heads) that returns one typed value or null per requested field from a text document in one forward pass"
+open_weights = true
+release_date = "2026-10-25"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 16_384
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/turion-ai/turion-extract-alpha"

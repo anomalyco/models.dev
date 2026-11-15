@@ -1,0 +1,18 @@
+schema = 2
+base_model = "zhipuai/glm-5.2"
+name = "Z.ai: GLM 5.2 Fast"
+description = "GLM-5.2-Fast-Preview is the high-speed variant of Zhipu AI&#39;s GLM-5.2, with 1M context and capabilities on par with the standard version. Inference-optimized to deliver 1.5–2× the output TPS, it fits latency-sensitive use cases such as real-time chat, multi-turn agents, and streaming code generation."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 2.8
+cache = { read = 0.56 }
+
+[cost.text.output]
+price = 8.8

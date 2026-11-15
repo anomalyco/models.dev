@@ -1,26 +1,28 @@
 # Specifications: https://platform.claude.com/docs/en/models/haiku-5-5/overview
 # Thinking and sampling: https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide
 # Evaluations: https://www.anthropic.com/claude-haiku-5-5
+schema = 2
 name = "Claude Haiku 5.5"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
 family = "claude-haiku"
-release_date = "2026-10-07"
-last_updated = "2026-10-07"
-attachment = true
-reasoning = true
-temperature = false
-tool_call = true
-structured_output = true
-knowledge = "2026-06"
 open_weights = false
+knowledge = "2026-06"
+release_date = "2026-10-07"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 1_000_000
 output = 128_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
 
 [[benchmarks]]
 name = "GDPval-AA"

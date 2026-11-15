@@ -358,21 +358,23 @@ test("first factor of a full-inline file inherits the lab entry instead of re-em
   expect(built).toMatchObject({ cost: { cache_read: 0.2 }, interleaved: { field: "reasoning_content" } });
 });
 
-test("an already-factored file keeps its authored lab-field deltas and omit list", () => {
+test("an already-factored file keeps its display name and omit list but leaves model facts to the lab", () => {
   const built = buildAiandModel(aiandModel(), {
     base_model: "deepseek/deepseek-v4-flash",
     base_model_omit: ["limit.input"],
     name: "DeepSeek V4 Flash (ai& lane)",
     knowledge: "2025-06",
+    release_date: "2026-01-01",
   });
-  // Deltas that differ from the lab entry survive; identical values would be
+  // A name that differs from the lab entry survives; identical values would be
   // dropped by factoring as redundant, which is the point.
   expect(built).toMatchObject({
     base_model: "deepseek/deepseek-v4-flash",
     base_model_omit: ["limit.input"],
     name: "DeepSeek V4 Flash (ai& lane)",
-    knowledge: "2025-06",
   });
+  expect(built).not.toHaveProperty("knowledge");
+  expect(built).not.toHaveProperty("release_date");
 });
 
 test("a created reasoner gets a leading header naming the single effort wire path and no other control", () => {
@@ -399,35 +401,35 @@ test("runner-level: a full-inline file factored for the first time is written wi
   await mkdir(path.dirname(providerFile), { recursive: true });
   await Bun.write(providerFile, [
     "# First-party Motif host entry (no shared lab base_model in catalog yet).",
+    "schema = 2",
     'name = "Motif 3"',
     'description = "Motif 3 is a large-scale, decoder-only Mixture-of-Experts (MoE) language model with 314 billion total parameters and 13.2 billion parameters activated per token."',
+    "open_weights = false",
     'release_date = "2026-08-12"',
     'last_updated = "2026-09-11"',
-    "attachment = false",
-    "reasoning = true",
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = false }",
+    'reasoning = { supported = true, effort = ["none", "high"] }',
     "temperature = false",
-    "tool_call = false",
     "structured_output = false",
-    "open_weights = false",
-    "",
-    "[[reasoning_options]]",
-    'type = "effort"',
-    'values = ["none", "high"]',
-    "",
-    "[interleaved]",
-    'field = "reasoning_content"',
-    "",
-    "[cost]",
-    "input = 0.5",
-    "output = 2",
     "",
     "[limit]",
     "context = 262_144",
     "output = 262_144",
     "",
-    "[modalities]",
-    'input = ["text"]',
-    'output = ["text"]',
+    "[api.chat-completions]",
+    'compatibility = { reasoning_field = "reasoning_content" }',
+    "",
+    "[cost.text.input]",
+    "price = 0.5",
+    "",
+    "[cost.text.output]",
+    "price = 2",
     "",
   ].join("\n"));
 
@@ -449,8 +451,8 @@ test("runner-level: a full-inline file factored for the first time is written wi
   expect(written).not.toMatch(/^description = /m);
   expect(written).not.toMatch(/^open_weights = /m);
   expect(written).not.toMatch(/^release_date = /m);
-  expect(written).toContain("cache_read = 0.2");
-  expect(written).toContain('field = "reasoning_content"');
+  expect(written).toContain("cache = { read = 0.2 }");
+  expect(written).toContain('reasoning_field = "reasoning_content"');
   expect(written.startsWith("# First-party Motif host entry")).toBe(true);
 });
 
@@ -462,7 +464,7 @@ test("runner-level: a reasoner the feed leaves without controls is reported and 
   await copyFile(path.join(import.meta.dirname, "..", "..", "..", "models", "motif-technologies", "motif-3.toml"), labDest);
   const providerFile = path.join(modelsDir, "motif-technologies", "motif-3.toml");
   await mkdir(path.dirname(providerFile), { recursive: true });
-  const original = ['base_model = "motif-technologies/motif-3"', "", "[cost]", "input = 0.5", "output = 2", ""].join("\n");
+  const original = ["schema = 2", 'base_model = "motif-technologies/motif-3"', "", "[cost.text.input]", "price = 0.5", "", "[cost.text.output]", "price = 2", ""].join("\n");
   await Bun.write(providerFile, original);
 
   const feed = aiandModel({ id: "motif-technologies/motif-3", name: "Motif-Technologies/Motif-3", reasoning_options: undefined });

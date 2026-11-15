@@ -1,22 +1,20 @@
+# Retired: absent from GET https://zenmux.ai/api/v1/models and its model page redirects to /bytedance/doubao-seed-2.0-code (2026-10-21).
+schema = 2
+base_model = "bytedance-seed/seed-2.0-code"
 name = "Doubao Seed 2.0 Code"
 description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
-release_date = "2026-03-20"
-last_updated = "2026-03-20"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
 knowledge = "2025-01-01"
-open_weights = false
+status = "deprecated"
 
-[cost]
-input = 0.90
-output = 4.48
+[capabilities]
+reasoning = { supported = false }
 
 [limit]
 context = 256_000
 output = 32_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.9
+
+[cost.text.output]
+price = 4.48

@@ -1,24 +1,17 @@
-name = "Kimi K2.5"
-description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k2"
-release_date = "2026-01"
-last_updated = "2026-01"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 262_143 }]
-temperature = true
-tool_call = true
+# Catalog: GET https://api.jiekou.ai/openai/models (2026-10-21): USD per 1M tokens (price_per_m_decimal, after Jiekou's listed discount), context_size, max_output_tokens, features, input_modalities.
+# Cache: implicit prefix caching, prompt_tokens_details.cached_tokens; https://docs.jiekou.ai/docs/feature/prompt-caching (2026-10-21).
+# Reasoning: no caller control documented. The chat reference lists enable_thinking only for zai-org/glm-4.5 and separate_reasoning only for deepseek-r1-turbo (https://docs.jiekou.ai/docs/models/reference-llm-create-chat-completion).
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
 structured_output = true
-open_weights = true
 
-[cost]
-input = 0.6
-output = 3
+[cost.text.input]
+price = 0.6
+cache = { read = 0.1 }
 
-[limit]
-context = 262144
-output = 262144
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.output]
+price = 3

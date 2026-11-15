@@ -1,0 +1,27 @@
+schema = 2
+name = "LiquidAI: LFM3-1.7B"
+description = "A compact 1.7B-parameter text model with a 256K-token context, post-trained for agents, tool calling, and structured outputs. It reasons before it answers. Prompts and outputs may be retained and used..."
+family = "liquid"
+open_weights = false
+release_date = "2026-11-06"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 8_192
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.2

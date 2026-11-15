@@ -1,0 +1,35 @@
+# Released 2026-02-05 with the Kling 3.0 series (Video 3.0, Video 3.0 Omni, Image 3.0, Image 3.0 Omni):
+#   https://ir.kuaishou.com/news-releases/news-release-details/kling-ai-launches-30-model-ushering-era-where-everyone-can-be
+# Sources (accessed 2026-11-12):
+# - https://kling.ai/document-api/guides/capability-map/image (Kling Image 3.0 Omni, API ID kling-v3-omni: text and image
+#   input, 1K/2K/4K output, single and series generation, multi-image to image, subject control)
+# - https://kling.ai/document-api/api/image/o1/image-generation (omni-image endpoint shared with Image O1: image_list
+#   .jpg/.jpeg/.png up to 10MB each; reference images and elements together up to 10; series of 2-9 images or auto;
+#   aspect_ratio 16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9 or auto)
+# Output: the API returns image URLs and doesn't document the file format, so output stays generic.
+schema = 2
+v2_only = true
+type = "image"
+name = "Kling IMAGE 3.0 Omni"
+description = "Kling 3.0 multimodal image model for generation, editing and image series from text and up to 10 references, with 4K output"
+open_weights = false
+release_date = "2026-02-05"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+url = "https://kling.ai/document-api/api/image/o1/image-generation"
+type = "docs"

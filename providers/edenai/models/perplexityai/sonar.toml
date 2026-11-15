@@ -1,13 +1,21 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists a different
+# input/output set than the lab; listed media kinds use the lab's MIME types.
+# Image formats: Perplexity image attachments: PNG, JPEG, WEBP, GIF (https://docs.perplexity.ai/guides/image-attachments).
+schema = 2
 base_model = "perplexity/sonar"
-attachment = true
-structured_output = false
 
-[cost]
-input = 1
-output = 1
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+structured_output = false
 
 [limit]
 context = 127_072
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 1

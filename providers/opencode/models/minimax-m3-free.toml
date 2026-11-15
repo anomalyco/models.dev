@@ -1,29 +1,30 @@
+# Toggle: thinking.type = enabled|disabled (deprecated; not re-verified on Zen)
+# knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/minimax/models/MiniMax-M3.toml (Zen passes requests through).
+# Tools follow MiniMax's API: https://platform.minimax.io/docs/api-reference/text-chat-anthropic (ToolChoice: only auto); Zen passes requests through.
+schema = 2
+base_model = "minimax/MiniMax-M3"
+knowledge = "2025-01"
 name = "MiniMax-M3 Free"
 description = "Legacy model retained for compatibility with older integrations"
-family = "minimax-m3-free"
-release_date = "2026-05-31"
-last_updated = "2026-05-31"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
-knowledge = "2025-01"
-open_weights = true
 status = "deprecated"
 
-[cost]
-input = 0
-output = 0
-cache_read = 0
+[capabilities]
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, toggle = true }
+system_updates = true
 
 [limit]
 context = 200_000
 output = 32_000
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[api.messages]
+base_url = "https://opencode.ai/inference/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

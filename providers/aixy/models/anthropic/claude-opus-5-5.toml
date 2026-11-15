@@ -1,0 +1,23 @@
+# Anthropic standard API prices in USD per million tokens; checked 2026-10-13.
+# https://platform.claude.com/docs/en/about-claude/pricing
+# https://platform.claude.com/docs/en/models/opus-5-5/overview
+# Cache writes use the 5-minute rate.
+# Effort: output_config.effort; https://platform.claude.com/docs/en/build-with-claude/effort
+# Adaptive thinking is always on.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.messages]
+base_url = "https://api.aixy-gateway.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20

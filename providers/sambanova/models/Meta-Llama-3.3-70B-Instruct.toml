@@ -1,0 +1,14 @@
+# Limits/pricing: GET https://api.sambanova.ai/v1/models (Meta-Llama-3.3-70B-Instruct context_length 131072, max_completion_tokens 3072; USD 0.60/1.20 per MTok).
+# Text-only 128k production deployment: https://docs.sambanova.ai/docs/en/models/sambacloud-models
+schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
+
+[limit]
+context = 131_072
+output = 3_072
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 1.2

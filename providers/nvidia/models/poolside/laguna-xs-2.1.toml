@@ -2,12 +2,21 @@
 # - https://docs.api.nvidia.com/nim/reference/poolside-laguna-xs-2-1-infer
 # - https://integrate.api.nvidia.com/v1/models id: poolside/laguna-xs-2.1
 # NIM Chat schema exposes no reasoning control field (only temperature/top_p/max_tokens).
+# Mid-conversation (live 2026-10-21, ~8k-token prefix, control turn then changed turn): a late system message was
+# followed and kept the cache in 2 of 2 trials. Tool changes couldn't be measured (503 ResourceExhausted).
+schema = 2
 base_model = "poolside/laguna-xs-2.1"
-reasoning_options = []
 
-[cost]
-input = 0.0
-output = 0.0
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+system_updates = true
 
 [limit]
 output = 16_384
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,24 +1,26 @@
 # Added benchmarks are from the original V4 preview instruct-model comparison, not the later 0731/0813 releases.
+schema = 2
 name = "DeepSeek V4 Flash"
 description = "Fast DeepSeek V4 lane for economical reasoning, coding, and long-context work"
 family = "deepseek-flash"
-release_date = "2026-04-24"
-last_updated = "2026-04-24"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2025-05"
 open_weights = true
-
-[limit]
-context = 1_000_000
-output = 384_000
+knowledge = "2025-05"
+release_date = "2026-04-24"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 384_000
 
 [[weights]]
 label = "Hugging Face"

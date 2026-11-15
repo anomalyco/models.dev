@@ -1,0 +1,11 @@
+# Sources (accessed 2026-10-19):
+# - Pricing: https://docs.z.ai/guides/overview/pricing ($0.2 per video)
+# - Model: https://docs.z.ai/guides/video/cogvideox-3
+# - API (async): https://docs.z.ai/api-reference/video/generate-video
+# Billed per generated video, which the cost schema has no unit for; no [cost] authored.
+schema = 2
+v2_only = true
+base_model = "zhipuai/cogvideox-3"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }

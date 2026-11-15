@@ -1,8 +1,14 @@
+schema = 2
 base_model = "google/gemini-2.5-computer-use-preview-10-2025"
 name = "Gemini 2.5 Computer Use Preview (10-2025)"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 1.25
-output = 10
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+tools = { supported = true }
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 10

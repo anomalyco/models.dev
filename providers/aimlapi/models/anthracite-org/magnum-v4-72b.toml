@@ -1,9 +1,15 @@
+schema = 2
 base_model = "anthracite-org/magnum-v4-72b"
 
-[cost]
-input = 4.1262
-output = 6.877
+[capabilities]
+structured_output = true
 
 [limit]
 context = 32_000
 output = 16_384
+
+[cost.text.input]
+price = 3.174
+
+[cost.text.output]
+price = 5.29

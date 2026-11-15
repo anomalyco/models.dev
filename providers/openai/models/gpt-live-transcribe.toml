@@ -1,0 +1,13 @@
+# Sources:
+# https://developers.openai.com/api/docs/models/gpt-live-transcribe
+# https://developers.openai.com/api/docs/pricing
+schema = 2
+v2_only = true
+base_model = "openai/gpt-live-transcribe"
+
+[api.realtime]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.017

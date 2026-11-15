@@ -227,12 +227,9 @@ export function buildAiandModel(
       baseModel,
       {
         ...host,
+        // Model facts (dates, knowledge, open weights) belong to the lab file.
         name: deltas?.name,
         description: deltas?.description,
-        release_date: deltas?.release_date,
-        last_updated: deltas?.last_updated,
-        knowledge: deltas?.knowledge,
-        open_weights: deltas?.open_weights,
       },
       limit,
       deltas?.base_model_omit,
@@ -340,6 +337,8 @@ type ReasoningEffortValue = Extract<
   string
 >;
 
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"];
+
 function isReasoningEffort(value: string): value is ReasoningEffortValue {
   return CatalogReasoningOption.safeParse({ type: "effort", values: [value] }).success;
 }
@@ -382,9 +381,10 @@ function resolveReasoningOptions(
     // be true of this host, so neither is ever written; parsing them keeps a
     // feed that publishes one from aborting the run.
     if (option.type !== "effort") return [];
-    const values = option.values.filter(
-      (value): value is ReasoningEffortValue => typeof value === "string" && isReasoningEffort(value),
-    );
+    // Low to high, so a reordered feed never rewrites the files.
+    const values = option.values
+      .filter((value): value is ReasoningEffortValue => typeof value === "string" && isReasoningEffort(value))
+      .sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
     return values.length > 0 ? [{ type: "effort" as const, values }] : [];
   });
   return feed.length > 0 ? feed : authoredReasoningOptions(authored);

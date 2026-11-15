@@ -1,13 +1,20 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=mistral%2Fmistral-medium-2505 (accessed 2026-07-21)
-
+# Cache: default route mistral is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "mistral/mistral-medium-2505"
-structured_output = true
 
-[cost]
-input = 0.4
-output = 2
-cache_read = 0.04
+[capabilities]
+structured_output = true
+tools = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 128_000
 output = 128_000
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 2

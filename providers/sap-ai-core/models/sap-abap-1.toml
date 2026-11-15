@@ -1,21 +1,23 @@
+# Cost: none. The v1 price was the SAP AI Core GenAI-token rate (not USD), and the model has no vendor list price.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+# Deprecated: the SAP AI Core calculator (https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/, 2026-10-21) listed with retirement date 2026-10-30 (version 1).
+schema = 2
 name = "sap-abap-1"
 description = "SAP-hosted model for ABAP code generation and enterprise development tasks"
-release_date = "2025-11-26"
-last_updated = "2025-11-26"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 open_weights = false
-
-[cost]
-input = 0.48
-output = 1.7
-
-[limit]
-context = 32_768
-output = 4096
+release_date = "2025-11-26"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 32_768
+output = 4_096

@@ -1,0 +1,40 @@
+# Status: deprecated, shutdown 2026-12-03 (requests route to gemini-omni-1.2-flash from then):
+#   https://ai.google.dev/gemini-api/docs/deprecations (accessed 2026-11-12)
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+# - Output: $9.00 text, $17.50 video. v1 output carries the video rate, like gemini-omni-flash-preview.
+# APIs: both run on the Interactions API (https://ai.google.dev/gemini-api/docs/omni). [api.videos] is
+#   @opencode/ai's video entry point, which runs Omni as a background interaction (POST /interactions with
+#   background: true, poll GET /interactions/{id}, cancel POST /interactions/{id}/cancel; see
+#   https://ai.google.dev/gemini-api/docs/background-execution). Added in https://github.com/anomalyco/opencode/pull/63683,
+#   recorded live against gemini-omni-1.2-flash on 2026-11-13. [api.interactions] stays "none" because the
+#   Interactions chat client reads text output only.
+schema = 2
+v2_only = true
+base_model = "google/gemini-omni-1.1-flash"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 131_072
+output = 65_536
+
+[api.videos]
+sdk = { opencodeai = "@opencode/ai/providers/google/videos" }
+
+[api.interactions]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 17.5
+
+[cost.video.output]
+price = 17.5

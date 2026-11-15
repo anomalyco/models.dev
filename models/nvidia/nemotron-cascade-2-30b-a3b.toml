@@ -1,18 +1,25 @@
+# Release date (Mar 19, 2026): https://huggingface.co/nvidia/Nemotron-Cascade-2-30B-A3B
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host;
+#   the model card recommends temperature 1.0 and top_p 0.95.
+schema = 2
 name = "Nemotron Cascade 2 30B A3B"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
 family = "nemotron"
-release_date = "2026-03-24"
-last_updated = "2026-04-09"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
-
-[limit]
-context = 256_000
-output = 32_768
+release_date = "2026-03-19"
+last_updated = "2026-04-09"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 256_000
+output = 32_768

@@ -1,0 +1,30 @@
+# Sources:
+# - https://docs.perceptron.inc/perceptron-mk1.5/models/perceptron-mk1.5.md (36,864-token context, 8,192 max output;
+#   text, image, video and audio input, text output; reasoning via reasoning_effort; function calling)
+# - https://docs.perceptron.inc/perceptron-mk1.5/changelog.md (released 2026-09-25)
+# - https://docs.perceptron.inc/perceptron-mk1.5/api-reference/files/upload-a-file.md (MIME types image/jpeg,
+#   image/png, image/webp, video/mp4, video/quicktime, video/webm, audio/wav, audio/mpeg, audio/flac)
+# - https://docs.perceptron.inc/perceptron-mk1.5/api-reference/chat-completions/create-chat-completion.md
+#   (temperature, top_p and top_k request fields)
+# - open_weights: API-only; Perceptron's Hugging Face org (https://huggingface.co/PerceptronAI) publishes only the
+#   Isaac models, and Mk1 is documented as closed source (https://docs.perceptron.inc/perceptron-mk1/index.md)
+schema = 2
+name = "Perceptron Mk1.5"
+description = "Image, video, and audio understanding with visual grounding, reasoning, and function calling"
+open_weights = false
+release_date = "2026-09-25"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video/mp4", "video/quicktime", "video/webm", "audio/wav", "audio/mpeg", "audio/flac"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 36_864
+output = 8_192

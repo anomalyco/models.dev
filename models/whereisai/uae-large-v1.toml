@@ -1,0 +1,29 @@
+# https://huggingface.co/WhereIsAI/UAE-Large-V1 (MIT; AnglE-optimized BERT-large, 512-token input, 1024 dimensions)
+# Repository created 2023-12-04 (Hugging Face API createdAt). Paper: https://arxiv.org/abs/2309.12871
+schema = 2
+v2_only = true
+type = "embedding"
+name = "UAE Large V1"
+description = "English text embedding model trained with angle-optimized contrastive learning"
+open_weights = true
+release_date = "2023-12-04"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 512
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/WhereIsAI/UAE-Large-V1"

@@ -1,8 +1,31 @@
 # Pricing: https://api.impossibl.com/v1/models
+# Billing (https://impossibl.com/docs/billing): prepaid credits at the GET /v1/models rates, no usage
+# markup; buying credits adds a 5% platform fee (not representable here). Catalog checked 2026-10-21.
+# Reasoning (https://impossibl.com/docs/reasoning): Chat Completions reasoning_effort / Responses reasoning.effort
+# accept none|minimal|low|medium|high|xhigh|max and move to the nearest level the model has.
+# Prompt caching (https://impossibl.com/docs/prompt-caching): OpenAI, xAI, DeepSeek and Google routes cache implicitly.
+# Effort: catalog reasoning = { kind = "effort", levels = low|medium|high, off = false }.
+# Long context: catalog context_price_tiers above 200,000 input tokens.
+schema = 2
 base_model = "xai/grok-4.5"
-reasoning_options = []
 
-[cost]
-input = 2.00
-output = 6.00
-cache_read = 0.30
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.3 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 0.6 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12

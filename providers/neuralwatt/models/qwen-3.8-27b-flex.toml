@@ -8,26 +8,28 @@
 # Neuralwatt serves text+image input only (lab metadata also lists video).
 # https://portal.neuralwatt.com/docs/guides/flex-tier
 # https://portal.neuralwatt.com/docs/api/chat-completions
+schema = 2
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B Flex"
-interleaved = true
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "xhigh"]
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 0.2925
-output = 2.08
-cache_read = 0.1625
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"], budget = {} }
+structured_output = true
 
 [limit]
 context = 262_128
 output = 131_072
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 0.2925
+cache = { read = 0.1625 }
+
+[cost.text.output]
+price = 2.08

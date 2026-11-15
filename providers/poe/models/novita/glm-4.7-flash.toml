@@ -1,18 +1,18 @@
+# Toggle: extra_body.enable_thinking true|false (Poe's parameter for Novita-hosted bots in https://api.poe.com/v1/models, e.g. deepseek-v3.2, glm-4.6; this bot lists no reasoning parameter there on 2026-10-21, toggle kept from the 2026-10-12 audit)
+# Cost: https://api.poe.com/v1/models pricing (USD per token x 1e6), retrieved 2026-10-21.
+schema = 2
+base_model = "zhipuai/glm-4.7-flash"
 name = "glm-4.7-flash"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-release_date = "2026-01-19"
-last_updated = "2026-01-19"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 temperature = false
-open_weights = false
-tool_call = true
 
 [limit]
-context = 200_000
 output = 65_500
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.0707
+
+[cost.text.output]
+price = 0.404

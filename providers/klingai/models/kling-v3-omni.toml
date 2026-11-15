@@ -1,0 +1,25 @@
+# Kling IMAGE 3.0 Omni. Kling also calls its 3.0 Omni video model kling-v3-omni on the legacy video endpoints; that model
+# is kling-3.0-omni here (providers/klingai/models/kling-3.0-omni.toml).
+# Sources (accessed 2026-11-12):
+# - API: POST https://api-singapore.klingai.com/v1/images/omni-image with model_name = "kling-v3-omni"
+#   (https://kling.ai/document-api/api/image/o1/image-generation). resolution "1k" (default), "2k" or "4k"; n 1-9.
+# - Pricing: https://kling.ai/document-api/pricing/base/image ("Balance" tab): $0.028 per image for text-to-image and
+#   image-to-image at 1K and 2K, $0.056 at 4K. Prepaid resource packages (https://kling.ai/dev/pricing) are not recorded.
+# Cost conditions: resolution uses the API's own value ("4k").
+# aisdk = "none": @ai-sdk/klingai only has video models. opencodeai = "none": @opencode/ai has no Kling package.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-image-v3.0-omni"
+
+[api.images]
+base_url = "https://api-singapore.klingai.com/v1"
+path = "/images/omni-image"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.output]
+unit = "image"
+price = 0.028
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "4k" } }
+price = 0.056
