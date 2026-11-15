@@ -1,15 +1,14 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-11-15)
 # Live catalog: https://api.commandcode.ai/provider/v1/models
 # Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
-# Reasoning: the lab's control is a thinking toggle (models/zhipuai/glm-5.1.toml), and this host
-#   publishes no graded levels for it: the same-generation GLM-5 entry here is always on with no
-#   caller control, and only the later GLM-5.2/GLM-5.3 checkpoints publish effort.
-#   Host-level probes were not possible on a Go plan (403 upgrade_required).
+# Reasoning: the three graded levels this host publishes for the GLM peers
+#   (providers/commandcode/models/zai-org/GLM-5.3.toml, z-ai/glm-5.3-flash.toml).
+# Limit: the 200_000 context is the host's live catalog context_length.
 schema = 2
 base_model = "zhipuai/glm-5.1"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [cost.text.input]
