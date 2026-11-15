@@ -1,11 +1,13 @@
 # Effort: reasoning_effort = low|high|max
 # Pricing: https://api.fikraapi.co.ke/v1/models (USD per 1M tokens, accessed 2026-10-17)
+schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
-[cost]
-input = 0.25
-output = 0.70
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 0.70
