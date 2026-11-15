@@ -1,0 +1,27 @@
+# Tier-dependent pricing for the documented ID deepseek/deepseek-v4-pro (checked 2026-11-02).
+# https://cloud.tencent.com/document/product/1823/133811
+# Section III, General plan, uniform subscription-tier pricing table:
+# Lite / Standard / Pro / Max = 22.285 / 19.8 / 18.687 / 18.43 points/MTok,
+# with the same rate for input, output and cached input (20 points = CNY 1).
+# Cost omitted pending subscription-tier representation; unknown does not mean free.
+# Availability: https://cloud.tencent.com/document/product/1823/130060
+# Specifications: https://cloud.tencent.com/document/product/1823/130051
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# Cached-input deductions: pricing source above; no separate cache-write rate published.
+# API: https://cloud.tencent.com/document/product/1823/132248
+# Direct-service IDs: deepseek/deepseek-flash and deepseek/deepseek-v4-pro.
+# Use Tencent's recommended IDs; omit aliases to avoid duplicates, not as retired.
+# Tencent manages the routed version; mapping is documented in Availability above.
+# Current documented upstream version: DeepSeek-V4-Pro-0813 (checked 2026-11-02).
+# Controls: thinking.type = enabled|disabled; reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

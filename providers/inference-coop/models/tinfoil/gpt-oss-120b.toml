@@ -1,0 +1,17 @@
+# Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
+# served on the Tinfoil tier (TEE enclaves), $0.15/$0.60 per 1M tokens, 131K context.
+# Reasoning surface copied from the underlying host entry
+# (providers/tinfoil/models/gpt-oss-120b.toml); reasoning_effort accepted by the
+# gateway (probe, 2026-11-01).
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

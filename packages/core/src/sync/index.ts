@@ -39,8 +39,11 @@ import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
+import { hostingerRouter } from "./providers/hostinger-router.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
+import { keln } from "./providers/keln.js";
+import { kenari } from "./providers/kenari.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
@@ -53,6 +56,7 @@ import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
+import { obscurify } from "./providers/obscurify.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
@@ -206,8 +210,11 @@ export const providers: {
   "github-copilot": SyncProvider<any>;
   google: SyncProvider<any>;
   hyper: SyncProvider<any>;
+  "hostinger-router": SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
+  keln: SyncProvider<any>;
+  kenari: SyncProvider<any>;
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "llmgateway-providers": SyncProvider<any>;
@@ -218,6 +225,7 @@ export const providers: {
   "nano-gpt": SyncProvider<any>;
   nearai: SyncProvider<any>;
   "novita-ai": SyncProvider<any>;
+  obscurify: SyncProvider<any>;
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
@@ -256,8 +264,11 @@ export const providers: {
   "github-copilot": githubCopilot,
   google,
   hyper,
+  "hostinger-router": hostingerRouter,
   huggingface,
   inceptron,
+  keln,
+  kenari,
   kilo,
   llmgateway,
   "llmgateway-providers": llmgatewayProviders,
@@ -268,6 +279,7 @@ export const providers: {
   "nano-gpt": nanoGpt,
   nearai,
   "novita-ai": novitaAi,
+  obscurify,
   ofox,
   "ollama-cloud": ollamaCloud,
   openai,
@@ -293,8 +305,11 @@ export const groups = {
     "crossmodel",
     "edenai",
     "empiriolabs",
+    "hostinger-router",
     "huggingface",
     "inceptron",
+    "keln",
+    "kenari",
     "kilo",
     "llmgateway",
     "llmgateway-providers",
@@ -308,7 +323,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "umans-ai", "umans-ai-coding-plan", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "umans-ai", "umans-ai-coding-plan", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
