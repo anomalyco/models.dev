@@ -1,0 +1,19 @@
+# SahabatMobile retail pricing (USD/MTok); source: https://www.sahabatmobile.com/dashboard/packages (accessed 2026-11-15)
+# Retail = official Anthropic price; upstream pricing: https://platform.claude.com/docs/en/about-claude/pricing
+# Served via SahabatMobile's OpenAI-compatible API over Anthropic direct.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.5
