@@ -1,0 +1,25 @@
+# Released 2026-09-18: https://docs.fish.audio/developer-guide/getting-started/changelog
+# Input formats (WAV, MP3, AAC incl. M4A/MP4, FLAC, Ogg, WebM/Matroska, MOV):
+#   https://docs.fish.audio/api-reference/endpoint/openapi-v1/speech-to-text
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Transcribe 1 Pro"
+description = "Speech-to-text model with speaker markers and emotion and vocal-event cues"
+open_weights = false
+release_date = "2026-09-18"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/aac", "audio/mp4", "audio/flac", "audio/ogg", "audio/webm", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

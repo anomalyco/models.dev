@@ -1,0 +1,27 @@
+# Released 2025-10-28 (Hailuo 2.3 and Hailuo 2.3 Fast): https://www.minimax.io/news/minimax-hailuo-23
+# Input image formats (first_frame_image: JPG, JPEG, PNG, WebP): https://platform.minimax.io/docs/api-reference/video-generation-i2v
+# Output: an MP4 file (output_aigc.mp4): https://platform.minimax.io/docs/api-reference/video-generation-download
+# Hailuo 2.3 Fast is image-to-video only (first_frame_image required).
+schema = 2
+v2_only = true
+type = "video"
+name = "Hailuo 2.3 Fast"
+description = "Faster, lower-cost Hailuo 2.3 variant that animates a first-frame image with a text prompt"
+family = "minimax"
+open_weights = false
+release_date = "2025-10-28"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

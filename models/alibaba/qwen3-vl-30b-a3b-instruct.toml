@@ -1,24 +1,29 @@
 # https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Instruct
 # https://github.com/QwenLM/Qwen3-VL (News: 2025.10.4)
+# Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+schema = 2
 name = "Qwen3 VL 30B A3B Instruct"
 description = "Open vision-language MoE model for image and video understanding, documents, and visual agents"
 family = "qwen"
-release_date = "2025-10-04"
-last_updated = "2025-10-04"
-attachment = true
-reasoning = false
-tool_call = true
-temperature = true
 open_weights = true
+release_date = "2025-10-04"
 license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 262_144
 output = 32_768
-
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
 
 [[weights]]
 label = "Hugging Face"

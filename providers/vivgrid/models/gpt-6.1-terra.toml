@@ -1,0 +1,30 @@
+# Pricing, context window and max output:
+# https://vivgrid.com/docs/models/gpt-6.1-terra (accessed 2026-10-28)
+# APIs: Responses and Chat Completions. https://vivgrid.com/docs/models/gpt-6.1-terra (accessed 2026-10-28)
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.055, write = 1.375 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2.2
+cache = { read = 0.11, write = 2.75 }
+
+[cost.text.output]
+price = 5.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 8.25

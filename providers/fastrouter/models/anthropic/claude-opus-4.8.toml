@@ -1,6 +1,16 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+# Not represented: web search $0.01 per request (no v2 per-request field).
+# Reasoning: FastRouter documents no controls of its own (the catalog lists `reasoning`), so these are Anthropic's, as in providers/anthropic:
+# Effort: output_config.effort = low|medium|high|xhigh|max (lab wire field; adaptive thinking, no token budget)
+schema = 2
 base_model = "anthropic/claude-opus-4-8"
-reasoning_options = [{ type = "budget_tokens", min = 1_024, max = 32_000 }]
 
-[cost]
-input = 5
-output = 25
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
+
+[cost.text.output]
+price = 25

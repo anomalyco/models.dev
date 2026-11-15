@@ -1,9 +1,17 @@
+# structured_output = true: /v1/models structured_outputs, strict json_schema (https://docs.llmgateway.io/learn/structured-outputs)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "perplexity/sonar"
 
-[cost]
-input = 0.25
-output = 2.5
-cache_write = 0.25
+[capabilities]
+structured_output = true
 
 [limit]
 context = 130_000
+
+[cost.text.input]
+price = 0.25
+cache = { write = 0.25 }
+
+[cost.text.output]
+price = 2.5

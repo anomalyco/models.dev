@@ -1,12 +1,21 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=openai%2Fgpt-4.1-nano (accessed 2026-07-21)
-
+# Cache: default route openai is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "openai/gpt-4.1-nano"
 name = "GPT-4.1 Nano"
 
-[cost]
-input = 0.1
-output = 0.4
-cache_read = 0.025
-
 [modalities]
-input = ["text", "image", "pdf"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+tools = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.4

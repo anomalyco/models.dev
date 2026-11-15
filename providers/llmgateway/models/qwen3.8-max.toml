@@ -1,20 +1,24 @@
+# Modalities: image formats from models/alibaba/qwen3.8-max-preview.toml (same model)
+# structured_output = true: /v1/models structured_outputs, strict json_schema (https://docs.llmgateway.io/learn/structured-outputs)
+# effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
+schema = 2
 base_model = "alibaba/qwen3.8-max-preview"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "medium", "xhigh"]
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
 
-[[reasoning_options]]
-type = "budget_tokens"
-
-[cost]
-input = 1.54
-output = 4.631
-cache_read = 0.198
-cache_write = 2.5
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"], budget = {} }
+structured_output = true
 
 [limit]
 output = 1_000_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 1.54
+cache = { read = 0.198, write = 2.5 }
+
+[cost.text.output]
+price = 4.631

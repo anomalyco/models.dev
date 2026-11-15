@@ -1,15 +1,24 @@
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 8, output 28, cache read 2.0
+schema = 2
 base_model = "zhipuai/glm-5.2"
-reasoning_options = [{ type = "effort", values = ["high", "max"] }]
 
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 1.4
-output = 4.4
-cache_read = 0.26
-cache_write = 0
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+structured_output = true
 
 [limit]
 context = 1_049_000
 output = 262_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.19557982
+cache = { read = 0.29889496, write = 0 }
+
+[cost.text.output]
+price = 4.18452938

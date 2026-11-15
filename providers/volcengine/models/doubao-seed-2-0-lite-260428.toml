@@ -7,31 +7,40 @@
 # Output limit: the lab default is 32_000, but this host accepts up to 131_072
 # (verified 2026-08-27: max_tokens=131072 -> 200, 132000 -> 400 invalid), matching
 # what openrouter/kilo/nano-gpt already declare for this model. Overridden below.
+schema = 2
 base_model = "bytedance-seed/seed-2.0-lite"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 output = 131_072
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.08906
+cache = { read = 0.01781 }
 
-[cost]
-input = 0.08906
-output = 0.53436
-cache_read = 0.01781
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.13359
+cache = { read = 0.02672 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 32_000 }
-input = 0.13359
-output = 0.80154
-cache_read = 0.02672
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.26718
+cache = { read = 0.05344 }
 
-[[cost.tiers]]
-tier = { type = "context", size = 128_000 }
-input = 0.26718
-output = 1.60308
-cache_read = 0.05344
+[cost.text.output]
+price = 0.53436
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.80154
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.60308

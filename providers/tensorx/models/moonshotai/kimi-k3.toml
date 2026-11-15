@@ -1,10 +1,16 @@
 # AI SDK auto-discovers native IDs via /v1/models — field values map those IDs
+# Reasoning is always on: Kimi models "cannot be toggled off" on TensorX and take no reasoning_effort.
+# https://docs.tensorx.ai/api-reference/reasoning (accessed 2026-10-21)
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "toggle" # API: {"chat_template_kwargs": {"thinking": false}} (default on)
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
-[cost]
-input = 3.00
-output = 15.00
-cache_read = 0.75
+[cost.text.input]
+price = 3
+cache = { read = 0.75 }
+
+[cost.text.output]
+price = 15

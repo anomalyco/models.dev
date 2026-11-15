@@ -1,18 +1,26 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=zai%2Fglm-4.5v (accessed 2026-07-21)
+# Cache: default route zai is in the explicit caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "zhipuai/glm-4.5v"
 name = "Glm 4.5V"
-structured_output = true
-reasoning_options = []
 
-[cost]
-input = 0.6
-output = 1.8
-cache_read = 0.11
-cache_write = 0
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+tools = { supported = true }
+cache = { implicit = true, explicit = true }
 
 [limit]
 context = 128_000
 output = 32_000
 
-[modalities]
-input = ["text", "image"]
+[cost.text.input]
+price = 0.6
+cache = { read = 0.11, write = 0 }
+
+[cost.text.output]
+price = 1.8

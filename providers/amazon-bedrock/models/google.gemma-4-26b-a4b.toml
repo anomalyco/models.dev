@@ -3,17 +3,44 @@
 # Effort: reasoning.effort = none|high on Mantle Responses, matching the Gemma 4 31B surface.
 # Live 2026-09-09: high returns reasoning; strict JSON schema and max_output_tokens=32768 accepted.
 # https://aws.amazon.com/bedrock/pricing/ (US Standard pricing)
+# Service tiers: priority|flex (Converse serviceTier.type; Mantle service_tier), per model card + live 2026-10-19. Prices: AmazonBedrock us-east-1 price list (1.75x/0.5x; exact SKU prices where AWS rounds).
+# Mid-conversation (Mantle Responses, live 2026-10-19): system/developer messages accepted; configuration_update rejected ("not supported with this model"); additional_tools accepted, but no prompt cache hits at all on Mantle (live 2026-10-23), so tools.updates is left out.
+# Modalities: the model card lists image and video input on Mantle (Responses / Chat Completions) and Bedrock names no formats.
+# Image MIME types are the base model's (Gemini API formats). `video` stays generic: neither Bedrock nor Google's Gemma docs name a video format.
+# APIs: Bedrock Mantle (https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html) lists this ID in GET /v1/models; the listed Mantle APIs answered live in us-east-1 on 2026-10-23 (/v1 for open-weight models, /openai/v1 for OpenAI, xAI and Gemma 4, /anthropic/v1 for Claude).
+# Per-API flags: system_updates sits on [api.responses]. Developer messages were checked on Mantle Responses; Mantle Chat Completions wasn't checked for in-place developer messages.
+schema = 2
 base_model = "google/gemma-4-26b-a4b-it"
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
-
-[cost]
-input = 0.13
-output = 0.40
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video"]
+output = ["text"]
 
-[provider]
-npm = "@ai-sdk/amazon-bedrock/mantle"
-api = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
-shape = "responses"
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+service_tier = ["flex", "priority"]
+
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/responses" }
+capabilities = { system_updates = true }
+
+[api.chat-completions]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/chat" }
+
+[cost.text.input]
+price = 0.13
+
+[cost.text.output]
+price = 0.4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

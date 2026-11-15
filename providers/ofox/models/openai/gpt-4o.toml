@@ -1,12 +1,21 @@
 # https://ofox.ai/models/openai/gpt-4o
 # https://api.ofox.ai/v2/models/catalog?include=provider_price&limit=500
+# Mid-conversation (Ofox Responses, https://ofox.ai/docs/api/openai/responses): effort_updates = false because OpenAI's own API has no such mechanism for this model (providers/openai/models/gpt-4o.toml). system_updates, tools.updates unset: OpenAI supports them, but Ofox's reference doesn't document passing them through.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/gpt#caching).
+schema = 2
 base_model = "openai/gpt-4o"
 
-[cost]
-input = 2
-output = 8
-cache_read = 1
+[capabilities]
+structured_output = true
+cache = { implicit = true }
 
-[provider]
-npm = "@ai-sdk/openai"
-api = "https://api.ofox.ai/v1"
+[api.responses]
+base_url = "https://api.ofox.ai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10

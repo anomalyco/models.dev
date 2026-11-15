@@ -1,22 +1,18 @@
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/
+# API: POST /v1/rerank returns results[{index, relevance_score}] without `meta`, which @ai-sdk/cohere 4.0.66 rejects (live 2026-10-21).
+schema = 2
+base_model = "baai/bge-reranker-v2-m3"
 name = "BGE Reranker v2 M3"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
-family = "bge"
-release_date = "2024-03-12"
-last_updated = "2026-04-30"
-attachment = false
-reasoning = false
-temperature = false
-tool_call = false
-open_weights = true
-
-[cost]
-input = 0.01
-output = 0.00
 
 [limit]
-context = 8_192
 output = 1
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.rerank]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,22 @@
+# Route: REST POST /ai/run with { model, input }, input a System One body; the answer is a run record { result: { state: "Completed", result: { answers, usage } } }. https://developers.cloudflare.com/ai/models/typesafe/jev/
+# Live 2026-10-23: typesafe/jev (answers as jev-1.13.0) and typesafe/jev-1.14.0 answered on /ai/run; the path form /ai/run/typesafe/jev returns 400 "No route for that URI" (code 7000).
+schema = 2
+base_model = "typesafe/jev-1.14.0"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 32_000
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+path = "/run"
+sdk = { opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.042
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

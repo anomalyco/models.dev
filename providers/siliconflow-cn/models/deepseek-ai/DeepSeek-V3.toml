@@ -1,1 +1,22 @@
-../../../siliconflow/models/deepseek-ai/DeepSeek-V3.toml
+# Prices: China pricing page https://siliconflow.cn/pricing (CNY per 1M tokens, accessed 2026-10-21),
+# converted to USD and rounded to 8 decimals. CNY→USD rate: 6.691314, 2026-10-21,
+# source: https://open.er-api.com/v6/latest/USD
+# CNY: input 2, output 8, cache read 0.2
+schema = 2
+base_model = "deepseek/deepseek-v3-0324"
+name = "deepseek-ai/DeepSeek-V3"
+description = "DeepSeek chat model for instruction following, coding, and analysis"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 164_000
+output = 164_000
+
+[cost.text.input]
+price = 0.29889496
+cache = { read = 0.0298895 }
+
+[cost.text.output]
+price = 1.19557982

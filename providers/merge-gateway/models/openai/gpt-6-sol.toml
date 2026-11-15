@@ -1,17 +1,31 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
+# Cache: default route openai is in the automatic caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "openai/gpt-6-sol"
 
-[[reasoning_options]]
-type = "toggle"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 2
-output = 10
-cache_read = 0.2
-cache_write = 2.5
-
 [modalities]
-input = ["text", "image"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+tools = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.4, write = 5 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15

@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = none|low|high|max. Lab set is low|high|max (always thinks); none is a real off switch on this host (reasoning_content empty, answers degrade), matching openrouter/venice/kilo/prime. minimal and medium are accepted but measured at the same reasoning depth as low, so they are not published. HTTP 404 on this model is also what upstream instability returns, so it is not used as validation evidence.
+# Cost: 302.AI catalog https://api.302ai.cn/v1/models (retrieved 2026-10-26): input $2.4, output $12, cache read $0.24 per MTok; no cache-write charge.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.4
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 12

@@ -1,16 +1,30 @@
+# Input formats (WAV, MP3, AAC incl. M4A/MP4, FLAC, Ogg): https://docs.fish.audio/api-reference/endpoint/openapi-v1/speech-to-text
+schema = 2
+type = "transcription"
 name = "Transcribe-1"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
-release_date = "2026-03-01"
-last_updated = "2026-03-01"
-attachment = false
-reasoning = false
-tool_call = false
 open_weights = false
+release_date = "2026-03-01"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/aac", "audio/mp4", "audio/flac", "audio/ogg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["audio"]
-output = ["text"]
+[api.transcriptions]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }
+
+[cost.audio.input]
+unit = "second"
+price = 0.0001

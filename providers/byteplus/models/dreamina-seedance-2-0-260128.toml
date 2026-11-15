@@ -1,0 +1,43 @@
+# Sources (accessed 2026-11-12):
+# - Model ID and output specs: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-list.md
+# - USD list prices (per million tokens): https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-pricing.md
+# - API: async POST https://ark.ap-southeast.bytepluses.com/api/v3/contents/generations/tasks, then poll
+#   GET .../tasks/{id}: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/create-video-generation-task-api.md
+#   @ai-sdk/bytedance (https://www.npmjs.com/package/@ai-sdk/bytedance, 2.0.84) posts to contents/generations/tasks
+#   and defaults to this base URL; it reads ARK_API_KEY rather than BYTEPLUS_API_KEY.
+# Billed per million tokens; tokens ~= (input video seconds + output seconds) x width x height x fps / 1024,
+# exact count in usage.completion_tokens.
+# With video input there is a minimum token charge, not modelled here. Offline inference (service_tier = "flex")
+# is not offered for the Seedance 2.x models. Activation needs a BytePlus balance above USD 30 or a resource pack:
+#   https://ai.byteplus.com/ark/region:ap-southeast-1/docs/seedance-model-activation-usage-and-refund.md
+# Prices: 480p/720p $7.00 ($4.30 with input video), 1080p $7.70 ($4.70), 4k $4.00 ($2.40).
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/seedance-2.0"
+
+[api.videos]
+base_url = "https://ark.ap-southeast.bytepluses.com/api/v3"
+sdk = { aisdk = "@ai-sdk/bytedance", opencodeai = "@opencode/ai/providers/byteplus/videos" }
+
+[cost.video.output]
+price = 7
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 7.7
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" } }
+price = 4
+
+[[cost.video.output.overrides]]
+when = { resolution = { in = ["480p", "720p"] }, input_video = { equals = true } }
+price = 4.3
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, input_video = { equals = true } }
+price = 4.7
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" }, input_video = { equals = true } }
+price = 2.4

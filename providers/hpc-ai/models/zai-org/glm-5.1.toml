@@ -1,28 +1,22 @@
+schema = 2
+base_model = "zhipuai/glm-5.1"
 name = "GLM 5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
-family = "glm"
-release_date = "2026-04-08"
-last_updated = "2026-06-01"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.615
-output = 2.46
-cache_read = 0.133
 
 [limit]
 context = 202_000
 output = 202_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.615
+cache = { read = 0.133 }
+
+[cost.text.output]
+price = 2.46

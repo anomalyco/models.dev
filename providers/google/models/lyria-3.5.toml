@@ -1,0 +1,21 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/lyria-3.5
+# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
+# - Billed $0.08 per song, not per token, so the file has no cost (no v1 or v2 per-song unit yet).
+# Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
+schema = 2
+v2_only = true
+base_model = "google/lyria-3.5"
+
+[capabilities]
+structured_output = false
+cache = false
+
+[limit]
+context = 1_048_576
+
+[api.generate-content]
+
+[api.interactions]
+sdk = { opencodeai = "none" }

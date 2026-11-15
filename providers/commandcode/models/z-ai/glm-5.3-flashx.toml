@@ -1,0 +1,17 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3-FlashX"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.37
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.25

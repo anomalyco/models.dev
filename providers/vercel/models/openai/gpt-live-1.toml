@@ -1,17 +1,16 @@
-name = "GPT-Live 1"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "gpt"
-release_date = "2026-09-10"
-last_updated = "2026-09-10"
-attachment = false
-reasoning = false
-tool_call = false
-open_weights = false
+# Synced from https://ai-gateway.vercel.sh/v1/models (type realtime)
+# https://vercel.com/docs/ai-gateway/modalities/realtime
+# Price: session duration billed as audio input per second
+schema = 2
+base_model = "openai/gpt-live-1"
 
-[limit]
-context = 0
-output = 0
+[capabilities]
+temperature = true
 
-[modalities]
-input = ["text", "audio"]
-output = ["text", "audio"]
+[api.live]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.audio.input]
+unit = "second"
+price = 0.0008334

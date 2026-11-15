@@ -1,22 +1,10 @@
-name = "DeepSeek V3 0324"
+# Price: GET https://api.meganova.ai/api/v1/serverless/models (public catalog behind console.meganova.ai/serverless, accessed 2026-10-21)
+schema = 2
+base_model = "deepseek/deepseek-v3-0324"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
-release_date = "2025-03-24"
-last_updated = "2025-03-24"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-open_weights = true
 
-[cost]
-input = 0.25
-output = 0.88
+[cost.text.input]
+price = 0.275
 
-[limit]
-context = 163_840
-output = 163_840
-
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 1.1

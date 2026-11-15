@@ -1,27 +1,30 @@
+# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
+# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
+# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Modalities: Kilo documents no formats; assumed to relay Alibaba's Qwen3.5 Plus (alibaba/qwen3.5-plus). Alibaba Model Studio image and video limits: https://www.alibabacloud.com/help/en/model-studio/vision
+schema = 2
 name = "Qwen: Qwen3.5 Plus 2026-02-15"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen3.5"
-release_date = "2026-02-16"
-last_updated = "2026-02-16"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-02-16"
 
-[[reasoning_options]]
-type = "effort"
-values = ["none", "high"]
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
 
-[cost]
-input = 0.26
-output = 1.56
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
 
 [limit]
 context = 1_000_000
 output = 65_536
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[cost.text.input]
+price = 0.26
+
+[cost.text.output]
+price = 1.56

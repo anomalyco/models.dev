@@ -1,0 +1,29 @@
+# Sources (accessed 2026-10-21):
+# - https://docs.inceptionlabs.ai/capabilities/decisions: Mercury Decide answers typed questions (noul, choice, score) about
+#   a shared `state` on POST /v1/decisions; images must be base64 data URLs in PNG, JPEG, WebP, or GIF.
+# - GET https://api.inceptionlabs.ai/v1/models: context_length 65536, max_output_length 50000, endpoint `decisions`.
+# - Release: first listed on OpenRouter 2026-09-30 (https://openrouter.ai/api/v1/models, inception/mercury-decide).
+# Sampling: the DecisionRequest schema takes only model, state and questions (https://api.inceptionlabs.ai/openapi.json).
+schema = 2
+v2_only = true
+type = "decision"
+name = "Mercury Decide"
+description = "Inception's diffusion decision model that returns probabilities for typed yes/no, choice and score questions about text or images"
+family = "mercury"
+open_weights = false
+release_date = "2026-09-30"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 65_536
+output = 50_000

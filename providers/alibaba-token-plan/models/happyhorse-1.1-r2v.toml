@@ -7,24 +7,35 @@
 # Sources:
 # https://www.alibabacloud.com/help/en/model-studio/happyhorse-text-to-video-api-reference
 # https://www.alibabacloud.com/help/en/model-studio/token-plan-overview
+# Type: video generation model (https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview).
+# MIME types: input images JPEG, JPG, PNG, WEBP (the doc's image/jpeg, image/png, image/webp); output MP4 (H.264), per https://www.alibabacloud.com/help/en/model-studio/happyhorse-reference-to-video-api-reference.
+# API: async POST /api/v1/services/aigc/video-generation/video-synthesis (https://www.alibabacloud.com/help/en/model-studio/token-plan-multimodal-gen); base_url is @ai-sdk/alibaba's videoBaseURL
+schema = 2
+type = "video"
 name = "HappyHorse 1.1 Reference-to-Video"
 description = "Video model for reference-guided video generation"
-release_date = "2026-07-17"
-last_updated = "2026-07-17"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = false
 open_weights = false
+release_date = "2026-07-17"
 
-[cost]
-input = 0
-output = 0
+[modalities]
+input = ["image/jpeg", "image/png", "image/webp", "text"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 0
 output = 0
 
-[modalities]
-input = ["image", "text"]
-output = ["video"]
+[api.videos]
+base_url = "https://token-plan.ap-southeast-1.maas.aliyuncs.com"
+sdk = { aisdk = "@ai-sdk/alibaba", opencodeai = "none" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

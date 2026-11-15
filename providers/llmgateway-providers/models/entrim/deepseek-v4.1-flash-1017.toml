@@ -1,0 +1,17 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 (entrim)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.8

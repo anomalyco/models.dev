@@ -1,7 +1,12 @@
 # 302.AI API reports context_length = 204,800 for MiniMax-M2.1 (reconciled from prior 1M override)
+schema = 2
 base_model = "minimax/MiniMax-M2.1"
-reasoning_options = []
 
-[cost]
-input = 0.3
-output = 1.2
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2

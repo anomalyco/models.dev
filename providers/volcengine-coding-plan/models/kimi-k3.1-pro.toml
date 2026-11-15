@@ -1,0 +1,27 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-11-10), listed alongside kimi-k3. Subscription tier: no
+# per-token price.
+# Always thinks: effort = reasoning_effort low|high|max, POST
+# /api/coding/v3/chat/completions, mirroring the first-party lab entry
+# (providers/moonshotai, default max) and the Kimi Code docs, which say K3.1
+# Pro requests with thinking disabled are rejected
+# (https://www.kimi.com/code/docs/en/kimi-code/models.html, accessed
+# 2026-11-10). Not re-measured on this endpoint; unlike the kimi-k3 peer here,
+# no thinking.type toggle is declared because the upstream rejects off
+# requests.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

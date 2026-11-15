@@ -1,14 +1,19 @@
+# Mid-conversation: CoreWeave serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.wandb.ai/inference
+schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B"
 description = "Multilingual model excelling in conversational tasks, detailed instruction-following, and coding."
-release_date = "2024-12-01"
-last_updated = "2024-12-01"
-structured_output = true
 
-[cost]
-input = 0.71
-output = 0.71
-cache_read = 0.71
+[capabilities]
+tools = { supported = true }
+structured_output = true
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 0.71
+cache = { read = 0.71 }
+
+[cost.text.output]
+price = 0.71

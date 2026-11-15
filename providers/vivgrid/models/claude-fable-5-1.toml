@@ -1,15 +1,23 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/claude-fable-5-1 (accessed 2026-09-07)
 # Effort: output_config.effort = low|medium|high|xhigh|max
+# APIs: Messages and Chat Completions. https://docs.vivgrid.com/models/claude-fable-5-1 (accessed 2026-10-23)
+schema = 2
 base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh", "max"] }]
 
-[cost]
-input = 10
-output = 50
-cache_read = 0.5
-cache_write = 12.5
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
-[provider]
-npm = "@ai-sdk/anthropic"
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[cost.text.input]
+price = 10
+cache = { read = 0.5, write = 12.5 }
+
+[cost.text.output]
+price = 50

@@ -1,15 +1,19 @@
+# Retired 2026-10-04 (rerouted to its replacement): https://docs.tensorx.ai/api-reference/model-deprecation (accessed 2026-10-21).
+# Effort: reasoning_effort = <value>; "none" disables reasoning (from the v1 file's inline comment; the model is retired, so the current docs no longer cover it).
+schema = 2
 base_model = "zhipuai/glm-5"
+status = "deprecated"
 
-[[reasoning_options]]
-type = "effort" # API: {"reasoning_effort": <value>}; "none" disables reasoning
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 1
-output = 3.2
-cache_read = 0.25
-cache_write = 1.25
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 
 [limit]
-context = 202752
-output = 202752
+context = 202_752
+output = 202_752
+
+[cost.text.input]
+price = 1
+cache = { read = 0.25, write = 1.25 }
+
+[cost.text.output]
+price = 3.2

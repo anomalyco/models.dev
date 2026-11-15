@@ -1,0 +1,48 @@
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# No lab: Doubao-Seed-Code (2025-11-11) predates Seed 2.0 Code. Image formats as the bytedance-seed labs.
+# Effort: Chat reasoning_effort = minimal|low|medium|high (https://docs.zenmux.ai/guide/advanced/reasoning.html).
+schema = 2
+name = "Doubao-Seed-Code"
+description = "Coding model for repository understanding, refactors, and agentic engineering tasks"
+open_weights = false
+release_date = "2025-11-11"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+temperature = true
+cache = { implicit = true }
+
+[limit]
+context = 256_000
+output = 32_000
+
+[cost.text.input]
+price = 0.17
+cache = { read = 0.034 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 32_000 } }
+price = 0.2
+cache = { read = 0.034 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 128_000 } }
+price = 0.39
+cache = { read = 0.034 }
+
+[cost.text.output]
+price = 1.12
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 32_000 } }
+price = 1.69
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 128_000 } }
+price = 2.25

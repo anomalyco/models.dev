@@ -259,3 +259,45 @@ test("fails the run rather than syncing from a degraded catalog response", async
   await expect(fetchNearAIModels(unavailable as unknown as typeof fetch))
     .rejects.toThrow(/503 Service Unavailable/);
 });
+
+const flux = (overrides: Partial<NearAIModel> = {}) => nearAIModel({
+  id: "black-forest-labs/FLUX.2-klein-4B",
+  name: "FLUX.2 Klein 4B",
+  pricing: { input: 1, output: 1, image: "0.012" },
+  input_modalities: ["text"],
+  output_modalities: ["image"],
+  supported_features: [],
+  ...overrides,
+});
+
+test("keeps an image model's per-image price in v2, since v1 has no per-image cost", () => {
+  const entry = { base_model: "black-forest-labs/flux-2-klein-4b", name: "FLUX.2 Klein 4B" } as ExistingModel;
+  const translated = nearai.translateModel(flux(), context({ [flux().id]: entry }));
+
+  expect(translated).toMatchObject({
+    id: "black-forest-labs/FLUX.2-klein-4B",
+    model: entry,
+    v2Set: { "cost.image": { output: { unit: "image", price: 0.012 } } },
+  });
+});
+
+test("sets no per-image price for a chat model whose catalog row carries pricing.image", () => {
+  const model = nearAIModel({ pricing: { input: 1.4, output: 4.4, image: "0.5" } });
+  const translated = nearai.translateModel(model, context({ [model.id]: authored({ cost: undefined }) }));
+
+  expect(translated && "v2Set" in translated ? translated.v2Set : undefined).toBeUndefined();
+});
+
+test("creates a new image model as a v2-only file priced per image", () => {
+  const translated = nearai.translateModel(flux({ id: "black-forest-labs/FLUX-2-Pro" }), context({}));
+
+  expect(translated).toEqual({
+    id: "black-forest-labs/FLUX-2-Pro",
+    v2: {
+      schema: 2,
+      v2_only: true,
+      base_model: "black-forest-labs/flux-2-pro",
+      cost: { image: { output: { unit: "image", price: 0.012 } } },
+    },
+  });
+});

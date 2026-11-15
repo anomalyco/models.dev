@@ -1,23 +1,26 @@
+schema = 2
 name = "GPT-4"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 family = "gpt"
+open_weights = false
+knowledge = "2023-11"
 release_date = "2023-11-06"
 last_updated = "2024-04-09"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = false
-knowledge = "2023-11"
-open_weights = false
-
-[limit]
-context = 8_192
-output = 8_192
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 8_192
+output = 8_192
 
 [[benchmarks]]
 name = "Artificial Analysis Coding Index"

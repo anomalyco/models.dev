@@ -1,18 +1,25 @@
+# Modalities: Qiniu's model square lists video input; video formats from the Model Studio vision guide, Image limits and Video limits (https://www.alibabacloud.com/help/en/model-studio/vision).
+# The square's audio input isn't in the model card and is left out.
+# Status: deprecated. Qiniu's model square lists retirement_at 2026-06-02 (retired).
+# Prices: Qiniu model square (https://www.qiniu.com/ai/models, accessed 2026-10-21), CNY per 1K tokens
+# converted at 6.9 CNY/USD (the rate behind the square's own USD figures), rounded to 8 decimals.
+schema = 2
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
 name = "Qwen 2.5 VL 72B Instruct"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = true
-reasoning = false
-tool_call = true
-temperature = true
-structured_output = false
-open_weights = false
+status = "deprecated"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
 
 [limit]
 context = 128_000
-output = 8_192
 
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text"]
+[cost.text.input]
+price = 2.31884058
+
+[cost.text.output]
+price = 6.95652174

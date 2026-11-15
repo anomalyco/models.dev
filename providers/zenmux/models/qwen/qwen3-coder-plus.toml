@@ -1,24 +1,21 @@
+# Retired: absent from GET https://zenmux.ai/api/v1/models and its model page shows Sunset (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+schema = 2
+base_model = "alibaba/qwen3-coder-plus"
 name = "Qwen3-Coder-Plus"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-release_date = "2025-07-23"
-last_updated = "2025-07-23"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
-knowledge = "2025-01-01"
-open_weights = false
+status = "deprecated"
 
-[cost]
-input = 1.00
-output = 5.00
-cache_read = 0.10
-cache_write = 1.25
+[capabilities]
+cache = { implicit = true, explicit = { min_tokens = 256 } }
 
 [limit]
-context = 1000_000
+context = 1_000_000
 output = 64_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1.25 }
+
+[cost.text.output]
+price = 5

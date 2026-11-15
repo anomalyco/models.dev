@@ -1,10 +1,17 @@
+# Cost: Azure OpenAI list price (https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/, as in providers/azure), used as a USD proxy.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+schema = 2
 base_model = "openai/gpt-5-nano"
-
 name = "gpt-5-nano"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high"] }]
 
-[cost]
-input = 0.05
-output = 0.4
-cache_read = 0.005
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.4

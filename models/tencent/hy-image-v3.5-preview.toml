@@ -1,0 +1,26 @@
+# Released 2026-09-22: https://stock.10jqka.com.cn/20260922/c680158069.shtml
+# API (references png/jpeg/jpg, up to 20): https://intl.cloud.tencent.com/document/product/1300/83708
+# Prompt up to 100k tokens: https://hyimage35.pro/hy-image-3-5-api. Output image/png through OpenRouter (2026-10-20).
+schema = 2
+v2_only = true
+type = "image"
+name = "Hy Image 3.5 Preview"
+description = "Preview image generation and multi-turn editing model"
+family = "Hy"
+open_weights = false
+release_date = "2026-09-22"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 100_000
+output = 0

@@ -1,1 +1,37 @@
-../../stepfun/models/step-tts-2.toml
+# Sources (accessed 2026-10-21):
+# - Text-to-speech API (POST /v1/audio/speech; input up to 1,000 characters; response_format wav, mp3, flac, opus, pcm,
+#   default mp3): https://platform.stepfun.ai/docs/en/api-reference/audio/create-audio
+# - Pricing: USD 0.40 per 10,000 characters = USD 40 per 1M characters: https://platform.stepfun.ai/docs/en/guides/pricing/details
+#   One Chinese character counts as 1 character; 2 English letters or 2 punctuation marks count as 1.
+#   Voice cloning (CNY 9.9 / USD 1.50 per voice) has no v2 field.
+# The global TTS API reference lists only stepaudio-3-tts and stepaudio-2.5-tts; the global pricing page still
+#   prices step-tts-2.
+# release_date is unsourced.
+schema = 2
+type = "speech"
+name = "Step TTS 2"
+description = "Speech generation model for controllable voice, narration, and audio delivery"
+family = "step"
+open_weights = false
+release_date = "2026-03-01"
+last_updated = "2026-07-02"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav", "audio/mpeg", "audio/flac", "audio/opus", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 0
+output = 0
+
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
+
+[cost.text.input]
+unit = "character"
+price = 40

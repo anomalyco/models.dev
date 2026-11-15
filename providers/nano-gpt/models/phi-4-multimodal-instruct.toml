@@ -1,24 +1,25 @@
+# effort_updates = false: NanoGPT documents per-turn effort updates (configuration_update) only for GPT-6 Astra and Claude Fable 5.1 (https://docs.nano-gpt.com/api-reference/miscellaneous/inline-reasoning-effort)
+schema = 2
+base_model = "microsoft/phi-4-multimodal-instruct"
 name = "Phi 4 Multimodal"
-description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "phi"
-release_date = "2025-07-26"
-last_updated = "2025-07-26"
-attachment = false
-reasoning = false
-tool_call = false
-structured_output = false
-open_weights = true
 
-[cost]
-input = 0.07
-output = 0.11
-cache_read = 0.035
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
 
 [limit]
 context = 128_000
 input = 128_000
 output = 16_384
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.07
+cache = { read = 0.035 }
+
+[cost.text.output]
+price = 0.11

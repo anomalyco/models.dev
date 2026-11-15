@@ -1,37 +1,38 @@
 # Baseten now documents top-level reasoning_effort = none | minimal | low |
 # medium (default) | high | xhigh | max for GPT OSS 120B; reasoning is
-# otherwise enabled by default. No toggle or budget exists. Reasoning output is
-# returned in reasoning_content.
+# otherwise enabled by default. The guide's Effective depth column runs every
+# value as sent ("none can still reason"), so all seven are distinct levels.
+# No toggle or budget exists. Reasoning output is returned in reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
-
+# Lab identity: model slug = Hugging Face repo openai/gpt-oss-120b
+# Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
+#   a system message after turn 1 is moved to the front or rejected (cached prefix lost) [cached/prompt tokens, control -> test: 12256/12302 -> 64/12315; 12576/12622 -> 64/12635; 12576/12622 -> 64/12635]
+#   changing reasoning_effort between turns drops the cached prefix [cached/prompt tokens, control -> test: 12544/12601 -> 64/12601 (reasoning tokens 0 -> 0); 12224/12281 -> 64/12281 (reasoning tokens 0 -> 0)]
+#   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 12608/12652 -> 96/12677; 12288/12332 -> 96/12357]
+schema = 2
+base_model = "openai/gpt-oss-120b"
 name = "OpenAI GPT 120B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
-family = "gpt-oss"
-release_date = "2025-08-05"
-last_updated = "2025-08-05"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-knowledge = "2025-08"
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.1
-output = 0.5
+cache = { implicit = true }
 
 [limit]
 context = 128_072
 output = 128_072
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 0.5

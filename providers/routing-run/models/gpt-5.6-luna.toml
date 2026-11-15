@@ -1,13 +1,18 @@
+schema = 2
 base_model = "openai/gpt-5.6-luna"
-reasoning_options = []
 
-[cost]
-input = 0.70
-output = 4.20
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
 
 [limit]
 context = 1_000_000
-output = 128_000
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.7
+
+[cost.text.output]
+price = 4.2

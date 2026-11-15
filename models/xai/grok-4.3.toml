@@ -1,22 +1,24 @@
+schema = 2
 name = "Grok 4.3"
 description = "xAI's default Grok for chat, coding, agentic tools, and lower hallucination risk"
 family = "grok"
-release_date = "2026-04-17"
-last_updated = "2026-04-17"
-attachment = true
-reasoning = true
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = false
+release_date = "2026-04-17"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_000_000
 output = 30_000
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
 
 [[benchmarks]]
 name = "Artificial Analysis Intelligence Index"

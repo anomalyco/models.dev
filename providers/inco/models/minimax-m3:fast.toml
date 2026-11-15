@@ -1,12 +1,18 @@
 # Standard-speed endpoint at 2x credit pricing, see minimax-m3.toml for controls.
+# Prices from https://api.inco.ai/v1/models (public, checked 2026-10-21), including cached input.
+schema = 2
 base_model = "minimax/MiniMax-M3"
 name = "MiniMax M3 Fast"
 
-reasoning_options = []
+[capabilities]
+reasoning = { supported = true }
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.6
-output = 2.4
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 2.4

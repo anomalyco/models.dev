@@ -1,27 +1,21 @@
+# Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
+schema = 2
+base_model = "minimax/MiniMax-M2.7-highspeed"
 name = "Coding MiniMax M2.7 Highspeed"
 description = "High-speed MiniMax model for low-latency coding and agent workflows"
-family = "minimax"
-release_date = "2026-03-18"
-last_updated = "2026-03-18"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true }
 structured_output = true
-open_weights = true
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.2
-output = 0.2
 
 [limit]
-context = 204_800
 output = 128_100
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.2

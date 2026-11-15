@@ -1,8 +1,14 @@
+# Qwen-Max is text-only (text in, text out), so it takes no attachments:
+# https://www.alibabacloud.com/help/en/model-studio/models (accessed 2026-10-21)
+schema = 2
 base_model = "alibaba/qwen-max"
 name = "Qwen Max (Alibaba Cloud)"
-attachment = true
+
+[capabilities]
 structured_output = false
 
-[cost]
-input = 1.6
-output = 6.4
+[cost.text.input]
+price = 1.6
+
+[cost.text.output]
+price = 6.4

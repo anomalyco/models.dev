@@ -1,0 +1,25 @@
+# Released 2025-04-15: https://deepgram.com/learn/introducing-aura-2-enterprise-text-to-speech
+# Output encodings (linear16 in wav or raw, mulaw, alaw, mp3, opus, flac, aac): https://developers.deepgram.com/docs/tts-media-output-settings
+schema = 2
+v2_only = true
+type = "speech"
+name = "Aura-2"
+description = "Enterprise text-to-speech model for real-time voice agents"
+family = "aura"
+open_weights = false
+release_date = "2025-04-15"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav", "audio/pcm", "audio/basic", "audio/alaw", "audio/mpeg", "audio/opus", "audio/flac", "audio/aac"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

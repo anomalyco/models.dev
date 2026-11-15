@@ -1,18 +1,27 @@
+# Sources:
+# - https://www.sarvam.ai/blogs/sarvam-30b-105b (open-sourced 2026-03-06 after being unveiled with Sarvam 30B at
+#   the India AI Impact Summit on 2026-02-18; Apache-2.0 weights)
+# - https://huggingface.co/sarvamai/sarvam-105b (config.json max_position_embeddings 131072)
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host; the model card
+#   examples use temperature 0.8, top_p 0.95.
+schema = 2
 name = "Sarvam 105B"
 description = "Flagship Indian-language reasoning model for enterprise multilingual applications"
 family = "sarvam"
-release_date = "2025-09-01"
-last_updated = "2025-09-01"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
 open_weights = true
-
-[limit]
-context = 131_072
-output = 131_072
+release_date = "2026-02-18"
 
 [modalities]
 input = ["text"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 131_072

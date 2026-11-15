@@ -110,7 +110,7 @@ export function buildInceptronModel(model: ReadyInceptronModel): SyncedModel {
       name: model.name,
       attachment: input.some((modality) => modality !== "text"),
       reasoning: features.has("reasoning"),
-      reasoning_options: model.models_dev.reasoning_options,
+      reasoning_options: sortEfforts(model.models_dev.reasoning_options),
       interleaved: model.models_dev.interleaved,
       tool_call: features.has("tools"),
       structured_output: features.has("structured_outputs"),
@@ -126,6 +126,22 @@ export function buildInceptronModel(model: ReadyInceptronModel): SyncedModel {
       modalities: { input, output },
     },
     limit,
+  );
+}
+
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"];
+
+// Low to high, so a reordered catalog never rewrites the files.
+function sortEfforts(options: z.infer<typeof ReasoningOption>[] | undefined) {
+  return options?.map((option) =>
+    option.type === "effort"
+      ? {
+          ...option,
+          values: [...option.values].sort(
+            (a, b) => EFFORT_ORDER.indexOf(a ?? "default") - EFFORT_ORDER.indexOf(b ?? "default"),
+          ),
+        }
+      : option,
   );
 }
 

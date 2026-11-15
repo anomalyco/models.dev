@@ -1,13 +1,23 @@
 # https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-xai-grok-4-6.html
 # Runtime Converse profile; Global CRIS Standard pricing. Structured outputs are Mantle-only.
 # Effort: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh, matching the US profile.
+# v2 cache: implicit per the model card; cache reads verified live on Converse 2026-10-19 (explicit cachePoint unsupported on Converse).
+# Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
+# Service tiers: the model card's priority/flex apply to Mantle; Converse rejects both live (2026-10-19), so none are set on this profile.
+schema = 2
 base_model = "xai/grok-4.6"
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 name = "Grok 4.6 (Global)"
 last_updated = "2026-08-18"
-structured_output = false
 
-[cost]
-input = 2.00
-output = 6.00
-cache_read = 0.50
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = false
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 6

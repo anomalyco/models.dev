@@ -7,26 +7,30 @@
 #   the same 131,072 practical output limit as Muse Spark.
 # - Image, PDF, audio, and video inputs, strict json_schema output, temperature, and tool calls are accepted.
 # Meta has not published a knowledge cutoff.
-
+# Sampling (temperature, top_p; no top_k): https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/protocols/messages
+# Image MIME types: https://dev.meta.ai/docs/image-understanding
+# Video and audio MIME types: https://dev.meta.ai/docs/video-understanding#supported-formats (video/mp4, audio/mpeg, audio/wav)
+schema = 2
 name = "Muse Wonder"
 description = "Muse Wonder is a frontier multimodal reasoning model from Meta for personal and professional agents, long-horizon coding, and computer use. It combines Active Memory, which carries relevant context across conversations, with Active Focus, which keeps it working through blockers toward a goal."
 family = "muse"
-release_date = "2026-10-12"
-last_updated = "2026-10-12"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-temperature = true
 open_weights = false
+release_date = "2026-10-12"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "application/pdf", "audio/mpeg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 1_048_576
 output = 131_072
-
-[modalities]
-input = ["text", "image", "video", "pdf", "audio"]
-output = ["text"]
 
 [[links]]
 label = "Announcement"

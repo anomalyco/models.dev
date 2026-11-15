@@ -1,0 +1,34 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api.minimax.cn/v2/video_generation (https://platform.minimax.io/docs/api-reference/video-generation-v2-create)
+# - Pricing (CNY): https://platform.minimaxi.com/docs/pricing/overview#models/video
+#   output per second: 768P ¥0.5, 480P ¥0.33; input video per second: 768P ¥0.97, 480P ¥0.37; input image ¥0.5 each after the first 2 per task
+# CNY→USD rate: 6.685797, 2026-11-12, source: https://open.er-api.com/v6/latest/USD
+# Not modeled: the free quota of 2 input images per task; audio input is free.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3-Max"
+
+[api.videos]
+base_url = "https://api.minimax.cn"
+path = "/v2/video_generation"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/minimax/videos" }
+
+[cost.video.output]
+unit = "second"
+price = 0.0748
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480P" } }
+price = 0.0494
+
+[cost.video.input]
+unit = "second"
+price = 0.1451
+
+[[cost.video.input.overrides]]
+when = { resolution = { equals = "480P" } }
+price = 0.0553
+
+[cost.image.input]
+unit = "image"
+price = 0.0748

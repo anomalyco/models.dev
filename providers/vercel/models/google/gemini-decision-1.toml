@@ -1,0 +1,22 @@
+schema = 2
+base_model = "google/gemini-decision-1"
+type = "decision"
+description = "Gemini Decisions is Google's evaluation model for classification, routing, and scoring. It answers structured questions with Boolean probabilities, choices, and scores, returning confidence values and probability distributions to help applications interpret the results. Developers can use it to triage support requests, categorize content, and evaluate inputs against defined criteria."
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0

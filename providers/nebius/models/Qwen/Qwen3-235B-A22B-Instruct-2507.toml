@@ -1,23 +1,30 @@
+# Sources (accessed 2026-10-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 262_144, text2text)
+# - https://tokenfactory.nebius.com/model-catalog.md (cached input is priced only through the optional
+#   input_cached_price_per_million_tokens field, which this model doesn't have)
+# Cost: $0.20 in / $0.60 out. No discounted prompt-cache tier is published, so cache_read = input (same
+#   rationale as Kimi-K3 / GLM-5.3 on this host).
+# knowledge = 2025-07 is unsourced: carried over from the original entry (Qwen publishes no cutoff).
+# Limits: output 8_192 is carried over from the original entry; models_info publishes only max_model_len.
+# Responses: POST https://api.tokenfactory.nebius.com/v1/responses (https://docs.tokenfactory.nebius.com/api-reference/inference/create-a-response); the public catalog
+#   https://tokenfactory.nebius.com/api/public/models_info lists "responses_api" in this model's use_cases (accessed 2026-10-22).
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "Qwen3 235B A22B Instruct 2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
-family = "qwen"
-release_date = "2025-07-25"
-last_updated = "2025-10-04"
-attachment = false
-reasoning = false
-temperature = true
 knowledge = "2025-07"
-tool_call = true
-open_weights = false
-
-[cost]
-input = 0.20
-output = 0.60
 
 [limit]
-context = 262144
-output = 8192
+output = 8_192
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 0.6

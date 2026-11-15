@@ -1,23 +1,28 @@
+# Image MIME types: MegaNova lists none for chat; this ID serves Qwen2.5-VL-32B-Instruct, so the lab's formats apply:
+# https://www.alibabacloud.com/help/en/model-studio/vision (Supported image formats; same list as models/alibaba/qwen2-5-vl-72b-instruct).
+schema = 2
 name = "Qwen2.5 VL 32B Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
 family = "qwen"
-release_date = "2025-03-24"
-last_updated = "2025-03-24"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
 open_weights = true
+release_date = "2025-03-24"
 
-[cost]
-input = 0.20
-output = 0.60
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
 
 [limit]
 context = 16_384
 output = 16_384
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.6

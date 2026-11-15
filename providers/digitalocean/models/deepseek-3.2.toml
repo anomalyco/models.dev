@@ -1,31 +1,38 @@
+# Mid-conversation: served on POST https://inference.do-ai.run/v1/chat/completions, where reasoning_effort
+# and tools are per-request fields (effort_updates = false, tools.updates = false).
+# system_updates: live 2026-10-20, a system message after an assistant turn was delivered.
+# Cache: DigitalOcean-hosted, automatic prefix caching; prompt_cache_key scopes it. https://docs.digitalocean.com/products/inference/how-to/use-prompt-caching/
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
 name = "Deepseek 3.2"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek"
-release_date = "2025-12-02"
-last_updated = "2026-04-30"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = true
-knowledge = "2024-12"
-open_weights = true
 
-[interleaved]
-field = "reasoning_content"
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "low", "medium", "high"]
-
-[cost]
-input = 0.5
-output = 1.6
-cache_read = 0.15
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { implicit = true }
+system_updates = true
+prompt_cache_key = true
 
 [limit]
 context = 163_840
 output = 163_840
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 1.6
+
+[cost.web_search]
+price = 10

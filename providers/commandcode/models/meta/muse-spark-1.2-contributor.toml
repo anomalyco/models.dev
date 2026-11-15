@@ -1,0 +1,18 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
+# Model catalog + pricing: https://commandcode.ai/models and
+# https://api.commandcode.ai/provider/v1/models
+# Live /chat/completions (2026-10-14): reasoning_effort = minimal -> HTTP 400 invalid option.
+schema = 2
+base_model = "meta/muse-spark-1.2"
+name = "Muse Spark 1.2 (Contributor)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.2

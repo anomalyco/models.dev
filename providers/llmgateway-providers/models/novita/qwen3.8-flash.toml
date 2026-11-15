@@ -1,15 +1,18 @@
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
 name = "Qwen3.8 Flash (NovitaAI)"
-attachment = false
-
-[[reasoning_options]]
-type = "effort"
-values = ["none", "minimal", "low", "medium", "high", "xhigh", "max"]
-
-[cost]
-input = 0.15
-output = 0.47
-cache_read = 0.016
 
 [modalities]
 input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.016 }
+
+[cost.text.output]
+price = 0.47

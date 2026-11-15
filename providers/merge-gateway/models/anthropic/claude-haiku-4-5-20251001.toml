@@ -1,12 +1,20 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
 # Source: https://api-gateway.merge.dev/v1/models?model=anthropic%2Fclaude-haiku-4-5-20251001 (accessed 2026-07-21)
-
+# Cache: default route anthropic is in the explicit caching family, https://docs.merge.dev/merge-gateway/capabilities/prompt-caching
+schema = 2
 base_model = "anthropic/claude-haiku-4-5-20251001"
 name = "Claude Haiku 4.5 (20251001)"
-reasoning_options = [{ type = "toggle" }, { type = "budget_tokens", min = 1_024, max = 63_999 }]
-structured_output = true
 
-[cost]
-input = 1
-output = 5
-cache_read = 0.1
-cache_write = 1.25
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024, max = 63_999 } }
+structured_output = true
+tools = { supported = true }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1.25 }
+
+[cost.text.output]
+price = 5

@@ -1,25 +1,18 @@
+# Prices: GET https://api.intelligence.io.solutions/api/v1/models input/output/cache_read_token_price (USD per token, 2026-10-21); io.net documents this endpoint as the pricing source and lists no cache-write price.
+# knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
+schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "Qwen 3 Coder 480B"
 description = "Qwen coding model for software agents, repository edits, and code reasoning"
-family = "qwen"
-release_date = "2025-01-15"
-last_updated = "2025-01-15"
-attachment = false
-reasoning = false
-temperature = true
-tool_call = true
 knowledge = "2024-12"
-open_weights = true
-
-[cost]
-input = 0.22
-output = 0.95
-cache_read = 0.11
-cache_write = 0.44
 
 [limit]
-context = 106000
-output = 4096
+context = 106_000
+output = 4_096
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.46125
+cache = { read = 0.230625 }
+
+[cost.text.output]
+price = 2.29375

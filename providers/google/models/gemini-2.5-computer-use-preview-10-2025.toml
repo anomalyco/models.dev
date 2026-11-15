@@ -1,18 +1,22 @@
+# Pricing: the >200k tier ($2.50/$15) is not modeled: the model's context is 128,000 (https://generativelanguage.googleapis.com/v1beta/models, accessed 2026-11-12), so it can't apply.
 # Sources:
 # - https://ai.google.dev/gemini-api/docs/pricing
 #   (Gemini 2.5 Computer Use Preview: $1.25/$10 <=200k prompts, $2.50/$15 >200k; no cache row)
 # - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-computer-use-preview-10-2025
 # - https://ai.google.dev/gemini-api/docs/computer-use
 #   (model id gemini-2.5-computer-use-preview-10-2025; thinking-level controls documented for Gemini 3.x only)
+# Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
+# systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
+schema = 2
 base_model = "google/gemini-2.5-computer-use-preview-10-2025"
 name = "Gemini 2.5 Computer Use Preview 10-2025"
-reasoning_options = []
 
-[cost]
-input = 1.25
-output = 10
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 
-[[cost.tiers]]
-tier = { type = "context", size = 200_000 }
-input = 2.5
-output = 15
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 10

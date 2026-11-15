@@ -1,23 +1,25 @@
+schema = 2
 name = "GPT-4o mini"
 description = "Small omni GPT for cheap multimodal assistance and production-scale traffic"
 family = "gpt-mini"
-release_date = "2024-07-18"
-last_updated = "2024-07-18"
-attachment = true
-reasoning = false
-temperature = true
-tool_call = true
-structured_output = true
-knowledge = "2023-09"
 open_weights = false
+knowledge = "2023-09"
+release_date = "2024-07-18"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 128_000
 output = 16_384
-
-[modalities]
-input = ["text", "image", "pdf"]
-output = ["text"]
 
 [[benchmarks]]
 name = "Aider Polyglot"

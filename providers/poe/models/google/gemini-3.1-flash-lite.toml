@@ -8,13 +8,20 @@
 # - The previous inline copy of this file carried release_date 2026-02-18, which is
 #   Poe's bot-created date and contradicted the lab's 2026-05-07; base_model restores
 #   Google's date (and every other lab fact it duplicated verbatim)
+schema = 2
 base_model = "google/gemini-3.1-flash-lite"
 name = "Gemini-3.1-Flash-Lite"
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "high"] }]
-
-[cost]
-input = 0.2525
-output = 1.5152
 
 [modalities]
-input = ["text", "image", "video", "audio"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.2525
+
+[cost.text.output]
+price = 1.5152

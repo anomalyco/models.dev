@@ -1,20 +1,34 @@
-name = "Step 5 Preview"
-description = "StepFun's next-generation flagship base model for coding and professional knowledge work, with native text, image, and video input and a 1M-token context window"
 # release_date is StepFun's API catalog first-appearance timestamp (created=1789564127,
 # 2026-09-16 13:08 UTC) — no dated launch announcement was found on the model docs page.
+# https://platform.stepfun.com/docs/zh/guides/models/step-5-preview
+# Sampling: open weights; the model card recommends temperature=1.0, top_p=0.95, top_k=0
+#   (https://huggingface.co/stepfun-ai/Step-5-Preview).
+# Input formats: images JPG/JPEG, PNG, static GIF and WebP; video containers MP4, QuickTime and Matroska
+#   (https://platform.stepfun.com/docs/zh/guides/developer/image-chat.md,
+#   https://platform.stepfun.com/docs/zh/guides/developer/video-chat.md).
+schema = 2
+name = "Step 5 Preview"
+description = "StepFun's next-generation flagship base model for coding and professional knowledge work, with native text, image, and video input and a 1M-token context window"
+open_weights = true
 release_date = "2026-09-16"
 last_updated = "2026-09-20"
-attachment = true
-reasoning = true
-tool_call = true
-structured_output = true
-open_weights = false
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/quicktime", "video/x-matroska"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 1_000_000
 input = 1_000_000
 output = 1_000_000
 
-[modalities]
-input = ["text", "image", "video"]
-output = ["text"]
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/stepfun-ai/Step-5-Preview"

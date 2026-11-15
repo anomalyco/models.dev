@@ -1,0 +1,37 @@
+# Source: https://api.lowrouter.ai/v1/models?currency=usd (read 2026-10-26): this ID has 1 route on openai
+# (openai/openai/gpt-6.1-terra/global, routing_reason only_route).
+# That route bills in USD, so this is its USD quote as the API returns it, with no currency conversion:
+# USD 1 in / 5 out / 0.05 cache read per MTok; over 272,000 tokens 2 in / 7.5 out / 0.1 cache read.
+# Another route can serve a request (the key's routing policy, or a failover); usage.cost on the
+# response carries the amount debited.
+# Cache write is not quoted by the catalog; OpenAI's published 1.25 (2.5 over 272K) is used, as on gpt-6.1-sol and gpt-5.6-terra here.
+# Effort: reasoning_effort is forwarded unchanged to OpenAI (https://lowrouter.ai/docs/guides/request-parameters).
+# LowRouter itself accepts none|minimal|low|medium|high|xhigh and refuses max with 400; OpenAI's GPT-6.1 Terra takes
+# none..max and no minimal, so the overlap is none|low|medium|high|xhigh (same as gpt-5.6-terra here).
+# Input modalities: the catalog lists text and image only for this ID (no document, unlike gpt-6.1-sol).
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5

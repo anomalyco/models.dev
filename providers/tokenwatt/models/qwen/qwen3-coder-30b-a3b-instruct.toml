@@ -1,0 +1,20 @@
+# API model id: qwen/qwen3-coder-30b-a3b-instruct (exactly as GET https://api.tokenwatt.io/v1/models lists it; the
+# gateway maps it to the engine). Weights: Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8, served with vLLM on one H100 in the US with a 131,072-token
+# context (the base model allows 262,144). Prompt prefixes are cached automatically (vLLM prefix caching; no
+# cache_control needed) and cached input tokens are billed at the input price. Prices from
+# https://api.tokenwatt.io/v1/models and https://www.tokenwatt.io/api.html (accessed 2026-11-12).
+schema = 2
+base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.28

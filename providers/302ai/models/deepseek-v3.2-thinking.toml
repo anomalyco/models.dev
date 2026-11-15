@@ -1,23 +1,22 @@
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
+# Peak hours: 09:00-12:00 and 14:00-18:00 Beijing time (01:00-04:00, 06:00-10:00 UTC) bill 2x the off-peak base price.
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
 name = "DeepSeek-V3.2-Thinking"
-description = "DeepSeek chat model for instruction following, coding, and analysis"
-release_date = "2025-12-01"
-last_updated = "2025-12-01"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-open_weights = false
 knowledge = "2024-12"
 
-[cost]
-input = 0.290
-output = 0.430
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
-context = 128_000
 output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.29
+
+[cost.text.output]
+price = 0.43
+
+[[cost.multipliers]]
+when = { any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

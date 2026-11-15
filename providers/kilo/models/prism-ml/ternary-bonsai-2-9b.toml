@@ -1,0 +1,26 @@
+schema = 2
+name = "PrismML: Ternary Bonsai 2 9B"
+description = "Ternary Bonsai 2 9B is PrismML’s compact, open-weight language model for conversational AI, reasoning, and tool use. Built on Qwen3.5, it uses ternary weights packed into 2 bits for efficient..."
+open_weights = false
+release_date = "2026-10-16"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.13

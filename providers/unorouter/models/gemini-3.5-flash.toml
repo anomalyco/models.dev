@@ -1,6 +1,12 @@
+schema = 2
 base_model = "google/gemini-3.5-flash"
-reasoning_options = []
 
-[cost]
-input = 0.1857
-output = 1.1142
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.1857
+
+[cost.text.output]
+price = 1.1142

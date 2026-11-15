@@ -1,17 +1,24 @@
+# Toggle: thinking.type = "enabled"|"disabled"; enabled requires thinking.budget_tokens.
+# https://docs.merge.dev/merge-gateway/capabilities/reasoning
+schema = 2
 base_model = "alibaba/qwen3.8-flash"
-attachment = false
 
-[[reasoning_options]]
-type = "toggle"
+[modalities]
+input = ["text"]
+output = ["text"]
 
-[cost]
-input = 0.15
-output = 0.47
-cache_read = 0.016
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+tools = { supported = true }
 
 [limit]
 context = 977_000
 output = 128_000
 
-[modalities]
-input = ["text"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.016 }
+
+[cost.text.output]
+price = 0.47

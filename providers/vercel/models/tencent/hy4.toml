@@ -1,0 +1,31 @@
+schema = 2
+base_model = "tencent/hy4"
+base_model_omit = ["limit.input"]
+name = "Tencent Hy4"
+description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_024_000
+output = 64_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.417
+cache = { read = 0.021 }
+
+[cost.text.output]
+price = 1.2505

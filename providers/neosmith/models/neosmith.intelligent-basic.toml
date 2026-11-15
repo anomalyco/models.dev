@@ -3,28 +3,30 @@
 # Source: NeoSmith's first-party rate card — the per-tier table shown to every
 # customer on their billing dashboard. There is no public pricing page yet; the
 # `doc` URL in provider.toml is product documentation, not a price list.
+schema = 2
 name = "NeoSmith Basic"
 description = "Cost-capped tier. Intelligent routing with a Claude Sonnet ceiling — Opus is never invoked."
+open_weights = false
 release_date = "2026-04-26"
 last_updated = "2026-08-03"
-open_weights = false
-attachment = true
-reasoning = true
-reasoning_options = []
-tool_call = true
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
 structured_output = false
 temperature = true
-
-[cost]
-input = 1.17
-output = 4.37
-cache_read = 0.22
-cache_write = 0.0
 
 [limit]
 context = 1_000_000
 output = 128_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 1.17
+cache = { read = 0.22, write = 0 }
+
+[cost.text.output]
+price = 4.37

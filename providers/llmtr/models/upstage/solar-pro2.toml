@@ -7,12 +7,16 @@
 # `minimal` and `low` both return no reasoning tokens, while `medium` and
 # `high` both return them. Two real bands, so the baseline pair is authored
 # rather than the wider accepted set.
+# Cache read price: GET https://llmtr.com/v1/models pricing.input_cache_read (accessed 2026-10-21).
+schema = 2
 base_model = "upstage/solar-pro2"
 
-[cost]
-input = 0.15
-output = 0.6
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "high"] }
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "high"]
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

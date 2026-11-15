@@ -3,14 +3,27 @@
 # No toggle: thinking.type.disabled is rejected, same as claude-fable-5-1.
 # json_schema on /v1/chat/completions is translated via forced tool use; this
 # model rejects that (INVALID_PARAMETER_VALUE). Measured 2026-10-03.
+# Catalog: https://neon.com/models.json and https://neon.com/docs/ai-gateway/overview (accessed 2026-10-21).
+# Cache: explicit. POST /anthropic/v1/messages forwards `cache_control` unchanged and caching "works exactly as described"
+# in Anthropic's docs (https://neon.com/docs/ai-gateway/anthropic-messages#prompt-caching); breakpoints, targets and
+# min_tokens follow providers/anthropic. Only 5m is listed because Neon publishes a single cache_write price.
+schema = 2
 base_model = "anthropic/claude-opus-5-5"
-structured_output = false
-reasoning_options = [
-  { type = "effort", values = ["low", "medium", "high", "xhigh", "max"] },
-]
 
-[cost]
-input = 4
-output = 20
-cache_read = 0.2
-cache_write = 5
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "${NEON_AI_GATEWAY_BASE_URL}/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20

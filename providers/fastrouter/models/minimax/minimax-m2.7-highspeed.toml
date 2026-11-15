@@ -1,6 +1,13 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-21); prices are USD per token there, per MTok here.
+schema = 2
 base_model = "minimax/MiniMax-M2.7-highspeed"
-reasoning_options = []
 
-[cost]
-input = 0.60
-output = 2.40
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06, write = 0.375 }
+
+[cost.text.output]
+price = 2.4

@@ -1,19 +1,12 @@
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 name = "qwen3-235b-2507-cs"
-description = "Legacy model retained for compatibility with older integrations"
-release_date = "2025-08-06"
-last_updated = "2025-08-06"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = false
-open_weights = false
-tool_call = true
 status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true }
+temperature = false
 
 [limit]
 context = 0
 output = 0
-
-[modalities]
-input = ["text"]
-output = ["text"]

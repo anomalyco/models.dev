@@ -6,10 +6,15 @@
 # RouteLLM input_token_rate: 0.000002
 # RouteLLM output_token_rate: 0.000012
 # RouteLLM cached_input_token_rate: 0.0000002
+schema = 2
 base_model = "google/gemini-3-pro-image"
-reasoning_options = []
 
-[cost]
-input = 2
-output = 12
-cache_read = 0.2
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 12

@@ -1,6 +1,7 @@
 name = "Ollama Cloud"
 env = ["OLLAMA_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 # Raw HTTP reasoning controls (sources accessed 2026-06-25):
 # Native POST `/api/chat` and `/api/generate` use `think = true|false` or a
 # model-supported level. GPT-OSS accepts only low|medium|high; booleans are
@@ -9,5 +10,13 @@ npm = "@ai-sdk/openai-compatible"
 # `reasoning_effort` or `reasoning.effort` with high|medium|low|max|none.
 # https://docs.ollama.com/capabilities/thinking
 # https://docs.ollama.com/openai
+# APIs (2026-10-21): OpenAI-compatible /v1/chat/completions (default), /v1/completions,
+# stateless /v1/responses and /v1/embeddings (https://docs.ollama.com/api/openai-compatibility);
+# Anthropic /v1/messages (https://docs.ollama.com/api/anthropic-compatibility); native
+# /api/chat, /api/generate, /api/embed and /v1/systemone (https://docs.ollama.com/openapi.yaml).
+# Per-model thinking levels and context: POST https://ollama.com/api/show.
+# Every chat model lists Chat Completions, Responses and Messages (all on https://ollama.com/v1). Direct cloud
+# Messages requests need `Authorization: Bearer` ("does not accept x-api-key alone"), so @ai-sdk/anthropic needs
+# `authToken`. Native /api/chat and /api/generate and legacy /v1/completions aren't listed.
 api = "https://ollama.com/v1"
 doc = "https://docs.ollama.com/cloud"

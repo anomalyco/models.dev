@@ -1,21 +1,31 @@
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
 # Source: https://zenmux.ai/api/frontend/model/listByFilter (accessed 2026-09-25)
-# ZenMux's time-of-day promotional rates are intentionally omitted from static token costs.
 # https://zenmux.ai/docs/api/openai/openai-list-models.html
+# Prices, limits and input modalities: ZenMux catalog GET https://zenmux.ai/api/v1/models (2026-10-21).
+# Cache: https://docs.zenmux.ai/guide/advanced/prompt-cache.html (implicit: OpenAI, DeepSeek, Grok, Gemini, Qwen, Kimi, GLM, Ling/Ring; cache_control: Claude, Gemini, Qwen).
+# Peak pricing: the catalog lists two levels with no condition (prompt 0.075 / 0.15; completion 0.3 / 0.6; input_cache_read 0.0015 / 0.003), exactly 2x apart.
+# ZenMux documents no schedule, so the 2x multiplier assumes DeepSeek's documented peak hours
+# (weekdays 01:00-04:00 and 06:00-10:00 UTC, https://api-docs.deepseek.com/quick_start/pricing);
+# the base is the off-peak price. No CN-holiday exception: ZenMux doesn't mention one.
+schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
-[[reasoning_options]]
-type = "toggle"
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[interleaved]
-field = "reasoning_content"
+[cost.text.input]
+price = 0.075
+cache = { read = 0.0015 }
 
-[cost]
-input = 0.15
-output = 0.6
-cache_read = 0.003
+[cost.text.output]
+price = 0.3
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

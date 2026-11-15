@@ -1,0 +1,27 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-26)
+# Model catalog + pricing: https://api.commandcode.ai/provider/v1/models (gpt-6.1-terra listed) and
+# https://commandcode.ai/models/gpt-6-1-terra: $1 in / $5 out / $0.05 cache read up to 272K, $2 / $7.50 / $0.10 above;
+# cache write $1.25 (https://commandcode.ai/models); long-context cache write follows OpenAI's 2x band.
+# Effort: same ladder as gpt-6.1-sol on this host (reasoning_effort = low|medium|high|xhigh|max; none is rejected with HTTP 400 on CommandCode's GPT Terra models).
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5

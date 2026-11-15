@@ -1,18 +1,32 @@
+# Endpoints: https://docs.digitalocean.com/products/inference/how-to/si-endpoints/ (POST /v1/audio/speech)
+# Prices: https://docs.digitalocean.com/products/inference/details/pricing/ (Qwen 3 TTS: $20.00 per 1M characters)
+# Output: /v1/audio/speech response_format "Supported values include mp3 and wav"
+#   (https://docs.digitalocean.com/reference/api/reference/serverless-inference/).
+schema = 2
+type = "speech"
 name = "Qwen3 TTS VoiceDesign"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
 family = "qwen"
+open_weights = true
 release_date = "2026-04-21"
 last_updated = "2026-04-30"
-attachment = false
-reasoning = false
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/wav"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
 temperature = false
-tool_call = false
-open_weights = true
 
 [limit]
 context = 32_768
 output = 1
 
-[modalities]
-input = ["text"]
-output = ["audio"]
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
+
+[cost.text.input]
+unit = "character"
+price = 20

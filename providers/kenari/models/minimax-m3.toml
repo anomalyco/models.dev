@@ -1,6 +1,15 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
+# Price: PAYG per token, micro-IDR per 1M / 1e6 / 17,500 IDR per USD (usd_idr_rate in /api/public/pricing), rounded to 8 decimals.
+# Reasoning: catalog reasoning_options [], reasoning_toggle false (https://kenari.id/en/docs/reasoning).
+schema = 2
 base_model = "minimax/MiniMax-M3"
-reasoning_options = []
 
-[cost]
-input = 0
-output = 0
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.36
+cache = { read = 0.06857143 }
+
+[cost.text.output]
+price = 1.42857143

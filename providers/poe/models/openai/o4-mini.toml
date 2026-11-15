@@ -1,24 +1,15 @@
-name = "o4-mini"
-description = "O-series reasoning model for hard analysis, math, coding, and planning"
-family = "o-mini"
-release_date = "2025-04-16"
-last_updated = "2025-04-16"
-attachment = true
-reasoning = true
-reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
-temperature = false
-open_weights = false
-tool_call = true
+# Effort: reasoning_effort = low|medium|high (top level, as on Poe's other OpenAI/xAI bots in https://api.poe.com/v1/models)
+# Status: https://poe.com/o4-mini is titled "o4-mini_DEPRECATED" (2026-10-21).
+schema = 2
+base_model = "openai/o4-mini"
+status = "deprecated"
 
-[cost]
-input = 0.99
-output = 4
-cache_read = 0.25
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
-[limit]
-context = 200_000
-output = 100_000
+[cost.text.input]
+price = 0.99
+cache = { read = 0.25 }
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.output]
+price = 4

@@ -1,0 +1,29 @@
+# Released 2026-02-26: https://www.perplexity.ai/hub/blog/pplx-embed-state-of-the-art-embedding-models-for-web-scale-retrieval
+# https://huggingface.co/perplexity-ai/pplx-embed-v1-4b
+schema = 2
+v2_only = true
+type = "embedding"
+name = "pplx-embed-v1-4b"
+description = "Open text embedding model for web-scale dense retrieval"
+open_weights = true
+release_date = "2026-02-26"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_000
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/perplexity-ai/pplx-embed-v1-4b"

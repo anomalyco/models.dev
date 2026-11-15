@@ -1,0 +1,19 @@
+# Modalities: image formats from the lab.
+schema = 2
+base_model = "meta/muse-spark-1.3"
+name = "Muse Spark 1.3 (Meta)"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

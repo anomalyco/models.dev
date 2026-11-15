@@ -1,0 +1,15 @@
+schema = 2
+base_model = "reflection/beam-1.0-501b-a23b"
+name = "Beam 1.0 501B A23B (Together AI)"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.2

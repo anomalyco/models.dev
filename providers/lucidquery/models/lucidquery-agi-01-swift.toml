@@ -1,24 +1,28 @@
+# Pricing: https://lucidquery.com/docs (Models, accessed 2026-10-21) lists EUR 2.50 input / EUR 15.00 output per 1M tokens.
+# EUR->USD at the ECB reference rate 1.1215 (2026-10-20); the v1 file had the EUR figures as USD.
+schema = 2
 name = "AGI-01 Swift"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "agi"
-release_date = "2026-06-16"
-last_updated = "2026-06-16"
-attachment = true
-reasoning = true
-reasoning_options = []
-temperature = true
-tool_call = true
-knowledge = "2026-06-05"
 open_weights = false
+knowledge = "2026-06-05"
+release_date = "2026-06-16"
 
-[cost]
-input = 2.50
-output = 15.00
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
 
 [limit]
 context = 300_000
 output = 120_000
 
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+[cost.text.input]
+price = 2.80375
+
+[cost.text.output]
+price = 16.8225

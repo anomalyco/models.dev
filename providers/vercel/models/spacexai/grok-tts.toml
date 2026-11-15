@@ -1,17 +1,12 @@
-name = "Grok TTS"
-description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "grok"
-release_date = "2026-03-16"
-last_updated = "2026-03-16"
-attachment = false
-reasoning = false
-tool_call = false
-open_weights = false
+# Synced from https://ai-gateway.vercel.sh/v1/models (type speech)
+# https://vercel.com/docs/ai-gateway/modalities/text-to-speech
+schema = 2
+base_model = "xai/grok-tts"
 
-[limit]
-context = 0
-output = 0
+[api.speech]
+base_url = "https://ai-gateway.vercel.sh/v4/ai"
+sdk = { opencodeai = "none" }
 
-[modalities]
-input = ["text"]
-output = ["audio"]
+[cost.text.input]
+unit = "character"
+price = 15

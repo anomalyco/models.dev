@@ -1,0 +1,19 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek: DeepSeek V4.1 Flash Fast"
+description = "Higher-throughput variant of DeepSeek V4.1 Flash for responsive coding, reasoning, and agentic workloads."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.014 }
+
+[cost.text.output]
+price = 2.4

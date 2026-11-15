@@ -1,26 +1,19 @@
 # Source: https://api-gateway.merge.dev/v1/models?model=bytedance%2Fdola-seed-2.0-pro (accessed 2026-07-21)
-
-name = "Seed 2.0 Pro"
-description = "Higher-capability Seed model for complex chat, analysis, and production tasks"
-family = "seed"
-release_date = "2026-03-28"
-last_updated = "2026-03-28"
-attachment = false
-reasoning = true
-temperature = true
-tool_call = false
-structured_output = false
-open_weights = false
-reasoning_options = []
-
-[cost]
-input = 0.5
-output = 3
-
-[limit]
-context = 131_072
-output = 32_768
+# Lab model: bytedance-seed/seed-2.0-pro (catalog display_name "Seed 2.0 Pro", served on byteplus (ByteDance's international ModelArk)).
+schema = 2
+base_model = "bytedance-seed/seed-2.0-pro"
 
 [modalities]
-input = ["text"]
+input = ["text", "image"]
 output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
+
+[cost.text.input]
+price = 0.63
+
+[cost.text.output]
+price = 3.79

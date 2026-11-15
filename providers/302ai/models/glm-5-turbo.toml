@@ -1,27 +1,26 @@
+# Toggle: thinking.type = enabled|disabled (lab-mapped, not probed on 302.AI)
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (retrieved 2026-10-21).
+schema = 2
+base_model = "zhipuai/glm-5-turbo"
 name = "glm-5-turbo"
-description = "Efficient GLM model for fast reasoning, coding, and agent workflows"
-family = "glm"
-release_date = "2026-03-16"
-last_updated = "2026-03-16"
-attachment = false
-reasoning = true
-reasoning_options = [{ type = "toggle" }]
-temperature = true
-tool_call = true
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
 structured_output = true
-open_weights = false
 
-[interleaved]
-field = "reasoning_content"
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
-[cost]
-input = 0.720
-output = 3.200
+[cost.text.input]
+price = 0.72
 
-[limit]
-context = 200_000
-output = 131_072
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 1.1
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.output]
+price = 3.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 3.8

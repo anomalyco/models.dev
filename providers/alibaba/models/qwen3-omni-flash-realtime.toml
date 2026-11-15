@@ -1,25 +1,43 @@
+# Status: retired on Model Studio international. Live 2026-10-19 the API answers 404 and the model is absent from https://www.alibabacloud.com/help/en/model-studio/model-pricing; retirement policy: https://www.alibabacloud.com/help/en/model-studio/model-depreciation
+# Type: realtime (WebSocket) model, not served on chat completions.
+# MIME types: https://www.alibabacloud.com/help/en/model-studio/realtime — images (and video, sent as image frames) "must be JPG or JPEG"; audio in/out is raw 16-bit PCM ("pcm"), registered as audio/L16.
+# `video` stays generic: the API takes video as a stream of JPEG frames (input_image_buffer.append) with no container format, so there is no video MIME type to list.
+# API: wss://<host>/api-ws/v1/realtime?model=<id> (https://www.alibabacloud.com/help/en/model-studio/realtime)
+schema = 2
+type = "realtime"
 name = "Qwen3-Omni Flash Realtime"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
 family = "qwen"
-release_date = "2025-09-15"
-last_updated = "2025-09-15"
-attachment = false
-reasoning = false
-temperature = true
-knowledge = "2024-04"
-tool_call = true
 open_weights = false
+knowledge = "2024-04"
+release_date = "2025-09-15"
+status = "deprecated"
 
-[cost]
-input = 0.52
-output = 1.99
-input_audio = 4.57
-output_audio = 18.13
+[modalities]
+input = ["text", "image/jpeg", "audio/L16", "video"]
+output = ["text", "audio/L16"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
 
 [limit]
 context = 65_536
 output = 16_384
 
-[modalities]
-input = ["text", "image", "audio", "video"]
-output = ["text", "audio"]
+[api.realtime]
+base_url = "wss://dashscope-intl.aliyuncs.com/api-ws/v1/realtime"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.52
+
+[cost.text.output]
+price = 1.99
+
+[cost.audio.input]
+price = 4.57
+
+[cost.audio.output]
+price = 18.13

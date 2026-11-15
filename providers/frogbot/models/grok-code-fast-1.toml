@@ -1,25 +1,18 @@
+# knowledge: FrogBot's value, unsourced (the lab states none). Kept so v1 doesn't change.
+schema = 2
+base_model = "xai/grok-code-fast-1"
 name = "Grok 4.1 Fast (Reasoning)"
-description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-family = "grok"
-release_date = "2025-08-28"
-last_updated = "2025-08-28"
-attachment = false
-reasoning = true
-reasoning_options = []
-temperature = true
 knowledge = "2023-10"
-tool_call = true
-open_weights = false
 
-[cost]
-input = 0.2
-output = 1.5
-cache_read = 0.02
+[capabilities]
+reasoning = { supported = true }
 
 [limit]
-context = 256_000
 output = 128_000
 
-[modalities]
-input = ["text"]
-output = ["text"]
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 1.5

@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { roundPrice } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
@@ -110,9 +111,9 @@ export function buildChutesModel(
 
   const cost = model.pricing?.prompt !== undefined && model.pricing?.completion !== undefined
     ? {
-        input: model.pricing.prompt,
-        output: model.pricing.completion,
-        cache_read: model.pricing.input_cache_read,
+        input: roundPrice(model.pricing.prompt),
+        output: roundPrice(model.pricing.completion),
+        cache_read: model.pricing.input_cache_read === undefined ? undefined : roundPrice(model.pricing.input_cache_read),
       }
     : existing?.cost;
 
@@ -151,9 +152,10 @@ export function buildChutesModel(
     modalities: { input, output },
   };
 
-  return baseModel == null
-    ? values
-    : factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+  if (baseModel == null) return values;
+  // Model facts belong to the lab file; a base_model file only carries host fields.
+  const { family: _family, release_date: _release, last_updated: _updated, knowledge: _knowledge, open_weights: _open, ...host } = values;
+  return factorBaseModel(baseModel, host, limit, existing?.base_model_omit);
 }
 
 function resolveBaseModel(modelId: string): string | undefined {

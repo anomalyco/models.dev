@@ -1,0 +1,17 @@
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+name = "MiniMax M3.1 Flash (NovitaAI)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+
+[limit]
+output = 524_288
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

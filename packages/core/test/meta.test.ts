@@ -69,7 +69,7 @@ const pricing = `
 | Generated image | $0.01 per image |
 `;
 
-const source = { models, pricing };
+const source = { models, pricing, families: [] };
 
 test("Meta sync is registered for direct and hourly runs", () => {
   expect(providers.meta).toBe(meta);
@@ -92,6 +92,13 @@ test("parses documented token-priced models, mode prices in USD/MTok, and contex
       .replace("### Muse Wonder", "### Muse Wonder {#muse-wonder}")
       .replace("### Muse Spark", "### Muse Spark {#muse-spark}"),
   })).toHaveLength(3);
+  const swapped = pricing
+    .replaceAll(
+      "| Usage | Standard mode (per 1M tokens) | Contributor mode (per 1M tokens) |",
+      "| Usage | Contributor mode (per 1M tokens) | Standard mode (per 1M tokens) |",
+    )
+    .replace(/^\| (Cached input|Input|Output) \| ([^|]+) \| ([^|]+) \|$/gm, "| $1 | $3 | $2 |");
+  expect(parseMetaModels({ ...source, pricing: swapped })).toEqual(parseMetaModels(source));
 });
 
 test("rejects incomplete or changed docs rather than guessing prices or limits", () => {
@@ -168,37 +175,177 @@ test("fetches only public docs without credentials and rejects HTTP failures", a
   await expect(fetchMetaModels(failing)).rejects.toThrow("Meta docs request failed: 503");
 });
 
+// Since Nov 2026 models.md only summarizes each family and links to its own page, which has the availability table
+// and an at-a-glance context window row.
+const overview = `
+# Models
+
+## Muse Wonder
+
+| Model ID | Input | Output | Context window |
+| :---- | :---- | :---- | :---- |
+| \`muse-wonder-1.0\` | Text, image | Text | 1,048,576 tokens |
+
+See the [Muse Wonder](https://dev.meta.ai/docs/muse-wonder) page for specs.
+
+## Muse Spark
+
+See the [Muse Spark](https://dev.meta.ai/docs/muse-spark) page for every version.
+
+## Muse Image
+
+| Model ID | Input | Output |
+| :---- | :---- | :---- |
+| \`muse-image-1.0\` | Text, image | Image |
+`;
+
+const wonderPage = `# Muse Wonder
+
+## At a glance
+
+| | |
+| :---- | :---- |
+| **Model ID** | \`muse-wonder-1.0\` |
+| **Context window** | 1,048,576 tokens |
+
+## Availability
+
+| Variant | Model API (pay-as-you-go) | Muse Code |
+| :---- | :---- | :---- |
+| Muse Wonder (\`muse-wonder-1.0\`) | Available (Standard mode only) | Pay-as-you-go |
+| Muse Wonder Full | Not available | Power Usage |
+`;
+
+const sparkPage = `# Muse Spark
+
+## Versions
+
+Muse Spark comes in two versions. All return text and have a 1,048,576-token context window.
+
+## Availability
+
+| Version | Model API (pay-as-you-go) | Muse Code |
+| :---- | :---- | :---- |
+| Muse Spark 1.2 (\`muse-spark-1.2\`) | Standard mode | Pay-as-you-go |
+| Muse Spark 1.2 Contributor (\`muse-spark-1.2-contributor\`) | Contributor mode | Pay-as-you-go |
+`;
+
+test("reads availability from each family's own page when models.md only links to it", async () => {
+  const pages: Record<string, string> = { models: overview, "pricing-rate-limits": pricing, "muse-wonder": wonderPage, "muse-spark": sparkPage };
+  const urls: string[] = [];
+  const fetcher = (async (url: string) => {
+    urls.push(url);
+    const page = url.match(/docs\/([a-z0-9-]+)\.md$/)?.[1];
+    return page && page in pages ? new Response(pages[page]) : new Response("Not found", { status: 404 });
+  }) as typeof fetch;
+  const fetched = await fetchMetaModels(fetcher);
+  expect(urls.slice(2).sort()).toEqual(["https://dev.meta.ai/docs/muse-spark.md", "https://dev.meta.ai/docs/muse-wonder.md"]);
+  expect(parseMetaModels(fetched)).toEqual(parseMetaModels(source));
+});
+
+const emberPage = `# Muse Ember
+
+## At a glance
+
+| | |
+| :---- | :---- |
+| **Standard mode model ID** | \`muse-ember-1.0\` |
+| **Context window** | 1,048,576 tokens |
+
+## Availability
+
+| Model | Model API (pay-as-you-go) | Muse Code |
+| :---- | :---- | :---- |
+| Muse Ember (\`muse-ember-1.0\`) | Standard mode | Pay-as-you-go |
+`;
+
+const emberPricing = `${pricing}
+### Muse Ember
+
+Model: \`muse-ember-1.0\`, in Standard mode only.
+
+| Usage | Up to 200K input tokens (per 1M tokens) | Over 200K input tokens (per 1M tokens) |
+| :---- | :---- | :---- |
+| Cached input | $0.004 | $0.012 |
+| Input | $0.10 | $0.30 |
+| Output | $0.50 | $1.50 |
+`;
+
+test("parses long-context price tiers for Standard-mode families", () => {
+  const tiered = { ...source, pricing: emberPricing, families: [emberPage] };
+  expect(parseMetaModels(tiered).at(-1)).toEqual({
+    id: "muse-ember-1.0",
+    context: 1_048_576,
+    cost: {
+      input: 0.1,
+      output: 0.5,
+      cache_read: 0.004,
+      tiers: [{ input: 0.3, output: 1.5, cache_read: 0.012, tier: { type: "context", size: 200_000 } }],
+    },
+  });
+  for (const bad of [
+    { ...tiered, pricing: emberPricing.replace("Over 200K", "Over 100K") },
+    { ...tiered, pricing: emberPricing.replace("| $0.30 |", "| Not available |") },
+    { ...tiered, pricing: emberPricing.replace("| Output | $0.50 | $1.50 |", "") },
+    { ...tiered, families: [emberPage.replace("(`muse-ember-1.0`) | Standard mode", "Contributor (`muse-ember-1.0-contributor`) | Contributor mode")] },
+  ]) {
+    expect(() => parseMetaModels(bad)).toThrow();
+  }
+});
+
+test("syncs tiers from the docs and clears stale tiers on flat-priced families", () => {
+  const tiered = parseMetaModels({ ...source, pricing: emberPricing, families: [emberPage] });
+  const authored: ExistingModel = { base_model: "meta/muse-ember-1.0", cost: { input: 9, output: 9, cache_read: 9 } };
+  const context = { authored: () => authored, existing: () => authored };
+  expect(meta.translateModel(tiered.at(-1)!, context)?.model.cost).toEqual(tiered.at(-1)!.cost);
+  const stale: ExistingModel = { ...authored, cost: { ...tiered.at(-1)!.cost } };
+  const flat = meta.translateModel(tiered[0]!, { authored: () => stale, existing: () => stale })!;
+  expect(flat.model.cost?.tiers).toBeUndefined();
+});
+
 test("runner preserves inherited controls, retains absent models, and is idempotent", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-meta-"));
   const modelsDir = path.join(root, "providers", "meta", "models");
   const filename = path.join(modelsDir, "muse-spark-1.2.toml");
   const original = `# Keep this authored source comment.
+schema = 2
 base_model = "meta/muse-spark-1.2"
 base_model_omit = ["limit.input"]
-reasoning_options = [{ type = "effort", values = ["minimal", "low", "medium", "high", "xhigh"] }]
-[cost]
-input = 9
-output = 9
-cache_read = 9
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 9
+cache = { read = 9 }
+
+[cost.text.output]
+price = 9
 `;
   const absent = path.join(modelsDir, "muse-spark-1.1.toml");
   try {
     await Bun.write(path.join(root, "models", "meta", "muse-spark-1.2.toml"), `
+schema = 2
 name = "Muse Spark 1.2"
 description = "Test fixture"
-release_date = "2026-01-01"
-last_updated = "2026-01-01"
-attachment = true
-reasoning = true
-tool_call = true
 open_weights = false
+release_date = "2026-01-01"
+
+[modalities]
+input = ["text", "image/png", "application/pdf", "video/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
 [limit]
 context = 1048576
 input = 1048576
 output = 131072
-[modalities]
-input = ["text", "image", "pdf", "video"]
-output = ["text"]
 `);
     await Bun.write(filename, original);
     await Bun.write(absent, original);
@@ -215,9 +362,9 @@ output = ["text"]
     const result = Bun.TOML.parse(text);
     expect(result.base_model).toBe("meta/muse-spark-1.2");
     expect(result.base_model_omit).toEqual(["limit.input"]);
-    expect(result.reasoning_options).toEqual(Bun.TOML.parse(original).reasoning_options);
+    expect(result.capabilities).toEqual(Bun.TOML.parse(original).capabilities);
     expect(result.limit).toBeUndefined();
-    expect(result.cost).toEqual({ input: 1.25, output: 4.25, cache_read: 0.15 });
+    expect(result.cost).toEqual({ text: { input: { price: 1.25, cache: { read: 0.15 } }, output: { price: 4.25 } } });
     const second = await syncProvider(provider, { openIssues: false });
     expect(second).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 2 });
     expect(await Bun.file(filename).text()).toBe(text);

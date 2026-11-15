@@ -1,16 +1,33 @@
 # https://novita.ai/models/model-detail/tencent-hy4-preview
 # Effort: reasoning_effort = none|high; none suppresses reasoning. Native effort baseline retained; accepted aliases are not additional distinct levels.
+# system_updates = true: cache hit right after a mid-conversation system message (live 2026-10-20).
+schema = 2
 base_model = "tencent/hy4-preview"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
 structured_output = true
-reasoning_options = [{ type = "effort", values = ["none", "high"] }]
-
-[interleaved]
-field = "reasoning_content"
-
-[cost]
-input = 0.834
-output = 2.501
-cache_read = 0.042
+system_updates = true
 
 [limit]
 context = 1_000_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501

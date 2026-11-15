@@ -1,9 +1,15 @@
+schema = 2
 base_model = "mistral/mistral-small-3.1-24b-instruct"
 name = "Small 3.1 24B"
 
-[cost]
-input = 0.482765
-output = 0.763347
+[capabilities]
+structured_output = false
 
 [limit]
 output = 128_000
+
+[cost.text.input]
+price = 0.371358
+
+[cost.text.output]
+price = 0.58719

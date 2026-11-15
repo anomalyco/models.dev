@@ -1,6 +1,11 @@
+schema = 2
 base_model = "anthropic/claude-haiku-4-5-20251001"
-reasoning_options = []
 
-[cost]
-input = 1.2
-output = 6
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.2
+
+[cost.text.output]
+price = 6
