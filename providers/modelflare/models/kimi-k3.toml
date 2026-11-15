@@ -1,10 +1,13 @@
 # Modelflare ID "kimi-k3" from GET https://modelflare.dev/v1/models (2026-10-15).
 # Effort: $.reasoning_effort on /v1/chat/completions; matches first-party providers/moonshotai effort set (always thinks, no toggle); low/high/max return reasoning_tokens live.
 # Cost: list price from https://modelflare.dev/api/pricing (2026-10-15): input_price=2.85714 USD/MTok, output = input_price * completion_ratio (5.0), cache_read = input_price * cache_ratio (0.1).
+# Cache: official model page lists a Cache Read token price (https://modelflare.dev/pricing/kimi-k3, accessed 2026-11-15). This declares implicit prompt-cache support, not a guaranteed hit rate; the host does not document cache_control markers, so capabilities.cache = { implicit = true } (AGENTS.md).
+# Official Models & Pricing pages state that prices are in USD (https://modelflare.dev/pricing, accessed 2026-11-15). Numeric list prices below remain the 2026-10-15 /api/pricing snapshot and were not refreshed here.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]
