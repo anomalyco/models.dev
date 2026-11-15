@@ -1190,10 +1190,13 @@ function stripUndefined<T>(value: T): T {
   return value;
 }
 
-async function writeReport(target: string, results: SyncResult[]) {
-  await mkdir(".sync", { recursive: true });
+// A pull request body is capped at 65,536 characters; past that, `gh pr create` fails and the
+// sync's PR is never opened (a provider's first sync can change hundreds of files). The report
+// stays under this, listing changed files only while they fit.
+export const MAX_REPORT_LENGTH = 60_000;
 
-  const lines = [
+export function buildReport(target: string, results: SyncResult[], maxLength = MAX_REPORT_LENGTH) {
+  const head = [
     `Updates model TOMLs for the \`${target}\` sync target.`,
     "",
     "| Provider | Status | Created | Updated | Deleted |",
@@ -1201,32 +1204,61 @@ async function writeReport(target: string, results: SyncResult[]) {
   ];
 
   for (const result of results) {
-    lines.push(
+    head.push(
       `| ${result.name} | ${result.status} | ${result.created} | ${result.updated} | ${result.deleted} |`,
     );
   }
 
-  for (const result of results.filter((item) => item.files.length > 0)) {
-    lines.push("", `<details><summary>${result.name} changed files</summary>`, "");
-    for (const file of result.files) {
-      lines.push(`- ${file.status}: \`${file.path}\``);
-    }
-    lines.push("", "</details>");
-  }
-
+  const notices: string[] = [];
   const noticeResults = results.filter((item) => item.notices.length > 0);
   if (noticeResults.length > 0) {
-    lines.push("", "## Notices");
+    notices.push("", "## Notices");
     for (const result of noticeResults) {
-      lines.push("", `### ${result.name}`);
+      notices.push("", `### ${result.name}`);
       for (const notice of result.notices) {
-        lines.push(`- ${notice}`);
+        notices.push(`- ${notice}`);
       }
     }
   }
 
-  lines.push("", "This PR was created automatically by the model sync workflow.");
-  await Bun.write(".sync/model-sync-report.md", `${lines.join("\n")}\n`);
+  const footer = ["", "This PR was created automatically by the model sync workflow."];
+  const length = (lines: string[]) => lines.reduce((sum, line) => sum + line.length + 1, 0);
+  let budget = maxLength - length(head) - length(notices) - length(footer);
+
+  const files: string[] = [];
+  for (const result of results.filter((item) => item.files.length > 0)) {
+    const open = ["", `<details><summary>${result.name} changed files</summary>`, ""];
+    const close = ["", "</details>"];
+    const entries = result.files.map((file) => `- ${file.status}: \`${file.path}\``);
+    const omittedLine = (n: number) => `- ...and ${n} more (the full list is in the diff)`;
+    budget -= length(open) + length(close);
+    let shown = 0;
+    for (const entry of entries) {
+      const reserve = shown + 1 < entries.length ? omittedLine(entries.length).length + 1 : 0;
+      if (budget - (entry.length + 1) - reserve < 0) break;
+      budget -= entry.length + 1;
+      shown++;
+    }
+    const listed = entries.slice(0, shown);
+    if (shown < entries.length) {
+      const line = omittedLine(entries.length - shown);
+      listed.push(line);
+      budget -= line.length + 1;
+    }
+    files.push(...open, ...listed, ...close);
+  }
+
+  const report = `${[...head, ...files, ...notices, ...footer].join("\n")}\n`;
+  if (report.length <= maxLength) return report;
+  // Notices alone can run past the cap; cut them, keeping the table and the footer.
+  const cut = "\n\n_The rest of this report was cut to fit a pull request body; see the sync workflow's log._\n";
+  const tail = `${footer.join("\n")}\n`;
+  return report.slice(0, Math.max(0, maxLength - cut.length - tail.length)) + cut + tail;
+}
+
+async function writeReport(target: string, results: SyncResult[]) {
+  await mkdir(".sync", { recursive: true });
+  await Bun.write(".sync/model-sync-report.md", buildReport(target, results));
 }
 
 // Preserve the leading comment block (header) authored at the top of a TOML file.
