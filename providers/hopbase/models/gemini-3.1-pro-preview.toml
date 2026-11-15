@@ -10,6 +10,8 @@
 # Images: a red PNG data URL returned "Red". Structured output: json_schema with strict = true
 # returned an enum-valid object.
 # tool_choice none|required|named all honoured.
+# Implicit caching: a repeated ~11K-token prefix returned usage.prompt_tokens_details.cached_tokens
+# of about 9.15K from the second call on (2026-11-15).
 # Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt). Base tier up to 200K input tokens; above 200K, input and cache read x2 and output x1.5
 # (long-context multipliers from https://api.hop-base.com/api/v1/models/pricing).
 schema = 2
@@ -20,6 +22,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 stream_usage = true
+cache = { implicit = { min_tokens = 4_096 } }
 
 [cost.text.input]
 price = 0.9118
