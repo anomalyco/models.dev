@@ -10,7 +10,9 @@
 # Images: a red PNG data URL returned "Red". Structured output: json_schema with strict = true
 # returned an enum-valid object.
 # tool_choice: not honoured in this probe (none still called the tool; required/named did not
-# force a call), so only auto is declared. No cache hit was observed on a repeated ~3K-token prefix.
+# force a call), so only auto is declared. Implicit caching: a repeated ~11K-token
+# prefix returned usage.prompt_tokens_details.cached_tokens of about 9.15K from the second or third
+# call (2026-11-15); the earlier ~3K-token probe was below Google's 4,096-token minimum.
 # Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt).
 schema = 2
 base_model = "google/gemini-3.8-flash"
@@ -20,6 +22,7 @@ tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 stream_usage = true
+cache = { implicit = { min_tokens = 4_096 } }
 
 [cost.text.input]
 price = 0.342
