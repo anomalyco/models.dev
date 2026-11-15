@@ -1,0 +1,45 @@
+# Source: https://api.powerspring.eu/v1/models (accessed 2026-11-14): context_length 1048576,
+# max_output_tokens 1048576; images, tools, json_schema, reasoning.
+# Effort: reasoning_effort = low|high on Chat Completions. "none" is not listed: it empties
+# reasoning_content, but GLM 5.3 Flash then reasons in its visible answer instead (checked live
+# 2026-11-14), so thinking can't really be switched off.
+# low|high follow the lab (providers/zhipuai/models/glm-5.3-flash.toml) and relay peers
+# (providers/cortecs/models/glm-5.3-flash.toml); "max" is left out because Powerspring rejects
+# it with 400.
+# Live check 2026-11-14 (Chat Completions, one short prompt): every listed level answered;
+# reasoning text per level: low 25 chars, high 41 chars.
+# Reasoning text: Chat Completions returns it in message.reasoning_content.
+# Input: text and images only (no video or PDF); image types are the lab's.
+# Cache: automatic, billed at the cached input price (https://powerspring.eu/docs/billing).
+# Prices: USD per million tokens, converted from Powerspring's EUR prices at the ECB reference
+# rate of 2026-11-13 (1 EUR = 1.1052 USD).
+# Lowest price shown; a request goes to the cheapest available server and can cost up to
+# USD 0.290115 input / USD 0.5860323 output per million tokens.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.1044414
+cache = { read = 0.01856736 }
+
+[cost.text.output]
+price = 0.36438444

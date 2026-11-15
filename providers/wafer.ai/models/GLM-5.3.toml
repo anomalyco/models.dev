@@ -1,0 +1,29 @@
+# Sources (accessed 2026-11-06):
+# - Model list, limits, list prices, vision flag and reasoning efforts: GET https://pass.wafer.ai/v1/models
+#   (public, no key; the docs name it the source of truth: https://docs.wafer.ai/serverless/models)
+# - Reasoning fields: https://docs.wafer.ai/serverless/chat-completions#reasoning
+# - Prompt caching (automatic, cache_control not needed, no cache-write charge): https://docs.wafer.ai/serverless/usage#prompt-caching
+# Effort: reasoning_effort = low|high|max (default low); also reasoning.effort.
+#   Wafer also accepts none, but its docs warn that on GLM-5.3 and GLM-5.3-Flash none doesn't fully stop
+#   reasoning (hidden reasoning still uses output tokens), so none is left out.
+# Reasoning text is returned in reasoning_content.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 1.8

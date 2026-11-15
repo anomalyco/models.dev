@@ -1,3 +1,4 @@
+# Output limit: 16,384 tokens, the cap its upstream documents (providers/deepinfra/models/openai/gpt-oss-20b.toml); the lab's raised cap would exceed it.
 schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "GPT OSS 20B (Deep Infra)"
@@ -6,6 +7,9 @@ name = "GPT OSS 20B (Deep Infra)"
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+
+[limit]
+output = 16_384
 
 [cost.text.input]
 price = 0.03

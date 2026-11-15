@@ -29,6 +29,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -200,6 +201,15 @@ EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
 - A `cache` or `prompt_cache` feature sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet. Authored `implicit` / `explicit` details are kept.
 - `base_model` files never carry model facts (dates, `family`, `knowledge`, `open_weights`); they come from the lab. Only standalone files keep them.
 
+## Keln Notes
+
+- Run with `bun models:sync keln` or `bun keln:sync`. Registration enables the hourly provider-specific workflow; no API key or new workflow secret is required.
+- Source: the public `https://api.keln.ai/v1/models` endpoint (OpenRouter's shape). Prices are USD per token as decimal strings and convert exactly to USD per million tokens. `context_length`, `input_modalities` and the per-model `reasoning` object are API-authoritative.
+- Model IDs use the Hugging Face organisation; `deepseek-ai/` and `minimaxai/` map to the `deepseek` and `minimax` metadata labs, every other prefix resolves as published. Lab facts, release dates and output limits are inherited via `base_model`.
+- Reasoning options come from the published `reasoning` object: `supported_efforts` becomes an effort option (with `none` when thinking can be switched off), an on/off-only model gets a toggle, and an always-on model with no published levels gets `[]`. Each file's header names the wire field.
+- Only rows whose `output_modalities` include `text` sync. Keln also lists decision-output models (e.g. `cloudflare/clef`); they cannot serve chat, so they are filtered out at parse time and their files are removed like retired models.
+- Rows without a lab base or published controls are reported and keep their files; models absent from the API are removed. Empty, malformed and duplicate-ID inventories fail before writes.
+
 ## OpenRouter Notes
 
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
@@ -250,6 +260,7 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - Use a dedicated token scoped to Workers AI read access so sync automation does not share deploy credentials.
 - The endpoint is parsed as Cloudflare's OpenRouter-like Workers AI metadata.
 - Model IDs map directly to TOML paths under `providers/cloudflare-workers-ai/models`.
+- A `deprecation_date` (set once Cloudflare schedules a retirement) sets `status = "deprecated"`; otherwise an existing status is kept.
 - This target only manages Workers AI; the separate Cloudflare AI Gateway target handles proxied third-party models.
 
 ## Cloudflare AI Gateway Notes
@@ -369,6 +380,15 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - A live model with no lab entry is not created either, and opens a missing-model issue. `openai/privacy-filter` is skipped silently because the token-cost schema cannot describe it.
 - Absence removes a model, so the fetch refuses a response carrying fewer than twenty models: a truncated list that still parses would otherwise be indistinguishable from a mass retirement. A local entry the catalog cannot price is republished unchanged rather than dropped, because dropping it would delete a route that is still served.
 
+## Obscurify.ai Notes
+
+- Obscurify.ai is implemented in `packages/core/src/sync/providers/obscurify.ts`.
+- Source endpoint: the public `https://obscurify.ai/v1/models` (no API key).
+- Existing models are updated from per-token `pricing.prompt` and `pricing.completion`, scaled to per-1M prices. `pricing.input_cache_read` and `pricing.input_cache_write` are synced only into files that already declare that cache price: each model's caching is confirmed live before it is added.
+- `context_length` only ever lowers the inherited context limit; it can report the lab's window rounded up (1048576 for 1M). Output limits, reasoning controls and other capabilities stay hand-authored.
+- `tools = false` overrides the lab's tool calling. Display names are not synced: the endpoint prefixes the lab name (`Z.ai: GLM 5.3`). Decision models (`decisions = true`) are skipped.
+- New models are not created automatically (`skipCreates`) and open no missing-model issues (`trackMissingModels: false`): the endpoint lists hundreds of models the catalog does not carry. It lists only models serving at that moment, so local files missing from a response are kept (`deleteMissing: false`) and reported.
+
 ## OpenAI Notes
 
 - OpenAI is implemented in `packages/core/src/sync/providers/openai.ts`.
@@ -463,6 +483,7 @@ Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
 - `VENICE_API_KEY` is optional locally and includes models visible to that account when set.
 - Models missing from the API response are removed from the Venice catalog.
 - Every Venice model uses `base_model`; flattened IDs are matched to provider-agnostic metadata before provider-specific overrides are written.
+- A model whose ID or name says Uncensored, Abliterated or Heretic is Venice's own fine-tune and only matches metadata that names the same fine-tune, so `qwen-3-6-plus` ("Qwen 3.6 Plus Uncensored") stays a standalone file.
 - Every Venice model declares `reasoning_options`; models without API-provided effort levels use an empty array.
 
 ## engy Notes

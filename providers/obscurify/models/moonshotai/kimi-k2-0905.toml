@@ -1,0 +1,9 @@
+# Prices: GET https://obscurify.ai/v1/models (pricing.* per token x 1M), synced by packages/core/src/sync/providers/obscurify.ts. One flat price per model.
+schema = 2
+base_model = "moonshotai/kimi-k2-0905"
+
+[cost.text.input]
+price = 0.78
+
+[cost.text.output]
+price = 3.25

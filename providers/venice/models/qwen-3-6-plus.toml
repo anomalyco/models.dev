@@ -6,9 +6,19 @@
 # effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
 # tools.updates = false: `tools` is request-level, with no tool addition/removal message.
 # Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
+# No base_model: Venice lists this id as "Qwen 3.6 Plus Uncensored ... an uncensored variant of Alibaba's Qwen 3.6 Plus"
+# (https://api.venice.ai/api/v1/models?type=text, accessed 2026-11-12), its own fine-tune rather than the lab model.
 schema = 2
-base_model = "alibaba/qwen3.6-plus"
 name = "Qwen 3.6 Plus Uncensored"
+description = "Uncensored variant of Qwen3.6 Plus for coding, reasoning, and multimodal agent tasks"
+family = "qwen"
+open_weights = false
+release_date = "2026-04-06"
+last_updated = "2026-11-13"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
 
 [capabilities]
 tools = { supported = true }
@@ -16,6 +26,10 @@ reasoning = { supported = true }
 structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
+
+[limit]
+context = 1_000_000
+output = 65_536
 
 [api.chat-completions]
 

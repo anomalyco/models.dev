@@ -1,3 +1,4 @@
+# Output limit: capped at the 983,616 context; no host cap is documented and the 1,000,000 from the base model or host listing is larger.
 # Modalities: image formats from models/alibaba/qwen3.7-flash.toml (same model)
 # effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.llmgateway.io/features/reasoning)
 schema = 2
@@ -16,7 +17,7 @@ structured_output = false
 
 [limit]
 context = 983_616
-output = 1_000_000
+output = 983_616
 
 [cost.text.input]
 price = 0.03
