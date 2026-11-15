@@ -1,0 +1,24 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Effort: reasoning.effort = none|low|high|max (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|high|max
+# /v1/responses: reasoning.effort = none|low|high|max
+schema = 2
+base_model = "zhipuai/glm-5.3"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 256_000
+output = 16_384
+
+[cost.text.input]
+price = 2.01
+
+[cost.text.output]
+price = 6.15

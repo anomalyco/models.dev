@@ -1,0 +1,15 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[cost.text.input]
+price = 0.113
+cache = { read = 0.01409999988 }
+
+[cost.text.output]
+price = 0.382

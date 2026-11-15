@@ -1,0 +1,15 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "amazon/nova-micro"
+name = "Nova Micro (APAC)"
+
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 0.037
+cache = { read = 0.00925, write = 0.037 }
+
+[cost.text.output]
+price = 0.148

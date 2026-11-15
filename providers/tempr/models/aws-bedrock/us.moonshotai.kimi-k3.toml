@@ -1,0 +1,26 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# No reasoning control for this model on this host: it reasons at its own depth,
+# and the x-tempr-reasoning-effort response header reports "default".
+schema = 2
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 (US)"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 3.3
+cache = { read = 0.33, write = 4.125 }
+
+[cost.text.output]
+price = 16.5

@@ -1,0 +1,24 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Effort: reasoning.effort = none|low|medium|high (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high
+# /v1/responses: reasoning.effort = none|low|medium|high
+schema = 2
+base_model = "amazon/nova-2-lite"
+name = "Nova 2 Lite (JP)"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+structured_output = false
+
+[limit]
+output = 65_535
+
+[cost.text.input]
+price = 0.396
+cache = { read = 0.099, write = 0.396 }
+
+[cost.text.output]
+price = 3.311

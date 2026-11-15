@@ -1,0 +1,22 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+output = 262_144
+
+[cost.text.input]
+price = 0.39
+
+[cost.text.output]
+price = 2.34

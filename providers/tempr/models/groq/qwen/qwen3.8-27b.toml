@@ -8,6 +8,7 @@
 # Image MIME types: the lab's (alibaba/qwen3.8-27b); Tempr routes this ID to Groq, which takes images but no video.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
+status = "beta"
 
 [modalities]
 input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
@@ -18,7 +19,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
 [limit]
-context = 131_042
+context = 131_072
 output = 16_384
 
 [cost.text.input]

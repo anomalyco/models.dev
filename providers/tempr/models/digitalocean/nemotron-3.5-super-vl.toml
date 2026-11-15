@@ -1,0 +1,25 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# No reasoning control for this model on this host: it reasons at its own depth,
+# and the x-tempr-reasoning-effort response header reports "default".
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+name = "NVIDIA Nemotron 3.5 Super VL"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 1_048_576
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.65

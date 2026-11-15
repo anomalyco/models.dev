@@ -1,0 +1,16 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "amazon/nova-premier"
+name = "Nova Premier (US)"
+status = "deprecated"
+
+[capabilities]
+structured_output = false
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.625, write = 2.5 }
+
+[cost.text.output]
+price = 12.5

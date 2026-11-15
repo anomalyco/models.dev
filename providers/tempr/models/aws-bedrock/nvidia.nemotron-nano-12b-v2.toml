@@ -1,0 +1,24 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "nvidia/nemotron-nano-12b-v2-vl"
+name = "NVIDIA Nemotron Nano 12B v2 VL BF16"
+status = "deprecated"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+context = 131_072
+output = 8_192
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.6

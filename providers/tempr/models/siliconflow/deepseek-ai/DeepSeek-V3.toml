@@ -1,0 +1,18 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "deepseek/deepseek-v3-0324"
+name = "deepseek-ai/DeepSeek-V3"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 164_000
+output = 164_000
+
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 1

@@ -1,0 +1,21 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "minimax/MiniMax-M2.5"
+name = "MiniMaxAI/MiniMax-M2.5"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 197_000
+output = 131_000
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

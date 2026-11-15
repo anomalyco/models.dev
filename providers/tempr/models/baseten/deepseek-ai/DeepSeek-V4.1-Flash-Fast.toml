@@ -1,0 +1,26 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# Off: reasoning.effort = "none" (or reasoning.enabled = false)
+# Effort: reasoning.effort = none|high|max (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = high|max
+# /v1/responses: reasoning.effort = none|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash Fast"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
+temperature = false
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.014 }
+
+[cost.text.output]
+price = 2.4

@@ -1,0 +1,33 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# Effort: reasoning.effort = low|medium|high|xhigh|max (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = low|medium|high|xhigh|max
+# /v1/responses: reasoning.effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+name = "GPT-6.1 Sol (Global)"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15

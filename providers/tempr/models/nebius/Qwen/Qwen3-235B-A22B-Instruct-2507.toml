@@ -1,0 +1,15 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+name = "Qwen3 235B A22B Instruct 2507"
+
+[limit]
+output = 8_192
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 0.6

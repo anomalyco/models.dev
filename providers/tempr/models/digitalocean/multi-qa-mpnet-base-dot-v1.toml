@@ -1,0 +1,14 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "sentence-transformers/multi-qa-mpnet-base-dot-v1"
+name = "Multi-QA-mpnet-base-dot-v1"
+
+[limit]
+output = 768
+
+[cost.text.input]
+price = 0.009
+
+[cost.text.output]
+price = 0

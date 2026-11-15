@@ -1,0 +1,20 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "openai/gpt-oss-20b"
+name = "openai/gpt-oss-20b"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+context = 131_000
+output = 8_000
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.18

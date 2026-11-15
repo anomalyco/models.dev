@@ -1,0 +1,19 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+name = "Nemotron 3 Ultra"
+
+[capabilities]
+reasoning = { supported = false }
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 1.7

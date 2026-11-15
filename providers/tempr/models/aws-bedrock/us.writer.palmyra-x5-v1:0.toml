@@ -1,0 +1,27 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# No reasoning control for this model on this host: it reasons at its own depth,
+# and the x-tempr-reasoning-effort response header reports "default".
+schema = 2
+base_model = "writer/palmyra-x5"
+name = "Palmyra X5 (US)"
+status = "deprecated"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+
+[limit]
+context = 1_040_000
+input = 1_040_000
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 6

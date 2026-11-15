@@ -1,0 +1,30 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high|xhigh|max
+# /v1/responses: reasoning.effort = none|low|medium|high|xhigh|max
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+name = "Claude Haiku 5.5 (Global)"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

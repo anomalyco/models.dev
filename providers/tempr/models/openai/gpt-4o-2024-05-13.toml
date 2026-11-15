@@ -1,0 +1,14 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "openai/gpt-4o-2024-05-13"
+status = "deprecated"
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 15

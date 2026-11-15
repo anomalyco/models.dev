@@ -1,3 +1,5 @@
+# Tempr serves this model on /v1/embeddings, which takes OpenAI's embeddings shape: text
+# input only there, so the lab's other input modalities aren't reachable through Tempr.
 # Tempr Gateway: https://temprhq.io/docs/gateway-reference
 # Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
 # GET https://api.temprhq.io/v1/catalog lists them, checked 2026-10-21.
@@ -15,7 +17,7 @@ output = ["text"]
 output = 1
 
 [api.embeddings]
-sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.2

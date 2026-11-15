@@ -1,0 +1,24 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# Off: reasoning.effort = "none" (or reasoning.enabled = false)
+# Effort: reasoning.effort = none|low|medium|high (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high
+# /v1/responses: reasoning.effort = none|low|medium|high
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 256_000
+output = 16_384
+
+[cost.text.input]
+price = 0.280375
+
+[cost.text.output]
+price = 0.56075

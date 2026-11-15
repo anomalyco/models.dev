@@ -1,0 +1,21 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# Toggle: reasoning.enabled = true|false (reasoning.effort = "none" also turns it off)
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# /v1/messages: thinking.type = enabled|disabled; thinking.budget_tokens
+# /v1/responses: reasoning.effort = "none" turns it off, any other level turns it on
+schema = 2
+base_model = "anthropic/claude-haiku-4-5-20251001"
+name = "Claude Haiku 4.5 (JP)"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
+structured_output = true
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.11, write = 1.375 }
+
+[cost.text.output]
+price = 5.5

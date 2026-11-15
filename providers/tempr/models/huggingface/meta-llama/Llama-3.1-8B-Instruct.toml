@@ -1,0 +1,16 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "meta/llama-3.1-8b-instruct"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.06

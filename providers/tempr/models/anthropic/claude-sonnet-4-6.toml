@@ -17,6 +17,9 @@ reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"
 cache = { explicit = { ttl = ["5m", "1h"] } }
 structured_output = true
 
+[limit]
+output = 128_000
+
 [cost.text.input]
 price = 3
 cache = { read = 0.3, write = { "5m" = 3.75, "1h" = 6 } }

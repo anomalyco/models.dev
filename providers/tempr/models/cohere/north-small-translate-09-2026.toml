@@ -1,0 +1,16 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "cohere/north-small-translate-1-0"
+
+[capabilities]
+structured_output = false
+
+[limit]
+context = 32_768
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

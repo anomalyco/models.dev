@@ -4,8 +4,15 @@
 schema = 2
 base_model = "mistral/voxtral-small-latest"
 
+[modalities]
+input = ["text", "audio", "application/pdf"]
+output = ["text"]
+
 [capabilities]
 structured_output = true
+
+[limit]
+context = 32_768
 
 [cost.text.input]
 price = 0.1

@@ -9,6 +9,11 @@ base_model = "minimax/MiniMax-M3"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
+structured_output = false
+
+[limit]
+context = 1_000_000
+output = 524_288
 
 [cost.text.input]
 price = 0.3

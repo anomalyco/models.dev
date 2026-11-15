@@ -1,0 +1,21 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# No caller control on Tempr: Tempr forwards no reasoning settings to this host at
+# all. It routes each model to whichever upstream provider serves it, and those providers
+# disagree, so there is no deterministic behaviour to expose.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.44
+
+[cost.text.output]
+price = 1.32

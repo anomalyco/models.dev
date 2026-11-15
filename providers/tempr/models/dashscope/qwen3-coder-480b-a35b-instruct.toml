@@ -1,0 +1,27 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+status = "deprecated"
+
+[cost.text.input]
+price = 1.5
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 2.7
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 4.5
+
+[cost.text.output]
+price = 7.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 13.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 22.5

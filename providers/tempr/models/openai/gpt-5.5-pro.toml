@@ -1,0 +1,26 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# Effort: reasoning.effort = medium|high|xhigh (alias: top-level reasoning_effort)
+# /v1/messages: output_config.effort = medium|high|xhigh
+# /v1/responses: reasoning.effort = medium|high|xhigh
+schema = 2
+base_model = "openai/gpt-5.5-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 30
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
+
+[cost.text.output]
+price = 180
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 270

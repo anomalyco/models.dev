@@ -1,0 +1,22 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
+name = "Qwen/Qwen3-VL-30B-A3B-Instruct"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 262_000
+output = 262_000
+
+[cost.text.input]
+price = 0.29
+
+[cost.text.output]
+price = 1

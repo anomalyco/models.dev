@@ -1,0 +1,17 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# No reasoning control for this model on this host: it reasons at its own depth,
+# and the x-tempr-reasoning-effort response header reports "default".
+schema = 2
+base_model = "alibaba/qwen3.6-27b"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.32
+
+[cost.text.output]
+price = 3.2

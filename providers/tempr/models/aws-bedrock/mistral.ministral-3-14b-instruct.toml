@@ -1,0 +1,18 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "mistral/ministral-3-14b-instruct-2512"
+name = "Ministral 14B 3.0"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 128_000
+output = 4_096
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.2

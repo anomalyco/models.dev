@@ -1,0 +1,18 @@
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+schema = 2
+base_model = "google/gemma-3-4b-it"
+status = "deprecated"
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
+
+[limit]
+output = 4_096
+
+[cost.text.input]
+price = 0.04
+
+[cost.text.output]
+price = 0.08

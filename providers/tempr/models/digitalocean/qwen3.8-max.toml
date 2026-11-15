@@ -1,0 +1,27 @@
+# Tempr Gateway: https://temprhq.io/docs/gateway-chat-completions#reasoning
+# Prices: bring-your-own-key, billed by the upstream provider at its own rates (https://temprhq.io/faq);
+# GET https://api.temprhq.io/v1/catalog lists them.
+# Off: reasoning.effort = "none" (or reasoning.enabled = false)
+# Effort: reasoning.effort = none|low|medium|high|max (alias: top-level reasoning_effort)
+# /v1/messages: thinking.type = enabled|disabled; output_config.effort = low|medium|high|max
+# /v1/responses: reasoning.effort = none|low|medium|high|max
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen3.8-Max"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+
+[limit]
+output = 262_144
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 6

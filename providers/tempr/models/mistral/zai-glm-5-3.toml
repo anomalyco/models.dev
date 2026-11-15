@@ -11,6 +11,9 @@ base_model = "zhipuai/glm-5.3"
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
+[limit]
+context = 1_048_576
+
 [cost.text.input]
 price = 1.4
 cache = { read = 0.14 }
