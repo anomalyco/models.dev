@@ -183,3 +183,17 @@ test("rows that price cache reads publish the cache kind, Anthropic as explicit"
   expect(uncached.v2Set?.["capabilities.cache"]).toBeUndefined();
   expect(uncached.header).not.toContain("# Cache:");
 });
+
+test("a lab output cap above the row's context is bounded by that context", () => {
+  // DeepSeek V3 0324's lab file allows 163,840 output tokens; TrustedRouter serves a 128,000-token context.
+  const deepseek = model({
+    id: "deepseek/deepseek-chat-v3-0324",
+    name: "DeepSeek: DeepSeek V3 0324",
+    context_length: 128_000,
+    top_provider: { context_length: 128_000, max_completion_tokens: null },
+    reasoning: undefined,
+  });
+  const translated = trustedrouter.translateModel(deepseek, none)!.model as { limit?: { context?: number; output?: number } };
+  expect(translated.limit?.context).toBe(128_000);
+  expect(translated.limit?.output).toBe(128_000);
+});

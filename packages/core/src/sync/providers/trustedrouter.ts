@@ -99,7 +99,9 @@ function toOpenRouterShape(model: TrustedRouterModel, baseModel: string): OpenRo
     },
     top_provider: {
       context_length: model.top_provider.context_length,
-      max_completion_tokens: model.top_provider.max_completion_tokens ?? labOutput,
+      // A lab output cap never exceeds this row's context.
+      max_completion_tokens:
+        model.top_provider.max_completion_tokens ?? (labOutput === null ? null : Math.min(labOutput, model.context_length!)),
     },
     supported_parameters: supportedParameters(model, baseModel),
     reasoning,
