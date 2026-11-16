@@ -1,0 +1,18 @@
+# Hy4 Flash. Tencent Flash-tier list price: USD 0.07 / 0.281 / 0.003 per MTok
+#   (input / output / cache hit).
+# Effort: reasoning_effort = none|high (default high). "none" is how thinking is turned off on
+#   this id, so per AGENTS.md there is no separate toggle entry.
+# https://cloud.tencent.com/document/product/1823/130055
+# https://cloud.tencent.com/document/product/1823/131208
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.281

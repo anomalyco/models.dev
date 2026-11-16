@@ -1,0 +1,28 @@
+# Hy4 Flash — the speed/cost-optimized tier of the Hy4 generation. Shares Hy4's window,
+#   image input set and reasoning ladder; only the serving tier differs.
+# Limits mirror Hy4: `1M - 64K` ⇒ input 983_040 (= 1_048_576 − 65_536). Note the sibling
+#   models/tencent/hy4.toml currently carries 983_010, which is a known typo in that file.
+# Pending official confirmation: per-request image count and per-image size caps
+#   (goes in `[limit.image]` once published).
+schema = 2
+name = "Hy4 Flash"
+description = "A fast, cost-optimized multimodal model in the Hy4 generation, tuned for high-throughput Agent and tool-use workloads."
+family = "Hy"
+open_weights = false
+release_date = "2026-11-16"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+input = 983_040
+output = 65_536
