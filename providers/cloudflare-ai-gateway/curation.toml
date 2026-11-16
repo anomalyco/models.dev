@@ -31,6 +31,10 @@
 # Proxied catalog ids with no lab file under models/, not reachable via unified billing
 # (BYOK-only), or failing on every request.
 skip = [
+  # Has a lab file, but multi-agent is Responses-only: Chat Completions rejects it on xAI
+  # (live 2026-10-22) and on OCI, both /openai/v1/chat/completions and native /actions/chat
+  # ("Multi Agent requests are not allowed on chat completions", 400, live 2026-11-16), and
+  # unified billing only serves /ai/v1/chat/completions and /ai/v1/messages.
   "xai/grok-4.20-multi-agent-0309",
   # Inkling has a lab file, but both ids are BYOK-only: unified billing returns code 2047
   # on /ai/v1/chat/completions and /ai/v1/messages (verified live 2026-10-16).
