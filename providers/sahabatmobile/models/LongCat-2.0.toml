@@ -1,4 +1,5 @@
 # SahabatMobile retail pricing (USD/MTok); source: https://www.sahabatmobile.com/dashboard/packages (accessed 2026-11-15)
+# Toggle: thinking.type = enabled|disabled
 # Retail = official LongCat price; LongCat served as a direct provider (api.longcat.chat).
 # Served via SahabatMobile's OpenAI-compatible API.
 schema = 2
@@ -6,12 +7,13 @@ base_model = "meituan/longcat-2.0"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
+temperature = false
 
 [limit]
 context = 1_048_576
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.3

@@ -1,4 +1,5 @@
 # SahabatMobile retail pricing (USD/MTok); source: https://www.sahabatmobile.com/dashboard/packages (accessed 2026-11-15)
+# Toggle: thinking.type = "enabled"|"disabled" (default enabled)
 # Retail = official Xiaomi MiMo price; upstream pricing per Xiaomi MiMo API docs:
 # https://platform.xiaomimimo.com (MiMo Direct)
 # Served via SahabatMobile's OpenAI-compatible API over MiMo Direct.
@@ -9,6 +10,7 @@ base_model = "xiaomi/mimo-v2.6-pro"
 tools = { supported = true, strict = true, choice = ["auto"] }
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 structured_output = true
+top_k = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

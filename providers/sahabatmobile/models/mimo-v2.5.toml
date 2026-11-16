@@ -1,7 +1,10 @@
-# SahabatMobile retail pricing (USD/MTok); source: https://www.sahabatmobile.com/dashboard/packages (accessed 2026-11-05)
-# Toggle: thinking.type = "enabled"|"disabled" (default enabled; proxied to upstream Xiaomi API)
+# SahabatMobile retail pricing (USD/MTok); source: https://www.sahabatmobile.com/admin/pricing (accessed 2026-11-16)
+# Retail = official Xiaomi price; the V2.5 series is priced the same as V2.6: https://mimo.mi.com/static/docs/news/latest/v2-6.md
+# Serving: Xiaomi retired the mimo-v2.5 upstream ID on 2026-10-21 (400 "Unsupported model"), but SahabatMobile's
+# gateway aliases mimo-v2.5 -> mimo-v2.6-flash (ai.model_redirects in config/ai.php), so requests stay callable
+# and are served by mimo-v2.6-flash over MiMo Direct (own master key), billed under the called slug.
+# Toggle: thinking.type = "enabled"|"disabled" (default enabled)
 # https://platform.xiaomimimo.com/static/docs/api/chat/openai-api.md
-# Served by SahabatMobile per first-party model list (MiMo Direct): https://www.sahabatmobile.com/docs (accessed 2026-11-05)
 schema = 2
 base_model = "xiaomi/mimo-v2.5"
 
@@ -12,7 +15,7 @@ reasoning = { supported = true, default = { type = "toggle", value = true }, tog
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.15
+price = 0.14
 
 [cost.text.output]
-price = 0.45
+price = 0.28
