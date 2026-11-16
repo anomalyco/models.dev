@@ -1,6 +1,7 @@
 # Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
 # Effort: reasoning_effort = low|medium|high
 # Output is capped conservatively at 32,768; the host does not report an output limit.
+# Current upstream lab output exceeds this host's context, so an override is required.
 schema = 2
 base_model = "openai/gpt-oss-safeguard-120b"
 

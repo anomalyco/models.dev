@@ -7,7 +7,6 @@ base_model = "openai/text-embedding-3-large"
 context = 8_191
 
 [api.embeddings]
-base_url = "https://api.sintaks.dev/v1"
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]

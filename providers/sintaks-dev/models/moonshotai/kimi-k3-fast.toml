@@ -1,6 +1,7 @@
 # Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
 # Effort: reasoning_effort = low|high|max
 # Output is capped conservatively at 131,072; the host does not report an output limit.
+# Current upstream lab output exceeds this host's context, so an override is required.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Fast"
