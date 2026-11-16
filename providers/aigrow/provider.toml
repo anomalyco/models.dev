@@ -1,14 +1,19 @@
-# AIGROW sells prepaid API credit for Claude, GPT, Gemini and Grok models on one
-# endpoint that speaks OpenAI Chat Completions (POST /v1/chat/completions) and
-# Anthropic Messages (POST /v1/messages). Keys start with `ag_` and are sent as
-# `Authorization: Bearer` or `x-api-key`. GET /v1/models lists the served ids
-# (it needs a key). Setup: https://aigrow.gg/ai-api/guide
-# Prices: https://aigrow.gg/ai-api (read 2026-11-12). The figure on that page is
-# headed "USD per million tokens" and lists, for each model, the USD a buyer pays
-# per 1M tokens. The model files copy those figures with no conversion, and each
-# one names its row. Each model has one flat rate at every context length. A
-# prompt-cache write bills at 1.25x the input rate, and at 2x on the Claude
-# models, where every write goes to the 1-hour cache.
+# AIGROW sells prepaid API credit for Claude, GPT, Gemini, Grok, Qwen and Kimi
+# models on one endpoint that speaks OpenAI Chat Completions
+# (POST /v1/chat/completions) and Anthropic Messages (POST /v1/messages). Keys
+# start with `ag_` and are sent as `Authorization: Bearer` or `x-api-key`.
+# GET /v1/models lists the served ids (it needs a key). Setup:
+# https://aigrow.gg/ai-api/guide
+# Prices: https://aigrow.gg/ai-api (read 2026-11-16). The price table on that
+# page reads "US dollars per million input / output tokens" (files read before
+# 2026-11-16 call it the figure "USD per million tokens") and lists, for each
+# model, the USD a buyer pays per 1M tokens. The model files copy those figures
+# with no conversion, and each one names its row. Each model has one flat rate
+# at every context length, except Claude Haiku 5.5: a request with more than
+# 100,000 prompt tokens bills at its higher tier. A prompt-cache write bills at
+# 1.25x the input rate, and at 2x on Claude Opus 5.5, Sonnet 5.5, Fable 5.1 and
+# Fable 5.2, where every write goes to the 1-hour cache. Kimi K3.1 Pro reports
+# no prompt-cache reads, so repeated context bills as input.
 name = "AIGROW"
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"

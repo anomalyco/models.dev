@@ -1,0 +1,31 @@
+# Prices: https://aigrow.gg/ai-api, price table "US dollars per million input / output tokens", row "Gemini 3.8 Flash", column "With AIGROW credit" (read 2026-11-16): input $0.375, output $1.875, cache read $0.0375, cache write $0.4688. These are the USD a buyer pays per 1M tokens, copied with no conversion, except the cache write: the page rounds it to four decimals, and the file keeps the rate it rounds, 1.25x the $0.375 input rate ($0.46875). One flat rate, with no date-based change on this host.
+# API: OpenAI Chat Completions only (POST /v1/chat/completions); the Messages endpoint does not serve this model (404, probed 2026-11-16).
+# Effort: reasoning_effort; levels as on providers/google; each level returned 200 with reasoning tokens reported, and the reasoning comes back in reasoning_content; an assistant turn sent back with its reasoning_content was accepted (200) (2026-11-16). No default is stated: this host's default was not confirmed.
+# Cache: implicit; minimum copied from providers/google. Three identical 9,721-token prompts reported no cached tokens on the first two sends and 7,674 on the third (probed 2026-11-16). Explicit caching is left out: not tested on this host.
+# Output: one request returns at most 65,536 output tokens, thinking included, the limit copied from providers/google (2026-11-16).
+# Structured output: a JSON schema response_format returned bare JSON, also on a prompt that did not ask for JSON (probed 2026-11-16).
+# Input: a PNG image and a PDF file part were read (probed 2026-11-16). Audio and video are left out because they were not tested on this host.
+# Tools: a function tool returned a tool call with the right arguments on Chat Completions with tool_choice "auto"; the legacy functions field returns 400 (probed 2026-11-16).
+# Streaming: with stream_options.include_usage the last chunk before [DONE] carried the usage (probed 2026-11-16).
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 4_096 } }
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
+output = ["text"]
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.375
+cache = { read = 0.0375, write = 0.46875 }
+
+[cost.text.output]
+price = 1.875

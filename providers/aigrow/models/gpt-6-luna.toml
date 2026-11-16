@@ -1,0 +1,21 @@
+# Prices: https://aigrow.gg/ai-api, price table "US dollars per million input / output tokens", row "GPT-6 Luna", column "With AIGROW credit" (read 2026-11-16): input $0.025, output $0.125, cache read $0.01, cache write $0.0313. These are the USD a buyer pays per 1M tokens, copied with no conversion, except the cache write: the page rounds it to four decimals, and the file keeps the rate it rounds, 1.25x the $0.025 input rate ($0.03125). One flat rate at every context length (no long-context tier).
+# API: OpenAI Chat Completions (POST /v1/chat/completions); there is no Responses API. /v1/messages also answered this model (200, 2026-11-16), but nothing else was probed there, so it is not listed.
+# Effort: reasoning_effort; levels as on providers/openai; each level returned 200 on this host, with reasoning tokens reported from medium up (2026-11-16). A JSON schema response_format, a PNG image and a PDF file part all worked, and the schema held on a prompt that did not ask for JSON (probed 2026-11-16).
+# Cache: automatic prefix caching; minimum copied from providers/openai. A second identical 3,498-token prompt reported 3,328 cached tokens (probed 2026-11-16).
+# Streaming: with stream_options.include_usage the last chunk before [DONE] carried the usage (probed 2026-11-16).
+# Tools: custom (freeform) tools do not reach the model on this host, so freeform is left out. Probed 2026-11-16 on Chat Completions with one custom tool per format (text, a regex grammar ZZ[0-9]{3}, the same grammar in lark): with tool_choice "required" each request returned 400 "Tool choice 'required' must be specified with 'tools' parameter.", and with no tool_choice each returned 200 with no tool call and the model answering that the tool is not available. Function tools are forwarded: a function tool returned a tool call with the right arguments under tool_choice "required" and "auto" (probed 2026-11-16).
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 0.025
+cache = { read = 0.01, write = 0.03125 }
+
+[cost.text.output]
+price = 0.125
