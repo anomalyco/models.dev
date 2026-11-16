@@ -1,0 +1,19 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: :free models cost Rp 0 (https://kenari.id/en/docs/free-models).
+# Reasoning: the catalog lists no reasoning fields for this id. With no listed levels kenari
+#   sends the requested reasoning_effort unchanged (https://kenari.id/en/docs/reasoning), so the
+#   effort list is the native one (providers/alibaba/models/qwen3.8-omni-flash.toml: none|low|medium|xhigh).
+#   No toggle: reasoning_toggle is false.
+schema = 2
+base_model = "alibaba/qwen3.8-omni-flash"
+name = "Qwen3.8 Omni Flash (Free)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,21 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-23).
+# Price: :free models cost Rp 0 (https://kenari.id/en/docs/free-models).
+# Reasoning: the catalog carries no controls for this id, so the entry describes the model:
+#   Same model and same evidence as `mimo-v2-6-flash`: MiMo takes the boolean
+#   `enable_thinking` switch, and the free lane is the same endpoint with a different price,
+#   so the toggle applies here too. Neither lane has a corroborated level list.
+# Toggle: reasoning: { "enabled": false } on this host's Chat Completions, the switch
+#   kenari documents for reasoning_toggle (https://kenari.id/en/docs/reasoning).
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+name = "MiMo-V2.6-Flash (Free)"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
