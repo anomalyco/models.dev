@@ -1,6 +1,17 @@
 schema = 2
 base_model = "anthropic/claude-fable-5-2"
 
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2.09136
+
+[cost.text.output]
+price = 9.176257
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
 [cost.text.input]
 price = 2.09136
 
