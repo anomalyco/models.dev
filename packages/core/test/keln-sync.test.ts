@@ -13,9 +13,10 @@ import {
   kelnReasoningControls,
   KelnResponse,
   type KelnModel,
+  type KelnTextModel,
 } from "../src/sync/providers/keln.js";
 
-function model(overrides: Partial<KelnModel> = {}): KelnModel {
+function model(overrides: Partial<KelnModel> = {}): KelnTextModel {
   return {
     id: "deepseek-ai/deepseek-v4.1-flash",
     object: "model",
@@ -25,7 +26,7 @@ function model(overrides: Partial<KelnModel> = {}): KelnModel {
     pricing: { prompt: "0.0000003", completion: "0.0000012", input_cache_read: "0.000000036" },
     reasoning: { mandatory: false, supported_efforts: ["none", "low", "high", "max"], default_effort: "max" },
     ...overrides,
-  };
+  } as KelnTextModel;
 }
 
 const context = { existing: () => undefined, authored: () => undefined };

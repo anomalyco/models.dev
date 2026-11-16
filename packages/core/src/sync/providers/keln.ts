@@ -49,6 +49,8 @@ export const KelnResponse = z.object({
 );
 
 export type KelnModel = z.infer<typeof KelnModel>;
+// What parseModels hands on: text rows, which always carry a context window.
+export type KelnTextModel = KelnModel & { context_length: number };
 
 // Keln names models by their Hugging Face organisation; these two differ from the
 // metadata labs' prefixes. Every other organisation resolves as published.
@@ -109,7 +111,7 @@ export const keln = {
     // A text row without a context window is malformed; fail rather than drop (and delete) a served model.
     const broken = text.filter((model) => model.context_length == null).map((model) => model.id);
     if (broken.length > 0) throw new Error(`Keln text models without context_length: ${broken.join(", ")}`);
-    return text as (typeof text[number] & { context_length: number })[];
+    return text as KelnTextModel[];
   },
   sourceID(model) {
     return model.id;
@@ -178,7 +180,7 @@ export const keln = {
       ...(v2Set && { v2Set }),
     };
   },
-} satisfies SyncProvider<KelnModel>;
+} satisfies SyncProvider<KelnTextModel>;
 
 /** The lab file's v2 input list (MIME types), or undefined when it has none. */
 function labInputModalities(modelID: string): string[] | undefined {
