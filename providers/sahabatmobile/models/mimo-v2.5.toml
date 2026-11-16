@@ -5,10 +5,12 @@
 # Toggle: thinking.type = "enabled"|"disabled" (default enabled)
 # https://platform.xiaomimimo.com/static/docs/api/chat/openai-api.md
 schema = 2
-base_model = "xiaomi/mimo-v2.5"
+base_model = "xiaomi/mimo-v2.6-flash"
+name = "MiMo V2.5"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+top_k = false
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
