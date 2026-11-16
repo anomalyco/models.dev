@@ -1176,3 +1176,16 @@ test("takes a row with several upstreams only when they price it the same", () =
     provider_details: two(4, 5),
   }, schema)).toThrow("list different prices");
 });
+
+test("a media row whose upstreams disagree on price isn't guessed either", () => {
+  const details = (b: number) => [
+    { id: "first", pricing: { input_characters: 0.0001 } },
+    { id: "second", pricing: { input_characters: b } },
+  ];
+  const build = (b: number) => buildCloudflareAiGatewayMediaModel(
+    { model_id: "elevenlabs/eleven-v3", task: "Text-to-Speech", name: "Catalog name", provider_details: details(b) },
+    undefined,
+  ).doc;
+  expect(build(0.0001).base_model).toBe("elevenlabs/eleven_v3");
+  expect(() => build(0.0002)).toThrow("list different prices");
+});

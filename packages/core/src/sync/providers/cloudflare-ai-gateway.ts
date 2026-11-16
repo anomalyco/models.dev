@@ -530,6 +530,7 @@ export function buildCloudflareAiGatewayMediaModel(
   if (Object.keys(capabilities).length > 0) doc.capabilities = capabilities;
   doc.api = RUN_API;
 
+  assertOneUpstreamPrice(catalog);
   const pricing = catalog.provider_details?.[0]?.pricing;
   if (pricing === undefined) return { doc, unpriced: ["(no provider_details)"] };
   const { cost, unpriced } = mediaCost(pricing, type, curated.output_tokens, schemaInput);
@@ -1132,14 +1133,18 @@ async function mapLimit<T, R>(items: T[], limit: number, transform: (item: T) =>
 
 // Structured provider_details is the source of truth. A curated cost is only allowed
 // (and then required) when Cloudflare omits it, so a stale override can't outlive it.
+// Cloudflare doesn't say which upstream a multi-provider row bills at, so a row whose upstreams disagree isn't guessed.
+function assertOneUpstreamPrice(catalog: { model_id: string; provider_details?: { id: string; pricing: unknown }[] | null }) {
+  const details = catalog.provider_details ?? [];
+  if (new Set(details.map((entry) => JSON.stringify(entry.pricing))).size > 1) {
+    throw new Error(`${catalog.model_id}: providers ${details.map((entry) => entry.id).join(", ")} list different prices`);
+  }
+}
+
 function catalogCost(catalog: CatalogModel, curated: CuratedModel): NonNullable<SyncedBaseModel["cost"]> {
   const id = catalog.model_id;
   const detail = catalog.provider_details?.[0];
-  const prices = new Set((catalog.provider_details ?? []).map((entry) => JSON.stringify(entry.pricing)));
-  if (prices.size > 1) {
-    // Cloudflare doesn't say which upstream a multi-provider row bills at, so don't guess.
-    throw new Error(`${id}: providers ${catalog.provider_details!.map((entry) => entry.id).join(", ")} list different prices`);
-  }
+  assertOneUpstreamPrice(catalog);
   if (detail !== undefined) {
     if (curated.cost !== undefined) {
       throw new Error(`${id}: catalog now has provider_details pricing; remove the curated cost`);
