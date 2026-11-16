@@ -1,4 +1,4 @@
-# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-12).
+# Sintaks.dev gateway pricing from https://api.sintaks.dev/v1/models (accessed 2026-11-16).
 # Effort: reasoning_effort = low|medium|high
 schema = 2
 base_model = "openai/gpt-oss-20b"
@@ -7,7 +7,7 @@ base_model = "openai/gpt-oss-20b"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [cost.text.input]
-price = 0.0945
+price = 0.077
 
 [cost.text.output]
-price = 0.405
+price = 0.33
