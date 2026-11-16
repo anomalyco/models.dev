@@ -24,7 +24,11 @@ export const TinfoilModel = z.object({
   context_window: z.number().int().positive().optional(),
   pricing: TinfoilPricing,
   reasoning: z.boolean(),
-  supported_efforts: z.array(z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"])).optional(),
+  // "auto" (Inkling 2 Small) lets the model pick its own depth, the same as sending no effort, so it isn't a level.
+  supported_efforts: z
+    .array(z.enum(["none", "minimal", "low", "medium", "auto", "high", "xhigh", "max"]))
+    .transform((efforts) => efforts.filter((effort): effort is Exclude<typeof effort, "auto"> => effort !== "auto"))
+    .optional(),
   tool_calling: z.boolean(),
   multimodal: z.boolean(),
   type: z.string().min(1),
