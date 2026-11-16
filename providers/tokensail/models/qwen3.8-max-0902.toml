@@ -11,6 +11,9 @@
 #         (1.25x input), which is why this is the only file declaring `explicit`.
 # structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
 #         (strict): HTTP 200 and `{"answer":"ok"}`.
+# Limit - no override. TokenSail publishes contextWindow = 1,000,000 for this route
+#         (GET https://api.tokensail.ai/api/public/models), the same as the canonical value,
+#         so context and output are both inherited.
 # Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
 # (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 75% of
 # Alibaba's list price.
@@ -28,9 +31,6 @@ cache = { implicit = true, explicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-
-[limit]
-input = 991_808
 
 [cost.text.input]
 price = 1.52553020

@@ -11,6 +11,12 @@
 #           parameter error, so the value never reaches sampling. Declared false.
 # Cache - implicit only. Zhipu's prompt cache is automatic with no write price; hits are
 #         billed at the cache-read price below.
+# Output cap - both fields are honored and behave the same (probe: either one set to 2
+#           -> total 2), so no `max_tokens_field` override is declared.
+# Limit - context 1,048,576 is what TokenSail publishes for this route
+#         (GET https://api.tokensail.ai/api/public/models -> contextWindow). It is larger than
+#         Zhipu's documented 1,000,000 (the canonical value), so it is recorded as the host's
+#         own published claim rather than a vendor one; output keeps the canonical 131,072.
 # structured_output - omitted on purpose: `response_format.type = "json_schema"` returns
 #         HTTP 400 ("`json_schema` is not supported by this mode") on TokenSail, while
 #         `json_object` is accepted. Declaring it true would mislead JSON-schema clients.

@@ -1,4 +1,9 @@
 # TokenSail entry for deepseek/deepseek-v4.1-flash.
+# Snapshot - the undated canonical is used on purpose. TokenSail publishes version = null for
+#           this route (GET /api/public/models), so there is no evidence it serves the 1017
+#           snapshot; if that is confirmed later this should point at
+#           deepseek/deepseek-v4.1-flash-1017. There is also no first-party
+#           providers/deepseek entry for this model to copy from.
 # Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
 #   toggle - `thinking = { "type": "disabled" }` turns reasoning off
 #            (reasoning_tokens 11 -> 0, no reasoning_content).
@@ -11,8 +16,16 @@
 #           documents no top_k support (providers/deepseek sets top_k = false) and a live
 #           probe with top_k = 5 returns HTTP 200 with no parameter error, so the value
 #           never reaches sampling. Declared false so clients do not send it.
+# Output cap - both fields reach the upstream and they do not mean the same thing here.
+#           `max_completion_tokens` caps reasoning and answer together (probe: 2 -> total 2);
+#           `max_tokens` caps only the visible answer (probe: 2 -> 41 total, 38 of them
+#           reasoning). No `max_tokens_field` override is declared, so the OpenAI-current
+#           field stays the documented one.
 # Cache - implicit only, same automatic disk cache as the rest of the DeepSeek family:
 #         no write price, no TTL, hits billed at the cache-read price below.
+# Limit - context 1,048,576 is what TokenSail publishes for this route
+#         (GET https://api.tokensail.ai/api/public/models -> contextWindow), which is larger
+#         than the canonical 1,000,000; output 393,216 matches DeepSeek's GET /models.
 # Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
 # (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 60% of
 # DeepSeek's list price.
