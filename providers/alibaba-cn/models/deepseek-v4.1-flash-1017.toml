@@ -1,8 +1,19 @@
-# Added as v2-only (served and listed on https://www.alibabacloud.com/help/en/model-studio/model-pricing, China (Beijing), accessed 2026-10-19).
+# Added as v2-only (served and listed in China (Beijing)).
+# Mainland billing basis (CNY per 1M tokens, busy hours): input 2, output 8.
+# Approximate USD equivalents at 2026-11-16 USD/CNY 6.67175: $0.30 / $1.20.
+# https://help.aliyun.com/zh/model-studio/billing-for-model-studio
+# The international USD Beijing list independently quotes $0.283 / $1.131:
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing
 # Capabilities: Chat API https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions; structured output https://www.alibabacloud.com/help/en/model-studio/json-mode; context cache https://www.alibabacloud.com/help/en/model-studio/context-cache (tool definitions count as part of the system message, so changing tools changes the prefix).
 # Toggle: enable_thinking true|false (default on); Effort: reasoning_effort = low|high|max (default high) per the Chat API reference. top_k: the DeepSeek series does not support it.
-# Peak/off-peak pricing: busy hours 08:00-22:00 UTC+8, idle 22:00-08:00 UTC+8 (14:00-24:00 UTC) at half price. Base = busy price, idle multiplier 0.5.
-# Cache: implicit (context-cache model lists), hits at 10% of the same period's input price.
+# Peak/off-peak pricing: busy hours 08:00-22:00 UTC+8, idle 22:00-08:00 UTC+8 (14:00-24:00 UTC) at half price. Base = mainland CNY price expressed in USD, idle multiplier 0.5.
+# Cache evidence (implicit cache, 2026-11-16): Both V4.1 Flash IDs are explicitly exempt from the previous 10% assumption.
+# Chinese billing rule: cached_token is 2% of input_token in Beijing and five other regions, peak and off-peak:
+# https://help.aliyun.com/zh/model-studio/context-cache
+# Beijing CNY 2 / 1 per 1M input => CNY 0.04 / 0.02 cached; at CNY 6.67175/USD, ~USD 0.006 / 0.003.
+# English billing rule independently specifies fixed USD 0.006 peak / 0.003 off-peak per 1M for both IDs in all regions:
+# https://www.alibabacloud.com/help/en/model-studio/context-cache
+# Cache: implicit (context-cache model lists).
 # Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 # Tools: tool_choice auto|none|required|named on every API except Responses (no required with more than one tool); no strict tool mode (sources in provider.toml).
 schema = 2
@@ -29,11 +40,11 @@ base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
 
 [cost.text.input]
-price = 0.283
-cache = { read = 0.0283 }
+price = 0.3
+cache = { read = 0.006 }
 
 [cost.text.output]
-price = 1.131
+price = 1.2
 
 [[cost.multipliers]]
 when = { utc_hours = { gte = "14:00" } }
