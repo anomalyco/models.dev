@@ -2,19 +2,14 @@
 # https://www.alibabacloud.com/help/en/model-studio/token-plan-personal-overview
 # https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview
 # https://www.alibabacloud.com/help/en/model-studio/qwen4-max
-# https://www.alibabacloud.com/help/en/model-studio/explicit-cache-qwen4
-# GA qwen4-max is listed on both Token Plan editions (Personal and Team); the preview entry stays until the preview retires.
+# qwen4-max is listed on both Token Plan editions (Personal and Team).
 # Toggle: enable_thinking true|false (hybrid, thinking on by default; Chat Completions). Messages: thinking.type = enabled|disabled.
 # Effort: reasoning_effort = low|high|xhigh (Chat Completions), reasoning.effort (Responses), output_config.effort (Messages); default high.
-# Aliases (Chat/Responses): minimal→low, medium→high, max→xhigh; Messages maps medium→high and max→xhigh.
-# The preview gateway also accepted none to disable thinking.
-# Budget: thinking_budget (default 131,072; max chain 262,144 per the GA model page and launch notes via PR #13763).
-# Cache: the Token Plan Team billing example bills cached tokens at a discount, but the plan docs don't describe the mechanism,
-# so only implicit caching is claimed. Explicit cache (ttl 5m|1h, 4 breakpoints, 1,024-token minimum) is documented for
-# Model Studio pay-as-you-go (https://www.alibabacloud.com/help/en/model-studio/explicit-cache-qwen4) and wasn't probed
-# on the plan endpoint.
-# structured_output and stream_usage: json_schema/json_object and stream_options.include_usage were live-probed on this gateway
-# for qwen4-max-preview 2026-11-13; the GA model page lists Structured output (JSON Object, JSON Schema).
+# Aliases (Chat/Responses): minimal→low, medium→high, max→xhigh; Messages maps medium→high and max→xhigh. none disables thinking.
+# Budget: thinking_budget (default 131,072; max chain 262,144).
+# Cache: cached tokens are billed at a discount, but the plan docs don't describe the mechanism, so implicit only.
+# structured_output and stream_usage: JSON Object/Schema per the model page; json_schema/json_object and
+# stream_options.include_usage were probed on this plan gateway 2026-11-13 with the preview id.
 # Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
 # Not probed live for GA, so system_updates and effort_updates are left unset.
 # Cost: Token Plan Credits subscription; no public USD per-token rate.
