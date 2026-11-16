@@ -3,7 +3,8 @@
 # Context: config.json sets max_position_embeddings = 1048576
 #   (https://huggingface.co/tencent/Hy4-preview/blob/main/config.json) and the model card lists 1M.
 #   Tencent's TokenHub lists a 1024k context window (960k input, 64k output) for both hy4-preview and hy4
-#   (https://cloud.tencent.com/document/product/1823/132252, accessed 2026-11-15); tencent/hy4 already uses 1_048_576.
+#   (https://cloud.tencent.com/document/product/1823/132252, accessed 2026-11-15). Input and output follow
+#   models/tencent/hy4.toml, Tencent's own reading of that shared row (context 1_048_576, input 983_010, output 65_536).
 schema = 2
 name = "Hy4 preview"
 description = "A next-generation productivity model with significantly enhanced Agent and complex task execution capabilities."
@@ -24,4 +25,5 @@ top_k = true
 
 [limit]
 context = 1_048_576
-output = 64_000
+input = 983_010
+output = 65_536
