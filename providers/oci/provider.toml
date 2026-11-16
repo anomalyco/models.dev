@@ -10,7 +10,9 @@
 # Chicago. The default URL below targets us-chicago-1, the one region that serves every model
 # listed here; for another region set the provider baseURL option in the consuming tool.
 # Reasoning: reasoning_effort = low|medium|high on gpt-oss and Grok 4.3, low|medium|high|xhigh on
-# Grok 4.6/4.7; the Grok 4.20 reasoning variants reject reasoning_effort (400). gpt-oss streams
+# Grok 4.6/4.7; the Grok 4.20 reasoning variants reject reasoning_effort (400). Grok 4.20
+# Multi-Agent is Responses only, needs an `OpenAI-Project` header there, and takes
+# reasoning.effort = low|medium|high (xhigh is rejected, 400; probed 2026-11-16). gpt-oss streams
 # reasoning as `reasoning_content` deltas. Streaming clients must accept gzip (the endpoint
 # negotiates zstd and compresses each streamed chunk as a separate frame).
 # Models below are the ones Oracle lists for API-key access to this endpoint (Meta Llama,
