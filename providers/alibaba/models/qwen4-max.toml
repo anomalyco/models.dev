@@ -1,0 +1,49 @@
+# Sources (accessed 2026-11-16):
+# https://www.alibabacloud.com/help/en/model-studio/qwen4-max
+# https://www.alibabacloud.com/help/en/model-studio/explicit-cache-qwen4
+# https://www.alibabacloud.com/help/en/model-studio/context-cache
+# https://www.alibabacloud.com/help/en/model-studio/model-pricing (Singapore: qwen4-max $1.5/$4.5 per 1M; cache write 5m $1.875, 1h $3; explicit/implicit cache read $0.075)
+# https://www.alibabacloud.com/help/en/model-studio/web-search
+# https://www.alibabacloud.com/help/en/model-studio/pdf-understanding (qwen4-max listed, so the lab's PDF input stays)
+# GA 2026-11-16 (issue #13766; launch notes via PR #13763): max_tokens caps thinking plus answer at 262,144 (131,072 non-thinking); effort low|high|xhigh, default high.
+# Toggle: enable_thinking true|false (hybrid, thinking on by default; Chat Completions/DashScope). Messages: thinking.type = enabled|disabled.
+# Effort: reasoning_effort = low|high|xhigh (Chat Completions/DashScope), reasoning.effort (Responses), output_config.effort (Messages); default high.
+# Aliases: minimal→low, medium→high, max→xhigh; the Responses cache examples also use effort "none" (thinking off).
+# Budget: thinking_budget (default 131,072; max chain 262,144 per the model page and launch notes).
+# Cache: implicit (1,024-token minimum) plus Qwen4 explicit cache: prompt_cache_breakpoint {"mode":"explicit"} on content blocks
+# (the older cache_control ephemeral marker stays compatible), prompt_cache_options {mode, ttl} on Chat/Responses, top-level or
+# block cache_control on Messages; ttl 5m|1h (default 5m), at most 4 breakpoints, 1,024-token minimum prefix, system/messages targets.
+# Explicit write 5m = 125% of input, 1h = 200%; explicit and implicit reads are both $0.075 per 1M (model-pricing cache table).
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate).
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
+# Not probed live (no GA key), so system_updates and effort_updates are left unset; the qwen3.8-max Chat system_updates probe does not carry over.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, explicit = { read = 0.075, write = { "5m" = 1.875, "1h" = 3 } } }
+
+[cost.text.output]
+price = 4.5
+
+[cost.web_search]
+price = 10

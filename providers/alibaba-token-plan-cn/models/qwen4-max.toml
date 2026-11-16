@@ -1,0 +1,46 @@
+# Sources (accessed 2026-11-16):
+# https://help.aliyun.com/zh/model-studio/token-plan-personal-overview
+# https://help.aliyun.com/zh/model-studio/token-plan-team-overview
+# https://help.aliyun.com/zh/model-studio/qwen4-max
+# https://help.aliyun.com/zh/model-studio/explicit-cache-qwen4
+# GA qwen4-max is listed on both Token Plan editions (Personal and Team); the preview entry stays until the preview retires.
+# Toggle: enable_thinking true|false (hybrid, thinking on by default; Chat Completions). Messages: thinking.type = enabled|disabled.
+# Effort: reasoning_effort = low|high|xhigh (Chat Completions), reasoning.effort (Responses), output_config.effort (Messages); default high.
+# Aliases: minimal→low, medium→high, max→xhigh (GA model page; the preview gateway also accepted none to disable thinking).
+# Budget: thinking_budget (default 131,072; max chain 262,144 per the GA model page and launch notes via PR #13763).
+# Cache: the GA model page lists implicit plus explicit cache (ttl 5m|1h), and the Token Plan Team billing example bills cached
+# tokens at a discount; explicit-cache details are from the GA docs, not probed on the plan endpoint.
+# structured_output: the China catalogue lists JSON Object and JSON Schema; json_schema/json_object and stream_options.include_usage
+# were live-probed on the shared international Token Plan gateway for qwen4-max-preview 2026-11-13.
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
+# China shares the Token Plan surface with the international host. The preview control checks (toggle, effort, budget, tools,
+# structured output) were live-probed on token-plan.ap-southeast-1.maas.aliyuncs.com 2026-11-13; the CN endpoint was not probed
+# (no CN plan key), so system_updates and effort_updates are left unset.
+# Cost: Token Plan Credits subscription; no public USD per-token rate.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"] } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
