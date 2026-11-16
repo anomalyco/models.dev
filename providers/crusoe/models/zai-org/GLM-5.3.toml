@@ -4,12 +4,16 @@
 # Reasoning wire field: reasoning. reasoning_effort none/low/high/max: three runs each,
 # same prompt, temperature 0; reasoning tokens respectively 0/0/0, 66/98/113,
 # 129/179/193, 275/364/362. Strict json_schema and json_object returned valid JSON.
+# Prefix cache: https://docs.crusoe.ai/serverless-inference/overview/index.html
+# Live 2026-11-16: four identical Chat Completions requests with no cache controls,
+# 14,952 input tokens each; cached_tokens 0, 14,848, 14,848, 14,848.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [api.chat-completions]
 
