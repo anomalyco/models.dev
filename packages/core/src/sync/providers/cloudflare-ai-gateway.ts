@@ -113,7 +113,8 @@ const CatalogEntry = z.object({
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
-  provider_details: z.array(ProviderDetail).length(1).nullish(),
+  // Usually one upstream; when Cloudflare lists more, the first is the one it prices and routes to by default.
+  provider_details: z.array(ProviderDetail).min(1).nullish(),
 });
 
 export type MediaType = "speech" | "transcription" | "image" | "video";
@@ -141,7 +142,7 @@ const UNSYNCED_TASKS = new Set([
 const MediaCatalogModel = CatalogEntry.extend({
   task: z.string().refine((task) => MEDIA_TASKS[task] !== undefined, "task must be a synced media task"),
   name: z.string().min(1).optional(),
-  provider_details: z.array(ProviderDetail).length(1).nullish(),
+  provider_details: z.array(ProviderDetail).min(1).nullish(),
 });
 
 const FlatPricing = z.object({

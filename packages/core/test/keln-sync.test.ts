@@ -59,6 +59,9 @@ test("rows whose output_modalities lack text never sync", () => {
   const decisions = model({ id: "cloudflare/clef", output_modalities: ["decisions"], reasoning: null });
   const rows = keln.parseModels({ object: "list", data: [model(), decisions] });
   expect(rows.map((row) => row.id)).toEqual([model().id]);
+  // Speech rows list no context window; they're left out instead of failing the parse.
+  const tts = model({ id: "google/gemini-3.8-flash-tts", output_modalities: ["audio"], context_length: undefined as never, reasoning: null });
+  expect(keln.parseModels({ object: "list", data: [model(), tts] }).map((row) => row.id)).toEqual([model().id]);
   expect(() => KelnResponse.parse({ object: "list", data: [model({ output_modalities: [] })] })).toThrow();
 });
 

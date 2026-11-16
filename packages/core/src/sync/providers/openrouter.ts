@@ -228,7 +228,11 @@ export const openrouter = {
       if (model.architecture.output_modalities.includes("video")) model.video_pricing_skus = skus.get(model.id);
     }
     await Promise.all(extra.filter((model) => mediaType(model) === "image").map(async (model) => {
-      model.image_endpoints = OpenRouterImageEndpoints.parse(await get(IMAGE_ENDPOINTS_URL(model.id))).endpoints;
+      // Some listed image models (openrouter/auto, a few :free variants) have no endpoints page and answer 404.
+      const response = await fetch(IMAGE_ENDPOINTS_URL(model.id), { headers });
+      if (response.status === 404) return;
+      if (!response.ok) throw new Error(`OpenRouter request failed: ${response.status} ${response.statusText}`);
+      model.image_endpoints = OpenRouterImageEndpoints.parse(await response.json()).endpoints;
     }));
     return { data: [...text.data, ...extra] };
   },

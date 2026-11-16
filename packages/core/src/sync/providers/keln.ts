@@ -20,7 +20,8 @@ const PerTokenPrice = z.string().regex(/^(0|[1-9]\d*)(?:\.\d+)?$/);
 
 export const KelnModel = z.object({
   id: z.string().min(1),
-  context_length: z.number().int().positive(),
+  // Speech models list no context window.
+  context_length: z.number().int().positive().nullish(),
   input_modalities: z.array(z.string()).min(1),
   output_modalities: z.array(z.string()).min(1),
   // USD per token as decimal strings (OpenRouter's shape).
@@ -104,7 +105,10 @@ export const keln = {
   parseModels(raw) {
     // Keln also lists decision-output models (output_modalities without "text", e.g.
     // cloudflare/clef); they cannot serve chat, so they never sync and their files are removed.
-    return KelnResponse.parse(raw).data.filter((model) => model.output_modalities.includes("text"));
+    return KelnResponse.parse(raw).data.filter(
+      (model): model is typeof model & { context_length: number } =>
+        model.output_modalities.includes("text") && model.context_length != null,
+    );
   },
   sourceID(model) {
     return model.id;
