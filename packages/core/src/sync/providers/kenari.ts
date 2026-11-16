@@ -540,12 +540,12 @@ export const kenari = {
     const cachePrice = (micro: number | null | undefined): number | undefined =>
       free ? undefined : toUsd(micro, rate);
     const perUnit = unitCosts(source.lines, rate);
-    const billedPerUnit = (source.lines ?? []).some((line) => line.endpoint !== "chat");
-    // A model billed through `pricing_lines` reports 0 for its token prices; that is "not
-    // billed per token", never a free tier.
+    // A paid model reporting 0 for both token prices is billed some other way (every one in the
+    // live feed has per-unit `pricing_lines`), never a free tier. Even when its lines are missing
+    // from the feed, no token cost is written rather than $0.
     const tokenFree = !free && pricing?.input === 0 && pricing?.output === 0;
-    const input = tokenFree && billedPerUnit ? undefined : price(pricing?.input);
-    const output = tokenFree && billedPerUnit ? undefined : price(pricing?.output);
+    const input = tokenFree ? undefined : price(pricing?.input);
+    const output = tokenFree ? undefined : price(pricing?.output);
     const cacheRead = cachePrice(pricing?.cache_read);
     const cacheWrite = cachePrice(pricing?.cache_write);
     // A price the feed does not publish is not `$0`: writing zero there would publish a fake

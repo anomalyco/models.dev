@@ -55,6 +55,12 @@ test("does not write $0 token prices for a model billed per unit", () => {
   expect(set(undefined)).toEqual({ unit: "second", price: 0.00001 });
 });
 
+test("a paid 0/0 model with no pricing lines in the feed gets no token cost either", () => {
+  const result = translate(catalog(), undefined);
+  expect(result?.model).not.toHaveProperty("cost");
+  expect(result).not.toHaveProperty("v2Set");
+});
+
 test("keeps the authored API table", () => {
   const authored = {
     base_model: "openai/whisper-large-v3-turbo",
