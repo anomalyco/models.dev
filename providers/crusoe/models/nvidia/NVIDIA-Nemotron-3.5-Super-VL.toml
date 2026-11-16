@@ -1,6 +1,6 @@
 # Sources: https://docs.crusoe.ai/serverless-inference/index.html and
 # https://www.crusoe.ai/cloud/pricing (accessed 2026-11-16); GET /v1/models.
-# Live: Chat Completions tool call, continuation, strict JSON schema and PNG vision.
+# Live: Chat Completions tool call, continuation, strict JSON schema and PNG/JPEG vision.
 # Implicit cache live: second identical request reused 11,040 of 12,709 input tokens.
 # Toggle: reasoning_effort = none (off), high (on); three tests each returned
 # 0/0/0 and 36/23/58 reasoning tokens. Other graded levels not verified.
@@ -8,7 +8,7 @@ schema = 2
 base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 
 [modalities]
-input = ["text", "image/png"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
