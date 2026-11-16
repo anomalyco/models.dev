@@ -1,9 +1,7 @@
 # Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
 # Effective USD per 1M tokens: official list price × MiniMax group ratio 0.58.
 # Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
-# Relay accepts reasoning_effort and reasoning={enabled,effort,max_tokens} and maps them to the upstream controls.
 # Output cap: pricing description says the maximum output is 524,288 tokens per request.
-# Toggle: thinking.type = adaptive|disabled
 schema = 2
 base_model = "minimax/MiniMax-M3"
 

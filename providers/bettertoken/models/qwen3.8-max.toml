@@ -1,10 +1,6 @@
 # Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
 # Effective USD per 1M tokens: official list price × Qwen group ratio 0.72.
 # Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
-# Relay accepts reasoning_effort and reasoning={enabled,effort,max_tokens} and maps them to the upstream controls.
-# Toggle: enable_thinking true|false
-# Effort: reasoning_effort = low|medium|xhigh
-# Budget: thinking_budget (integer reasoning tokens; not combined with reasoning_effort)
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 

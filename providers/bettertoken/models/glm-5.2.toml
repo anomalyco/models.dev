@@ -1,9 +1,6 @@
 # Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
 # Effective USD per 1M tokens: official list price × GLM group ratio 0.75.
 # Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
-# Relay accepts reasoning_effort and reasoning={enabled,effort,max_tokens} and maps them to the upstream controls.
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = high|max
 schema = 2
 base_model = "zhipuai/glm-5.2"
 

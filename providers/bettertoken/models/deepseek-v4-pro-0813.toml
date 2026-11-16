@@ -1,10 +1,7 @@
 # Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
 # Effective USD per 1M tokens: official list price × DeepSeek group ratio 0.78.
 # Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
-# Relay accepts reasoning_effort and reasoning={enabled,effort,max_tokens} and maps them to the upstream controls.
 # Pricing description: deepseek-v4-pro-0813 is the 2026-08-13 DeepSeek V4 Pro snapshot.
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
