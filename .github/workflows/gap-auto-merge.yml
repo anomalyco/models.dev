@@ -1,0 +1,69 @@
+name: Gap Auto-merge
+
+# Enables auto-merge on low-risk gap pull requests once the reviewer marks them `reviewer: ready`. The reviewer adds that
+# label with the built-in token, which starts no workflows, so this runs when PR Reviewer finishes and hourly as a
+# fallback. GitHub still merges only after the required checks pass.
+on:
+  workflow_run:
+    workflows: [PR Reviewer]
+    types: [completed]
+  schedule:
+    - cron: "47 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gap-auto-merge
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    if: github.repository == 'anomalyco/models.dev'
+    runs-on: ubuntu-latest
+    # The app token's merges deploy like any other push to dev; the built-in token's wouldn't.
+    environment: automation
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::604439173067:role/github/models.dev-automation
+          role-session-name: models.dev-automation-${{ github.run_id }}
+          aws-region: us-east-1
+
+      - name: Fetch secrets
+        uses: aws-actions/aws-secretsmanager-get-secrets@2297f9a879480a9e3af9b293ed15c70caf8e1c88 # v3.0.2
+        with:
+          secret-ids: |
+            AUTOMATION_APP_PRIVATE_KEY,models.dev/automation/AUTOMATION_APP_PRIVATE_KEY
+          parse-json-secrets: false
+
+      - name: Create app token
+        id: app
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
+        with:
+          app-id: ${{ vars.AUTOMATION_APP_ID }}
+          private-key: ${{ env.AUTOMATION_APP_PRIVATE_KEY }}
+          repositories: models.dev
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Check out scripts
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          ref: ${{ github.sha }}
+          sparse-checkout: /.github/sync-models/
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Enable auto-merge on ready gap pull requests
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          SLUG: ${{ steps.app.outputs.app-slug }}
+        run: bash .github/sync-models/gap-auto-merge.sh

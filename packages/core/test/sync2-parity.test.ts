@@ -1,0 +1,150 @@
+import { expect, test, setSystemTime } from "bun:test";
+import { existsSync } from "node:fs";
+import path from "node:path";
+
+// Fixtures were recorded on 2026-11-10; the old sync dates new files from the clock, so pin it.
+setSystemTime(new Date("2026-11-10T12:00:00Z"));
+
+import { parity, SCENARIOS } from "../script/sync2-parity.js";
+import { REPO_ROOT } from "../src/sync2/catalog.js";
+
+// NEAR AI files live in both `Qwen/` and `qwen/`. On a case-insensitive
+// filesystem (macOS) those are one folder, listed as `Qwen/`, so the old sync
+// misses `qwen/qwen3.7-max`, fails to create it (reasoning without controls) and
+// deletes the existing file. The new engine matches ignoring case and updates
+// the file in place. On Linux both engines see the exact path and agree.
+const caseInsensitive = existsSync(path.join(REPO_ROOT, "PACKAGE.JSON"));
+const nearaiCase = caseInsensitive
+  ? ["providers/nearai/models/Qwen/qwen3.7-max.toml"]
+  : [];
+const EXPECTED: Record<string, string[]> = {
+  // Vercel: a new standalone file lists its reasoning capability before tools;
+  // the old sync wrote tools first (base_model files put reasoning first in both).
+  // Seed 1.6 and 1.8 have left the catalog since the fixture was recorded, so both engines recreate them.
+  "vercel/recorded": ["providers/vercel/models/bytedance/seed-1.6.toml", "providers/vercel/models/bytedance/seed-1.8.toml"],
+  "vercel/perturbed": [
+    "providers/vercel/models/acme/brand-new.toml",
+    "providers/vercel/models/bytedance/seed-1.6.toml",
+    "providers/vercel/models/bytedance/seed-1.8.toml",
+  ],
+  // OpenRouter: a new model with no lab file that reasons with no listed controls
+  // is a gap; the old sync wrote a standalone file with reasoning = { supported = true }.
+  // Seed 2.0 Code has left the catalog since the fixture was recorded; both engines recreate it, the
+  // new one listing structured_output before reasoning.
+  "openrouter/recorded": ["providers/openrouter/models/bytedance-seed/seed-2.0-code.toml"],
+  "openrouter/perturbed": ["providers/openrouter/models/acme/brand-new.toml", "providers/openrouter/models/bytedance-seed/seed-2.0-code.toml"],
+  // Cloudflare AI Gateway: a context window equal to the lab's is inherited (the
+  // old sync wrote it into the file: qwen3-max, gpt-5.4, the new o3-pro), a
+  // rewritten file keeps its tools table's key order (the old sync reordered it:
+  // gpt-4o, gpt-5.4, claude-opus-4.8, and gpt-4.1-nano, whose cache price the
+  // catalog has changed since the recording), and a new 5m write price keeps the
+  // file's 1h price (the old sync scaled it by the 5m change: claude-opus-4.8).
+  "cloudflare-ai-gateway/recorded": ["providers/cloudflare-ai-gateway/models/openai/gpt-4.1-nano.toml"],
+  "cloudflare-ai-gateway/perturbed": [
+    "providers/cloudflare-ai-gateway/models/alibaba/qwen3-max.toml",
+    "providers/cloudflare-ai-gateway/models/anthropic/claude-opus-4.8.toml",
+    "providers/cloudflare-ai-gateway/models/openai/gpt-4.1-nano.toml",
+    "providers/cloudflare-ai-gateway/models/openai/gpt-4o.toml",
+    "providers/cloudflare-ai-gateway/models/openai/gpt-5.4.toml",
+    "providers/cloudflare-ai-gateway/models/openai/o3-pro.toml",
+  ],
+  // DigitalOcean: a new model with no lab file is a gap (the old sync wrote a standalone file).
+  "digitalocean/perturbed": ["providers/digitalocean/models/acme-brand-new.toml"],
+  // DevPass: a new reasoning price on a model whose parameters don't list
+  // reasoning is written; the old sync couldn't write it and left the file.
+  "llmgateway/perturbed": ["providers/llmgateway/models/o3.toml"],
+  // Eden AI: a new file's kinds take the lab's formats (the old sync wrote bare kinds).
+  // An alias the catalog has since pointed at a newer model (Claude Fable Latest, now 5.2) keeps
+  // its base_model; the old sync re-resolved it from the recorded source (5.1).
+  "edenai/recorded": ["providers/edenai/models/anthropic/claude-fable-latest.toml"],
+  "edenai/perturbed": ["providers/edenai/models/anthropic/claude-fable-latest.toml", "providers/edenai/models/openai/gpt-4.1-nano.toml"],
+  // EmpirioLabs: a model that starts reasoning with no controls is a gap.
+  "empiriolabs/perturbed": ["providers/empiriolabs/models/gemma-3-27b.toml"],
+  // CoreWeave: a model that drops its only control (a toggle) is written without
+  // controls; the old sync couldn't write that and left the file. A new model
+  // that reasons with no controls is a gap.
+  "wandb/perturbed": ["providers/wandb/models/google/gemma-4-31B-it.toml", "providers/wandb/models/zai-org/GLM-5.1.toml"],
+  // CrossModel: a new model's lab ID is matched ignoring case and written as filed
+  // (MiniMax-M3.1-Flash). The old sync wrote the vendor's spelling, which only
+  // resolves on a case-insensitive filesystem, and skipped the model on Linux.
+  "crossmodel/recorded": ["providers/crossmodel/models/minimax/minimax-m3.1-flash.toml"],
+  "crossmodel/perturbed": ["providers/crossmodel/models/minimax/minimax-m3.1-flash.toml"],
+  // Prime: a new file's kinds take the lab's formats (the old sync wrote bare kinds).
+  "prime/perturbed": ["providers/prime/models/anthropic/claude-mythos-5.1.toml"],
+  // OVHcloud: a model that starts reasoning with no controls is a gap.
+  "ovhcloud/perturbed": ["providers/ovhcloud/models/qwen3guard-gen-0.6b.toml"],
+  // Ofox: the 1h cache write price is read from the catalog; the old sync
+  // ignored it and scaled the file's 1h price by the change to the 5m one.
+  "ofox/perturbed": ["providers/ofox/models/anthropic/claude-opus-5.toml"],
+  // Ambient: a new model that reasons with no controls is a gap; the old sync
+  // wrote reasoning = { supported = true }.
+  "ambient/perturbed": ["providers/ambient/models/qwen/qwen3-235b-a22b-thinking-2507.toml"],
+  "nearai/recorded": nearaiCase,
+  "nearai/perturbed": nearaiCase,
+  // Google turns thinking on for a TTS model. The old sync wrote reasoning = { supported = true }
+  // with no controls; the new engine reports a gap instead, as AGENTS.md asks.
+  "google/perturbed": ["providers/google/models/gemini-2.5-flash-preview-tts.toml"],
+  // Fireworks drops Priority for GLM 5.3 Flash (and its alias). Both engines remove the mode;
+  // the old sync left its price multiplier behind, the new one removes it too.
+  "fireworks-ai/perturbed": [
+    "providers/fireworks-ai/models/accounts/fireworks/models/glm-5p3-flash.toml",
+    "providers/fireworks-ai/models/accounts/fireworks/routers/glm-flash-latest.toml",
+  ],
+  // Deep Infra: the old sync can't write a file with retention write prices
+  // (cost.text.input.cache.explicit) at all ("does not reproduce the synced
+  // fields"), so Kimi K3's changed retention never lands; the new one writes it.
+  // An input kind a tag adds takes the lab's formats and keeps the file's; the
+  // old sync wrote bare kinds (gemma-3-4b-it) or dropped the file's narrowed
+  // image list for the lab's (Qwen3-VL-30B-A3B-Instruct).
+  "deepinfra/perturbed": [
+    "providers/deepinfra/models/Qwen/Qwen3-VL-30B-A3B-Instruct.toml",
+    "providers/deepinfra/models/google/gemma-3-4b-it.toml",
+    "providers/deepinfra/models/moonshotai/Kimi-K3.toml",
+  ],
+  // Baseten: a new model that reasons with no controls is a gap.
+  "baseten/perturbed": ["providers/baseten/models/zai-org/GLM-5.1.toml"],
+  // Chutes: a kind the source changes is written in the lab's formats (the old
+  // sync wrote bare kinds), and a new model that reasons with no controls is a gap.
+  "chutes/perturbed": [
+    "providers/chutes/models/Qwen/Qwen3.5-9B-TEE.toml",
+    "providers/chutes/models/acme/Thinker-9B.toml",
+    "providers/chutes/models/moonshotai/Kimi-K2.6-TEE.toml",
+  ],
+  // Hugging Face: a new file doesn't restate tools = { supported = true } when
+  // the lab already says so; the old sync always wrote it.
+  "huggingface/perturbed": [
+    "providers/huggingface/models/meta-llama/Llama-3.2-11B-Vision-Instruct.toml",
+    "providers/huggingface/models/meta-llama/Llama-3.2-3B-Instruct.toml",
+  ],
+  // Cortecs: a new model with no lab file is a gap (the old sync wrote a
+  // standalone file), and so is a new or standalone model that starts reasoning
+  // with no controls (the old sync wrote reasoning = { supported = true }).
+  // GLM 5.1 and MiniCPM-V 4.5 have left the catalog since the fixture was recorded.
+  "cortecs/recorded": ["providers/cortecs/models/glm-5.1.toml", "providers/cortecs/models/minicpm-v-4.5.toml"],
+  "cortecs/perturbed": [
+    "providers/cortecs/models/brand-new-model.toml",
+    "providers/cortecs/models/minicpm-v-4.5.toml",
+    "providers/cortecs/models/qwen3-235b-a22b-instruct-2507-fp8.toml",
+  ],
+  // NanoGPT: a model that starts reasoning with no controls is a gap.
+  "nano-gpt/recorded": ["providers/nano-gpt/models/arcee-ai/trinity-large-thinking.toml"],
+  "nano-gpt/perturbed": ["providers/nano-gpt/models/arcee-ai/trinity-large-thinking.toml", "providers/nano-gpt/models/qwen/qwen3.8-max.toml"],
+  // Requesty: a new model with no lab file is a gap; the old sync wrote a standalone file.
+  "requesty/perturbed": ["providers/requesty/models/acme-brand-new.toml"],
+  // A new Venice model with no lab file. The old sync wrote a standalone file with a generated
+  // description and today's date; the new engine reports a gap (no create-only fields yet).
+  "venice/perturbed": ["providers/venice/models/venice-brand-new.toml"],
+};
+
+const OWNS_NOTHING = new Set(["ollama-cloud", "openai"]);
+
+for (const [provider, scenarios] of Object.entries(SCENARIOS)) {
+  for (const scenario of Object.keys(scenarios)) {
+    test(`old and new sync write the same files: ${provider} / ${scenario}`, async () => {
+      const result = await parity(provider, scenario);
+      expect(result.differences).toEqual(EXPECTED[`${provider}/${scenario}`] ?? []);
+      // OpenAI and Ollama Cloud own no fields, so they never write a file.
+      if (scenario === "perturbed" && !OWNS_NOTHING.has(provider)) expect(Object.keys(result.new).length).toBeGreaterThan(0);
+    }, 30_000);
+  }
+}

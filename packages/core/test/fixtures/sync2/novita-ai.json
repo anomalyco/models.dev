@@ -1,0 +1,5467 @@
+{
+  "data": [
+    {
+      "created": 1793757877,
+      "id": "tencent/hy4",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 4170,
+      "output_token_price_per_m": 12505,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 8340,
+          "price_per_m": 4170,
+          "origin_price_per_m_decimal": "0.834",
+          "price_per_m_decimal": "0.417"
+        },
+        "completion": {
+          "origin_price_per_m": 25010,
+          "price_per_m": 12505,
+          "origin_price_per_m_decimal": "2.501",
+          "price_per_m_decimal": "1.2505"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 420,
+          "price_per_m": 210,
+          "origin_price_per_m_decimal": "0.042",
+          "price_per_m_decimal": "0.021"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "tencent/hy4",
+      "description": "Tencent: The official release of Hy4 delivers comprehensive and substantial improvements over Hy4 Preview, with particularly strong gains in agentic capabilities and performance across a wide range of long-horizon, real-world productivity tasks. It also introduces visual understanding for the first time.",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Hy4",
+      "model_type": "chat",
+      "max_output_tokens": 64000,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1792375957,
+      "id": "deepseek/deepseek-v4.1-flash-1017",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3000,
+      "output_token_price_per_m": 12000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "completion": {
+          "origin_price_per_m": 12000,
+          "price_per_m": 12000,
+          "origin_price_per_m_decimal": "1.2",
+          "price_per_m_decimal": "1.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 60,
+          "price_per_m": 60,
+          "origin_price_per_m_decimal": "0.006",
+          "price_per_m_decimal": "0.006"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-v4.1-flash-1017",
+      "description": "",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "DeepSeek V4.1 Flash 1017",
+      "model_type": "chat",
+      "max_output_tokens": 393216,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1793786609,
+      "id": "zai-org/glm-5.3-flashX",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3700,
+      "output_token_price_per_m": 12500,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3700,
+          "price_per_m": 3700,
+          "origin_price_per_m_decimal": "0.37",
+          "price_per_m_decimal": "0.37"
+        },
+        "completion": {
+          "origin_price_per_m": 12500,
+          "price_per_m": 12500,
+          "origin_price_per_m_decimal": "1.25",
+          "price_per_m_decimal": "1.25"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 750,
+          "price_per_m": 750,
+          "origin_price_per_m_decimal": "0.075",
+          "price_per_m_decimal": "0.075"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-5.3-flashX",
+      "description": "GLM-5.3-FlashX is a speed-optimized version built on the same foundation as GLM-5.3-Flash. Targeted at low-latency use cases including programming, Agents and real-time customer service, it features a 1 million token context window.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "GLM 5.3 FlashX",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1792803395,
+      "id": "moonshotai/kimi-k3.1-pro-highspeed",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 40000,
+      "output_token_price_per_m": 200000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 40000,
+          "price_per_m": 40000,
+          "origin_price_per_m_decimal": "4",
+          "price_per_m_decimal": "4"
+        },
+        "completion": {
+          "origin_price_per_m": 200000,
+          "price_per_m": 200000,
+          "origin_price_per_m_decimal": "20",
+          "price_per_m_decimal": "20"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 2000,
+          "price_per_m": 2000,
+          "origin_price_per_m_decimal": "0.2",
+          "price_per_m_decimal": "0.2"
+        },
+        "input_cache_write": {
+          "origin_price_per_m": 40000,
+          "price_per_m": 40000,
+          "origin_price_per_m_decimal": "4",
+          "price_per_m_decimal": "4"
+        },
+        "input_cache_write_1h": {
+          "origin_price_per_m": 80000,
+          "price_per_m": 80000,
+          "origin_price_per_m_decimal": "8",
+          "price_per_m_decimal": "8"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "moonshotai/kimi-k3.1-pro-highspeed",
+      "description": "Kimi K3.1 Pro Highspeed is the high-speed model released.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "Kimi K3.1 Pro Highspeed",
+      "model_type": "chat",
+      "max_output_tokens": 1048576,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1792803011,
+      "id": "moonshotai/kimi-k3.1-pro",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 20000,
+      "output_token_price_per_m": 100000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 20000,
+          "price_per_m": 20000,
+          "origin_price_per_m_decimal": "2",
+          "price_per_m_decimal": "2"
+        },
+        "completion": {
+          "origin_price_per_m": 100000,
+          "price_per_m": 100000,
+          "origin_price_per_m_decimal": "10",
+          "price_per_m_decimal": "10"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 2000,
+          "price_per_m": 2000,
+          "origin_price_per_m_decimal": "0.2",
+          "price_per_m_decimal": "0.2"
+        },
+        "input_cache_write": {
+          "origin_price_per_m": 20000,
+          "price_per_m": 20000,
+          "origin_price_per_m_decimal": "2",
+          "price_per_m_decimal": "2"
+        },
+        "input_cache_write_1h": {
+          "origin_price_per_m": 40000,
+          "price_per_m": 40000,
+          "origin_price_per_m_decimal": "4",
+          "price_per_m_decimal": "4"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "moonshotai/kimi-k3.1-pro",
+      "description": "Kimi K3.1 Pro is Moonshot AI's flagship open-weight multimodal reasoning model and a post-trained successor to Kimi K3, with a 1M-token context window. It is built for long-horizon coding, 3D creation, financial research, and end-to-end agentic knowledge work, with native image and video understanding.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "Kimi K3.1 Pro",
+      "model_type": "chat",
+      "max_output_tokens": 1048576,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1792406343,
+      "id": "minimax/minimax-m3.1-flash",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1500,
+      "output_token_price_per_m": 6000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1500,
+          "price_per_m": 1500,
+          "origin_price_per_m_decimal": "0.15",
+          "price_per_m_decimal": "0.15"
+        },
+        "completion": {
+          "origin_price_per_m": 6000,
+          "price_per_m": 6000,
+          "origin_price_per_m_decimal": "0.6",
+          "price_per_m_decimal": "0.6"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 150,
+          "price_per_m": 150,
+          "origin_price_per_m_decimal": "0.015",
+          "price_per_m_decimal": "0.015"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "minimax/minimax-m3.1-flash",
+      "description": "MiniMax M3.1 Flash is positioned as a lightweight model optimized for Coding/Agent scenarios, boasting a 1 million-token context window. It supports both text and image inputs, and delivers enhanced performance in agentic tasks, programming, computer use, and cybersecurity capabilities.",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "MiniMax M3.1 Flash",
+      "model_type": "chat",
+      "max_output_tokens": 524288,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1787754787,
+      "id": "zai-org/glm-5.3-flash",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1500,
+      "output_token_price_per_m": 5000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1500,
+          "price_per_m": 1500,
+          "origin_price_per_m_decimal": "0.15",
+          "price_per_m_decimal": "0.15"
+        },
+        "completion": {
+          "origin_price_per_m": 5000,
+          "price_per_m": 5000,
+          "origin_price_per_m_decimal": "0.5",
+          "price_per_m_decimal": "0.5"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 300,
+          "price_per_m": 300,
+          "origin_price_per_m_decimal": "0.03",
+          "price_per_m_decimal": "0.03"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-5.3-flash",
+      "description": "GLM-5.3-Flash is a native multimodal model from Z.ai. It is suited for efficient coding and long-horizon agent tasks. Its hybrid sparse and linear attention architecture maintains accurate long-context behavior while reducing compute overhead.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "GLM 5.3 Flash",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1790471016,
+      "id": "deepseek/deepseek-v4-pro-0813-p",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 13200,
+      "output_token_price_per_m": 39600,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 13200,
+          "price_per_m": 13200,
+          "origin_price_per_m_decimal": "1.32",
+          "price_per_m_decimal": "1.32"
+        },
+        "completion": {
+          "origin_price_per_m": 39600,
+          "price_per_m": 39600,
+          "origin_price_per_m_decimal": "3.96",
+          "price_per_m_decimal": "3.96"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 440,
+          "price_per_m": 440,
+          "origin_price_per_m_decimal": "0.044",
+          "price_per_m_decimal": "0.044"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-v4-pro-0813-p",
+      "description": "",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "deepseek/deepseek-v4-pro-0813-p",
+      "model_type": "chat",
+      "max_output_tokens": 393216,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "responses",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1790413998,
+      "id": "deepseek/deepseek-v4.1-flash-dst",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3000,
+      "output_token_price_per_m": 12000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "completion": {
+          "origin_price_per_m": 12000,
+          "price_per_m": 12000,
+          "origin_price_per_m_decimal": "1.2",
+          "price_per_m_decimal": "1.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 60,
+          "price_per_m": 60,
+          "origin_price_per_m_decimal": "0.006",
+          "price_per_m_decimal": "0.006"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-v4.1-flash-dst",
+      "description": "",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "DeepSeek V4.1 Flash DST",
+      "model_type": "chat",
+      "max_output_tokens": 393216,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1790240765,
+      "id": "deepseek/deepseek-v4.1-flash-p",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3000,
+      "output_token_price_per_m": 12000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "completion": {
+          "origin_price_per_m": 12000,
+          "price_per_m": 12000,
+          "origin_price_per_m_decimal": "1.2",
+          "price_per_m_decimal": "1.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 60,
+          "price_per_m": 60,
+          "origin_price_per_m_decimal": "0.006",
+          "price_per_m_decimal": "0.006"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-v4.1-flash-p",
+      "description": "",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "DeepSeek V4.1 Flash",
+      "model_type": "chat",
+      "max_output_tokens": 393216,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1790230295,
+      "id": "xiaomimimo/mimo-v2.6-flash",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1400,
+      "output_token_price_per_m": 2800,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1400,
+          "price_per_m": 1400,
+          "origin_price_per_m_decimal": "0.14",
+          "price_per_m_decimal": "0.14"
+        },
+        "completion": {
+          "origin_price_per_m": 2800,
+          "price_per_m": 2800,
+          "origin_price_per_m_decimal": "0.28",
+          "price_per_m_decimal": "0.28"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 28,
+          "price_per_m": 28,
+          "origin_price_per_m_decimal": "0.0028",
+          "price_per_m_decimal": "0.0028"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "xiaomimimo/mimo-v2.6-flash",
+      "description": "MiMo V2.6 Flash is Xiaomi's cost-efficient open-source reasoning model for high-frequency calls and large-scale professional workflows. It combines native text, image, video, and audio understanding with a 1M-token context window and up to 128K output tokens, while supporting controllable deep thinking, tool calling, JSON mode, streaming, and prompt caching.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "MiMo V2.6 Flash",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1790230183,
+      "id": "xiaomimimo/mimo-v2.6-pro",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 4350,
+      "output_token_price_per_m": 8700,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 4350,
+          "price_per_m": 4350,
+          "origin_price_per_m_decimal": "0.435",
+          "price_per_m_decimal": "0.435"
+        },
+        "completion": {
+          "origin_price_per_m": 8700,
+          "price_per_m": 8700,
+          "origin_price_per_m_decimal": "0.87",
+          "price_per_m_decimal": "0.87"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 36,
+          "price_per_m": 36,
+          "origin_price_per_m_decimal": "0.0036",
+          "price_per_m_decimal": "0.0036"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "xiaomimimo/mimo-v2.6-pro",
+      "description": "MiMo V2.6 Pro is Xiaomi's flagship open-source reasoning model for complex projects, long-horizon agent tasks, cybersecurity, research, and high-value professional work. It natively understands text, images, video, and audio, supports a 1M-token context window and up to 128K output tokens, and provides controllable deep thinking, tool calling, JSON mode, streaming, and prompt caching.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "MiMo V2.6 Pro",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1789634674,
+      "id": "tencent/hy4-preview",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 8340,
+      "output_token_price_per_m": 25010,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 8340,
+          "price_per_m": 8340,
+          "origin_price_per_m_decimal": "0.834",
+          "price_per_m_decimal": "0.834"
+        },
+        "completion": {
+          "origin_price_per_m": 25010,
+          "price_per_m": 25010,
+          "origin_price_per_m_decimal": "2.501",
+          "price_per_m_decimal": "2.501"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 420,
+          "price_per_m": 420,
+          "origin_price_per_m_decimal": "0.042",
+          "price_per_m_decimal": "0.042"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "tencent/hy4-preview",
+      "description": "Tencent: Hy4 preview is a mixture-of-experts model from Tencent, with 49B active parameters out of 770B total. It is designed for coding agents, complex tool-use workflows, and productivity tasks that require planning, context continuity, and sustained multi-step execution.",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Hy4 Preview",
+      "model_type": "chat",
+      "max_output_tokens": 64000,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1789095097,
+      "id": "zai-org/glm-5.3-p",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 14000,
+      "output_token_price_per_m": 44000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 14000,
+          "price_per_m": 14000,
+          "origin_price_per_m_decimal": "1.4",
+          "price_per_m_decimal": "1.4"
+        },
+        "completion": {
+          "origin_price_per_m": 44000,
+          "price_per_m": 44000,
+          "origin_price_per_m_decimal": "4.4",
+          "price_per_m_decimal": "4.4"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 2600,
+          "price_per_m": 2600,
+          "origin_price_per_m_decimal": "0.26",
+          "price_per_m_decimal": "0.26"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-5.3-p",
+      "description": "GLM-5.3 is Z.ai’s latest flagship model, delivering comprehensive advancements in complex software engineering and agent capabilities. It uses the same base model as GLM-5.2, with all improvements driven by post-training. ",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "zai-org/glm-5.3-p",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1789024319,
+      "id": "deepseek/deepseek-v4.1-flash",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3000,
+      "output_token_price_per_m": 12000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "completion": {
+          "origin_price_per_m": 12000,
+          "price_per_m": 12000,
+          "origin_price_per_m_decimal": "1.2",
+          "price_per_m_decimal": "1.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 60,
+          "price_per_m": 60,
+          "origin_price_per_m_decimal": "0.006",
+          "price_per_m_decimal": "0.006"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-v4.1-flash",
+      "description": "",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "DeepSeek V4.1 Flash",
+      "model_type": "chat",
+      "max_output_tokens": 393216,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1788944660,
+      "id": "moonshotai/kimi-k3-p",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 30000,
+      "output_token_price_per_m": 150000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 30000,
+          "price_per_m": 30000,
+          "origin_price_per_m_decimal": "3",
+          "price_per_m_decimal": "3"
+        },
+        "completion": {
+          "origin_price_per_m": 150000,
+          "price_per_m": 150000,
+          "origin_price_per_m_decimal": "15",
+          "price_per_m_decimal": "15"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "moonshotai/kimi-k3-p",
+      "description": "Kimi K3 is Kimi’s most capable model to date, with 2.8 trillion parameters. Built on Kimi Delta Attention, a hybrid linear attention mechanism, and Attention Residuals, it offers native visual understanding and a 1M-token context window for frontier intelligence scenarios such as software engineering, knowledge work, and deep reasoning.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "Kimi K3",
+      "model_type": "chat",
+      "max_output_tokens": 1048576,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1787105676,
+      "id": "zai-org/glm-5.3",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 14000,
+      "output_token_price_per_m": 44000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 14000,
+          "price_per_m": 14000,
+          "origin_price_per_m_decimal": "1.4",
+          "price_per_m_decimal": "1.4"
+        },
+        "completion": {
+          "origin_price_per_m": 44000,
+          "price_per_m": 44000,
+          "origin_price_per_m_decimal": "4.4",
+          "price_per_m_decimal": "4.4"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 2600,
+          "price_per_m": 2600,
+          "origin_price_per_m_decimal": "0.26",
+          "price_per_m_decimal": "0.26"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-5.3",
+      "description": "GLM-5.3 is a large-scale reasoning model from Z.ai, built for complex software engineering and long-horizon agent tasks. It supports text input and output with a 1M-token context window, and improves on GLM-5.2 in coding and in the balance between performance and token efficiency.\nReasoning is always on and cannot be disabled. Reasoning efforts low, high, and max are supported; max is the default.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "GLM 5.3",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1786588436,
+      "id": "deepseek/deepseek-v4-pro-0813",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 13200,
+      "output_token_price_per_m": 39600,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 13200,
+          "price_per_m": 13200,
+          "origin_price_per_m_decimal": "1.32",
+          "price_per_m_decimal": "1.32"
+        },
+        "completion": {
+          "origin_price_per_m": 39600,
+          "price_per_m": 39600,
+          "origin_price_per_m_decimal": "3.96",
+          "price_per_m_decimal": "3.96"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 440,
+          "price_per_m": 440,
+          "origin_price_per_m_decimal": "0.044",
+          "price_per_m_decimal": "0.044"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-v4-pro-0813",
+      "description": "",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "DeepSeek V4 Pro 0813",
+      "model_type": "chat",
+      "max_output_tokens": 393216,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "responses",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1784168859,
+      "id": "moonshotai/kimi-k3",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 30000,
+      "output_token_price_per_m": 150000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 30000,
+          "price_per_m": 30000,
+          "origin_price_per_m_decimal": "3",
+          "price_per_m_decimal": "3"
+        },
+        "completion": {
+          "origin_price_per_m": 150000,
+          "price_per_m": 150000,
+          "origin_price_per_m_decimal": "15",
+          "price_per_m_decimal": "15"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "input_cache_write": {
+          "origin_price_per_m": 30000,
+          "price_per_m": 30000,
+          "origin_price_per_m_decimal": "3",
+          "price_per_m_decimal": "3"
+        },
+        "input_cache_write_1h": {
+          "origin_price_per_m": 60000,
+          "price_per_m": 60000,
+          "origin_price_per_m_decimal": "6",
+          "price_per_m_decimal": "6"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "moonshotai/kimi-k3",
+      "description": "Kimi K3 is Kimi’s most capable model to date, with 2.8 trillion parameters. Built on Kimi Delta Attention, a hybrid linear attention mechanism, and Attention Residuals, it offers native visual understanding and a 1M-token context window for frontier intelligence scenarios such as software engineering, knowledge work, and deep reasoning.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "Kimi K3",
+      "model_type": "chat",
+      "max_output_tokens": 1048576,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1782798401,
+      "id": "tencent/hy3",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1400,
+      "output_token_price_per_m": 5800,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1400,
+          "price_per_m": 1400,
+          "origin_price_per_m_decimal": "0.14",
+          "price_per_m_decimal": "0.14"
+        },
+        "completion": {
+          "origin_price_per_m": 5800,
+          "price_per_m": 5800,
+          "origin_price_per_m_decimal": "0.58",
+          "price_per_m_decimal": "0.58"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 350,
+          "price_per_m": 350,
+          "origin_price_per_m_decimal": "0.035",
+          "price_per_m_decimal": "0.035"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "tencent/hy3",
+      "description": "Built for real-world business scenarios, Hy3 features a 295B/21B active MoE architecture, native 256K context support, and three reasoning modes. It enhances coding, long-form comprehension, multi-turn dialogue, and agentic task execution, balancing reliability, efficiency, and cost across both high-frequency interactions and complex workflows.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Hy3",
+      "model_type": "chat",
+      "max_output_tokens": 262144,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1781262235,
+      "id": "zai-org/glm-5.2",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 14000,
+      "output_token_price_per_m": 44000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 14000,
+          "price_per_m": 14000,
+          "origin_price_per_m_decimal": "1.4",
+          "price_per_m_decimal": "1.4"
+        },
+        "completion": {
+          "origin_price_per_m": 44000,
+          "price_per_m": 44000,
+          "origin_price_per_m_decimal": "4.4",
+          "price_per_m_decimal": "4.4"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 2600,
+          "price_per_m": 2600,
+          "origin_price_per_m_decimal": "0.26",
+          "price_per_m_decimal": "0.26"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-5.2",
+      "description": "GLM-5.2 is Z.AI's latest flagship model, meticulously engineered for long-horizon autonomous tasks. Capable of working continuously on a single assignment for up to 8 hours, it autonomously manages the entire workflow—from initial planning and execution to iterative optimization and the delivery of production-grade results. With coding and agentic capabilities that rival leading proprietary frontier models, it excels particularly in sustained execution, complex engineering optimization, and real-world development scenarios. Its context window has been expanded from 200K to 1M tokens, making it an ideal foundational model for powering advanced autonomous agents and long-horizon coding assistants.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "GLM 5.2",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1781260548,
+      "id": "moonshotai/kimi-k2.7-code",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 9500,
+      "output_token_price_per_m": 40000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 9500,
+          "price_per_m": 9500,
+          "origin_price_per_m_decimal": "0.95",
+          "price_per_m_decimal": "0.95"
+        },
+        "completion": {
+          "origin_price_per_m": 40000,
+          "price_per_m": 40000,
+          "origin_price_per_m_decimal": "4",
+          "price_per_m_decimal": "4"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1900,
+          "price_per_m": 1900,
+          "origin_price_per_m_decimal": "0.19",
+          "price_per_m_decimal": "0.19"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "moonshotai/kimi-k2.7-code",
+      "description": "Kimi K2.7 Code is MoonshotAI's strongest coding & agentic model — a 1T-parameter MoE (32B activated) , 256K context and interleaved thinking with multi-step tool calling. It delivers major gains on long-horizon coding tasks while cutting thinking-token usage by ~30% vs K2.6, and accepts text, image and video inputs for vision-driven development workflows.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Kimi K2.7 Code",
+      "model_type": "chat",
+      "max_output_tokens": 262144,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1790471310,
+      "id": "deepseek/deepseek-v4-flash-0731-p",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 4400,
+      "output_token_price_per_m": 13200,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 4400,
+          "price_per_m": 4400,
+          "origin_price_per_m_decimal": "0.44",
+          "price_per_m_decimal": "0.44"
+        },
+        "completion": {
+          "origin_price_per_m": 13200,
+          "price_per_m": 13200,
+          "origin_price_per_m_decimal": "1.32",
+          "price_per_m_decimal": "1.32"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 148,
+          "price_per_m": 148,
+          "origin_price_per_m_decimal": "0.0148",
+          "price_per_m_decimal": "0.0148"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-v4-flash-0731-p",
+      "description": "DeepSeek V4 Flash 0731 is a sparse mixture-of-experts model from DeepSeek, with 13B active parameters out of 284B total. This re-post-trained revision is suited for coding, reasoning, and agent workflows.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "deepseek/deepseek-v4-flash-0731-p",
+      "model_type": "chat",
+      "max_output_tokens": 393216,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1787815610,
+      "id": "qwen/qwen3.8-flash",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1500,
+      "output_token_price_per_m": 4700,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1500,
+          "price_per_m": 1500,
+          "origin_price_per_m_decimal": "0.15",
+          "price_per_m_decimal": "0.15"
+        },
+        "completion": {
+          "origin_price_per_m": 4700,
+          "price_per_m": 4700,
+          "origin_price_per_m_decimal": "0.47",
+          "price_per_m_decimal": "0.47"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 160,
+          "price_per_m": 160,
+          "origin_price_per_m_decimal": "0.016",
+          "price_per_m_decimal": "0.016"
+        },
+        "input_cache_write": {
+          "origin_price_per_m": 2000,
+          "price_per_m": 2000,
+          "origin_price_per_m_decimal": "0.2",
+          "price_per_m_decimal": "0.2"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.8-flash",
+      "description": "Qwen3.8-Flash is Alibaba's multimodal MoE model and an early preview of the Qwen4 architecture: 125B total parameters with only 6B activated per token, plus a 51B N-gram embedding, built on GDN + QSA hybrid attention. It accepts text, image and video input across a 1M-token context and emits up to 131K tokens, with thinking mode on by default and switchable off. Built for coding, agentic workflows, visual\nand long-document understanding, and long-video analysis at a fraction of the cost of comparable frontier models.",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Qwen3.8 Flash",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1785546565,
+      "id": "deepseek/deepseek-v4-flash-0731",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 4400,
+      "output_token_price_per_m": 13200,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 4400,
+          "price_per_m": 4400,
+          "origin_price_per_m_decimal": "0.44",
+          "price_per_m_decimal": "0.44"
+        },
+        "completion": {
+          "origin_price_per_m": 13200,
+          "price_per_m": 13200,
+          "origin_price_per_m_decimal": "1.32",
+          "price_per_m_decimal": "1.32"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 280,
+          "price_per_m": 280,
+          "origin_price_per_m_decimal": "0.028",
+          "price_per_m_decimal": "0.028"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-v4-flash-0731",
+      "description": "DeepSeek V4 Flash 0731 is a sparse mixture-of-experts model from DeepSeek, with 13B active parameters out of 284B total. This re-post-trained revision is suited for coding, reasoning, and agent workflows.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "DeepSeek V4 Flash 0731",
+      "model_type": "chat",
+      "max_output_tokens": 393216,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1784605406,
+      "id": "mindai/macaron-v1-venti",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 8250,
+      "output_token_price_per_m": 24750,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 8250,
+          "price_per_m": 8250,
+          "origin_price_per_m_decimal": "0.825",
+          "price_per_m_decimal": "0.825"
+        },
+        "completion": {
+          "origin_price_per_m": 24750,
+          "price_per_m": 24750,
+          "origin_price_per_m_decimal": "2.475",
+          "price_per_m_decimal": "2.475"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1650,
+          "price_per_m": 1650,
+          "origin_price_per_m_decimal": "0.165",
+          "price_per_m_decimal": "0.165"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "mindai/macaron-v1-venti",
+      "description": "Macaron-V1-Venti is a 748B-parameter flagship model in the Macaron-V1 family, built for personal intelligence, tool use, coding workflows, and code-native Generative UI. The model uses a Mixture of LoRA (MoL) architecture on top of GLM-5.2, consisting of a 744B-parameter base model and four 1B-parameter LoRA specialists. The specialists cover chat, personal-agent tasks, coding, and GenUI, with an L0 router selecting the most suitable specialist for each new user request.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "Macaron V1 Venti",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless",
+        "function-calling",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1780282959,
+      "id": "minimax/minimax-m3",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3000,
+      "output_token_price_per_m": 12000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "completion": {
+          "origin_price_per_m": 12000,
+          "price_per_m": 12000,
+          "origin_price_per_m_decimal": "1.2",
+          "price_per_m_decimal": "1.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 600,
+          "price_per_m": 600,
+          "origin_price_per_m_decimal": "0.06",
+          "price_per_m_decimal": "0.06"
+        }
+      },
+      "is_tiered_billing": true,
+      "tiered_billing_configs": [
+        {
+          "min_tokens": 1,
+          "max_tokens": 524288,
+          "pricing": {
+            "prompt": {
+              "origin_price_per_m": 3000,
+              "price_per_m": 3000,
+              "origin_price_per_m_decimal": "0.3",
+              "price_per_m_decimal": "0.3"
+            },
+            "completion": {
+              "origin_price_per_m": 12000,
+              "price_per_m": 12000,
+              "origin_price_per_m_decimal": "1.2",
+              "price_per_m_decimal": "1.2"
+            },
+            "input_cache_read": {
+              "origin_price_per_m": 600,
+              "price_per_m": 600,
+              "origin_price_per_m_decimal": "0.06",
+              "price_per_m_decimal": "0.06"
+            }
+          }
+        },
+        {
+          "min_tokens": 524288,
+          "max_tokens": 1000000,
+          "pricing": {
+            "prompt": {
+              "origin_price_per_m": 6000,
+              "price_per_m": 6000,
+              "origin_price_per_m_decimal": "0.6",
+              "price_per_m_decimal": "0.6"
+            },
+            "completion": {
+              "origin_price_per_m": 24000,
+              "price_per_m": 24000,
+              "origin_price_per_m_decimal": "2.4",
+              "price_per_m_decimal": "2.4"
+            },
+            "input_cache_read": {
+              "origin_price_per_m": 1200,
+              "price_per_m": 1200,
+              "origin_price_per_m_decimal": "0.12",
+              "price_per_m_decimal": "0.12"
+            }
+          }
+        }
+      ],
+      "title": "minimax/minimax-m3",
+      "description": "",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "MiniMax M3",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1777000931,
+      "id": "deepseek/deepseek-v4-pro",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 16000,
+      "output_token_price_per_m": 32000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 16000,
+          "price_per_m": 16000,
+          "origin_price_per_m_decimal": "1.6",
+          "price_per_m_decimal": "1.6"
+        },
+        "completion": {
+          "origin_price_per_m": 32000,
+          "price_per_m": 32000,
+          "origin_price_per_m_decimal": "3.2",
+          "price_per_m_decimal": "3.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1350,
+          "price_per_m": 1350,
+          "origin_price_per_m_decimal": "0.135",
+          "price_per_m_decimal": "0.135"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-v4-pro",
+      "description": "DeepSeek-V4-Pro is the next-generation flagship open-source large language model developed by DeepSeek, delivering comprehensive performance that rivals the world's premier closed-source models. Compared to its predecessor, V4-Pro achieves a breakthrough evolution in Agentic capabilities. It firmly holds the top position among open-source models in Agentic Coding, providing a high-quality, end-to-end code delivery experience that surpasses mainstream industry benchmarks (such as Sonnet 4.5). Furthermore, the model not only boasts an expansive repository of world knowledge that leads the open-source community, but it also demonstrates ultimate logical reasoning prowess in highly demanding evaluations—including mathematics, STEM, and competitive programming. In these rigorous domains, V4-Pro outperforms all publicly evaluated open-source models and matches the capabilities of global closed-source giants. As the ideal foundational model for building complex agentic workflows, professional-grade software developm",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "DeepSeek V4 Pro",
+      "model_type": "chat",
+      "max_output_tokens": 393216,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1790824276,
+      "id": "apodex/apodex-1.1-mini",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 0,
+      "output_token_price_per_m": 0,
+      "is_tiered_billing": false,
+      "title": "apodex/apodex-1.1-mini",
+      "description": "Apodex-1.1-mini is a reasoning-first model by Apodex for complex, long-horizon research and forecasting tasks. It works directly with files, data, code, and tools to deliver verifiable results, and ranks at the top of ProphetArena, the leading live forecasting benchmark.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Apodex 1.1 Mini",
+      "model_type": "chat",
+      "max_output_tokens": 262144,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1790740518,
+      "id": "stepfun/step-5-preview",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 10000,
+      "output_token_price_per_m": 27000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 10000,
+          "price_per_m": 10000,
+          "origin_price_per_m_decimal": "1",
+          "price_per_m_decimal": "1"
+        },
+        "completion": {
+          "origin_price_per_m": 27000,
+          "price_per_m": 27000,
+          "origin_price_per_m_decimal": "2.7",
+          "price_per_m_decimal": "2.7"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1000,
+          "price_per_m": 1000,
+          "origin_price_per_m_decimal": "0.1",
+          "price_per_m_decimal": "0.1"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "stepfun/step-5-preview",
+      "description": "Step 5 Preview is StepFun's flagship model for coding, software engineering, and professional knowledge work. Its sparse MoE architecture uses 600B total and 27B active parameters, with a 1M-token context window and up to 64K output tokens. It accepts text, images, and video and supports tool calling, structured JSON output, three reasoning effort levels, streaming, and prompt caching. ",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Step 5 Preview",
+      "model_type": "chat",
+      "max_output_tokens": 64000,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1790563605,
+      "id": "inclusionai/ling-3.1-flash",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3000,
+      "output_token_price_per_m": 9000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "completion": {
+          "origin_price_per_m": 9000,
+          "price_per_m": 9000,
+          "origin_price_per_m_decimal": "0.9",
+          "price_per_m_decimal": "0.9"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 600,
+          "price_per_m": 600,
+          "origin_price_per_m_decimal": "0.06",
+          "price_per_m_decimal": "0.06"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "inclusionai/ling-3.1-flash",
+      "description": "Hybrid reasoning model with a 1M-token context window, featuring 560B total parameters and 25B activated parameters.",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Ling 3.1 Flash 1019",
+      "model_type": "chat",
+      "max_output_tokens": 262144,
+      "features": [
+        "serverless",
+        "function-calling",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1787737609,
+      "id": "qwen/qwen3.8-27b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 4200,
+      "output_token_price_per_m": 30000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 4200,
+          "price_per_m": 4200,
+          "origin_price_per_m_decimal": "0.42",
+          "price_per_m_decimal": "0.42"
+        },
+        "completion": {
+          "origin_price_per_m": 30000,
+          "price_per_m": 30000,
+          "origin_price_per_m_decimal": "3",
+          "price_per_m_decimal": "3"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 850,
+          "price_per_m": 850,
+          "origin_price_per_m_decimal": "0.085",
+          "price_per_m_decimal": "0.085"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.8-27b",
+      "description": "",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Qwen3.8 27B",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1787726682,
+      "id": "inclusionai/ling-3.0-flash-fin",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 750,
+      "output_token_price_per_m": 2200,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 750,
+          "price_per_m": 750,
+          "origin_price_per_m_decimal": "0.075",
+          "price_per_m_decimal": "0.075"
+        },
+        "completion": {
+          "origin_price_per_m": 2200,
+          "price_per_m": 2200,
+          "origin_price_per_m_decimal": "0.22",
+          "price_per_m_decimal": "0.22"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 150,
+          "price_per_m": 150,
+          "origin_price_per_m_decimal": "0.015",
+          "price_per_m_decimal": "0.015"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "inclusionai/ling-3.0-flash-fin",
+      "description": "Ling-3.0-flash-Fin is a finance-enhanced MoE model built on Ling-3.0-flash, with 124 billion total parameters and approximately 5.1 billion activated parameters. Designed for real-world investment workflows, it is optimized for complex multi-step tasks and long-horizon planning and execution. With a relatively small active parameter footprint, it delivers competitive financial performance while maintaining strong general capabilities in reasoning, coding, and mathematics.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Ling 3.0 Flash Fin",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "serverless",
+        "function-calling",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1787637817,
+      "id": "qwen/qwen3.8-2.4t-a95b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 20000,
+      "output_token_price_per_m": 60000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 20000,
+          "price_per_m": 20000,
+          "origin_price_per_m_decimal": "2",
+          "price_per_m_decimal": "2"
+        },
+        "completion": {
+          "origin_price_per_m": 60000,
+          "price_per_m": 60000,
+          "origin_price_per_m_decimal": "6",
+          "price_per_m_decimal": "6"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 2500,
+          "price_per_m": 2500,
+          "origin_price_per_m_decimal": "0.25",
+          "price_per_m_decimal": "0.25"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.8-2.4t-a95b",
+      "description": "Qwen3.8 2.4T A95B is an open-weight sparse mixture-of-experts model from Qwen and the open-weight variant of Qwen3.8 Max, with 95 billion active parameters out of 2.4 trillion total. It is suited for coding, research, complex reasoning, and agentic workflows.Text-only.",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Qwen3.8 2.4T A95B",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "responses"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1785494178,
+      "id": "qwen/qwen3.8-max",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 20000,
+      "output_token_price_per_m": 60000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 20000,
+          "price_per_m": 20000,
+          "origin_price_per_m_decimal": "2",
+          "price_per_m_decimal": "2"
+        },
+        "completion": {
+          "origin_price_per_m": 60000,
+          "price_per_m": 60000,
+          "origin_price_per_m_decimal": "6",
+          "price_per_m_decimal": "6"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 2500,
+          "price_per_m": 2500,
+          "origin_price_per_m_decimal": "0.25",
+          "price_per_m_decimal": "0.25"
+        },
+        "input_cache_write": {
+          "origin_price_per_m": 25000,
+          "price_per_m": 25000,
+          "origin_price_per_m_decimal": "2.5",
+          "price_per_m_decimal": "2.5"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.8-max",
+      "description": " A 2.4T-parameter MoE flagship for coding and knowledge work. Programs autonomously for days to deliver complete projects end to end, with native visual understanding across planning, execution, and verification, plus deep semantic analysis of ultra-long documents and video.",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Qwen3.8 Max",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless",
+        "reasoning",
+        "structured-outputs",
+        "function-calling"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1784701806,
+      "id": "inclusionai/ling-3.0-flash",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 600,
+      "output_token_price_per_m": 1800,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 600,
+          "price_per_m": 600,
+          "origin_price_per_m_decimal": "0.06",
+          "price_per_m_decimal": "0.06"
+        },
+        "completion": {
+          "origin_price_per_m": 1800,
+          "price_per_m": 1800,
+          "origin_price_per_m_decimal": "0.18",
+          "price_per_m_decimal": "0.18"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 120,
+          "price_per_m": 120,
+          "origin_price_per_m_decimal": "0.012",
+          "price_per_m_decimal": "0.012"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "inclusionai/ling-3.0-flash",
+      "description": "Ling-3.0-flash is a 124B-parameter Mixture-of-Experts (MoE) model, with approximately 5.1B parameters activated per token.\nThe model is designed with token efficiency and production-scale agentic inference as key priorities, enabling developers to complete more useful work within constrained token, latency, and serving-cost budgets.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Ling 3.0 Flash",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "serverless",
+        "function-calling",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1784113196,
+      "id": "mindai/macaron-v1-tall",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 2475,
+      "output_token_price_per_m": 14300,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 2475,
+          "price_per_m": 2475,
+          "origin_price_per_m_decimal": "0.2475",
+          "price_per_m_decimal": "0.2475"
+        },
+        "completion": {
+          "origin_price_per_m": 14300,
+          "price_per_m": 14300,
+          "origin_price_per_m_decimal": "1.43",
+          "price_per_m_decimal": "1.43"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 440,
+          "price_per_m": 440,
+          "origin_price_per_m_decimal": "0.044",
+          "price_per_m_decimal": "0.044"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "mindai/macaron-v1-tall",
+      "description": "Macaron-V1-Tall is the efficient model of the Macaron-V1 family, built on Qwen3.6-35B-A3B with four specialist LoRA adapters for Chat, Agent, Coding, and GenUI. It follows the same routed Mixture of LoRA (MoL) design as Macaron-V1-Venti, bringing Macaron’s personal-intelligence, coding, tool-use, and code-native Generative UI capabilities to a smaller and more accessible deployment profile.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Macaron V1 Tall",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "serverless",
+        "function-calling",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1781231066,
+      "id": "stepfun/step-3.7-flash",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 2000,
+      "output_token_price_per_m": 11500,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 2000,
+          "price_per_m": 2000,
+          "origin_price_per_m_decimal": "0.2",
+          "price_per_m_decimal": "0.2"
+        },
+        "completion": {
+          "origin_price_per_m": 11500,
+          "price_per_m": 11500,
+          "origin_price_per_m_decimal": "1.15",
+          "price_per_m_decimal": "1.15"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 400,
+          "price_per_m": 400,
+          "origin_price_per_m_decimal": "0.04",
+          "price_per_m_decimal": "0.04"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "stepfun/step-3.7-flash",
+      "description": "Step-3.7-Flash is StepFun's flagship high-efficiency multimodal reasoning model, built on a sparse Mixture-of-Experts architecture (198B total / ~11B active parameters) that delivers high throughput and low latency for real-time agentic workflows and high-frequency calls. It natively understands images and video — no extra vision model needed in agent frameworks — and offers a 256K context window with three selectable reasoning levels (low/medium/high) to balance speed, cost and reasoning depth. With reliable multi-step tool calling, task decomposition and plan execution, it excels at coding, solution planning and vision-to-workflow tasks, producing complete plans in a single call.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Step 3.7 Flash",
+      "model_type": "chat",
+      "max_output_tokens": 256000,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1781004459,
+      "id": "nvidia/nemotron-3-nano-30b-a3b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 500,
+      "output_token_price_per_m": 2000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 500,
+          "price_per_m": 500,
+          "origin_price_per_m_decimal": "0.05",
+          "price_per_m_decimal": "0.05"
+        },
+        "completion": {
+          "origin_price_per_m": 2000,
+          "price_per_m": 2000,
+          "origin_price_per_m_decimal": "0.2",
+          "price_per_m_decimal": "0.2"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "nvidia/nemotron-3-nano-30b-a3b",
+      "description": "Nemotron-3-Nano-30B-A3B is NVIDIA's compute-efficient, open-weight reasoning model built for agentic AI. Its Mixture-of-Experts design (30B total / 3.5B active) with a hybrid Mamba-2 + Transformer architecture delivers strong reasoning and tool use at a fraction of the compute required by comparable dense models. It supports a 256K context window, toggleable chain-of-thought reasoning, function calling, and structured (JSON) outputs — making it well-suited for long-context agents, coding, and math. Released under the NVIDIA Nemotron Open Model License and ready for commercial use.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "NVIDIA Nemotron 3 Nano 30B A3B",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1780454207,
+      "id": "baidu/cobuddy",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 2800,
+      "output_token_price_per_m": 11300,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 2800,
+          "price_per_m": 2800,
+          "origin_price_per_m_decimal": "0.28",
+          "price_per_m_decimal": "0.28"
+        },
+        "completion": {
+          "origin_price_per_m": 11300,
+          "price_per_m": 11300,
+          "origin_price_per_m_decimal": "1.13",
+          "price_per_m_decimal": "1.13"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 700,
+          "price_per_m": 700,
+          "origin_price_per_m_decimal": "0.07",
+          "price_per_m_decimal": "0.07"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "baidu/cobuddy",
+      "description": "CoBuddy is a specialized code generation model developed by Baidu, engineered with targeted optimizations for Coding and AI Agent scenarios. It delivers exceptional performance, characterized by high inference throughput and ultra-low end-to-end (E2E) latency.",
+      "tags": [],
+      "context_size": 131072,
+      "status": 1,
+      "display_name": "CoBuddy",
+      "model_type": "chat",
+      "max_output_tokens": 65536,
+      "features": [
+        "serverless",
+        "function-calling",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1779367973,
+      "id": "qwen/qwen3.7-max",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 12500,
+      "output_token_price_per_m": 37500,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 12500,
+          "price_per_m": 12500,
+          "origin_price_per_m_decimal": "1.25",
+          "price_per_m_decimal": "1.25"
+        },
+        "completion": {
+          "origin_price_per_m": 37500,
+          "price_per_m": 37500,
+          "origin_price_per_m_decimal": "3.75",
+          "price_per_m_decimal": "3.75"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 2500,
+          "price_per_m": 2500,
+          "origin_price_per_m_decimal": "0.25",
+          "price_per_m_decimal": "0.25"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.7-max",
+      "description": "The Qwen3.7 Max model—the largest and most powerful in the series—is currently available for users to try out its text-only features. Built as a next-generation flagship model for the era of AI agents, Qwen3.7 stands out for the exceptional breadth and depth of its agent capabilities, seamlessly handling various tasks in programming, office productivity, and long-term autonomous execution.",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Qwen3.7 Max",
+      "model_type": "chat",
+      "max_output_tokens": 65536,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1776936762,
+      "id": "qwen/qwen3.6-27b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 6000,
+      "output_token_price_per_m": 36000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 6000,
+          "price_per_m": 6000,
+          "origin_price_per_m_decimal": "0.6",
+          "price_per_m_decimal": "0.6"
+        },
+        "completion": {
+          "origin_price_per_m": 36000,
+          "price_per_m": 36000,
+          "origin_price_per_m_decimal": "3.6",
+          "price_per_m_decimal": "3.6"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.6-27b",
+      "description": "The Qwen3.6 27B native vision-language dense model builds upon the 3.5-27B version, with key improvements in agentic coding capabilities and enhanced STEM reasoning and inference skills. In the vision modality, it demonstrates significant advances in spatial intelligence, object localization, and detection, while video understanding, document OCR, and visual agent capabilities continue to improve steadily.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Qwen3.6 27B",
+      "model_type": "chat",
+      "max_output_tokens": 65536,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1776654459,
+      "id": "moonshotai/kimi-k2.6",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 8000,
+      "output_token_price_per_m": 34000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 8000,
+          "price_per_m": 8000,
+          "origin_price_per_m_decimal": "0.8",
+          "price_per_m_decimal": "0.8"
+        },
+        "completion": {
+          "origin_price_per_m": 34000,
+          "price_per_m": 34000,
+          "origin_price_per_m_decimal": "3.4",
+          "price_per_m_decimal": "3.4"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1600,
+          "price_per_m": 1600,
+          "origin_price_per_m_decimal": "0.16",
+          "price_per_m_decimal": "0.16"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "moonshotai/kimi-k2.6",
+      "description": "Kimi K2.6 is an open-source, native multimodal agentic model that significantly advances practical capabilities in long-horizon coding, coding-driven design, and swarm-based task orchestration. It robustly executes complex, end-to-end development tasks across multiple programming languages and domains, seamlessly transforming simple prompts and visual inputs into production-ready, aesthetically precise interfaces and full-stack workflows. Uniquely engineered for high scalability, K2.6 can horizontally orchestrate up to 300 domain-specialized sub-agents through 4,000 coordinated steps, dynamically decomposing intricate tasks to deliver diverse end-to-end outputs—from documents and spreadsheets to fully functional websites—in a single autonomous run. Furthermore, its proactive execution capabilities empower persistent, 24/7 background agents to manage schedules, deploy code, and orchestrate cross-platform operations entirely without human oversight, establishing it as a premier foundational model for next-gener",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Kimi K2.6",
+      "model_type": "chat",
+      "max_output_tokens": 262144,
+      "features": [
+        "serverless",
+        "reasoning",
+        "structured-outputs",
+        "function-calling"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1775817236,
+      "id": "bunny",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 0,
+      "output_token_price_per_m": 0,
+      "is_tiered_billing": false,
+      "title": "bunny",
+      "description": "",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Bunny",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1775554586,
+      "id": "zai-org/glm-5.1",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 13800,
+      "output_token_price_per_m": 44000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 13800,
+          "price_per_m": 13800,
+          "origin_price_per_m_decimal": "1.38",
+          "price_per_m_decimal": "1.38"
+        },
+        "completion": {
+          "origin_price_per_m": 44000,
+          "price_per_m": 44000,
+          "origin_price_per_m_decimal": "4.4",
+          "price_per_m_decimal": "4.4"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 2600,
+          "price_per_m": 2600,
+          "origin_price_per_m_decimal": "0.26",
+          "price_per_m_decimal": "0.26"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-5.1",
+      "description": "GLM-5.1 is Z.AI's latest flagship model, meticulously engineered for long-horizon autonomous tasks. Capable of working continuously on a single assignment for up to 8 hours, it autonomously manages the entire workflow—from initial planning and execution to iterative optimization and the delivery of production-grade results. While its general capabilities and coding proficiency are on par with Claude Opus 4.6, GLM-5.1 excels particularly in sustained execution, complex engineering optimization, and real-world development scenarios. This makes it the ideal foundational model for powering advanced autonomous agents and long-horizon coding assistants.",
+      "tags": [],
+      "context_size": 204800,
+      "status": 1,
+      "display_name": "GLM 5.1",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1775119268,
+      "id": "minimax/minimax-m2.7-highspeed",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 6000,
+      "output_token_price_per_m": 24000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 6000,
+          "price_per_m": 6000,
+          "origin_price_per_m_decimal": "0.6",
+          "price_per_m_decimal": "0.6"
+        },
+        "completion": {
+          "origin_price_per_m": 24000,
+          "price_per_m": 24000,
+          "origin_price_per_m_decimal": "2.4",
+          "price_per_m_decimal": "2.4"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 600,
+          "price_per_m": 600,
+          "origin_price_per_m_decimal": "0.06",
+          "price_per_m_decimal": "0.06"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "minimax/minimax-m2.7-highspeed",
+      "description": "MiniMax M2.7-highspeed is an accelerated SOTA model engineered for scenarios demanding extreme efficiency. It perfectly inherits the core intelligence and robust digital workspace capabilities of the standard M2.7.\nIn real-world software engineering, M2.7 excels by independently driving end-to-end project delivery while efficiently handling advanced tasks such as log analysis, bug troubleshooting, code security, and machine learning. In the professional workspace, it boasts the highest open-source GDPval-AA score (1495 ELO). It delivers high-fidelity, complex editing and multi-turn revisions across the Office suite (Excel, PPT, Word), elevating task execution to industry-leading standards.\nBuilt for complex environment interactions, M2.7 maintains an impressive 97% skill-following rate even with complex, long-context tool calls (>2000 tokens).  Beyond its robust productivity, M2.7 breaks the \"cold tool\" stereotype of traditional models. With exceptional identity retention and high emotional intelligence (EQ),",
+      "tags": [],
+      "context_size": 204800,
+      "status": 1,
+      "display_name": "MiniMax M2.7-highspeed",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1775113502,
+      "id": "google/gemma-4-26b-a4b-it",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1300,
+      "output_token_price_per_m": 4000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1300,
+          "price_per_m": 1300,
+          "origin_price_per_m_decimal": "0.13",
+          "price_per_m_decimal": "0.13"
+        },
+        "completion": {
+          "origin_price_per_m": 4000,
+          "price_per_m": 4000,
+          "origin_price_per_m_decimal": "0.4",
+          "price_per_m_decimal": "0.4"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "google/gemma-4-26b-a4b-it",
+      "description": "Gemma 4 26B A4B is built for developers who need scalable performance without sacrificing core capabilities.Crucially, it retains the massive 256K-token context window of the 31B model, making it highly competitive for long-context RAG and processing extensive, image-rich document datasets. It fully supports the series' core innovations: native Thinking mode for advanced logic, Interleaved Multimodal Input for dynamic text-image workflows, and flawless document/UI parsing. Equipped with native Function Calling and robust coding proficiencies, the 26B A4B is the ideal, cost-effective engine for powering real-world agentic workflows, visual automation, and global applications across its 140+ pre-trained languages.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Gemma 4 26B A4B",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless",
+        "structured-outputs",
+        "function-calling",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1775113407,
+      "id": "google/gemma-4-31b-it",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1400,
+      "output_token_price_per_m": 4000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1400,
+          "price_per_m": 1400,
+          "origin_price_per_m_decimal": "0.14",
+          "price_per_m_decimal": "0.14"
+        },
+        "completion": {
+          "origin_price_per_m": 4000,
+          "price_per_m": 4000,
+          "origin_price_per_m_decimal": "0.4",
+          "price_per_m_decimal": "0.4"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "google/gemma-4-31b-it",
+      "description": "Gemma 4 31B is engineered to tackle the most demanding enterprise workloads and complex reasoning tasks. With an expansive 256K-token context window, the 31B model can effortlessly ingest entire codebases, and massive sets of images in a single prompt. It boasts state-of-the-art vision-language capabilities, allowing developers to freely interleave text and images. It excels at parsing UI screens, comprehending complex charts, and executing multilingual OCR or handwriting recognition. Combined with native structured Function Calling, robust code generation, and out-of-the-box fluency in 35+ languages, Gemma 4 31B is the ultimate foundation for building sophisticated, autonomous AI agents and heavy-duty multimodal analysis pipelines.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Gemma 4 31B",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless",
+        "structured-outputs",
+        "function-calling",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1773739876,
+      "id": "minimax/minimax-m2.7",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3000,
+      "output_token_price_per_m": 12000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "completion": {
+          "origin_price_per_m": 12000,
+          "price_per_m": 12000,
+          "origin_price_per_m_decimal": "1.2",
+          "price_per_m_decimal": "1.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 600,
+          "price_per_m": 600,
+          "origin_price_per_m_decimal": "0.06",
+          "price_per_m_decimal": "0.06"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "minimax/minimax-m2.7",
+      "description": "MiniMax M2.7 is an all-around evolved, versatile open-source large language model that seamlessly blends hardcore engineering productivity with high-EQ, human-like interaction capabilities.\nIn real-world software engineering, M2.7 excels by independently driving end-to-end project delivery while efficiently handling advanced tasks such as log analysis, bug troubleshooting, code security, and machine learning. In the professional workspace, it boasts the highest open-source GDPval-AA score (1495 ELO). It delivers high-fidelity, complex editing and multi-turn revisions across the Office suite (Excel, PPT, Word), elevating task execution to industry-leading standards.\nBuilt for complex environment interactions, M2.7 maintains an impressive 97% skill-following rate even with complex, long-context tool calls (>2000 tokens).  Beyond its robust productivity, M2.7 breaks the \"cold tool\" stereotype of traditional models. With exceptional identity retention and high emotional intelligence (EQ), it not only empowers ent",
+      "tags": [],
+      "context_size": 204800,
+      "status": 1,
+      "display_name": "MiniMax M2.7",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1772075943,
+      "id": "qwen/qwen3.5-27b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3000,
+      "output_token_price_per_m": 24000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "completion": {
+          "origin_price_per_m": 24000,
+          "price_per_m": 24000,
+          "origin_price_per_m_decimal": "2.4",
+          "price_per_m_decimal": "2.4"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.5-27b",
+      "description": "The Qwen3.5 27B native vision-language Dense model incorporates a linear attention mechanism, delivering fast response times while balancing inference speed and performance. Its overall capabilities are comparable to those of the Qwen3.5-122B-A10B.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Qwen3.5 27B",
+      "model_type": "chat",
+      "max_output_tokens": 65536,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1772074350,
+      "id": "qwen/qwen3.5-122b-a10b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 4000,
+      "output_token_price_per_m": 32000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 4000,
+          "price_per_m": 4000,
+          "origin_price_per_m_decimal": "0.4",
+          "price_per_m_decimal": "0.4"
+        },
+        "completion": {
+          "origin_price_per_m": 32000,
+          "price_per_m": 32000,
+          "origin_price_per_m_decimal": "3.2",
+          "price_per_m_decimal": "3.2"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.5-122b-a10b",
+      "description": "The Qwen3.5-122B-A10B native vision-language model is built on a hybrid architecture that integrates a linear attention mechanism with a sparse mixture-of-experts model, achieving higher inference efficiency. In terms of overall performance, this model is second only to Qwen3.5-397B-A17B. Its text capabilities significantly outperform those of Qwen3-235B-2507, and its visual capabilities surpass those of Qwen3-VL-235B.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Qwen3.5 122B A10B",
+      "model_type": "chat",
+      "max_output_tokens": 65536,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1772072318,
+      "id": "qwen/qwen3.5-35b-a3b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 2500,
+      "output_token_price_per_m": 20000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 2500,
+          "price_per_m": 2500,
+          "origin_price_per_m_decimal": "0.25",
+          "price_per_m_decimal": "0.25"
+        },
+        "completion": {
+          "origin_price_per_m": 20000,
+          "price_per_m": 20000,
+          "origin_price_per_m_decimal": "2",
+          "price_per_m_decimal": "2"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.5-35b-a3b",
+      "description": "The Qwen3.5 Series 35B-A3B is a native vision-language model designed with a hybrid architecture that integrates linear attention mechanisms and a sparse mixture-of-experts model, achieving higher inference efficiency. Its overall performance is comparable to that of the Qwen3.5-27B.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Qwen3.5 35B A3B",
+      "model_type": "chat",
+      "max_output_tokens": 65536,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1771236163,
+      "id": "qwen/qwen3.5-397b-a17b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 6000,
+      "output_token_price_per_m": 36000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 6000,
+          "price_per_m": 6000,
+          "origin_price_per_m_decimal": "0.6",
+          "price_per_m_decimal": "0.6"
+        },
+        "completion": {
+          "origin_price_per_m": 36000,
+          "price_per_m": 36000,
+          "origin_price_per_m_decimal": "3.6",
+          "price_per_m_decimal": "3.6"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.5-397b-a17b",
+      "description": "The Qwen3.5 series 397B-A17B native vision-language model is based on a hybrid architecture design that integrates linear attention mechanisms with sparse Mixture-of-Experts (MoE), achieving higher inference efficiency. Across a variety of tasks—including language understanding, logical reasoning, code generation, agentic tasks, image understanding, video understanding, and graphical user interface (GUI) interaction—it demonstrates exceptional performance comparable to current top-tier frontier models. Possessing robust code generation and agentic capabilities, it exhibits strong generalization across various agent scenarios.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Qwen3.5 397B A17B",
+      "model_type": "chat",
+      "max_output_tokens": 65536,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1770874862,
+      "id": "minimax/minimax-m2.5",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3000,
+      "output_token_price_per_m": 12000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "completion": {
+          "origin_price_per_m": 12000,
+          "price_per_m": 12000,
+          "origin_price_per_m_decimal": "1.2",
+          "price_per_m_decimal": "1.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 300,
+          "price_per_m": 300,
+          "origin_price_per_m_decimal": "0.03",
+          "price_per_m_decimal": "0.03"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "minimax/minimax-m2.5",
+      "description": "MiniMax-M2.5 is a SOTA large language model designed for real-world productivity. Trained in a diverse range of complex real-world digital working environments, M2.5 builds upon the coding expertise of M2.1 to extend into general office work, reaching fluency in generating and operating Word, Excel, and Powerpoint files, context switching between diverse software environments, and working across different agent and human teams. Scoring 80.2% on SWE-Bench Verified, 51.3% on Multi-SWE-Bench, and 76.3% on BrowseComp, M2.5 is also more token efficient than previous generations, having been trained to optimize its actions and output through planning.",
+      "tags": [],
+      "context_size": 204800,
+      "status": 1,
+      "display_name": "MiniMax M2.5",
+      "model_type": "chat",
+      "max_output_tokens": 131100,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1770519748,
+      "id": "zai-org/glm-5",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 10000,
+      "output_token_price_per_m": 32000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 10000,
+          "price_per_m": 10000,
+          "origin_price_per_m_decimal": "1",
+          "price_per_m_decimal": "1"
+        },
+        "completion": {
+          "origin_price_per_m": 32000,
+          "price_per_m": 32000,
+          "origin_price_per_m_decimal": "3.2",
+          "price_per_m_decimal": "3.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 2000,
+          "price_per_m": 2000,
+          "origin_price_per_m_decimal": "0.2",
+          "price_per_m_decimal": "0.2"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-5",
+      "description": "GLM-5 is an open-source foundation model engineered for complex system engineering and long-horizon Agent tasks, delivering reliable productivity for top-tier programmers. Transcending the boundary from \"writing code\" to \"building systems,\" it moves beyond traditional snippet generation to offer senior-architect-level planning and execution capabilities. By rejecting the \"frontend-heavy, logic-light\" approach, GLM-5 demonstrates exceptional reasoning and self-healing abilities in backend refactoring, complex algorithm implementation, and deep debugging—autonomously analyzing logs and iteratively fixing persistent bugs until the system runs. As the first open-source model featuring Opus-class style and system engineering depth, GLM-5 provides extreme logic density alongside the freedom of local deployment and high cost-effectiveness, making it the ideal choice for large-scale backend development and automated Agent construction.",
+      "tags": [],
+      "context_size": 202800,
+      "status": 1,
+      "display_name": "GLM 5",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1769499613,
+      "id": "deepseek/deepseek-ocr-2",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 300,
+      "output_token_price_per_m": 300,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 300,
+          "price_per_m": 300,
+          "origin_price_per_m_decimal": "0.03",
+          "price_per_m_decimal": "0.03"
+        },
+        "completion": {
+          "origin_price_per_m": 300,
+          "price_per_m": 300,
+          "origin_price_per_m_decimal": "0.03",
+          "price_per_m_decimal": "0.03"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-ocr-2",
+      "description": "DeepSeek-OCR 2 is a multimodal document recognition model released by DeepSeek AI, serving as an upgrade to DeepSeek-OCR. By introducing the DeepEncoder V2 architecture, it achieves a paradigm shift in visual encoding from \"fixed scanning\" to \"semantic reasoning.\" The model replaces the original CLIP encoder with a lightweight language model (Qwen2-0.5B) and incorporates a causal flow query mechanism, while retaining the DeepSeek-3B-MoE decoder. The model requires only 256 to 1120 visual tokens to cover complex document pages. On the OmniDocBench v1.5 benchmark, it achieves an overall score of 91.09%, a 3.73% improvement over its predecessor, with reading order recognition edit distance reduced from 0.085 to 0.057.",
+      "tags": [],
+      "context_size": 8192,
+      "status": 1,
+      "display_name": "DeepSeek OCR 2",
+      "model_type": "chat",
+      "max_output_tokens": 8192,
+      "features": [
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1769495073,
+      "id": "moonshotai/kimi-k2.5",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 6000,
+      "output_token_price_per_m": 30000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 6000,
+          "price_per_m": 6000,
+          "origin_price_per_m_decimal": "0.6",
+          "price_per_m_decimal": "0.6"
+        },
+        "completion": {
+          "origin_price_per_m": 30000,
+          "price_per_m": 30000,
+          "origin_price_per_m_decimal": "3",
+          "price_per_m_decimal": "3"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1000,
+          "price_per_m": 1000,
+          "origin_price_per_m_decimal": "0.1",
+          "price_per_m_decimal": "0.1"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "moonshotai/kimi-k2.5",
+      "description": "Kimi K2.5 is the latest flagship iteration of Moonshot AI's large language model series, representing a significant leap in multimodal and agentic capabilities. It features a native multimodal architecture supporting both visual and text inputs, alongside versatile thinking and non-thinking modes. This model maintains the substantial 256k token context window found in the K2 series but achieves new open-source state-of-the-art (SoTA) performance across general intelligence, coding, and visual understanding benchmarks. Kimi K2.5 delivers a breakthrough in frontend development, enabling the generation of fully functional, aesthetically polished interactive interfaces with complex dynamic layouts directly from natural language. Optimized for complex problem-solving, it excels in multi-step tool invocation, logical reasoning, and full-stack code synthesis.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Kimi K2.5",
+      "model_type": "chat",
+      "max_output_tokens": 262144,
+      "features": [
+        "serverless",
+        "reasoning",
+        "structured-outputs",
+        "function-calling"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1769395795,
+      "id": "zai-org/glm-4.7-h",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 6000,
+      "output_token_price_per_m": 22000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 6000,
+          "price_per_m": 6000,
+          "origin_price_per_m_decimal": "0.6",
+          "price_per_m_decimal": "0.6"
+        },
+        "completion": {
+          "origin_price_per_m": 22000,
+          "price_per_m": 22000,
+          "origin_price_per_m_decimal": "2.2",
+          "price_per_m_decimal": "2.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1100,
+          "price_per_m": 1100,
+          "origin_price_per_m_decimal": "0.11",
+          "price_per_m_decimal": "0.11"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-4.7-h",
+      "description": "GLM-4.7 is Z.AI's latest flagship model, with major upgrades focused on advanced coding capabilities and more reliable multi-step reasoning and execution. It shows clear gains in complex agent workflows, while delivering a more natural conversational experience and stronger front-end design sensibility.",
+      "tags": [],
+      "context_size": 204800,
+      "status": 1,
+      "display_name": "GLM 4.7",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1768823553,
+      "id": "zai-org/glm-4.7-flash",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 700,
+      "output_token_price_per_m": 4000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 700,
+          "price_per_m": 700,
+          "origin_price_per_m_decimal": "0.07",
+          "price_per_m_decimal": "0.07"
+        },
+        "completion": {
+          "origin_price_per_m": 4000,
+          "price_per_m": 4000,
+          "origin_price_per_m_decimal": "0.4",
+          "price_per_m_decimal": "0.4"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 100,
+          "price_per_m": 100,
+          "origin_price_per_m_decimal": "0.01",
+          "price_per_m_decimal": "0.01"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-4.7-flash",
+      "description": "GLM-4.7-Flash, a state-of-the-art model in the 30B class, delivers a compelling balance of high performance and efficiency. Tailored for Agentic Coding, it strengthens coding proficiency, long-horizon planning, and tool synergy, securing top-tier results on public benchmarks among similarly sized open-source models. It excels in complex agent tasks with superior instruction following for tool use, while significantly elevating the frontend aesthetics and completion efficiency of long-range workflows in Artifacts and Agentic Coding.",
+      "tags": [],
+      "context_size": 200000,
+      "status": 1,
+      "display_name": "GLM 4.7 Flash",
+      "model_type": "chat",
+      "max_output_tokens": 128000,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1766422299,
+      "id": "zai-org/glm-4.7",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 6000,
+      "output_token_price_per_m": 22000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 6000,
+          "price_per_m": 6000,
+          "origin_price_per_m_decimal": "0.6",
+          "price_per_m_decimal": "0.6"
+        },
+        "completion": {
+          "origin_price_per_m": 22000,
+          "price_per_m": 22000,
+          "origin_price_per_m_decimal": "2.2",
+          "price_per_m_decimal": "2.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1100,
+          "price_per_m": 1100,
+          "origin_price_per_m_decimal": "0.11",
+          "price_per_m_decimal": "0.11"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-4.7",
+      "description": "GLM-4.7 is Z.AI's latest flagship model, with major upgrades focused on advanced coding capabilities and more reliable multi-step reasoning and execution. It shows clear gains in complex agent workflows, while delivering a more natural conversational experience and stronger front-end design sensibility.",
+      "tags": [],
+      "context_size": 204800,
+      "status": 1,
+      "display_name": "GLM 4.7",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1765370191,
+      "id": "zai-org/autoglm-phone-9b-multilingual",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 350,
+      "output_token_price_per_m": 1380,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 350,
+          "price_per_m": 350,
+          "origin_price_per_m_decimal": "0.035",
+          "price_per_m_decimal": "0.035"
+        },
+        "completion": {
+          "origin_price_per_m": 1380,
+          "price_per_m": 1380,
+          "origin_price_per_m_decimal": "0.138",
+          "price_per_m_decimal": "0.138"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/autoglm-phone-9b-multilingual",
+      "description": "Phone Agent is a mobile intelligent assistant framework built on AutoGLM, capable of understanding smartphone screens through multimodal perception and executing automated operations to complete tasks.\nThe system controls devices via ADB (Android Debug Bridge), uses a vision-language model for screen understanding, and leverages intelligent planning to generate and execute action sequences.\n\nUsers can simply describe tasks in natural language—for example, “Open Xiaohongshu and search for food recommendations.”\nPhone Agent will automatically parse the intent, understand the current UI, plan the next steps, and carry out the entire workflow.\n\nThe system also includes:\n\nSensitive action confirmation mechanisms\nHuman-in-the-loop fallback for login or verification code scenarios\nRemote ADB debugging, allowing device connection via WiFi or network for flexible remote control and development",
+      "tags": [],
+      "context_size": 65536,
+      "status": 1,
+      "display_name": "AutoGLM Phone 9B Multilingual",
+      "model_type": "chat",
+      "max_output_tokens": 65536,
+      "features": [
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1762480786,
+      "id": "moonshotai/kimi-k2-thinking",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 6000,
+      "output_token_price_per_m": 25000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 6000,
+          "price_per_m": 6000,
+          "origin_price_per_m_decimal": "0.6",
+          "price_per_m_decimal": "0.6"
+        },
+        "completion": {
+          "origin_price_per_m": 25000,
+          "price_per_m": 25000,
+          "origin_price_per_m_decimal": "2.5",
+          "price_per_m_decimal": "2.5"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1500,
+          "price_per_m": 1500,
+          "origin_price_per_m_decimal": "0.15",
+          "price_per_m_decimal": "0.15"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "moonshotai/kimi-k2-thinking",
+      "description": "The kimi-k2-thinking model is a general-purpose agentic reasoning model developed by Moonshot AI. ",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Kimi K2 Thinking",
+      "model_type": "chat",
+      "max_output_tokens": 98304,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1761138629,
+      "id": "paddlepaddle/paddleocr-vl",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 200,
+      "output_token_price_per_m": 200,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 200,
+          "price_per_m": 200,
+          "origin_price_per_m_decimal": "0.02",
+          "price_per_m_decimal": "0.02"
+        },
+        "completion": {
+          "origin_price_per_m": 200,
+          "price_per_m": 200,
+          "origin_price_per_m_decimal": "0.02",
+          "price_per_m_decimal": "0.02"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "paddlepaddle/paddleocr-vl",
+      "description": "",
+      "tags": [],
+      "context_size": 16384,
+      "status": 1,
+      "display_name": "PaddleOCR VL",
+      "model_type": "chat",
+      "max_output_tokens": 16384,
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1765204180,
+      "id": "zai-org/glm-4.6v",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 3000,
+      "output_token_price_per_m": 9000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 3000,
+          "price_per_m": 3000,
+          "origin_price_per_m_decimal": "0.3",
+          "price_per_m_decimal": "0.3"
+        },
+        "completion": {
+          "origin_price_per_m": 9000,
+          "price_per_m": 9000,
+          "origin_price_per_m_decimal": "0.9",
+          "price_per_m_decimal": "0.9"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 550,
+          "price_per_m": 550,
+          "origin_price_per_m_decimal": "0.055",
+          "price_per_m_decimal": "0.055"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-4.6v",
+      "description": "GLM-4.6V represents a significant multimodal advancement in the GLM series, featuring a 128k-token training context window and achieving state-of-the-art visual understanding accuracy for models of its parameter scale. Notably, it's the first visual model to natively integrate Function Call capabilities directly into its architecture, creating a seamless pathway from visual perception to executable actions. This breakthrough establishes a unified technical foundation for deploying multimodal agents in real-world business applications.",
+      "tags": [],
+      "context_size": 131072,
+      "status": 1,
+      "display_name": "GLM 4.6V",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "completions"
+      ],
+      "input_modalities": [
+        "text",
+        "video",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1759220284,
+      "id": "zai-org/glm-4.6",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 5500,
+      "output_token_price_per_m": 22000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 5500,
+          "price_per_m": 5500,
+          "origin_price_per_m_decimal": "0.55",
+          "price_per_m_decimal": "0.55"
+        },
+        "completion": {
+          "origin_price_per_m": 22000,
+          "price_per_m": 22000,
+          "origin_price_per_m_decimal": "2.2",
+          "price_per_m_decimal": "2.2"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1100,
+          "price_per_m": 1100,
+          "origin_price_per_m_decimal": "0.11",
+          "price_per_m_decimal": "0.11"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-4.6",
+      "description": "As the latest iteration in the GLM series, GLM-4.6 achieves comprehensive enhancements across multiple domains, including real-world coding, long-context processing, reasoning, searching, writing, and agentic applications. ",
+      "tags": [],
+      "context_size": 204800,
+      "status": 1,
+      "display_name": "GLM 4.6",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1776765179,
+      "id": "qwen/qwen3.6-35b-a3b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 2480,
+      "output_token_price_per_m": 14850,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 2480,
+          "price_per_m": 2480,
+          "origin_price_per_m_decimal": "0.248",
+          "price_per_m_decimal": "0.248"
+        },
+        "completion": {
+          "origin_price_per_m": 14850,
+          "price_per_m": 14850,
+          "origin_price_per_m_decimal": "1.485",
+          "price_per_m_decimal": "1.485"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3.6-35b-a3b",
+      "description": "The Qwen3.6 35B-A3B native vision-language model is built on a hybrid architecture that integrates linear attention mechanisms with a sparse mixture-of-experts framework, achieving higher inference efficiency. Compared with the 3.5-35B-A3B, this model demonstrates significantly improved agentic coding capabilities, mathematical and code reasoning abilities, spatial intelligence, as well as object localization and object detection performance.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Qwen3.6 35B A3B",
+      "model_type": "chat",
+      "max_output_tokens": 65536,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1757052991,
+      "id": "moonshotai/kimi-k2-0905",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 6000,
+      "output_token_price_per_m": 25000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 6000,
+          "price_per_m": 6000,
+          "origin_price_per_m_decimal": "0.6",
+          "price_per_m_decimal": "0.6"
+        },
+        "completion": {
+          "origin_price_per_m": 25000,
+          "price_per_m": 25000,
+          "origin_price_per_m_decimal": "2.5",
+          "price_per_m_decimal": "2.5"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "moonshotai/kimi-k2-0905",
+      "description": "Kimi K2 0905 is the September update of Kimi K2 0711. It is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion total parameters with 32 billion active per forward pass. It supports long-context inference up to 256k tokens, extended from the previous 128k.\nThis update improves agentic coding with higher accuracy and better generalization across scaffolds, and enhances frontend coding with more aesthetic and functional outputs for web, 3D, and related tasks. Kimi K2 is optimized for agentic capabilities, including advanced tool use, reasoning, and code synthesis. It excels across coding (LiveCodeBench, SWE-bench), reasoning (ZebraLogic, GPQA), and tool-use (Tau2, AceBench) benchmarks. The model is trained with a novel stack incorporating the MuonClip optimizer for stable large-scale MoE training.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Kimi K2 Instruct 0905",
+      "model_type": "chat",
+      "max_output_tokens": 98304,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1754438873,
+      "id": "openai/gpt-oss-120b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 500,
+      "output_token_price_per_m": 2500,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 500,
+          "price_per_m": 500,
+          "origin_price_per_m_decimal": "0.05",
+          "price_per_m_decimal": "0.05"
+        },
+        "completion": {
+          "origin_price_per_m": 2500,
+          "price_per_m": 2500,
+          "origin_price_per_m_decimal": "0.25",
+          "price_per_m_decimal": "0.25"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "openai/gpt-oss-120b",
+      "description": "gpt-oss-120b is an open-weight, 117B-parameter Mixture-of-Experts (MoE) language model from OpenAI designed for high-reasoning, agentic, and general-purpose production use cases. It activates 5.1B parameters per forward pass and is optimized to run on a single H100 GPU with native MXFP4 quantization. The model supports configurable reasoning depth, full chain-of-thought access, and native tool use, including function calling, browsing, and structured output generation.",
+      "tags": [],
+      "context_size": 131072,
+      "status": 1,
+      "display_name": "OpenAI GPT OSS 120B",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions",
+        "batch-api"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1752263515,
+      "id": "moonshotai/kimi-k2-instruct",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 5700,
+      "output_token_price_per_m": 23000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 5700,
+          "price_per_m": 5700,
+          "origin_price_per_m_decimal": "0.57",
+          "price_per_m_decimal": "0.57"
+        },
+        "completion": {
+          "origin_price_per_m": 23000,
+          "price_per_m": 23000,
+          "origin_price_per_m_decimal": "2.3",
+          "price_per_m_decimal": "2.3"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "moonshotai/kimi-k2-instruct",
+      "description": "Kimi K2 is a state-of-the-art mixture-of-experts (MoE) language model with 32 billion activated parameters and 1 trillion total parameters. Trained with the Muon optimizer, Kimi K2 achieves exceptional performance across frontier knowledge, reasoning, and coding tasks while being meticulously optimized for agentic capabilities.Specifically designed for tool use, reasoning, and autonomous problem-solving.",
+      "tags": [],
+      "context_size": 131072,
+      "status": 1,
+      "display_name": "Kimi K2 Instruct",
+      "model_type": "chat",
+      "max_output_tokens": 98304,
+      "features": [
+        "function-calling",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1736942072,
+      "id": "deepseek/deepseek_v3",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 8900,
+      "output_token_price_per_m": 8900,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 8900,
+          "price_per_m": 8900,
+          "origin_price_per_m_decimal": "0.89",
+          "price_per_m_decimal": "0.89"
+        },
+        "completion": {
+          "origin_price_per_m": 8900,
+          "price_per_m": 8900,
+          "origin_price_per_m_decimal": "0.89",
+          "price_per_m_decimal": "0.89"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek_v3",
+      "description": "DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported evaluations reveal that the model outperforms other open-source models and rivals leading closed-source models.",
+      "tags": [],
+      "context_size": 64000,
+      "status": 1,
+      "display_name": "DeepSeek V3",
+      "model_type": "chat",
+      "max_output_tokens": 16000,
+      "features": [
+        "function-calling",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1721801867,
+      "id": "meta-llama/llama-3.1-8b-instruct",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 200,
+      "output_token_price_per_m": 500,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 200,
+          "price_per_m": 200,
+          "origin_price_per_m_decimal": "0.02",
+          "price_per_m_decimal": "0.02"
+        },
+        "completion": {
+          "origin_price_per_m": 500,
+          "price_per_m": 500,
+          "origin_price_per_m_decimal": "0.05",
+          "price_per_m_decimal": "0.05"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "meta-llama/llama-3.1-8b-instruct",
+      "description": "Meta's latest class of models, Llama 3.1, launched with a variety of sizes and configurations. The 8B instruct-tuned version is particularly fast and efficient. It has demonstrated strong performance in human evaluations, outperforming several leading closed-source models.",
+      "tags": [],
+      "context_size": 16384,
+      "status": 1,
+      "display_name": "Llama 3.1 8B Instruct",
+      "model_type": "chat",
+      "max_output_tokens": 16384,
+      "features": [
+        "structured-outputs",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1756965597,
+      "id": "google/gemma-3-12b-it",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 500,
+      "output_token_price_per_m": 1000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 500,
+          "price_per_m": 500,
+          "origin_price_per_m_decimal": "0.05",
+          "price_per_m_decimal": "0.05"
+        },
+        "completion": {
+          "origin_price_per_m": 1000,
+          "price_per_m": 1000,
+          "origin_price_per_m_decimal": "0.1",
+          "price_per_m_decimal": "0.1"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "google/gemma-3-12b-it",
+      "description": "",
+      "tags": [],
+      "context_size": 131072,
+      "status": 1,
+      "display_name": "Gemma 3 12B",
+      "model_type": "chat",
+      "max_output_tokens": 8192,
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1754914926,
+      "id": "zai-org/glm-4.5v",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 6000,
+      "output_token_price_per_m": 18000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 6000,
+          "price_per_m": 6000,
+          "origin_price_per_m_decimal": "0.6",
+          "price_per_m_decimal": "0.6"
+        },
+        "completion": {
+          "origin_price_per_m": 18000,
+          "price_per_m": 18000,
+          "origin_price_per_m_decimal": "1.8",
+          "price_per_m_decimal": "1.8"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 1100,
+          "price_per_m": 1100,
+          "origin_price_per_m_decimal": "0.11",
+          "price_per_m_decimal": "0.11"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-4.5v",
+      "description": "Z.ai's GLM-4.5V sets a new standard in visual reasoning, achieving SOTA performance across 42 benchmarks among open-source models. Beyond benchmarks, it excels in real-world applications through hybrid training, enabling comprehensive visual understanding—from image/video analysis and GUI interaction to complex document processing and precise visual grounding.\n\nIn China's GeoGuessr challenge, GLM-4.5V surpassed 99% of 21,000 human players within 16 hours, reaching 66th place in a week. Built on the GLM-4.5-Air foundation and inheriting GLM-4.1V-Thinking's approach, it leverages a 106B-parameter MoE architecture for scalable, efficient performance. This model bridges advanced AI research with practical deployment, delivering unmatched visual intelligence",
+      "tags": [],
+      "context_size": 65536,
+      "status": 1,
+      "display_name": "GLM 4.5V",
+      "model_type": "chat",
+      "max_output_tokens": 16384,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text",
+        "video",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1733560109,
+      "id": "meta-llama/llama-3.3-70b-instruct",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1350,
+      "output_token_price_per_m": 4000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1350,
+          "price_per_m": 1350,
+          "origin_price_per_m_decimal": "0.135",
+          "price_per_m_decimal": "0.135"
+        },
+        "completion": {
+          "origin_price_per_m": 4000,
+          "price_per_m": 4000,
+          "origin_price_per_m_decimal": "0.4",
+          "price_per_m_decimal": "0.4"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "meta-llama/llama-3.3-70b-instruct",
+      "description": "The Meta Llama 3.3 multilingual large language model (LLM) is a pretrained and instruction tuned generative model in 70B (text in/text out). The Llama 3.3 instruction tuned text only model is optimized for multilingual dialogue use cases and outperforms many of the available open source and closed chat models on common industry benchmarks.\n\nSupported languages: English, German, French, Italian, Portuguese, Hindi, Spanish, and Thai.",
+      "tags": [],
+      "context_size": 12288,
+      "status": 1,
+      "display_name": "Llama 3.3 70B Instruct",
+      "model_type": "chat",
+      "max_output_tokens": 12288,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1750139830,
+      "id": "minimaxai/minimax-m1-80k",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 5500,
+      "output_token_price_per_m": 22000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 5500,
+          "price_per_m": 5500,
+          "origin_price_per_m_decimal": "0.55",
+          "price_per_m_decimal": "0.55"
+        },
+        "completion": {
+          "origin_price_per_m": 22000,
+          "price_per_m": 22000,
+          "origin_price_per_m_decimal": "2.2",
+          "price_per_m_decimal": "2.2"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "minimaxai/minimax-m1-80k",
+      "description": "MiniMax-M1: The World's First Open-Weight, Large-Scale Hybrid Attention Inference Model\n\nMiniMax-M1 adopts a Mixture of Experts (MoE) architecture and integrates the Flash Attention mechanism. The model contains a total of 456 billion parameters, with 45.9 billion parameters activated per token.\n\nNatively, the M1 model supports a context length of 1 million tokens—8 times that of DeepSeek R1. Additionally, by combining the CISPO algorithm with an efficient hybrid attention design for reinforcement learning training, MiniMax-M1 achieves industry-leading performance in long-context reasoning and real-world software engineering scenarios.",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "MiniMax M1",
+      "model_type": "chat",
+      "max_output_tokens": 40000,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1748457624,
+      "id": "deepseek/deepseek-r1-0528",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 7000,
+      "output_token_price_per_m": 25000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 7000,
+          "price_per_m": 7000,
+          "origin_price_per_m_decimal": "0.7",
+          "price_per_m_decimal": "0.7"
+        },
+        "completion": {
+          "origin_price_per_m": 25000,
+          "price_per_m": 25000,
+          "origin_price_per_m_decimal": "2.5",
+          "price_per_m_decimal": "2.5"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 3500,
+          "price_per_m": 3500,
+          "origin_price_per_m_decimal": "0.35",
+          "price_per_m_decimal": "0.35"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-r1-0528",
+      "description": "DeepSeek R1 0528 is the latest open-source model released by the DeepSeek team, featuring impressive reasoning capabilities, particularly achieving performance comparable to OpenAI's o1 model in mathematics, coding, and reasoning tasks.",
+      "tags": [],
+      "context_size": 163840,
+      "status": 1,
+      "display_name": "DeepSeek R1 0528",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "batch-api"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1713938472,
+      "id": "microsoft/wizardlm-2-8x22b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 6200,
+      "output_token_price_per_m": 6200,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 6200,
+          "price_per_m": 6200,
+          "origin_price_per_m_decimal": "0.62",
+          "price_per_m_decimal": "0.62"
+        },
+        "completion": {
+          "origin_price_per_m": 6200,
+          "price_per_m": 6200,
+          "origin_price_per_m_decimal": "0.62",
+          "price_per_m_decimal": "0.62"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "microsoft/wizardlm-2-8x22b",
+      "description": "WizardLM-2 8x22B is Microsoft AI's most advanced Wizard model. It demonstrates highly competitive performance compared to leading proprietary models, and it consistently outperforms all existing state-of-the-art opensource models.",
+      "tags": [],
+      "context_size": 65535,
+      "status": 1,
+      "display_name": "WizardLM 2 8x22B",
+      "model_type": "chat",
+      "max_output_tokens": 8000,
+      "features": [
+        "structured-outputs",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1748526709,
+      "id": "deepseek/deepseek-r1-0528-qwen3-8b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 600,
+      "output_token_price_per_m": 900,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 600,
+          "price_per_m": 600,
+          "origin_price_per_m_decimal": "0.06",
+          "price_per_m_decimal": "0.06"
+        },
+        "completion": {
+          "origin_price_per_m": 900,
+          "price_per_m": 900,
+          "origin_price_per_m_decimal": "0.09",
+          "price_per_m_decimal": "0.09"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-r1-0528-qwen3-8b",
+      "description": "DeepSeek-R1-0528-Qwen3-8B is a high-performance reasoning model based on the Qwen3 8B Base model, enhanced through the integration of DeepSeek-R1-0528's Chain-of-Thought (CoT) optimization. In the AIME 2024 evaluation, this open-source model achieved state-of-the-art (SOTA) performance, delivering a 10% improvement over the original Qwen3 8B while matching the reasoning capabilities of the much larger 235-billion-parameter Qwen3-235B-thinking. ",
+      "tags": [],
+      "context_size": 128000,
+      "status": 1,
+      "display_name": "DeepSeek R1 Distill Qwen3 8B 0528",
+      "model_type": "chat",
+      "max_output_tokens": 32000,
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1743906990,
+      "id": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 2700,
+      "output_token_price_per_m": 8500,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 2700,
+          "price_per_m": 2700,
+          "origin_price_per_m_decimal": "0.27",
+          "price_per_m_decimal": "0.27"
+        },
+        "completion": {
+          "origin_price_per_m": 8500,
+          "price_per_m": 8500,
+          "origin_price_per_m_decimal": "0.85",
+          "price_per_m_decimal": "0.85"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
+      "description": "Llama 4 Maverick 17B Instruct (128E) is a high-capacity multimodal language model from Meta, built on a mixture-of-experts (MoE) architecture with 128 experts and 17 billion active parameters per forward pass (400B total). It supports multilingual text and image input, and produces multilingual text and code output across 12 supported languages. Optimized for vision-language tasks, Maverick is instruction-tuned for assistant-like behavior, image reasoning, and general-purpose multimodal interaction.\n\nMaverick features early fusion for native multimodality and a 1 million token context window. It was trained on a curated mixture of public, licensed, and Meta-platform data, covering ~22 trillion tokens, with a knowledge cutoff in August 2024. Released on April 5, 2025 under the Llama 4 Community License, Maverick is suited for research and commercial applications requiring advanced multimodal understanding and high model throughput.",
+      "tags": [],
+      "context_size": 1048576,
+      "status": 1,
+      "display_name": "Llama 4 Maverick Instruct",
+      "model_type": "chat",
+      "max_output_tokens": 8192,
+      "features": [
+        "structured-outputs",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1743906925,
+      "id": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1800,
+      "output_token_price_per_m": 5900,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1800,
+          "price_per_m": 1800,
+          "origin_price_per_m_decimal": "0.18",
+          "price_per_m_decimal": "0.18"
+        },
+        "completion": {
+          "origin_price_per_m": 5900,
+          "price_per_m": 5900,
+          "origin_price_per_m_decimal": "0.59",
+          "price_per_m_decimal": "0.59"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "meta-llama/llama-4-scout-17b-16e-instruct",
+      "description": "Llama 4 Scout 17B Instruct (16E) is a mixture-of-experts (MoE) language model developed by Meta, activating 17 billion parameters out of a total of 109B. It supports native multimodal input (text and image) and multilingual output (text and code) across 12 supported languages. Designed for assistant-style interaction and visual reasoning, Scout uses 16 experts per forward pass and features a context length of 10 million tokens, with a training corpus of ~40 trillion tokens.\n\nBuilt for high efficiency and local or commercial deployment, Llama 4 Scout incorporates early fusion for seamless modality integration. It is instruction-tuned for use in multilingual chat, captioning, and image understanding tasks. Released under the Llama 4 Community License, it was last trained on data up to August 2024 and launched publicly on April 5, 2025.",
+      "tags": [],
+      "context_size": 131072,
+      "status": 1,
+      "display_name": "Llama 4 Scout Instruct",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "features": [
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1719493012,
+      "id": "nousresearch/hermes-2-pro-llama-3-8b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1400,
+      "output_token_price_per_m": 1400,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1400,
+          "price_per_m": 1400,
+          "origin_price_per_m_decimal": "0.14",
+          "price_per_m_decimal": "0.14"
+        },
+        "completion": {
+          "origin_price_per_m": 1400,
+          "price_per_m": 1400,
+          "origin_price_per_m_decimal": "0.14",
+          "price_per_m_decimal": "0.14"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "nousresearch/hermes-2-pro-llama-3-8b",
+      "description": "Hermes 2 Pro is an upgraded, retrained version of Nous Hermes 2, consisting of an updated and cleaned version of the OpenHermes 2.5 Dataset, as well as a newly introduced Function Calling and JSON Mode dataset developed in-house.",
+      "tags": [],
+      "context_size": 8192,
+      "status": 1,
+      "display_name": "Hermes 2 Pro Llama 3 8B",
+      "model_type": "chat",
+      "max_output_tokens": 8192,
+      "features": [
+        "structured-outputs"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1718699128,
+      "id": "sao10k/l3-70b-euryale-v2.1",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 14800,
+      "output_token_price_per_m": 14800,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 14800,
+          "price_per_m": 14800,
+          "origin_price_per_m_decimal": "1.48",
+          "price_per_m_decimal": "1.48"
+        },
+        "completion": {
+          "origin_price_per_m": 14800,
+          "price_per_m": 14800,
+          "origin_price_per_m_decimal": "1.48",
+          "price_per_m_decimal": "1.48"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "sao10k/l3-70b-euryale-v2.1",
+      "description": "The uncensored llama3 model is a powerhouse of creativity, excelling in both roleplay and story writing. It offers a liberating experience during roleplays, free from any restrictions. This model stands out for its immense creativity, boasting a vast array of unique ideas and plots, truly a treasure trove for those seeking originality. Its unrestricted nature during roleplays allows for the full breadth of imagination to unfold, akin to an enhanced, big-brained version of Stheno. Perfect for creative minds seeking a boundless platform for their imaginative expressions, the uncensored llama3 model is an ideal choice",
+      "tags": [],
+      "context_size": 8192,
+      "status": 1,
+      "display_name": "Llama 3 70B Euryale V2.1",
+      "model_type": "chat",
+      "max_output_tokens": 8192,
+      "features": [
+        "function-calling"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1755106514,
+      "id": "baichuan/baichuan-m2-32b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 700,
+      "output_token_price_per_m": 700,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 700,
+          "price_per_m": 700,
+          "origin_price_per_m_decimal": "0.07",
+          "price_per_m_decimal": "0.07"
+        },
+        "completion": {
+          "origin_price_per_m": 700,
+          "price_per_m": 700,
+          "origin_price_per_m_decimal": "0.07",
+          "price_per_m_decimal": "0.07"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "baichuan/baichuan-m2-32b",
+      "description": "Baichuan-M2 is a medically-enhanced reasoning model specifically designed for real-world medical reasoning tasks. We begin with real-world medical questions and conduct reinforcement learning training based on a large-scale verifier system. While maintaining the model's general capabilities, the medical effectiveness of Baichuan-M2 has achieved breakthrough improvements.\n\nBaichuan-M2 is currently the world's best open-source medical model. On the HealthBench Benchmark, it surpasses all open-source models, including GPT-OSS-120B, as well as many cutting-edge closed-source models. It is the open-source model closest to GPT-5 in terms of medical capabilities.\n\nOur research demonstrates that a robust verifier is crucial for aligning model capabilities with real-world applications, and an end-to-end reinforcement learning approach fundamentally enhances the model's medical reasoning abilities. The release of Baichuan-M2 represents a significant advancement in the field of medical artificial intelligence, pushing t",
+      "tags": [],
+      "context_size": 131072,
+      "status": 1,
+      "display_name": "Baichuan M2 32B",
+      "model_type": "chat",
+      "max_output_tokens": 131072,
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1742889385,
+      "id": "google/gemma-3-27b-it",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1190,
+      "output_token_price_per_m": 2000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1190,
+          "price_per_m": 1190,
+          "origin_price_per_m_decimal": "0.119",
+          "price_per_m_decimal": "0.119"
+        },
+        "completion": {
+          "origin_price_per_m": 2000,
+          "price_per_m": 2000,
+          "origin_price_per_m_decimal": "0.2",
+          "price_per_m_decimal": "0.2"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "google/gemma-3-27b-it",
+      "description": "Gemma 3 introduces multimodality, supporting vision-language input and text outputs. It handles context windows up to 32k tokens, understands over 140 languages, and offers improved math, reasoning, and chat capabilities, including structured outputs. Gemma 3 27B is Google's latest open source model, successor to Gemma.",
+      "tags": [],
+      "context_size": 98304,
+      "status": 1,
+      "display_name": "Gemma 3 27B",
+      "model_type": "chat",
+      "max_output_tokens": 16384,
+      "features": [
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1741174465,
+      "id": "deepseek/deepseek-r1-turbo",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 7000,
+      "output_token_price_per_m": 25000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 7000,
+          "price_per_m": 7000,
+          "origin_price_per_m_decimal": "0.7",
+          "price_per_m_decimal": "0.7"
+        },
+        "completion": {
+          "origin_price_per_m": 25000,
+          "price_per_m": 25000,
+          "origin_price_per_m_decimal": "2.5",
+          "price_per_m_decimal": "2.5"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-r1-turbo",
+      "description": "DeepSeek R1 is the latest open-source model released by the DeepSeek team, featuring impressive reasoning capabilities, particularly achieving performance comparable to OpenAI's o1 model in mathematics, coding, and reasoning tasks.",
+      "tags": [],
+      "context_size": 64000,
+      "status": 1,
+      "display_name": "DeepSeek R1 Turbo",
+      "model_type": "chat",
+      "max_output_tokens": 16000,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1739525865,
+      "id": "deepseek/deepseek-r1/community",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 40000,
+      "output_token_price_per_m": 40000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 40000,
+          "price_per_m": 40000,
+          "origin_price_per_m_decimal": "4",
+          "price_per_m_decimal": "4"
+        },
+        "completion": {
+          "origin_price_per_m": 40000,
+          "price_per_m": 40000,
+          "origin_price_per_m_decimal": "4",
+          "price_per_m_decimal": "4"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "deepseek/deepseek-r1/community",
+      "description": "",
+      "tags": [],
+      "context_size": 64000,
+      "status": 1,
+      "display_name": "DeepSeek R1",
+      "model_type": "chat",
+      "max_output_tokens": 8000,
+      "features": [
+        "function-calling",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1732875917,
+      "id": "Sao10K/L3-8B-Stheno-v3.2",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 500,
+      "output_token_price_per_m": 500,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 500,
+          "price_per_m": 500,
+          "origin_price_per_m_decimal": "0.05",
+          "price_per_m_decimal": "0.05"
+        },
+        "completion": {
+          "origin_price_per_m": 500,
+          "price_per_m": 500,
+          "origin_price_per_m_decimal": "0.05",
+          "price_per_m_decimal": "0.05"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "Sao10K/L3-8B-Stheno-v3.2",
+      "description": "Sao10K/L3-8B-Stheno-v3.2 is a highly skilled actor that excels at fully immersing itself in any role assigned.",
+      "tags": [],
+      "context_size": 8192,
+      "status": 1,
+      "display_name": "Llama 3 8B Stheno V3.2",
+      "model_type": "chat",
+      "max_output_tokens": 32000,
+      "features": [
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1714024873,
+      "id": "gryphe/mythomax-l2-13b",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 900,
+      "output_token_price_per_m": 900,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 900,
+          "price_per_m": 900,
+          "origin_price_per_m_decimal": "0.09",
+          "price_per_m_decimal": "0.09"
+        },
+        "completion": {
+          "origin_price_per_m": 900,
+          "price_per_m": 900,
+          "origin_price_per_m_decimal": "0.09",
+          "price_per_m_decimal": "0.09"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "gryphe/mythomax-l2-13b",
+      "description": "The idea behind this merge is that each layer is composed of several tensors, which are in turn responsible for specific functions. Using MythoLogic-L2's robust understanding as its input and Huginn's extensive writing capability as its output seems to have resulted in a model that exceeds at both, confirming my theory. (More details to be released at a later time).",
+      "tags": [],
+      "context_size": 4096,
+      "status": 1,
+      "display_name": "MythoMax L2 13B",
+      "model_type": "chat",
+      "max_output_tokens": 3200,
+      "endpoints": [
+        "chat/completions",
+        "completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1793083113,
+      "id": "nvrouter/auto",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 0,
+      "output_token_price_per_m": 0,
+      "is_tiered_billing": false,
+      "title": "nvrouter/auto",
+      "description": "智能网关 Auto 模型",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Auto",
+      "model_type": "chat",
+      "max_output_tokens": 328000,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1793082715,
+      "id": "nvrouter/fusion",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 0,
+      "output_token_price_per_m": 0,
+      "is_tiered_billing": false,
+      "title": "nvrouter/fusion",
+      "description": "",
+      "tags": [],
+      "context_size": 1000000,
+      "status": 1,
+      "display_name": "Fusion",
+      "model_type": "chat",
+      "max_output_tokens": 328000,
+      "features": [
+        "serverless",
+        "function-calling",
+        "structured-outputs",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic",
+        "responses"
+      ],
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1789699811,
+      "id": "ming-image-0.1-design-layer",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 0,
+      "output_token_price_per_m": 20000,
+      "pricing": {
+        "completion": {
+          "origin_price_per_m": 20000,
+          "price_per_m": 20000,
+          "origin_price_per_m_decimal": "2",
+          "price_per_m_decimal": "2"
+        },
+        "multimodal_input": [
+          {
+            "modals": [
+              "text"
+            ]
+          },
+          {
+            "modals": [
+              "image"
+            ]
+          },
+          {
+            "modals": [
+              "video"
+            ]
+          },
+          {
+            "modals": [
+              "audio"
+            ]
+          }
+        ],
+        "multimodal_output": [
+          {
+            "modals": [
+              "text"
+            ],
+            "output_token_base_price": 20000,
+            "output_token_discount_price": 20000
+          },
+          {
+            "modals": [
+              "image"
+            ],
+            "output_token_base_price": 20000,
+            "output_token_discount_price": 20000
+          },
+          {
+            "modals": [
+              "video"
+            ]
+          },
+          {
+            "modals": [
+              "audio"
+            ]
+          }
+        ]
+      },
+      "is_tiered_billing": false,
+      "title": "ming-image-0.1-design-layer",
+      "description": "",
+      "tags": [],
+      "context_size": 0,
+      "status": 1,
+      "display_name": "ming image 0.1 design layer",
+      "model_type": "chat",
+      "features": [
+        "serverless"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "output_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ]
+    },
+    {
+      "created": 1789699451,
+      "id": "ming-image-0.1-design",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 0,
+      "output_token_price_per_m": 20000,
+      "pricing": {
+        "completion": {
+          "origin_price_per_m": 20000,
+          "price_per_m": 20000,
+          "origin_price_per_m_decimal": "2",
+          "price_per_m_decimal": "2"
+        },
+        "multimodal_input": [
+          {
+            "modals": [
+              "text"
+            ]
+          },
+          {
+            "modals": [
+              "image"
+            ]
+          },
+          {
+            "modals": [
+              "video"
+            ]
+          },
+          {
+            "modals": [
+              "audio"
+            ]
+          }
+        ],
+        "multimodal_output": [
+          {
+            "modals": [
+              "text"
+            ],
+            "output_token_base_price": 20000,
+            "output_token_discount_price": 20000
+          },
+          {
+            "modals": [
+              "image"
+            ],
+            "output_token_base_price": 20000,
+            "output_token_discount_price": 20000
+          },
+          {
+            "modals": [
+              "video"
+            ]
+          },
+          {
+            "modals": [
+              "audio"
+            ]
+          }
+        ]
+      },
+      "is_tiered_billing": false,
+      "title": "ming-image-0.1-design",
+      "description": "",
+      "tags": [],
+      "context_size": 0,
+      "status": 1,
+      "display_name": "ming image 0.1 design",
+      "model_type": "chat",
+      "features": [
+        "serverless"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ],
+      "output_modalities": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ]
+    },
+    {
+      "created": 1788406767,
+      "id": "inclusionai/ling-3.0-flash-vl",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 750,
+      "output_token_price_per_m": 2200,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 750,
+          "price_per_m": 750,
+          "origin_price_per_m_decimal": "0.075",
+          "price_per_m_decimal": "0.075"
+        },
+        "completion": {
+          "origin_price_per_m": 2200,
+          "price_per_m": 2200,
+          "origin_price_per_m_decimal": "0.22",
+          "price_per_m_decimal": "0.22"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 150,
+          "price_per_m": 150,
+          "origin_price_per_m_decimal": "0.015",
+          "price_per_m_decimal": "0.015"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "inclusionai/ling-3.0-flash-vl",
+      "description": "Ling-3.0-flash-VL builds on Ling-3.0-flash, further strengthening its language capabilities while adding native visual perception and advanced visual agent capabilities. ",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Ling 3.0 Flash VL",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "serverless",
+        "function-calling",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1788406672,
+      "id": "inclusionai/ling-3.0-flash-sante",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 750,
+      "output_token_price_per_m": 2200,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 750,
+          "price_per_m": 750,
+          "origin_price_per_m_decimal": "0.075",
+          "price_per_m_decimal": "0.075"
+        },
+        "completion": {
+          "origin_price_per_m": 2200,
+          "price_per_m": 2200,
+          "origin_price_per_m_decimal": "0.22",
+          "price_per_m_decimal": "0.22"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 150,
+          "price_per_m": 150,
+          "origin_price_per_m_decimal": "0.015",
+          "price_per_m_decimal": "0.015"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "inclusionai/ling-3.0-flash-sante",
+      "description": "Ling-3.0-Flash-Sante is a Mixture-of-Experts (MoE) model with enhanced capabilities across health and medicine. Built on Ling-3.0-Flash, it has 124 billion total parameters and activates approximately 5.1 billion parameters per token. The model excels in medical knowledge reasoning, clinical safety, evidence-based retrieval, and long-horizon medical tasks, while retaining strong general capabilities in reasoning, coding, and agentic tasks.",
+      "tags": [],
+      "context_size": 262144,
+      "status": 1,
+      "display_name": "Ling 3.0 Flash Sante",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "serverless",
+        "function-calling",
+        "reasoning"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1763607567,
+      "id": "dev/glm46",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 0,
+      "output_token_price_per_m": 0,
+      "is_tiered_billing": false,
+      "title": "dev/glm46",
+      "description": "",
+      "tags": [],
+      "context_size": 256000,
+      "status": 1,
+      "display_name": "dev/glm46",
+      "model_type": "chat",
+      "max_output_tokens": 256000,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions",
+        "anthropic"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1760367673,
+      "id": "zai-org/glm-4.5-air",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 1300,
+      "output_token_price_per_m": 8500,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 1300,
+          "price_per_m": 1300,
+          "origin_price_per_m_decimal": "0.13",
+          "price_per_m_decimal": "0.13"
+        },
+        "completion": {
+          "origin_price_per_m": 8500,
+          "price_per_m": 8500,
+          "origin_price_per_m_decimal": "0.85",
+          "price_per_m_decimal": "0.85"
+        },
+        "input_cache_read": {
+          "origin_price_per_m": 250,
+          "price_per_m": 250,
+          "origin_price_per_m_decimal": "0.025",
+          "price_per_m_decimal": "0.025"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "zai-org/glm-4.5-air",
+      "description": "",
+      "tags": [],
+      "context_size": 131072,
+      "status": 1,
+      "display_name": "GLM 4.5 Air",
+      "model_type": "chat",
+      "max_output_tokens": 98304,
+      "features": [
+        "function-calling",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1760182393,
+      "id": "qwen/qwen3-vl-30b-a3b-instruct",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 2000,
+      "output_token_price_per_m": 7000,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 2000,
+          "price_per_m": 2000,
+          "origin_price_per_m_decimal": "0.2",
+          "price_per_m_decimal": "0.2"
+        },
+        "completion": {
+          "origin_price_per_m": 7000,
+          "price_per_m": 7000,
+          "origin_price_per_m_decimal": "0.7",
+          "price_per_m_decimal": "0.7"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3-vl-30b-a3b-instruct",
+      "description": "",
+      "tags": [],
+      "context_size": 131072,
+      "status": 1,
+      "display_name": "Qwen3 VL 30B A3B Instruct",
+      "model_type": "chat",
+      "max_output_tokens": 32768,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "video",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1758695093,
+      "id": "qwen/qwen3-omni-30b-a3b-thinking",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 2500,
+      "output_token_price_per_m": 9700,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 2500,
+          "price_per_m": 2500,
+          "origin_price_per_m_decimal": "0.25",
+          "price_per_m_decimal": "0.25"
+        },
+        "completion": {
+          "origin_price_per_m": 9700,
+          "price_per_m": 9700,
+          "origin_price_per_m_decimal": "0.97",
+          "price_per_m_decimal": "0.97"
+        },
+        "multimodal_input": [
+          {
+            "modals": [
+              "text"
+            ],
+            "input_token_base_price": 2500,
+            "input_token_discount_price": 2500
+          },
+          {
+            "modals": [
+              "audio"
+            ],
+            "input_token_base_price": 22000,
+            "input_token_discount_price": 22000
+          },
+          {
+            "modals": [
+              "image"
+            ],
+            "input_token_base_price": 4600,
+            "input_token_discount_price": 4600
+          },
+          {
+            "modals": [
+              "video"
+            ],
+            "input_token_base_price": 4600,
+            "input_token_discount_price": 4600
+          },
+          {
+            "modals": [
+              "image",
+              "video"
+            ],
+            "input_token_base_price": 4600,
+            "input_token_discount_price": 4600
+          }
+        ],
+        "multimodal_output": [
+          {
+            "modals": [
+              "text"
+            ],
+            "output_token_base_price": 9700,
+            "output_token_discount_price": 9700
+          },
+          {
+            "modals": [
+              "audio"
+            ],
+            "output_token_base_price": 17880,
+            "output_token_discount_price": 17880
+          }
+        ]
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen3-omni-30b-a3b-thinking",
+      "description": "The Qwen-Omni model accepts combined inputs of text and a single additional modality (image, audio, or video) to generate responses in text or speech. It offers a variety of human-like voices, supports speech output in multiple languages and dialects, and is suitable for applications such as text creation, visual recognition, and voice assistants",
+      "tags": [],
+      "context_size": 65536,
+      "status": 1,
+      "display_name": "Qwen3 Omni 30B A3B Thinking",
+      "model_type": "chat",
+      "max_output_tokens": 16384,
+      "features": [
+        "function-calling",
+        "structured-outputs",
+        "reasoning",
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text",
+        "audio",
+        "video",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    {
+      "created": 1756888269,
+      "id": "qwen/qwen-mt-plus",
+      "object": "model",
+      "owned_by": "novita",
+      "permission": null,
+      "root": "",
+      "parent": "",
+      "input_token_price_per_m": 2500,
+      "output_token_price_per_m": 7500,
+      "pricing": {
+        "prompt": {
+          "origin_price_per_m": 2500,
+          "price_per_m": 2500,
+          "origin_price_per_m_decimal": "0.25",
+          "price_per_m_decimal": "0.25"
+        },
+        "completion": {
+          "origin_price_per_m": 7500,
+          "price_per_m": 7500,
+          "origin_price_per_m_decimal": "0.75",
+          "price_per_m_decimal": "0.75"
+        }
+      },
+      "is_tiered_billing": false,
+      "title": "qwen/qwen-mt-plus",
+      "description": "Qwen-MT is a large language model optimized for machine translation, built upon the foundation of the Tongyi Qianwen model. It supports translation across 92 languages — including Chinese, English, Japanese, Korean, French, Spanish, German, Thai, Indonesian, Vietnamese, Arabic, and more — enabling seamless multilingual communication.",
+      "tags": [],
+      "context_size": 16384,
+      "status": 1,
+      "display_name": "Qwen MT Plus",
+      "model_type": "chat",
+      "max_output_tokens": 8192,
+      "features": [
+        "serverless"
+      ],
+      "endpoints": [
+        "chat/completions"
+      ],
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    }
+  ]
+}

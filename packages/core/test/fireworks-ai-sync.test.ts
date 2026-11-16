@@ -1,10 +1,9 @@
-import { expect, spyOn, test } from "bun:test";
+import { expect, test } from "bun:test";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { syncProvider, type ExistingModel } from "../src/sync/index.js";
-import * as missingIssues from "../src/sync/missing-issues.js";
 import {
   buildFireworksModel,
   chatApis,
@@ -161,7 +160,6 @@ test("does not report retired pricing rows or their aliases as missing models", 
   const dir = await mkdtemp(path.join(tmpdir(), "fireworks-sync-"));
   const modelsDir = path.join(dir, "providers/fireworks-ai/models");
   await mkdir(modelsDir, { recursive: true });
-  const issues = spyOn(missingIssues, "openMissingModelIssues").mockResolvedValue([]);
   const provider = {
     ...fireworksAi,
     modelsDir,
@@ -186,11 +184,9 @@ test("does not report retired pricing rows or their aliases as missing models", 
   };
 
   try {
-    await syncProvider(provider, { openIssues: true });
-    expect(issues).toHaveBeenCalledTimes(1);
-    expect(issues.mock.calls[0]?.[1]).toEqual(["accounts/fireworks/models/new"]);
+    const result = await syncProvider(provider);
+    expect(result.missing).toEqual([{ id: "accounts/fireworks/models/new" }]);
   } finally {
-    issues.mockRestore();
     await rm(dir, { recursive: true, force: true });
   }
 });
