@@ -1,0 +1,18 @@
+# Prices: Prentis rate card, USD per 1M tokens (as of 2026-11-13).
+# Reasoning controls copied from providers/deepinfra/models/tencent/Hy3.toml.
+schema = 2
+base_model = "tencent/hy3"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.64
