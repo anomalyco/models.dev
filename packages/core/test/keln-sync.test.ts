@@ -13,9 +13,10 @@ import {
   kelnReasoningControls,
   KelnResponse,
   type KelnModel,
+  type KelnTextModel,
 } from "../src/sync/providers/keln.js";
 
-function model(overrides: Partial<KelnModel> = {}): KelnModel {
+function model(overrides: Partial<KelnModel> = {}): KelnTextModel {
   return {
     id: "deepseek-ai/deepseek-v4.1-flash",
     object: "model",
@@ -25,7 +26,7 @@ function model(overrides: Partial<KelnModel> = {}): KelnModel {
     pricing: { prompt: "0.0000003", completion: "0.0000012", input_cache_read: "0.000000036" },
     reasoning: { mandatory: false, supported_efforts: ["none", "low", "high", "max"], default_effort: "max" },
     ...overrides,
-  };
+  } as KelnTextModel;
 }
 
 const context = { existing: () => undefined, authored: () => undefined };
@@ -59,6 +60,11 @@ test("rows whose output_modalities lack text never sync", () => {
   const decisions = model({ id: "cloudflare/clef", output_modalities: ["decisions"], reasoning: null });
   const rows = keln.parseModels({ object: "list", data: [model(), decisions] });
   expect(rows.map((row) => row.id)).toEqual([model().id]);
+  // Speech rows list no context window; they're left out instead of failing the parse.
+  const tts = model({ id: "google/gemini-3.8-flash-tts", output_modalities: ["audio"], context_length: undefined as never, reasoning: null });
+  expect(keln.parseModels({ object: "list", data: [model(), tts] }).map((row) => row.id)).toEqual([model().id]);
+  // A text row without one is malformed and fails, instead of being dropped and its file deleted.
+  expect(() => keln.parseModels({ object: "list", data: [model({ context_length: undefined as never })] })).toThrow("without context_length");
   expect(() => KelnResponse.parse({ object: "list", data: [model({ output_modalities: [] })] })).toThrow();
 });
 

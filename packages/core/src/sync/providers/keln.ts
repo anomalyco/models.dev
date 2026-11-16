@@ -20,7 +20,8 @@ const PerTokenPrice = z.string().regex(/^(0|[1-9]\d*)(?:\.\d+)?$/);
 
 export const KelnModel = z.object({
   id: z.string().min(1),
-  context_length: z.number().int().positive(),
+  // Speech models list no context window.
+  context_length: z.number().int().positive().nullish(),
   input_modalities: z.array(z.string()).min(1),
   output_modalities: z.array(z.string()).min(1),
   // USD per token as decimal strings (OpenRouter's shape).
@@ -48,6 +49,8 @@ export const KelnResponse = z.object({
 );
 
 export type KelnModel = z.infer<typeof KelnModel>;
+// What parseModels hands on: text rows, which always carry a context window.
+export type KelnTextModel = KelnModel & { context_length: number };
 
 // Keln names models by their Hugging Face organisation; these two differ from the
 // metadata labs' prefixes. Every other organisation resolves as published.
@@ -104,7 +107,11 @@ export const keln = {
   parseModels(raw) {
     // Keln also lists decision-output models (output_modalities without "text", e.g.
     // cloudflare/clef); they cannot serve chat, so they never sync and their files are removed.
-    return KelnResponse.parse(raw).data.filter((model) => model.output_modalities.includes("text"));
+    const text = KelnResponse.parse(raw).data.filter((model) => model.output_modalities.includes("text"));
+    // A text row without a context window is malformed; fail rather than drop (and delete) a served model.
+    const broken = text.filter((model) => model.context_length == null).map((model) => model.id);
+    if (broken.length > 0) throw new Error(`Keln text models without context_length: ${broken.join(", ")}`);
+    return text as KelnTextModel[];
   },
   sourceID(model) {
     return model.id;
@@ -173,7 +180,7 @@ export const keln = {
       ...(v2Set && { v2Set }),
     };
   },
-} satisfies SyncProvider<KelnModel>;
+} satisfies SyncProvider<KelnTextModel>;
 
 /** The lab file's v2 input list (MIME types), or undefined when it has none. */
 function labInputModalities(modelID: string): string[] | undefined {

@@ -175,6 +175,8 @@ export const OpenRouterModel = z.object({
   supported_parameters: z.array(z.string()),
   // Images API endpoint records, attached by fetchModels for image models.
   image_endpoints: z.array(OpenRouterImageEndpoint).optional(),
+  // Set by fetchModels when the model's endpoints page answers 404.
+  image_endpoints_missing: z.boolean().optional(),
   // Video SKU prices from the video models list, attached by fetchModels for video models.
   video_pricing_skus: z.record(z.string()).optional(),
   reasoning: z
@@ -227,9 +229,22 @@ export const openrouter = {
     for (const model of text.data) {
       if (model.architecture.output_modalities.includes("video")) model.video_pricing_skus = skus.get(model.id);
     }
-    await Promise.all(extra.filter((model) => mediaType(model) === "image").map(async (model) => {
-      model.image_endpoints = OpenRouterImageEndpoints.parse(await get(IMAGE_ENDPOINTS_URL(model.id))).endpoints;
+    const images = extra.filter((model) => mediaType(model) === "image");
+    await Promise.all(images.map(async (model) => {
+      // Some listed image models (openrouter/auto, a few :free variants) have no endpoints page and answer 404.
+      const response = await fetch(IMAGE_ENDPOINTS_URL(model.id), { headers });
+      if (response.status === 404) {
+        model.image_endpoints_missing = true;
+        return;
+      }
+      if (!response.ok) throw new Error(`OpenRouter request failed: ${response.status} ${response.statusText}`);
+      model.image_endpoints = OpenRouterImageEndpoints.parse(await response.json()).endpoints;
     }));
+    const missing = images.filter((model) => model.image_endpoints_missing).length;
+    // A few 404s are models without a page; most of them means the endpoints API moved.
+    if (missing >= 5 && missing * 2 >= images.length) {
+      throw new Error(`OpenRouter image endpoints answered 404 for ${missing} of ${images.length} image models`);
+    }
     return { data: [...text.data, ...extra] };
   },
   parseModels(raw) {
@@ -238,9 +253,14 @@ export const openrouter = {
   },
   sourceNotices(models) {
     const ids = new Set(models.map((model) => model.id));
-    return [...TIME_BILLED_AUDIO]
-      .filter((id) => !ids.has(id))
-      .map((id) => `${id}: listed in TIME_BILLED_AUDIO but no longer in the OpenRouter catalog`);
+    return [
+      ...[...TIME_BILLED_AUDIO]
+        .filter((id) => !ids.has(id))
+        .map((id) => `${id}: listed in TIME_BILLED_AUDIO but no longer in the OpenRouter catalog`),
+      ...models
+        .filter((model) => model.image_endpoints_missing)
+        .map((model) => `${model.id}: no Images API endpoints page (404), so no image price`),
+    ];
   },
   translateModel(model, context) {
     const type = mediaType(model);
