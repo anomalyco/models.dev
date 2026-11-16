@@ -6,6 +6,9 @@
 # Context: Verda documents 1,048,576 tokens.
 # Maximum output: Verda console: 393,216 tokens.
 # Pricing: Verda console, USD per million tokens.
+# Caching: Verda documents discounted cached input; no explicit cache-control mechanism is documented.
+# https://docs.verda.com/inference/models/deepseek-4-1-flash-1017/#reasoning
+# Cache-read price: Verda console, USD 0.006 per million tokens.
 
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
@@ -16,6 +19,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
