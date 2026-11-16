@@ -1,0 +1,21 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DiscreteStack Max"
+description = "Maximum-capability tier for the hardest coding and long-horizon agent work"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
