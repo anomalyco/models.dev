@@ -3,6 +3,9 @@
 # Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+# Served identity: the upstream entry points at zhipuai/glm-5.3-flash, which has a different name and price.
+name = "GLM-5.3-FlashX"
+release_date = "2026-09-18"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }

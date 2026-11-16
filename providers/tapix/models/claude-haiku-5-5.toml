@@ -1,11 +1,11 @@
 # Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
 # Relayed via Tapix AI (https://tapixai.com/v1); upstream model is anthropic/claude-haiku-5-5.
-# Streams reasoning via reasoning_content deltas.
+# Reasoning effort is exposed through reasoning_effort on /v1/chat/completions; no separate on/off toggle is claimed.
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
 [cost.text.input]

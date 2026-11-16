@@ -1,11 +1,11 @@
 # Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
 # Relayed via Tapix AI (https://tapixai.com/v1); upstream model is zhipuai/glm-5.2.
-# Streams reasoning via reasoning_content deltas.
+# Reasoning effort is exposed through reasoning_effort on /v1/chat/completions; no separate on/off toggle is claimed.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["high", "max"] }
 structured_output = true
 
 [cost.text.input]
