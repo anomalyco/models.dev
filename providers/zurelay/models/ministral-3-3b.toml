@@ -1,5 +1,6 @@
 # Output: capped at this host's 131,072-token window (the lab's 262,144 doesn't fit in it).
-# Prices: https://zurelay.com/models/ministral-3-3b (USD per 1M tokens, accessed 2026-11-15).
+# Prices (USD per 1M tokens): https://zurelay.com/models/ministral-3-3b. Input, output follow
+# https://zurelay.com/prices.json (input_per_1m, output_per_1m), which the zurelay sync reads.
 schema = 2
 base_model = "mistral/ministral-3-3b-instruct-2512"
 

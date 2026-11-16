@@ -3,20 +3,20 @@
 # (https://zurelay.com/docs/multimodal, accessed 2026-11-15).
 # Effort: reasoning_effort = low|high|max on POST /v1/chat/completions; default max.
 # Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-15)
-# Prices: https://zurelay.com/models/kimi-k3.1-pro-highspeed (USD per 1M tokens, accessed 2026-11-15).
-# Cache read: 0.165 = cached_input_per_1m in https://zurelay.com/prices.json (accessed 2026-11-15). Zurelay sets
-# its own cached price, so it isn't always the lab's ratio to input (here 5% of the 3.3 input price).
+# Prices (USD per 1M tokens): https://zurelay.com/models/kimi-k3.1-pro-highspeed. Input, output and cache read follow
+# https://zurelay.com/prices.json (input_per_1m, output_per_1m, cached_input_per_1m), which the zurelay sync reads.
+# Zurelay sets its own cached price, so the cache read isn't a fixed share of input.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro Highspeed"
 
-[capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
-cache = { implicit = true }
-
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 3.3

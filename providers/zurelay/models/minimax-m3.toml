@@ -1,21 +1,21 @@
 # Inputs on this host: text, images, in the formats Zurelay takes
 # (https://zurelay.com/docs/multimodal, accessed 2026-11-15).
-# Toggle: reasoning_effort = none turns thinking off (Zurelay sends thinking.type = disabled upstream);
+# Toggle: reasoning_effort = none turns thinking off;
 # any other level, or leaving it out, thinks (tested 2026-11-15: no reasoning came back with none, and it did without).
 # https://zurelay.com/docs/chat#reasoning (accessed 2026-11-15)
-# Prices: https://zurelay.com/models/minimax-m3 (USD per 1M tokens, accessed 2026-11-15).
-# Cache read: 0.026 = cached_input_per_1m in https://zurelay.com/prices.json (accessed 2026-11-15). Zurelay sets
-# its own cached price, so it isn't always the lab's ratio to input (here 20% of the 0.13 input price).
+# Prices (USD per 1M tokens): https://zurelay.com/models/minimax-m3. Input, output and cache read follow
+# https://zurelay.com/prices.json (input_per_1m, output_per_1m, cached_input_per_1m), which the zurelay sync reads.
+# Zurelay sets its own cached price, so the cache read isn't a fixed share of input.
 schema = 2
 base_model = "minimax/MiniMax-M3"
-
-[capabilities]
-reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
-cache = { implicit = true }
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.13

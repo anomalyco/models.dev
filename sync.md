@@ -29,6 +29,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
+- `bun models:sync zurelay` syncs only Zurelay.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -503,6 +504,17 @@ engy is implemented in `packages/core/src/sync/providers/engy.ts`.
   - Point `base_model` at the lab entry for the exact id, adding it under `models/` if it is missing. Pointing at a sibling is not a substitute: because an authored `base_model` wins, the sync never corrects it later.
 - Per-token USD string prices become per-1M, rounded to six decimals; two would carry float error otherwise.
 - Modalities are sorted into catalogue order; wire order is arbitrary.
+
+## Zurelay Notes
+
+- Zurelay is implemented in `packages/core/src/sync/providers/zurelay.ts`.
+- Source endpoint: `https://zurelay.com/prices.json`, Zurelay's public price feed (CC BY 4.0). No authentication is required.
+- Only `kind = "chat"` entries are read. Image, video, speech, music, decision and embedding entries are ignored.
+- Existing models are updated from `price.input_per_1m`, `price.output_per_1m` and `price.cached_input_per_1m`, which are already USD per 1M tokens. A cache read price is written only to files that already declare one, because each model's caching is checked live before it is added. The feed leaves out a cached price that isn't below input, and such reads bill at the input price.
+- Prices derived from a base price keep their ratio to it: long-prompt tiers (the lab's multipliers) and Claude cache writes (1.25x input for 5 minutes, 2x for 1 hour) are scaled when Zurelay's price changes.
+- `context_window` only ever lowers the inherited context, and caps output to fit, because the feed can report a lab's 1M window as 1048576. Reasoning controls, modalities, cache capabilities and APIs stay hand-authored from live tests.
+- The feed lists exactly the models Zurelay sells, so a local file whose model leaves the feed is removed: Zurelay has retired it. A feed with fewer than 20 chat models is refused instead of being read as a mass retirement.
+- New models are not created (`skipCreates`) and open no missing-model issues (`trackMissingModels: false`). Zurelay adds each model by PR with its reasoning controls, inputs and caching tested live, and the feed also lists models the catalog leaves out on purpose: uncensored builds, and models that failed Zurelay's live tests. Skipped chat IDs are listed in the sync report.
 
 ## Standalone Generators
 

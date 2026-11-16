@@ -1,7 +1,8 @@
 # Zurelay: one OpenAI-compatible API for models from Anthropic, OpenAI, Google, xAI, DeepSeek,
 # Alibaba, Z.ai, MiniMax, Xiaomi, Moonshot AI, StepFun, Mistral AI and Tencent, priced below each lab's
 # list price. Models, prices and context windows: https://zurelay.com/docs/models
-# (machine-readable: https://zurelay.com/prices.json).
+# (machine-readable: https://zurelay.com/prices.json). packages/core/src/sync/providers/zurelay.ts reads that
+# feed for prices, smaller context windows and retirements; new models are added by hand after live tests.
 # Reasoning: POST /v1/chat/completions takes top-level reasoning_effort. Each model takes the levels
 # in its file; a level it doesn't take runs at the closest one it does, and thinking goes off only
 # with none, where listed. https://zurelay.com/docs/chat#reasoning (accessed 2026-11-15)

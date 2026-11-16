@@ -7,9 +7,9 @@
 # PDFs: read on /v1/messages (live 2026-11-15: it returned the code word from a one-page PDF document block).
 # Effort: output_config.effort = low|medium|high|xhigh|max on POST /v1/messages.
 # Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-15)
-# Prices: https://zurelay.com/models/claude-opus-5-5 (USD per 1M tokens, accessed 2026-11-15).
-# Cache read: 0.07 = cached_input_per_1m in https://zurelay.com/prices.json (accessed 2026-11-15). Zurelay sets
-# its own cached price, so it isn't always the lab's ratio to input (here 5% of the 1.4 input price).
+# Prices (USD per 1M tokens): https://zurelay.com/models/claude-opus-5-5. Input, output and cache read follow
+# https://zurelay.com/prices.json (input_per_1m, output_per_1m, cached_input_per_1m), which the zurelay sync reads.
+# Zurelay sets its own cached price, so the cache read isn't a fixed share of input.
 # Cache writes: 1.25x input for 5 minutes, 2x for 1 hour (https://zurelay.com/docs/anthropic#prompt-caching).
 schema = 2
 base_model = "anthropic/claude-opus-5-5"

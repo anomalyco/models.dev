@@ -69,6 +69,7 @@ import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
+import { zurelay } from "./providers/zurelay.js";
 
 const ExistingModelType = AuthoredModelShape.partial()
   .extend({
@@ -240,6 +241,7 @@ export const providers: {
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
+  zurelay: SyncProvider<any>;
 } = {
   aiand,
   aimlapi,
@@ -292,6 +294,7 @@ export const providers: {
   venice,
   wandb,
   xai,
+  zurelay,
 };
 
 export const groups = {
@@ -316,6 +319,7 @@ export const groups = {
     "openrouter",
     "prime",
     "vercel",
+    "zurelay",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
   direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],

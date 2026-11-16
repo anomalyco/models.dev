@@ -3,9 +3,9 @@
 # https://zurelay.com/docs/chat#reasoning (accessed 2026-11-15)
 # Levels checked live 2026-11-15 with the x-zurelay-reasoning-effort response header, which names the level each
 # request ran at (a level the model doesn't take runs at the closest one it does): none->none, high->high.
-# Prices: https://zurelay.com/models/hy4-preview (USD per 1M tokens, accessed 2026-11-15).
-# Cache read: 0.02 = cached_input_per_1m in https://zurelay.com/prices.json (accessed 2026-11-15). Zurelay sets
-# its own cached price, so it isn't always the lab's ratio to input (here 5% of the 0.4 input price).
+# Prices (USD per 1M tokens): https://zurelay.com/models/hy4-preview. Input, output and cache read follow
+# https://zurelay.com/prices.json (input_per_1m, output_per_1m, cached_input_per_1m), which the zurelay sync reads.
+# Zurelay sets its own cached price, so the cache read isn't a fixed share of input.
 schema = 2
 base_model = "tencent/hy4-preview"
 
