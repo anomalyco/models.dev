@@ -1,22 +1,28 @@
+# TokenSail entry for moonshotai/kimi-k3.1-pro.
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+#   toggle - `thinking = { "type": "disabled" }` turns reasoning off
+#            (reasoning_tokens 31 -> 0, no reasoning_content). Moonshot's own API has no
+#            off switch; TokenSail implements the off path.
+#            `enable_thinking = false` is accepted but ignored (still 28 tokens).
+#   effort - `reasoning_effort` low | high | max (default max).
+# Pricing (read 2026-11-16): USD, converted from the vendor's CNY list price at
+# 1 USD = 6.6864 CNY and rounded to 8 decimals. TokenSail charges 95% of that list price.
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k3.1-pro"
-name = "Kimi K3.1 Pro"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
-context = 1_048_576
 output = 131_072
 
 [cost.text.input]
-price = 1.94430319
-cache = { read = 0.19443032 }
+price = 1.84708803
+cache = { read = 0.18470880 }
 
 [cost.text.output]
-price = 10.17020131
+price = 9.66169124

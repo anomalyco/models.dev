@@ -1,25 +1,28 @@
+# TokenSail entry for zhipuai/glm-5.3-flash.
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+#   toggle - `thinking = { "type": "disabled" }` turns reasoning off
+#            (reasoning_tokens 97 -> 0, no reasoning_content). The vendor's own API only
+#            accepts `type = "enabled"`; TokenSail implements the off path.
+#            `enable_thinking = false` is accepted but ignored (still 42 tokens).
+#   effort - `reasoning_effort` low | high | max (default max).
+# Pricing (read 2026-11-16): USD, converted from the vendor's CNY list price at
+# 1 USD = 6.6864 CNY and rounded to 8 decimals. TokenSail charges 80% of that list price.
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-5.3-flash"
-name = "GLM-5.3 Flash"
-
-# Measured 2026-11-15: `thinking: {type: "disabled"}` zeroes reasoning on this
-# model; `enable_thinking: false` is silently ignored by the gateway.
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
 context = 1_048_576
-output = 131_072
 
 [cost.text.input]
-price = 0.11964943
-cache = { read = 0.03439921 }
+price = 0.09571954
+cache = { read = 0.02751937 }
 
 [cost.text.output]
-price = 0.418773
+price = 0.33501840

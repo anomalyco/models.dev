@@ -1,16 +1,25 @@
+# TokenSail entry for alibaba/qwen3.8-max-0902.
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+#   toggle - `thinking = { "type": "disabled" }` turns reasoning off (no reasoning_content;
+#            this vendor omits reasoning_tokens from usage in every mode).
+#            `enable_thinking = false` has the same effect.
+#   effort - `reasoning_effort` low | medium | xhigh (default xhigh).
+#   budget - `thinking_budget_tokens` 1..262144 (0 and 262145 both return HTTP 400),
+#            not combinable with `reasoning_effort`.
+# Pricing (read 2026-11-16): USD, converted from the vendor's CNY list price at
+# 1 USD = 6.6864 CNY and rounded to 8 decimals. Vendor list price as-is.
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen3.8-max-0902"
-name = "Qwen3.8 Max 0902"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 1, max = 262_144 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
-context = 1_000_000
 input = 991_808
-output = 131_072
 
 [cost.text.input]
 price = 1.52553020

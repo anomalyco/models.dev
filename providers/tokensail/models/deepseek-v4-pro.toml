@@ -1,11 +1,19 @@
+# TokenSail entry for deepseek/deepseek-v4-pro.
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+#   toggle - `thinking = { "type": "disabled" }` turns reasoning off
+#            (reasoning_tokens 30 -> 0, no reasoning_content).
+#            `enable_thinking = false` is accepted but ignored (still 10 tokens).
+#   effort - `reasoning_effort` low | high | max (default high). The full OpenAI set is
+#            accepted and collapsed upstream: minimal -> low, medium/xhigh -> high,
+#            `none` also disables thinking.
+# Pricing (read 2026-11-16): USD, converted from the vendor's CNY list price at
+# 1 USD = 6.6864 CNY and rounded to 8 decimals. Vendor list price as-is.
 schema = 2
 v2_only = true
 base_model = "deepseek/deepseek-v4-pro"
-name = "DeepSeek V4 Pro"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]

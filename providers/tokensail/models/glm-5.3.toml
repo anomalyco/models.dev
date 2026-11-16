@@ -1,21 +1,25 @@
+# TokenSail entry for zhipuai/glm-5.3.
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+#   no toggle - this vendor requires thinking on. `thinking = { "type": "disabled" }`,
+#               `enable_thinking = false` and `reasoning_effort = "none"` all return
+#               HTTP 400 ("reasoning is always on for this model"), so no `toggle` is declared.
+#   effort - `reasoning_effort` low | high | max (default max). The full OpenAI set is
+#            accepted and collapsed upstream: minimal -> low, medium/xhigh -> high.
+# Pricing (read 2026-11-16): USD, converted from the vendor's CNY list price at
+# 1 USD = 6.6864 CNY and rounded to 8 decimals. TokenSail charges 70% of that list price.
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-5.3"
-name = "GLM-5.3"
-
-# Measured 2026-11-15: this model REQUIRES thinking on. Both
-# `enable_thinking: false` and `thinking: {type: "disabled"}` are rejected
-# with HTTP 400 because the upstream restricts the parameter to True.
-# Hence no reasoning toggle.
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
 context = 1_048_576
-output = 131_072
 
 [cost.text.input]
 price = 0.83754599
