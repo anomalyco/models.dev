@@ -1,14 +1,18 @@
 # Sources (accessed 2026-11-16):
 # https://help.aliyun.com/zh/model-studio/qwen4-max
+# https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-chat-completions
 # https://help.aliyun.com/zh/model-studio/explicit-cache-qwen4
 # https://help.aliyun.com/zh/model-studio/model-pricing
 # https://www.alibabacloud.com/help/en/model-studio/web-search
 # CNY list: input ¥10, output ¥30, cache hit ¥0.5, cache create 5m ¥12.5 / 1h ¥20 (per 1M tokens).
 # CNY→USD rate: 6.6784, 2026-11-16, source: https://open.er-api.com/v6/latest/USD
-# Toggle: enable_thinking true|false (hybrid, thinking on by default; Chat Completions). Messages: thinking.type = enabled|disabled.
+# Toggle: enable_thinking true|false (hybrid, thinking on by default; Chat Completions; Responses accepts it but plans to drop it in favor of effort). Messages: thinking.type = enabled|disabled.
 # Effort: reasoning_effort = low|high|xhigh (Chat Completions), reasoning.effort (Responses), output_config.effort (Messages); default high.
-# Aliases (Chat/Responses): minimal→low, medium→high, max→xhigh; Messages maps medium→high and max→xhigh. none disables thinking.
-# Budget: thinking_budget (default 131,072; max chain 262,144).
+# Aliases (Chat/Responses): minimal→low, medium→high, max→xhigh; none disables thinking. Messages maps medium→high and max→xhigh; off is thinking.type = disabled (none not accepted).
+# Budget: thinking_budget (Chat Completions), a positive integer (0 rejected) that cannot be combined with reasoning_effort;
+# 1-4,096 maps to low, 4,097-131,072 to high, 131,073-262,144 to xhigh; default 131,072. Messages takes thinking.budget_tokens
+# (slated for deprecation); Responses takes no budget.
+# stream_usage: stream_options.include_usage (Chat Completions) returns token usage in the final chunk.
 # Cache: implicit (1,024-token minimum) plus Qwen4 explicit cache: prompt_cache_breakpoint {"mode":"explicit"} on content blocks,
 # prompt_cache_options {mode, ttl} on Chat/Responses, and cache_control on Messages (top-level or block); ttl 5m|1h (default 5m),
 # at most 4 breakpoints, 1,024-token minimum prefix, system/messages targets. Write 5m = 125% of input, 1h = 200%; reads share one price.
@@ -21,7 +25,7 @@ base_model = "alibaba/qwen4-max"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "tool"] }
-reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "xhigh"], budget = { max = 262_144 } }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "xhigh"], budget = { min = 1, max = 262_144 } }
 structured_output = true
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
