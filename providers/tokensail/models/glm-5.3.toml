@@ -5,13 +5,17 @@
 #               HTTP 400 ("reasoning is always on for this model"), so no `toggle` is declared.
 #   effort - `reasoning_effort` low | high | max (default max). The full OpenAI set is
 #            accepted and collapsed upstream: minimal -> low, medium/xhigh -> high.
+#   top_k - accepted and ignored. The gateway forwards the raw JSON body, but Zhipu
+#           documents no top_k support (providers/zhipuai sets top_k = false: temperature
+#           and top_p only) and a live probe with top_k = 5 returns HTTP 200 with no
+#           parameter error, so the value never reaches sampling. Declared false.
 # Cache - implicit only. Zhipu's prompt cache is automatic with no write price; hits are
 #         billed at the cache-read price below (1/4 of input).
-# Pricing (read 2026-11-16): USD, converted from Zhipu's CNY list price at
-# 1 USD = 6.6864 CNY, rounded to 8 decimals. CNY base per 1M tokens: input 8.00,
-# cache hit 2.00, output 28.00. TokenSail charges 70% of that list.
-# Sources: https://docs.z.ai/guides/overview/pricing
-#          https://tokensail.ai/pricing-compare
+# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 70% of
+# Zhipu's list price.
+# Sources: https://docs.z.ai/guides/overview/pricing (vendor list)
+#          https://tokensail.ai/pricing-compare (published USD)
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-5.3"
@@ -19,6 +23,7 @@ base_model = "zhipuai/glm-5.3"
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
+top_k = false
 cache = { implicit = true }
 
 [api.chat-completions]

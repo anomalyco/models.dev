@@ -10,11 +10,15 @@
 # structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
 #         (strict) and a 1k-token budget: HTTP 200 and `{"answer":"ok"}`. Note this model
 #         always thinks, so a small `max_tokens` can return an empty content string.
-# Pricing (read 2026-11-16): USD, converted from Moonshot's CNY list price at
-# 1 USD = 6.6864 CNY, rounded to 8 decimals. CNY base per 1M tokens: input 13.00,
-# cache hit 1.30, output 68.00. TokenSail charges 95% of that list.
-# Sources: https://platform.kimi.ai/docs/pricing/chat
-#          https://tokensail.ai/pricing-compare
+# limit - no output override. 131,072 is Moonshot's max_completion_tokens default, not the
+#         cap; live probe 2026-11-16 shows TokenSail accepts max_tokens up to 1,048,576 and
+#         applies no inbound cap of its own (the gateway leaves the ceiling to the upstream),
+#         so the canonical 1,048,576 is inherited.
+# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 95% of
+# Moonshot's list price.
+# Sources: https://platform.kimi.ai/docs/pricing/chat (vendor list)
+#          https://tokensail.ai/pricing-compare (published USD)
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k3.1-pro"
@@ -26,9 +30,6 @@ cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-
-[limit]
-output = 131_072
 
 [cost.text.input]
 price = 1.84708803

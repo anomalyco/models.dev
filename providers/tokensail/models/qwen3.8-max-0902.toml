@@ -11,11 +11,12 @@
 #         (1.25x input), which is why this is the only file declaring `explicit`.
 # structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
 #         (strict): HTTP 200 and `{"answer":"ok"}`.
-# Pricing (read 2026-11-16): USD, converted from Alibaba's CNY list price at
-# 1 USD = 6.6864 CNY, rounded to 8 decimals. CNY base per 1M tokens: input 13.60,
-# cache read 1.70, cache write 17.00, output 40.80. TokenSail charges 75% of that list.
+# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 75% of
+# Alibaba's list price.
 # Sources: https://docs.modelstudio.console.alibabacloud.com/zh/model-studio/model-pricing
-#          https://tokensail.ai/pricing-compare
+#          (vendor list)
+#          https://tokensail.ai/pricing-compare (published USD)
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen3.8-max-0902"

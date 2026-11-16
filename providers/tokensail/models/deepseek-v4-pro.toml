@@ -6,14 +6,17 @@
 #   effort - `reasoning_effort` low | high | max (default high). The full OpenAI set is
 #            accepted and collapsed upstream: minimal -> low, medium/xhigh -> high,
 #            `none` also disables thinking.
+#   top_k - accepted and ignored. The gateway forwards the raw JSON body, but DeepSeek
+#           documents no top_k support (providers/deepseek sets top_k = false) and a live
+#           probe with top_k = 5 returns HTTP 200 with no parameter error, so the value
+#           never reaches sampling. Declared false so clients do not send it.
 # Cache - implicit only. DeepSeek's context cache is automatic: no write price, no TTL,
 #         hits billed at the cache-read price below (exactly 1/30 of input).
-# Pricing (read 2026-11-16): USD, converted from DeepSeek's CNY list price at
-# 1 USD = 6.6864 CNY, rounded to 8 decimals. CNY base per 1M tokens: input 9.00,
-# cache hit 0.30, output 27.00 (standard band; the off-peak band is half of that and is
-# not what we bill against). TokenSail charges 80% of that list.
-# Sources: https://api-docs.deepseek.com/quick_start/pricing
-#          https://tokensail.ai/pricing-compare
+# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 80% of
+# DeepSeek's list price.
+# Sources: https://api-docs.deepseek.com/quick_start/pricing (vendor list)
+#          https://tokensail.ai/pricing-compare (published USD)
 schema = 2
 v2_only = true
 base_model = "deepseek/deepseek-v4-pro"
@@ -21,6 +24,7 @@ base_model = "deepseek/deepseek-v4-pro"
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+top_k = false
 cache = { implicit = true }
 
 [api.chat-completions]
