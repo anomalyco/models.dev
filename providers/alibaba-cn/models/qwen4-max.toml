@@ -8,14 +8,15 @@
 # GA 2026-11-16 (issue #13766; launch notes via PR #13763): max_tokens caps thinking plus answer at 262,144 (131,072 non-thinking); effort low|high|xhigh, default high.
 # Toggle: enable_thinking true|false (hybrid, thinking on by default; Chat Completions/DashScope). Messages: thinking.type = enabled|disabled.
 # Effort: reasoning_effort = low|high|xhigh (Chat Completions/DashScope), reasoning.effort (Responses), output_config.effort (Messages); default high.
-# Aliases: minimal→low, medium→high, max→xhigh; the Responses cache examples also use effort "none" (thinking off).
+# Aliases (Chat/Responses): minimal→low, medium→high, max→xhigh; Messages maps medium→high and max→xhigh. The Responses cache examples also use effort "none" (thinking off).
 # Budget: thinking_budget (default 131,072; max chain 262,144 per the model page and launch notes).
 # Cache: implicit (1,024-token minimum) plus Qwen4 explicit cache: prompt_cache_breakpoint {"mode":"explicit"} on content blocks
 # (the older cache_control ephemeral marker stays compatible), prompt_cache_options {mode, ttl} on Chat/Responses, top-level or
 # block cache_control on Messages; ttl 5m|1h (default 5m), at most 4 breakpoints, 1,024-token minimum prefix, system/messages targets.
 # Explicit write 5m = 125% of input, 1h = 200%; explicit and implicit reads are both ¥0.5 per 1M (model-pricing cache table).
+# qwen4-max doesn't support Chat search_strategy "agent"; agent-style retrieval goes through the Responses web_search tool.
 # Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
-# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset where the docs are silent.
+# Not probed live, so system_updates and effort_updates are left unset where the docs are silent.
 schema = 2
 base_model = "alibaba/qwen4-max"
 
