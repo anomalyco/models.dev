@@ -175,6 +175,8 @@ export const OpenRouterModel = z.object({
   supported_parameters: z.array(z.string()),
   // Images API endpoint records, attached by fetchModels for image models.
   image_endpoints: z.array(OpenRouterImageEndpoint).optional(),
+  // Set by fetchModels when the model's endpoints page answers 404.
+  image_endpoints_missing: z.boolean().optional(),
   // Video SKU prices from the video models list, attached by fetchModels for video models.
   video_pricing_skus: z.record(z.string()).optional(),
   reasoning: z
@@ -223,9 +225,26 @@ export const openrouter = {
     for (const model of extra) {
       if (mediaType(model) === "video") model.video_pricing_skus = skus.get(model.id);
     }
-    await Promise.all(extra.filter((model) => mediaType(model) === "image").map(async (model) => {
-      model.image_endpoints = OpenRouterImageEndpoints.parse(await get(IMAGE_ENDPOINTS_URL(model.id))).endpoints;
+    // Chat models that also generate video (Gemini Omni) are priced per second in the video catalog.
+    for (const model of text.data) {
+      if (model.architecture.output_modalities.includes("video")) model.video_pricing_skus = skus.get(model.id);
+    }
+    const images = extra.filter((model) => mediaType(model) === "image");
+    await Promise.all(images.map(async (model) => {
+      // Some listed image models (openrouter/auto, a few :free variants) have no endpoints page and answer 404.
+      const response = await fetch(IMAGE_ENDPOINTS_URL(model.id), { headers });
+      if (response.status === 404) {
+        model.image_endpoints_missing = true;
+        return;
+      }
+      if (!response.ok) throw new Error(`OpenRouter request failed: ${response.status} ${response.statusText}`);
+      model.image_endpoints = OpenRouterImageEndpoints.parse(await response.json()).endpoints;
     }));
+    const missing = images.filter((model) => model.image_endpoints_missing).length;
+    // A few 404s are models without a page; most of them means the endpoints API moved.
+    if (missing >= 5 && missing * 2 >= images.length) {
+      throw new Error(`OpenRouter image endpoints answered 404 for ${missing} of ${images.length} image models`);
+    }
     return { data: [...text.data, ...extra] };
   },
   parseModels(raw) {
@@ -234,9 +253,14 @@ export const openrouter = {
   },
   sourceNotices(models) {
     const ids = new Set(models.map((model) => model.id));
-    return [...TIME_BILLED_AUDIO]
-      .filter((id) => !ids.has(id))
-      .map((id) => `${id}: listed in TIME_BILLED_AUDIO but no longer in the OpenRouter catalog`);
+    return [
+      ...[...TIME_BILLED_AUDIO]
+        .filter((id) => !ids.has(id))
+        .map((id) => `${id}: listed in TIME_BILLED_AUDIO but no longer in the OpenRouter catalog`),
+      ...models
+        .filter((model) => model.image_endpoints_missing)
+        .map((model) => `${model.id}: no Images API endpoints page (404), so no image price`),
+    ];
   },
   translateModel(model, context) {
     const type = mediaType(model);
@@ -261,6 +285,23 @@ export const openrouter = {
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
     const built = buildOpenRouterModel(model, context.existing(model.id));
+    // Factoring compares v1 modality kinds, which collapse all image formats.
+    // Keep a real v2 host-format override when the catalog still lists those kinds.
+    const formats = context.v2?.(model.id)?.modalities;
+    const authored = formats === undefined ? undefined : context.authored(model.id);
+    if (
+      "base_model" in built && typeof built.base_model === "string"
+      && built.modalities === undefined && authored?.modalities !== undefined
+      && sameInheritedValue(authored.modalities, {
+        input: modalities(model.architecture.input_modalities, ["text"]),
+        output: modalities(model.architecture.output_modalities, ["text"]),
+      })
+    ) {
+      const base = rawLabModel(built.base_model);
+      if (base !== undefined && !sameInheritedValue(formats, base.modalities)) {
+        built.modalities = authored.modalities;
+      }
+    }
     // The decision model's first API (systemone) names its own AI SDK package,
     // which v1 reads as the model's provider npm.
     const translated = isDecisionModel(model)
@@ -419,8 +460,9 @@ const BASE_URL = "https://openrouter.ai/api/v1";
 // SDK provider implements embeddings. Rerank takes and returns Cohere's rerank
 // shape, so @ai-sdk/cohere works against it. Images also answer OpenAI's
 // /images/generations, so OpenCode uses its OpenAI media protocols for images,
-// speech and transcription, and its OpenRouter provider for embeddings; it has
-// none for video or rerank.
+// speech and transcription, and its OpenRouter provider for embeddings and video
+// (providers/openrouter/videos, added in anomalyco/opencode#63681); it has none
+// for rerank.
 // https://openrouter.ai/docs/api/api-reference/tts/create-speech (POST /audio/speech)
 // https://openrouter.ai/docs/api/api-reference/stt/create-transcription (POST /audio/transcriptions)
 // https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request (POST /embeddings)
@@ -439,7 +481,7 @@ const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk: string; opencodea
   embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/embeddings" },
   reranking: { protocol: "rerank", aisdk: "@ai-sdk/cohere", opencodeai: "none" },
   image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/images" },
-  video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
+  video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/videos" },
 };
 
 const MEDIA_HEADERS: Record<MediaType, string> = {
@@ -658,7 +700,7 @@ export function imageCost(model: OpenRouterModel) {
 
 type VideoSku = { target: "output" | "image"; unit: "second" | "token" | "image"; price: number; when: Record<string, string | boolean> };
 
-const VIDEO_RESOLUTION = "(480p|720p|768p|1080p|2k|4k)";
+const VIDEO_RESOLUTION = "(360p|480p|720p|768p|1080p|2k|4k)";
 const VIDEO_MODES: Record<string, string> = {
   text_to_video_: "text-to-video",
   image_to_video_: "image-to-video",
@@ -1324,6 +1366,7 @@ function catalogV2Set(model: OpenRouterModel, current: Record<string, unknown> |
       "cost.image": cost.image,
       "cost.audio": cost.audio,
       "cost.web_search": cost.webSearch,
+      ...(model.video_pricing_skus === undefined ? {} : { "cost.video": videoCost(model.video_pricing_skus)?.video }),
     },
   };
 }

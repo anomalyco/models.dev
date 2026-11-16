@@ -1,0 +1,58 @@
+# Sources (accessed 2026-11-05):
+# - Model id, name, 1,048,576 context, 32,768 max output, text-only input and USD prices per
+#   1M tokens (input 0.20, cached input 0.19, output 0.60): https://api.unrestricted.sh/v1/models
+# - Prices, context, text input, reasoning in reasoning_content, tool calls, served by an
+#   outside inference partner: https://unrestricted.sh/models/glm-5.3-flash-uncensored
+#   and https://unrestricted.sh/pricing
+# - Output limit (32,768 in the provider config): https://unrestricted.sh/guides/opencode
+# - Base URL and endpoints: https://unrestricted.sh/reference
+# - Cache: cached-input prices apply when a tool resends the start of a conversation
+#   (https://unrestricted.sh/pricing); no cache markers are documented, so caching is implicit.
+# - release_date: the day the current model went live on this API.
+# Standalone entry, not base_model: an uncensored GLM-5.3 Flash served text-only, like
+# qwen3.8-27b-uncensored here and the uncensored GLM-5.3 entries
+# providers/nano-gpt/models/z-ai/glm-5.3-flash-uncensored.toml and
+# providers/abliteration-ai/models/abliterated-model-large-v2.toml.
+# Effort: reasoning_effort = low|high|max, GLM-5.3 Flash's native levels, as on
+# providers/zai/models/glm-5.3-flash.toml and providers/nano-gpt/models/z-ai/glm-5.3-flash-uncensored.toml.
+# none is left out: Z.AI's own API cannot turn GLM-5.3 Flash thinking off (thinking.type
+# only accepts enabled), and abliteration-ai's GLM-5.3 model maps none to low.
+# Live-tested on Unrestricted's /v1/chat/completions (2026-11-05):
+# - structured_output: a strict json_schema response_format (3 required fields,
+#   additionalProperties false) returned schema-valid JSON in 3/3 runs, on a prompt asking
+#   for a poem, so the schema is enforced rather than followed by chance.
+# - temperature: temperature 0 gave identical outputs on repeat; 1.8 gave visibly
+#   different, incoherent sampling.
+# family from models/zhipuai/glm-5.3-flash.toml; open_weights = true as on the nano-gpt
+# uncensored entry and the lab file.
+schema = 2
+name = "GLM-5.3 Flash Uncensored"
+description = "Uncensored GLM-5.3 Flash for coding and security research"
+family = "glm-flash"
+open_weights = true
+release_date = "2026-10-23"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+temperature = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 0.6

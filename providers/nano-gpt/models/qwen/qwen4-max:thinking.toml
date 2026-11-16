@@ -1,0 +1,22 @@
+schema = 2
+base_model = "alibaba/qwen4-max"
+name = "Qwen 4 Max Thinking"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 983_616
+input = 983_616
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, write = 1.875 }
+
+[cost.text.output]
+price = 4.5

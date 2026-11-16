@@ -3,6 +3,7 @@
 # https://www.scaleway.com/en/docs/generative-apis/how-to/query-reasoning-models/
 # Scaleway pricing: https://www.scaleway.com/en/pricing/model-as-a-service/ (accessed 2026-10-21)
 # Billed in EUR: €0.15 input / €0.60 output per 1M tokens; converted at the ECB rate 1 EUR = 1.1215 USD (2026-10-20).
+# Output limit: no host-specific cap is documented, so output is capped at the context served here (the lab's raised cap would exceed it).
 schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "GPT-OSS 120B"
@@ -13,6 +14,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 128_000
+output = 128_000
 
 [cost.text.input]
 price = 0.168225

@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-12):
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/veo/3-1-generate.md.txt
+#   (model ID veo-3.1-fast-generate-001, GA, release date November 17, 2025; text and image input, video output;
+#   video extension and reference images supported; output video/mp4)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/video/generate-videos-from-an-image.md.txt
+#   (input image MIME types: image/jpeg, image/png)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/video/extend-videos.md.txt
+#   (extension takes a Veo video/mp4 as input)
+# Limits: Google doesn't publish token limits for the -001 IDs. context = 1_024 is the text input limit from the
+# Gemini API card for the same model (veo-3.1-fast-generate-preview).
+schema = 2
+v2_only = true
+type = "video"
+name = "Veo 3.1 Fast"
+description = "Video model for prompt-guided generation, editing, and motion workflows"
+family = "veo"
+open_weights = false
+release_date = "2025-11-17"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_024
+output = 0

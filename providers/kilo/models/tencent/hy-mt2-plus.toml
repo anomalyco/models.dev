@@ -1,0 +1,26 @@
+schema = 2
+name = "Tencent: Tencent Hy-MT2-Plus"
+description = "Hy-MT2-Plus is Tencent Cloud Hunyuan’s 7B translation model, offering an 8K-token context window and broad multilingual coverage. Optimized for translation across 33 languages and five ethnic Chinese and dialect variants, it delivers industry-leading performance on benchmarks including FLORES-200 and WMT25. It excels in professional domains and real-world business scenarios, with strong instruction-following for structured, delimiter-preserving, context-aware, glossary-guided, and style-specific translation."
+family = "Hy"
+open_weights = false
+release_date = "2026-06-12"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 8_000
+output = 4_000
+
+[cost.text.input]
+price = 0.074
+
+[cost.text.output]
+price = 0.295

@@ -1,0 +1,11 @@
+# Turion API: https://turion.ai/docs/reference/rest-api/ (accessed 2026-11-11). Base URL https://api.turion.ai, every
+# endpoint under /v1, bearer key (`Authorization: Bearer tk_...`). POST /v1/chat/completions is OpenAI-compatible;
+# decision models answer on POST /v1/systemone with TypeSafe's System One request and response shapes.
+# Key variable: TURION_API_TOKEN, as in Turion's docs; the CLI and Python SDK read it first, then TURION_API_KEY
+# (https://turion.ai/docs/reference/python-sdk/).
+name = "Turion"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["TURION_API_TOKEN"]
+api = "https://api.turion.ai/v1"
+doc = "https://turion.ai/docs"

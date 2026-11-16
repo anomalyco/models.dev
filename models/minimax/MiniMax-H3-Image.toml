@@ -9,14 +9,17 @@
 # /v1/images/edits), not the Anthropic-compatible /anthropic/v1 base or the older
 # /v1/image_generation image-01 route, so provider entries set their own [api.images] base_url.
 # Distinct from models/minimax/MiniMax-H3.toml, which is the video model.
+# Open weights (Hugging Face MiniMaxAI/MiniMax-H3-Image, released 2026-11-03; blog: "As with H3, we're releasing H3-Image's model weights"):
+#   https://www.minimax.io/blog/minimax-h3-image
 schema = 2
 v2_only = true
 type = "image"
 name = "MiniMax H3 Image"
 description = "MiniMax text-to-image and image-editing model"
 family = "minimax"
-open_weights = false
+open_weights = true
 release_date = "2026-11-10"
+license = "MiniMax H3 Image Community License Agreement"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"]
@@ -32,3 +35,20 @@ top_k = false
 [limit]
 context = 0
 output = 0
+
+[[links]]
+url = "https://www.minimax.io/blog/minimax-h3-image"
+type = "announcement"
+
+[[links]]
+url = "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image"
+type = "model_card"
+
+[[weights]]
+label = "Hugging Face: MiniMax-H3-Image"
+url = "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image"
+format = "safetensors"
+
+[[links]]
+url = "https://huggingface.co/MiniMaxAI/MiniMax-H3-Image/blob/main/LICENSE"
+type = "license"

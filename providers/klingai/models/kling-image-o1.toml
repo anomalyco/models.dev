@@ -1,0 +1,18 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api-singapore.klingai.com/v1/images/omni-image with model_name = "kling-image-o1"
+#   (https://kling.ai/document-api/api/image/o1/image-generation). resolution "1k" (default) or "2k"; n 1-9.
+# - Pricing: https://kling.ai/document-api/pricing/base/image ("Balance" tab): $0.028 per image for text-to-image and
+#   image-to-image at 1K and 2K. Prepaid resource packages (https://kling.ai/dev/pricing) are not recorded.
+# aisdk = "none": @ai-sdk/klingai only has video models. opencodeai = "none": @opencode/ai has no Kling package.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-image-o1"
+
+[api.images]
+base_url = "https://api-singapore.klingai.com/v1"
+path = "/images/omni-image"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.output]
+unit = "image"
+price = 0.028

@@ -9,7 +9,7 @@ bun validate
 bun run v1:check
 ```
 
-Run both after every catalog change. `bun validate` must pass before a PR is mergeable; it rejects any model file without `schema = 2`.
+Run both after every catalog change. `bun validate` must pass before a PR is mergeable; it rejects any model file without `schema = 2`, and any model whose resolved `limit.output` or `limit.input` is larger than its `limit.context` (after the `base_model` merge). The exemption is any model whose `modalities.output` contains no text (speech, image-only, video, embedding): their audio, image or vector limits are separate from the text window. When a host's context is smaller than the lab's output, set the host's own `limit.output` (its documented cap, or the context).
 
 `bun run v1:check` (or `bun run v1:check <ref>`) protects the published v1 API (`api.json`, etc.), which is still generated from these files. It compares the v1 output with the merge-base of `origin/dev`, lists every changed field, every model added to or removed from v1, and changed files that still use generic modalities, and exits 1 if v1 changed.
 
@@ -242,6 +242,7 @@ description = "One or two sentences on what the lab builds."
 
 - **Token prices are USD per million tokens.** Never publish EUR, CNY, CHF, etc. as if they were USD. Convert and note rate/date in a **top-of-file** comment.
 - Text prices live in `[cost.text.input]` (`price`, `cache = { read, write }`) and `[cost.text.output]` (`price`, `reasoning`). Audio/image/video use `[cost.audio.input]` etc.; non-token units set `unit` (`character`, `image`, `megapixel`, `second`, `minute`; priced per unit).
+- v1's single output price always uses `cost.text.output`; image output prices are v2-only. Models without a per-token text input/output pair have no v1 cost, and per-image or other non-token prices also stay v2-only.
 - Cache writes with several TTLs: `write = { "5m" = 6.25, "1h" = 10 }`. v1 only gets the first TTL listed.
 - **Context-based pricing → overrides** keyed on `context`. The threshold is where that band starts; no duplicate thresholds.
 - Service tiers, regions, and time-of-day pricing → `[[cost.multipliers]]`.

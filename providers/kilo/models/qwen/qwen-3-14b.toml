@@ -1,0 +1,26 @@
+schema = 2
+name = "Qwen: Qwen3-14B"
+description = "Qwen3 is the latest generation of large language models in Qwen series, offering a comprehensive suite of dense and mixture-of-experts (MoE) models. Built upon extensive training, Qwen3 delivers groundbreaking advancements in reasoning, instruction-following, agent capabilities, and multilingual support"
+family = "qwen"
+open_weights = false
+release_date = "2025-04-28"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 40_960
+output = 16_384
+
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 0.24

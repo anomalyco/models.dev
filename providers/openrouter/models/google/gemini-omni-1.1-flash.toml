@@ -21,5 +21,21 @@ price = 1.5
 [cost.text.output]
 price = 9
 
+[cost.video.output]
+unit = "second"
+price = 0.15204
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4K" }, generate_audio = { equals = true } }
+price = 0.30408
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "360p" }, generate_audio = { equals = true } }
+price = 0.0337925
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" }, generate_audio = { equals = true } }
+price = 0.10136
+
 [cost.web_search]
 price = 14
