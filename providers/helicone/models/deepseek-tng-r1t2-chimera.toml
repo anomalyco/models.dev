@@ -1,3 +1,4 @@
+# Output limit: capped at the 130,000 context; no host cap is documented and the 163,840 from the base model or host listing is larger.
 schema = 2
 name = "DeepSeek TNG R1T2 Chimera"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
@@ -17,7 +18,7 @@ temperature = true
 
 [limit]
 context = 130_000
-output = 163_840
+output = 130_000
 
 [cost.text.input]
 price = 0.3

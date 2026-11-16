@@ -1,3 +1,4 @@
+# Pricing (accessed 2026-11-12): https://ai.google.dev/gemini-api/docs/pricing#gemma-4 (Gemma 4: free of charge, paid tier not available)
 # v2 capabilities and prices:
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
@@ -36,3 +37,9 @@ sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/provider
 
 [api.interactions]
 sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

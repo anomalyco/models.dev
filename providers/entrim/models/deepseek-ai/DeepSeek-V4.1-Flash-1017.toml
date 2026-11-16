@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-08):
+# - Pricing, limits, precision (FP8): https://entrim.ai/ai-models/deepseek/deepseek-v4-1-flash-1017-api and https://entrim.ai/pricing/
+# - Effort: reasoning_effort is an integer 1-100 with low|high|max presets, and effort none skips
+#   reasoning entirely (model page). Live 2026-11-08: reasoning_effort none disabled thinking,
+#   low/high kept it on. thinking.type = disabled also disabled thinking live; enable_thinking is ignored.
+#   Integers 1-100 are not representable in the catalog.
+# - Default effort copied from the lab's relay baseline (Alibaba Model Studio, default high); not independently verified on Entrim.
+# - Levels copied from the lab baseline; low/high are behaviorally indistinguishable in short probes.
+# - Probes live 2026-11-08: json_schema structured output works; tool calling works with auto and
+#   required, strict accepted; vision works (64x64 red square answered "Red"); implicit KV-cache hits.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "required"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = [
+  "none",
+  "low",
+  "high",
+  "max",
+] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.6

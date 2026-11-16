@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel } from "./openrouter.js";
 
 // Public DeepInfra deploy catalog. Richer than the OpenAI-compatible
 // `/v1/openai/models` endpoint: it exposes capability tags (tools,
@@ -81,13 +82,19 @@ export const deepinfra = {
   },
   parseModels(raw) {
     return DeepInfraResponse.parse(raw).filter((model) =>
-      model.type === "text-generation"
+      (model.type === "text-generation" || model.type === "embeddings")
       && !model.private
       && !isExcluded(model.model_name),
     );
   },
   translateModel(model, context) {
     const id = model.model_name;
+    // Embedding models are hand-authored v2 files: keep them as written, and
+    // report models without a file as skipped instead of retained-but-missing.
+    if (model.type === "embeddings") {
+      const v2 = context.v2?.(id);
+      return v2 === undefined ? undefined : { id, v2 };
+    }
     const existing = context.existing(id);
     const baseModel = existing === undefined
       ? resolveDeepInfraBaseModel(id)
@@ -105,6 +112,12 @@ export const deepinfra = {
     // Don't introduce brand-new entries for models that are already deprecated;
     // existing entries are kept and marked instead.
     if (existing === undefined && isDeprecated(model)) return undefined;
+
+    // The catalog has no reasoning_effort levels, so a new reasoning model needs
+    // them researched before it's created.
+    if (existing === undefined && deepInfraReasons(model, baseModel)) {
+      throw new MissingReasoningOptionsError(id, "Deep Infra lists no reasoning controls; author them before creating this model");
+    }
 
     const built = buildDeepInfraModel(model, existing, baseModel, context.authored(id));
     return {
@@ -200,6 +213,13 @@ export async function fetchDeepInfraModels(
     throw new Error(`Deep Infra models request failed: ${response.status} ${response.statusText}`);
   }
   return DeepInfraResponse.parse(await response.json());
+}
+
+function deepInfraReasons(model: DeepInfraModel, baseModel: string | undefined) {
+  const tags = new Set(model.tags ?? []);
+  if (tags.has("non-reasoning")) return false;
+  if (tags.has("reasoning") || tags.has("can-disable-reasoning")) return true;
+  return baseModel !== undefined && modelMetadata(baseModel).reasoning === true;
 }
 
 function isDeprecated(model: DeepInfraModel) {

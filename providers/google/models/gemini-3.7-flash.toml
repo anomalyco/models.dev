@@ -4,6 +4,8 @@
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/thinking
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/models/gemini-3.7-flash
+# Introductory pricing through 2026-12-31, the same promotion as Gemini 3.6 and 3.8 Flash; rates double from 2027-01-01.
+# Token-only multiplier (object factor, so cost.web_search is unscaled), as in gemini-3.6-flash and gemini-3.8-flash.
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 # Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#pricing-for-tools ("Gemini 3 and newer models"); support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-3.7-flash
@@ -40,3 +42,7 @@ price = 0.75
 
 [cost.web_search]
 price = 14
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = { text = 2, audio = 2 }

@@ -1,3 +1,4 @@
+# Output limit: capped at the 80,000 context; no host cap is documented and the 131,072 from the base model or host listing is larger.
 schema = 2
 base_model = "meta/llama-3.2-3b-instruct"
 name = "Llama 3.2 3B Instruct (Cloudflare)"
@@ -8,6 +9,7 @@ structured_output = false
 
 [limit]
 context = 80_000
+output = 80_000
 
 [cost.text.input]
 price = 0.0509

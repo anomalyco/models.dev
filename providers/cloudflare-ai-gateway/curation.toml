@@ -120,7 +120,7 @@ skip = [
 ]
 "google/gemini-4" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), served by Vertex AI: no per-turn effort or tool-change mechanism.",
-  "Live 2026-10-19: a mid-conversation system message misses the warm cache (hoisted into the system instruction), so system_updates = false; response_format json_schema is enforced.",
+  "Live 2026-10-19 on Gemini 4 Argon: a mid-conversation system message misses the warm cache (hoisted into the system instruction), so system_updates = false; response_format json_schema is enforced.",
 ]
 "meta/muse-spark-1" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/), translated to Meta's Responses API: no per-turn effort or tool-change mechanism.",
@@ -546,6 +546,21 @@ note = [
 ]
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
 
+# Gemini 4 Carbon takes the same route and controls as Argon (Vertex AI, REST chat-completions).
+# Live 2026-11-11 through the unified-billing gateway key: low|medium|high accepted
+# (reasoning tokens 0 / 210 / 232 on a short math prompt); none and minimal were not re-probed
+# (balance ran out); minimal is rejected on Google's own API (providers/google gemini-4-carbon).
+# https://ai.google.dev/gemini-api/docs/thinking
+# https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon
+# https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# structured_output is left out: response_format json_schema was not probed on Carbon (gateway balance ran out, 2026-11-11).
+[models."google/gemini-4-carbon"]
+note = [
+  "Effort: reasoning_effort = low|medium|high (maps to Gemini's thinking level; live 2026-11-11, 0 / 210 / 232 reasoning tokens).",
+  "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high"] }]
+
 # Gemini 2.5 and 3.x on the REST API's chat-completions route (catalog provider_details
 # google-vertex-ai). They were skipped while they had no lab file. The catalog schemas list no
 # effort enum, so the values are Google's own lists (providers/google) cut to what Cloudflare
@@ -707,6 +722,13 @@ base_model = "bytedance-seed/seedance-2.5"
 
 [models."bytedance/seedream-4.5"]
 base_model = "bytedance-seed/seedream-4.5"
+
+# Cloudflare files Runway's models under runwayml/; the lab is runway.
+[models."runwayml/aleph-2"]
+base_model = "runway/aleph-2"
+
+[models."runwayml/gen-4.5"]
+base_model = "runway/gen-4.5"
 
 [models."bytedance/seedream-5-lite"]
 base_model = "bytedance-seed/seedream-5.0-lite"

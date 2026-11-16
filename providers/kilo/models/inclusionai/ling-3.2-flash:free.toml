@@ -1,0 +1,26 @@
+schema = 2
+name = "inclusionAI: Ling 3.2 Flash (free)"
+description = "Ling 3.2 Flash is a hybrid reasoning model from inclusionAI that accepts text and image input, with a 1M-token context window and up to 200 images per request. Thinking can..."
+family = "ling"
+open_weights = false
+release_date = "2026-11-13"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

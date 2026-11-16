@@ -27,3 +27,7 @@ output = 0
 [api.speech]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"
 sdk = { opencodeai = "none" }
+
+[cost.audio.output]
+unit = "second"
+price = 0.002

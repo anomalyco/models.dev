@@ -1,0 +1,31 @@
+# https://huggingface.co/sentence-transformers/clip-ViT-B-32-multilingual-v1 (Apache-2.0): multilingual text encoder
+# (50+ languages) aligned to the CLIP ViT-B/32 image space; text input only.
+# Context: max_seq_length 128 (https://huggingface.co/sentence-transformers/clip-ViT-B-32-multilingual-v1/blob/main/sentence_bert_config.json).
+# Released 2021-06-22: initial commit of the model repository (https://huggingface.co/sentence-transformers/clip-ViT-B-32-multilingual-v1/commits/main)
+schema = 2
+v2_only = true
+type = "embedding"
+name = "CLIP ViT-B-32 Multilingual v1"
+description = "Multilingual text encoder that embeds text into the CLIP ViT-B/32 vector space"
+open_weights = true
+release_date = "2021-06-22"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 128
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/sentence-transformers/clip-ViT-B-32-multilingual-v1"

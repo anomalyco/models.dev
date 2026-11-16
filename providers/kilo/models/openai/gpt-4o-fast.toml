@@ -1,0 +1,14 @@
+schema = 2
+base_model = "openai/gpt-4o"
+name = "OpenAI: GPT-4o (Fast)"
+description = "GPT-4o from OpenAI has broad general knowledge and domain expertise allowing it to follow complex instructions in natural language and solve difficult problems accurately. It matches GPT-4 Turbo performance with a faster and cheaper API."
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 4.25
+cache = { read = 2.125 }
+
+[cost.text.output]
+price = 17

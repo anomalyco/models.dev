@@ -1,0 +1,31 @@
+# Pricing: https://ai.google.dev/gemini-api/docs/pricing#gemini-4-carbon
+# Introductory $2 / $10 / $0.10 cache read through 2026-11-30; the multiplier restores $4 / $20 / $0.20 from 2026-12-01.
+# Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high (https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon).
+# Cache: implicit only (explicit caching is not supported).
+# Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes; Zen passes requests through.
+schema = 2
+base_model = "google/gemini-4-carbon"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.generate-content]
+base_url = "https://opencode.ai/inference/google/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10
+
+[cost.audio.input]
+price = 2
+
+[[cost.multipliers]]
+when = { date = { gte = "2026-12-01" } }
+factor = 2

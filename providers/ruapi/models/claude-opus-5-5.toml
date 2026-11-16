@@ -1,0 +1,23 @@
+# Prices from https://www.ruapi.ai/pricing (standard rate), checked 2026-10-23. USD per 1M tokens.
+# 1-hour cache writes are billed at 2x input: https://docs.ruapi.ai/en/prompt-caching
+# Served over the native Anthropic Messages API (POST https://www.ruapi.ai/v1/messages);
+# cache_control markers (ttl included) and output_config are forwarded unchanged.
+# Effort: output_config.effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+structured_output = true
+
+[api.messages]
+base_url = "https://www.ruapi.ai/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 4.8
+cache = { read = 0.24, write = { "5m" = 6, "1h" = 9.6 } }
+
+[cost.text.output]
+price = 24

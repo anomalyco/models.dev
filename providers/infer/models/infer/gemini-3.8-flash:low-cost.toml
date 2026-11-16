@@ -1,0 +1,23 @@
+# Source: https://infer.flow7.org/api/public/catalog (2026-10-29 UTC)
+# Exact selector: infer/gemini-3.8-flash:low-cost
+# Low cost route: text and tool calls. Image and file input need the model's :official route.
+# Limits: the lab's, which match Infer's published figures for the model.
+# Reasoning controls copied from the lab's own entry, as AGENTS.md asks of relays.
+schema = 2
+base_model = "google/gemini-3.8-flash"
+name = "Gemini 3.8 Flash (Low cost)"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.05, write = 0.3 }
+
+[cost.text.output]
+price = 2.21

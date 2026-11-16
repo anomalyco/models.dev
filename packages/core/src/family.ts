@@ -63,6 +63,7 @@ export const ModelFamilyValues = [
   "qwen3.7-plus",
   "qwen3.7-max",
   "qwen3.8-max",
+  "qwen4-max",
   "qwen-free",
 
   // DeepReinforce

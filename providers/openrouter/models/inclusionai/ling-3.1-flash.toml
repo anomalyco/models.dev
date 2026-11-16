@@ -11,7 +11,7 @@ description = "Efficient model for low-latency assistance, extraction, and routi
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
-structured_output = true
+structured_output = false
 
 [limit]
 context = 1_000_000
@@ -27,8 +27,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.075
-cache = { read = 0.015 }
+price = 0.045
+cache = { read = 0.009 }
 
 [cost.text.output]
-price = 0.225
+price = 0.135
