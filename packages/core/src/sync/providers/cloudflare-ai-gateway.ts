@@ -113,8 +113,7 @@ const CatalogEntry = z.object({
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
-  // Usually one upstream. More are fine when they price the model the same (see catalogCost).
-  provider_details: z.array(ProviderDetail).min(1).nullish(),
+  provider_details: z.array(ProviderDetail).length(1).nullish(),
 });
 
 export type MediaType = "speech" | "transcription" | "image" | "video";
@@ -142,7 +141,7 @@ const UNSYNCED_TASKS = new Set([
 const MediaCatalogModel = CatalogEntry.extend({
   task: z.string().refine((task) => MEDIA_TASKS[task] !== undefined, "task must be a synced media task"),
   name: z.string().min(1).optional(),
-  provider_details: z.array(ProviderDetail).min(1).nullish(),
+  provider_details: z.array(ProviderDetail).length(1).nullish(),
 });
 
 const FlatPricing = z.object({
@@ -530,7 +529,6 @@ export function buildCloudflareAiGatewayMediaModel(
   if (Object.keys(capabilities).length > 0) doc.capabilities = capabilities;
   doc.api = RUN_API;
 
-  assertOneUpstreamPrice(catalog);
   const pricing = catalog.provider_details?.[0]?.pricing;
   if (pricing === undefined) return { doc, unpriced: ["(no provider_details)"] };
   const { cost, unpriced } = mediaCost(pricing, type, curated.output_tokens, schemaInput);
@@ -1133,18 +1131,9 @@ async function mapLimit<T, R>(items: T[], limit: number, transform: (item: T) =>
 
 // Structured provider_details is the source of truth. A curated cost is only allowed
 // (and then required) when Cloudflare omits it, so a stale override can't outlive it.
-// Cloudflare doesn't say which upstream a multi-provider row bills at, so a row whose upstreams disagree isn't guessed.
-function assertOneUpstreamPrice(catalog: { model_id: string; provider_details?: { id: string; pricing: unknown }[] | null }) {
-  const details = catalog.provider_details ?? [];
-  if (new Set(details.map((entry) => JSON.stringify(entry.pricing))).size > 1) {
-    throw new Error(`${catalog.model_id}: providers ${details.map((entry) => entry.id).join(", ")} list different prices`);
-  }
-}
-
 function catalogCost(catalog: CatalogModel, curated: CuratedModel): NonNullable<SyncedBaseModel["cost"]> {
   const id = catalog.model_id;
   const detail = catalog.provider_details?.[0];
-  assertOneUpstreamPrice(catalog);
   if (detail !== undefined) {
     if (curated.cost !== undefined) {
       throw new Error(`${id}: catalog now has provider_details pricing; remove the curated cost`);
