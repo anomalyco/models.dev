@@ -24,10 +24,10 @@ export const TinfoilModel = z.object({
   context_window: z.number().int().positive().optional(),
   pricing: TinfoilPricing,
   reasoning: z.boolean(),
-  // "auto" (Inkling 2 Small) lets the model pick its own depth, the same as sending no effort, so it isn't a level.
+  // "auto" (Inkling 2 Small) lets the model pick its own depth, which the catalog records as the `default` level.
   supported_efforts: z
-    .array(z.enum(["none", "minimal", "low", "medium", "auto", "high", "xhigh", "max"]))
-    .transform((efforts) => efforts.filter((effort): effort is Exclude<typeof effort, "auto"> => effort !== "auto"))
+    .array(z.enum(["none", "minimal", "low", "medium", "auto", "high", "xhigh", "max", "default"]))
+    .transform((efforts) => efforts.map((effort) => (effort === "auto" ? "default" as const : effort)))
     .optional(),
   tool_calling: z.boolean(),
   multimodal: z.boolean(),
@@ -91,7 +91,7 @@ function isRepresentableTokenModel(model: TinfoilModel) {
     );
 }
 
-const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"] as const;
 
 // The catalog's supported_efforts are the reasoning_effort values Tinfoil accepts; they replace the authored effort
 // list and keep any other authored control. Without them, the authored controls stay as they are.
