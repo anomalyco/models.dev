@@ -8919,10 +8919,12 @@ test("OpenRouter media models resolve to their lab files", () => {
   expect(resolveMediaBaseModel("cohere/rerank-5-pro")).toBe("cohere/rerank-v5.0-pro");
 });
 
-test("Tinfoil's auto effort is the catalog's default level", () => {
+test("Tinfoil's auto effort is left out of the published levels", () => {
   const [model] = tinfoil.parseModels({
     object: "list",
     data: [tinfoilModel({ id: "inkling-2-small", supported_efforts: ["none", "low", "auto", "high"] as never })],
   });
-  expect(model?.supported_efforts).toEqual(["none", "low", "default", "high"]);
+  expect(model?.supported_efforts).toEqual(["none", "low", "high"]);
+  const built = buildTinfoilModel(model!, { ...existingTinfoilGLM, reasoning: true });
+  expect(built.reasoning_options).toContainEqual({ type: "effort", values: ["none", "low", "high"] });
 });
