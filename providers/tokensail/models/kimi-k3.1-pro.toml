@@ -5,14 +5,24 @@
 #            off switch; TokenSail implements the off path.
 #            `enable_thinking = false` is accepted but ignored (still 28 tokens).
 #   effort - `reasoning_effort` low | high | max (default max).
-# Pricing (read 2026-11-16): USD, converted from the vendor's CNY list price at
-# 1 USD = 6.6864 CNY and rounded to 8 decimals. TokenSail charges 95% of that list price.
+# Cache - implicit only. Prefix caching is automatic and keyed by the prompt prefix;
+#         hits are billed at the cache-read price below (1/10 of input).
+# structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
+#         (strict) and a 1k-token budget: HTTP 200 and `{"answer":"ok"}`. Note this model
+#         always thinks, so a small `max_tokens` can return an empty content string.
+# Pricing (read 2026-11-16): USD, converted from Moonshot's CNY list price at
+# 1 USD = 6.6864 CNY, rounded to 8 decimals. CNY base per 1M tokens: input 13.00,
+# cache hit 1.30, output 68.00. TokenSail charges 95% of that list.
+# Sources: https://platform.kimi.ai/docs/pricing/chat
+#          https://tokensail.ai/pricing-compare
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k3.1-pro"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

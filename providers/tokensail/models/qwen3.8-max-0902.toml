@@ -6,14 +6,24 @@
 #   effort - `reasoning_effort` low | medium | xhigh (default xhigh).
 #   budget - `thinking_budget_tokens` 1..262144 (0 and 262145 both return HTTP 400),
 #            not combinable with `reasoning_effort`.
-# Pricing (read 2026-11-16): USD, converted from the vendor's CNY list price at
-# 1 USD = 6.6864 CNY and rounded to 8 decimals. Vendor list price as-is.
+# Cache - implicit and explicit, both priced below. Implicit hits are billed at
+#         cache.read (1/8 of input); explicit cache points are written at cache.write
+#         (1.25x input), which is why this is the only file declaring `explicit`.
+# structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
+#         (strict): HTTP 200 and `{"answer":"ok"}`.
+# Pricing (read 2026-11-16): USD, converted from Alibaba's CNY list price at
+# 1 USD = 6.6864 CNY, rounded to 8 decimals. CNY base per 1M tokens: input 13.60,
+# cache read 1.70, cache write 17.00, output 40.80. TokenSail charges 75% of that list.
+# Sources: https://docs.modelstudio.console.alibabacloud.com/zh/model-studio/model-pricing
+#          https://tokensail.ai/pricing-compare
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen3.8-max-0902"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 1, max = 262_144 } }
+structured_output = true
+cache = { implicit = true, explicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

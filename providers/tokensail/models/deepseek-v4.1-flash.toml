@@ -7,8 +7,13 @@
 #            DeepSeek V4 Pro family, which has a lab entry for this control; there is no
 #            separate lab entry for this model. The full OpenAI set is accepted and
 #            collapsed upstream: minimal -> low, medium/xhigh -> high, `none` disables.
-# Pricing (read 2026-11-16): USD, converted from the vendor's CNY list price at
-# 1 USD = 6.6864 CNY and rounded to 8 decimals. Vendor list price as-is.
+# Cache - implicit only, same automatic disk cache as the rest of the DeepSeek family:
+#         no write price, no TTL, hits billed at the cache-read price below.
+# Pricing (read 2026-11-16): USD, converted from DeepSeek's CNY list price at
+# 1 USD = 6.6864 CNY, rounded to 8 decimals. CNY base per 1M tokens: input 1.00,
+# cache hit 0.02, output 4.00 (standard band). TokenSail charges 60% of that list.
+# Sources: https://api-docs.deepseek.com/quick_start/pricing
+#          https://tokensail.ai/pricing-compare
 schema = 2
 v2_only = true
 base_model = "deepseek/deepseek-v4.1-flash"
@@ -16,6 +21,7 @@ base_model = "deepseek/deepseek-v4.1-flash"
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

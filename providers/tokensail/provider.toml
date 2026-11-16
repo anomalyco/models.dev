@@ -1,12 +1,14 @@
+# TokenSail - OpenAI-compatible gateway. Per-model reasoning controls, cache support
+# and price sources are documented in a leading comment block in each file under models/.
+#
+# Reasoning controls, live-verified on api.tokensail.ai 2026-11-16:
+#   `thinking = { "type": "disabled" }` turns reasoning off;
+#   `enable_thinking = false` is accepted but ignored;
+#   `glm-5.3` requires thinking on and rejects both forms with HTTP 400.
+# Reasoning streams back in `reasoning_content`.
 name = "TokenSail"
 env = ["TOKENSAIL_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"
 api = "https://api.tokensail.ai/v1"
 doc = "https://tokensail.ai/docs/"
-
-# Raw HTTP reasoning controls (live-verified 2026-11-16): `thinking = { type = "disabled" }`
-# turns reasoning off, while `enable_thinking = false` is accepted but ignored.
-# `glm-5.3` requires thinking on and rejects both forms with HTTP 400, so the
-# model files declare no `toggle` for it. Reasoning streams in `reasoning_content`.
-# https://tokensail.ai

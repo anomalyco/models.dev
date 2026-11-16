@@ -5,14 +5,23 @@
 #            accepts `type = "enabled"`; TokenSail implements the off path.
 #            `enable_thinking = false` is accepted but ignored (still 42 tokens).
 #   effort - `reasoning_effort` low | high | max (default max).
-# Pricing (read 2026-11-16): USD, converted from the vendor's CNY list price at
-# 1 USD = 6.6864 CNY and rounded to 8 decimals. TokenSail charges 80% of that list price.
+# Cache - implicit only. Zhipu's prompt cache is automatic with no write price; hits are
+#         billed at the cache-read price below.
+# structured_output - omitted on purpose: `response_format.type = "json_schema"` returns
+#         HTTP 400 ("`json_schema` is not supported by this mode") on TokenSail, while
+#         `json_object` is accepted. Declaring it true would mislead JSON-schema clients.
+# Pricing (read 2026-11-16): USD, converted from Zhipu's CNY list price at
+# 1 USD = 6.6864 CNY, rounded to 8 decimals. CNY base per 1M tokens: input 0.80,
+# cache hit 0.23, output 2.80. TokenSail charges 80% of that list.
+# Sources: https://docs.z.ai/guides/overview/pricing
+#          https://tokensail.ai/pricing-compare
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
