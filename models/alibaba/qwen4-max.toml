@@ -4,7 +4,8 @@
 # https://docs.qwencloud.com/developer-guides/text-generation/thinking
 # https://www.alibabacloud.com/help/en/model-studio/pdf-understanding
 # https://www.alibabacloud.com/help/en/model-studio/vision
-# Modalities and limits follow Qwen4 Max Preview, the same model before general availability.
+# Modalities follow Qwen4 Max Preview, the same model before general availability.
+# Output limit: max_tokens caps reasoning plus answer at 262,144 tokens with thinking on (131,072 with thinking off), per Alibaba launch notes 2026-11-16.
 # Input MIME types follow the shared Model Studio vision limits, plus PDF understanding.
 schema = 2
 name = "Qwen4 Max"
@@ -26,4 +27,4 @@ top_k = true
 
 [limit]
 context = 1_000_000
-output = 393_216
+output = 262_144
