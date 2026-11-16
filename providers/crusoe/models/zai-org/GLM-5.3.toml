@@ -1,0 +1,19 @@
+# Model and context: https://docs.crusoe.ai/serverless-inference/index.html
+# Pricing: Crusoe Foundry model catalog (USD per million tokens).
+# Live tested 2026-11-16: chat completions, tool calls and reasoning_effort
+# low/high/max accepted; reasoning is returned in the "reasoning" field.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+legacy_interleaved = true
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4
