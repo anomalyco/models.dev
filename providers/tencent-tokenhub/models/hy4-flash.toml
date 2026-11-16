@@ -1,7 +1,5 @@
-# Hy4 Flash. Tencent has not published a separate price row for this id (the China-site price
-#   table lists only "Hy4 preview", accessed 2026-11-11), so it carries the same listing as the
-#   other Hy4 rows: CNY 6 / 18 / 0.3 per MTok (input / output / cache hit) → USD 0.834 / 2.501 /
-#   0.042 per MTok via list_price / tax_rate * FX. Revisit when a Flash price row appears.
+# Hy4 Flash. Tencent Flash-tier list price: USD 0.07 / 0.281 / 0.003 per MTok
+#   (input / output / cache hit).
 # Effort: reasoning_effort = none|high (default high). "none" is how thinking is turned off on
 #   this id, so per AGENTS.md there is no separate toggle entry.
 # https://cloud.tencent.com/document/product/1823/130055
@@ -13,8 +11,8 @@ base_model = "tencent/hy4-flash"
 reasoning = { supported = true, effort = ["none", "high"] }
 
 [cost.text.input]
-price = 0.834
-cache = { read = 0.042 }
+price = 0.07
+cache = { read = 0.003 }
 
 [cost.text.output]
-price = 2.501
+price = 0.281
