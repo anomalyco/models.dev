@@ -3,6 +3,10 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }

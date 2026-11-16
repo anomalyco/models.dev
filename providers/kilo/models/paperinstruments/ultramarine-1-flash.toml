@@ -1,0 +1,26 @@
+schema = 2
+name = "Ultramarine 1 Flash"
+description = "Ultramarine 1 Flash is an open-weight multimodal reasoning model from Paper Instruments, post-trained from GLM-5.3 Flash for knowledge work in enterprise operations, finance, law, and consulting. It supports long-context document analysis and agentic workflows."
+open_weights = false
+release_date = "2026-11-12"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 131_000
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

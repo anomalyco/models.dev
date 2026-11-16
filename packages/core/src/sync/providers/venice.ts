@@ -258,10 +258,16 @@ export function buildVeniceModel(
   };
 }
 
+// Venice's own fine-tunes can keep the lab model's id: "qwen-3-6-plus" is "Qwen 3.6 Plus Uncensored",
+// "an uncensored variant of Alibaba's Qwen 3.6 Plus". Such a model only matches a lab file that names
+// the same fine-tune.
+const FINE_TUNE_MARKER = /uncensored|abliterated|heretic/i;
+
 export function resolveVeniceBaseModel(id: string, name: string) {
   const alias = BASE_MODEL_ALIASES[id];
   if (alias !== undefined) return alias;
-  const entries = getMetadataEntries();
+  const marker = `${id} ${name}`.match(FINE_TUNE_MARKER)?.[0].toLowerCase();
+  const entries = getMetadataEntries().filter((entry) => marker === undefined || entry.normalizedFull.includes(marker));
   for (const candidate of veniceBaseModelCandidates(id, name)) {
     const normalized = normalize(candidate);
     const ranked = [

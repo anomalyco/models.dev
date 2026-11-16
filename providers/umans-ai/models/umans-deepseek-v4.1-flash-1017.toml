@@ -10,7 +10,7 @@
 # true, context_window 1048576, max_completion_tokens 393216).
 # Pay-per-token: Umans AI's public rate, the same as umans-deepseek-v4.1-flash
 # ($0.15 / $0.60 / $0.028 cached per 1M; GET /v1/models renders input/output).
-# limit.output is cap-1 on purpose: the gateway 400s max_tokens >=
+# limit.output is cap-1 on purpose: the Umans API 400s max_tokens >=
 # max_completion_tokens (393216), so 393215 is the largest value that serves
 # (its advertised recommended_max_tokens).
 schema = 2

@@ -1,0 +1,14 @@
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-baai
+# 0.1000 CHF/MTok, converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_BAAI/bge-m3 (POST /v1/embeddings; gateway max_model_len 8192 matches the lab)
+schema = 2
+base_model = "baai/bge-m3"
+
+[api.embeddings]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.119
+
+[cost.text.output]
+price = 0

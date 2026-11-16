@@ -1,0 +1,114 @@
+# Sources:
+# https://research.meta.ai/blog/muse-ember (announcement, 2026-11-09; benchmark scores at max effort)
+# https://dev.meta.ai/docs/muse-ember (context 1,048,576; max output 524,288; text, image, video, audio and PDF input)
+# https://dev.meta.ai/docs/choose-a-model (same request body as Muse Spark and Muse Wonder)
+# Meta has not published a knowledge cutoff.
+# Sampling (temperature, top_p; no top_k): https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/protocols/messages
+# Image, video and audio MIME types: https://dev.meta.ai/docs/media-understanding (image/jpeg, image/png, image/gif, image/webp; video/mp4; audio/mpeg, audio/wav)
+schema = 2
+name = "Muse Ember"
+description = "Muse Ember is Meta's smallest and most efficient reasoning model, built for the work agents repeat all day: tool calls, coding subtasks, routing, extraction, and long-document parsing. It pairs with Muse Wonder or Muse Spark, which plan while Muse Ember handles the volume."
+family = "muse"
+open_weights = false
+release_date = "2026-11-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "application/pdf", "audio/mpeg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 524_288
+
+[[links]]
+label = "Announcement"
+url = "https://research.meta.ai/blog/muse-ember"
+type = "announcement"
+
+[[benchmarks]]
+name = "AutomationBench"
+score = 37.8
+metric = "strict pass@1"
+variant = "max effort; Artificial Analysis AutomationBench-AA"
+source = "https://research.meta.ai/blog/muse-ember"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "Agents' Last Exam"
+score = 61.6
+metric = "score"
+variant = "max effort"
+dataset = "Linux subset"
+harness = "Meta internal evaluation framework"
+source = "https://research.meta.ai/blog/muse-ember"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 40.9
+metric = "accuracy"
+variant = "max effort"
+version = "4.0"
+harness = "mini-swe-agent"
+source = "https://research.meta.ai/blog/muse-ember"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "FrontierCode"
+score = 27.2
+metric = "score"
+variant = "max effort; Artificial Analysis FrontierCode-AA"
+version = "2.0"
+source = "https://research.meta.ai/blog/muse-ember"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "GDP.pdf"
+score = 22.8
+metric = "score"
+variant = "max effort; Artificial Analysis GDP.pdf-AA"
+source = "https://research.meta.ai/blog/muse-ember"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 69.5
+metric = "mean partial score"
+variant = "max effort"
+version = "2.1"
+source = "https://research.meta.ai/blog/muse-ember"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "OSWorld"
+score = 33.8
+metric = "binary completion rate"
+variant = "max effort"
+version = "2.1"
+source = "https://research.meta.ai/blog/muse-ember"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "PerceptionBench"
+score = 80.6
+metric = "score"
+variant = "max effort; with tools"
+harness = "Meta internal evaluation framework"
+source = "https://research.meta.ai/blog/muse-ember"
+date = "2026-11-09"
+
+[[benchmarks]]
+name = "Artificial Analysis Intelligence Index"
+score = 36
+metric = "index score"
+variant = "max effort"
+version = "5"
+source = "https://research.meta.ai/blog/muse-ember"
+date = "2026-11-09"

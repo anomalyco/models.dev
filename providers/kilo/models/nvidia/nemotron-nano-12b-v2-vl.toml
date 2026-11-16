@@ -1,0 +1,22 @@
+schema = 2
+base_model = "nvidia/nemotron-nano-12b-v2-vl"
+name = "NVIDIA: Nvidia Nemotron Nano 12B V2 VL"
+description = "The model is an auto-regressive vision language model that uses an optimized transformer architecture. The model enables multi-image reasoning and video understanding, along with strong document intelligence, visual Q&A and summarization capabilities."
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+structured_output = false
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.6

@@ -1,0 +1,26 @@
+schema = 2
+base_model = "google/gemini-omni-1.1-flash"
+name = "Google: Gemini Omni 1.1 Flash"
+description = "Gemini Omni 1.1 Flash is Google's native multimodal video generation and editing model, the generally available successor to Gemini Omni Flash Preview. It is suited for text-to-video, image-to-video, first and..."
+
+[modalities]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text", "video"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = false
+temperature = true
+
+[limit]
+context = 131_072
+output = 65_536
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 9
+
+[cost.web_search]
+price = 14

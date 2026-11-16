@@ -20,9 +20,6 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 service_tier = ["flex", "priority"]
 
-[limit]
-output = 131_072
-
 [api.responses]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/v1"
 sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/responses" }

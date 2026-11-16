@@ -1,0 +1,26 @@
+schema = 2
+name = "KT: Mi:dm K 3.0 Pro"
+description = "Mi:dm K 3.0 Pro is a Mixture-of-Experts reasoning model from KT, with 120B total and 12B active parameters. It uses a hybrid architecture that mixes Mamba, MoE and attention layers."
+open_weights = false
+release_date = "2026-11-05"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 261_795
+output = 235_615
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.8

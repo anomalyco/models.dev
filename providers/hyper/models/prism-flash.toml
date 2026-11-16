@@ -1,0 +1,25 @@
+schema = 2
+name = "Prism Flash"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+open_weights = false
+release_date = "1970-01-01"
+last_updated = "2026-11-06"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.31

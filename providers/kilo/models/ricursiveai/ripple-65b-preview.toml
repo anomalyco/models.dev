@@ -1,5 +1,5 @@
 schema = 2
-name = "ricursiveAI/Ripple-65B-Preview"
+name = "Ricursive: Ripple 65B Preview"
 description = "Ripple-65B-Preview by ricursiveAI, a 65B model with native tool calling, served in BF16."
 open_weights = false
 release_date = "2026-11-04"
@@ -10,8 +10,8 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
-structured_output = false
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
 temperature = true
 
 [limit]
@@ -19,8 +19,8 @@ context = 1_048_576
 output = 131_072
 
 [cost.text.input]
-price = 0.2
-cache = { read = 0.05 }
+price = 0.1
+cache = { read = 0.025 }
 
 [cost.text.output]
-price = 0.6
+price = 0.3

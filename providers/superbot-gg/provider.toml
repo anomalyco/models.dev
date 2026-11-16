@@ -1,0 +1,10 @@
+# superbot is an OpenAI-compatible API: one base URL and one caller key (sbc_...)
+# for the house models and for the models on the caller's own account.
+# Model list: GET https://api.superbot.gg/v1/models (needs a caller key; a keyless trial key comes from
+# POST https://api.superbot.gg/v1/keys/trial, documented at https://superbot.gg/docs#api-auth). Accessed 2026-10-26.
+name = "superbot"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["SUPERBOT_API_KEY"]
+api = "https://api.superbot.gg/v1"
+doc = "https://superbot.gg/api"

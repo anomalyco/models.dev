@@ -6,7 +6,7 @@ description = "Fast DeepSeek model for efficient chat, coding help, and agent lo
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 

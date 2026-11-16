@@ -1,0 +1,25 @@
+# Sources (accessed 2026-11-06):
+# - https://meragpt.com/docs/models and https://meragpt.com/docs/chat-completions: rewrites machine-written prose so
+#   it reads as if a person wrote it; only the last user message is used; tools and response_format are not
+#   supported; temperature and top_p are accepted and ignored.
+# - GET https://meragpt.com/v1/models: context_window 4096, max_output_tokens 2048, release_date 2026-09-02.
+schema = 2
+name = "Restyler 1"
+description = "meraGPT model that rewrites machine-written prose so it reads as if a person wrote it, keeping its structure"
+open_weights = false
+release_date = "2026-09-02"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 4_096
+output = 2_048

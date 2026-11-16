@@ -1,9 +1,6 @@
 schema = 2
-name = "Gemini Omni 1.2 Flash"
+base_model = "google/gemini-omni-1.2-flash"
 description = "Omni-modal model for text, vision, audio, and multimodal agent tasks"
-family = "gemini"
-open_weights = false
-release_date = "2026-11-05"
 
 [modalities]
 input = ["text", "image", "application/pdf"]
@@ -14,7 +11,6 @@ tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 
 [limit]
-context = 131_072
 output = 260_640
 
 [api.chat-completions]
