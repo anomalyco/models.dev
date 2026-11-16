@@ -1,0 +1,17 @@
+# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
+# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is alibaba/qwen3.8-flash.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
+
+[api.chat-completions]
+capabilities = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 0.376

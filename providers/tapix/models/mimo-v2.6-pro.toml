@@ -1,0 +1,16 @@
+# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
+# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is above/mimo-v2.6-pro.
+schema = 2
+base_model = "above/mimo-v2.6-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+capabilities = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2958
+
+[cost.text.output]
+price = 0.939712

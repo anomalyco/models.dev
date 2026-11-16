@@ -1,0 +1,17 @@
+# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
+# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is openai/gpt-6.1-terra.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+capabilities = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.429888
+
+[cost.text.output]
+price = 1.453417

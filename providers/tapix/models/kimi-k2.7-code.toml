@@ -1,0 +1,17 @@
+# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
+# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is moonshotai/kimi-k2.7-code.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+capabilities = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.59616
+
+[cost.text.output]
+price = 2.8

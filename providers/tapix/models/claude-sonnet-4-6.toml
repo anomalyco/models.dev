@@ -1,0 +1,13 @@
+# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
+# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is anthropic/claude-sonnet-4-6.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[api.chat-completions]
+capabilities = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.1
+
+[cost.text.output]
+price = 10.5

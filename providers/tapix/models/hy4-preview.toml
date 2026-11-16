@@ -1,0 +1,17 @@
+# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
+# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is aihubmix/hy4-preview.
+schema = 2
+base_model = "aihubmix/hy4-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"], budget = {} }
+structured_output = true
+
+[api.chat-completions]
+capabilities = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.690418
+
+[cost.text.output]
+price = 2.761671

@@ -1,8 +1,14 @@
+# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
+# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is xai/grok-4.6.
 schema = 2
 base_model = "xai/grok-4.6"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[api.chat-completions]
+capabilities = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 1.4

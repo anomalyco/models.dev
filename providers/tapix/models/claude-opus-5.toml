@@ -1,0 +1,13 @@
+# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
+# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is anthropic/claude-opus-5.
+schema = 2
+base_model = "anthropic/claude-opus-5"
+
+[api.chat-completions]
+capabilities = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3.5
+
+[cost.text.output]
+price = 17.5

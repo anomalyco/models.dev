@@ -1,0 +1,13 @@
+# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
+# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is minimax/minimax-m2.7.
+schema = 2
+base_model = "minimax/minimax-m2.7"
+
+[api.chat-completions]
+capabilities = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.191681
+
+[cost.text.output]
+price = 0.697832
