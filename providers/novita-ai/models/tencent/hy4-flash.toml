@@ -5,7 +5,7 @@
 # Effort: reasoning_effort = none|high; none (or thinking.type = disabled) suppresses reasoning and an unknown value is
 #   rejected with a 400 (live 2026-11-16). Same native set as novita-ai/tencent/hy4; other accepted values are aliases.
 # Cache: implicit prefix cache (cached_tokens 10752 of 10830 on a repeated prompt, live 2026-11-16).
-# system_updates = true: cache hit right after a mid-conversation system message (live 2026-11-16, 10752 of 10856 prompt tokens cached).
+# system_updates = true (Chat Completions only, the API tested): cache hit right after a mid-conversation system message (live 2026-11-16, 10752 of 10856 prompt tokens cached).
 schema = 2
 base_model = "tencent/hy4-flash"
 
@@ -13,7 +13,6 @@ base_model = "tencent/hy4-flash"
 reasoning = { supported = true, effort = ["none", "high"] }
 cache = { implicit = true }
 structured_output = true
-system_updates = true
 
 [limit]
 context = 1_000_000
@@ -21,6 +20,7 @@ output = 64_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.messages]
 base_url = "https://api.novita.ai/anthropic/v1"

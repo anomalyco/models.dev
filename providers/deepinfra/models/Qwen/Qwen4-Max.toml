@@ -17,6 +17,7 @@ output = ["text"]
 reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
 structured_output = true
 cache = { implicit = true }
+prompt_cache_key = true
 
 [cost.text.input]
 price = 1.413
