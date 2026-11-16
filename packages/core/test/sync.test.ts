@@ -95,6 +95,7 @@ import {
   resolveNanoGptBaseModel,
   type NanoGptModel,
 } from "../src/sync/providers/nano-gpt.js";
+import { anyapi, parseAnyApiModels } from "../src/sync/providers/anyapi.js";
 import { openai, parseOpenAIModels } from "../src/sync/providers/openai.js";
 import { buildOfoxModel, ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
@@ -1346,11 +1347,86 @@ test("OpenAI availability sync retains models absent from a scoped response", as
   }
 });
 
+test("parses the AnyAPI models list", () => {
+  expect(parseAnyApiModels({
+    object: "list",
+    data: [
+      { id: "anthropic/claude-sonnet-4.6", object: "model", created: 1, owned_by: "anthropic" },
+      { id: "x-ai/grok-4.3", object: "model" },
+    ],
+  }).map((model) => model.id)).toEqual(["anthropic/claude-sonnet-4.6", "x-ai/grok-4.3"]);
+  expect(() => parseAnyApiModels({ data: [] })).toThrow();
+});
+
+test("AnyAPI availability sync preserves authored base_model files", () => {
+  const authored = {
+    base_model: "anthropic/claude-sonnet-4-6",
+    capabilities: { reasoning: { supported: true, toggle: true, effort: ["low", "medium", "high"] } },
+  };
+  expect(anyapi.translateModel(
+    { id: "anthropic/claude-sonnet-4.6", object: "model" },
+    { existing: () => authored as never, authored: () => authored as never },
+  )).toEqual({ id: "anthropic/claude-sonnet-4.6", model: authored as never });
+});
+
+test("AnyAPI availability sync skips models without authored metadata", () => {
+  expect(anyapi.translateModel(
+    { id: "some-lab/new-model", object: "model" },
+    { existing: () => undefined, authored: () => undefined },
+  )).toBeUndefined();
+});
+
+test("AnyAPI availability sync retains models absent from a scoped response", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-anyapi-"));
+  const modelsDir = path.join(dir, "providers", "anyapi", "models");
+  await Bun.write(path.join(modelsDir, "openai", "o3-mini.toml"), [
+    "schema = 2",
+    'name = "Existing model"',
+    'release_date = "2026-01-01"',
+    "open_weights = false",
+    "",
+    "[modalities]",
+    'input = ["text"]',
+    'output = ["text"]',
+    "",
+    "[capabilities]",
+    "tools = { supported = true }",
+    "reasoning = { supported = false }",
+    "",
+    "[limit]",
+    "context = 1_000",
+    "output = 100",
+    "",
+  ].join("\n"));
+
+  try {
+    const result = await syncProvider({
+      ...anyapi,
+      modelsDir,
+      async fetchModels() {
+        return {
+          object: "list",
+          data: [{ id: "some-lab/new-model", object: "model" }],
+        };
+      },
+    });
+    expect(result.created).toBe(0);
+    expect(result.deleted).toBe(0);
+    expect(result.unchanged).toBe(1);
+    expect(await Bun.file(path.join(modelsDir, "openai", "o3-mini.toml")).exists()).toBe(true);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 test("tracks missing models except for unreliable first-party inventories", () => {
   expect(google.skipCreates).toBe(true);
   expect(google.trackMissingModels).toBe(false);
   expect(openai.skipCreates).toBe(true);
   expect(openai.trackMissingModels).toBe(false);
+  expect(anyapi.skipCreates).toBe(true);
+  expect(anyapi.trackMissingModels).toBe(false);
+  expect(anyapi.deleteMissing).toBe(false);
   expect(pioneer.skipCreates).toBe(true);
   expect(pioneer.trackMissingModels).toBe(true);
   expect(ofox.skipCreates).toBe(true);
