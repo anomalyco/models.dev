@@ -40,15 +40,11 @@ skip = [
   # POST /ai/v1/chat/completions (live 2026-10-20).
   "minimax/m2.7",
   "minimax/m3",
-  "stealth/union-alpha",
   # Text-to-Speech: BYOK-only, unified billing returns code 2047 on POST /ai/run (verified live
   # 2026-10-20). The other ElevenLabs speech models are served.
   "elevenlabs/eleven-flash-v2-5",
-  # Image and video ids with no lab file yet. Each needs a lab file with a sourced release date
-  # and the upstream API's input/output formats before it can be synced.
-  "bria/fibo-edit-1.5",
-  "bria/remove-background",
-  "bria/v-rmbg-3.0",
+  # Ids with no lab file yet (image, video, speech and text). Each needs a lab file with a sourced
+  # release date and the upstream API's formats before it can be synced.
   "black-forest-labs/flux-2-pro-preview",
   "black-forest-labs/flux-3-video",
   "black-forest-labs/flux-video-upscale",
@@ -64,7 +60,23 @@ skip = [
   "bytedance/seedance-2.0-mini",
   "bytedance/seedream-4.0",
   "lightricks/ltx-2-5-fast",
-  "minimax/h3-max",
+  "klingai/kling-v3",
+  "klingai/kling-v3-image",
+  "klingai/kling-v3-omni",
+  "klingai/kling-v4",
+  "klingai/kling-v4-flash",
+  "lightricks/ltx-2-3-fast",
+  "lightricks/ltx-2-3-pro",
+  "minimax/speech-02-hd",
+  "minimax/speech-02-turbo",
+  "minimax/speech-2.6-hd",
+  "minimax/speech-2.6-turbo",
+  "openai/decisions",
+  "particle/particle-1",
+  "topaz/gigapixel-high-fidelity-3",
+  "topaz/gigapixel-standard-2",
+  "veed/fabric-1.0",
+  "veed/fabric-1.0-fast",
   "pixverse/v5.6",
   "pixverse/v6",
   "pruna/p-image",
@@ -161,6 +173,8 @@ skip = [
 # https://developers.cloudflare.com/ai/models/typesafe/jev/), so it is Jev 1.13, not the moving alias.
 [models."typesafe/jev"]
 base_model = "typesafe/jev-1.13.0"
+modalities = { input = ["text"], output = ["decision"] }
+note = ["Modalities: text only, Cloudflare's typesafe/jev input schema has no assets field and its page shows no image input, unlike typesafe/jev-1.14.0 (https://developers.cloudflare.com/ai/models/typesafe/jev/)"]
 
 # Muse Spark 1.x / Muse Wonder: the catalog schema's reasoning.effort enum (none..max) is the generic
 # Responses schema, not what the model accepts. Cloudflare's own validation error lists the values:
@@ -693,6 +707,10 @@ base_model = "google/gemini-omni-flash-preview"
 modalities = { input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"], output = ["video/mp4"] }
 note = ["Input: the schema also has an `audio` reference field, which Google's Omni docs don't list as an input, so it's left out."]
 
+[models."google/gemini-omni-1.2-flash"]
+modalities = { input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"], output = ["video/mp4"] }
+note = ["Input: the schema also has an `audio` reference field and the route bills audio input, but Google's Omni docs don't list audio as an input (https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash), so it's left out."]
+
 [models."google/gemini-omni-1.1-flash"]
 modalities = { input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp"], output = ["video/mp4"] }
 note = ["Input: the schema also has an `audio` reference field, which Google's Omni docs don't list as an input, so it's left out."]
@@ -704,6 +722,15 @@ note = ["Grok Imagine 1.5 launched in preview on the xAI API 2026-06-03 (https:/
 
 [models."minimax/h3"]
 base_model = "minimax/MiniMax-H3"
+
+[models."minimax/h3-highspeed"]
+base_model = "minimax/MiniMax-H3-Highspeed"
+
+[models."minimax/h3-lite"]
+base_model = "minimax/MiniMax-H3-Lite"
+
+[models."minimax/h3-max"]
+base_model = "minimax/MiniMax-H3-Max"
 
 [models."minimax/hailuo-2.3"]
 base_model = "minimax/MiniMax-Hailuo-2.3"
@@ -748,3 +775,54 @@ note = ["output_tokens is the text output price; image output tokens are priced 
 
 [models."openai/gpt-image-1.5"]
 note = ["provider_details lists only input_tokens, input_cached_tokens and output_tokens; the image-token prices the catalog's display pricing shows (input 8, cached 2, output 32 per 1M) aren't in it."]
+
+# Kimi K3.1 Pro always thinks: Cloudflare's model page lists reasoning_effort low, high or max
+# (https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3.1-pro/), same as Moonshot's own
+# API (providers/moonshotai/models/kimi-k3.1-pro.toml), and there is no off value. Cloudflare
+# forwards the field unvalidated (a made-up value was accepted, live 2026-11-16), so the list
+# comes from those sources. The gateway balance ran out before low and max could be timed.
+# Prices: provider_details[0] (moonshot), the one the model page shows.
+[models."moonshotai/kimi-k3.1-pro"]
+note = [
+  "Always reasons; effort: reasoning_effort = low|high|max (POST /ai/v1/chat/completions; default max; no off value).",
+  "Sources: https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3.1-pro/ ; https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart",
+]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+# Gemini 4 Hydrogen takes the same route as Argon and Carbon (Vertex AI, REST chat-completions).
+# Effort values are Google's own list (providers/google/models/gemini-4-hydrogen.toml:
+# low|medium|high|xhigh, default high). Live 2026-11-16 through the gateway: none is rejected
+# (code 7003) and minimal, low and medium are accepted; high and xhigh could not be probed
+# because the gateway balance ran out. minimal is rejected by Google's own API, so it is not listed.
+# https://ai.google.dev/gemini-api/docs/models/gemini-4-hydrogen
+# https://ai.google.dev/gemini-api/docs/thinking
+[models."google/gemini-4-hydrogen"]
+note = [
+  "Effort: reasoning_effort = low|medium|high|xhigh (maps to Gemini's thinking level; default high; none rejected, live 2026-11-16).",
+  "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-hydrogen",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
+# MiMo V2.6 Pro: Xiaomi's only control is thinking on/off (providers/xiaomi/models/mimo-v2.6-pro.toml:
+# "Responses reasoning.effort only maps none -> off, every other level -> on"), and the gateway
+# accepts the generic reasoning_effort none..max enum for it (an invalid value returns that enum from
+# the upstream, live 2026-11-16). So the control is a toggle sent as reasoning_effort = none, like
+# providers/aihubmix/models/mimo-v2.6-pro.toml. The gateway balance ran out before off could be timed.
+[models."xiaomi/mimo-v2.6-pro"]
+note = [
+  "Toggle: reasoning_effort = none turns thinking off; any other level leaves it on (POST /ai/v1/chat/completions; Xiaomi maps none -> off only, so no graded effort).",
+  "Sources: providers/xiaomi/models/mimo-v2.6-pro.toml ; providers/aihubmix/models/mimo-v2.6-pro.toml",
+]
+reasoning_options = [{ type = "toggle" }]
+
+# Catalog id uses the HuggingFace org (deepseek-ai/); the lab file is models/deepseek/.
+# Cloudflare's own Workers AI entry for this model (@cf/deepseek-ai/deepseek-v4.1-flash-1017,
+# GET /ai/models/search, 2026-11-16) lists supported_efforts none|low|high|max, default high,
+# normalizing minimal -> none, medium -> high and xhigh -> max. Same ladder as the Kilo entry.
+# Prices: provider_details[0] (subconscious), the first upstream.
+[models."deepseek-ai/deepseek-v4.1-flash-1017"]
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+note = [
+  "Off: reasoning_effort = none; effort: low|high|max (default high; minimal -> none, medium -> high, xhigh -> max; POST /ai/v1/chat/completions; ladder from Cloudflare's Workers AI model metadata, not probed live: the gateway balance ran out).",
+]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
