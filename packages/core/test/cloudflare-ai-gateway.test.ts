@@ -1158,3 +1158,21 @@ test("lists decision models on the /ai/run API", () => {
   expect(translated.v2Set.api(undefined)).toEqual(run);
   expect(translated.v2Set.api({ systemone: { sdk: { aisdk: "none" } } })).toEqual(run);
 });
+
+test("takes a row with several upstreams only when they price it the same", () => {
+  const schema = { properties: { output_config: { properties: { effort: { enum: ["low", "high"] } } } } };
+  const two = (a: number, b: number) => [
+    { id: "first", pricing: { input_tokens: a, output_tokens: 20 } },
+    { id: "second", pricing: { input_tokens: b, output_tokens: 20 } },
+  ];
+  expect(buildCloudflareAiGatewayModel({
+    model_id: "anthropic/claude-opus-5.5",
+    task: "Text Generation",
+    provider_details: two(4, 4),
+  }, schema).cost).toMatchObject({ input: 4, output: 20 });
+  expect(() => buildCloudflareAiGatewayModel({
+    model_id: "anthropic/claude-opus-5.5",
+    task: "Text Generation",
+    provider_details: two(4, 5),
+  }, schema)).toThrow("list different prices");
+});

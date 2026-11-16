@@ -62,6 +62,8 @@ test("rows whose output_modalities lack text never sync", () => {
   // Speech rows list no context window; they're left out instead of failing the parse.
   const tts = model({ id: "google/gemini-3.8-flash-tts", output_modalities: ["audio"], context_length: undefined as never, reasoning: null });
   expect(keln.parseModels({ object: "list", data: [model(), tts] }).map((row) => row.id)).toEqual([model().id]);
+  // A text row without one is malformed and fails, instead of being dropped and its file deleted.
+  expect(() => keln.parseModels({ object: "list", data: [model({ context_length: undefined as never })] })).toThrow("without context_length");
   expect(() => KelnResponse.parse({ object: "list", data: [model({ output_modalities: [] })] })).toThrow();
 });
 

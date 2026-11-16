@@ -113,7 +113,7 @@ const CatalogEntry = z.object({
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
-  // Usually one upstream; when Cloudflare lists more, the first is the one it prices and routes to by default.
+  // Usually one upstream. More are fine when they price the model the same (see catalogCost).
   provider_details: z.array(ProviderDetail).min(1).nullish(),
 });
 
@@ -1135,6 +1135,11 @@ async function mapLimit<T, R>(items: T[], limit: number, transform: (item: T) =>
 function catalogCost(catalog: CatalogModel, curated: CuratedModel): NonNullable<SyncedBaseModel["cost"]> {
   const id = catalog.model_id;
   const detail = catalog.provider_details?.[0];
+  const prices = new Set((catalog.provider_details ?? []).map((entry) => JSON.stringify(entry.pricing)));
+  if (prices.size > 1) {
+    // Cloudflare doesn't say which upstream a multi-provider row bills at, so don't guess.
+    throw new Error(`${id}: providers ${catalog.provider_details!.map((entry) => entry.id).join(", ")} list different prices`);
+  }
   if (detail !== undefined) {
     if (curated.cost !== undefined) {
       throw new Error(`${id}: catalog now has provider_details pricing; remove the curated cost`);

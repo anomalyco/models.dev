@@ -105,10 +105,11 @@ export const keln = {
   parseModels(raw) {
     // Keln also lists decision-output models (output_modalities without "text", e.g.
     // cloudflare/clef); they cannot serve chat, so they never sync and their files are removed.
-    return KelnResponse.parse(raw).data.filter(
-      (model): model is typeof model & { context_length: number } =>
-        model.output_modalities.includes("text") && model.context_length != null,
-    );
+    const text = KelnResponse.parse(raw).data.filter((model) => model.output_modalities.includes("text"));
+    // A text row without a context window is malformed; fail rather than drop (and delete) a served model.
+    const broken = text.filter((model) => model.context_length == null).map((model) => model.id);
+    if (broken.length > 0) throw new Error(`Keln text models without context_length: ${broken.join(", ")}`);
+    return text as (typeof text[number] & { context_length: number })[];
   },
   sourceID(model) {
     return model.id;
