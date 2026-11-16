@@ -11,12 +11,12 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "xhigh", "max"] }
 structured_output = true
 temperature = true
 
 [limit]
-context = 1_000_000
+context = 1_048_576
 output = 1_000_000
 
 [cost.text.input]
