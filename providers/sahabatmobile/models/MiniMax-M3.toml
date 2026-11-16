@@ -1,4 +1,4 @@
-# SahabatMobile retail pricing (USD/MTok); source: https://www.sahabatmobile.com/dashboard/packages (accessed 2026-11-05)
+# Price (USD/MTok) = official MiniMax price; source: https://platform.minimax.io/docs/pricing/overview#models/text
 # Toggle: thinking.type = "adaptive"|"disabled" (default disabled; proxied to upstream MiniMax API)
 # https://platform.minimax.io/docs/guides/text-generation
 schema = 2
@@ -17,5 +17,13 @@ compatibility = { reasoning_field = "reasoning_content" }
 [cost.text.input]
 price = 0.30
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 512_000 } }
+price = 0.60
+
 [cost.text.output]
 price = 1.20
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 512_000 } }
+price = 2.40
