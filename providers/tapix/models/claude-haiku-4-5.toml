@@ -4,6 +4,10 @@
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+structured_output = true
+
 [cost.text.input]
 price = 0.7
 
