@@ -1,14 +1,12 @@
 # Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
 # Relayed via Tapix AI (https://tapixai.com/v1); upstream model is zhipuai/glm-5.2.
+# Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
 structured_output = true
-
-[api.chat-completions]
-capabilities = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.904

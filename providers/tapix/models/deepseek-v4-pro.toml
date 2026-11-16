@@ -1,14 +1,12 @@
 # Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
 # Relayed via Tapix AI (https://tapixai.com/v1); upstream model is deepseek/deepseek-v4-pro.
+# Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
-
-[api.chat-completions]
-capabilities = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.76416

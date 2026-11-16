@@ -1,13 +1,11 @@
 # Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
 # Relayed via Tapix AI (https://tapixai.com/v1); upstream model is adzuki/mimo-v2.5-pro.
+# Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "adzuki/mimo-v2.5-pro"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-
-[api.chat-completions]
-capabilities = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.384
