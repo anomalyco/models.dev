@@ -4,6 +4,10 @@
 schema = 2
 base_model = "meta/muse-glimmer-30b"
 
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 cache = { implicit = true }

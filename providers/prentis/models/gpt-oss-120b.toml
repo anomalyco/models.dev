@@ -4,6 +4,10 @@
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { implicit = true }

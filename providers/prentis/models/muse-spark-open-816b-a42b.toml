@@ -4,6 +4,10 @@
 schema = 2
 base_model = "meta/muse-spark-open"
 
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 cache = { implicit = true }

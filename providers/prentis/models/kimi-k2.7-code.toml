@@ -4,6 +4,10 @@
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, toggle = true }
 cache = { implicit = true }

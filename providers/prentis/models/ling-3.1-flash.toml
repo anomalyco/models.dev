@@ -4,6 +4,10 @@
 schema = 2
 base_model = "inclusionai/ling-3.1-flash"
 
+[modalities]
+input = ["text"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
