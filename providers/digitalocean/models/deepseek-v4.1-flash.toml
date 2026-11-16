@@ -7,7 +7,7 @@ base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["low", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
 cache = { implicit = true }
 structured_output = true
 system_updates = true
