@@ -58,6 +58,40 @@ describe("catalog generation", () => {
     });
   });
 
+  test("splits v2 text and image output prices while v1 keeps the text rate", async () => {
+    await withFixture(async (root) => {
+      await write(root, "providers/v2/provider.toml", providerToml("V2"));
+      await write(root, "models/google/model.toml", modelMetadataToml());
+      await write(root, "providers/v2/models/model.toml", `schema = 2
+base_model = "google/model"
+type = "image"
+[modalities]
+input = ["text"]
+output = ["text", "image/png"]
+
+[capabilities]
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5
+
+[cost.image.output]
+price = 30
+`);
+
+      const catalog = await generateCatalog(root);
+      expect(catalog.providers.v2?.models.model?.cost).toMatchObject({ input: 1.5, output: 7.5 });
+      const v2 = await generateV2(path.join(root, "providers"));
+      expect(v2.v2?.models.model?.cost).toEqual({
+        text: { input: { price: 1.5 }, output: { price: 7.5 } },
+        image: { output: { price: 30 } },
+      });
+    });
+  });
+
   test("base_model publishes canonical identity with the provider model", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/direct/provider.toml", providerToml("Direct"));

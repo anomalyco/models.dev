@@ -1,0 +1,36 @@
+# Prices: GET https://www.runcrate.ai/api/models/catalog (accessed 2026-10-29), USD per 1M tokens as billed
+# (zai-org/GLM-5.3-Flash): input 0.1575, cached input 0.0315, output 0.525. context_length 1,048,576
+# there and in GET https://api.runcrate.ai/v1/models.
+# Effort: reasoning_effort = low|high|max on POST https://api.runcrate.ai/v1/chat/completions
+# (live 2026-10-24): on one prompt max produced 5,366 reasoning tokens against 327 (low) and 491 (high).
+# Thinking cannot be turned off here: reasoning_effort none, thinking.type disabled and
+# enable_thinking false all still returned reasoning, so there is no toggle.
+# Reasoning text is returned in reasoning_content (live).
+# Inputs: the catalog lists text and image only (input_modalities); PNG and JPEG answered correctly
+# live. The lab entry's video and PDF are not claimed for this host.
+# Live 2026-10-24: a tool call round-tripped; a strict json_schema response validated; a repeated
+# 7,455-token prompt reported 7,424 cached_tokens.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1575
+cache = { read = 0.0315 }
+
+[cost.text.output]
+price = 0.525

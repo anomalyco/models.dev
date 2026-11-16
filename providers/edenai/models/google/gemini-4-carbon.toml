@@ -6,12 +6,12 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
 [cost.text.input]
-price = 2
-cache = { read = 0.1, write = 0.1875 }
+price = 4
+cache = { read = 0.2, write = 0.375 }
 
 [cost.text.output]
-price = 10
-reasoning = 10
+price = 20
+reasoning = 20
 
 [cost.audio.input]
-price = 2
+price = 4

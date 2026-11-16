@@ -1,0 +1,36 @@
+# Source: https://api.powerspring.eu/v1/models (accessed 2026-11-14): context_length 262000,
+# max_output_tokens 262000; images, tools, json_schema, reasoning, reasoning_off.
+# Effort: reasoning_effort = none|high on Chat Completions. "none" turns thinking off; Gemma 4
+# has no graded levels, matching the relay peers (providers/kilo/models/google/gemma-4-31b-it.toml,
+# providers/aiand/models/google/gemma-4-31b-it.toml).
+# Live check 2026-11-14 (Chat Completions, one short prompt): every listed level answered;
+# reasoning text per level: none 0, high 484 chars.
+# Reasoning text: Chat Completions returns it in message.reasoning_content.
+# Cache: not listed. Our public price list gives these models no cached-input discount, and
+# caching depends on the server (https://powerspring.eu/docs/billing), so we don't claim it.
+# Prices: USD per million tokens, converted from Powerspring's EUR prices at the ECB reference
+# rate of 2026-11-13 (1 EUR = 1.1052 USD).
+# Lowest price shown; a request goes to the cheapest available server and can cost up to
+# USD 0.44208 input / USD 0.66312 output per million tokens.
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[limit]
+context = 262_000
+output = 262_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.232092
+
+[cost.text.output]
+price = 0.406161

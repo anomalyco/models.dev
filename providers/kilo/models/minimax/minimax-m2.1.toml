@@ -1,0 +1,15 @@
+schema = 2
+base_model = "minimax/MiniMax-M2.1"
+name = "MiniMax: MiniMax M2.1"
+description = "MiniMax 2.1 is MiniMax's latest model, optimized specifically for robustness in coding, tool use, instruction following, and long-horizon planning."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.375 }
+
+[cost.text.output]
+price = 1.2

@@ -2,7 +2,7 @@ name: Sync Model Catalogs
 
 on:
   schedule:
-    - cron: "17 * * * *"
+    - cron: "17 */6 * * *"
   workflow_dispatch:
 
 # sync runs repository code and provider API keys with the built-in token only. It uploads each provider's catalog
@@ -15,39 +15,14 @@ permissions:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  providers:
-    if: github.repository == 'anomalyco/models.dev'
-    runs-on: blacksmith-4vcpu-ubuntu-2404
-    outputs:
-      matrix: ${{ steps.providers.outputs.matrix }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
-        with:
-          ref: dev
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-        with:
-          bun-version: 1.4.4
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-
-      - name: List sync providers
-        id: providers
-        run: |
-          matrix="$(bun models:sync --list-providers)"
-          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
-
+  # One job syncs every provider so a run pays for one runner instead of one per provider. Providers are independent:
+  # each starts from a clean dev, and a provider that fails neither stops the rest nor leaks its partial changes.
   sync:
-    needs: providers
     if: github.repository == 'anomalyco/models.dev'
     runs-on: blacksmith-4vcpu-ubuntu-2404
     environment: release
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJSON(needs.providers.outputs.matrix) }}
+    outputs:
+      changed: ${{ steps.sync.outputs.changed }}
     # bun models:sync opens an issue for each missing model and dispatches the issue fixer (repository_dispatch needs
     # contents: write). The built-in token can't change dev or workflows; catalog changes still go through publish.
     permissions:
@@ -97,7 +72,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Sync model catalogs
-        run: bun models:sync ${{ matrix.provider }}
+        id: sync
         env:
           GH_TOKEN: ${{ github.token }}
           ANTHROPIC_API_KEY: ${{ env.ANTHROPIC_API_KEY }}
@@ -123,49 +98,106 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
           CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID: ${{ vars.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
           CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN: ${{ env.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN }}
-
-      - name: Validate models
-        run: bun validate
-
-      - name: Prepare changes
-        id: changes
-        env:
-          OUT: ${{ runner.temp }}/sync
-          PROVIDER: ${{ matrix.provider }}
-          NAME: ${{ matrix.name }}
         run: |
-          set -euo pipefail
-          tee -a "$GITHUB_STEP_SUMMARY" < .sync/model-sync-report.md >/dev/null
+          set -uo pipefail
 
-          if [ -z "$(git status --porcelain -- models providers)" ]; then
-            echo "No model catalog changes found."
+          out="$RUNNER_TEMP/sync"
+          failures="$RUNNER_TEMP/sync-failures"
+          results="$RUNNER_TEMP/sync-results.md"
+          providers="$RUNNER_TEMP/sync-providers"
+          : > "$failures"
+          printf '| provider | result |\n| --- | --- |\n' > "$results"
+
+          base="$(git rev-parse HEAD)"
+          changed=false
+
+          if ! bun models:sync --list-providers | jq -r '.include[] | [.provider, .name] | @tsv' > "$providers"; then
+            echo "::error::failed to list sync providers"
+            echo "failed=true" >> "$GITHUB_OUTPUT"
+            echo "changed=$changed" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          mkdir -p "$OUT"
-          git add models providers
-          git -c user.name=sync -c user.email=sync@localhost commit -q --no-verify -m sync
-          git diff --binary HEAD^ HEAD > "$OUT/changes.patch"
-          GITHUB_OUTPUT="$RUNNER_TEMP/auto-merge" bun sync:auto-merge HEAD^ HEAD
-          sed -n 's/^safe=//p' "$RUNNER_TEMP/auto-merge" | tr -d '\n' > "$OUT/safe"
-          printf '%s' "$PROVIDER" > "$OUT/provider"
-          printf '%s' "$NAME" > "$OUT/name"
-          cp .sync/model-sync-report.md "$OUT/report.md"
-          echo "changed=true" >> "$GITHUB_OUTPUT"
+          while IFS=$'\t' read -r provider name <&3; do
+            echo "::group::Sync $name ($provider)"
+
+            # Every provider starts from clean dev, exactly like the old per-provider jobs: nothing a previous
+            # provider (or a failed one) left behind can appear in this provider's patch.
+            git reset -q --hard "$base"
+            git clean -qfd models providers
+            rm -f .sync/model-sync-report.md "$RUNNER_TEMP/auto-merge"
+
+            result=ok
+            if ! bun models:sync "$provider" < /dev/null; then
+              result="sync failed"
+            elif [ -n "$(git status --porcelain -- models providers)" ] && ! bun validate < /dev/null; then
+              result="validation failed"
+            fi
+
+            if [ "$result" != ok ]; then
+              # Drop this provider's partial changes and keep syncing the rest.
+              echo "::error::$provider: $result"
+              printf '%s: %s\n' "$provider" "$result" >> "$failures"
+              printf '| %s | %s |\n' "$provider" "$result" >> "$results"
+              echo "::endgroup::"
+              continue
+            fi
+
+            if [ -z "$(git status --porcelain -- models providers)" ]; then
+              echo "No model catalog changes found."
+              printf '| %s | unchanged |\n' "$provider" >> "$results"
+              echo "::endgroup::"
+              continue
+            fi
+
+            dir="$out/sync-$provider"
+            mkdir -p "$dir"
+            tee -a "$GITHUB_STEP_SUMMARY" < .sync/model-sync-report.md >/dev/null
+
+            git add models providers
+            git -c user.name=sync -c user.email=sync@localhost commit -q --no-verify -m sync
+            git diff --binary HEAD^ HEAD > "$dir/changes.patch"
+            GITHUB_OUTPUT="$RUNNER_TEMP/auto-merge" bun sync:auto-merge HEAD^ HEAD
+            sed -n 's/^safe=//p' "$RUNNER_TEMP/auto-merge" | tr -d '\n' > "$dir/safe"
+            printf '%s' "$provider" > "$dir/provider"
+            printf '%s' "$name" > "$dir/name"
+            cp .sync/model-sync-report.md "$dir/report.md"
+
+            printf '| %s | changed |\n' "$provider" >> "$results"
+            changed=true
+            echo "::endgroup::"
+          done 3< "$providers"
+
+          git reset -q --hard "$base"
+          git clean -qfd models providers
+
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          if [ -s "$failures" ]; then
+            echo "failed=true" >> "$GITHUB_OUTPUT"
+          fi
+          cat "$results" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload changes
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.sync.outputs.changed == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: sync-${{ matrix.provider }}
+          name: sync
           path: ${{ runner.temp }}/sync
           if-no-files-found: error
           retention-days: 1
 
+      # Fails the run after the changes other providers produced are safely uploaded, so publish still goes ahead.
+      - name: Check for failed providers
+        if: steps.sync.outputs.failed == 'true'
+        run: |
+          echo "These providers did not sync and produced no patch:"
+          cat "$RUNNER_TEMP/sync-failures"
+          exit 1
+
   publish:
-    needs: [providers, sync]
+    needs: sync
     # Runs when some provider syncs failed, so the others still publish.
-    if: always() && github.repository == 'anomalyco/models.dev' && needs.providers.result == 'success'
+    if: always() && github.repository == 'anomalyco/models.dev' && needs.sync.outputs.changed == 'true'
     runs-on: ubuntu-latest
     environment: automation
     permissions:
@@ -218,8 +250,8 @@ jobs:
       - name: Download changes
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
+          name: sync
           path: ${{ runner.temp }}/sync
-          pattern: sync-*
 
       - name: Publish
         working-directory: repo

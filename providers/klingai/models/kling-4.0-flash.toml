@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api-singapore.klingai.com/text-to-video/kling-4.0-flash, /image-to-video/kling-4.0-flash and
+#   /omni-video/kling-4.0-flash (https://kling.ai/document-api/api/video/4-0-flash/video-omni); 720p only.
+# - Pricing: https://kling.ai/document-api/pricing/base/video ("Balance" tab, USD per second of output). Prepaid
+#   resource packages (https://kling.ai/dev/pricing) bill in units at a lower effective rate and are not recorded.
+# With an input video Kling bills "total duration": output x 2 when the input is no longer than the output, else input + output,
+# at the lower with-input rate. Recorded as output plus input video seconds at that rate; when the input is shorter than the
+# output, Kling still bills it as if it were as long as the output, which this can't express.
+# Cost conditions: input_video = a feature_video or base_video item in contents.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v4.0-flash"
+
+[api.videos]
+base_url = "https://api-singapore.klingai.com"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.094
+
+[[cost.video.output.overrides]]
+when = { input_video = { equals = true } }
+price = 0.063
+
+[cost.video.input]
+unit = "second"
+price = 0.063

@@ -14,9 +14,6 @@ tools = { supported = true, choice = ["auto", "required", "tool", "none"] }
 reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
 
-[limit]
-output = 131_072
-
 [cost.text.input]
 price = 0.33
 cache = { read = 0.066 }

@@ -1,0 +1,25 @@
+# Effort: reasoning_effort = none|high (none disables
+# thinking; the tencent first-party entries and the
+# relay peers author exactly this shape)
+# Pricing & limits: Watt catalog (2026-10-23), Hy4-preview row:
+# 0.83/2.5 USD per MTok, context 1_048_576, output 131_072
+# (lab base: 1_024_000/64_000)
+schema = 2
+base_model = "tencent/hy4-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.830
+
+[cost.text.output]
+price = 2.50

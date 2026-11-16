@@ -5,13 +5,16 @@ base_model = "xiaomi/mimo-v2.5"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
-structured_output = false
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
 system_updates = true
 
+[limit]
+context = 262_144
+
 [cost.text.input]
-price = 0.14
-cache = { read = 0.0028 }
+price = 0.4
+cache = { read = 0.08 }
 
 [cost.text.output]
-price = 0.28
+price = 2

@@ -1,0 +1,14 @@
+schema = 2
+base_model = "openai/gpt-4o-mini"
+name = "OpenAI: GPT-4o mini (Fast)"
+description = "GPT-4o mini from OpenAI is their most advanced and cost-efficient small model. It is multi-modal (accepting text or image inputs and outputting text) and has higher intelligence than gpt-3.5-turbo but is just as fast."
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 1

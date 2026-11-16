@@ -1,0 +1,22 @@
+name = "Synthorai"
+env = ["SYNTHORAI_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://synthorai.io/v1"
+# Multi-model gateway: one OpenAI-compatible base URL in front of many labs' models.
+# Reasoning over POST /v1/chat/completions, per upstream family:
+#   https://synthorai.io/docs/guides/reasoning-effort/ (read 2026-10-26)
+# - OpenAI-compatible models (GPT, DeepSeek, GLM, Kimi): reasoning_effort is forwarded as
+#   sent; where a model's accepted levels are known, a value below the lowest is raised to
+#   it and one above the highest steps down (GPT-6.1 Sol: none and minimal run at low).
+#   DeepSeek's thinking.type is forwarded unchanged.
+# - Claude models in this file (adaptive thinking only): low|medium|high|xhigh|max become
+#   thinking.type = adaptive with output_config.effort at the same level; minimal runs at
+#   low; none uses the model's own off form, and on Opus 5.5, which cannot turn thinking
+#   off, runs at low.
+# - Gemini 3.x: reasoning_effort becomes thinkingLevel; low|medium|high map straight
+#   across.
+# Limits: max_input_tokens / max_output_tokens per model on https://synthorai.io/api/models
+#   (e.g. deepseek-v4-pro and deepseek-v4.1-flash: max_output_tokens 393216).
+# Pricing: https://synthorai.io/pricing/ (machine-readable: https://synthorai.io/api/pricing).
+doc = "https://synthorai.io/docs/"

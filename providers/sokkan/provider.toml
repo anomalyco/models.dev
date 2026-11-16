@@ -1,0 +1,13 @@
+# Inference gateway operated by NINABOT Sàrl (Geneva, Switzerland).
+# OpenAI-compatible Chat Completions API; models declare their serving
+# zone (CH / EU / any) and a response header (x-sokkan-region) names the
+# zone that actually generated it. Per-request data-location restriction
+# via X-Data-Location header or provider.data_location body field.
+# Sources (accessed 2026-10-22):
+# https://router.sokkan.ch/docs
+# https://router.sokkan.ch/v1/models
+name = "SOKKAN Router"
+env = ["SOKKAN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+doc = "https://router.sokkan.ch/docs"
+api = "https://router.sokkan.ch/v1"
