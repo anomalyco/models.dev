@@ -5,9 +5,10 @@
 # Default: effort=none; Verda documents reasoning off when reasoning_effort is omitted or set to none.
 # Verda ignores DeepSeek's native thinking parameter; use reasoning_effort instead.
 # Verda documents discounted cached input but no explicit cache-control mechanism.
-# Pricing and maximum output: Verda Console, DeepSeek V4.1 Flash 1017 model page, accessed 2026-11-16.
+# Pricing and prompt-caching support: https://verda.com/models/deepseek-v4-1-flash (accessed 2026-11-16).
+# Page identifies model ID deepseek-4-1-flash-1017.
 # USD per million tokens: input 0.15, cached input 0.006, output 0.60.
-# Maximum output: 393,216 tokens.
+# Maximum output: Verda Console model page, accessed 2026-11-16: "Max output tokens: 393,216".
 
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
