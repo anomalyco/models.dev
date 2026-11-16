@@ -1,0 +1,21 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-11-16).
+# Price: :free models cost Rp 0 within daily and per-minute limits (https://kenari.id/en/docs/free-models).
+# Context: 262,144 per /v1/models (lab: 1,048,576).
+# Reasoning: kenari publishes no reasoning_options for this id, so the baseline is the same model on other hosts
+#   (providers/vercel/models/reflection/beam.toml, providers/openrouter/models/reflection/beam-1.0-501b-a23b.toml): low|medium|high|xhigh|max.
+# Effort: reasoning_effort (Chat completions), reasoning.effort (Responses), output_config.effort (Messages).
+schema = 2
+base_model = "reflection/beam-1.0-501b-a23b"
+name = "Beam 1.0 (Free)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

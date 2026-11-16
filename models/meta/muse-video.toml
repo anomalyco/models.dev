@@ -1,0 +1,33 @@
+# Sources:
+# https://ai.meta.com/blog/introducing-muse-image-muse-video-msl/ (Muse Video previewed 2026-07-07, built on the same pretraining base as Muse Image, native audio)
+# Meta has published no API reference, limits or prices for Muse Video (https://dev.meta.ai/docs/models lists no video model),
+# so the modalities stay generic and the limits are zero like other generation-only models.
+# Kenari serves it for image-to-video (https://kenari.id/v1/models: input image, output video, 10 s clips at 720p).
+schema = 2
+v2_only = true
+type = "video"
+name = "Muse Video"
+description = "Video generation model from Meta Superintelligence Labs with native audio, previewed alongside Muse Image"
+family = "muse"
+open_weights = false
+release_date = "2026-07-07"
+
+[modalities]
+input = ["text", "image"]
+output = ["video"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+label = "Announcement"
+url = "https://ai.meta.com/blog/introducing-muse-image-muse-video-msl/"
+type = "announcement"

@@ -1,0 +1,14 @@
+# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-11-16).
+# Price: per generated second at 720p (pricing_lines output_video, Rp 300), / 17,500 IDR per USD. The only tier listed is 720p, clips are 10 s.
+# Videos: POST /v1/videos/generations, then poll GET /v1/videos/{id} (https://kenari.id/en/docs/videos). Not OpenAI-compatible, so no SDK package.
+schema = 2
+v2_only = true
+base_model = "meta/muse-video"
+
+[api.videos]
+path = "/videos/generations"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.01714286
