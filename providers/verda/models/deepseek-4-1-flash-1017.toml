@@ -1,0 +1,32 @@
+# Model: https://docs.verda.com/inference/models/deepseek-4-1-flash-1017/
+# Reasoning: https://docs.verda.com/inference/models/deepseek-4-1-flash-1017/#reasoning
+# Verda uses reasoning_effort; the native DeepSeek thinking parameter is ignored.
+# Modalities: Verda documents text/image input and text output.
+# Exact image MIME types are not specified in Verda's documentation.
+# Context: Verda documents 1,048,576 tokens.
+# Maximum output: Verda console: 393,216 tokens.
+# Pricing: Verda console, USD per million tokens.
+
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.60
