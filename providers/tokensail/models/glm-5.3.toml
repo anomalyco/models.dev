@@ -1,0 +1,25 @@
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3"
+
+# Measured 2026-11-15: this model REQUIRES thinking on. Both
+# `enable_thinking: false` and `thinking: {type: "disabled"}` are rejected
+# with HTTP 400 because the upstream restricts the parameter to True.
+# Hence no reasoning toggle.
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 0.83754599
+cache = { read = 0.2093865 }
+
+[cost.text.output]
+price = 2.93141097

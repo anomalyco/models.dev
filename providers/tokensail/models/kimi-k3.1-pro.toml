@@ -1,0 +1,22 @@
+schema = 2
+v2_only = true
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 1.94430319
+cache = { read = 0.19443032 }
+
+[cost.text.output]
+price = 10.17020131

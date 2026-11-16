@@ -1,0 +1,20 @@
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.8-max-0902"
+name = "Qwen3.8 Max 0902"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 1_000_000
+input = 991_808
+output = 131_072
+
+[cost.text.input]
+price = 1.52553020
+cache = { read = 0.19069128, write = 1.90691275 }
+
+[cost.text.output]
+price = 4.57659059

@@ -1,0 +1,23 @@
+schema = 2
+v2_only = true
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[cost.text.input]
+price = 1.07684485
+cache = { read = 0.03589483 }
+
+[cost.text.output]
+price = 3.23053454
