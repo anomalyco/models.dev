@@ -13,9 +13,15 @@
 # Cache: cache_control markers are documented, so explicit caching is listed; usage also reports
 # cached_tokens without any marker, so implicit caching is listed too. Cache hits bill at
 # 10% of the input price. No cache write price, TTL or breakpoint limit is published.
-# Effort: reasoning is supported but Radium documents no request field, effort level, toggle or
-# budget for it, so it is authored as always-on with no caller control. A live probe of
-# reasoning_effort and thinking fields showed no change in reasoning tokens.
+# Effort: Radium documents no reasoning control, so this comes from a live probe (2026-11-16, 3 runs
+# per value). Chat Completions reasoning_effort = none|low|medium|high is accepted, and "none" gave
+# 0 reasoning tokens on every run.
+# Clarke grades clearly: low ~220-310, medium ~280-310, high ~500-860 reasoning tokens.
+# Chat Completions thinking.type = disabled gave 0 reasoning tokens too, but "none" already covers
+# off, so no toggle is authored.
+# Messages: thinking.type = enabled only adds a thinking block, budget_tokens is not honored (10 is
+# accepted, no size change) and output_config.effort has no effect, so no budget is authored.
+# Not probed: minimal, xhigh, max, the default when no field is sent, and reasoning_effort on Messages.
 # Release date: the provenance page gives "Q2 2026" and a version stamp of clarke-1.0-20260101,
 # which disagree; the month the quarter starts is used.
 # top_k: not in Radium's docs, but top_k = 1 gave identical output on 8 of 8 runs at temperature 2
@@ -36,7 +42,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, strict = true }
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true, explicit = true }
 temperature = true
