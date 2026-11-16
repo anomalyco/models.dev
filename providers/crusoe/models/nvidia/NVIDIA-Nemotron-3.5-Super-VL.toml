@@ -1,5 +1,8 @@
 # Sources: https://docs.crusoe.ai/serverless-inference/index.html and
 # https://www.crusoe.ai/cloud/pricing (accessed 2026-11-16); GET /v1/models.
+# Limits: GET https://api.inference.crusoecloud.com/v1/models (2026-11-16),
+# this model has context_length=1,048,576 and top_provider.context_length=1,048,576;
+# top_provider.max_completion_tokens=262,144. Large-limit requests not tested.
 # Live: Chat Completions tool call, continuation, strict JSON schema and PNG/JPEG vision.
 # Implicit cache live: second identical request reused 11,040 of 12,709 input tokens.
 # Toggle: reasoning_effort = none (off), high (on); three tests each returned
