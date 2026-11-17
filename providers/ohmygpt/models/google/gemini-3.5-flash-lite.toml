@@ -1,12 +1,13 @@
-# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/google/gemini-3.5-flash-lite (snapshot 2026-11-11): prices, limits and the serving provider (vertex).
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/google/gemini-3.5-flash-lite (snapshot 2026-11-17): prices, limits and the serving providers (google, vertex).
 # Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
 # API: Gemini generateContent (POST /v1/models/{model}:generateContent, x-goog-api-key or Bearer) is this model's native protocol on OhMyGPT; the request body reaches Google as sent (https://www.ohmygpt.com/docs/api/gemini). Chat Completions is also listed: OhMyGPT converts the request and the answer (https://www.ohmygpt.com/docs/api/protocols#other-protocols).
 # generate-content base URL ends in /models: @ai-sdk/google appends a model ID that contains a slash as it is (getModelPath). @opencode/ai/providers/google always adds /models/ itself, so it cannot use this table (opencodeai = "none") and takes Chat Completions.
 # Checked live 2026-11-11 with @ai-sdk/google 4.0.117 and model ID google/gemini-3-flash-preview: this base URL requests /v1/models/google/gemini-3-flash-preview:generateContent and gets 200; with https://api.ohmygpt.com/v1 the package requests /v1/google/gemini-3-flash-preview:generateContent and gets 404.
-# Effort: generationConfig.thinkingConfig.thinkingLevel = minimal|low|medium|high on generateContent; reasoning_effort with the same values on Chat Completions, which OhMyGPT sends as thinkingLevel (https://www.ohmygpt.com/docs/api/thinking#gemini). Levels follow providers/google/models/gemini-3.5-flash-lite.toml. Checked live 2026-11-11 on Chat Completions: each listed level is accepted. reasoning_effort = none selects the model's lowest level, not off, so it is not listed.
-# Input: video is accepted on generateContent only; Chat Completions returns 400 for video content (live 2026-11-11).
+# Effort: generationConfig.thinkingConfig.thinkingLevel = minimal|low|medium|high on generateContent; reasoning_effort with the same values on Chat Completions, which OhMyGPT sends as thinkingLevel (https://www.ohmygpt.com/docs/api/thinking#gemini). Levels follow providers/google/models/gemini-3.5-flash-lite.toml. Checked live 2026-11-17 on each serving provider (Google (Gemini), Google Vertex AI), pinned as `<provider>:google/gemini-3.5-flash-lite`: every listed level is accepted on both APIs. reasoning_effort = none selects the model's lowest level, not off, so it is not listed.
+# Input: video is accepted on both APIs (live 2026-11-17: inlineData on generateContent, video_url on Chat Completions).
 # Cache: implicit; the catalog prices cached input and requests need no cache markers.
 # Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+# Prices: the catalog's headline price, which is its lowest-priced serving provider (Google Vertex AI). The gateway tries the cheaper provider first; a request served by another provider is billed at that provider's rate, up to 1.22x on input (catalog providers[].pricing).
 schema = 2
 base_model = "google/gemini-3.5-flash-lite"
 

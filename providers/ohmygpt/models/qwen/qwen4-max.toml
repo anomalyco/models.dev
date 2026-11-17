@@ -1,0 +1,32 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/qwen/qwen4-max (snapshot 2026-11-17): prices, limits and the serving provider (alibaba).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT; the request is forwarded to the serving provider (Alibaba Cloud (Model Studio Intl)) without protocol conversion (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
+# Toggle: enable_thinking true|false (thinking is on by default); thinking.type = enabled|disabled works as well
+# Effort: reasoning_effort = low|high|xhigh (default high). Alibaba maps minimal to low, medium to high and max to xhigh, and none turns thinking off (https://www.alibabacloud.com/help/en/model-studio/qwen4-max)
+# Budget: thinking_budget (integer reasoning tokens, 1..262144; cannot be combined with reasoning_effort)
+# Checked live 2026-11-17 with each serving provider pinned as `<provider>:qwen/qwen4-max` (https://www.ohmygpt.com/docs/provider-routing): with no thinking field the answer carried reasoning_content; enable_thinking = false, thinking.type = disabled and reasoning_effort = none each returned none; reasoning_effort low, high and xhigh were accepted, and so were the documented aliases minimal, medium and max; thinking_budget = 300 held reasoning to 271 tokens, thinking_budget = 0 returned 400 (`must be a positive integer and not greater than 262144`), and thinking_budget sent together with reasoning_effort returned 400.
+# Alibaba Cloud Model Studio has no models.dev entry for this model yet, so the controls are Alibaba's documented ones (https://www.alibabacloud.com/help/en/model-studio/qwen4-max), each confirmed live here.
+# structured_output: response_format json_schema returned JSON matching the schema (live 2026-11-17).
+# top_k: accepted by every serving provider (live 2026-11-17), and none of their own models.dev entries excludes it.
+# Cache: the catalog prices implicit cache reads and an explicit cache (its own read and write prices).
+# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "xhigh"], budget = { min = 1, max = 262_144 } }
+structured_output = true
+cache = { implicit = true, explicit = true }
+
+[limit]
+input = 991_808
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.413
+cache = { read = 0.071, explicit = { read = 0.071, write = { "5m" = 1.767, "1h" = 2.827 } } }
+
+[cost.text.output]
+price = 4.24

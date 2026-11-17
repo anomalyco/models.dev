@@ -1,4 +1,4 @@
-# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/anthropic/claude-opus-5 (snapshot 2026-11-11): prices, limits and the serving provider (anthropic).
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/anthropic/claude-opus-5 (snapshot 2026-11-17): prices, limits and the serving provider (anthropic).
 # Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
 # API: Anthropic Messages (POST /v1/messages) is this model's native protocol on OhMyGPT. The request body and anthropic-* headers reach Anthropic as sent (https://www.ohmygpt.com/docs/api/messages#claude), so reasoning controls, prompt caching and structured output are Anthropic's: providers/anthropic/models/claude-opus-5.toml.
 # Effort: output_config.effort = low|medium|high|xhigh|max
