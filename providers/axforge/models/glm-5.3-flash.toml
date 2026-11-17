@@ -6,8 +6,9 @@
 # Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16 and 2026-11-17: reasoning_content
 # present by default and at low, high and max. none is not an off switch here: reasoning_content is then empty but
 # the thinking comes inside the answer.
-# A plain call (no reasoning_effort) runs at high, tried live 2026-11-17 (reasoning tokens, 2 calls each: plain
-# 58/37, low 28/46, high 60/56, max 197/186).
+# Default high: our vLLM sets the chat template's reasoning_effort default to high, and only low, high and max pass
+# through from a request. Tried live 2026-11-17, median reasoning tokens over 4 calls (max: 2) on two prompts:
+# plain 25 and 137, low 14 and 97.5, high 19.5 and 126.5, max 233 and 215.
 # No cost: our prices are in EUR and follow a live price sheet, https://axforge.ai/pricing/
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
