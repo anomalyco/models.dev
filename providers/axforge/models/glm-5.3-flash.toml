@@ -6,6 +6,8 @@
 # Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16 and 2026-11-17: reasoning_content
 # present by default and at low, high and max. none is not an off switch here: reasoning_content is then empty but
 # the thinking comes inside the answer.
+# A plain call (no reasoning_effort) runs at high, tried live 2026-11-17 (reasoning tokens, 2 calls each: plain
+# 58/37, low 28/46, high 60/56, max 197/186).
 # No cost: our prices are in EUR and follow a live price sheet, https://axforge.ai/pricing/
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
@@ -15,7 +17,7 @@ input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "high", "max"] }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
