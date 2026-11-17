@@ -64,6 +64,7 @@ import { requesty } from "./providers/requesty.js";
 import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
 import { tinfoil } from "./providers/tinfoil.js";
+import { topxai } from "./providers/topxai.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -234,6 +235,7 @@ export const providers: {
   sambanova: SyncProvider<any>;
   morph: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
+  topxai: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -285,6 +287,7 @@ export const providers: {
   sambanova: sambaNova,
   morph,
   tinfoil,
+  topxai,
   vercel,
   venice,
   wandb,
@@ -312,6 +315,7 @@ export const groups = {
     "requesty",
     "openrouter",
     "prime",
+    "topxai",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],

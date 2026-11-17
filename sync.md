@@ -507,3 +507,10 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
 
+## TopxAI
+
+Run `bun models:sync topxai` to read the unauthenticated [pricing catalog](https://api.topxai.xyz/api/pricing). Only token-priced chat models are included. The image routes also advertise Chat Completions but bill per image. System One and video use their own endpoints.
+
+For each chat model, `auto_route` selects the route whose USD-per-million text input, output, cache read/write and whole-request long-context prices are published. The sync preserves the distinction between an inclusive threshold and an exclusive threshold, and between ordinary cache writes and the 5-minute/1-hour rates. Published context and output limits override differing inherited values. Reference prices, backup routes, alternate groups, and image/audio prices do not set chat pricing.
+
+New chat IDs open missing-model issues for review of the lab base, API-specific controls and tool support. A missing ID is reported for retirement review: the feed gives no independent total to distinguish a partial successful response from a retirement. An empty or invalid feed fails the run. The sync keeps manually checked API capabilities, source comments, and prices outside its text-token scope.
