@@ -1,0 +1,24 @@
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Native media requires an operation-bound inference ticket, not bearer-key SDK authentication.
+# Setup: https://github.com/anonrouter/anonrouter-sdk/blob/main/docs/ticketed-media.md.
+# Non-text output has no token context or output cap; zero denotes an unspecified token limit.
+schema = 2
+v2_only = true
+base_model = "inworld/inworld-tts-1.5-max"
+name = "Inworld TTS-1.5 Max"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg"]
+
+[capabilities]
+temperature = false
+
+[api.speech]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.audio.output]
+unit = "character"
+price = 13.25

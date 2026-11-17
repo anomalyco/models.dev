@@ -1,0 +1,27 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://ideogram.ai/models/4.5/
+# https://control.anonrouter.ai/v1/catalog/models
+# Release date is the public catalog releasedAt value, corroborated by the September launch; file formats depend on the serving API.
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "image"
+name = "Ideogram 4.5"
+description = "Image generation and precise editing model for repeated image revisions"
+open_weights = false
+release_date = "2026-09-30"
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

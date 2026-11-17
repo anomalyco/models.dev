@@ -1,0 +1,31 @@
+# Native sampling: https://github.com/resemble-ai/chatterbox/blob/master/src/chatterbox/tts.py (generate takes temperature and top_p).
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://huggingface.co/ResembleAI/chatterbox
+# Repository created 2025-04-24 (Hugging Face API createdAt); HD is a serving-quality label, not a separate published checkpoint.
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "speech"
+name = "Chatterbox"
+description = "Open speech synthesis model with voice cloning and expressive speech control"
+open_weights = true
+release_date = "2025-04-24"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ResembleAI/chatterbox"

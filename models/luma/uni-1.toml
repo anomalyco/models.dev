@@ -1,0 +1,27 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://lumalabs.ai/legal/training-content-summary-uni
+# https://lumalabs.ai/learning-center/articles/uni-1-complete-guide
+# Luma records March 23, 2026 as the Uni-1 placement date, and May 11 for the Uni-1.1 update served under the same ID.
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "image"
+name = "Uni-1"
+description = "Unified autoregressive model for image generation and editing from text and reference images"
+open_weights = false
+release_date = "2026-03-23"
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
