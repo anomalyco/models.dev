@@ -1,6 +1,10 @@
+# Effort: top-level reasoning_effort on POST /v1/chat/completions (https://docs.anyapi.ai/guides/parameters).
+# Live probe 2026-11-17: none, low, medium, high and xhigh are accepted (200); none returns 0 reasoning
+# tokens and the others return reasoning tokens; an unknown value is rejected with 400, so the parameter
+# reaches xAI. Values match the first-party list (providers/xai/models/grok-4.3.toml). Off is effort=none.
 schema = 2
 base_model = "xai/grok-4.3"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
