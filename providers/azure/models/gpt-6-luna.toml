@@ -25,7 +25,7 @@ service_tier = ["flex"]
 system_updates = true
 
 [api.responses]
-capabilities = { effort_updates = true, tools = { search = true, updates = true } }
+capabilities = { effort_updates = true, tools = { search = true, updates = ["add", "remove", "replace"] } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }

@@ -27,7 +27,7 @@ capabilities = { tools = { choice = ["auto"] } }
 [api.messages]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/messages" }
-capabilities = { effort_updates = true, tools = { updates = true, choice = ["auto", "none"], search = true } }
+capabilities = { effort_updates = true, tools = { updates = ["add", "remove", "replace"], choice = ["auto", "none"], search = true } }
 
 [cost.text.input]
 price = 4

@@ -26,7 +26,7 @@ prompt_cache_key = true
 service_tier = ["flex", "priority", "ultrafast"]
 
 [api.responses]
-capabilities = { effort_updates = true, tools = { strict = true, search = true, updates = true } }
+capabilities = { effort_updates = true, tools = { strict = true, search = true, updates = ["add", "remove", "replace"] } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }

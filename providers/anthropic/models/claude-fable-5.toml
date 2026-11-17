@@ -30,7 +30,7 @@ context = 1_000_000
 output = 128_000
 
 [api.messages]
-capabilities = { system_updates = true, tools = { updates = true, strict = true, search = true } }
+capabilities = { system_updates = true, tools = { updates = ["add", "remove", "replace"], strict = true, search = true } }
 
 [api.chat-completions]
 base_url = "https://api.anthropic.com/v1"

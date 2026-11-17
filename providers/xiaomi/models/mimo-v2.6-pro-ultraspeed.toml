@@ -16,7 +16,7 @@
 #   mimo-v2.6-pro and mimo-v2.6-pro-ultraspeed): a system message before the last user turn stays in place
 #   (+23 input tokens), is followed, and keeps the cache -> system_updates; switching thinking.type between turns
 #   (either direction) keeps the cache; adding a tool drops the cache to 0-64 tokens while the
-#   same request with the old tool list keeps it -> tools.updates = false.
+#   same request with the old tool list keeps it -> tools.updates = [].
 # effort_updates: left out. Changing thinking.type on the next request keeps the cache, but there's no
 #   in-history effort message, so it doesn't count.
 # Web search plugin: $5 per 1,000 calls (Overseas Internet Connectivity Service; the domestic service, CNY 16 per 1,000,

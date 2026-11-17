@@ -16,7 +16,7 @@
 # - effort_updates = false on every chat model: /v1/ai-sdk/chat/completions has no
 #   effort control at all, only `thinking`, and no per-turn configuration update.
 #   https://docs.merge.dev/merge-gateway/capabilities/reasoning (surface table)
-# - tools.updates = false: a Chat Completions `tools` array only; Gateway documents no
+# - tools.updates = []: a Chat Completions `tools` array only; Gateway documents no
 #   tool addition/removal mechanism.
 #   https://docs.merge.dev/merge-gateway/capabilities/tool-calling
 # - system_updates is unset: the AI SDK provider sends later system messages in place,

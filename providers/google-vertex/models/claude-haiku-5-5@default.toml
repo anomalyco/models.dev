@@ -20,7 +20,7 @@ schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = ["add", "remove", "replace"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true

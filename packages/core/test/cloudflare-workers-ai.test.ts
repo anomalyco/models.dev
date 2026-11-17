@@ -245,8 +245,8 @@ test("reads tool_choice values from a request schema only when it names them", (
 
 test("sets stated tool fields and keeps the file's others", () => {
   expect(toolsWith(undefined, { choice: ["auto"] })).toEqual({ supported: true, choice: ["auto"] });
-  expect(toolsWith({ supported: true, updates: true, choice: ["auto"] }, { choice: ["auto", "none"] }))
-    .toEqual({ supported: true, updates: true, choice: ["auto", "none"] });
+  expect(toolsWith({ supported: true, updates: ["add", "remove", "replace"], choice: ["auto"] }, { choice: ["auto", "none"] }))
+    .toEqual({ supported: true, updates: ["add", "remove", "replace"], choice: ["auto", "none"] });
   expect(toolsWith({ supported: true, choice: ["auto"] }, { choice: undefined })).toEqual({ supported: true, choice: ["auto"] });
   expect(toolsWith({ supported: false }, { choice: ["auto"] })).toEqual({ supported: false });
 });

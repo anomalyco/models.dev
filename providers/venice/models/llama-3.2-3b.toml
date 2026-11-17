@@ -1,7 +1,7 @@
 # Mid-conversation (Venice /api/v1/chat/completions, live probes 2026-10-20): system_updates = false. Venice hoists a later system message into the
 # leading system block: with W = [system, user, assistant, system, user], W + [assistant, user] read W from cache but W + [assistant, system, user] read 0,
 # on 12 models across Anthropic, OpenAI, Google, xAI, Moonshot, MiniMax, Z.AI, Qwen, DeepSeek, Xiaomi and NVIDIA routes (anonymized and private).
-# tools.updates = false: `tools` is request-level, with no tool addition/removal message.
+# tools.updates = []: `tools` is request-level, with no tool addition/removal message.
 # base_model is the Instruct model: Venice serves llama-3.2-3b on chat completions with function calling
 # (supportsFunctionCalling = true at https://api.venice.ai/api/v1/models?type=text, accessed 2026-11-12), which the
 # base Llama-3.2-3B lacks; Venice's modelSource links the base model's card.

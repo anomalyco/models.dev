@@ -25,7 +25,7 @@ cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_bre
 [api.responses]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
 sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/responses" }
-capabilities = { system_updates = true, tools = { updates = true } }
+capabilities = { system_updates = true, tools = { updates = ["add"] } }
 
 [api.chat-completions]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"

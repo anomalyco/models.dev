@@ -13,7 +13,7 @@ description = "Alias for flagship general-purpose models with safeguards for def
 release_date = "2026-08-07"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"], updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"], updates = ["add", "remove", "replace"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true

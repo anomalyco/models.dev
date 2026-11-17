@@ -11,7 +11,7 @@ temperature = true
 cache = { explicit = true }
 
 [api.chat-completions]
-capabilities = { system_updates = true, tools = { updates = true } }
+capabilities = { system_updates = true, tools = { updates = ["add", "remove", "replace"] } }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"
