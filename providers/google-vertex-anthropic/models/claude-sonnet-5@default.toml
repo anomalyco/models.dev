@@ -10,6 +10,7 @@
 # system_updates = false: Anthropic's mid-conversation system message docs, which cover Google Cloud, say the feature
 # isn't available on Sonnet 5, and Google Cloud's Claude docs don't mention it. The first-party API accepting it live
 # isn't documented for Vertex, and Vertex Claude can't be tested with an API key (rawPredict needs OAuth).
+# Toggle: thinking.type = adaptive|disabled https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting#supported-models
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
