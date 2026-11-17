@@ -4,6 +4,7 @@
 # Token-only multipliers (object factor, so cost.web_search is unscaled): US data residency (https://platform.claude.com/docs/en/manage-claude/data-residency#pricing).
 # APIs: Messages, and Chat Completions through the OpenAI SDK compatibility layer (https://platform.claude.com/docs/en/api/openai-sdk)
 # Per-API tools: the OpenAI SDK compatibility layer ignores `strict` and takes only function tools, so strict and search sit on [api.messages] only; tool_choice works on both APIs and stays top-level (https://platform.claude.com/docs/en/api/openai-sdk). Live 2026-10-26 on Chat Completions (claude-sonnet-4-6): a strict tool whose schema strict mode rejects was accepted, and a tool_search_tool_regex tool returned 400 "tools.0.type: Input should be 'function'".
+# Toggle: thinking.type = adaptive|disabled https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting#supported-models
 schema = 2
 name = "Claude Sonnet 4.6"
 description = "Claude workhorse for coding agents, careful analysis, and production cost control"
@@ -19,7 +20,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
 temperature = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
