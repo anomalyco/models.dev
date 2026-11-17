@@ -1,19 +1,24 @@
-# TokenSail entry for qwen4-max.
+# TokenSail entry for alibaba/qwen4-max.
 # Snapshot - the undated canonical is the right target: Alibaba released Qwen4-Max on
 #           2026-11-16 and TokenSail started serving it the same day
 #           (GET https://api.tokensail.ai/api/public/models -> catalog.publishedAt), with no
 #           dated variant published yet.
-# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16 and 2026-11-17):
 #   toggle - `thinking = { "type": "disabled" }`, `enable_thinking = false` and
 #            `reasoning_effort = "none"` all stop reasoning (no reasoning_content, no
 #            reasoning_tokens).
-#   effort - accepted, but no effort set is declared. DashScope-compatible routes only
-#            honour a boolean switch, so every non-none value maps to thinking-on and
-#            minimal through max produce the same reasoning_tokens; advertising a ladder
-#            would promise depth the route cannot deliver.
-#   budget - `thinking_budget_tokens` is the depth control: reasoning_tokens equals the
-#            budget exactly (16 -> 16, 256 -> 256, 2048 -> 2048). 0 and 262145 are both
-#            rejected with HTTP 400, and combining it with `reasoning_effort` is rejected.
+#   effort - accepted, but no effort set is declared. Probed 2026-11-17 with three runs per
+#            level on one prompt: reasoning_tokens low [4, 15, 4], medium [16, 15, 4],
+#            xhigh [4, 15, 15] - overlapping and non-monotonic. DashScope-compatible routes
+#            rewrite `reasoning_effort` into the boolean `enable_thinking` and never forward
+#            a strength, so advertising a ladder would promise depth the route cannot
+#            deliver.
+#   budget - `thinking_budget_tokens` is the depth control and is enforced as a cap, not a
+#            target: probe 2026-11-17 gives 16 -> 16, 256 -> 256 and 2048 -> 1103 (the model
+#            finished before the ceiling), while on a prompt that needs no long reasoning the
+#            same 16 returns 3. 0 returns HTTP 400 validation_error, 262145 returns HTTP 400
+#            capability_unsupported ("the maximum for this model is 262144"), and combining
+#            it with `reasoning_effort` is rejected with HTTP 400.
 # structured_output - omitted on purpose: `response_format.type = "json_schema"` returns
 #            HTTP 400 ("does not support response_format.type='json_schema'; the highest
 #            supported level is 'json_object'"), while `json_object` is accepted. Note this

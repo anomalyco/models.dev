@@ -1,14 +1,21 @@
 # TokenSail entry for alibaba/qwen3.8-max-0902.
-# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16 and 2026-11-17):
 #   toggle - `thinking = { "type": "disabled" }` turns reasoning off (no reasoning_content;
 #            this vendor omits reasoning_tokens from usage in every mode).
 #            `enable_thinking = false` and `reasoning_effort = "none"` have the same effect.
-#   effort - accepted, but no effort set is declared. DashScope-compatible routes only
-#            honour a boolean switch, so every non-none value means thinking-on with no
-#            depth change; minimal through max return the same result.
-#   budget - `thinking_budget_tokens` 1..262144 (0 and 262145 both return HTTP 400),
-#            not combinable with `reasoning_effort`. This is the depth control:
-#            reasoning_tokens equals the budget exactly (16 -> 16).
+#   effort - accepted, but no effort set is declared. Probed 2026-11-17 with three runs per
+#            level on one prompt: reasoning_tokens low [30, 44, 30], medium [29, 29, 44],
+#            xhigh [29, 24, 25] - overlapping and non-monotonic, i.e. sampling noise around a
+#            single behaviour, not depth. The adapter rewrites `reasoning_effort` into
+#            `enable_thinking: true|false` on DashScope-compatible routes and never forwards
+#            a strength, so a ladder would promise control the route cannot deliver.
+#   budget - `thinking_budget_tokens` 1..262144 is the depth control and is enforced as a cap
+#            (probe 2026-11-17: 16 -> reasoning_tokens 16, 256 -> 256 exactly; 512 -> 31 when
+#            the model finishes early, so the value is a ceiling, not a target).
+#            0 returns HTTP 400 validation_error ("must be an integer greater than or equal to
+#            1"), 262145 returns HTTP 400 capability_unsupported ("the maximum for this model
+#            is 262144"), and sending it together with `reasoning_effort` returns HTTP 400
+#            ("must not be combined with 'reasoning_effort'").
 # Cache - implicit and explicit, both priced below. Implicit hits are billed at
 #         cache.read (1/8 of input); cache-write traffic is billed at cache.write
 #         (1.25x input) but has no separate usage counter on this path.

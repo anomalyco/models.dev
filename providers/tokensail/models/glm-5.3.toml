@@ -1,10 +1,20 @@
 # TokenSail entry for zhipuai/glm-5.3.
-# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16 and 2026-11-17):
 #   no toggle - this vendor requires thinking on. `thinking = { "type": "disabled" }`,
 #               `enable_thinking = false` and `reasoning_effort = "none"` all return
 #               HTTP 400 ("reasoning is always on for this model"), so no `toggle` is declared.
-#   effort - `reasoning_effort` low | high | max (default max). The full OpenAI set is
-#            accepted and collapsed upstream: minimal -> low, medium/xhigh -> high.
+#   effort - not declared, because the ladder is flat rather than graded. Probed 2026-11-17
+#            with three runs per level on one prompt: low, high and max all returned
+#            reasoning_tokens 21, completion_tokens 23 and 70 characters of reasoning_content,
+#            byte-identical. The gateway rewrites `reasoning_effort` into
+#            `thinking: {type: enabled}` on this vendor family and keeps no strength field,
+#            so the "minimal -> low, medium/xhigh -> high" mapping recorded here earlier
+#            described the accepted OpenAI vocabulary, not vendor behaviour, and is withdrawn.
+#   budget - accepted but not honoured on this route (probe 2026-11-17:
+#            `thinking_budget_tokens` 512 still returns reasoning_tokens 8190, the
+#            `max_tokens` ceiling). 1..131072 passes the gateway bound check, 262145 is
+#            rejected with HTTP 400 ("the maximum for this model is 131072"), and combining
+#            it with `reasoning_effort` is rejected with HTTP 400, so it is not declared.
 #   top_k - accepted and ignored. The gateway forwards the raw JSON body, but Zhipu
 #           documents no top_k support (providers/zhipuai sets top_k = false: temperature
 #           and top_p only) and a live probe with top_k = 5 returns HTTP 200 with no
@@ -33,7 +43,7 @@ v2_only = true
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+reasoning = { supported = true }
 structured_output = true
 top_k = false
 cache = { implicit = true }

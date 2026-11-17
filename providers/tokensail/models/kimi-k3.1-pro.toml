@@ -1,10 +1,19 @@
 # TokenSail entry for moonshotai/kimi-k3.1-pro.
-# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16 and 2026-11-17):
 #   toggle - `thinking = { "type": "disabled" }` turns reasoning off
 #            (reasoning_tokens 31 -> 0, no reasoning_content). Moonshot's own API has no
 #            off switch; TokenSail implements the off path.
 #            `enable_thinking = false` is accepted but ignored (still 28 tokens).
-#   effort - `reasoning_effort` low | high | max (default max).
+#   effort - `reasoning_effort` low | high | max (default max), forwarded as the vendor's
+#            own top-level field (the adapter rejects every other value). Probing this ladder
+#            is noisy at short budgets - three runs per level on a one-line prompt gave
+#            reasoning_tokens low [18, 32], high [33, 12], max [22, 33] - so the list is
+#            declared on the forwarded field, not on a measured depth ordering.
+# Temperature - the vendor pins the value per mode: thinking on accepts only `temperature`
+#            1 and thinking off accepts only 0.6 (probe 2026-11-17; any other value returns
+#            upstream HTTP 400 "`temperature` only <x> is allowed for this model"). The
+#            gateway forwards the client value unchanged, so a client that sets 0 with
+#            thinking disabled gets the vendor error rather than a silent rewrite.
 # Cache - implicit only. Prefix caching is automatic and keyed by the prompt prefix;
 #         hits are billed at the cache-read price below (1/10 of input).
 # structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
@@ -14,11 +23,13 @@
 #         cap; live probe 2026-11-16 shows TokenSail accepts max_tokens up to 1,048,576 and
 #         applies no inbound cap of its own (the gateway leaves the ceiling to the upstream),
 #         so the canonical 1,048,576 is inherited.
-# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
-# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 95% of
-# Moonshot's list price.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape): 1.84708803 input /
+# 0.18470880 cache read / 9.66169124 output. The same response reports Moonshot's official
+# list for this route as 2.00 / 0.20 / 10.00 USD, i.e. 92.4% / 92.4% / 96.6% of list rather
+# than a single discount step.
 # Sources: https://platform.kimi.ai/docs/pricing/chat (vendor list)
-#          https://tokensail.ai/pricing-compare (published USD)
+#          https://api.tokensail.ai/api/public/models (published USD)
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k3.1-pro"

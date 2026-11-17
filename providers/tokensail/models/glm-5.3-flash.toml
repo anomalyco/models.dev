@@ -1,10 +1,20 @@
 # TokenSail entry for zhipuai/glm-5.3-flash.
-# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16 and 2026-11-17):
 #   toggle - `thinking = { "type": "disabled" }` turns reasoning off
-#            (reasoning_tokens 97 -> 0, no reasoning_content). The vendor's own API only
-#            accepts `type = "enabled"`; TokenSail implements the off path.
+#            (reasoning_tokens 97 -> 0, no reasoning_content; re-probed 2026-11-17:
+#            reasoning_effort="none" and thinking.type=disabled both return
+#            reasoning_tokens 0). The vendor's own API only accepts `type = "enabled"`;
+#            TokenSail implements the off path.
 #            `enable_thinking = false` is accepted but ignored (still 42 tokens).
-#   effort - `reasoning_effort` low | high | max (default max).
+#   effort - not declared, because the ladder is flat rather than graded. Probed 2026-11-17,
+#            three runs per level: low returned reasoning_tokens [21, 23, 52] and max
+#            [21, 21, 35] - overlapping and non-monotonic - and the gateway rewrites
+#            `reasoning_effort` into `thinking: {type: enabled}` on this vendor family with
+#            no strength field, so a low|high|max list would promise depth the route cannot
+#            deliver.
+#   budget - `thinking_budget_tokens` 1..131072 passes the gateway bound check and 262145 is
+#            rejected with HTTP 400 ("the maximum for this model is 131072"), but nothing
+#            reaches the vendor as a budget on this family, so it is not declared.
 #   top_k - accepted and ignored. The gateway forwards the raw JSON body, but Zhipu
 #           documents no top_k support (providers/zhipuai sets top_k = false: temperature
 #           and top_p only) and a live probe with top_k = 5 returns HTTP 200 with no
@@ -33,7 +43,7 @@ v2_only = true
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 top_k = false
 cache = { implicit = true }
 

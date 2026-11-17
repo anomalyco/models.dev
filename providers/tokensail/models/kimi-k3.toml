@@ -10,14 +10,22 @@
 #            graded field never carries the off switch - the toggle form is the one that works.
 #   effort - `reasoning_effort` low | high | max (default max). The adapter forwards the
 #            native top-level field unchanged for `kimi-k3*` ids and rejects every other
-#            value, so the graded list here is executable.
+#            value, so the graded list here is executable. Unlike the GLM and DashScope
+#            families, this one keeps the vendor's own field, so the ladder is not rewritten
+#            into a boolean switch.
 #   budget - not declared. `thinking_budget_tokens` returns HTTP 400 across the Moonshot
 #            family (no reasoning-budget field upstream).
 # modalities - video input is dropped. models/moonshotai/kimi-k3 lists nine video MIME
 #            types, but TokenSail publishes architecture.inputModalities = ["text", "image"]
 #            for this route (GET https://api.tokensail.ai/api/public/models), so the video
 #            entries are not inherited: advertising them would promise input this host does
-#            not accept. The image MIME types are kept as the lab lists them.
+#            not accept. The narrowing is per route, not a family default - the sibling
+#            kimi-k3.1-pro on the same host publishes ["text", "image", "video"] in the same
+#            response, and that route inherits the full list. The image MIME types are kept
+#            as the lab lists them. `output = ["text"]` restates the canonical value because
+#            the authored v2 schema requires both halves of an authored `[modalities]` block
+#            (`bun validate` fails with path ["modalities", "output"], "Required" when it is
+#            dropped), not because this route differs on the output side.
 # Cache - implicit only. Prefix caching is automatic and keyed by the prompt prefix; hits
 #         are billed at the cache-read price below.
 # Limit - no override, canonical 1,048,576 / 1,048,576 inherited. TokenSail publishes the
