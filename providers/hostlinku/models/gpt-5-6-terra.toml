@@ -1,6 +1,7 @@
 # Pricing source: https://hostlinku.com/models/gpt-5-6-terra and https://api.hostlinku.com/api/public/models/gpt-5-6-terra
 #   Performance (USD/MTok): input $0.7268, output $4.3608, cache_read $0.07268, web_search $15.8/1k, (>=272000 tok: in $5.056, out $22.752, cache_read $0.5056)
 #   Economy (USD/MTok): input $0.125, output $0.75, cache_read $0.0125, web_search $12.5/1k, (>=272000 tok: in $0.25, out $1.125, cache_read $0.025)
+# Cache note: GET /api/public/models/gpt-5-6-terra lists generic 5m/1h cacheWrite*Credits table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
 # Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
 # Freeform probe (2026-11-17, live on https://api.hostlinku.com): /v1/responses and /v1/chat/completions
 # were probed with custom tool grammar (syntax "regex" ZZ[0-9]{3} against prompt "APPLE" and syntax

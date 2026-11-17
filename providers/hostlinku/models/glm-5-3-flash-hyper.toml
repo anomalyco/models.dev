@@ -1,5 +1,6 @@
 # Pricing source: https://hostlinku.com/models/glm-5-3-flash-hyper and https://api.hostlinku.com/api/public/models/glm-5-3-flash-hyper
 #   Dedicated (USD/MTok): input $0.339, output $1.13, cache_read $0.0678
+# Limits note: GET https://api.hostlinku.com/api/public/models/glm-5-3-flash-hyper and GET /v1/models report binary 1M/128K figures (1_048_576 context / 131_072 output = 2^20 / 128*1024); [limit] is omitted so the entry inherits the lab's decimal 1_000_000 / 131_072 window without exceeding base_model.
 # Service mode: offered in "dedicated" (runtime pricing & availability via GET /v1/models).
 # Effort: reasoning_effort = low|high|max
 schema = 2

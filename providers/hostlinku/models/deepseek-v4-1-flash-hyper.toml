@@ -1,5 +1,6 @@
 # Pricing source: https://hostlinku.com/models/deepseek-v4-1-flash-hyper and https://api.hostlinku.com/api/public/models/deepseek-v4-1-flash-hyper
 #   Dedicated (USD/MTok): input $0.3955, output $1.582, cache_read $0.00791
+# Limits note: GET https://api.hostlinku.com/api/public/models/deepseek-v4-1-flash-hyper and GET /v1/models report binary 1M/384K figures (1_048_576 context / 393_216 output = 2^20 / 384*1024); [limit] is omitted so the entry inherits the lab's decimal 1_000_000 / 384_000 window without exceeding base_model.
 # Service mode: offered in "dedicated" (runtime pricing & availability via GET /v1/models).
 # Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables)
 # Effort: reasoning_effort = low|high|max

@@ -1,6 +1,7 @@
 # Pricing source: https://hostlinku.com/models/grok-4-7 and https://api.hostlinku.com/api/public/models/grok-4-7
-#   Performance (USD/MTok): input $0.948, output $2.844, cache_read $0.237, cache_write_5m $1.185, cache_write_1h $1.896, web_search $0.948/1k
+#   Performance (USD/MTok): input $0.948, output $2.844, cache_read $0.237, web_search $0.948/1k
 # Limits source: GET https://api.hostlinku.com/api/public/models/grok-4-7 and GET /v1/models (maxOutputTokens / max_output_tokens = 131_072, below the lab default).
+# Cache note: GET /api/public/models/grok-4-7 lists generic 5m/1h cacheWrite*Credits table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
 # Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
 # Effort: reasoning_effort = low|medium|high|xhigh
 schema = 2
@@ -19,7 +20,7 @@ compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.948
-cache = { read = 0.237, write = { "5m" = 1.185, "1h" = 1.896 } }
+cache = { read = 0.237 }
 
 [cost.text.output]
 price = 2.844
