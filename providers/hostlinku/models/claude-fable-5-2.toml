@@ -1,6 +1,7 @@
 # Pricing source: https://hostlinku.com/models/claude-fable-5-2 and https://api.hostlinku.com/api/public/models/claude-fable-5-2
 #   Performance (USD/MTok): input $4.424, output $22.12, cache_read $0.1106, cache_write_5m $5.53, cache_write_1h $8.848, web_search $5.53/1k
 #   Economy (USD/MTok): input $1.5, output $7.5, cache_read $0.0375, cache_write_5m $1.875, cache_write_1h $3, web_search $12.5/1k
+# Note: GET /api/public/models/claude-fable-5-2 lists modes.performance.prices.webSearchPer1kCredits = 5.53 (0.553 multiplier on the $10 official rate) and modes.economy.prices.webSearchPer1kCredits = 12.5 (fixed economy web_search rate).
 # Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
 # APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
 # Effort: $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max" on /v1/messages

@@ -1,6 +1,6 @@
 # Pricing source: https://hostlinku.com/models/claude-haiku-5-5 and https://api.hostlinku.com/api/public/models/claude-haiku-5-5
-#   Performance (USD/MTok): input $0.0553, output $0.2765, cache_read $0.00553, cache_write_5m $0.069125, cache_write_1h $0.1106, web_search $15.8/1k, (>=100000 tok: in $0.632, out $3.16)
-#   Economy (USD/MTok): input $0.01875, output $0.09375, cache_read $0.001875, cache_write_5m $0.023438, cache_write_1h $0.0375, web_search $12.5/1k, (>=100000 tok: in $0.09375, out $0.46875)
+#   Performance (USD/MTok): input $0.0553, output $0.2765, cache_read $0.00553, cache_write_5m $0.069125, cache_write_1h $0.1106, web_search $15.8/1k, (>=100000 tok: in $0.632, out $3.16, cache_read $0.0632, cache_write_5m $0.79, cache_write_1h $1.264)
+#   Economy (USD/MTok): input $0.01875, output $0.09375, cache_read $0.001875, cache_write_5m $0.023438, cache_write_1h $0.0375, web_search $12.5/1k, (>=100000 tok: in $0.09375, out $0.46875, cache_read $0.009375, cache_write_5m $0.117188, cache_write_1h $0.1875)
 # Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
 # APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
 # Toggle: $.thinking.type = "adaptive"|"disabled"
