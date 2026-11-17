@@ -1,0 +1,27 @@
+# attachment are for security reasons not supported on AKI.IO and are therefore disabled
+# Effort: reasoning_effort = none|low|high|max ("none" disables reasoning; the API accepts 
+# unknown values without error and ignores them)
+# follows the lab baseline rather than probing)
+# Prices: GET /openai/v1/models (checked 2026-11-17) list EUR per 1M tokens (net); converted
+# to USD at the ECB reference rate of 1.0989 USD/EUR (2026-11-17).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 81_920
+
+[cost.text.input]
+price = 2.1978
+cache = { read = 0.274725 }
+
+[cost.text.output]
+price = 10.989
