@@ -1,12 +1,12 @@
 # Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
 # Relayed by Tapix AI (https://tapixai.com/v1); upstream model is moonshotai/kimi-k2.6.
-# Toggle: reasoning_effort = none disables thinking on /v1/chat/completions (lab surface: thinking.type = enabled|disabled; we forward effort only, so none is the off switch).
+# Reasoning: no caller-side control is published — the upstream route returned errors on 2026-11-17, so no effort ladder or off switch could be verified.
 # Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 structured_output = true
 
 [cost.text.input]

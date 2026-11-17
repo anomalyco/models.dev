@@ -1,12 +1,12 @@
 # Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
 # Relayed by Tapix AI (https://tapixai.com/v1); upstream model is xiaomi/mimo-v2.6-pro.
-# Toggle: reasoning_effort = none disables thinking on /v1/chat/completions (lab surface: thinking.type = enabled|disabled; we forward effort only, so none is the off switch).
+# Reasoning: thinking is always on upstream for this model — a 2026-11-17 probe sent reasoning_effort=none and still received reasoning_content, so no caller-side off switch or effort ladder is published.
 # Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 structured_output = true
 
 [cost.text.input]
