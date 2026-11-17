@@ -1,0 +1,53 @@
+# https://novita.ai/models/model-detail/qwen-qwen3-vl-plus
+# Source: Novita /openai/v1/models (2026-11-17): context_size 262000, max_output_tokens 32000, tiered pricing (0-32K, 32K-128K, 128K-256K), input modalities text/image/video, endpoints chat/completions, anthropic, responses.
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking_budget (reasoning tokens)
+# Reasoning controls follow the other Novita Qwen routes and the route's "reasoning" feature; not probed live, the route answered 503 "model unavailable" on 2026-11-17.
+schema = 2
+base_model = "alibaba/qwen3-vl-plus"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, budget = {} }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 262_000
+output = 32_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.144
+cache = { read = 0.014, write = 0.18 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 32_000 } }
+price = 0.216
+cache = { read = 0.022, write = 0.27 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.431
+cache = { read = 0.043, write = 0.539 }
+
+[cost.text.output]
+price = 1.434
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 32_000 } }
+price = 2.151
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 4.301
