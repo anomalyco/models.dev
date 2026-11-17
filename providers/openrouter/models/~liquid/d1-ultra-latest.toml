@@ -17,7 +17,7 @@ structured_output = false
 temperature = false
 
 [limit]
-context = 32_768
+context = 65_536
 output = 0
 
 [api.systemone]
@@ -26,7 +26,6 @@ compatibility = { media_input = "state" }
 
 [cost.text.input]
 price = 0.042
-cache = { read = 0.042 }
 
 [cost.text.output]
 price = 0
