@@ -24,10 +24,6 @@ export default {
     ctx: ExecutionContext,
   ): Promise<Response> {
     const url = new URL(request.url);
-    // These files back the public v2 route, not a second way to opt in.
-    if (url.pathname.startsWith("/_experimental_v2.0_api")) {
-      return new Response(null, { status: 404 });
-    }
     const ip = request.headers.get("cf-connecting-ip") ?? undefined;
     const country = request.headers.get("cf-ipcountry") ?? undefined;
     const agent = request.headers.get("user-agent") ?? undefined;

@@ -33,16 +33,8 @@ export default $config({
         directory: "./packages/web/dist",
       },
       transform: {
-        worker(args) {
-          args.observability = { enabled: true };
-          // Keep internal v2 assets behind the public route's include gate.
-          args.assets = $output(args.assets).apply((assets) => ({
-            ...assets,
-            config: $output(assets?.config).apply((config) => ({
-              ...config,
-              runWorkerFirst: true,
-            })),
-          }));
+        worker: {
+          observability: { enabled: true },
         },
       },
     });

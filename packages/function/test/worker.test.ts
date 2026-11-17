@@ -196,12 +196,11 @@ describe("experimental provider opt-in", () => {
     }
   });
 
-  test("internal prebuilt v2 files cannot bypass the public route", async () => {
-    for (const path of ["/_experimental_v2.0_api.json", "/_experimental_v2.0_api-optin-all.json"]) {
-      for (const query of ["", "?include=openai-codex"]) {
-        expect((await request(path + query)).status).toBe(404);
-      }
-    }
+  test("prebuilt v2 files retain direct static access", async () => {
+    const defaults = await request("/_experimental_v2.0_api.json");
+    expect(await defaults.json()).toEqual(v2Providers);
+    const included = await request("/_experimental_v2.0_api-optin-all.json");
+    expect(await included.json()).toEqual(expandedProviders);
   });
 });
 
