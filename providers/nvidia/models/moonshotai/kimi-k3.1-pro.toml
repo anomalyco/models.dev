@@ -1,0 +1,22 @@
+# NVIDIA NIM wire id (model card / API reference, accessed 2026-11-18):
+#   "model": "moonshotai/kimi-k3.1-pro"
+# The build.nvidia.com URL slug is kimi-k3_1-pro; the slug is not the wire id.
+#   effort: top-level "reasoning_effort" = "low" | "medium" | "high" | "max" (default "low")
+#   reasoning is always on (showReasoningToggle=false); the streamed field is reasoning_content.
+# Pricing: Free Endpoint; NVIDIA publishes no per-token rate (providers/nvidia/provider.toml).
+# https://build.nvidia.com/moonshotai/kimi-k3_1-pro
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
