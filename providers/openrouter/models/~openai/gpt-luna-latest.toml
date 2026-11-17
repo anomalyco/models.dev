@@ -3,7 +3,7 @@
 # effort_updates = true: configuration_update keeps the cache on Responses (input item) and Chat Completions (content-less system message). Live 2026-10-23 on gpt-6-luna: full prefix read on the update turn on both; xhigh -> none takes effect on both, none -> xhigh only on Chat (OpenAI's own Responses API ignores it too) (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort) Top level: OpenRouter documents the in-history update on Chat Completions, Responses and Messages and converts between them, so it holds on every listed API.
 # additional_tools on [api.responses] (/api/v1/responses, add only): an `additional_tools` input item keeps the cache (live 2026-10-23, pinned to OpenAI). OpenRouter's Responses docs don't mention it (https://openrouter.ai/docs/api/reference/responses/overview); lab mechanism: https://developers.openai.com/api/docs/guides/prompt-caching. Chat Completions has no mechanism.
 # Cache: automatic from 1,024 tokens; GPT-5.6+ explicit prompt_cache_breakpoint, 30m TTL (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
-# tools.updates is left out: on GPT-5.5 and earlier, calls to tools added through additional_tools come back namespaced and replaying them without the namespace fails ("Missing namespace for function_call", live 2026-11-16), so callers fold tool changes into the top-level tools list.
+# Live 2026-11-17 (@opencode/ai request shapes, every tool in additional_tools, 2 runs each on this model): tools.updates = ["add", "remove"] on [api.responses]: additions and removal announcements work; a redefinition keeps the old schema. Chat Completions has no mechanism.
 schema = 2
 name = "GPT Luna Latest"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
@@ -33,6 +33,7 @@ output = 128_000
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { updates = ["add", "remove"] } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

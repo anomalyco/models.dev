@@ -4,6 +4,7 @@
 # additional_tools on [api.responses] (/api/v1/responses, add only): an `additional_tools` input item keeps the cache (live 2026-10-23, pinned to OpenAI). OpenRouter's Responses docs don't mention it (https://openrouter.ai/docs/api/reference/responses/overview); lab mechanism: https://developers.openai.com/api/docs/guides/prompt-caching. Chat Completions has no mechanism.
 # Cache: automatic from 1,024 tokens (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
 # tools.updates is left out: on GPT-5.5 and earlier, calls to tools added through additional_tools come back namespaced and replaying them without the namespace fails ("Missing namespace for function_call", live 2026-11-16), so callers fold tool changes into the top-level tools list.
+# Live 2026-11-17 (@opencode/ai request shapes, 2 runs): no tools.updates: an addition through additional_tools is called, but a removal announcement was ignored 2/2 and a redefinition keeps the old schema; the alias has no base_model, so replaying added-tool calls (the GPT-5.5 namespace failure) is unknown.
 schema = 2
 name = "GPT Mini Latest"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
