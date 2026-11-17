@@ -1,12 +1,12 @@
 # Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
 # Relayed by Tapix AI (https://tapixai.com/v1); upstream model is minimax/MiniMax-M2.7.
-# Reasoning: no caller-side control — this model always reasons upstream and its lab ignores toggles; the host only exposes its default.
+# Reasoning: no caller-side control — thinking is always on upstream (or its only control is a thinking budget that our whitelist does not forward), so no caller-side option is published.
 # Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "minimax/MiniMax-M2.7"
 
 [capabilities]
-reasoning = { supported = true, effort = ["default"] }
+reasoning = { supported = true }
 structured_output = true
 
 [cost.text.input]
