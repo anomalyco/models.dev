@@ -175,6 +175,7 @@ export interface SyncedV2Model {
   id: string;
   v2: Record<string, unknown>;
   header?: string;
+  notices?: string[];
 }
 
 export interface SyncResult {
