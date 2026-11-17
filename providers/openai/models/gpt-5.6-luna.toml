@@ -9,6 +9,7 @@
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
 # Cache writes: 30m (default) is 1.25x input; 12h (Responses API) is 2.5x. https://developers.openai.com/api/docs/guides/prompt-caching
 # Regional processing (data residency) endpoints: +10% on token prices for models released on or after 2026-03-05 (FedRAMP endpoints also +10%, not modeled). Token-only factor so cost.web_search is unscaled. Source: https://developers.openai.com/api/docs/pricing (accessed 2026-11-12)
+# tools.updates (live 2026-11-17, the request shapes @opencode/ai sends, every tool declared in additional_tools, gpt-6-astra and gpt-5.6-sol on OpenAI's /v1/responses): add, a redefinition (the call uses the new schema) and a removal all work, 3/3 each; the removal is announced in a developer message and followed. Re-adding a removed tool works (2026-11-16).
 schema = 2
 base_model = "openai/gpt-5.6-luna"
 

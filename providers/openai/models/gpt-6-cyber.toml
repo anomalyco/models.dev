@@ -20,6 +20,7 @@
 # Cache lifetime (documented for the Responses API): prompt_cache_options.ttl "30m" (default, write 1.25x uncached input) or "12h" (write 2.5x); reads cost the same for both, and the request-level ttl also applies to the implicit breakpoint: https://developers.openai.com/api/docs/guides/prompt-caching
 # Cache write prices: $25 per 1M tokens for 30m and $50 for 12h (model page).
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# tools.updates (live 2026-11-17, the request shapes @opencode/ai sends, every tool declared in additional_tools, gpt-6-astra and gpt-5.6-sol on OpenAI's /v1/responses): add, a redefinition (the call uses the new schema) and a removal all work, 3/3 each; the removal is announced in a developer message and followed. Re-adding a removed tool works (2026-11-16).
 schema = 2
 v2_only = true
 base_model = "openai/gpt-6-cyber"

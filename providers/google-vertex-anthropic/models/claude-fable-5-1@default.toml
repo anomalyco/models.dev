@@ -7,6 +7,7 @@
 # Mid-conversation updates follow the per-model lists in Anthropic's docs, which cover Google Cloud:
 # - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference)
 # - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort)
+# tools.updates (live 2026-11-17 on Vertex rawPredict, tool_addition / tool_removal blocks with inline-tools-2026-09-15, claude-opus-5-5, opus-5, opus-4-8): add, a redefinition (the call uses the new schema) and a removal all work, 3/3 each. Other Claude models follow Anthropic's own API, where they pass the same checks.
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 

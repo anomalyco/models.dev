@@ -13,6 +13,7 @@
 # tools.choice: Messages tool_choice auto/any/tool/none; Fable 5.2 rejects any/tool: https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
 # tools.search: left out, as on the other Claude models here. Claude on Google Cloud supports client tools, not server tools (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/use-claude), and Google's Fable 5.2 page doesn't list tool search.
 # Fast mode: "speed": "fast" in online prediction requests to claude-fable-5-2 (Google's model page above; https://platform.claude.com/docs/en/build-with-claude/fast-mode#feature-availability).
+# tools.updates (live 2026-11-17 on Vertex rawPredict, tool_addition / tool_removal blocks with inline-tools-2026-09-15, claude-opus-5-5, opus-5, opus-4-8): add, a redefinition (the call uses the new schema) and a removal all work, 3/3 each. Other Claude models follow Anthropic's own API, where they pass the same checks.
 schema = 2
 base_model = "anthropic/claude-fable-5-2"
 

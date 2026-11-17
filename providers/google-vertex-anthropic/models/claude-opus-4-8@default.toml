@@ -10,6 +10,7 @@
 # No long-context premium on Vertex: the pricing page lists the same rates for <= 200K and > 200K input tokens
 # (https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing), and Anthropic includes the 1M window at standard pricing for Claude 4.6 and later
 # (https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing).
+# tools.updates (live 2026-11-17 on Vertex rawPredict, tool_addition / tool_removal blocks with inline-tools-2026-09-15, claude-opus-5-5, opus-5, opus-4-8): add, a redefinition (the call uses the new schema) and a removal all work, 3/3 each. Other Claude models follow Anthropic's own API, where they pass the same checks.
 schema = 2
 base_model = "anthropic/claude-opus-4-8"
 
