@@ -11,6 +11,8 @@
 # https://api.topxai.xyz/docs/glm-5-3-abliterated (checked 2026-11-18).
 # Fixed prices, no long-context tier and no cache-write price:
 # https://api.topxai.xyz/pricing/glm-5.3-abliterated (accessed 2026-11-10)
+# The host sampling guide confirms temperature and top_p. It lists no top_k
+# control for this deployment, so the catalog does not advertise one.
 # Chat supports auto, none, required and named functions (tool_choice):
 # https://api.topxai.xyz/docs/glm-5-3-abliterated (checked 2026-11-18).
 schema = 2
