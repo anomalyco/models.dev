@@ -1,5 +1,10 @@
 # APIs: Chat Completions (listed first, so v1 is unchanged) and native Messages,
 # https://api.topxai.xyz/docs/api-reference (checked 2026-11-13).
+# On Chat Completions, response_format=json_schema is converted to Anthropic's
+# supported schema subset. Native Messages accepts structured output through
+# output_config.format (ChatAnthropic method="json_schema"). Numeric bounds and
+# list lengths can become hints; see the host's Structured output and ChatAnthropic
+# sections: https://api.topxai.xyz/docs/use-topxai-with-langchain (2026-11-18).
 # Explicit caching holds on both: Messages forwards cache_control as sent, and the
 # Chat Completions conversion to Claude Messages keeps cache_control, ttl included,
 # on system, message and tool blocks. The host prices 5m and 1h cache writes.
