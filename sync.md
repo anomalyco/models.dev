@@ -29,6 +29,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
+- `bun models:sync unrestricted` syncs only Unrestricted prices.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -387,6 +388,14 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - `context_length` only ever lowers the inherited context limit; it can report the lab's window rounded up (1048576 for 1M). Output limits, reasoning controls and other capabilities stay hand-authored.
 - `tools = false` overrides the lab's tool calling. Display names are not synced: the endpoint prefixes the lab name (`Z.ai: GLM 5.3`). Decision models (`decisions = true`) are skipped.
 - New models are not created automatically (`skipCreates`) and open no missing-model issues (`trackMissingModels: false`): the endpoint lists hundreds of models the catalog does not carry. It lists only models serving at that moment, so local files missing from a response are kept (`deleteMissing: false`) and reported.
+
+## Unrestricted Notes
+
+- Unrestricted is implemented in `packages/core/src/sync/providers/unrestricted.ts`.
+- Source endpoint: the public `https://api.unrestricted.sh/v1/models` (no API key).
+- Existing models are repriced from `pricing.input` and `pricing.output`, which the endpoint states in USD per 1M tokens. `pricing.cached_input` is synced only into files that already declare a cache price.
+- Limits, names, reasoning controls and other capabilities stay hand-authored from the live probes in each file's header.
+- New models are not created automatically (`skipCreates`) and open no missing-model issues (`trackMissingModels: false`). The endpoint lists only models serving at that moment, so local files missing from a response are kept (`deleteMissing: false`) and reported.
 
 ## OpenAI Notes
 

@@ -1,6 +1,7 @@
 # Sources (accessed 2026-11-07):
 # - Model id, name, 1,048,576 context, 65,536 max output, text-only input and USD prices per
-#   1M tokens (input 0.15, cached input 0.05, output 0.60): https://api.unrestricted.sh/v1/models
+#   1M tokens: https://api.unrestricted.sh/v1/models (prices are kept current by the sync in
+#   packages/core/src/sync/providers/unrestricted.ts)
 # - Prices, context, text input, reasoning in reasoning_content, tool calls, served by an
 #   outside inference partner: https://unrestricted.sh/models/deepseek-v4.1-flash-uncensored
 #   and https://unrestricted.sh/pricing
@@ -9,7 +10,7 @@
 # - Cache: cached-input prices apply when a tool resends the start of a conversation
 #   (https://unrestricted.sh/pricing); no cache markers are documented, so caching is implicit.
 # - release_date: the day the current model went live on this API.
-# The API names the model DeepSeek V4.1 Flash 1017 Uncensored; its id has no 1017.
+# The API names the model DeepSeek V4.1 Flash 1017 Abliterated (2026-11-16); its id has no 1017.
 # Standalone entry, not base_model: an uncensored DeepSeek V4.1 Flash 1017 served text-only,
 # like qwen3.8-27b-uncensored here and
 # providers/nearai/models/deepseek-ai/DeepSeek-V4.1-Flash-1017-abliterated.toml.
@@ -26,8 +27,8 @@
 # family from models/deepseek/deepseek-v4.1-flash-1017.toml; open_weights = true as on the
 # venice and nano-gpt uncensored entries and the lab file.
 schema = 2
-name = "DeepSeek V4.1 Flash 1017 Uncensored"
-description = "Uncensored DeepSeek V4.1 Flash 1017 for coding and security research"
+name = "DeepSeek V4.1 Flash 1017 Abliterated"
+description = "Abliterated DeepSeek V4.1 Flash 1017 for coding and security research"
 family = "deepseek-flash"
 open_weights = true
 release_date = "2026-10-29"
@@ -51,8 +52,8 @@ output = 65_536
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.05 }
+price = 0.43
+cache = { read = 0.09 }
 
 [cost.text.output]
-price = 0.6
+price = 1.5
