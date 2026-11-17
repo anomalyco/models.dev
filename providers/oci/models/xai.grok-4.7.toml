@@ -16,6 +16,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
 structured_output = true
 service_tier = ["priority"]
 

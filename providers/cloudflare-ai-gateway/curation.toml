@@ -33,8 +33,11 @@
 skip = [
   # Has a lab file, but multi-agent is Responses-only: Chat Completions rejects it on xAI
   # (live 2026-10-22) and on OCI, both /openai/v1/chat/completions and native /actions/chat
-  # ("Multi Agent requests are not allowed on chat completions", 400, live 2026-11-16), and
-  # unified billing only serves /ai/v1/chat/completions and /ai/v1/messages.
+  # ("Multi Agent requests are not allowed on chat completions", 400, live 2026-11-16).
+  # Whether this id's catalog row lists `responses` and POST /ai/v1/responses serves it is
+  # unverified: no synced xai/* text row carries an [api.responses] table (the generator adds
+  # one when request_formats lists responses), and this id was never probed through the
+  # gateway. It stays skipped until someone probes /ai/v1/responses for it.
   "xai/grok-4.20-multi-agent-0309",
   # Inkling has a lab file, but both ids are BYOK-only: unified billing returns code 2047
   # on /ai/v1/chat/completions and /ai/v1/messages (verified live 2026-10-16).
