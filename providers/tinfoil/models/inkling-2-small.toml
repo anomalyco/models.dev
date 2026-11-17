@@ -1,0 +1,22 @@
+# Sources (accessed 2026-11-17):
+# - https://inference.tinfoil.sh/v1/models (id inkling-2-small; context 524288; pricing input 0.3 / output 1 / cache_read 0.03 per 1M;
+#   supported_efforts none|minimal|low|medium|high|xhigh|max; tool_calling, multimodal; /v1/chat/completions and /v1/responses)
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max on Tinfoil, as the catalog lists; none turns thinking off, so no toggle.
+# Cache: the inference router reuses matching prompt prefixes automatically (https://docs.tinfoil.sh/sdk/prompt-caching).
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 524_288
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1
