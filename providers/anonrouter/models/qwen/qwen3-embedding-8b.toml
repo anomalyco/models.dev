@@ -1,12 +1,14 @@
+# The default Entrim route quotes USD 0.0115 per million input tokens, from pricing.input_usd_per_million_tokens.
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
 # Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
-# Embeddings accepts text strings only: https://docs.anonrouter.ai/compatibility.
+# The embeddings API accepts text strings only: https://docs.anonrouter.ai/compatibility.
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen3-embedding-8b"
 
 [api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.0115

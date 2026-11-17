@@ -1,9 +1,10 @@
+# The file schema requires both modality arrays when either differs from the lab.
 # Context verified at 10,240 reported input tokens; the 10,241-token probe returned upstream HTTP 502.
 # The feed advertises 32,768, so the lab limit is retained instead of that larger unverified value.
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
 # Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
-# Embeddings accepts text strings only: https://docs.anonrouter.ai/compatibility.
+# The embeddings API accepts text strings only: https://docs.anonrouter.ai/compatibility.
 schema = 2
 v2_only = true
 base_model = "nvidia/llama-nemotron-embed-vl-1b-v2"
@@ -13,6 +14,7 @@ input = ["text"]
 output = ["embedding"]
 
 [api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.0144
