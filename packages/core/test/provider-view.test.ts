@@ -33,6 +33,7 @@ test("include parses explicit provider IDs with whitespace, duplicates, and repe
   ))]).toEqual(["openai-codex", "openai-chatgpt", "github-copilot"]);
 });
 
+// Both generators read the full repository catalog from disk.
 test("real catalog retains existing providers, composes types, and leaves v1 alone", async () => {
   const root = path.join(import.meta.dir, "..", "..", "..");
   const providers = await generateV2(path.join(root, "providers"));
@@ -47,4 +48,4 @@ test("real catalog retains existing providers, composes types, and leaves v1 alo
   expect(expanded["openai-codex"]).toEqual(providers["openai-codex"]);
   const v1 = await generateCatalog(root);
   expect(v1.providers["openai-codex"]).toBeUndefined();
-});
+}, 30_000);
