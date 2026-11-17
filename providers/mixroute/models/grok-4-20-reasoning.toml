@@ -1,0 +1,13 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Provider alias for xai/grok-4.20-0309-reasoning.
+schema = 2
+base_model = "xai/grok-4.20-0309-reasoning"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.responses]
+base_url = "https://api.mixroute.ai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]

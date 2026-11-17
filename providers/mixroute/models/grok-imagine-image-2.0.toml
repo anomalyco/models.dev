@@ -1,0 +1,7 @@
+# Catalog: https://api.mixroute.ai/v1/models
+schema = 2
+base_model = "xai/grok-imagine-image-2.0"
+
+[api.images]
+base_url = "https://api.mixroute.ai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/images" }

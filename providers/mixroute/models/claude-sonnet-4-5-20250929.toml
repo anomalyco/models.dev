@@ -1,0 +1,17 @@
+# Host caching and structured output checked 2026-11-17: https://mixroute.ai/models/claude-sonnet-4-5-20250929/
+# Explicit cache_control format: https://mixroute.ai/docs/api-reference/endpoint/messages#prompt-caching
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/anthropic/models/claude-sonnet-4-5-20250929.toml
+schema = 2
+base_model = "anthropic/claude-sonnet-4-5-20250929"
+
+[capabilities]
+cache = { explicit = true }
+structured_output = true
+reasoning = { supported = true, budget = { min = 1024 } }
+
+[api.messages]
+base_url = "https://api.mixroute.ai/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]

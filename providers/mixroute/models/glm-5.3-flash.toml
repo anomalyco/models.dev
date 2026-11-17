@@ -1,0 +1,9 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/zhipuai/models/glm-5.3-flash.toml
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]

@@ -1,0 +1,10 @@
+# Catalog: https://api.mixroute.ai/v1/models
+# Model and native API: https://mixroute.ai/docs/api-reference/endpoint/kling-omni-video
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-video-o1"
+
+[api.videos]
+base_url = "https://api.mixroute.ai"
+path = "/kling/omni-video/kling-o1"
+sdk = { aisdk = "none", opencodeai = "none" }
