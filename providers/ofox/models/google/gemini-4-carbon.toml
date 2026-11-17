@@ -5,15 +5,14 @@
 # Reasoning: multi-model relay, so the lab effort set low/medium/high comes from providers/google/models/gemini-4-carbon.toml and the Ofox peer gemini-4-argon.toml. Not probed live (no Ofox key available).
 # Modalities, limits and temperature flags inherit the lab file; the Ofox catalog does not list modalities.
 # Mid-conversation (Ofox Gemini native API, https://ofox.ai/docs/api/gemini/generate-content): systemInstruction, thinkingConfig and tools are request-level and content roles are user/model, so system_updates, effort_updates and tools.updates are false.
-# Cache: implicit, plus explicit cachedContents on the Gemini native API, as on the Ofox gemini-4-argon entry (https://ofox.ai/docs/develop/models/gemini#caching). Google itself rejects explicit caching for Carbon, so this follows the Ofox peer and was not verified for Carbon.
+# Cache: implicit only. The Ofox catalog says implicit caching only for this model, and Google rejects explicit caching for Carbon.
 schema = 2
 base_model = "google/gemini-4-carbon"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-cache = { implicit = true, explicit = true }
+cache = { implicit = true }
 
 [api.generate-content]
 base_url = "https://api.ofox.ai/gemini/v1beta"
