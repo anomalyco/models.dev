@@ -1,0 +1,46 @@
+# TokenSail entry for zhipuai/glm-5.2.
+# Reasoning controls - taken from TokenSail's own capability declaration for this route,
+# not re-probed on it (unlike the glm-5.3 pair):
+#   toggle - declared. The route is declared `reasoning.mode = switchable` on every vendor
+#            path that carries it (glm, dashscope, volcengine), and only glm-5.3 is
+#            overridden to `mode = always`; the gateway translates `reasoning_effort` to
+#            `thinking.type` enabled/disabled, so `reasoning_effort = "none"` is the off form.
+#   effort - not declared. That translation is boolean only: the adapter keeps per-vendor
+#            effort strength out of the capability set until it can be measured on the
+#            vendor, so a graded list would be a promise nobody verified.
+#   budget - not declared. `thinking_budget` exists only on the Bailian path
+#            (thinking_budget_max 131,072); the first-party Zhipu and Volcengine paths have
+#            no budget field and reject `thinking_budget_tokens` with HTTP 400, so
+#            advertising a budget would fail wherever the route lands on those channels.
+# top_k - inherited as true. The gateway forwards the raw JSON body and Zhipu documents
+#         top_k for GLM-5.2 (models/zhipuai/glm-5.2 declares top_k = true), so no override.
+# Cache - implicit only. Zhipu's prompt cache is automatic with no write price; hits are
+#         billed at the cache-read price below.
+# Limit - no override, canonical 1,000,000 / 131,072 inherited. TokenSail publishes
+#         contextWindow 1,048,576 (GET https://api.tokensail.ai/api/public/models), but a
+#         relay cannot enlarge a model's window and models/zhipuai/glm-5.2 declares
+#         1,000,000. Same judgement as the two glm-5.3 routes.
+# structured_output - omitted on purpose: the declared support for this route is
+#         `response_format(json_object)`; `json_schema` has not been verified here, and
+#         declaring it true would mislead JSON-schema clients.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape).
+# Sources: https://docs.z.ai/guides/overview/pricing (vendor list)
+#          https://api.tokensail.ai/api/public/models (published USD)
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.77772128
+cache = { read = 0.19443032 }
+
+[cost.text.output]
+price = 2.72202447

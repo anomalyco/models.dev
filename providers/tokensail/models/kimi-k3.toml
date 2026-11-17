@@ -1,0 +1,62 @@
+# TokenSail entry for moonshotai/kimi-k3.
+# Reasoning controls - copied from the sibling kimi-k3.1-pro route on this same host
+# (live-verified there on 2026-11-16) and from the adapter that both routes share, not
+# re-probed here:
+#   toggle - `thinking = { "type": "disabled" }` turns reasoning off (no reasoning_content).
+#            Moonshot's own API has no off switch; TokenSail implements the off path, and
+#            the kimi-k3.1-pro probe measured reasoning_tokens 31 -> 0 through it.
+#            `enable_thinking = false` is accepted but ignored, and `reasoning_effort = "none"`
+#            is rejected with HTTP 400 ("reasoning is always on for this model") because the
+#            graded field never carries the off switch - the toggle form is the one that works.
+#   effort - `reasoning_effort` low | high | max (default max). The adapter forwards the
+#            native top-level field unchanged for `kimi-k3*` ids and rejects every other
+#            value, so the graded list here is executable.
+#   budget - not declared. `thinking_budget_tokens` returns HTTP 400 across the Moonshot
+#            family (no reasoning-budget field upstream).
+# modalities - video input is dropped. models/moonshotai/kimi-k3 lists nine video MIME
+#            types, but TokenSail publishes architecture.inputModalities = ["text", "image"]
+#            for this route (GET https://api.tokensail.ai/api/public/models), so the video
+#            entries are not inherited: advertising them would promise input this host does
+#            not accept. The image MIME types are kept as the lab lists them.
+# Cache - implicit only. Prefix caching is automatic and keyed by the prompt prefix; hits
+#         are billed at the cache-read price below.
+# Limit - no override, canonical 1,048,576 / 1,048,576 inherited. TokenSail publishes the
+#         same context window, and 131,072 is Moonshot's max_completion_tokens default
+#         rather than a cap, so neither limit is overridden.
+# structured_output - omitted on purpose: the sibling kimi-k3.1-pro route passes a strict
+#         `json_schema` probe, but that was measured on that id and not on this one, so the
+#         claim is left out rather than inherited.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape).
+# Sources: https://platform.kimi.ai/docs/pricing/chat (vendor list)
+#          https://api.tokensail.ai/api/public/models (published USD)
+schema = 2
+v2_only = true
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "image/heic",
+  "image/heif",
+]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.09386498
+cache = { read = 0.2093865 }
+
+[cost.text.output]
+price = 10.46932488
