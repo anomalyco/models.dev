@@ -11,6 +11,9 @@ reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 
+[limit]
+output = 131_072
+
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
