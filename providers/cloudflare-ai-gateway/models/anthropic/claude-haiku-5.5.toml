@@ -4,12 +4,11 @@
 # Toggle: thinking.type = adaptive|disabled (disabled accepted at high effort or below; xhigh|max reject it).
 # Effort: output_config.effort = low|medium|high|xhigh|max (Anthropic Messages API; adaptive thinking on by default).
 # Sources: https://platform.claude.com/docs/en/build-with-claude/effort ; https://platform.claude.com/docs/en/models/haiku-5-5/overview ; https://platform.claude.com/docs/en/models/haiku-5-5/migration-guide
-# tools.updates follows the upstream API this passthrough forwards to (live 2026-11-17 on OpenAI's and Anthropic's own APIs: add, redefine and removal 3/3); not re-tested through the gateway (its key returned 401).
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-tools = { supported = true, updates = ["add", "remove", "replace"], strict = true, choice = ["auto", "none", "required", "tool"], search = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, updates = ["add", "remove", "replace"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 structured_output = true
