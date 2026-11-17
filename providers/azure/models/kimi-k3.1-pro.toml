@@ -1,0 +1,44 @@
+# Source: https://ai.azure.com/catalog/models/Kimi-K3.1-Pro
+# Version 2026-11-04, Generally available; inference deprecation 2027-11-04.
+# Pricing: Azure Kimi global deployment, effective 2026-11-01, USD per 1M tokens:
+# input 2.30, cached input 0.23, output 11.50.
+# https://aka.ms/Kimi-k3-Pricing
+# https://prices.azure.com/api/retail/prices?$filter=contains(productName,'Kimi')
+# Azure catalog lists context 1048576 (same as the base model) and output 262144
+# (base is 1048576).
+# Direct endpoint: POST /models/chat/completions on the Foundry models endpoint.
+# Modalities: Azure documents text and image input, no video; formats follow the
+# other Azure Kimi entries.
+# Reasoning: always-on; Azure returns reasoning in `reasoning_content` and does
+# not document an effort, toggle, or budget request field.
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions
+# API, which has no documented way to change tools or effort mid-conversation and
+# doesn't document mid-conversation system messages, so none of the three flags
+# is marked.
+schema = 2
+v2_only = true
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+output = 262_144
+
+[api.chat-completions]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.3
+cache = { read = 0.23 }
+
+[cost.text.output]
+price = 11.5
