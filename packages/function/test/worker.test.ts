@@ -166,24 +166,6 @@ describe("experimental provider opt-in", () => {
     }
   });
 
-  test("normalizes repeated types and handles conditional HEAD without a body", async () => {
-    const response = await request(endpoint + "?include=openai-codex&type=decision,chat");
-    const etag = response.headers.get("etag")!;
-    const again = await request(endpoint + "?type=chat&type=decision&include=openai-codex", {
-      "if-none-match": `"other", ${etag}`,
-    });
-    expect(again.status).toBe(304);
-    for (const query of ["", "?include=openai-codex", "?include=openai-codex&type=chat,decision"]) {
-      const head = await request(endpoint + query, {}, undefined, "HEAD");
-      expect(head.status).toBe(200);
-      expect(await head.text()).toBe("");
-      const cached = await request(endpoint + query, {
-        "if-none-match": head.headers.get("etag")!,
-      }, undefined, "HEAD");
-      expect(cached.status).toBe(304);
-    }
-  });
-
   test("include cannot add the provider to any v1 view, even with type=all", async () => {
     for (const path of ["/api.json", "/models.json", "/catalog.json", "/model-schema.json"]) {
       for (const query of ["", "type=all&"]) {
@@ -298,7 +280,6 @@ async function request(
   path: string,
   headers: Record<string, string> = { "user-agent": "test" },
   waitUntil: (promise: Promise<unknown>) => void = () => {},
-  method = "GET",
 ) {
   const env = {
     PosthogToken: secret("posthog-token"),
@@ -323,7 +304,6 @@ async function request(
           if (input.headers.get("if-none-match")?.includes(etag)) {
             return new Response(null, { status: 304, headers });
           }
-          if (input.method === "HEAD") return new Response(null, { headers });
           return Response.json(value, { headers });
         }
         if (pathname === "/_api.json") {
@@ -380,7 +360,7 @@ async function request(
   } as unknown as Env;
 
   return worker.fetch(
-    new Request(`https://models.dev${path}`, { headers, method }),
+    new Request(`https://models.dev${path}`, { headers }),
     env,
     { waitUntil } as unknown as ExecutionContext,
   );

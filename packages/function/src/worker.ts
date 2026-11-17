@@ -212,20 +212,10 @@ async function catalogResponse(
   // A filtered body depends only on the full file and the types, so its ETag is
   // the file's ETag plus the types, and revalidation is passed to the file.
   const tag = suffix === undefined ? `;type=${[...filter].sort().join(",")}` : "";
-  const assetRequest = new Request(assetUrl.toString(), {
-    method: suffix === undefined ? "GET" : request.method,
-    headers: request.headers,
-  });
+  const assetRequest = new Request(assetUrl.toString(), request);
   const conditional = request.headers.get("If-None-Match");
   if (tag && conditional) {
-    const matching = (conditional.match(/(?:W\/)?"[^"]*"|\*/g) ?? [])
-      .filter((value) => value === "*" || value.endsWith(`${tag}"`))
-      .map((value) => value.replace(`${tag}"`, '"'));
-    assetRequest.headers.delete("If-None-Match");
-    if (matching.length)
-      assetRequest.headers.set("If-None-Match", matching.join(", "));
-  } else if (conditional?.includes(";type=")) {
-    assetRequest.headers.delete("If-None-Match");
+    assetRequest.headers.set("If-None-Match", conditional.replaceAll(`${tag}"`, '"'));
   }
   const assetResponse = await env.ASSETS.fetch(assetRequest);
   if (suffix !== undefined) return assetResponse;
@@ -261,10 +251,7 @@ async function catalogResponse(
   if (etag) headers.set("ETag", etag);
   headers.set("Content-Type", "application/json");
   headers.set("Cache-Control", "public, max-age=3600");
-  return new Response(
-    request.method === "HEAD" ? null : JSON.stringify(filtered),
-    { headers },
-  );
+  return new Response(JSON.stringify(filtered), { headers });
 }
 
 interface CatalogModel {
