@@ -5,7 +5,6 @@
 # v2 capabilities and prices:
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/context-cache/context-cache-overview
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/priority-paygo
-# text.output keeps the image output price that v1 `output` carries; cost.image.output is the real image price.
 # Mid-conversation updates: false. Vertex takes system instructions, thinking config and tools only as request-level
 # fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/nano-banana-2-1
@@ -36,7 +35,7 @@ price = 1.5
 cache = { read = 0.15 }
 
 [cost.text.output]
-price = 30
+price = 7.5
 
 [cost.image.output]
 price = 30

@@ -13,13 +13,12 @@ structured_output = true
 cache = { implicit = true }
 
 [limit]
-context = 1_310_720
-input = 1_000_000
+context = 1_048_576
 output = 393_216
 
 [cost.text.input]
-price = 0.264
-cache = { read = 0.008 }
+price = 0.6
+cache = { read = 0.156 }
 
 [cost.text.output]
-price = 0.792
+price = 1.8

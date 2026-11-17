@@ -351,10 +351,10 @@ base_model = "lab/model"
 [capabilities]
 system_updates = true
 effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true, updates = [] }
 
 [api.messages]
-capabilities = { system_updates = false, tools = { updates = true } }
+capabilities = { system_updates = false, tools = { updates = ["add", "remove", "replace"] } }
 `) as Record<string, unknown>;
   expect(explicitFalseFlags(toml)).toEqual([
     "capabilities.effort_updates",

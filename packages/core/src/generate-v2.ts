@@ -388,6 +388,7 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "@ai-sdk/amazon-bedrock":
     "https://bedrock-runtime.${AWS_REGION}.amazonaws.com",
   "@ai-sdk/mistral": "https://api.mistral.ai/v1",
+  "@ai-sdk/typesafe-ai": "https://api.typesafe.ai/v1",
   "@ai-sdk/cerebras": "https://api.cerebras.ai/v1",
   "@ai-sdk/xai": "https://api.x.ai/v1",
   "@ai-sdk/groq": "https://api.groq.com/openai/v1",
@@ -430,7 +431,7 @@ function toApiV2(model: Model, provider: Provider): ApiV2 {
     base_url,
     sdk: { aisdk: npm },
     ...(compatibility !== undefined ? { compatibility } : {}),
-    ...(model.tool_call ? { capabilities: { tools: { updates: false } } } : {}),
+    ...(model.tool_call ? { capabilities: { tools: { updates: [] } } } : {}),
   };
 
   return { [protocol]: entry } as ApiV2;
@@ -528,7 +529,7 @@ function withApiTools(
       );
       return [
         protocol,
-        { ...entry, capabilities: { ...entry.capabilities, tools: { ...details, updates: merged.updates ?? false } } },
+        { ...entry, capabilities: { ...entry.capabilities, tools: { ...details, updates: merged.updates ?? [] } } },
       ];
     }),
   ) as ApiV2;

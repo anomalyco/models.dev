@@ -8,7 +8,7 @@ base_model = "openai/gpt-image-1.5"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/webp"]
-output = ["image/png", "image/jpeg", "image/webp"]
+output = ["image/png", "image/webp", "image/jpeg"]
 
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"

@@ -49,14 +49,12 @@ import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
 import { mistral } from "./providers/mistral.js";
-import { modular } from "./providers/modular.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { nearai } from "./providers/nearai.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { axforge } from "./providers/axforge.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
-import { opencheap } from "./providers/opencheap.js";
 import { ofox } from "./providers/ofox.js";
 import { obscurify } from "./providers/obscurify.js";
 import { openrouter } from "./providers/openrouter.js";
@@ -66,12 +64,9 @@ import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
-import { tempr } from "./providers/tempr.js";
 import { tinfoil } from "./providers/tinfoil.js";
-import { uberllm } from "./providers/uberllm.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
-import { voidApi } from "./providers/void-api.js";
 import { wandb } from "./providers/wandb.js";
 import { xai } from "./providers/xai.js";
 
@@ -225,7 +220,6 @@ export const providers: {
   "merge-gateway": SyncProvider<any>;
   meta: SyncProvider<any>;
   mistral: SyncProvider<any>;
-  modular: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
   nearai: SyncProvider<any>;
   "novita-ai": SyncProvider<any>;
@@ -234,7 +228,6 @@ export const providers: {
   "axforge": SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
-  opencheap: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
@@ -242,12 +235,9 @@ export const providers: {
   requesty: SyncProvider<any>;
   sambanova: SyncProvider<any>;
   morph: SyncProvider<any>;
-  tempr: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
-  uberllm: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
-  "void-api": SyncProvider<any>;
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
@@ -282,7 +272,6 @@ export const providers: {
   "merge-gateway": mergeGateway,
   meta,
   mistral,
-  modular,
   "nano-gpt": nanoGpt,
   nearai,
   "novita-ai": novitaAi,
@@ -291,7 +280,6 @@ export const providers: {
   "axforge": axforge,
   "ollama-cloud": ollamaCloud,
   openai,
-  opencheap,
   openrouter,
   ovhcloud,
   pioneer,
@@ -299,12 +287,9 @@ export const providers: {
   requesty,
   sambanova: sambaNova,
   morph,
-  tempr,
   tinfoil,
-  uberllm,
   vercel,
   venice,
-  "void-api": voidApi,
   wandb,
   xai,
 };
@@ -327,17 +312,13 @@ export const groups = {
     "nano-gpt",
     "novita-ai",
     "ofox",
-    "opencheap",
     "requesty",
-    "tempr",
     "openrouter",
     "prime",
-    "uberllm",
     "vercel",
-    "void-api",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "axforge", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "axforge", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -374,6 +355,7 @@ export async function syncProvider<SourceModel>(
   const missingRemote = new Set<string>();
   const missingReasoning = new Map<string, string>();
   const translateNotices: string[] = [];
+  const translateFailures: string[] = [];
   let nonTextLabs: Set<string> | undefined;
   for (const notice of provider.sourceNotices?.(sourceModels) ?? []) {
     translateNotices.push(notice);
@@ -395,9 +377,16 @@ export async function syncProvider<SourceModel>(
         },
       });
     } catch (error) {
-      if (!(error instanceof MissingReasoningOptionsError)) throw error;
-      missingReasoning.set(error.modelId, error.message);
-      console.warn(error.message);
+      if (error instanceof MissingReasoningOptionsError) {
+        missingReasoning.set(error.modelId, error.message);
+        console.warn(error.message);
+        continue;
+      }
+      // One model the module can't translate shouldn't stop the provider. It's skipped and reported,
+      // and nothing is deleted this run, since its file can't be told apart from a dropped model.
+      const message = `Skipped a model that failed to translate (${provider.sourceID?.(sourceModel) ?? "unknown id"}): ${error instanceof Error ? error.message : String(error)}`;
+      translateFailures.push(message);
+      console.warn(message);
       continue;
     }
     if (translated === undefined) {
@@ -600,6 +589,10 @@ export async function syncProvider<SourceModel>(
     }
   }
 
+  if (translateFailures.length > Math.max(3, Math.floor(sourceModels.length / 5))) {
+    throw new Error(`${provider.name}: ${translateFailures.length} of ${sourceModels.length} models failed to translate\n${translateFailures.join("\n")}`);
+  }
+
   const missingLocal: string[] = [];
   for (const relativePath of new Set([...existing.keys(), ...brokenSymlinks])) {
     if (desired.has(relativePath) || desiredV2.has(relativePath)) continue;
@@ -611,7 +604,7 @@ export async function syncProvider<SourceModel>(
       unchanged++;
       continue;
     }
-    if (provider.deleteMissing === false) {
+    if (provider.deleteMissing === false || translateFailures.length > 0) {
       missingLocal.push(relativePath);
       console.log(`Retaining model missing from source: ${relativePath}`);
       unchanged++;
@@ -633,6 +626,7 @@ export async function syncProvider<SourceModel>(
   }
 
   const notices = [
+    ...translateFailures,
     ...translateNotices,
     ...v2Notices,
     ...missingReasoning.values(),

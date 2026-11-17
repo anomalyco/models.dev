@@ -19,7 +19,7 @@ context = 128_000
 [api.responses]
 base_url = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/openai"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
-capabilities = { tools = { search = true, updates = true } }
+capabilities = { tools = { search = true } }
 
 [api.chat-completions]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1"

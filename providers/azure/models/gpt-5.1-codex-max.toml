@@ -6,6 +6,7 @@
 # Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
 # system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
 # `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
+# tools.updates is left out: on GPT-5.5 and earlier, calls to tools added through additional_tools come back namespaced and replaying them without the namespace fails ("Missing namespace for function_call", live 2026-11-16), so callers fold tool changes into the top-level tools list.
 schema = 2
 base_model = "openai/gpt-5.1-codex-max"
 
@@ -14,7 +15,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"], updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 store = true

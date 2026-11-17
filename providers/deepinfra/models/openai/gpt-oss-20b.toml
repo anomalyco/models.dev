@@ -7,12 +7,15 @@ description = "Open-weight GPT model for self-hosted reasoning and instruction-f
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 service_tier = ["flex", "priority"]
+cache = { implicit = true }
+prompt_cache_key = true
 
 [limit]
 output = 16_384
 
 [cost.text.input]
 price = 0.03
+cache = { read = 0.015 }
 
 [cost.text.output]
 price = 0.14

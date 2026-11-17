@@ -3,6 +3,7 @@
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing).
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4o-mini
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# tools.updates is left out: on GPT-5.5 and earlier, calls to tools added through additional_tools come back namespaced and replaying them without the namespace fails ("Missing namespace for function_call", live 2026-11-16), so callers fold tool changes into the top-level tools list.
 schema = 2
 name = "GPT-4o mini"
 description = "Small omni GPT for cheap multimodal assistance and production-scale traffic"
@@ -31,7 +32,6 @@ context = 128_000
 output = 16_384
 
 [api.responses]
-capabilities = { tools = { updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }

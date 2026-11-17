@@ -26,10 +26,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
-- `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
-- `bun models:sync uberllm` syncs only UberLLM.
-- `bun models:sync opencheap` syncs only OpenCheap prices.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -346,18 +343,6 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
 
-## Modular Notes
-
-- Modular is implemented in `packages/core/src/sync/providers/modular.ts`.
-- Source endpoint: `https://console.modular.com/api/v1/docs/models`, the public catalog behind <https://docs.modular.com/models>.
-- No authentication is required; the catalog is public.
-- A catalog row is public only when `shared_endpoint` is true, `billing_type` is `token`, `gateway_model_id` is set, and both input and output prices are non-zero. Rows that are deployed but not yet sold on the shared endpoint carry `"0"` prices and are ignored.
-- Model IDs come from `gateway_model_id`, the ID the API serves, not the display `model_id`.
-- Existing Modular models are updated from catalog-authoritative input, output, and cached-input pricing. Context limits, reasoning controls, and modalities stay hand-authored: the catalog's context window is rounded display text (`"1M"`) and its modalities are incomplete.
-- New models are not created automatically (`skipCreates`) and do not open missing-model issues (`trackMissingModels: false`); Modular opens a PR with measured limits and reasoning controls instead.
-- Local models that leave the public set (unshared, unpriced, or gone from the catalog) are removed: the catalog is authoritative for what the shared endpoint sells. A catalog with no public models fails the sync instead of removing every file.
-- If the catalog is unreachable, returns an error status, or returns anything that is not the expected shape, the sync fails before writing, so existing files keep their last synced values until a later run succeeds. A well-formed response that is missing some rows is treated as those models being retired.
-
 ## Morph Notes
 
 - Morph is implemented in `packages/core/src/sync/providers/morph.ts`.
@@ -383,19 +368,6 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - A live model with no lab entry is not created either, and opens a missing-model issue. `openai/privacy-filter` is skipped silently because the token-cost schema cannot describe it.
 - Absence removes a model, so the fetch refuses a response carrying fewer than twenty models: a truncated list that still parses would otherwise be indistinguishable from a mass retirement. A local entry the catalog cannot price is republished unchanged rather than dropped, because dropping it would delete a route that is still served.
 
-## UberLLM Notes
-
-- UberLLM is implemented in `packages/core/src/sync/providers/uberllm.ts`.
-- Source endpoint: `https://api.uberllm.dev/v1/models`.
-- No authentication is required; the catalog is public, so the sync needs no repository secret.
-- Existing models are updated from the catalog's input and output prices (`pricing.input_usd`, `pricing.output_usd`, already USD per million tokens) and context window. Prices follow a market and move between runs.
-- `pricing.cache_read_usd` updates the cached-input price only in a file that already has one. Caching is confirmed per model by a live probe recorded in the file header, so the catalog never adds a cache price.
-- `context` is the catalog's `context_length`, capped at the lab entry's context.
-- `limit.output` is never synced. `max_output_tokens` is not enforced: a request above it is accepted (65,536 where the catalog says 65,535).
-- Reasoning controls, `capabilities.cache`, `[api.*]` compatibility and header comments stay hand-authored from live probes; the catalog's `supported_parameters` does not say which reasoning field a route honours.
-- New models are not created (`skipCreates`) and do not open missing-model issues (`trackMissingModels: false`): the catalog lists a few hundred routes and the provider directory is a curated, probed subset.
-- A local model absent from the catalog is removed. The fetch refuses a response carrying fewer than fifty models, so a truncated list cannot read as a mass retirement.
-- A row with `available: false` (no seller serving it at that moment) keeps its file unchanged: neither repriced nor removed.
 ## Obscurify.ai Notes
 
 - Obscurify.ai is implemented in `packages/core/src/sync/providers/obscurify.ts`.
@@ -491,28 +463,6 @@ Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
 - Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
 - Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
 
-## Tempr Gateway Notes
-
-Tempr Gateway is implemented in `packages/core/src/sync/providers/tempr.ts`.
-
-- Run it with `bun models:sync tempr`.
-- Source endpoint: `https://api.temprhq.io/v1/catalog`; no auth required. It uses OpenRouter's model-list shape plus a `tempr` object (provider, model, type, status, `price_source`, `reasoning_forwarded`, `provider_kind`, `models_dev`, `reasoning_options`). Docs: https://temprhq.io/docs/gateway-reference#catalog
-- **Mirroring.** Tempr serves each provider's models on the caller's own key, so every catalog model names the models.dev entry it is (`tempr.models_dev`: `providers/<provider>/models/<model>.toml`). The Tempr entry copies that entry's overrides onto the same `base_model`.
-  - When the mirrored entry is the lab's full definition, the base is the lab file of the same id, found with `resolveCanonicalBaseModel` / `resolveModelMetadataBaseModel`, and only the fields that differ from it are kept.
-  - Request-surface fields (`provider`, `experimental`, `interleaved`, `reasoning_options`) and catalogue fields (description, dates, family, knowledge) are never copied.
-- **Prices.** Cost is Tempr's only where `price_source` is `"tempr"`: Tempr's copy of a host's whole catalog confirms the model at that price. The mirrored entry's `reasoning` and audio rates are kept, since the catalog doesn't publish them. Otherwise the mirrored entry's cost stands.
-- **Reasoning.** `reasoning_options` come from `tempr.reasoning_options` (the controls Tempr's API takes), written the way the mirrored entry writes "can be off". The leading comment names the request fields that set them on `/v1/chat/completions`, `/v1/messages` and `/v1/responses`.
-  - `reasoning_forwarded: false` (hosts Tempr sends no reasoning settings to) writes `[]` with a note.
-  - A reasoning model whose controls the catalog omits, or lists with values the schema doesn't know, keeps its authored controls. A new one raises `MissingReasoningOptionsError` instead of getting `[]`.
-- **Schema 2.** Mirrored provider and lab files are read through `readProviderModel` / `readLabModel`, so the adapter works on v1 fields and the runner writes schema 2.
-- **Comments.** Headers are authoritative but merged: an existing entry keeps every comment line the adapter doesn't write (the maintainers' notes) where it is, and only the reasoning block is regenerated. A new entry gets the block plus the bring-your-own-key prices note.
-- **Status.** `tempr.status` (`deprecated`, `beta` or `alpha`) is written to `status` whatever the mirrored file carries, so a deprecation the catalog states is never dropped.
-- **Safeguards.**
-  - Catalog ids are checked before they name a file read or written.
-  - A catalog of fewer than 100 models is treated as an outage and the sync stops.
-  - A model skipped for having no lab file is reported through `missingModelID`, so its existing entry is kept. Models absent from the catalog are retirements and are deleted.
-  - `preserveDescriptions` is `false` and headers are authoritative.
-
 ## Venice Notes
 
 Venice is implemented in `packages/core/src/sync/providers/venice.ts`.
@@ -559,15 +509,3 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
 
-## OpenCheap Notes
-
-OpenCheap is implemented in `packages/core/src/sync/providers/opencheap.ts`.
-
-- Run it with `bun models:sync opencheap` or `bun opencheap:sync`.
-- Source endpoint: `https://opencheap.si/api/prices` (the list the OpenCheap site and model pages read); no auth required. `ours` is the price OpenCheap bills per 1M tokens.
-- The list carries every model OpenCheap routes, but the catalog lists a hand-picked subset whose tools, reasoning and caching were checked live. The list has no capability data, so the sync only updates existing files: `skipCreates` is set, `trackMissingModels` is `false` (no issues for the rest) and `deleteMissing` is `false` (a truncated 200 must not delete checked files; missing files are retained and reported).
-- The list owns `cost.input` and `cost.output`. A model with no positive price on the list keeps its authored prices and is reported.
-- `cost.cache_read` is updated only where the file already lists one. Those files declare `cache = { implicit = true }` after cached tokens came back live; the list also prices a cache read on routes that report no cached tokens, so a cache price is never added by the sync.
-- `limit.context` follows `contextLength` only where the file already overrides the lab's window. Where the window is inherited, a list window below it is reported for a human to author.
-- Long-context prices on the list (`ours.longContext`) are reported, not authored.
-- Every other authored field is preserved: `base_model`, capabilities, `[api.*]` tables and the header.
