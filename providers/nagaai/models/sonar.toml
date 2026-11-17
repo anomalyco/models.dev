@@ -1,0 +1,19 @@
+schema = 2
+base_model = "perplexity/sonar"
+
+[limit]
+context = 127_072
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 0.5

@@ -1,0 +1,17 @@
+# Multi-model relay. Every chat model is served on Responses, Chat Completions and
+# Messages at the same base URL; Responses is the default API, and the catalog lists
+# the endpoints per model.
+# Reasoning: one effort scale for every model, none|minimal|low|medium|high|xhigh|max,
+# sent as the nearest level the model supports; "none" turns reasoning off where the
+# model allows it. Responses: $.reasoning.effort. Chat Completions: $.reasoning_effort,
+# with reasoning returned in $.reasoning_details and $.reasoning_content. No budget field.
+# https://docs.naga.ac/guides/reasoning (accessed 2026-11-07)
+# Catalog, no key needed: https://api.naga.ac/v1/models (USD per token, context window,
+# accepted parameters, input modalities, deprecates_at).
+# https://docs.naga.ac/get-started/models (accessed 2026-11-07)
+name = "NagaAI"
+env = ["NAGA_API_KEY"]
+npm = "@ai-sdk/openai"
+opencodeai = "@opencode/ai/providers/openai-compatible/responses"
+api = "https://api.naga.ac/v1"
+doc = "https://docs.naga.ac"
