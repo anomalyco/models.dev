@@ -1,3 +1,8 @@
+# Ark image/video MIME types (Kimi uses Base64 input), accessed 2026-11-25:
+# https://ark.volcengine.com/region:cn-beijing/docs/image-understanding.md
+# https://ark.volcengine.com/region:cn-beijing/docs/video-understanding.md
+# Exact maximum input: public Ark Docs MCP ark_get_model("kimi-k3-1-pro-261024"), accessed 2026-11-25.
+# https://ark.volcengine.com/region:cn-beijing/docs/tutorials-mcp.md
 # Model ID, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24); not called live (no Ark key).
 # CNY list prices (在线推理（常规）): https://ark.volcengine.com/region:cn-beijing/docs/model-pricing.md (accessed 2026-11-24)
 # CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
@@ -11,10 +16,17 @@
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff", "image/x-icon", "image/x-icns", "image/sgi", "image/jp2", "image/heic", "video/mp4", "video/x-msvideo", "video/quicktime"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 cache = { implicit = true }
 structured_output = true
+
+[limit]
+input = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

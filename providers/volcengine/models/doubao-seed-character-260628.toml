@@ -1,3 +1,5 @@
+# Exact 32K price-band cutoff: public Ark Docs MCP ark_get_model("doubao-seed-character-260628"), accessed 2026-11-25.
+# billing_condition.max_prompt_tokens = 32768; https://ark.volcengine.com/region:cn-beijing/docs/tutorials-mcp.md
 # Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-character-260628`
 # CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
@@ -28,7 +30,7 @@ price = 0.11875
 cache = { read = 0.02375 }
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 32_000 } }
+when = { context = { gt = 32_768 } }
 price = 0.17812
 cache = { read = 0.02375 }
 
@@ -36,5 +38,5 @@ cache = { read = 0.02375 }
 price = 0.29687
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 32_000 } }
+when = { context = { gt = 32_768 } }
 price = 0.8906
