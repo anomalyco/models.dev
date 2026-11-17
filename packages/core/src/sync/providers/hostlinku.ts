@@ -62,11 +62,7 @@ export const hostlinku = {
   skipCreates: true,
   trackMissingModels: false,
   async fetchModels() {
-    const response = await fetch(API_ENDPOINT);
-    if (!response.ok) {
-      throw new Error(`Hostlinku models request failed: ${response.status} ${response.statusText}`);
-    }
-    return response.json();
+    return fetchHostlinkuModels();
   },
   parseModels(raw) {
     const models = HostlinkuResponse.parse(raw).models;
@@ -80,7 +76,14 @@ export const hostlinku = {
     if (current === undefined) return undefined;
 
     const cost = buildHostlinkuCost(model, current);
-    if (cost === undefined) return undefined;
+    if (cost === undefined) {
+      // Keep the existing TOML intact if a listed model temporarily lacks usable mode pricing.
+      return {
+        id: model.modelId,
+        v2: current,
+        notices: [`Retained ${model.modelId}: public catalog row has no priceable mode.`],
+      } satisfies SyncedV2Model;
+    }
 
     return {
       id: model.modelId,
@@ -88,6 +91,14 @@ export const hostlinku = {
     } satisfies SyncedV2Model;
   },
 } satisfies SyncProvider<HostlinkuModel>;
+
+export async function fetchHostlinkuModels(fetcher: typeof fetch = fetch) {
+  const response = await fetcher(API_ENDPOINT);
+  if (!response.ok) {
+    throw new Error(`Hostlinku models request failed: ${response.status} ${response.statusText}`);
+  }
+  return response.json();
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
