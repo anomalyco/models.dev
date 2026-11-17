@@ -7,13 +7,14 @@
 # Mid-conversation updates follow the per-model lists in Anthropic's docs, which cover Google Cloud:
 # - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference)
 # - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort)
+# Toggle: thinking.type = enabled|disabled https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting#supported-models
 schema = 2
 base_model = "anthropic/claude-sonnet-4-20250514"
 status = "deprecated"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, budget = { min = 1_024 } }
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
 structured_output = false
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
