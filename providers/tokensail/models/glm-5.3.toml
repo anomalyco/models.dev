@@ -13,10 +13,16 @@
 #         billed at the cache-read price below (1/4 of input).
 # Output cap - both fields are honored and behave the same (probe: either one set to 2
 #           -> total 2), so no `max_tokens_field` override is declared.
-# Limit - context 1,048,576 is what TokenSail publishes for this route
-#         (GET https://api.tokensail.ai/api/public/models -> contextWindow). It is larger than
-#         Zhipu's documented 1,000,000 (the canonical value), so it is recorded as the host's
-#         own published claim rather than a vendor one; output keeps the canonical 131,072.
+# structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
+#         (strict): HTTP 200 and a schema-valid `{"capital": "Paris"}`. Declared true;
+#         `glm-5.3-flash` on the same host rejects the same request with HTTP 400, so this is
+#         a per-route difference and not a route-family default.
+# Limit - no override, canonical 1,000,000 / 131,072 inherited. TokenSail publishes
+#         contextWindow 1,048,576 (GET https://api.tokensail.ai/api/public/models), but a
+#         relay cannot enlarge a model's window, no first-party entry corroborates 2^20 for
+#         GLM-5.3 (models/zhipuai/glm-5.3 declares 1,000,000), and the corroboration the
+#         DeepSeek routes rely on (their own GET /models) has no GLM counterpart. Advertising
+#         the larger figure would promise prompts the vendor window cannot hold.
 # Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
 # (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 70% of
 # Zhipu's list price.
@@ -34,9 +40,6 @@ cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-
-[limit]
-context = 1_048_576
 
 [cost.text.input]
 price = 0.83754599

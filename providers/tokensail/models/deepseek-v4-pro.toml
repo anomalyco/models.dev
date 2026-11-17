@@ -3,7 +3,10 @@
 #           (deepseek/deepseek-v4-pro -> deepseek/deepseek-v4-pro-0813). The low|high|max
 #           effort set and the minimal->low / medium/xhigh->high collapse verified below
 #           were introduced by that 2026-08-13 release, so the route behaves like the GA
-#           rather than the 2026-04-24 preview the undated canonical describes.
+#           rather than the 2026-04-24 preview the undated canonical describes. The GA
+#           canonical is named "DeepSeek V4 Pro 0813", so `name` is overridden below to keep
+#           the undated name this route advertises (same override as providers/deepseek and
+#           providers/ruapi over the same base).
 # Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
 #   toggle - `thinking = { "type": "disabled" }` turns reasoning off
 #            (reasoning_tokens 30 -> 0, no reasoning_content).
@@ -22,9 +25,16 @@
 #           field stays the documented one.
 # Cache - implicit only. DeepSeek's context cache is automatic: no write price, no TTL,
 #         hits billed at the cache-read price below (exactly 1/30 of input).
-# Limit - context 1,048,576 is what TokenSail publishes for this route
-#         (GET https://api.tokensail.ai/api/public/models -> contextWindow), which is larger
-#         than the canonical 1,000,000; output 393,216 matches DeepSeek's GET /models.
+# Limit - context 1,048,576 and output 393,216 are overrides because DeepSeek's own
+#         GET /models reports exactly those numbers (context_window 1048576,
+#         max_output_tokens 393216; see providers/deepseek/models/deepseek-v4-pro.toml), and
+#         TokenSail publishes the same pair (GET https://api.tokensail.ai/api/public/models ->
+#         contextWindow). The canonical file rounds context to 1,000,000, so the override
+#         carries the lab figures and contradicts nothing the vendor publishes.
+# structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
+#         (strict): HTTP 200 and a schema-valid `{"capital": "Paris"}`. Relay peers built on
+#         the same base model record 400s on their paths, so the probe is what decides it
+#         here rather than the peer files.
 # Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
 # (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 80% of
 # DeepSeek's list price.
@@ -33,6 +43,7 @@
 schema = 2
 v2_only = true
 base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }

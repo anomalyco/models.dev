@@ -23,9 +23,17 @@
 #           field stays the documented one.
 # Cache - implicit only, same automatic disk cache as the rest of the DeepSeek family:
 #         no write price, no TTL, hits billed at the cache-read price below.
-# Limit - context 1,048,576 is what TokenSail publishes for this route
-#         (GET https://api.tokensail.ai/api/public/models -> contextWindow), which is larger
-#         than the canonical 1,000,000; output 393,216 matches DeepSeek's GET /models.
+# Limit - context 1,048,576 and output 393,216 are overrides because that is the pair the
+#         lab reports for the family and TokenSail publishes both
+#         (GET https://api.tokensail.ai/api/public/models -> contextWindow and
+#         maxOutputTokens; the same figures appear in DeepSeek's own GET /models, which is
+#         what providers/deepseek documents for the GA sibling). The canonical file rounds
+#         them to 1,000,000 / 384,000, so the override carries the precise numbers and
+#         contradicts nothing the vendor publishes.
+# structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
+#         (strict): HTTP 200 and a schema-valid `{"capital": "Paris"}`. Relay peers built on
+#         the same base model record 400s on their paths, so the probe is what decides it
+#         here rather than the peer files.
 # Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
 # (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 60% of
 # DeepSeek's list price.
