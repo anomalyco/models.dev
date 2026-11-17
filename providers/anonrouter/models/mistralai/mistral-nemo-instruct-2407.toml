@@ -1,3 +1,4 @@
+# Limits retain the documented checkpoint caps; larger catalog claims are not qualified here.
 # AnonRouter rejected a forced-function request with HTTP 400 tools_not_supported (live 2026-11-17).
 # Host catalog capabilities.tools (2026-11-17): deepinfra/mistralai-mistral-nemo-instruct-2407=false.
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
@@ -12,7 +13,6 @@ name = "Mistral Nemo Instruct 2407"
 tools = { supported = false }
 
 [limit]
-context = 131_072
 output = 16_384
 
 [api.chat-completions]

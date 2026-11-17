@@ -158,7 +158,7 @@ function assertUniqueIDs(rows: { id: string }[]) {
   if (new Set(ids).size !== ids.length) throw new Error("AnonRouter returned duplicate model IDs");
 }
 
-/** Preserve reviewed APIs and capabilities; the authenticated feed owns prices and serving limits. */
+/** Update prices and serving limits while retaining reviewed APIs, capabilities and limit caps. */
 export function updateAnonRouterModel(model: AuthenticatedModel, current: Record<string, unknown>): Record<string, unknown> {
   const next = ModelFile.parse(current);
   // Plaintext APIs exclude E2EE routes before choosing the default provider.
@@ -169,17 +169,20 @@ export function updateAnonRouterModel(model: AuthenticatedModel, current: Record
     const base = typeof current.base_model === "string" ? modelMetadata(current.base_model) : undefined;
     const baseLimit = base?.limit as { context?: number; output?: number } | undefined;
     const limits = { ...next.limit };
-    let context = route.context_window;
-    if (model.model_type === "embedding") {
-      const reviewedContext = next.limit?.context ?? baseLimit?.context;
-      if (reviewedContext !== undefined && reviewedContext > 0) {
-        context = Math.min(context, reviewedContext);
-      }
+    const authoredContext = next.limit?.context;
+    const reviewedContext = authoredContext !== undefined && authoredContext > 0 ? authoredContext : baseLimit?.context;
+    const context = reviewedContext !== undefined && reviewedContext > 0
+      ? Math.min(route.context_window, reviewedContext) : route.context_window;
+    const authoredOutput = next.limit?.output;
+    const reviewedOutput = authoredOutput !== undefined && authoredOutput > 0 ? authoredOutput : baseLimit?.output;
+    let output = route.max_output_tokens;
+    if (reviewedOutput !== undefined && reviewedOutput > 0) {
+      output = output !== null && output > 0 ? Math.min(output, reviewedOutput) : reviewedOutput;
     }
     const updates = {
       context,
-      ...(model.model_type === "text" && route.max_output_tokens != null && route.max_output_tokens > 0
-        ? { output: Math.min(route.max_output_tokens, route.context_window) } : {}),
+      ...(model.model_type === "text" && output !== null && output > 0
+        ? { output: Math.min(output, context) } : {}),
     };
     for (const key of ["context", "output"] as const) {
       const value = updates[key];

@@ -1,3 +1,4 @@
+# Limits retain the documented checkpoint caps; larger catalog claims are not qualified here.
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
 # Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
@@ -14,9 +15,6 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
-
-[limit]
-output = 262_144
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

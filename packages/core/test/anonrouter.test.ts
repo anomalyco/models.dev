@@ -116,7 +116,7 @@ test("authenticated updates preserve lab identity, reviewed controls, APIs and c
   const next = updateAnonRouterModel(row({ context_window: 200_000, max_output_tokens: 8193,
     pricing: { input_usd_per_million_tokens: 0.25, output_usd_per_million_tokens: 1.5, unit_usd: null } }), current);
   expect(next).toMatchObject({ base_model: current.base_model, api: current.api, capabilities: current.capabilities, metadata: current.metadata,
-    limit: { context: 200_000, output: 8193 }, cost: { text: { input: { price: 0.25, cache: current.cost.text.input.cache }, output: { price: 1.5 } } } });
+    limit: { context: 163_840, output: 8193 }, cost: { text: { input: { price: 0.25, cache: current.cost.text.input.cache }, output: { price: 1.5 } } } });
   expect(current.limit.context).toBe(163_840);
   expect(current.cost.text.input.price).toBe(0.37);
 });
@@ -142,6 +142,25 @@ test("limits identical to the shared model are inherited instead of duplicated",
   const baseLimit = modelMetadata("deepseek/deepseek-v3").limit as { context: number; output: number };
   const next = updateAnonRouterModel(row({ context_window: baseLimit.context, max_output_tokens: baseLimit.output }), modelFile());
   expect(next.limit).toBeUndefined();
+});
+
+test("text limit updates retain reviewed native and lower host caps", () => {
+  const current = {
+    schema: 2,
+    base_model: "deepseek/deepseek-v4.1-flash-1017",
+    api: { "chat-completions": {} },
+  };
+  const source = row({ id: "deepseek/deepseek-v4.1-flash-1017", context_window: 1_048_576, max_output_tokens: 943_718 });
+  // The positive native caps are inherited rather than replaced by larger catalog figures.
+  expect(updateAnonRouterModel(source, current).limit).toBeUndefined();
+  const curated = { ...current, limit: { context: 262_144, output: 32_768 } };
+  expect(updateAnonRouterModel(source, curated).limit).toEqual(curated.limit);
+  expect(updateAnonRouterModel(row({ ...source, context_window: 16_384 }), curated).limit)
+    .toEqual({ context: 16_384, output: 16_384 });
+  expect(updateAnonRouterModel(row({ ...source, context_window: 16_384, max_output_tokens: null }), curated).limit)
+    .toEqual({ context: 16_384, output: 16_384 });
+  // The original provider's explicitly reviewed caps take precedence over the lab's smaller defaults.
+  expect(updateAnonRouterModel(row(), modelFile()).limit).toEqual(modelFile().limit);
 });
 
 test("null router prices stay unquoted and free prices remain actual zeroes", () => {

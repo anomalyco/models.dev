@@ -1,3 +1,4 @@
+# Sampling: Chat Completions forwards temperature and top_p; top_k is not in the request contract.
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
 # Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
@@ -21,6 +22,8 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 1_048_576

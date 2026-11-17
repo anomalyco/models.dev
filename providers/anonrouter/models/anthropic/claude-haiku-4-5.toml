@@ -1,8 +1,10 @@
+# Effort: top-level reasoning_effort = low|medium|high selects an eligible DeepInfra route.
+# DeepInfra tags this exact model reasoning_effort: https://api.deepinfra.com/v1/openai/models.
+# Its official client maps that tag to graded controls: https://github.com/deepinfra/dsh-provider-deepinfra/blob/main/lib/catalog.js.
+# AnonRouter does not allow disabling reasoning on this route or expose the native thinking-budget field.
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
 # Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
-# Effort: top-level reasoning_effort = low|medium|high.
-# Controls are accepted across eligible routes: https://docs.anonrouter.ai/reasoning.
 # Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"

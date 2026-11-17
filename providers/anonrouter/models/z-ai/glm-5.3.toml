@@ -1,3 +1,4 @@
+# Limits retain the documented checkpoint caps; larger catalog claims are not qualified here.
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
 # Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
@@ -12,7 +13,6 @@ name = "GLM 5.3"
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
 
 [limit]
-context = 1_048_576
 output = 32_768
 
 [api.chat-completions]

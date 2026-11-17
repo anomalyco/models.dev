@@ -1,3 +1,4 @@
+# Sampling: Chat Completions forwards temperature and top_p; top_k is not in the request contract.
 # Reasoning-capable routes expose no configurable effort or off control.
 # Live tickets (2026-11-17) rejected reasoning_effort=low with HTTP 400 (reasoning_effort_not_configurable).
 # Live tickets (2026-11-17) rejected reasoning_effort=none with HTTP 400 (reasoning_not_disableable).
@@ -22,6 +23,9 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
 
 [limit]
 context = 1_000_000

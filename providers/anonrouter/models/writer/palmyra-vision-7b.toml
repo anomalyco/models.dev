@@ -11,6 +11,9 @@ base_model = "writer/palmyra-vision-7b"
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
+[capabilities]
+tools = { supported = false }
+
 [api.chat-completions]
 
 [cost.text.input]
