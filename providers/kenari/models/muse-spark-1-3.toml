@@ -1,0 +1,22 @@
+# Synced from kenari's public API by the kenari sync module.
+# Catalog: GET https://kenari.id/docs/models
+# Pricing: GET https://kenari.id/api/public/pricing (usd_idr_rate = 17500, re-read on every sync)
+# IDR prices were converted to USD by dividing by that rate: per 1M tokens, or per unit for pricing_lines.
+# Docs: https://kenari.id/docs/reasoning
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max
+schema = 2
+base_model = "meta/muse-spark-1.3"
+
+[modalities]
+input = ["image", "application/pdf", "text", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1.14
+cache = { read = 0.1143 }
+
+[cost.text.output]
+price = 4.57
