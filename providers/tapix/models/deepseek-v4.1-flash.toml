@@ -1,12 +1,12 @@
-# Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17); these are our published list prices, not a converted third-party list.
+# Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
 # Relayed by Tapix AI (https://tapixai.com/v1); upstream model is deepseek/deepseek-v4.1-flash.
-# Reasoning: reasoning_effort on /v1/chat/completions; none = off. Live probe 2026-11-17 accepted none/low/medium/high/minimal/xhigh/max; claude-fable-5 rejects none.
+# Reasoning: reasoning_effort = none, low, high, max on /v1/chat/completions, forwarded verbatim (copy of the lab surface; the lab toggle field is not in our whitelist and is not forwarded).
 # Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
 [cost.text.input]
