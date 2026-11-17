@@ -212,17 +212,18 @@ export function updateAnonRouterModel(model: AuthenticatedModel, current: Record
     }
     if (next.cost?.text !== undefined && Object.keys(next.cost.text).length === 0) delete next.cost.text;
   } else {
-    const kind = model.model_type === "image" ? "image" : "audio";
+    const kind = model.model_type === "image" ? "image" : "text";
+    const direction = model.model_type === "image" ? "output" : "input";
     if (route.pricing.unit_usd === null) {
       if (next.cost?.[kind] !== undefined) {
-        delete next.cost[kind]!.output;
+        delete next.cost[kind]![direction];
         if (Object.keys(next.cost[kind]!).length === 0) delete next.cost[kind];
       }
     } else {
       next.cost ??= {};
       next.cost[kind] ??= {};
-      next.cost[kind]!.output = {
-        ...next.cost[kind]!.output,
+      next.cost[kind]![direction] = {
+        ...next.cost[kind]![direction],
         unit: model.model_type === "image" ? "image" : "character",
         // Models.dev prices both tokens and characters per million; images are per image.
         price: route.pricing.unit_usd,

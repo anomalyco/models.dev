@@ -165,7 +165,7 @@ test("image, speech and embedding prices keep their distinct units and API recip
     .toMatchObject({ api: image.api, cost: { image: { output: { unit: "image", price: 0.0115 } } } });
   expect(updateAnonRouterModel(row({ model_type: "tts", max_output_tokens: null,
     pricing: { input_usd_per_million_tokens: 0, output_usd_per_million_tokens: 0, unit_usd: 65.5 } }), speech))
-    .toMatchObject({ api: speech.api, cost: { audio: { output: { unit: "character", price: 65.5 } } } });
+    .toMatchObject({ api: speech.api, cost: { text: { input: { unit: "character", price: 65.5 } } } });
   const embedding = { schema: 2, v2_only: true, base_model: "openai/text-embedding-3-small", api: { embeddings: {} } };
   const embedded = updateAnonRouterModel(row({ model_type: "embedding", max_output_tokens: 0,
     pricing: { input_usd_per_million_tokens: 0.026, output_usd_per_million_tokens: 0.026, unit_usd: null } }), embedding);
