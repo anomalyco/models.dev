@@ -1,10 +1,11 @@
 # Served by AxForge as qwen3.8-flash-next: https://api.axforge.ai/v1/public/models (read 2026-11-14).
 # Reads pictures; videos are not served. Context 500,000 tokens on our servers (the engine's max_model_len, read
 # 2026-11-14); our API caps an answer at 65,536 tokens.
-# Toggle: chat_template_kwargs.enable_thinking = true|false (off by default on our servers)
-# Effort: reasoning_effort = low|medium|high (any of them turns thinking on)
-# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16: no reasoning_content by default,
-# present with enable_thinking = true or a reasoning_effort level.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (off by default on our servers, unlike the lab's always-on)
+# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16 and 2026-11-17: no reasoning_content by
+# default, present with enable_thinking = true. reasoning_effort low, medium, high and xhigh also turn thinking on
+# but do not grade it (reasoning tokens, 3 calls each: low 223/272/364, medium 438/346/237, high 267/241/306,
+# xhigh 256/324/229), so no effort levels are authored; none or an unknown value leaves it off.
 # No cost: our prices are in EUR and follow a live price sheet, https://axforge.ai/pricing/
 schema = 2
 base_model = "alibaba/qwen3.8-flash-next"
@@ -14,7 +15,10 @@ input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
 context = 500_000

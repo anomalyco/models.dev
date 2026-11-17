@@ -1,9 +1,11 @@
+# Toggle: reasoning_effort = none or absent (off) | low, medium, high or xhigh (on); thinking.type is not honoured here.
 # Served by AxForge as mimo-v2.6-flash: https://api.axforge.ai/v1/public/models (read 2026-11-14).
-# Context 262,144 tokens on our servers (the engine's max_model_len, read 2026-11-14); our API caps an answer at 65,536 tokens.
+# Context 262,144 tokens on our servers (the engine's max_model_len, read 2026-11-14); our API caps an answer at
+# 65,536 tokens.
 # Reads pictures (jpeg, png, webp, tried live on our servers 2026-11-16); videos are not served.
-# Effort: reasoning_effort = none|low|medium|high (thinking off by default; low and up turn it on)
-# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16: no reasoning_content by default or at
-# none, present at low, medium and high. thinking.type = enabled does not turn it on here.
+# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16 and 2026-11-17: no reasoning_content by
+# default or at none; present at low, medium, high and xhigh, with no grading between them (reasoning tokens, 3 calls
+# each: low 302/246/750, medium 203/227/223, high 343/182/306, xhigh 246/256/255), so no effort levels are authored.
 # No cost: our prices are in EUR and follow a live price sheet, https://axforge.ai/pricing/
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
@@ -13,7 +15,10 @@ input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
 context = 262_144
