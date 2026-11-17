@@ -3,6 +3,7 @@
 # Service mode: offered in "economy" (runtime pricing & availability via GET /v1/models).
 # APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
 # Effort: $.output_config.effort = "low"|"medium"|"high"|"max"
+# Budget: integer $.thinking.budget_tokens (min 1024); no on/off toggle on this host (matches Anthropic 4.6 baseline).
 schema = 2
 base_model = "anthropic/claude-opus-4-6"
 
