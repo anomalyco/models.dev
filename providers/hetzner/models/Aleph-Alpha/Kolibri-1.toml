@@ -12,7 +12,7 @@ base_model = "aleph-alpha/kolibri-1"
 
 [capabilities]
 structured_output = true
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
 
 [limit]
 context = 262_144
