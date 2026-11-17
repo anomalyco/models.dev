@@ -23,6 +23,7 @@ import { aiand } from "./providers/aiand.js";
 import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
 import { anthropic } from "./providers/anthropic.js";
+import { anyapi } from "./providers/anyapi.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareAiGateway } from "./providers/cloudflare-ai-gateway.js";
@@ -192,6 +193,7 @@ export const providers: {
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
   anthropic: SyncProvider<any>;
+  anyapi: SyncProvider<any>;
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
   "cloudflare-ai-gateway": SyncProvider<any>;
@@ -243,6 +245,7 @@ export const providers: {
   aimlapi,
   ambient,
   anthropic,
+  anyapi,
   baseten,
   chutes,
   "cloudflare-ai-gateway": cloudflareAiGateway,
@@ -294,6 +297,7 @@ export const providers: {
 export const groups = {
   aggregators: [
     "aimlapi",
+    "anyapi",
     "crossmodel",
     "edenai",
     "empiriolabs",
