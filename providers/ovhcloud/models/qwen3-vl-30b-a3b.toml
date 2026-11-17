@@ -1,0 +1,25 @@
+schema = 2
+name = "qwen3-vl-30b-a3b"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+open_weights = false
+release_date = "2026-11-17"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+
+[limit]
+context = 32_768
+output = 16_384
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
