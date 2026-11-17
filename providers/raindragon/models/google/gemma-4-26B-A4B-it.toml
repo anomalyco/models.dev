@@ -8,6 +8,8 @@ base_model = "google/gemma-4-26b-a4b-it"
 
 [modalities]
 input = ["text"]
+# Same as the lab, kept because bun validate requires modalities.output
+# whenever [modalities] is overridden.
 output = ["text"]
 
 [capabilities]
