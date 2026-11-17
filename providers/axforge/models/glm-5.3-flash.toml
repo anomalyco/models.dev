@@ -2,9 +2,10 @@
 # Context 500,000 tokens on our servers (the engine's max_model_len, read 2026-11-14); our API caps an answer at
 # 65,536 tokens.
 # Reads pictures (jpeg, png, webp, tried live on our servers 2026-11-16); videos and PDFs are not served.
-# Effort: reasoning_effort = none|low|high|max (thinks by default; none turns thinking off)
-# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16: reasoning_content present by default
-# and at low, high and max, absent at none.
+# Effort: reasoning_effort = low|high|max (always thinks on our servers; there is no off switch)
+# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16 and 2026-11-17: reasoning_content
+# present by default and at low, high and max. none is not an off switch here: reasoning_content is then empty but
+# the thinking comes inside the answer.
 # No cost: our prices are in EUR and follow a live price sheet, https://axforge.ai/pricing/
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
@@ -14,7 +15,7 @@ input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
