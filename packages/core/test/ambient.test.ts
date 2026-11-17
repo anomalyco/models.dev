@@ -63,11 +63,12 @@ test("Ambient caps an inherited output limit at the served context", () => {
 test("Ambient linked files never restate the generated description", () => {
   const linked: ExistingModel = {
     base_model: "deepseek/deepseek-v4.1-flash-1017",
-    description: "Lab description",
+    description: "October 17 update of DeepSeek V4.1 Flash with improved reasoning, coding, agentic tasks, and visual understanding",
     reasoning: true,
     reasoning_options: efforts,
   };
-  // existing is the resolved view (lab description); only an authored one stays.
   expect(buildAmbientModel(ambientModel(), linked, { ...linked, description: undefined })).not.toHaveProperty("description");
-  expect(buildAmbientModel(ambientModel(), linked, linked)).toMatchObject({ description: "Lab description" });
+  // A restated lab description is dropped; one that differs stays.
+  expect(buildAmbientModel(ambientModel(), linked, linked)).not.toHaveProperty("description");
+  expect(buildAmbientModel(ambientModel(), linked, { ...linked, description: "Ambient wording" })).toMatchObject({ description: "Ambient wording" });
 });

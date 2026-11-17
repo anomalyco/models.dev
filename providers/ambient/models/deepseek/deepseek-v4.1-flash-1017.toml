@@ -4,18 +4,16 @@
 # Model controls: https://api-docs.deepseek.com/guides/thinking_mode/ and OpenRouter's catalog entry for the slug Ambient lists (https://openrouter.ai/api/v1/models, deepseek/deepseek-v4.1-flash-1017: none|low|high|max). Not probed live: no Ambient key.
 # Pricing and context: https://api.ambient.xyz/v1/models (input 0.098, output 0.294, cache read 0.0000000029 per token, accessed 2026-11-16)
 # Output limit: the catalog's max_output_length repeats the 1,048,576 context window, so the lab's cap is inherited.
-# Input MIME types: the catalog lists text only; the lab's image input is not served here.
+# Input modalities: the catalog lists text only; the lab's image input is not served here. The schema needs input and output together, so output repeats the lab's.
 # Mid-conversation: Ambient serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://api.ambient.xyz/openapi.json
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
-description = "October 17 update of DeepSeek V4.1 Flash with improved reasoning, coding, agentic tasks, and visual understanding"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 

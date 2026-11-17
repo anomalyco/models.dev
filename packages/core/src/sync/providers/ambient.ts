@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { inheritedOutput } from "./cortecs.js";
-import { buildOpenRouterModel, resolveCanonicalBaseModel, type OpenRouterModel } from "./openrouter.js";
+import { buildOpenRouterModel, modelMetadata, type OpenRouterModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.ambient.xyz/v1/models";
 
@@ -66,6 +66,8 @@ export const ambient = {
   name: "Ambient",
   modelsDir: "providers/ambient/models",
   deleteMissing: false,
+  // The runner would otherwise re-inject an authored description that equals the lab's.
+  preserveDescriptions: false,
   sourceID(model) {
     return model.id;
   },
@@ -128,11 +130,12 @@ export function buildAmbientModel(
     ? model.max_output_length
     : authored?.limit?.output ?? inheritedOutput(withOptions.base_model, model.context_length);
   // The generated description is boilerplate that never equals the lab's, so a
-  // linked file keeps only an authored one.
+  // linked file keeps only an authored one that differs from the lab's.
+  const labDescription = modelMetadata(withOptions.base_model).description;
   const { description: _generated, ...linked } = withOptions as SyncedModel & { description?: string };
   return {
     ...linked,
-    ...(authored?.description === undefined ? {} : { description: authored.description }),
+    ...(authored?.description === undefined || authored.description === labDescription ? {} : { description: authored.description }),
     limit: { ...withOptions.limit, output },
   } as SyncedModel;
 }
