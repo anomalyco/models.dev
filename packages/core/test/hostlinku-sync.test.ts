@@ -184,6 +184,55 @@ test("buildHostlinkuCost updates multi-mode tiers and preserves cache-write poli
   expect(implicitOnlyCost?.text.input.cache).toEqual({ read: 0.1817 });
   expect(implicitOnlyCost?.text.input.overrides?.[1]?.cache).toEqual({ read: 0.03125 });
   expect(buildHostlinkuCost(makeModel({ modes: { performance: null, economy: null, dedicated: null } }), {})).toBeUndefined();
+
+  const preservedNonOwned = buildHostlinkuCost(makeModel(), {
+    cost: {
+      multipliers: [{ when: { region: { equals: "eu" } }, multiplier: 1.1 }],
+      audio: { input: { price: 10 }, output: { price: 20 } },
+      text: {
+        input: {
+          price: 0.0553,
+          cache: { read: 0.00553, write: { "5m": 0.069125, "1h": 0.1106, "24h": 0.2 } },
+          overrides: [
+            { when: { context: { gte: 100_000 } }, price: 0.5 },
+            { when: { service_tier: { equals: "flex" } }, price: 0.02 },
+          ],
+        },
+        output: {
+          price: 0.2765,
+          reasoning: 0.5,
+          overrides: [
+            { when: { mode: { equals: "economy" } }, price: 0.08 },
+            { when: { service_tier: { equals: "flex" } }, price: 0.1 },
+          ],
+        },
+      },
+      web_search: {
+        price: 15.8,
+        overrides: [{ when: { service_tier: { equals: "flex" } }, price: 8 }],
+      },
+    },
+  });
+
+  expect(preservedNonOwned?.multipliers).toEqual([{ when: { region: { equals: "eu" } }, multiplier: 1.1 }]);
+  expect(preservedNonOwned?.audio).toEqual({ input: { price: 10 }, output: { price: 20 } });
+  expect(preservedNonOwned?.text.output.reasoning).toBe(0.5);
+  expect(preservedNonOwned?.text.input.cache).toEqual({
+    read: 0.00553,
+    write: { "24h": 0.2, "5m": 0.069125, "1h": 0.1106 },
+  });
+  expect(preservedNonOwned?.text.input.overrides?.at(-1)).toEqual({
+    when: { service_tier: { equals: "flex" } },
+    price: 0.02,
+  });
+  expect(preservedNonOwned?.text.output.overrides?.at(-1)).toEqual({
+    when: { service_tier: { equals: "flex" } },
+    price: 0.1,
+  });
+  expect(preservedNonOwned?.web_search?.overrides?.at(-1)).toEqual({
+    when: { service_tier: { equals: "flex" } },
+    price: 8,
+  });
 });
 
 test("listed models with no priceable mode are retained with a notice while delisted models are removed", async () => {
