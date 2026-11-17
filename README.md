@@ -33,6 +33,27 @@ curl "https://models.dev/api.json?type=all"
 The currently supported model type is `decision`. The `type` parameter is also
 available on `models.json`, `catalog.json`, and `model-schema.json`.
 
+### Experimental v2
+
+The experimental v2 catalog includes every model type by default and supports
+the same `type` filters. `openai-codex` is hidden unless explicitly included:
+
+```bash
+curl "https://models.dev/experimental/v2.0/api.json?include=openai-codex"
+curl "https://models.dev/experimental/v2.0/api.json?include=openai-codex&type=chat"
+```
+
+`include` adds named opt-in providers to the usual catalog; it does not filter
+out existing providers such as `openai` or `github-copilot`. Comma-separated IDs
+and repeated `include` parameters are combined, with whitespace and duplicates
+ignored. Unknown IDs are ignored: `include=openai-codex,openai-chatgpt` currently
+adds only `openai-codex`, not a new provider.
+
+This intentionally withdraws the recently added `openai-codex` entry from the
+default v2 catalog. Its backend needs client-managed ChatGPT OAuth. Clients must
+opt in only when they support that setup. The v1 endpoints
+never expose it, even with `include` or `type=all`; the default website is unchanged.
+
 Use the **Model ID** field to do a lookup on any model; it's the identifier used by [AI SDK](https://ai-sdk.dev/).
 
 Provider-agnostic model metadata is available separately:

@@ -8,6 +8,7 @@ import {
 } from "@models.dev/core/src/filter.js";
 import type { ModelTypeValue } from "@models.dev/core/src/filter.js";
 import { hitEvent } from "@models.dev/core/src/hit.js";
+import { includedProviders } from "@models.dev/core/src/provider-view.js";
 
 export interface Env {
   ASSETS: any;
@@ -23,6 +24,10 @@ export default {
     ctx: ExecutionContext,
   ): Promise<Response> {
     const url = new URL(request.url);
+    // These files back the public v2 route, not a second way to opt in.
+    if (url.pathname.startsWith("/_experimental_v2.0_api")) {
+      return new Response(null, { status: 404 });
+    }
     const ip = request.headers.get("cf-connecting-ip") ?? undefined;
     const country = request.headers.get("cf-ipcountry") ?? undefined;
     const agent = request.headers.get("user-agent") ?? undefined;
@@ -201,15 +206,30 @@ async function catalogResponse(
       : filter.length === 1
         ? `-${filter[0]}`
         : undefined;
-  assetUrl.pathname = `/_${endpoint}${suffix ?? "-all"}.json`;
+  const view =
+    endpoint === "experimental_v2.0_api" &&
+    includedProviders(url.searchParams).has("openai-codex")
+      ? "-optin"
+      : "";
+  assetUrl.pathname = `/_${endpoint}${view}${suffix ?? "-all"}.json`;
   assetUrl.search = "";
   // A filtered body depends only on the full file and the types, so its ETag is
   // the file's ETag plus the types, and revalidation is passed to the file.
   const tag = suffix === undefined ? `;type=${[...filter].sort().join(",")}` : "";
-  const assetRequest = new Request(assetUrl.toString(), request);
+  const assetRequest = new Request(assetUrl.toString(), {
+    method: suffix === undefined ? "GET" : request.method,
+    headers: request.headers,
+  });
   const conditional = request.headers.get("If-None-Match");
   if (tag && conditional) {
-    assetRequest.headers.set("If-None-Match", conditional.replaceAll(`${tag}"`, '"'));
+    const matching = (conditional.match(/(?:W\/)?"[^"]*"|\*/g) ?? [])
+      .filter((value) => value === "*" || value.endsWith(`${tag}"`))
+      .map((value) => value.replace(`${tag}"`, '"'));
+    assetRequest.headers.delete("If-None-Match");
+    if (matching.length)
+      assetRequest.headers.set("If-None-Match", matching.join(", "));
+  } else if (conditional?.includes(";type=")) {
+    assetRequest.headers.delete("If-None-Match");
   }
   const assetResponse = await env.ASSETS.fetch(assetRequest);
   if (suffix !== undefined) return assetResponse;
@@ -245,7 +265,10 @@ async function catalogResponse(
   if (etag) headers.set("ETag", etag);
   headers.set("Content-Type", "application/json");
   headers.set("Cache-Control", "public, max-age=3600");
-  return new Response(JSON.stringify(filtered), { headers });
+  return new Response(
+    request.method === "HEAD" ? null : JSON.stringify(filtered),
+    { headers },
+  );
 }
 
 interface CatalogModel {
