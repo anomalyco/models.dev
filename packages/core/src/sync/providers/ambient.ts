@@ -1,7 +1,9 @@
 import { z } from "zod";
 
-import type { SyncProvider } from "../index.js";
-import { buildOpenRouterModel, type OpenRouterModel } from "./openrouter.js";
+import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { inheritedOutput } from "./cortecs.js";
+import { buildOpenRouterModel, resolveCanonicalBaseModel, type OpenRouterModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.ambient.xyz/v1/models";
 
@@ -94,18 +96,46 @@ export const ambient = {
   translateModel(model, context) {
     if (!model.is_ready) return undefined;
     const existing = context.existing(model.id);
-    const built = buildOpenRouterModel(toOpenRouterShape(model), existing);
-    const reasoning = model.supported_features.includes("reasoning");
-    const withOptions = reasoning
-      ? { ...built, reasoning_options: existing?.reasoning_options ?? [] }
-      : built;
+    // The catalog lists no reasoning_effort levels, so a new reasoning model
+    // needs them researched before it's created.
+    if (existing === undefined && model.supported_features.includes("reasoning")) {
+      throw new MissingReasoningOptionsError(model.id, "Ambient lists no reasoning controls; author them before creating this model");
+    }
+    const built = buildAmbientModel(model, existing, context.authored(model.id));
     const aliasName = ambientAliasName(model.id);
     return {
       id: model.id,
-      model: aliasName === undefined ? withOptions : { ...withOptions, name: aliasName },
+      model: aliasName === undefined ? built : { ...built, name: aliasName },
     };
   },
 } satisfies SyncProvider<AmbientModel>;
+
+export function buildAmbientModel(
+  model: AmbientModel,
+  existing: ExistingModel | undefined,
+  authored: ExistingModel | undefined,
+): SyncedModel {
+  const built = buildOpenRouterModel(toOpenRouterShape(model), existing);
+  const reasoning = model.supported_features.includes("reasoning");
+  const withOptions = reasoning
+    ? { ...built, reasoning_options: existing?.reasoning_options ?? [] }
+    : built;
+  if (!("base_model" in withOptions) || withOptions.base_model === undefined) return withOptions;
+  // A max_output_length at or above the context window is the window repeated,
+  // not a per-request cap. Keep an authored output limit; a linked file otherwise
+  // inherits the lab's, unless that exceeds the context this route serves.
+  const output = model.max_output_length < model.context_length
+    ? model.max_output_length
+    : authored?.limit?.output ?? inheritedOutput(withOptions.base_model, model.context_length);
+  // The generated description is boilerplate that never equals the lab's, so a
+  // linked file keeps only an authored one.
+  const { description: _generated, ...linked } = withOptions as SyncedModel & { description?: string };
+  return {
+    ...linked,
+    ...(authored?.description === undefined ? {} : { description: authored.description }),
+    limit: { ...withOptions.limit, output },
+  } as SyncedModel;
+}
 
 function ambientAliasName(id: string): string | undefined {
   if (!id.startsWith("ambient/")) return undefined;

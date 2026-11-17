@@ -1,9 +1,13 @@
+# Effort: reasoning_effort = low|high|xhigh. The gateway's catalog lists the reasoning_effort parameter for the alibaba
+#   mapping but no effort levels, so the set follows Alibaba's own documentation
+#   (https://www.alibabacloud.com/help/en/model-studio/qwen4-max) and the other Qwen4 Max hosts (providers/novita-ai/models/qwen/qwen4-max.toml).
+#   Not probed live. https://api.llmgateway.io/v1/models?mapped=true (alibaba/qwen4-max, 2026-11-16)
 schema = 2
 base_model = "alibaba/qwen4-max"
 name = "Qwen4 Max (Alibaba Cloud)"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "xhigh"] }
 structured_output = true
 
 [limit]
