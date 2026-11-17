@@ -1,0 +1,30 @@
+schema = 2
+name = "OpenAI: GPT-6.2 Astra Pro ($$$$)"
+description = "GPT-6.2 Astra Pro is the same underlying model as [GPT-6.2 Astra](https://openrouter.ai/openai/gpt-6.2-astra), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks. **Cost note:** pro mode spends far more..."
+family = "gpt"
+open_weights = false
+release_date = "2026-11-17"
+
+[modalities]
+input = ["application/pdf", "image", "text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[cost.text.input]
+price = 16
+cache = { read = 0.8, write = 20 }
+
+[cost.text.output]
+price = 60
+
+[cost.web_search]
+price = 10

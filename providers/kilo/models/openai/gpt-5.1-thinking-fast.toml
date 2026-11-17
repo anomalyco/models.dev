@@ -20,8 +20,12 @@ context = 400_000
 output = 128_000
 
 [cost.text.input]
-price = 2.5
-cache = { read = 0.25 }
+price = 1.25
+cache = { read = 0.125 }
 
 [cost.text.output]
-price = 20
+price = 10
+reasoning = 0
+
+[cost.web_search]
+price = 10

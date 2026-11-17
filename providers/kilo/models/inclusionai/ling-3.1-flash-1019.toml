@@ -11,7 +11,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
 temperature = true
 
@@ -25,3 +25,4 @@ cache = { read = 0.06 }
 
 [cost.text.output]
 price = 0.9
+reasoning = 0

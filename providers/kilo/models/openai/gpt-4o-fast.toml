@@ -7,8 +7,12 @@ description = "GPT-4o from OpenAI has broad general knowledge and domain experti
 structured_output = true
 
 [cost.text.input]
-price = 4.25
-cache = { read = 2.125 }
+price = 2.5
+cache = { read = 1.25, write = 0 }
 
 [cost.text.output]
-price = 17
+price = 10
+reasoning = 0
+
+[cost.web_search]
+price = 10
