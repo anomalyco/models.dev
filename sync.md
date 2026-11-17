@@ -528,3 +528,6 @@ Hostlinku is implemented in `packages/core/src/sync/providers/hostlinku.ts`.
 - Updates existing models' per-mode (`performance`, `economy`, `dedicated`) USD/MTok input, output, cache, long-context tier, and web-search prices, and removes local files that leave the public catalog.
 - `skipCreates: true` and `trackMissingModels: false`: lab `base_model` mappings, API surface tables (`[api.messages]`, `[api.responses]`), and live-probed reasoning controls are hand-authored.
 - Models without a declared explicit cache-write block preserve read-only cache pricing when synced.
+
+
+- Listed catalog entries without any priceable mode retain their existing TOML unchanged and emit a notice instead of deleting the local file.
