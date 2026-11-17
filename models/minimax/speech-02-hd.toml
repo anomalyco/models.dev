@@ -1,0 +1,26 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://www.minimax.io/news/speech-02-series
+# MiniMax launch post records April 2, 2025 and FLAC, WAV, MP3 and PCM output.
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "speech"
+name = "MiniMax Speech-02 HD"
+description = "Multilingual speech synthesis model with voice cloning and expressive speech"
+open_weights = false
+release_date = "2025-04-02"
+
+[modalities]
+input = ["text"]
+output = ["audio/flac", "audio/wav", "audio/mpeg", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -1,0 +1,23 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-writer-palmyra-vision-7b.html
+# Bedrock model card records the launch date, image/text input and 4K context/output limits.
+# Sampling follows Bedrock Converse inferenceConfig (temperature and topP).
+schema = 2
+name = "Palmyra Vision 7B"
+description = "Writer multimodal model for enterprise image understanding and visual analysis"
+open_weights = false
+release_date = "2026-03-26"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 4000
+output = 4000

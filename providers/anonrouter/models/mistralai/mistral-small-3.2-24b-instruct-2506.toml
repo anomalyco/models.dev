@@ -1,0 +1,22 @@
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+base_model = "mistral/mistral-small-3.2-24b-instruct"
+name = "Mistral Small 3.2 24B Instruct 2506"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[limit]
+context = 128_000
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.087
+
+[cost.text.output]
+price = 0.23

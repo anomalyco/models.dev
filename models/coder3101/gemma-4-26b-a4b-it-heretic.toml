@@ -1,0 +1,28 @@
+# https://huggingface.co/coder3101/gemma-4-26B-A4B-it-heretic
+# Repository created 2026-04-02 (Hugging Face API createdAt).
+# Architecture and base capabilities follow google/gemma-4-26b-a4b-it; serving limits belong to the host.
+schema = 2
+family = "gemma"
+open_weights = true
+name = "Gemma 4 26B A4B IT Heretic"
+description = "Abliterated Gemma 4 mixture-of-experts checkpoint for open-ended conversation"
+release_date = "2026-04-02"
+license = "apache-2.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/coder3101/gemma-4-26B-A4B-it-heretic"

@@ -199,6 +199,17 @@ EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
 - A `cache` or `prompt_cache` feature sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet. Authored `implicit` / `explicit` details are kept.
 - `base_model` files never carry model facts (dates, `family`, `knowledge`, `open_weights`); they come from the lab. Only standalone files keep them.
 
+## AnonRouter Notes
+
+- Run with `bun models:sync anonrouter` or `bun anonrouter:sync`.
+- With `ANONROUTER_API_KEY`, the sync reads `https://api.anonrouter.ai/v1/models` and updates authored models' default-route prices and serving limits. Prices are already USD per million tokens. Image prices are per image; speech prices are per million characters, matching Models.dev's `character` unit.
+- Without a key, the public `https://control.anonrouter.ai/v1/catalog/models` feed is used for discovery only. Only `callable` models and the separately listed routers are included. Its preferred route can differ from the authenticated API's default, so its prices, limits and capabilities never replace authored values.
+- Existing lab pointers, reviewed reasoning controls, exact modalities, APIs, cache settings and other authored metadata are preserved. A promoted Latest alias is retained for review until its target has a matching authored lab pointer. Variable router prices remain absent; an unquoted price never becomes zero.
+- Context pricing tiers are written only when `in_effect` is true, using a strict `context > above_input_tokens` condition. Inactive context tiers are removed while other price conditions are retained.
+- The sync creates and deletes no model files. New IDs use the missing-model issue flow for metadata and API verification. Missing local IDs are reported and retained. Empty, malformed and duplicate-ID inventories fail before writes, including case-insensitive duplicates and invalid paths. A stale public feed is reported and remains discovery-only.
+- `tencent/hy4-uncensored` is intentionally unlisted pending upstream lifecycle confirmation and excluded from discovery.
+- Upstream automated price updates require maintainers to configure `ANONROUTER_API_KEY`; registration alone enables public discovery without an added secret.
+
 ## Keln Notes
 
 - Run with `bun models:sync keln` or `bun keln:sync`. Registration enables the hourly provider-specific workflow; no API key or new workflow secret is required.

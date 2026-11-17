@@ -1,0 +1,31 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://ideogram.ai/news/
+# https://huggingface.co/ideogram-ai/ideogram-4-fp8
+# Ideogram news and the model card record the June 3, 2026 release.
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "image"
+name = "Ideogram 4.0"
+description = "Open image generation model for multilingual text rendering and controlled layouts"
+open_weights = true
+release_date = "2026-06-03"
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ideogram-ai/ideogram-4-fp8"

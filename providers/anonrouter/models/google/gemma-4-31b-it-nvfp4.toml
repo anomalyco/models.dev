@@ -1,0 +1,27 @@
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B Instruct NVFP4"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 260_834
+output = 131_072
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.161
+
+[cost.text.output]
+price = 0.46

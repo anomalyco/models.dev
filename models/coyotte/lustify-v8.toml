@@ -1,0 +1,31 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://civitai.com/models/573152?modelVersionId=2808677
+# https://civitai.com/api/v1/models/573152
+# The model creator is coyotte; Civitai version2808677 publishedAt records the April13 2026 release.
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "image"
+name = "Lustify v8 APEX"
+description = "Updated photorealistic SDXL fine-tune by coyotte for open-ended image generation"
+open_weights = true
+release_date = "2026-04-13"
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Civitai"
+url = "https://civitai.com/models/573152?modelVersionId=2808677"

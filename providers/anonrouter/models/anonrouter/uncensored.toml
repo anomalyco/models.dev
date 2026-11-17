@@ -1,0 +1,27 @@
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Named router: https://docs.anonrouter.ai/routers. Limits depend on eligible members.
+# Price varies with the selected model. No fixed token rate is quoted.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+name = "Uncensored Router"
+description = "Picks the best uncensored or abliterated model from a reviewed list."
+family = "auto"
+open_weights = false
+release_date = "2026-10-22"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[api.chat-completions]

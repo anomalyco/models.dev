@@ -1,0 +1,31 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice
+# Repository created 2026-01-21 (Hugging Face API createdAt); Venice lists the same nine preset speakers as this CustomVoice checkpoint.
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "speech"
+name = "Qwen3 TTS 12Hz 1.7B CustomVoice"
+description = "Open multilingual speech model with nine preset speakers and instruction-controlled voice styles"
+open_weights = true
+release_date = "2026-01-21"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice"

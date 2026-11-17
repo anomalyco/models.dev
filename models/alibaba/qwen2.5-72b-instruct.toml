@@ -1,0 +1,30 @@
+# Native limits: https://huggingface.co/Qwen/Qwen2.5-72B-Instruct (full 131,072-token context with YaRN and 8,192-token generation).
+# Sampling defaults: https://huggingface.co/Qwen/Qwen2.5-72B-Instruct/blob/main/generation_config.json.
+# Model: https://huggingface.co/Qwen/Qwen2.5-72B-Instruct
+# Shared model metadata extracted from providers/siliconflow/models/Qwen/Qwen2.5-72B-Instruct.toml.
+# API controls, cache and prices are defined by each host.
+schema = 2
+name = "Qwen2.5 72B Instruct"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+open_weights = true
+release_date = "2024-09-18"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 131072
+output = 8192
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen2.5-72B-Instruct"
