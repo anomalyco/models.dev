@@ -8,7 +8,8 @@
 # (base is 1048576).
 # Direct endpoint: POST /models/chat/completions on the Foundry models endpoint.
 # Modalities: Azure documents text and image input, no video; formats follow the
-# other Azure Kimi entries.
+# other Azure Kimi entries. A provider modalities block must supply both input
+# and output, so `output` is restated.
 # Reasoning: reasoning_effort = low|high|max, always-on with no off toggle.
 # Live probe 2026-11-17 on the Kimi-K3.1-Pro deployment: all three levels are
 # accepted; the lab documents the same surface. Azure returns the chain of
@@ -21,7 +22,6 @@ schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
 [modalities]
-# A provider modalities block must supply both input and output.
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
