@@ -104,21 +104,108 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function buildCacheEntry(prices: HostlinkuPriceFields | HostlinkuTierFields, includeWrite: boolean) {
+function buildCacheEntry(
+  prices: HostlinkuPriceFields | HostlinkuTierFields,
+  includeWrite: boolean,
+  existingCache?: Record<string, unknown>,
+) {
+  const { read: _existingRead, write: existingWriteRaw, ...restCache } = existingCache ?? {};
+  const existingWrite = isRecord(existingWriteRaw) ? existingWriteRaw : undefined;
+  const { "5m": _w5m, "1h": _w1h, ...restWrite } = existingWrite ?? {};
+
   const read = prices.cacheReadCredits ?? undefined;
   const write5m = includeWrite ? (prices.cacheWrite5mCredits ?? undefined) : undefined;
   const write1h = includeWrite ? (prices.cacheWrite1hCredits ?? undefined) : undefined;
-  const write = write5m !== undefined || write1h !== undefined
+  const hasWrite = write5m !== undefined || write1h !== undefined || (includeWrite && Object.keys(restWrite).length > 0);
+  const write = hasWrite
     ? {
+        ...restWrite,
         ...(write5m !== undefined ? { "5m": write5m } : {}),
         ...(write1h !== undefined ? { "1h": write1h } : {}),
       }
     : undefined;
 
-  if (read === undefined && write === undefined) return undefined;
+  if (read === undefined && write === undefined && Object.keys(restCache).length === 0) return undefined;
   return {
+    ...restCache,
     ...(read !== undefined ? { read } : {}),
     ...(write !== undefined ? { write } : {}),
+  };
+}
+
+function isCatalogOwnedOverride(entry: unknown): boolean {
+  if (!isRecord(entry) || !isRecord(entry.when)) return false;
+  const keys = Object.keys(entry.when);
+  if (keys.length === 0 || keys.some((key) => key !== "context" && key !== "mode")) {
+    return false;
+  }
+  if ("mode" in entry.when) {
+    if (
+      !isRecord(entry.when.mode)
+      || entry.when.mode.equals !== "economy"
+      || Object.keys(entry.when.mode).length !== 1
+    ) {
+      return false;
+    }
+  }
+  if ("context" in entry.when) {
+    if (
+      !isRecord(entry.when.context)
+      || typeof entry.when.context.gte !== "number"
+      || Object.keys(entry.when.context).length !== 1
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function preservedOverrides(value: unknown): Array<Record<string, unknown>> {
+  if (!Array.isArray(value)) return [];
+  return value.filter((entry): entry is Record<string, unknown> => isRecord(entry) && !isCatalogOwnedOverride(entry));
+}
+
+function findMatchingOverride(
+  value: unknown,
+  when: Record<string, unknown>,
+): Record<string, unknown> | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const target = JSON.stringify(when);
+  return value.find((entry): entry is Record<string, unknown> => isRecord(entry) && JSON.stringify(entry.when) === target);
+}
+
+function buildInputOverride(
+  existingList: unknown,
+  when: Record<string, unknown>,
+  prices: HostlinkuPriceFields | HostlinkuTierFields,
+  includeWrite: boolean,
+): Record<string, unknown> {
+  const existing = findMatchingOverride(existingList, when);
+  const { when: _w, price: _p, cache: existingCacheRaw, ...rest } = existing ?? {};
+  const cache = buildCacheEntry(
+    prices,
+    includeWrite,
+    isRecord(existingCacheRaw) ? existingCacheRaw : undefined,
+  );
+  return {
+    ...rest,
+    when,
+    price: prices.inputCredits,
+    ...(cache !== undefined ? { cache } : {}),
+  };
+}
+
+function buildOutputOverride(
+  existingList: unknown,
+  when: Record<string, unknown>,
+  outputCredits: number,
+): Record<string, unknown> {
+  const existing = findMatchingOverride(existingList, when);
+  const { when: _w, price: _p, ...rest } = existing ?? {};
+  return {
+    ...rest,
+    when,
+    price: outputCredits,
   };
 }
 
@@ -133,6 +220,8 @@ export function buildHostlinkuCost(model: HostlinkuModel, current: Record<string
   const currentCost = isRecord(current.cost) ? current.cost : undefined;
   const currentText = isRecord(currentCost?.text) ? currentCost.text : undefined;
   const currentInput = isRecord(currentText?.input) ? currentText.input : undefined;
+  const currentOutput = isRecord(currentText?.output) ? currentText.output : undefined;
+  const currentWebSearch = isRecord(currentCost?.web_search) ? currentCost.web_search : undefined;
   const currentCache = isRecord(currentInput?.cache) ? currentInput.cache : undefined;
   const includeWrite = currentCache?.write !== undefined;
 
@@ -143,54 +232,43 @@ export function buildHostlinkuCost(model: HostlinkuModel, current: Record<string
   const outputOverrides: Array<Record<string, unknown>> = [];
 
   for (const tier of sortedTiers(baseMode.tiers)) {
-    const cache = buildCacheEntry(tier, includeWrite);
-    inputOverrides.push({
-      when: { context: { gte: tier.minTokens } },
-      price: tier.inputCredits,
-      ...(cache !== undefined ? { cache } : {}),
-    });
-    outputOverrides.push({
-      when: { context: { gte: tier.minTokens } },
-      price: tier.outputCredits,
-    });
+    const when = { context: { gte: tier.minTokens } };
+    inputOverrides.push(buildInputOverride(currentInput?.overrides, when, tier, includeWrite));
+    outputOverrides.push(buildOutputOverride(currentOutput?.overrides, when, tier.outputCredits));
   }
 
   const economy = model.defaultMode !== "economy" ? (model.modes.economy ?? undefined) : undefined;
   if (economy !== undefined) {
-    const econCache = buildCacheEntry(economy.prices, includeWrite);
-    inputOverrides.push({
-      when: { mode: { equals: "economy" } },
-      price: economy.prices.inputCredits,
-      ...(econCache !== undefined ? { cache: econCache } : {}),
-    });
-    outputOverrides.push({
-      when: { mode: { equals: "economy" } },
-      price: economy.prices.outputCredits,
-    });
+    const modeWhen = { mode: { equals: "economy" } };
+    inputOverrides.push(buildInputOverride(currentInput?.overrides, modeWhen, economy.prices, includeWrite));
+    outputOverrides.push(buildOutputOverride(currentOutput?.overrides, modeWhen, economy.prices.outputCredits));
 
     for (const tier of sortedTiers(economy.tiers)) {
-      const cache = buildCacheEntry(tier, includeWrite);
-      inputOverrides.push({
-        when: { context: { gte: tier.minTokens }, mode: { equals: "economy" } },
-        price: tier.inputCredits,
-        ...(cache !== undefined ? { cache } : {}),
-      });
-      outputOverrides.push({
-        when: { context: { gte: tier.minTokens }, mode: { equals: "economy" } },
-        price: tier.outputCredits,
-      });
+      const tierModeWhen = { context: { gte: tier.minTokens }, mode: { equals: "economy" } };
+      inputOverrides.push(buildInputOverride(currentInput?.overrides, tierModeWhen, tier, includeWrite));
+      outputOverrides.push(buildOutputOverride(currentOutput?.overrides, tierModeWhen, tier.outputCredits));
     }
   }
 
-  const baseCache = buildCacheEntry(baseMode.prices, includeWrite);
+  const allInputOverrides = [...inputOverrides, ...preservedOverrides(currentInput?.overrides)];
+  const allOutputOverrides = [...outputOverrides, ...preservedOverrides(currentOutput?.overrides)];
+
+  const { price: _inPrice, cache: _inCache, overrides: _inOverrides, ...restInput } = currentInput ?? {};
+  const { price: _outPrice, overrides: _outOverrides, ...restOutput } = currentOutput ?? {};
+  const { input: _textIn, output: _textOut, ...restText } = currentText ?? {};
+  const { text: _costText, web_search: _costWeb, ...restCost } = currentCost ?? {};
+
+  const baseCache = buildCacheEntry(baseMode.prices, includeWrite, currentCache);
   const textInput = {
+    ...restInput,
     price: baseMode.prices.inputCredits,
     ...(baseCache !== undefined ? { cache: baseCache } : {}),
-    ...(inputOverrides.length > 0 ? { overrides: inputOverrides } : {}),
+    ...(allInputOverrides.length > 0 ? { overrides: allInputOverrides } : {}),
   };
   const textOutput = {
+    ...restOutput,
     price: baseMode.prices.outputCredits,
-    ...(outputOverrides.length > 0 ? { overrides: outputOverrides } : {}),
+    ...(allOutputOverrides.length > 0 ? { overrides: allOutputOverrides } : {}),
   };
 
   const baseWeb = baseMode.prices.webSearchPer1kCredits ?? undefined;
@@ -201,15 +279,20 @@ export function buildHostlinkuCost(model: HostlinkuModel, current: Record<string
       price: economy.prices.webSearchPer1kCredits,
     });
   }
+  const allWebOverrides = [...webOverrides, ...preservedOverrides(currentWebSearch?.overrides)];
+  const { price: _webPrice, overrides: _webOverrides, ...restWebSearch } = currentWebSearch ?? {};
   const webSearch = baseWeb !== undefined
     ? {
+        ...restWebSearch,
         price: baseWeb,
-        ...(webOverrides.length > 0 ? { overrides: webOverrides } : {}),
+        ...(allWebOverrides.length > 0 ? { overrides: allWebOverrides } : {}),
       }
     : undefined;
 
   return {
+    ...restCost,
     text: {
+      ...restText,
       input: textInput,
       output: textOutput,
     },
