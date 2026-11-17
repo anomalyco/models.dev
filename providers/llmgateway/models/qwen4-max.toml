@@ -1,8 +1,10 @@
+# Effort: reasoning_effort = none|low|high|xhigh, no separate toggle; same set as providers/llmgateway-providers/models/alibaba/qwen4-max.toml
+#   (Alibaba docs for low|high|xhigh, gateway docs and the Novita peer for none). Not probed on the gateway.
 schema = 2
 base_model = "alibaba/qwen4-max"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
 
 [limit]
 context = 983_616

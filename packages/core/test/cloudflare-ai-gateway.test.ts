@@ -523,6 +523,8 @@ test("syncs Jev through shared TypeSafe metadata without inventing tool support"
       base_model: "typesafe/jev-1.13.0",
       cost: { input: 0.042, output: 0 },
       limit: { context: 32_000 },
+      provider: { api: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai" },
+      modalities: { input: ["text"], output: ["text"] },
     });
   } finally {
     globalThis.fetch = originalFetch;
@@ -1066,6 +1068,33 @@ test("reads image and video route modalities from the request schema", () => {
     .toThrow("the route takes video input but the lab lists no video MIME types");
   // Inputs carried in a content-parts array aren't read; the lab's modalities apply.
   expect(routeModalities("video", { properties: { content: {}, duration: {} } }, lab)).toBeUndefined();
+});
+
+test("reads image output formats including gif", () => {
+  const lab = { modalities: { input: ["text"], output: ["image/png", "image/gif"] } };
+  expect(routeModalities("image", {
+    properties: { prompt: {}, output_format: { enum: ["png", "webp", "jpeg", "gif"] } },
+  }, lab)).toEqual({ input: ["text"], output: ["image/png", "image/webp", "image/jpeg", "image/gif"] });
+});
+
+test("prices a model with several upstreams from the first one", () => {
+  const upstreams = [
+    { id: "first", pricing: { input_tokens: 2, output_tokens: 10, input_cached_tokens: 0.2 } },
+    { id: "second", pricing: { input_tokens: 1.8, output_tokens: 9, input_cached_tokens: 0.18 } },
+  ];
+  const catalog = { model_id: "openai/gpt-4.1", task: "Text Generation", context_length: 1_000_000, provider_details: upstreams };
+  expect(buildCloudflareAiGatewayModel(catalog).cost).toEqual({ input: 2, output: 10, cache_read: 0.2 });
+
+  const { doc } = buildCloudflareAiGatewayMediaModel(
+    { model_id: "minimax/h3", task: "Text-to-Video", provider_details: [
+      { id: "first", pricing: { default: 0.5 } },
+      { id: "second", pricing: { default: 0.4 } },
+    ] },
+    undefined,
+    { base_model: "minimax/MiniMax-H3" },
+  );
+  expect(JSON.stringify(doc.cost)).toContain("0.5");
+  expect(JSON.stringify(doc.cost)).not.toContain("0.4");
 });
 
 function testSyncProvider(modelsDir: string, id: string) {

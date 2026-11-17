@@ -1,7 +1,9 @@
 import { z } from "zod";
 
-import type { SyncProvider } from "../index.js";
-import { buildOpenRouterModel, type OpenRouterModel } from "./openrouter.js";
+import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { inheritedOutput } from "./cortecs.js";
+import { buildOpenRouterModel, modelMetadata, type OpenRouterModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.ambient.xyz/v1/models";
 
@@ -64,6 +66,8 @@ export const ambient = {
   name: "Ambient",
   modelsDir: "providers/ambient/models",
   deleteMissing: false,
+  // The runner would otherwise re-inject an authored description that equals the lab's.
+  preserveDescriptions: false,
   sourceID(model) {
     return model.id;
   },
@@ -94,18 +98,58 @@ export const ambient = {
   translateModel(model, context) {
     if (!model.is_ready) return undefined;
     const existing = context.existing(model.id);
-    const built = buildOpenRouterModel(toOpenRouterShape(model), existing);
-    const reasoning = model.supported_features.includes("reasoning");
-    const withOptions = reasoning
-      ? { ...built, reasoning_options: existing?.reasoning_options ?? [] }
-      : built;
+    // The catalog lists no reasoning_effort levels, so a new reasoning model
+    // needs them researched before it's created.
+    // A row can omit the flag for a model whose lab reasons, so the lab is checked too (as cortecs/deepinfra do).
+    const built0 = existing === undefined ? buildOpenRouterModel(toOpenRouterShape(model), existing) : undefined;
+    const labReasons = built0 !== undefined && "base_model" in built0 && built0.base_model !== undefined
+      && modelMetadata(built0.base_model).reasoning === true;
+    if (existing === undefined && (model.supported_features.includes("reasoning") || labReasons)) {
+      throw new MissingReasoningOptionsError(model.id, "Ambient lists no reasoning controls; author them before creating this model");
+    }
+    const built = buildAmbientModel(model, existing, context.authored(model.id));
     const aliasName = ambientAliasName(model.id);
     return {
       id: model.id,
-      model: aliasName === undefined ? withOptions : { ...withOptions, name: aliasName },
+      model: aliasName === undefined ? built : { ...built, name: aliasName },
     };
   },
 } satisfies SyncProvider<AmbientModel>;
+
+export function buildAmbientModel(
+  model: AmbientModel,
+  existing: ExistingModel | undefined,
+  authored: ExistingModel | undefined,
+): SyncedModel {
+  const built = buildOpenRouterModel(toOpenRouterShape(model), existing);
+  const reasoning = model.supported_features.includes("reasoning");
+  const withOptions = reasoning
+    ? { ...built, reasoning_options: existing?.reasoning_options ?? [] }
+    : built;
+  if (!("base_model" in withOptions) || withOptions.base_model === undefined) return withOptions;
+  // A max_output_length at or above the context window is the window repeated,
+  // not a per-request cap. Keep an authored output limit; a linked file otherwise
+  // inherits the lab's, unless that exceeds the context this route serves.
+  const output = model.max_output_length < model.context_length
+    ? model.max_output_length
+    : authored?.limit?.output ?? inheritedOutput(withOptions.base_model, model.context_length);
+  // The generated description is boilerplate that never equals the lab's, so a
+  // linked file keeps only an authored one that differs from the lab's.
+  const labDescription = modelMetadata(withOptions.base_model).description;
+  const { description: _generated, ...linked } = withOptions as SyncedModel & { description?: string };
+  // Only real deltas: an output equal to the lab's is inherited, and an empty limit is left out.
+  const { output: _built, ...limitRest } = (withOptions.limit ?? {}) as Record<string, number | undefined>;
+  const limit = {
+    ...limitRest,
+    ...(output === undefined || output === (modelMetadata(withOptions.base_model).limit as { output?: number } | undefined)?.output ? {} : { output }),
+  };
+  const { limit: _limit, ...rest } = linked as SyncedModel & { limit?: unknown };
+  return {
+    ...rest,
+    ...(authored?.description === undefined || authored.description === labDescription ? {} : { description: authored.description }),
+    ...(Object.keys(limit).length === 0 ? {} : { limit }),
+  } as SyncedModel;
+}
 
 function ambientAliasName(id: string): string | undefined {
   if (!id.startsWith("ambient/")) return undefined;
