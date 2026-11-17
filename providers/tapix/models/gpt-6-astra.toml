@@ -1,7 +1,7 @@
 # Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
 # Relayed by Tapix AI (https://tapixai.com/v1); upstream model is openai/gpt-6-astra.
 # Reasoning: reasoning_effort = low, medium, high, xhigh, max on /v1/chat/completions, forwarded verbatim from the lab surface (a lab toggle field is not in our whitelist and is not forwarded).
-# Custom tools: probed on 2026-11-17 with a custom tool carrying regex grammar ZZ[0-9]{3}; the host answered 503 "no_verified_route" for this model, so freeform formats are left out (no evidence of support).
+# Custom tools: probed on 2026-11-17 with a custom tool carrying regex grammar ZZ[0-9]{3}; the host accepted the request (HTTP 200) but returned no tool call and no grammar-constrained output, so no freeform formats are published (evidence of non-support, not an untested omission).
 # Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "openai/gpt-6-astra"

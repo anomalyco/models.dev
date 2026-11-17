@@ -1,12 +1,11 @@
 # Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
 # Relayed by Tapix AI (https://tapixai.com/v1); upstream model is anthropic/claude-opus-4-6.
-# Reasoning: reasoning_effort = low, medium, high, max on /v1/chat/completions, forwarded verbatim from the lab surface (a lab toggle field is not in our whitelist and is not forwarded).
-# Streams reasoning via reasoning_content deltas.
+# Reasoning: this host returns no reasoning for this model on /v1/chat/completions — the upstream relay exposes neither reasoning text nor reasoning tokens (live probe 2026-11-17: no `reasoning`/`reasoning_content` field, usage.reasoning_tokens = 0), so reasoning support is not published for it here.
 schema = 2
 base_model = "anthropic/claude-opus-4-6"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+reasoning = { supported = false }
 structured_output = true
 
 [cost.text.input]
@@ -15,5 +14,3 @@ price = 2.15
 [cost.text.output]
 price = 9.22
 
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
