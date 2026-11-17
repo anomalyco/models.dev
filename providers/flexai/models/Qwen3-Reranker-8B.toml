@@ -1,0 +1,18 @@
+# Rerank: POST https://api.flex.ai/v1/rerank (https://docs.flex.ai/inference-api/guides/rerank).
+# Price and context from GET /v1/models (USD per 1M input tokens; context_length is the served window), 2026-11-17.
+# Staging probe 2026-11-17: POST /v1/rerank returns 200 with results[{index, relevance_score, document}] and a
+# `meta.billed_units` block that carries total_tokens only, so no AI SDK or OpenCode package is declared.
+schema = 2
+base_model = "alibaba/qwen3-reranker-8b"
+
+[limit]
+context = 40_960
+
+[api.rerank]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0

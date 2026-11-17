@@ -4,9 +4,17 @@
 # Measured on FlexAI 2026-10-29 (length of reasoning_content, 3 prompts, no max_tokens, all finish_reason stop):
 #   default 812/368/1992 · max 834/377/2695 · high 22/87/735 · low 0/161/321
 # low and high both cut reasoning sharply versus max; they were not separated at one sample per prompt.
+# Modalities (staging probe, 2026-11-17): reads images; video is NOT served -- a video_url part returns
+# 400 ("does not accept video input"; GET /v1/models lists input_modalities text, image) and
+# input_video, a PDF file part and input_audio each return 400 -- so input is the lab's image
+# MIME list without video or application/pdf.
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }

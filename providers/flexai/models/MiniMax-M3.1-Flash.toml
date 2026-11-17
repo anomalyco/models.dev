@@ -5,15 +5,23 @@
 # Effort (median reasoning_content, 3 runs per level, one hard prompt):
 #   default 3826 · top-level low 3087 · medium 3623 · high 3968
 #   chat_template_kwargs.reasoning_effort low 2921 · medium 2885 · high 4020
-# high reasons somewhat more than low, but medium is not separable and the ranges
-# overlap, so no effort levels are declared yet.
+# Effort levels, checked on FlexAI staging 2026-11-17 (top-level reasoning_effort, HTTP status):
+#   low 200 · medium 200 · high 200 · max 200 · xhigh 400 ("expected one of minimal, low,
+#   medium, high, max"). The gateway validates the value, so the accepted levels are declared
+#   (low, medium, high, max); xhigh, which the lab lists, is rejected here and omitted. The
+#   wire path is top-level reasoning_effort. Levels are ordered on this host for low/medium/high
+#   (medians above); max is accepted but was not measured separately.
+# Modalities (staging probe, 2026-11-17): the lab's video input is served and inherited. A
+#   video_url part (mp4) returns 200 and the reply describes the clip; input_video, a PDF
+#   file part and input_audio return 400 (none is in the inherited list). GET /v1/models lists
+#   input_modalities text, image, video.
 # Context: 1_048_576 is the served window (GET /v1/models context_length).
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
 
 [limit]
 context = 1_048_576

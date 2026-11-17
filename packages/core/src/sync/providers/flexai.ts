@@ -19,14 +19,17 @@ const BaseModels: Record<string, string> = {
   "GLM-5.2": "zhipuai/glm-5.2",
   "GLM-5.3-Flash": "zhipuai/glm-5.3-flash",
   "Kokoro-82M": "hexgrad/kokoro-82m",
+  "Llama-Guard-4-12B": "meta/llama-guard-4-12b",
   "Llama-3.3-70B-Instruct-FP8": "meta/llama-3.3-70b-instruct",
   "Meta-Llama-3.1-8B-Instruct-FP8": "meta/llama-3.1-8b-instruct",
   "MiMo-V2.6-Flash-RL": "xiaomi/mimo-v2.6-flash",
+  "MiniMax-H3": "minimax/MiniMax-H3",
   "MiniMax-M3.1-Flash": "minimax/MiniMax-M3.1-Flash",
   "Mistral-Nemo-Instruct-2407-FP8": "mistral/mistral-nemo",
   "Muse-Glimmer-30B": "meta/muse-glimmer-30b",
   "NVIDIA-Nemotron-3.5-Lightning-30B-A3B": "nvidia/nemotron-3.5-lightning",
   "PaddleOCR-VL": "paddlepaddle/paddleocr-vl",
+  "Qwen3-Reranker-8B": "alibaba/qwen3-reranker-8b",
   "Qwen3-30B-A3B-Thinking-2507-FP8": "alibaba/qwen3-30b-a3b-thinking-2507",
   "Qwen3-Coder-30B-A3B-Instruct-FP8": "alibaba/qwen3-coder-30b-a3b-instruct",
   "Qwen3.5-9B": "alibaba/qwen3.5-9b",
@@ -182,10 +185,11 @@ const MediaUnits: Record<string, { path: string; unit: string; scale: number }> 
   minute_audio: { path: "cost.audio.input", unit: "minute", scale: 1 },
   second_audio: { path: "cost.audio.input", unit: "second", scale: 1 },
   image: { path: "cost.image.output", unit: "image", scale: 1 },
+  second_video: { path: "cost.video.output", unit: "second", scale: 1 },
 };
 
 /**
- * Per-unit cost of a media model (image, speech, transcription) as v2 values,
+ * Per-unit cost of a media model (image, video, speech, transcription) as v2 values,
  * which v1's per-token cost fields can't carry. Only a single untiered row is
  * published; anything else is left to the authored file and reported.
  */

@@ -3,9 +3,17 @@
 # disabled, non-zero when enabled. reasoning_effort is accepted by the
 # gateway for this model but produces no distinct effect, so no effort
 # levels are declared.
+# Modalities (staging probe, 2026-11-17): reads images; video is NOT served -- a video_url part returns
+# 400 ("does not accept video input"; GET /v1/models lists input_modalities text, image) and
+# input_video, a PDF file part and input_audio each return 400 -- so input is the lab's image
+# MIME list without video.
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true }

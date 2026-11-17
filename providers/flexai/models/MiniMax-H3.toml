@@ -1,0 +1,15 @@
+# Video generation: POST https://api.flex.ai/v1/videos/generations, poll GET /v1/videos/generations/{id}
+# (https://docs.flex.ai/inference-api/guides/video).
+# Price: GET /v1/models media_pricing, $0.08 per second of generated video (billing_unit second_video, one untiered
+# row: no resolution, quality or preset tier), 2026-11-17. The row carries no input-video or input-image price.
+# Listed by GET /v1/models with is_ready false on 2026-11-17; no generation was run. Token limits do not apply.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.08

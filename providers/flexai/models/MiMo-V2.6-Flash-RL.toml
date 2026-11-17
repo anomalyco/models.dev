@@ -11,6 +11,10 @@
 #   top-level reasoning_effort low 6829 · medium 3982 · high 4390 (not ordered)
 # No effort levels are declared yet: the lever works only as a chat-template kwarg,
 # and FlexAI's gateway does not yet map top-level reasoning_effort onto it.
+# Modalities (staging probe, 2026-11-17): the lab's video and audio input is served and inherited.
+# A video_url part (mp4) returns 200 and the reply describes the clip; an input_audio part (wav)
+# returns 200 and the reply describes the tone. input_video and a PDF file part return 400
+# (neither is in the inherited list). GET /v1/models lists input_modalities text, image, audio, video.
 # https://docs.flex.ai/inference-api/agents/langchain
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
