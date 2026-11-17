@@ -1,0 +1,36 @@
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Host-specific fine-tune/serving alias. Checkpoint identity is not shared across its routes.
+# Metadata: https://github.com/anomalyco/models.dev/blob/dev/providers/venice/models/qwen-3-6-plus.toml.
+# Reasoning is always on on the callable routes and has no caller control.
+# Controls are accepted across eligible routes: https://docs.anonrouter.ai/reasoning.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+name = "Qwen 3.6 Plus Uncensored"
+description = "Uncensored variant of Qwen3.6 Plus for coding, reasoning, and multimodal agent tasks"
+family = "qwen"
+open_weights = false
+release_date = "2026-04-06"
+last_updated = "2026-11-13"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.66
+
+[cost.text.output]
+price = 3.95

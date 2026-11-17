@@ -1,0 +1,31 @@
+# Context uses the default 40,960-token model configuration. The model card documents up to 131,072 with YaRN.
+# Its recommended output lengths are sampling guidance; the serving host supplies its output cap.
+# Sampling defaults: https://huggingface.co/Qwen/Qwen3-14B/blob/main/generation_config.json.
+# Model: https://huggingface.co/Qwen/Qwen3-14B
+# Shared model metadata extracted from providers/openrouter/models/qwen/qwen3-14b.toml.
+# API controls, cache and prices are defined by each host.
+schema = 2
+name = "Qwen3 14B"
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
+family = "qwen"
+open_weights = true
+knowledge = "2025-03-31"
+release_date = "2025-04-28"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 40960
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-14B"

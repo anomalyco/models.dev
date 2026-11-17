@@ -1,0 +1,19 @@
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+base_model = "alibaba/qwen2.5-7b-instruct"
+name = "Qwen 2.5 7B"
+
+[limit]
+context = 32_768
+output = 32_768
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 0.24

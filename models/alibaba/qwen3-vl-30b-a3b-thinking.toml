@@ -1,0 +1,28 @@
+# https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Thinking
+# https://github.com/QwenLM/Qwen3-VL (News, 2025.10.4).
+# Context from text_config.max_position_embeddings; output cap is host-specific.
+schema = 2
+family = "qwen"
+open_weights = true
+name = "Qwen3 VL 30B A3B Thinking"
+description = "Open vision-language mixture-of-experts model with explicit reasoning for image and video tasks"
+release_date = "2025-10-04"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Thinking"

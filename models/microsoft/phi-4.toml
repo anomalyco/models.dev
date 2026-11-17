@@ -1,0 +1,30 @@
+# The model card specifies a 16K context window and no separate output ceiling.
+# Sampling defaults: https://huggingface.co/microsoft/phi-4/blob/main/generation_config.json.
+# Model: https://huggingface.co/microsoft/phi-4
+# Shared model metadata extracted from providers/openrouter/models/microsoft/phi-4.toml.
+# API controls, cache and prices are defined by each host.
+schema = 2
+name = "Phi 4"
+description = "Open-weight instruction model for adaptable chat and self-hosted production workloads"
+family = "phi"
+open_weights = true
+knowledge = "2024-06-30"
+release_date = "2025-01-10"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 16384
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/microsoft/phi-4"
