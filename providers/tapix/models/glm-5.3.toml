@@ -1,15 +1,19 @@
-# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
-# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is zhipuai/glm-5.3.
+# Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17); these are our published list prices, not a converted third-party list.
+# Relayed by Tapix AI (https://tapixai.com/v1); upstream model is zhipuai/glm-5.3.
+# Reasoning: reasoning_effort on /v1/chat/completions; none = off. Live probe 2026-11-17 accepted none/low/medium/high/minimal/xhigh/max; claude-fable-5 rejects none.
 # Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
 [cost.text.input]
-price = 0.73472
+price = 0.73
 
 [cost.text.output]
-price = 2.557806
+price = 2.56
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

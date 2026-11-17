@@ -1,15 +1,19 @@
-# Prices: https://tapixai.com/pricing and https://tapixai.com/api/models (USD per 1M tokens).
-# Relayed via Tapix AI (https://tapixai.com/v1); upstream model is google/gemini-4-hydrogen.
+# Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17); these are our published list prices, not a converted third-party list.
+# Relayed by Tapix AI (https://tapixai.com/v1); upstream model is google/gemini-4-hydrogen.
+# Reasoning: reasoning_effort on /v1/chat/completions; none = off. Live probe 2026-11-17 accepted none/low/medium/high/minimal/xhigh/max; claude-fable-5 rejects none.
 # Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "google/gemini-4-hydrogen"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
 [cost.text.input]
-price = 0.858589
+price = 0.86
 
 [cost.text.output]
-price = 3.434589
+price = 3.43
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
