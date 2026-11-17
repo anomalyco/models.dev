@@ -17,6 +17,7 @@ base_model = "mistral/mistral-large-4"
 
 [limit]
 context = 262_144
+image = { max_per_request = 8 }
 
 [capabilities]
 structured_output = true
