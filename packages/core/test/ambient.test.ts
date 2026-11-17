@@ -14,7 +14,7 @@ function ambientModel(overrides: Partial<AmbientModel> = {}): AmbientModel {
     max_output_length: 1_048_576,
     input_modalities: ["text"],
     output_modalities: ["text"],
-    pricing: { prompt: "0.000000098", completion: "0.000000294", input_cache_read: "0.0000000029" },
+    pricing: { prompt: "0.000000098", completion: "0.000000294", input_cache_read: "0.0000000029", input_cache_write: "0" },
     supported_features: ["tools", "json_mode", "structured_outputs", "reasoning"],
     supported_sampling_parameters: ["temperature", "top_p"],
     openrouter: { slug: "deepseek/deepseek-v4.1-flash-1017" },
