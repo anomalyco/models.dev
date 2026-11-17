@@ -1,0 +1,27 @@
+# Pricing: https://lazu.ai/api/pricing (`channel_group = "direct"`, USD per MTok, accessed 2026-11-18).
+# Direct lane bills flat USD rates ($0.10 input, $0.01 cache read, $0.125 cache write, $0.50 output per MTok; no context_tier override on the direct lane).
+# APIs: OpenAI Responses at https://api.lazu.ai/v1/responses and Chat Completions at https://api.lazu.ai/v1/chat/completions (https://api.lazu.ai/v1/models).
+# Effort: reasoning.effort (Responses) / reasoning_effort (Chat Completions) = none|low|medium|high|xhigh|max;
+# off is effort = "none", so no separate toggle is authored (providers/openai).
+# Cache: OpenAI automatic prompt caching (implicit).
+# freeform: custom tools with text/lark/regex grammars have not been live-probed with a restrictive grammar on this host yet
+# (and Lazu's cross-protocol codec rejects tools[].type != "function" when bridging), so freeform is left unset.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = 0.125 }
+
+[cost.text.output]
+price = 0.5

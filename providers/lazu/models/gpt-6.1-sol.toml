@@ -1,0 +1,36 @@
+# Pricing: https://lazu.ai/api/pricing (`channel_group = "direct"`, USD per MTok, accessed 2026-11-18).
+# Context pricing: above 272,000 input tokens, input, cache read and cache write x2 ($4 / $0.20 / $5), output x1.5 ($15).
+# APIs: OpenAI Responses at https://api.lazu.ai/v1/responses and Chat Completions at https://api.lazu.ai/v1/chat/completions (https://api.lazu.ai/v1/models).
+# Effort: reasoning.effort (Responses) / reasoning_effort (Chat Completions) = low|medium|high|xhigh|max,
+# as on providers/openai and relay peers (teamorouter, 302ai).
+# Cache: OpenAI automatic prompt caching (implicit); cache_write_5m_per_mtok is $2.50 ($5.00 above 272K) in https://lazu.ai/api/pricing.
+# freeform: custom tools with text/lark/regex grammars have not been live-probed with a restrictive grammar on this host yet
+# (and Lazu's cross-protocol codec rejects tools[].type != "function" when bridging), so freeform is left unset.
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15
