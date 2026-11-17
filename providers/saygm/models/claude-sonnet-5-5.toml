@@ -1,0 +1,23 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-17).
+# Effort: output_config.effort = low|medium|high|xhigh|max (thinking.type = disabled is rejected)
+# structured_output: live probe 2026-11-17 on api.saygm.com /v1/messages: output_config.format
+# json_schema {n: integer} returned schema-valid JSON for a prose prompt.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.messages]
+base_url = "https://api.saygm.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.9982
+cache = { read = 0.09991, write = { "5m" = 2.49775, "1h" = 3.9964 } }
+
+[cost.text.output]
+price = 9.991

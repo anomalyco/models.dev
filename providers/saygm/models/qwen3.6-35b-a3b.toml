@@ -1,0 +1,28 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-17).
+# Toggle: chat_template_kwargs.enable_thinking = true|false (false gave 0 reasoning tokens).
+# No budget: thinking_budget = 50, top-level or in chat_template_kwargs, still reasoned 1,956 to
+# 3,000 tokens (live 2026-11-17 on api.saygm.com).
+# SayGM serves this id text-only (its /v1/models capabilities report vision: false).
+# Reasoning output: reasoning_content
+# No cache discount: every SayGM offer prices cache reads at the input rate.
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+cache = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.242668
+
+[cost.text.output]
+price = 1.4530725

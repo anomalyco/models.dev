@@ -1,0 +1,28 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-17).
+# Toggle: thinking.type = enabled|disabled
+# SayGM serves this id text-only (its /v1/models capabilities report vision: false).
+# Reasoning output: reasoning_content
+# structured_output: live probe 2026-11-17 on api.saygm.com /v1/chat/completions: response_format
+# json_schema {n: integer} (strict) returned schema-shaped JSON for a prose prompt, 2 of 2.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.24025
+cache = { read = 0.01854 }
+
+[cost.text.output]
+price = 4.4805
