@@ -1,0 +1,13 @@
+# Hostlinku unified AI gateway (https://hostlinku.com, docs: https://docs.hostlinku.com).
+# Endpoints under https://api.hostlinku.com/v1 speak OpenAI Chat Completions (POST /v1/chat/completions),
+# OpenAI Responses (POST /v1/responses), and Anthropic Messages (POST /v1/messages) with the same API key
+# (`Authorization: Bearer` or `x-api-key`).
+# Service modes: each API key is bound to `performance`, `economy`, or `dedicated` (https://docs.hostlinku.com/service-modes).
+# GET /v1/models returns the active key's callable models and USD per-1M-token prices.
+# Public catalog and per-mode USD pricing (no auth): https://hostlinku.com/models and GET https://api.hostlinku.com/api/public/models.
+name = "Hostlinku"
+env = ["HOSTLINKU_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.hostlinku.com/v1"
+doc = "https://docs.hostlinku.com"
