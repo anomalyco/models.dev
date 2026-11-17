@@ -163,7 +163,7 @@ export const volcengine = {
   name: "Volcengine Ark",
   modelsDir: "providers/volcengine/models",
   deleteMissing: false,
-  sourceID(model) { return model.id; },
+  sourceID(model) { return model.retiring ? undefined : model.id; },
   missingModelID(model) { return model.retiring ? undefined : model.id; },
   skippedNotice(ids) {
     return ids.length === 0 ? [] : [
@@ -228,6 +228,7 @@ export const volcengine = {
       ...(controls.some((option) => option.type === "toggle") ? ["# Toggle: thinking.type = enabled|disabled"] : []),
       ...(effort === undefined ? [] : [`# Effort: reasoning_effort = ${effort.values.join("|")}`]),
       "# Pricing is not provided by the model list and is intentionally omitted.",
+      "# Cache support is not inferred from other versions; curate this exact ID before merging.",
     ].join("\n");
     return {
       id: model.id,
@@ -250,6 +251,7 @@ export const volcengine = {
       } as SyncedModel,
       header,
       v2Set,
+      notices: [`Volcengine ${model.id}: curate exact-version cache support before merging this new model; cache settings are not copied from ${peerID}.`],
     };
   },
 } satisfies SyncProvider<VolcengineModel>;
