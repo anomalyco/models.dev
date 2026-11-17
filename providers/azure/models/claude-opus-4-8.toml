@@ -10,13 +10,14 @@
 # Messages endpoint even though Microsoft doesn't document them. Live 2026-10-23: both kept the full cache (same as the control) and the model saw the change.
 # Web search: $10 per 1,000 searches; Foundry bills Claude in CCUs at Anthropic's standard per-feature rates: https://platform.claude.com/docs/en/about-claude/pricing#claude-in-microsoft-foundry-pricing
 # tools.updates follows OpenAI's own Responses API (live 2026-11-17 there: add, redefine and removal 3/3 on gpt-6-astra and gpt-5.6-sol); Azure wasn't re-tested (no key here).
+# Toggle: thinking.type = adaptive|disabled https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting#supported-models
 schema = 2
 base_model = "anthropic/claude-opus-4-8"
 knowledge = "2025-12-31"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], search = true, updates = ["add", "remove", "replace"] }
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 structured_output = true
 
