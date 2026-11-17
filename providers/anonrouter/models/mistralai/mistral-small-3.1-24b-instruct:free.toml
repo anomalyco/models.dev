@@ -1,4 +1,4 @@
-# Host catalog capabilities.tools (2026-11-17): cloudflare/mistral-small-3-1-24b-instruct-free=true.
+# The host advertises tools, but live qualification was blocked by shared free capacity (HTTP 429, 2026-11-17).
 # Callable plaintext routes advertise capabilities.vision=false; this host entry accepts text only.
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
@@ -12,9 +12,6 @@ name = "Mistral Small 3.1 24B (Free)"
 [modalities]
 input = ["text"]
 output = ["text"]
-
-[capabilities]
-tools = { supported = true }
 
 [limit]
 context = 32_768

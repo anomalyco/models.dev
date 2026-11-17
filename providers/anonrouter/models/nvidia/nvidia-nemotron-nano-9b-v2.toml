@@ -1,4 +1,6 @@
-# Host catalog capabilities.reasoning.supported (2026-11-17): amazon-bedrock/nvidia-nemotron-nano-9b-v2=false, surplusintelligence/nvidia-nemotron-nano-9b-v2=false.
+# Reasoning support follows the native model; route profiles expose no configurable effort or off control.
+# A number-only math prompt returned step-by-step thinking in content, without a separate reasoning field (live 2026-11-17).
+# Live tickets rejected reasoning_effort=low with HTTP 400 reasoning_not_supported (2026-11-17).
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
 # Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
@@ -8,7 +10,7 @@ base_model = "nvidia/nemotron-nano-9b-v2"
 name = "NVIDIA Nemotron Nano 9B v2"
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true }
 
 [limit]
 context = 128_000

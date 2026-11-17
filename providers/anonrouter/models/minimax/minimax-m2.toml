@@ -1,4 +1,6 @@
-# Host catalog capabilities.reasoning.supported (2026-11-17): amazon-bedrock/minimax-minimax-m2=false, cheaperinference/minimax-m2=false, surplusintelligence/minimax-m2=false.
+# Reasoning support follows the native model; route profiles expose no configurable effort or off control.
+# Default chat returned reasoning_content despite the route profile reasoning=false flag (live 2026-11-17).
+# Live tickets rejected reasoning_effort=low with HTTP 400 reasoning_not_supported (2026-11-17).
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
 # Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
@@ -8,13 +10,14 @@ base_model = "minimax/MiniMax-M2"
 name = "MiniMax M2"
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true }
 
 [limit]
 context = 196_000
 output = 8_000
 
 [api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.35

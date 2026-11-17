@@ -1,5 +1,8 @@
+# Reasoning support follows the native model; route profiles expose no configurable effort or off control.
+# Default-chat qualification remained unavailable after a retry (503 authorization_unavailable, 2026-11-17).
+# Live tickets rejected reasoning_effort=low with HTTP 400 reasoning_not_supported (2026-11-17).
+# AnonRouter rejected a forced-function request with HTTP 400 tools_not_supported (live 2026-11-17).
 # Host catalog capabilities.tools (2026-11-17): sail/google-gemma-4-12b-it=false.
-# Host catalog capabilities.reasoning.supported (2026-11-17): sail/google-gemma-4-12b-it=false.
 # Callable plaintext routes advertise capabilities.vision=false; this host entry accepts text only.
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
@@ -15,7 +18,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = false }
-reasoning = { supported = false }
+reasoning = { supported = true }
 
 [limit]
 context = 15_872
