@@ -1,5 +1,5 @@
 schema = 2
-name = "deepseek-v4.1-flash-latest (reka-ai)"
+name = "DeepSeek V4.1 Flash Latest (Fireworks AI)"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
 family = "deepseek"
 open_weights = false
@@ -11,7 +11,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = true
 
@@ -20,8 +20,8 @@ context = 1_048_576
 output = 393_216
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.003 }
+price = 0.3
+cache = { read = 0.006 }
 
 [cost.text.output]
-price = 0.6
+price = 1.2
