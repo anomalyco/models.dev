@@ -8,6 +8,9 @@
 # Reuse this provider's fixed conversion rate; all prices are USD per million tokens.
 # Exact limits: public Ark Docs MCP ark_get_model("doubao-seed-2-1-pro-260915").
 # Effort: reasoning_effort = minimal|low|medium|high; minimal disables thinking.
+# Default high: the exact-model deep-thinking#fc5eac89 row and public Ark Docs MCP
+# ark_get_model("doubao-seed-2-1-pro-260915") parameter_support.reasoning_effort.default,
+# both rechecked 2026-11-17, document high.
 # Accepted aliases: none->minimal, xhigh/max->high. Do not repeat equivalent levels.
 schema = 2
 base_model = "bytedance-seed/seed-2.1-pro"
