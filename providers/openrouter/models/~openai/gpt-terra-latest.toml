@@ -3,7 +3,6 @@
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Cache: automatic from 1,024 tokens; GPT-5.6+ explicit prompt_cache_breakpoint, 30m TTL (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
-# Live 2026-11-17 (@opencode/ai request shapes, every tool in additional_tools, 2 runs each on this model): tools.updates = ["add", "remove"] on [api.responses]: additions and removal announcements work; a redefinition keeps the old schema. Chat Completions has no mechanism.
 schema = 2
 name = "GPT Terra Latest"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
@@ -32,7 +31,6 @@ output = 128_000
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
-capabilities = { tools = { updates = ["add", "remove"] } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
