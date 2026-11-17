@@ -1,4 +1,5 @@
 # Source: GET https://api.isoquant.ai/v1/models (accessed 2026-11-10).
+# API docs: https://isoquant.ai/docs (accessed 2026-11-17).
 # Same weights as the lab model on a higher-throughput serve; the host names it "... Fast".
 # Pricing (nano-USD per token -> USD per million): 35/5/370 = $0.035/$0.005/$0.37
 # input/cached input/output. Prompt caching is automatic with no write price.
@@ -9,11 +10,15 @@
 # Chat Completions returns the trace in `reasoning_content`.
 # Tools: the host reports `strict_tools: true` and tool_choice auto/none/required/function on
 # Chat Completions and Responses, and auto/none/any/tool on Messages; its docs state "Strict
-# function tools are supported." The top-level list is the union across those APIs, with any
-# mapped to required and named to tool.
+# function tools are supported." The top-level list is the union across those APIs, with
+# `function`/`tool` recorded as `tool` and `any` as `required`.
+# `store: true` is rejected: "Only stateless foreground Responses are supported" (live probe
+# 2026-11-17). `top_k` is rejected on Chat Completions, Messages and Responses; `temperature`
+# and `top_p` are accepted on all three APIs (live probes 2026-11-17).
 # Limits: the host reports context_length 1048576 and output_limit.max_tokens 943718
 # (policy `remaining_context`); the lab's 384,000 output cap does not apply on this serve.
-# Modalities: the host advertises text+image on all three APIs, which matches the lab.
+# Modalities: the host advertises generic text+image on all three APIs; per-format input
+# support is inherited from the lab and was not separately probed on this serve.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash 1017 Fast"
@@ -22,7 +27,9 @@ name = "DeepSeek V4.1 Flash 1017 Fast"
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high"] }
 structured_output = true
+store = false
 cache = { implicit = true }
+top_k = false
 
 [limit]
 context = 1_048_576
