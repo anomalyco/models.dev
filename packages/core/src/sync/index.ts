@@ -40,6 +40,7 @@ import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
 import { hyper } from "./providers/hyper.js";
 import { hostingerRouter } from "./providers/hostinger-router.js";
+import { hostlinku } from "./providers/hostlinku.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
 import { keln } from "./providers/keln.js";
@@ -210,6 +211,7 @@ export const providers: {
   google: SyncProvider<any>;
   hyper: SyncProvider<any>;
   "hostinger-router": SyncProvider<any>;
+  hostlinku: SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
   keln: SyncProvider<any>;
@@ -262,6 +264,7 @@ export const providers: {
   google,
   hyper,
   "hostinger-router": hostingerRouter,
+  hostlinku,
   huggingface,
   inceptron,
   keln,
@@ -301,6 +304,7 @@ export const groups = {
     "edenai",
     "empiriolabs",
     "hostinger-router",
+    "hostlinku",
     "huggingface",
     "inceptron",
     "keln",
