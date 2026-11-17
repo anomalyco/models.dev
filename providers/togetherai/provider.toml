@@ -31,5 +31,5 @@ opencodeai = "@opencode/ai/providers/togetherai"
 # the chat template rendered it, which shows where a later system message and the tool list land.
 # Where the backend doesn't return it, a cache probe warms a ~8k-token prefix, sends a control
 # turn, then the changed turn: a late system message that is answered and keeps the cache is in
-# place (system_updates = true); adding one tool that drops the cache means tools.updates = [].
+# place (system_updates = true); adding one tool that drops the cache means tools.updates = false.
 doc = "https://docs.together.ai/docs/serverless-models"
