@@ -1,0 +1,21 @@
+# Pricing source: https://hostlinku.com/models/gemini-4-argon and https://api.hostlinku.com/api/public/models/gemini-4-argon
+#   Performance (USD/MTok): input $0.948, output $4.74, cache_read $0.0474, cache_write_5m $1.185, cache_write_1h $1.896, web_search $0.948/1k
+# Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
+# Effort: reasoning_effort = low|medium|high
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.948
+cache = { read = 0.0474, write = { "5m" = 1.185, "1h" = 1.896 } }
+
+[cost.text.output]
+price = 4.74
+
+[cost.web_search]
+price = 0.948

@@ -1,0 +1,27 @@
+# Pricing source: https://hostlinku.com/models/deepseek-v4-1-flash and https://api.hostlinku.com/api/public/models/deepseek-v4-1-flash
+#   Dedicated (USD/MTok): input $0.1695, output $0.678, cache_read $0.00339
+# Service mode: offered in "dedicated" (runtime pricing & availability via GET /v1/models).
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables)
+# Effort: reasoning_effort = low|high|max
+# Live probe 2026-11-17 on https://api.hostlinku.com/v1/chat/completions: default returns reasoning_content; thinking.type="disabled" + reasoning_effort="none" suppresses reasoning.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1695
+cache = { read = 0.00339 }
+
+[cost.text.output]
+price = 0.678

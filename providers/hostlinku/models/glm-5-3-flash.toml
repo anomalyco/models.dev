@@ -1,0 +1,24 @@
+# Pricing source: https://hostlinku.com/models/glm-5-3-flash and https://api.hostlinku.com/api/public/models/glm-5-3-flash
+#   Dedicated (USD/MTok): input $0.1695, output $0.565, cache_read $0.0339
+# Service mode: offered in "dedicated" (runtime pricing & availability via GET /v1/models).
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1695
+cache = { read = 0.0339 }
+
+[cost.text.output]
+price = 0.565

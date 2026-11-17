@@ -1,0 +1,24 @@
+# Pricing source: https://hostlinku.com/models/qwen3-8-max and https://api.hostlinku.com/api/public/models/qwen3-8-max
+#   Performance (USD/MTok): input $1.896, output $5.688, cache_read $0.237, cache_write_5m $2.37, cache_write_1h $3.792, web_search $1.896/1k
+# Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
+# Effort: reasoning_effort = low|medium|xhigh
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.896
+cache = { read = 0.237, write = { "5m" = 2.37, "1h" = 3.792 } }
+
+[cost.text.output]
+price = 5.688
+
+[cost.web_search]
+price = 1.896

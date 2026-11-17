@@ -1,0 +1,64 @@
+# Pricing source: https://hostlinku.com/models/gpt-5-6-sol and https://api.hostlinku.com/api/public/models/gpt-5-6-sol
+#   Performance (USD/MTok): input $1.4536, output $7.268, cache_read $0.14536, cache_write_5m $1.817, cache_write_1h $2.9072, web_search $15.8/1k, (>=272000 tok: in $10.112, out $37.92)
+#   Economy (USD/MTok): input $0.25, output $1.25, cache_read $0.025, cache_write_5m $0.3125, cache_write_1h $0.3125, web_search $12.5/1k, (>=272000 tok: in $0.5, out $1.875)
+# Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
+# Freeform probe (2026-11-17, live on https://api.hostlinku.com): /v1/responses and /v1/chat/completions
+# were probed with custom tool grammar (syntax "regex" ZZ[0-9]{3} against prompt "APPLE" and syntax
+# "lark" LK[0-9]{3} against prompt "BANANA"). Grammar constraints are not consistently enforced across
+# upstream routes (e.g. gpt-6-sol returned "APPLE"/"BANANA" and gpt-5-5 rejected grammar tools with 400),
+# so freeform is omitted.
+schema = 2
+base_model = "openai/gpt-5.6-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.responses]
+base_url = "https://api.hostlinku.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]
+base_url = "https://api.hostlinku.com/v1"
+
+[cost.text.input]
+price = 1.4536
+cache = { read = 0.14536, write = { "5m" = 1.817, "1h" = 2.9072 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 272_000 } }
+price = 10.112
+cache = { read = 1.0112, write = { "5m" = 12.64, "1h" = 12.64 } }
+
+[[cost.text.input.overrides]]
+when = { mode = { equals = "economy" } }
+price = 0.25
+cache = { read = 0.025, write = { "5m" = 0.3125, "1h" = 0.3125 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 272_000 }, mode = { equals = "economy" } }
+price = 0.5
+cache = { read = 0.05, write = { "5m" = 0.625, "1h" = 0.625 } }
+
+[cost.text.output]
+price = 7.268
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 272_000 } }
+price = 37.92
+
+[[cost.text.output.overrides]]
+when = { mode = { equals = "economy" } }
+price = 1.25
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 272_000 }, mode = { equals = "economy" } }
+price = 1.875
+
+[cost.web_search]
+price = 15.8
+
+[[cost.web_search.overrides]]
+when = { mode = { equals = "economy" } }
+price = 12.5
