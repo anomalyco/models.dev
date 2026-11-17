@@ -1,0 +1,25 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-25); prices are USD per token there, per MTok here.
+# Service tiers: catalog <tier>_service_tier_pricing as multipliers of the default prices.
+# Effort: reasoning.effort = low|medium|high
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-25): supported_parameters lists thinking (schemas empty, no enum).
+#   Baseline: lab providers/google gemini-3.7-flash = effort low|medium|high; peer providers/openrouter google/gemini-3.7-flash = effort low|medium|high.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+# Cache: the catalog's input_cache_write = $0.5 is Google's context-cache storage rate (USD per MTok per hour, as in providers/google gemini-3.8-flash), so it is published as storage, not write.
+# Not represented: flex does not scale cache storage in the catalog (still $0.5).
+schema = 2
+base_model = "google/gemini-3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+service_tier = ["flex"]
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075, storage = 0.5 }
+
+[cost.text.output]
+price = 3.75
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

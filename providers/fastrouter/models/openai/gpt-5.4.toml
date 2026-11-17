@@ -1,0 +1,36 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-25); prices are USD per token there, per MTok here.
+# Service tiers: catalog <tier>_service_tier_pricing as multipliers of the default prices.
+# Not represented: web search $0.01 per request (no v2 per-request field).
+# Effort: reasoning.effort = none|low|medium|high|xhigh
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-25): supported_parameters lists include_reasoning, reasoning (schemas empty, no enum).
+#   Baseline: lab providers/openai gpt-5.4 = effort none|low|medium|high|xhigh; peer providers/openrouter openai/gpt-5.4 = effort none|low|medium|high|xhigh.
+#   effort = none disables reasoning on FastRouter (same as reasoning.enabled = false), so no separate toggle.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+# Not represented: the catalog publishes no long-context (>272k) cache price for this route (no input_cache_read_more_than_272k_input field), so the base cache rate applies above 272k.
+# Not represented: flex cache read is $0.13 in the catalog, x0.52 rather than x0.5 (rounding).
+schema = 2
+base_model = "openai/gpt-5.4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+service_tier = ["flex"]
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 5
+
+[cost.text.output]
+price = 15
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 22.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
