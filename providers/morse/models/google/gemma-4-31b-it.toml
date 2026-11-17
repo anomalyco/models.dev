@@ -1,0 +1,19 @@
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "high"] }
+top_k = false
+
+[limit]
+output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.25
+
+[cost.text.output]
+price = 0.5

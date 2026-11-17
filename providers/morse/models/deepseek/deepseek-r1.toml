@@ -1,0 +1,20 @@
+schema = 2
+base_model = "deepseek/deepseek-r1"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
+top_k = false
+
+[limit]
+context = 64_000
+output = 16_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.875
+
+[cost.text.output]
+price = 3.125

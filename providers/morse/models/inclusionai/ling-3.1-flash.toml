@@ -1,0 +1,18 @@
+schema = 2
+base_model = "inclusionai/ling-3.1-flash"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "high"] }
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.375
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.125

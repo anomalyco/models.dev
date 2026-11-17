@@ -1,0 +1,22 @@
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+top_k = false
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.625
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 2.75

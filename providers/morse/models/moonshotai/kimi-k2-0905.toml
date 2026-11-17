@@ -1,0 +1,12 @@
+schema = 2
+base_model = "moonshotai/kimi-k2-0905"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+top_k = false
+
+[cost.text.input]
+price = 0.75
+
+[cost.text.output]
+price = 3.125

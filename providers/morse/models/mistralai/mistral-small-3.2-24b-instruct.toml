@@ -1,0 +1,19 @@
+schema = 2
+base_model = "mistral/mistral-small-3.2-24b-instruct"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+top_k = false
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.3

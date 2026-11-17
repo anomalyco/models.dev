@@ -1,0 +1,17 @@
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = false }
+top_k = false
+
+[cost.text.input]
+price = 0.375
+
+[cost.text.output]
+price = 2.25

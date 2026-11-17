@@ -1,0 +1,25 @@
+schema = 2
+name = "Qwen2.5 72B Instruct"
+description = "Open Qwen2.5 instruction model for chat, structured output, and tool use"
+family = "qwen"
+open_weights = true
+release_date = "2024-09-19"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 8_192
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen2.5-72B-Instruct"
