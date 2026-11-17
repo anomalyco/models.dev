@@ -496,7 +496,7 @@ price = 2
         responses: {
           base_url: "https://example.com/v1",
           sdk: { aisdk: "@ai-sdk/openai" },
-          capabilities: { tools: { updates: false } },
+          capabilities: { tools: { updates: [] } },
         },
       });
       expect(JSON.stringify(providersV2)).not.toContain("legacy_shape");
@@ -808,7 +808,7 @@ path = "/decisions"
 [api.chat-completions]
 
 [api.responses]
-capabilities = { tools = { choice = ["auto"], search = true, updates = true } }
+capabilities = { tools = { choice = ["auto"], search = true, updates = ["add", "remove", "replace"] } }
 
 [api.messages]
 capabilities = { tools = { strict = false } }
@@ -824,12 +824,12 @@ capabilities = { tools = { strict = false } }
         Object.entries(models?.model?.api ?? {}).map(([protocol, entry]) => [protocol, entry.capabilities?.tools]),
       );
       expect(tools).toEqual({
-        "chat-completions": { strict: true, choice: ["auto", "none", "required", "tool"], updates: false },
-        responses: { strict: true, choice: ["auto"], search: true, updates: true },
-        messages: { strict: false, choice: ["auto", "none", "required", "tool"], updates: false },
+        "chat-completions": { strict: true, choice: ["auto", "none", "required", "tool"], updates: [] },
+        responses: { strict: true, choice: ["auto"], search: true, updates: ["add", "remove", "replace"] },
+        messages: { strict: false, choice: ["auto", "none", "required", "tool"], updates: [] },
       });
       // Without tables, the provider's default API takes the model's values.
-      expect(models?.plain?.api["chat-completions"]?.capabilities).toEqual({ tools: { search: true, updates: false } });
+      expect(models?.plain?.api["chat-completions"]?.capabilities).toEqual({ tools: { search: true, updates: [] } });
     });
   });
 

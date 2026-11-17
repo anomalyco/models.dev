@@ -7,7 +7,7 @@ schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required"], updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required"], updates = ["add"] }
 reasoning = { supported = true, effort = ["max"] }
 structured_output = true
 system_updates = true

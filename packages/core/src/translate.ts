@@ -17,8 +17,9 @@ export function isSchemaV2(toml: Record<string, unknown>) {
   return toml.schema === 2;
 }
 
-// Mid-conversation flags default to false, so files leave them out instead of
-// writing `= false`. Returns the dotted path of every explicit false.
+// Mid-conversation flags default to false and `tools.updates` to none, so files
+// leave them out instead of writing `= false` or `= []`. Returns the dotted path
+// of every explicit default.
 export function explicitFalseFlags(toml: Record<string, unknown>): string[] {
   const record = (value: unknown) =>
     value !== null && typeof value === "object" && !Array.isArray(value)
@@ -27,10 +28,11 @@ export function explicitFalseFlags(toml: Record<string, unknown>): string[] {
   const check = (capabilities: unknown, at: string) => {
     const caps = record(capabilities);
     if (caps === undefined) return [];
+    const updates = record(caps.tools)?.updates;
     return [
       caps.system_updates === false ? `${at}.system_updates` : undefined,
       caps.effort_updates === false ? `${at}.effort_updates` : undefined,
-      record(caps.tools)?.updates === false ? `${at}.tools.updates` : undefined,
+      Array.isArray(updates) && updates.length === 0 ? `${at}.tools.updates` : undefined,
     ].filter((flag) => flag !== undefined);
   };
   return [

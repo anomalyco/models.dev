@@ -431,7 +431,7 @@ function toApiV2(model: Model, provider: Provider): ApiV2 {
     base_url,
     sdk: { aisdk: npm },
     ...(compatibility !== undefined ? { compatibility } : {}),
-    ...(model.tool_call ? { capabilities: { tools: { updates: false } } } : {}),
+    ...(model.tool_call ? { capabilities: { tools: { updates: [] } } } : {}),
   };
 
   return { [protocol]: entry } as ApiV2;
@@ -529,7 +529,7 @@ function withApiTools(
       );
       return [
         protocol,
-        { ...entry, capabilities: { ...entry.capabilities, tools: { ...details, updates: merged.updates ?? false } } },
+        { ...entry, capabilities: { ...entry.capabilities, tools: { ...details, updates: merged.updates ?? [] } } },
       ];
     }),
   ) as ApiV2;
