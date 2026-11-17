@@ -31,10 +31,15 @@ const efforts: ExistingModel["reasoning_options"] = [
 test("Ambient skips new reasoning models until their controls are authored", () => {
   const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
   expect(() => ambient.translateModel(ambientModel(), context)).toThrow(MissingReasoningOptionsError);
-  // Non-reasoning models are still created.
-  expect(ambient.translateModel(ambientModel({ supported_features: ["tools"] }), context)).toMatchObject({
-    id: "deepseek/deepseek-v4.1-flash-1017",
+  // A row that drops the flag still skips when the lab reasons.
+  expect(() => ambient.translateModel(ambientModel({ supported_features: ["tools"] }), context)).toThrow(MissingReasoningOptionsError);
+  // Models whose lab doesn't reason are still created.
+  const llama = ambientModel({
+    id: "meta-llama/llama-3.3-70b-instruct", name: "Llama 3.3 70B", hugging_face_id: "meta-llama/Llama-3.3-70B-Instruct",
+    context_length: 131_072, max_output_length: 131_072, supported_features: ["tools"],
+    openrouter: { slug: "meta-llama/llama-3.3-70b-instruct" },
   });
+  expect(ambient.translateModel(llama, context)).toMatchObject({ id: "meta-llama/llama-3.3-70b-instruct" });
 });
 
 test("Ambient keeps authored reasoning controls on existing files", () => {
@@ -71,4 +76,11 @@ test("Ambient linked files never restate the generated description", () => {
   // A restated lab description is dropped; one that differs stays.
   expect(buildAmbientModel(ambientModel(), linked, linked)).not.toHaveProperty("description");
   expect(buildAmbientModel(ambientModel(), linked, { ...linked, description: "Ambient wording" })).toMatchObject({ description: "Ambient wording" });
+});
+
+test("Ambient doesn't restate an output limit equal to the lab's or write an empty limit", () => {
+  const authored = { base_model: "deepseek/deepseek-v4.1-flash-1017", reasoning_options: efforts } as ExistingModel;
+  const built = buildAmbientModel(ambientModel(), authored, authored) as { limit?: Record<string, number> };
+  expect(built.limit?.output).toBeUndefined();
+  if (built.limit !== undefined) expect(Object.keys(built.limit).length).toBeGreaterThan(0);
 });

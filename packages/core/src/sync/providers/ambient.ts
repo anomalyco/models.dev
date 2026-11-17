@@ -100,7 +100,11 @@ export const ambient = {
     const existing = context.existing(model.id);
     // The catalog lists no reasoning_effort levels, so a new reasoning model
     // needs them researched before it's created.
-    if (existing === undefined && model.supported_features.includes("reasoning")) {
+    // A row can omit the flag for a model whose lab reasons, so the lab is checked too (as cortecs/deepinfra do).
+    const built0 = existing === undefined ? buildOpenRouterModel(toOpenRouterShape(model), existing) : undefined;
+    const labReasons = built0 !== undefined && "base_model" in built0 && built0.base_model !== undefined
+      && modelMetadata(built0.base_model).reasoning === true;
+    if (existing === undefined && (model.supported_features.includes("reasoning") || labReasons)) {
       throw new MissingReasoningOptionsError(model.id, "Ambient lists no reasoning controls; author them before creating this model");
     }
     const built = buildAmbientModel(model, existing, context.authored(model.id));
@@ -133,10 +137,17 @@ export function buildAmbientModel(
   // linked file keeps only an authored one that differs from the lab's.
   const labDescription = modelMetadata(withOptions.base_model).description;
   const { description: _generated, ...linked } = withOptions as SyncedModel & { description?: string };
+  // Only real deltas: an output equal to the lab's is inherited, and an empty limit is left out.
+  const { output: _built, ...limitRest } = (withOptions.limit ?? {}) as Record<string, number | undefined>;
+  const limit = {
+    ...limitRest,
+    ...(output === undefined || output === (modelMetadata(withOptions.base_model).limit as { output?: number } | undefined)?.output ? {} : { output }),
+  };
+  const { limit: _limit, ...rest } = linked as SyncedModel & { limit?: unknown };
   return {
-    ...linked,
+    ...rest,
     ...(authored?.description === undefined || authored.description === labDescription ? {} : { description: authored.description }),
-    limit: { ...withOptions.limit, output },
+    ...(Object.keys(limit).length === 0 ? {} : { limit }),
   } as SyncedModel;
 }
 
