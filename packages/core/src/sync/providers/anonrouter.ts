@@ -75,7 +75,7 @@ export const anonrouter = {
   name: "AnonRouter",
   modelsDir: "providers/anonrouter/models",
   skipCreates: true,
-  trackMissingModels: true,
+  trackMissingModels: false,
   deleteMissing: false,
   fetchModels: fetchAnonRouterModels,
   parseModels: parseAnonRouterModels,
