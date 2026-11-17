@@ -5,11 +5,13 @@ import path from "node:path";
 
 import { groups, providers, syncProvider, type ExistingModel } from "../src/sync/index.js";
 import { modelMetadata } from "../src/sync/providers/openrouter.js";
+import { classifyAutoMerge } from "../src/sync/auto-merge.js";
 import { fetchVolcengineModels, parseVolcengineModels, volcengine } from "../src/sync/providers/volcengine.js";
 
 const peerID = "doubao-seed-2-1-pro-260915";
 const newID = "doubao-seed-2-1-pro-261101";
 const unknownID = "new-model-family-261101";
+const retiringID = "doubao-seed-2-1-pro-260101";
 
 function canonicalText(id: string) {
   return Bun.file(path.join(import.meta.dirname, "..", "..", "..", "models", `${id}.toml`)).text();
@@ -141,6 +143,8 @@ test("new Kimi versions preserve curated host MIME and sampling restrictions and
   expect(translated.model.modalities).toEqual(modalities);
   expect(translated.v2Set).toEqual({ modalities: preciseModalities, api, "capabilities.top_k": false });
   expect(translated.model.cost).toBeUndefined();
+  expect(translated.header).toContain("curate this exact ID before merging");
+  expect(translated.notices?.join(" ")).toContain(`${kimiNew}: curate exact-version cache support`);
 });
 
 test("updates exact limits and positive capabilities while preserving curated fields", () => {
@@ -233,7 +237,7 @@ doc = "https://ark.volcengine.com/region:cn-beijing/docs/model-list"
 `);
     await Bun.write(filename, original);
     await Bun.write(absent, original);
-    const provider = { ...volcengine, modelsDir, fetchModels: async () => ({ models: modelDocs([modelRow(peerID), modelRow(newID), modelRow(unknownID)]) }) };
+    const provider = { ...volcengine, modelsDir, fetchModels: async () => ({ models: modelDocs([modelRow(peerID, "`即将下线`"), modelRow(newID), modelRow(unknownID), modelRow(retiringID, "`即将下线`")]) }) };
     const dry = await syncProvider(provider, { dryRun: true, openIssues: false });
     expect(dry).toMatchObject({ created: 1, updated: 1, deleted: 0 });
     expect(await Bun.file(filename).text()).toBe(original);
@@ -241,11 +245,15 @@ doc = "https://ark.volcengine.com/region:cn-beijing/docs/model-list"
     const first = await syncProvider(provider, { openIssues: false });
     expect(first).toMatchObject({ created: 1, updated: 1, deleted: 0 });
     expect(first.notices.join(" ")).toContain(unknownID);
+    expect(first.notices.join(" ")).not.toContain(retiringID);
+    expect(first.notices.join(" ")).toContain(`${newID}: curate exact-version cache support`);
+    expect(await Bun.file(path.join(modelsDir, `${retiringID}.toml`)).exists()).toBe(false);
     const text = await Bun.file(filename).text();
     const updated = Bun.TOML.parse(text) as Record<string, any>;
     const before = Bun.TOML.parse(original) as Record<string, any>;
     expect(text).toStartWith("# Keep audited provenance and the existing exchange rate.");
     expect(updated.base_model).toBe(before.base_model);
+    expect(updated.status).toBe("deprecated");
     expect(updated.cost).toEqual(before.cost);
     expect(updated.api).toEqual(before.api);
     expect((updated.capabilities as any).reasoning).toEqual((before.capabilities as any).reasoning);
@@ -254,12 +262,20 @@ doc = "https://ark.volcengine.com/region:cn-beijing/docs/model-list"
     const created = Bun.TOML.parse(await Bun.file(path.join(modelsDir, `${newID}.toml`)).text()) as Record<string, any>;
     expect(created.base_model).toBe(before.base_model);
     expect(created.cost).toBeUndefined();
+    expect(created.capabilities.cache).toBeUndefined();
+    const decision = await classifyAutoMerge(
+      [{ status: "created", path: `providers/volcengine/models/${newID}.toml` }],
+      (file) => Bun.file(path.join(root, file)).text(),
+    );
+    expect(decision).toMatchObject({ safe: false, created: 1 });
+    expect(decision.reasons.join(" ")).toContain("requires manual review");
     expect({ ...base.limit, ...created.limit }).toEqual({ context: 1_048_576, input: 1_048_576, output: 262_144 });
     for (const [key, value] of Object.entries(created.limit ?? {})) {
       expect(base.limit[key]).not.toBe(value);
     }
     const second = await syncProvider(provider, { openIssues: false });
     expect(second).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 3 });
+    expect(second.notices.join(" ")).not.toContain("curate exact-version cache support");
     expect(await Bun.file(filename).text()).toBe(text);
     await expect(syncProvider({ ...provider, fetchModels: async () => ({ models: "Unavailable" }) }, { openIssues: false })).rejects.toThrow();
     expect(await Bun.file(filename).text()).toBe(text);
