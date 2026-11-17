@@ -169,8 +169,15 @@ export function updateAnonRouterModel(model: AuthenticatedModel, current: Record
     const base = typeof current.base_model === "string" ? modelMetadata(current.base_model) : undefined;
     const baseLimit = base?.limit as { context?: number; output?: number } | undefined;
     const limits = { ...next.limit };
+    let context = route.context_window;
+    if (model.model_type === "embedding") {
+      const reviewedContext = next.limit?.context ?? baseLimit?.context;
+      if (reviewedContext !== undefined && reviewedContext > 0) {
+        context = Math.min(context, reviewedContext);
+      }
+    }
     const updates = {
-      context: route.context_window,
+      context,
       ...(model.model_type === "text" && route.max_output_tokens != null && route.max_output_tokens > 0
         ? { output: Math.min(route.max_output_tokens, route.context_window) } : {}),
     };

@@ -255,3 +255,18 @@ test("normal sync updates an existing card, remains idempotent, and retains miss
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test("embedding inventory cannot raise a reviewed or shared context cap", () => {
+  const current = {
+    schema: 2,
+    v2_only: true,
+    base_model: "nvidia/llama-nemotron-embed-vl-1b-v2",
+    api: { embeddings: {} },
+  };
+  const source = row({ model_type: "embedding", context_window: 32_768, max_output_tokens: 0 });
+  expect(updateAnonRouterModel(source, current).limit).toBeUndefined();
+  expect(updateAnonRouterModel(source, { ...current, limit: { context: 4096 } }))
+    .toMatchObject({ limit: { context: 4096 } });
+  expect(updateAnonRouterModel({ ...source, context_window: 8192 }, current))
+    .toMatchObject({ limit: { context: 8192 } });
+});
