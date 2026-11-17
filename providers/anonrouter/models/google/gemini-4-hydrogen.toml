@@ -1,8 +1,9 @@
+# Reasoning-capable routes expose no configurable effort or off control.
+# Live tickets (2026-11-17) rejected reasoning_effort=low with HTTP 400 (reasoning_effort_not_configurable).
+# Live tickets (2026-11-17) rejected reasoning_effort=none with HTTP 400 (reasoning_not_disableable).
 # Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
 # Route-dependent prices and limits are the default plaintext route snapshot.
 # Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
-# Reasoning is always on on the callable routes and has no caller control.
-# Controls are accepted across eligible routes: https://docs.anonrouter.ai/reasoning.
 # Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
 schema = 2
 base_model = "google/gemini-4-hydrogen"
