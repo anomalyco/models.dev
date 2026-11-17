@@ -4,10 +4,11 @@
 # Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
+name = "MiniMax M3 Flash"
+release_date = "2026-08-05"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-structured_output = true
 
 [cost.text.input]
 price = 0.34
