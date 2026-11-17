@@ -2,23 +2,26 @@
 # a documented host capability, so support is not advertised here.
 # https://api.topxai.xyz/docs/deepseek-flash-abliterated (checked 2026-11-09).
 # DeepSeek V4.1 Flash 1017 with its refusal alignment removed (abliterated), served from
-# TopxAI's private deployment, not DeepSeek's official API. Defined inline because this
-# variant does not have the official model's weights/benchmarks.
+# TopxAI's private deployment. The base identifies the source architecture; the altered
+# weights have no published cutoff or benchmark results.
 # Launched 2026-10-24; replaces the retired deepseek-flash ID with no forwarding alias.
 # https://api.topxai.xyz/blog/deepseek-flash-abliterated
 # Effort: reasoning_effort = none|low|high|max on Chat Completions (default low).
 # none disables reasoning, so there is no additional toggle. Text/image input,
 # limits, protocols and prices: https://api.topxai.xyz/docs/deepseek-flash-abliterated
 # and https://api.topxai.xyz/api/pricing (accessed 2026-11-10).
+# The host sets distinct output budgets on the two 1017 deployments: 131,072
+# on this fine-tune and 262,144 on the standard-weights Fast variant (host guide above).
 # Fixed prices at every hour and context length; automatic cache reads, no separate
 # cache-write charge. Official DeepSeek comparison prices and peak hours do not apply.
 # Chat honours strict json_schema plus auto, none and required tool choice, per
 # https://api.topxai.xyz/docs/deepseek-flash-abliterated (2026-11-18).
 # Responses is stateless; send the full conversation. Messages converts to Chat.
 schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+base_model_omit = ["knowledge"]
 name = "DeepSeek Flash Abliterated"
 description = "Abliterated DeepSeek V4.1 Flash on a private TopxAI deployment with text and image input, 1M context and optional reasoning"
-family = "deepseek-flash"
 open_weights = false
 release_date = "2026-10-24"
 
@@ -27,10 +30,7 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-temperature = true
-top_p = true
 top_k = false
-tools = { supported = true }
 structured_output = true
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }

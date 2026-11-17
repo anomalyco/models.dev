@@ -1,6 +1,5 @@
 # Z.ai's GLM-5.3-Flash with its refusal alignment removed (abliterated), served from
-# TopxAI's own private deployment rather than Z.ai's API. Unique to this host, so
-# defined inline. Text and image input (base64 data URLs only; http(s) image URLs are
+# TopxAI's private deployment. Text and image input (base64 data URLs only; HTTP image URLs are
 # not fetched). Launched 2026-11-08.
 # https://api.topxai.xyz/docs/glm-5-3-abliterated (accessed 2026-11-08)
 # Effort: reasoning_effort = low|high|max on /v1/chat/completions, reasoning.effort on
@@ -14,9 +13,9 @@
 # Chat supports auto, none, required and named functions (tool_choice):
 # https://api.topxai.xyz/docs/glm-5-3-abliterated (checked 2026-11-18).
 schema = 2
+base_model = "zhipuai/glm-5.3-flash"
 name = "GLM-5.3-Flash-Abliterated"
 description = "GLM-5.3-Flash with refusal alignment removed, on TopxAI's private deployment; text and image input"
-family = "glm-flash"
 open_weights = false
 release_date = "2026-11-08"
 
@@ -25,17 +24,13 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
-temperature = true
-top_p = true
 top_k = false
 
 [limit]
 context = 1_048_576
-output = 131_072
 
 [api.chat-completions]
 capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
