@@ -33,9 +33,18 @@
 # structured_output - omitted on purpose: `response_format.type = "json_schema"` returns
 #         HTTP 400 ("`json_schema` is not supported by this mode") on TokenSail, while
 #         `json_object` is accepted. Declaring it true would mislead JSON-schema clients.
-# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
-# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 80% of
-# Zhipu's list price.
+# Modalities - inherited unchanged. TokenSail publishes text/image/video for this route and
+#         never a document bucket, but the published vocabulary across all 28 models it lists
+#         is exactly text/image/audio/video - no model anywhere publishes a pdf or document
+#         token - so the absent `application/pdf` cannot be read as "rejected". A 64x64 PNG
+#         through /v1/chat/completions on 2026-11-17 returned HTTP 200, so the image half is
+#         exercised on this route rather than assumed.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports (officialShape: 0.15 / 0.03 / 0.5), the published
+# 0.09571954 / 0.02751937 / 0.33501840 are 63.8% / 91.7% / 67.0% of list. The earlier "80%"
+# was a rounded guess and is withdrawn; the cache read sits on a different step from the
+# token prices.
 # Sources: https://docs.z.ai/guides/overview/pricing (vendor list)
 #          https://tokensail.ai/pricing-compare (published USD)
 schema = 2

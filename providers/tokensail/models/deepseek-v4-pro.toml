@@ -35,9 +35,12 @@
 #         (strict): HTTP 200 and a schema-valid `{"capital": "Paris"}`. Relay peers built on
 #         the same base model record 400s on their paths, so the probe is what decides it
 #         here rather than the peer files.
-# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
-# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 80% of
-# DeepSeek's list price.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports for this route (officialShape: 1.32 / 0.044 /
+# 3.96), the published 1.07684485 / 0.03589483 / 3.23053454 are 81.6% / 81.6% / 81.6% of
+# list. The earlier "80%" was a rounded guess; the per-field figures are what the sources
+# support.
 # Sources: https://api-docs.deepseek.com/quick_start/pricing (vendor list)
 #          https://tokensail.ai/pricing-compare (published USD)
 schema = 2

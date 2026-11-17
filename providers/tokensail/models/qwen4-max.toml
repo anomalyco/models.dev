@@ -34,9 +34,16 @@
 #         ceiling, so it is not used to narrow the canonical value.
 # top_k - inherited. DeepSeek and Zhipu route need it disabled; DashScope implements it,
 #         and a probe with top_k = 5 returns HTTP 200.
-# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
-# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 80% of
-# Alibaba's list price (1.5 / 0.075 / 4.5 / 1.875).
+# Modalities - inherited unchanged. TokenSail publishes text/image/video for this route and
+#         never a document bucket, but the published vocabulary across all 28 models it lists
+#         is exactly text/image/audio/video - no model anywhere publishes a pdf or document
+#         token - so the absent `application/pdf` cannot be read as "rejected". A 64x64 PNG
+#         through /v1/chat/completions on 2026-11-17 returned HTTP 200.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports (1.5 / 0.075 / 4.5), the published
+# 1.19649427 / 0.05982471 / 3.58948282 are 79.8% on all three fields, replacing the
+# unmeasured "80%" this header carried before.
 # Sources: https://www.alibabacloud.com/help/en/model-studio/model-pricing (vendor list)
 #          https://tokensail.ai/pricing-compare (published USD)
 schema = 2

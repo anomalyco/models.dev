@@ -33,9 +33,12 @@
 #         GLM-5.3 (models/zhipuai/glm-5.3 declares 1,000,000), and the corroboration the
 #         DeepSeek routes rely on (their own GET /models) has no GLM counterpart. Advertising
 #         the larger figure would promise prompts the vendor window cannot hold.
-# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
-# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 70% of
-# Zhipu's list price.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports (officialShape: 1.4 / 0.26 / 4.4), the published
+# 0.83754599 / 0.20938650 / 2.93141097 are 59.8% / 80.5% / 66.6% of list. The earlier "70%"
+# was a rounded guess and is withdrawn; the cache read sits on a different step from the
+# token prices.
 # Sources: https://docs.z.ai/guides/overview/pricing (vendor list)
 #          https://tokensail.ai/pricing-compare (published USD)
 schema = 2

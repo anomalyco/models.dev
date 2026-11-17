@@ -34,9 +34,17 @@
 #         (strict): HTTP 200 and a schema-valid `{"capital": "Paris"}`. Relay peers built on
 #         the same base model record 400s on their paths, so the probe is what decides it
 #         here rather than the peer files.
-# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
-# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 60% of
-# DeepSeek's list price.
+# Modalities - inherited from the lab (text + jpeg/png/gif/webp) even though TokenSail
+#         publishes architecture.inputModalities = ["text"] for this route
+#         (GET https://api.tokensail.ai/api/public/models/deepseek-v4.1-flash). The published
+#         payload contradicts itself - modelType is "vision" - so the modality list is not
+#         affirmative evidence that images are rejected, and a 64x64 PNG sent through
+#         /v1/chat/completions on 2026-11-17 returned HTTP 200 with the right colour.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports for this route (officialShape: 0.30 / 0.006 /
+# 1.20), the published 0.08973707 / 0.00179474 / 0.35894828 are 29.9% / 29.9% / 29.9% of
+# list. The earlier "60%" did not reconcile with either source and is withdrawn.
 # Sources: https://api-docs.deepseek.com/quick_start/pricing (vendor list)
 #          https://tokensail.ai/pricing-compare (published USD)
 schema = 2

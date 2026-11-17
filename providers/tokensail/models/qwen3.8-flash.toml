@@ -27,8 +27,16 @@
 #         per-route difference and not a family default.
 # Batch - TokenSail publishes batch input/output prices for this model, but the v2 cost
 #         schema has no batch slot, so only the standard prices are recorded here.
+# Modalities - inherited unchanged and consistent with what the host publishes: TokenSail
+#         reports text/image/video for this route, which matches the canonical list once the
+#         MIME types are folded into those three buckets (this is the one route of the three
+#         Alibaba ones whose canonical list carries no `application/pdf`). A 64x64 PNG
+#         through /v1/chat/completions on 2026-11-17 returned HTTP 200.
 # Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
-# (GET https://api.tokensail.ai/api/public/models -> priceShape).
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports (0.15 / - / 0.47; it publishes no official cache
+# read for this route), the published 0.10768449 / 0.01346056 / 0.36343514 are 71.8% and
+# 77.3% of list - the two fields are on different steps, so no single percentage is claimed.
 # Sources: https://docs.modelstudio.console.alibabacloud.com/zh/model-studio/model-pricing
 #          (vendor list)
 #          https://api.tokensail.ai/api/public/models (published USD)

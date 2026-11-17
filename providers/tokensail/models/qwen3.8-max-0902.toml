@@ -24,9 +24,16 @@
 # Limit - no override. TokenSail publishes contextWindow = 1,000,000 for this route
 #         (GET https://api.tokensail.ai/api/public/models), the same as the canonical value,
 #         so context and output are both inherited.
-# Pricing (read 2026-11-16): USD, transcribed from what TokenSail publishes for this model
-# (GET https://api.tokensail.ai/api/public/models -> priceShape). TokenSail charges 75% of
-# Alibaba's list price.
+# Modalities - inherited unchanged. TokenSail publishes text/image/video for this route and
+#         never a document bucket, but the published vocabulary across all 28 models it lists
+#         is exactly text/image/audio/video - no model anywhere publishes a pdf or document
+#         token - so the absent `application/pdf` cannot be read as "rejected". A 64x64 PNG
+#         through /v1/chat/completions on 2026-11-17 returned HTTP 200.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports (2.0 / - / 6.0; it publishes no official cache
+# read for this route), the published 1.52553020 / 0.19069128 / 4.57659059 are 76.3% on both
+# fields that have an official counterpart, replacing the unmeasured "75%".
 # Sources: https://docs.modelstudio.console.alibabacloud.com/zh/model-studio/model-pricing
 #          (vendor list)
 #          https://tokensail.ai/pricing-compare (published USD)
