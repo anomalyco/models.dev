@@ -1,0 +1,26 @@
+# Ezkielyna serves thinkingmachines/inkling-2-small under the id `inkling-2-small` (Standard key group, 1x).
+# Prices: public price list GET https://api.ezkielyna.store/api/pricing (read 2026-11-17 11:16 UTC),
+#   USD/MTok = model_ratio x 2 x group_ratio; output = input x completion_ratio; cache read = input x cache_ratio.
+#   Same prices in IDR: https://ezkielyna.store/harga-api-ai
+# Live status and success rate: https://api.ezkielyna.store/status
+# Reasoning controls follow the underlying model's peers on other relays; the gateway forwards
+#   reasoning_effort / thinking unchanged to an upstream serving the same model.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max (forwarded unchanged)
+# Limit: this route serves a TEE deployment with a 524,288-token context window.
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 524_288
+
+[cost.text.input]
+price = 0.724
+cache = { read = 0.0724 }
+
+[cost.text.output]
+price = 2.41331

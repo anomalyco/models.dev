@@ -1,0 +1,22 @@
+# Ezkielyna serves google/gemini-4-hydrogen under the id `gemini-4-hydrogen` (Standard key group, 1x).
+# Prices: public price list GET https://api.ezkielyna.store/api/pricing (read 2026-11-17 11:16 UTC),
+#   USD/MTok = model_ratio x 2 x group_ratio; output = input x completion_ratio; cache read = input x cache_ratio.
+#   Same prices in IDR: https://ezkielyna.store/harga-api-ai
+# Live status and success rate: https://api.ezkielyna.store/status
+# Reasoning controls follow the underlying model's peers on other relays; the gateway forwards
+#   reasoning_effort / thinking unchanged to an upstream serving the same model.
+# Effort: reasoning_effort = low|medium|high|xhigh (forwarded unchanged)
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 3.62
+cache = { read = 0.181 }
+
+[cost.text.output]
+price = 18.1
