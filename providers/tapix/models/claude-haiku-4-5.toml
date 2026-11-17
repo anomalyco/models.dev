@@ -1,6 +1,6 @@
 # Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
 # Relayed by Tapix AI (https://tapixai.com/v1); upstream model is anthropic/claude-haiku-4-5.
-# Reasoning: no caller-side control — thinking is always on upstream (or its only control is a thinking budget that our whitelist does not forward), so no caller-side option is published.
+# Reasoning: thinking cannot be enabled through this API — the lab control is a thinking budget, which our request whitelist does not forward, and a live call on 2026-11-17 returned no reasoning output.
 # Streams reasoning via reasoning_content deltas.
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"
