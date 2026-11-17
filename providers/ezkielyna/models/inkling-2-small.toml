@@ -6,7 +6,10 @@
 # Reasoning controls follow the underlying model's peers on other relays; the gateway forwards
 #   reasoning_effort / thinking unchanged to an upstream serving the same model.
 # Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max (forwarded unchanged)
-# Limit: this route serves a TEE deployment with a 524,288-token context window.
+# Limit: the gateway maps `inkling-2-small` to the upstream's TEE deployment of Inkling 2 Small (model id
+#   TEE/inkling-2-small in the gateway channel config, read 2026-11-17). The 524,288-token context and the
+#   none..max effort list follow the TEE deployment as listed by providers/tinfoil/models/inkling-2-small.toml
+#   (TEE catalog: context 524288, supported_efforts none|minimal|low|medium|high|xhigh|max).
 schema = 2
 base_model = "thinkingmachines/inkling-2-small"
 

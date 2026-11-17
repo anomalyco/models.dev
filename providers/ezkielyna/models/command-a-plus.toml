@@ -6,11 +6,12 @@
 # Reasoning controls follow the underlying model's peers on other relays; the gateway forwards
 #   reasoning_effort / thinking unchanged to an upstream serving the same model.
 # Toggle: thinking.type = enabled|disabled (forwarded unchanged)
+# Budget: thinking.token_budget, inside the same forwarded thinking object; bounds not verified on this host, so budget = {}
 schema = 2
 base_model = "cohere/command-a-plus-05-2026"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
 cache = { implicit = true }
 

@@ -6,6 +6,10 @@
 # Reasoning controls follow the underlying model's peers on other relays; the gateway forwards
 #   reasoning_effort / thinking unchanged to an upstream serving the same model.
 # Effort: reasoning_effort = none|low|high|xhigh (none turns reasoning off; forwarded unchanged)
+# Reasoning field: this route goes to a different upstream than the other Qwen entries (gateway channel config,
+#   read 2026-11-17). That upstream's Chat Completions endpoint returns reasoning in message.reasoning, and the
+#   gateway passes it through, so no reasoning_field is set: v2 accepts "reasoning", but v1's interleaved.field
+#   only allows reasoning_content|reasoning_details, so leaving it out is better than a wrong value.
 schema = 2
 base_model = "alibaba/qwen4-max"
 

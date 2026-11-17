@@ -6,11 +6,12 @@
 # Reasoning controls follow the underlying model's peers on other relays; the gateway forwards
 #   reasoning_effort / thinking unchanged to an upstream serving the same model.
 # Effort: reasoning_effort = none|medium|high (none turns reasoning off; forwarded unchanged)
+# Budget: top-level reasoning_budget (forwarded unchanged); bounds not verified on this host, so budget = {}
 schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "medium", "high"], budget = {} }
 structured_output = true
 cache = { implicit = true }
 

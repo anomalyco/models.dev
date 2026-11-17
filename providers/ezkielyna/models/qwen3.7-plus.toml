@@ -6,11 +6,12 @@
 # Reasoning controls follow the underlying model's peers on other relays; the gateway forwards
 #   reasoning_effort / thinking unchanged to an upstream serving the same model.
 # Toggle: enable_thinking = true|false (forwarded unchanged)
+# Budget: thinking_budget (integer reasoning tokens, forwarded unchanged); bounds not verified on this host, so budget = {}
 schema = 2
 base_model = "alibaba/qwen3.7-plus"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, budget = {} }
 structured_output = true
 cache = { implicit = true }
 

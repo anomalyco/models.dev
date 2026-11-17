@@ -3,9 +3,9 @@
 #   USD/MTok = model_ratio x 2 x group_ratio; output = input x completion_ratio; cache read = input x cache_ratio.
 #   Same prices in IDR: https://ezkielyna.store/harga-api-ai
 # Live status and success rate: https://api.ezkielyna.store/status
-# Reasoning controls follow the underlying model's peers on other relays; the gateway forwards
-#   reasoning_effort / thinking unchanged to an upstream serving the same model.
-# Reasoning is always on for this route, no caller control.
+# Reasoning: this route goes to an upstream relay (gateway channel config, read 2026-11-17) whose listing of
+#   LongCat 2.5 Preview documents no thinking toggle. The lab's thinking.type toggle is not published here
+#   because it is not verified to take effect on this route, so no caller control is claimed.
 schema = 2
 base_model = "meituan/longcat-2.5-preview"
 
