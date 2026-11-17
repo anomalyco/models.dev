@@ -1,0 +1,18 @@
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+name = "OpenAI: GPT-6.2 Sol"
+description = "GPT-6.2 Sol is an upgrade to GPT-6.1 Sol from OpenAI, positioned below the flagship GPT-6.2 Astra in the GPT-6.2 series. It is an efficient, versatile model for everyday work, suited..."
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 15
+
+[cost.web_search]
+price = 10

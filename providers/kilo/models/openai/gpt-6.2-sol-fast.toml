@@ -1,0 +1,19 @@
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+name = "OpenAI: GPT-6.2 Sol (Fast)"
+description = "GPT-6.2 Sol is OpenAI's reasoning model for text, images, and tool use. It accepts text and images, generates text, and supports a 1,050,000-token context window with up to 128,000 output tokens. Structured outputs, prompt caching, and Responses API tools such as web search and computer use support multi-step workflows."
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 10
+reasoning = 0
+
+[cost.web_search]
+price = 10
