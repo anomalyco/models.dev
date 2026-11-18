@@ -6,8 +6,7 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-tools = { supported = true }
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
 [limit]

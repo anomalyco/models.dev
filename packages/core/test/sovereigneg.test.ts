@@ -80,6 +80,9 @@ test("empty, duplicate and malformed inventories are rejected", () => {
   expect(() => SovereignEGResponse.parse({ data: [model(), model()] })).toThrow("duplicate model IDs");
   expect(() => SovereignEGResponse.parse({ data: [model({ context_window: -1 })] })).toThrow();
   expect(() => SovereignEGResponse.parse({ data: [model({ pricing: { input_per_1m_egp: -1 } })] })).toThrow();
+  // A zero limit is unpublished, not a reason to reject the catalog.
+  const [zero] = SovereignEGResponse.parse({ data: [model({ max_output_tokens: 0 })] }).data;
+  expect(zero!.max_output_tokens).toBeNull();
 });
 
 test("EGP prices convert to three significant figures and keep an authored price inside the tolerance", () => {
@@ -99,6 +102,40 @@ test("bare IDs resolve through the lab named in provider_handle", () => {
   expect(resolveSovereignEGBaseModel({ id: "SovereignEG/Qwen3.8-27B-FP8", provider_handle: "Qwen" }))
     .toBe("alibaba/qwen3.8-27b");
   expect(resolveSovereignEGBaseModel({ id: "no-such-model-anywhere", provider_handle: "nobody" })).toBeUndefined();
+});
+
+test("reasoning controls come from the lab ladder when the route takes reasoning_effort or reasoning", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const options = (overrides: Record<string, unknown>) => {
+    const [source] = sovereigneg.parseModels({ catalog: { data: [model(overrides)] }, egp_per_usd: 53.349909 });
+    const translated = sovereigneg.translateModel(source!, context);
+    return (translated!.model as { reasoning_options?: unknown }).reasoning_options;
+  };
+  const gpt = { id: "gpt-5.1", provider_handle: "openai", display_name: "gpt-5.1" };
+  const ladder = [{ type: "effort", values: ["none", "low", "medium", "high"] }];
+
+  expect(options({ ...gpt, supported_parameters: ["tools", "reasoning_effort"] })).toEqual(ladder);
+  // The catalog often lists only OpenRouter's `reasoning`; the gateway still forwards reasoning_effort.
+  expect(options({ ...gpt, supported_parameters: ["tools", "reasoning"] })).toEqual(ladder);
+  // No effort parameter at all: no caller control.
+  expect(options({ ...gpt, supported_parameters: ["tools"] })).toEqual([]);
+  // A lab entry with no effort ladder (always-on reasoning): no caller control, not an error.
+  expect(options({ id: "kimi-k2.7-code", provider_handle: "moonshotai", supported_parameters: ["tools", "reasoning"] }))
+    .toEqual([]);
+
+  // Hand-authored levels are kept; a "no control" value written by an earlier sync is not.
+  const authored = (reasoning_options: unknown) => ({
+    existing: () => undefined,
+    authored: () => ({ base_model: "openai/gpt-5.1", reasoning_options }) as never,
+  });
+  const [source] = sovereigneg.parseModels({
+    catalog: { data: [model({ ...gpt, supported_parameters: ["tools", "reasoning"] })] },
+    egp_per_usd: 53.349909,
+  });
+  const kept = sovereigneg.translateModel(source!, authored([{ type: "effort", values: ["low", "high"] }]));
+  expect((kept!.model as { reasoning_options?: unknown }).reasoning_options).toBeUndefined();
+  const refreshed = sovereigneg.translateModel(source!, authored([]));
+  expect((refreshed!.model as { reasoning_options?: unknown }).reasoning_options).toEqual(ladder);
 });
 
 test("only live, public, tool-capable chat routes with a price, a context window and a lab base are translated", () => {
@@ -121,6 +158,11 @@ test("only live, public, tool-capable chat routes with a price, a context window
   expect(sovereigneg.translateModel(source({ pricing: null }), context)).toBeUndefined();
   expect(sovereigneg.translateModel(source({ id: "no-such-model-anywhere", provider_handle: "nobody" }), context))
     .toBeUndefined();
+
+  // Values identical to the lab are not restated, so files stay override-only.
+  expect(synced).not.toHaveProperty("tool_call");
+  expect(synced).not.toHaveProperty("reasoning");
+  expect(synced).not.toHaveProperty("name");
 
   // Skipped chat routes are reported; routes of other kinds are not.
   expect(sovereigneg.sourceID(source({ id: "no-such-model-anywhere" }))).toBe("no-such-model-anywhere");

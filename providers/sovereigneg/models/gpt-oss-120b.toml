@@ -6,7 +6,6 @@ schema = 2
 base_model = "openai/gpt-oss-120b"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
@@ -15,6 +14,7 @@ output = 16_384
 
 [cost.text.input]
 price = 0.0408
+cache = { read = 0.0204 }
 
 [cost.text.output]
 price = 0.188

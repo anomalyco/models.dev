@@ -3,7 +3,7 @@ import { z } from "zod";
 import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
-import { labEffortValues } from "./aimlapi.js";
+import { labLadder } from "./aimlapi.js";
 import {
   factorBaseModel,
   modelMetadata,
@@ -38,7 +38,9 @@ const BASE_MODELS: Record<string, string> = {
   "SovereignEG/Qwen3.8-27B-FP8": "alibaba/qwen3.8-27b",
 };
 
-const TokenLimit = z.number().int().positive().nullish();
+// The catalog reports 0 for some routes without a published limit, so 0 reads
+// as unpublished rather than a real limit.
+const TokenLimit = z.number().int().nonnegative().nullish().transform((value) => value === 0 ? null : value);
 const Price = z.number().nonnegative().nullish();
 
 export const SovereignEGModel = z.object({
@@ -213,25 +215,49 @@ export function usd(egp: number, egpPerUsd: number, authored?: number) {
 }
 
 /**
- * The catalog says whether a route accepts `reasoning_effort` but not which
- * levels, so the levels come from the lab's own provider entry. Authored
- * controls are left alone (the runner keeps them). A new reasoning route
- * without a lab ladder is not created with invented levels.
+ * Parameters that mean the gateway forwards `reasoning_effort` to the route.
+ * The catalog lists OpenRouter's `reasoning` object on many routes without
+ * `reasoning_effort`, but the gateway forwards top-level `reasoning_effort` on
+ * them too. Probed on 2026-11-16 across the 48 reasoning routes that listed
+ * `reasoning` without `reasoning_effort`: `"none"` stopped thinking on 38,
+ * `"low"`/`"high"` started it on the four DeepSeek routes, and three rejected
+ * `"none"` as mandatory reasoning (their labs publish no effort ladder either).
+ * `reasoning.enabled`, `enable_thinking`, `chat_template_kwargs` and
+ * `thinking.type` were all ignored, so no toggle is published.
+ */
+const EFFORT_PARAMETERS = ["reasoning_effort", "reasoning"];
+
+/**
+ * The catalog says whether a route accepts reasoning effort but not which
+ * levels, so the levels come from the lab's own provider entry:
+ * - no effort parameter listed: no caller control;
+ * - the lab publishes an effort ladder: that ladder;
+ * - the lab's entry exists but has no effort ladder (always-on reasoning): no
+ *   caller control;
+ * - no lab entry at all: the route is not created with invented levels.
+ * Hand-authored levels are kept. A "no control" value the sync wrote earlier is
+ * not, so a route whose catalog gains an effort parameter picks up the ladder.
  */
 function reasoningOptions(
   model: SovereignEGModel,
   baseModel: string,
   authored: ExistingModel | undefined,
 ): SyncedModel["reasoning_options"] {
-  if (authored?.reasoning_options !== undefined) return undefined;
   if (modelMetadata(baseModel).reasoning !== true) return undefined;
-  if (!model.supported_parameters?.includes("reasoning_effort")) return [];
-  const effort = ReasoningOption.safeParse({ type: "effort", values: labEffortValues(baseModel) });
+  const authoredControls = authored?.reasoning_options;
+  if (authoredControls !== undefined && authoredControls.length > 0) return undefined;
+  if (!EFFORT_PARAMETERS.some((parameter) => model.supported_parameters?.includes(parameter))) return [];
+  const ladder = labLadder(baseModel);
+  if (ladder.kind === "no-effort") return [];
+  const effort = ReasoningOption.safeParse({
+    type: "effort",
+    values: ladder.kind === "effort" ? ladder.values : undefined,
+  });
   if (!effort.success || effort.data.type !== "effort" || effort.data.values.length === 0) {
     throw new MissingReasoningOptionsError(
       model.id,
-      `reasoning model (base ${baseModel}) that accepts reasoning_effort on SovereignEG, but the lab publishes`
-        + " no effort levels to copy; probe the route and author its reasoning_options by hand",
+      `reasoning model (base ${baseModel}) that accepts reasoning_effort on SovereignEG, but neither the lab nor`
+        + " OpenRouter has an entry to copy effort levels from; probe the route and author its reasoning_options by hand",
     );
   }
   return [effort.data];
