@@ -3,9 +3,7 @@
 #   $0.042 per 1M tokens (Foundry Global Standard), output free.
 # - https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision: judges
 #   text, JSON or images (base64 assets referenced from the state) and returns typed numerical decisions; nothing is
-#   generated. No sampling parameters.
-# Image types: live 2026-11-18 through GitHub Copilot's /v1/systemone (its microsoft-decision-1 answers as
-#   microsoft-decision-1.1), a solid red image as PNG, JPEG, GIF, BMP, TIFF and HEIC was each judged red.
+#   generated. No sampling parameters. Its image example is a PNG asset (`"format": "png"`); no other type is documented.
 # Context: Microsoft documents none; 32,768 is OpenRouter's /api/v1/models context_length.
 schema = 2
 v2_only = true
@@ -16,7 +14,7 @@ open_weights = false
 release_date = "2026-11-17"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/gif", "image/bmp", "image/tiff", "image/heic"]
+input = ["text", "image/png"]
 output = ["decision"]
 
 [capabilities]

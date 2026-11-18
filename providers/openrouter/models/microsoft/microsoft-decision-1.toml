@@ -1,11 +1,8 @@
 schema = 2
 base_model = "microsoft/microsoft-decision-1"
-type = "decision"
 description = "Decision model for typed evaluation of shared state"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
 
 [api.systemone]
