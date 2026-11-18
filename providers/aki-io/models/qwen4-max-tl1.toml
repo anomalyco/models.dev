@@ -12,6 +12,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 81_920

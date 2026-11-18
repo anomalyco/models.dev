@@ -8,6 +8,7 @@ base_model = "deepseek/deepseek-v4-pro-0813"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 81_920

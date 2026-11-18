@@ -1,4 +1,3 @@
-# attachment are not supported on AKI.IO for security reasons and therefore are disabled
 # AKI.IO uses reasoning_effort = none to disable reasoning
 # modalities image/jpeg and image/png input are now supported. Vision capability is listed 
 # at aki.io model catalog at https://aki.io/models (2026-11-17).
@@ -14,6 +13,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.164835

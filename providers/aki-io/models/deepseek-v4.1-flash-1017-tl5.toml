@@ -1,4 +1,3 @@
-# attachment are for security reasons not supported on AKI.IO and are therefore disabled
 # Effort: reasoning_effort = none|low|high|max (verified live 2026-11-07: "none" disables
 # reasoning; the API accepts unknown values without error and ignores them, so this list
 # follows the lab baseline rather than probing)
@@ -17,6 +16,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
