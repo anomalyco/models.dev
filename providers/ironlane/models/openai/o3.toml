@@ -1,5 +1,7 @@
 # Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Served by OpenAI through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
 # Effort: reasoning_effort = low|medium|high (https://ironlane.ai/docs/api/chat-completions, request fields); levels from providers/openai/models/o3.toml.
+# Cache: implicit; cached input bills at OpenAI's cached price (https://ironlane.ai/docs/api/chat-completions).
 schema = 2
 base_model = "openai/o3"
 

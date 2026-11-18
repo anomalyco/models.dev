@@ -1,9 +1,16 @@
 # Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Served by NEAR AI Cloud through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
+# Input: text, image/jpeg, image/png, image/gif, image/webp, as NEAR AI Cloud takes this model (providers/nearai/models/openai/gpt-6-sol.toml).
 # Effort: reasoning_effort = none|low|medium|high|xhigh (https://ironlane.ai/docs/api/chat-completions, request fields); levels from providers/openai/models/gpt-6-sol.toml.
 # max: refused by Ironlane (400 for any reasoning_effort outside none..xhigh).
 # Custom tools: none. Ironlane takes function tools only ("function tools, in OpenAI's format", https://ironlane.ai/docs/api/chat-completions); a "custom" tool is a 400 invalid_tools, so no freeform.
+# Cache: implicit; cached input bills at NEAR AI Cloud's cached price (https://ironlane.ai/docs/api/chat-completions).
 schema = 2
 base_model = "openai/gpt-6-sol"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }

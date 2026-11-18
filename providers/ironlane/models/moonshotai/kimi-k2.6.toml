@@ -1,7 +1,14 @@
 # Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Served by DigitalOcean through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
+# Input: text, image/jpeg, image/png, image/gif, image/webp, image/bmp, image/heic, image/heif, as DigitalOcean takes this model (providers/digitalocean/models/kimi-k2.6.toml).
 # Reasoning: no caller control. Ironlane documents reasoning_effort for OpenAI models only ("other models ignore it") and passes no other field to the provider (https://ironlane.ai/docs/api/chat-completions).
+# Cache: implicit; cached input bills at DigitalOcean's cached price (https://ironlane.ai/docs/api/chat-completions).
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true }
