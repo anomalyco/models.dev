@@ -1,0 +1,24 @@
+# Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing (accessed 2026-11-18): $0.05 input / $0.005 cached / $0.25 output
+#   per 1M until 2027-05-17 (launch promo), then double. Modeled as a 2x multiplier from that date.
+# Effort: low|medium|high|xhigh|max from the model card. Not probed on Copilot (no Copilot token); the API layout
+#   follows MAI-Code-1.1-Flash on this host.
+schema = 2
+base_model = "microsoft/mai-code-2-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.25
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-05-17" } }
+factor = { text = 2 }
