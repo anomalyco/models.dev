@@ -1,0 +1,19 @@
+# Verified on https://router-api.0g.ai/v1 (2026-11-18): chat and a tool call (get_weather), image input.
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-18).
+# Reasoning probed 2026-11-18 on Chat Completions: reasoning_effort none|low|medium|high|xhigh accepted, reasoning tokens rise with the level
+# (none = 0); minimal and max are rejected upstream (400). chat_template_kwargs and thinking are rejected (400).
+# Context: the catalog's context_length is 1,000,000, below the lab's.
+schema = 2
+base_model = "openai/gpt-5.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 30

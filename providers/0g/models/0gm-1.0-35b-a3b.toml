@@ -1,0 +1,23 @@
+# Weights and model facts: models/0g/0gm-1.0-35b-a3b.toml (0G's own open model, served here in a TEE: catalog tee_attested, tee_type TDX).
+# Verified on https://router-api.0g.ai/v1 (2026-11-18): chat, a tool call (get_weather), image input.
+# Toggle: reasoning_effort = "none" (or "minimal") or chat_template_kwargs.enable_thinking = false turns thinking off; on by default.
+# Graded reasoning_effort: re-probed 2026-11-18 with a 4,000-token cap, three runs each (low, medium, high, max): completion tokens
+#   ranged ~1,000-4,000 within every level with no consistent order, so no effort levels are listed.
+# Budget: thinking_budget 64 and 1024 were accepted but ignored (runs still reached the 4,000-token cap), so no budget is listed.
+# thinking.type=disabled is ignored.
+# Output: the catalog's max_completion_tokens is 32,768, below the model's.
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-18).
+schema = 2
+base_model = "0g/0gm-1.0-35b-a3b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+output = 32_768
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0.48

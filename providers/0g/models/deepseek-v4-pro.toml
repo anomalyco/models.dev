@@ -1,0 +1,15 @@
+# Verified on https://router-api.0g.ai/v1 (2026-11-18): chat and a tool call (get_weather).
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-18).
+# Reasoning probed 2026-11-18: reasoning_effort none turns thinking off (as do chat_template_kwargs.enable_thinking=false and
+# thinking.type=disabled); low/medium/high ~170 reasoning tokens, max ~455. Levels follow DeepSeek's low|high|max.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[cost.text.input]
+price = 1.98
+
+[cost.text.output]
+price = 3.96
