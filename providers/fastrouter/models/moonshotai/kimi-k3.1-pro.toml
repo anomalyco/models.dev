@@ -4,12 +4,14 @@
 #   Baseline: lab providers/moonshotai kimi-k3.1-pro = effort low|high|max.
 #   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
 # Limit: not overridden. The catalog reports context_length 1048576, the same as the lab; its max_completion_tokens 1048576 equals the lab output.
+# Cache: automatic, no request changes (Moonshot AI, https://docs.fastrouter.ai/explore-features/prompt-caching, accessed 2026-11-18).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 2

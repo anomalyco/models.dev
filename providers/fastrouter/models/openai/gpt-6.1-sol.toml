@@ -1,18 +1,21 @@
 # Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-11-18); prices are USD per token there, per MTok here.
 # Service tiers: catalog <tier>_service_tier_pricing as multipliers of the default prices (flex x0.5, fast x2, ultrafast x6).
-# Not represented: web search $0.01 per request (no v2 per-request field).
+# Web search: catalog web_search = $0.01 per request, so [cost.web_search] price = 10 per 1,000; tier multipliers use the text-only object form so the search fee stays unscaled, as in the lab entries.
 # Effort: reasoning.effort = none|low|medium|high|xhigh|max
 #   Live GET https://api.fastrouter.ai/api/v1/models (2026-11-18): supported_params_details.reasoning enum is exactly none|low|medium|high|xhigh|max.
 #   Baseline: lab providers/openai gpt-6.1-sol = effort low|medium|high|xhigh|max; the catalog also lists none.
 #   effort = none disables reasoning on FastRouter (same as reasoning.enabled = false), so no separate toggle.
 #   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+# Cache write: the catalog lists one write rate for this route (input_cache_write $2.5, $5 above 272k, no 30m/12h split, checked over 24 requests on 2026-11-18), equal to the lab's 30m rate, so a single write rate is authored.
 # Limit: not overridden. The catalog reports context_length 1050000 and max_completion_tokens 128000, the same as the lab (context 1_050_000, input 922_000, output 128_000).
+# Cache: automatic (min 1,024 tokens) plus explicit prompt_cache_breakpoint with ttl 30m on GPT-5.6 and newer, per https://docs.fastrouter.ai/explore-features/prompt-caching (accessed 2026-11-18).
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"] } }
 service_tier = ["flex", "fast", "ultrafast"]
 
 [cost.text.input]
@@ -31,14 +34,17 @@ price = 10
 when = { context = { gt = 272_000 } }
 price = 15
 
+[cost.web_search]
+price = 10
+
 [[cost.multipliers]]
 when = { service_tier = { equals = "flex" } }
-factor = 0.5
+factor = { text = 0.5 }
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "fast" } }
-factor = 2.0
+factor = { text = 2.0 }
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "ultrafast" } }
-factor = 6.0
+factor = { text = 6.0 }
