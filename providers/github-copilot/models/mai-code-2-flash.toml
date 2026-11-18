@@ -1,0 +1,34 @@
+# Sources (accessed 2026-11-18):
+# - https://github.blog/changelog/2026-11-17-mai-code-2-and-mai-code-2-flash-in-github-copilot/
+# - https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
+# Pricing: promo $0.05 input / $0.005 cached input / $0.25 output per 1M tokens until 2027-05-17; $0.10 / $0.01 / $0.50
+#   after (pricing page footnote). Price is the promo; the 2027-05-17 step is not modeled. A live /responses call on
+#   2026-11-18 billed input at the promo rate (copilot_usage cost_per_batch half of /models' list input_price).
+# Authenticated GET https://api.enterprise.githubcopilot.com/models (2026-11-18): limits 1,050,000 context /
+#   922,000 prompt / 128,000 output (same as the lab), reasoning_effort low|medium|high|xhigh|max, structured_outputs,
+#   vision supported_media_types below.
+# APIs: /models lists /chat/completions and /responses. Live 2026-11-18: /responses 200; /chat/completions 400
+#   "no_available_model_endpoints", so only Responses is published (as for MAI-Code-1.1-Flash).
+# tools.freeform: live 2026-11-18 on /responses, custom tools with text, lark and regex formats returned a
+#   custom_tool_call matching the grammar.
+schema = 2
+base_model = "microsoft/mai-code-2-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.25

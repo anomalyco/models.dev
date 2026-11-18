@@ -1,0 +1,71 @@
+# Sources (accessed 2026-11-18):
+# - https://microsoft.ai/pdf/MAI-Code-2-And-MAI-Code-2-Flash-Model-Card.pdf (release date, text and image input,
+#   922,000 input / 128,000 output / 1,050,000 context tokens, pre-training cut-off Aug 2026, weights not distributed,
+#   benchmark table in section 3)
+# - https://microsoft.ai/news/introducing-mai-code-2-and-mai-code-2-flash/ (launch 2026-11-17)
+# temperature, top_p, top_k = false: the model card and announcement document no sampling parameters, so none are
+#   claimed (as for MAI-Code-1.1-Flash).
+# Benchmarks: model card section 3, MSBench with the GitHub Copilot CLI 1.0.102 (subagents disabled), max reasoning
+#   effort, mean single-attempt pass rate over three runs.
+schema = 2
+name = "MAI Code 2 Flash"
+description = "Fast, cost-efficient Microsoft coding model for high-volume everyday developer work"
+family = "mai"
+open_weights = false
+knowledge = "2026-08"
+release_date = "2026-11-17"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_050_000
+input = 922_000
+output = 128_000
+
+[[links]]
+label = "Model card"
+url = "https://microsoft.ai/pdf/MAI-Code-2-And-MAI-Code-2-Flash-Model-Card.pdf"
+type = "model_card"
+
+[[links]]
+label = "Announcement"
+url = "https://microsoft.ai/news/introducing-mai-code-2-and-mai-code-2-flash/"
+type = "announcement"
+
+[[benchmarks]]
+name = "DeepSWE"
+score = 59.9
+metric = "pass rate"
+variant = "max effort"
+version = "1.1"
+harness = "GitHub Copilot CLI"
+source = "https://microsoft.ai/pdf/MAI-Code-2-And-MAI-Code-2-Flash-Model-Card.pdf"
+date = "2026-11-17"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 78.3
+metric = "pass rate"
+variant = "max effort"
+version = "2.1"
+harness = "GitHub Copilot CLI"
+source = "https://microsoft.ai/pdf/MAI-Code-2-And-MAI-Code-2-Flash-Model-Card.pdf"
+date = "2026-11-17"
+
+[[benchmarks]]
+name = "SWE-Atlas"
+score = 44.8
+metric = "pass rate"
+variant = "max effort; Codebase QnA, Test Writing and Refactoring combined"
+harness = "GitHub Copilot CLI"
+source = "https://microsoft.ai/pdf/MAI-Code-2-And-MAI-Code-2-Flash-Model-Card.pdf"
+date = "2026-11-17"
