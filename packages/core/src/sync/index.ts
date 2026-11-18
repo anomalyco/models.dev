@@ -20,6 +20,7 @@ import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from 
 import { keepInheritedNote, withPredecessorCapabilities } from "./inherit.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
+import { zerog } from "./providers/0g.js";
 import { aiand } from "./providers/aiand.js";
 import { alibaba } from "./providers/alibaba.js";
 import { aimlapi } from "./providers/aimlapi.js";
@@ -206,6 +207,7 @@ export interface SyncResult {
 }
 
 export const providers: {
+  "0g": SyncProvider<any>;
   aiand: SyncProvider<any>;
   alibaba: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
@@ -268,6 +270,7 @@ export const providers: {
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  "0g": zerog,
   aiand,
   alibaba,
   aimlapi,
@@ -356,7 +359,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "alibaba", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "deepseek", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "meta", "mistral", "moonshotai", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "thinkingmachines", "tinfoil", "togetherai", "venice", "wandb", "xai"],
+  direct: ["0g", "aiand", "alibaba", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "deepseek", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "meta", "mistral", "moonshotai", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "thinkingmachines", "tinfoil", "togetherai", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

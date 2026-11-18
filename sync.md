@@ -411,6 +411,18 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - A live model with no lab entry is not created either, and opens a missing-model issue. `openai/privacy-filter` is skipped silently because the token-cost schema cannot describe it.
 - Absence removes a model, so the fetch refuses a response carrying fewer than twenty models: a truncated list that still parses would otherwise be indistinguishable from a mass retirement. A local entry the catalog cannot price is republished unchanged rather than dropped, because dropping it would delete a route that is still served.
 
+## 0G Private Computer Notes
+
+- 0G Private Computer is implemented in `packages/core/src/sync/providers/0g.ts`.
+- Source endpoint: the public `https://router-api.0g.ai/v1/models` (no API key).
+- Only chat models (`type = "chatbot"`) are in scope; image, video, speech, transcription, embedding and decision models are skipped silently.
+- `NOT_SERVING` in the module keeps catalog-listed chat models out while they do not serve, each with its evidence. It holds `qwen2.5-vl-72b-instruct` (404 on every chat and image probe, 2026-11-18). Remove an entry once a probe succeeds again; the next run then creates the model like any other.
+- Prices are `pricing_usd` per-token strings, scaled to USD per million tokens and rounded. `cache_write` is the default (5-minute) write price. `cache_write_1h` has no v1 field: it is published through v2 as `cost.text.input.cache.write = { <default TTL> = …, "1h" = … }` only when the file's cache capability lists exactly a default TTL and `1h` (as OpenRouter's sync requires), since otherwise nothing says which TTL the default price is for. The catalog publishes no cache read price.
+- Only price is synced. 0G relays most of its models, so `context_length` is the upstream's figure rather than a cap 0G imposes, and `supported_parameters` describes what the router forwards: limits, capabilities and reasoning controls stay hand-authored.
+- Catalog ids are bare (`claude-opus-5.5`), so a new model's lab entry is found by a unique normalized match against `models/` (the same resolver as ai&). New models are created as `base_model` overlays carrying only `cost`.
+- A new model whose lab entry reasons is not created: the catalog does not say which reasoning controls a route accepts, so the run opens a deduped missing-model issue for them to be researched and hand-authored. A chat model with no lab entry opens one too. Once a file exists, the sync keeps it priced.
+- A chat row whose price is garbled or missing altogether keeps the published entry unchanged; such a row stays in the synced set so it is not deleted as absent. A new chat row without a price is skipped silently: no issue, and it is not listed as lacking a lab entry. The fetch refuses a response with fewer than twenty chat models, since absence removes a model.
+
 ## Obscurify.ai Notes
 
 - Obscurify.ai is implemented in `packages/core/src/sync/providers/obscurify.ts`.
