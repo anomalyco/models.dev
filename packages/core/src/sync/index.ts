@@ -50,7 +50,6 @@ import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
 import { mistral } from "./providers/mistral.js";
-import { modular } from "./providers/modular.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { nearai } from "./providers/nearai.js";
 import { novitaAi } from "./providers/novita-ai.js";
@@ -234,7 +233,6 @@ export const providers: {
   "merge-gateway": SyncProvider<any>;
   meta: SyncProvider<any>;
   mistral: SyncProvider<any>;
-  modular: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
   nearai: SyncProvider<any>;
   "novita-ai": SyncProvider<any>;
@@ -287,7 +285,6 @@ export const providers: {
   "merge-gateway": mergeGateway,
   meta,
   mistral,
-  modular,
   "nano-gpt": nanoGpt,
   nearai,
   "novita-ai": novitaAi,
@@ -334,7 +331,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -372,6 +369,7 @@ export async function syncProvider<SourceModel>(
   const missingRemote = new Set<string>();
   const missingReasoning = new Map<string, string>();
   const translateNotices: string[] = [];
+  const translateFailures: string[] = [];
   let nonTextLabs: Set<string> | undefined;
   for (const notice of provider.sourceNotices?.(sourceModels) ?? []) {
     translateNotices.push(notice);
@@ -393,9 +391,16 @@ export async function syncProvider<SourceModel>(
         },
       });
     } catch (error) {
-      if (!(error instanceof MissingReasoningOptionsError)) throw error;
-      missingReasoning.set(error.modelId, error.message);
-      console.warn(error.message);
+      if (error instanceof MissingReasoningOptionsError) {
+        missingReasoning.set(error.modelId, error.message);
+        console.warn(error.message);
+        continue;
+      }
+      // One model the module can't translate shouldn't stop the provider. It's skipped and reported,
+      // and nothing is deleted this run, since its file can't be told apart from a dropped model.
+      const message = `Skipped a model that failed to translate (${provider.sourceID?.(sourceModel) ?? "unknown id"}): ${error instanceof Error ? error.message : String(error)}`;
+      translateFailures.push(message);
+      console.warn(message);
       continue;
     }
     if (translated === undefined) {
@@ -614,6 +619,10 @@ export async function syncProvider<SourceModel>(
     }
   }
 
+  if (translateFailures.length > Math.max(3, Math.floor(sourceModels.length / 5))) {
+    throw new Error(`${provider.name}: ${translateFailures.length} of ${sourceModels.length} models failed to translate\n${translateFailures.join("\n")}`);
+  }
+
   const missingLocal: string[] = [];
   for (const relativePath of new Set([...existing.keys(), ...brokenSymlinks])) {
     if (desired.has(relativePath) || desiredV2.has(relativePath)) continue;
@@ -632,7 +641,7 @@ export async function syncProvider<SourceModel>(
       unchanged++;
       continue;
     }
-    if (provider.deleteMissing === false) {
+    if (provider.deleteMissing === false || translateFailures.length > 0) {
       missingLocal.push(relativePath);
       console.log(`Retaining model missing from source: ${relativePath}`);
       unchanged++;
@@ -654,6 +663,7 @@ export async function syncProvider<SourceModel>(
   }
 
   const notices = [
+    ...translateFailures,
     ...translateNotices,
     ...v2Notices,
     ...missingReasoning.values(),

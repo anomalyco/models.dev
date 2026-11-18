@@ -1036,13 +1036,15 @@ function mediaCost(pricing: Record<string, unknown>, type: MediaType): Doc | und
   } else if (cacheRead !== undefined || cacheWrite !== undefined) {
     throw new Unrepresentable("cache prices without an input price");
   }
-  if (output !== undefined) set("text", "output", { price: perMillion(output) });
-
   const images = imagePrices(pricing);
+  // With no separate per-image price, an image model's output tokens are image tokens,
+  // not a second text price. Keep only genuine text prices for v1; image prices stay in v2.
+  if (output !== undefined && (type !== "image" || images !== undefined)) {
+    set("text", "output", { price: perMillion(output) });
+  }
   if (images !== undefined) {
     set("image", "output", { unit: "image", ...conditionalPrice(images.entries, images.base) });
   } else if (type === "image" && output !== undefined) {
-    // Image models' output tokens are image tokens (`text.output` keeps the v1 pair).
     set("image", "output", { price: perMillion(output) });
   }
 

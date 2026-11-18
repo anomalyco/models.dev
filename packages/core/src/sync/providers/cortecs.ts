@@ -119,7 +119,7 @@ function labModalities(modelID: string) {
   }
 }
 
-function inheritedOutput(canonical: string | undefined, context: number) {
+export function inheritedOutput(canonical: string | undefined, context: number) {
   if (canonical === undefined) return context;
   const labOutput = (modelMetadata(canonical).limit as { output?: number } | undefined)?.output;
   return labOutput !== undefined && labOutput > context ? context : undefined;

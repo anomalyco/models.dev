@@ -1,0 +1,27 @@
+schema = 2
+name = "Kimi K3.1 Pro Abliterated (Lyber)"
+description = "Kimi K3.1 Pro Abliterated served by Lyber.ai."
+family = "kimi-k3"
+open_weights = false
+release_date = "2026-11-16"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 262_144
+
+[cost.text.input]
+price = 4
+cache = { read = 4 }
+
+[cost.text.output]
+price = 15

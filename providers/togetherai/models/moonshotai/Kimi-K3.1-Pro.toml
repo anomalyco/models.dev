@@ -6,7 +6,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true, updates = ["add"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 cache = { implicit = true }
 structured_output = true

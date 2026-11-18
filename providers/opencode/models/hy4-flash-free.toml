@@ -1,0 +1,19 @@
+# Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/.
+# Effort: reasoning_effort = none|high, as on Tencent TokenHub (https://cloud.tencent.com/document/product/1823/131208), which this host proxies.
+# Mid-conversation flags left out: tencent has no provider file for tencent/hy4-flash to follow.
+schema = 2
+base_model = "tencent/hy4-flash"
+name = "Hy4 flash Free"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

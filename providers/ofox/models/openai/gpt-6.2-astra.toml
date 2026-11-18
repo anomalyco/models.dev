@@ -1,0 +1,34 @@
+# Sources (accessed 2026-11-18):
+# - Ofox model page: https://ofox.ai/models/openai/gpt-6.2-astra
+# - Ofox catalog API: https://api.ofox.ai/v2/models/catalog?include=provider_price&search=gpt-6.2 (input 8, output 40, cache read 0.4, cache write 10 per MTok; above 272,000 tokens 16 / 60 / 0.8 / 20; context 1,050,000, max output 128,000; no provider_price override)
+# - OpenAI model docs (pricing/reasoning): https://developers.openai.com/api/docs/models/gpt-6.2-astra
+# Mid-conversation (Ofox Responses, https://ofox.ai/docs/api/openai/responses): system_updates, effort_updates, tools.updates unset, as on the Ofox gpt-6-astra entry: Ofox's reference doesn't document passing them through.
+# Cache: automatic prefix caching (https://ofox.ai/docs/develop/models/gpt#caching).
+# Effort: reasoning.effort = low|medium|high|xhigh|max, the lab set (OpenAI rejects none and minimal on GPT-6.2). Not probed on Ofox (no key).
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.responses]
+base_url = "https://api.ofox.ai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4, write = 10 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16
+cache = { read = 0.8, write = 20 }
+
+[cost.text.output]
+price = 40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60

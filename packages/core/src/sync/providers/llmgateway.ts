@@ -35,6 +35,8 @@ const Pricing = z.object({
   input_audio: z.string().optional(),
   input_cache_read: z.string().optional(),
   input_cache_write: z.string().optional(),
+  // Fraction off the list token prices ("0.5" = half price).
+  discount: z.string().optional(),
 });
 
 const ReasoningEffortOrder = new Map([
@@ -221,18 +223,31 @@ function price(value: string | undefined) {
     : undefined;
 }
 
+type GatewayPricing = z.infer<typeof Pricing>;
+
+// The gateway reports list prices plus a `discount` fraction; the real token
+// price is list * (1 - discount). Per-request and web search fees are not
+// covered, and are not read here.
+function tokenPrice(pricing: GatewayPricing, key: Exclude<keyof GatewayPricing, "discount">) {
+  const list = price(pricing[key]);
+  if (list === undefined) return undefined;
+  const discount = Number(pricing.discount ?? 0);
+  if (!Number.isFinite(discount) || discount <= 0 || discount >= 1) return list;
+  return Math.round(list * (1 - discount) * 1_000_000) / 1_000_000;
+}
+
 // Cache/reasoning prices are reported as "0" when the gateway has no data; treat
 // those as unknown so we never downgrade a hand-authored value to zero.
-function nonZeroPrice(value: string | undefined) {
-  const result = price(value);
+function nonZeroPrice(pricing: GatewayPricing, key: Exclude<keyof GatewayPricing, "discount">) {
+  const result = tokenPrice(pricing, key);
   return result !== undefined && result > 0 ? result : undefined;
 }
 
 // v1 leaves out the reasoning price of a model without reasoning, so v2 takes it
 // directly: reasoning tokens are billed whenever the model reasons.
 function reasoningPriceV2Set(model: LLMGatewayModel) {
-  if (price(model.pricing.prompt) === undefined || price(model.pricing.completion) === undefined) return undefined;
-  const reasoning = nonZeroPrice(model.pricing.internal_reasoning);
+  if (tokenPrice(model.pricing, "prompt") === undefined || tokenPrice(model.pricing, "completion") === undefined) return undefined;
+  const reasoning = nonZeroPrice(model.pricing, "internal_reasoning");
   return { "cost.text.output.reasoning": (current: unknown) => reasoning ?? current };
 }
 
@@ -346,8 +361,8 @@ export function buildLLMGatewayModel(
   model: LLMGatewayModel,
   existing: ExistingModel | undefined,
 ): SyncedModel | undefined {
-  const prompt = price(model.pricing.prompt);
-  const completion = price(model.pricing.completion);
+  const prompt = tokenPrice(model.pricing, "prompt");
+  const completion = tokenPrice(model.pricing, "completion");
   const reasoning = model.supported_parameters.includes("reasoning")
     || model.supported_parameters.includes("include_reasoning");
   const reasoningOptions = llmGatewayReasoningOptions(model, existing);
@@ -370,9 +385,9 @@ export function buildLLMGatewayModel(
     ? {
         input: prompt,
         output: completion,
-        reasoning: reasoning ? nonZeroPrice(model.pricing.internal_reasoning) ?? existing?.cost?.reasoning : existing?.cost?.reasoning,
-        cache_read: nonZeroPrice(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
-        cache_write: nonZeroPrice(model.pricing.input_cache_write) ?? existing?.cost?.cache_write,
+        reasoning: reasoning ? nonZeroPrice(model.pricing, "internal_reasoning") ?? existing?.cost?.reasoning : existing?.cost?.reasoning,
+        cache_read: nonZeroPrice(model.pricing, "input_cache_read") ?? existing?.cost?.cache_read,
+        cache_write: nonZeroPrice(model.pricing, "input_cache_write") ?? existing?.cost?.cache_write,
         tiers: existing?.cost?.tiers,
       }
     : existing?.cost;
@@ -541,8 +556,8 @@ export function buildLLMGatewayMappedModel(
   // supported_parameters are too noisy to trust.
   const mapping = model.providers?.[0];
   const rootID = model.id.split("/").slice(1).join("/");
-  const prompt = price(model.pricing.prompt);
-  const completion = price(model.pricing.completion);
+  const prompt = tokenPrice(model.pricing, "prompt");
+  const completion = tokenPrice(model.pricing, "completion");
   // The mapping's flag stays authoritative on resyncs too, so the written
   // reasoning boolean and the reasoning_options derived from it always move
   // together; prior curation only fills in when the mapping is silent, then
@@ -592,10 +607,10 @@ export function buildLLMGatewayMappedModel(
     ? {
         input: prompt,
         output: completion,
-        reasoning: reasoning ? nonZeroPrice(model.pricing.internal_reasoning) ?? existing?.cost?.reasoning : existing?.cost?.reasoning,
-        cache_read: nonZeroPrice(model.pricing.input_cache_read) ?? existing?.cost?.cache_read,
-        cache_write: nonZeroPrice(model.pricing.input_cache_write) ?? existing?.cost?.cache_write,
-        input_audio: nonZeroPrice(model.pricing.input_audio) ?? existing?.cost?.input_audio,
+        reasoning: reasoning ? nonZeroPrice(model.pricing, "internal_reasoning") ?? existing?.cost?.reasoning : existing?.cost?.reasoning,
+        cache_read: nonZeroPrice(model.pricing, "input_cache_read") ?? existing?.cost?.cache_read,
+        cache_write: nonZeroPrice(model.pricing, "input_cache_write") ?? existing?.cost?.cache_write,
+        input_audio: nonZeroPrice(model.pricing, "input_audio") ?? existing?.cost?.input_audio,
         // The gateway API does not expose context pricing tiers, so authored
         // tiers stick and new files seed from the aggregated sibling's curated
         // tiers rather than silently under-stating long-context pricing.

@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { AuthoredModelShape, ReasoningOption } from "../../schema.js";
 import type { CostV2, CostWhenV2 } from "../../schema-v2.js";
-import { readLabModel } from "../../translate.js";
+import { readLabModel, toV1Modalities } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedBaseModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { schemaToolChoice, toolsWith } from "./cloudflare-workers-ai.js";
@@ -113,7 +113,10 @@ const CatalogEntry = z.object({
 const CatalogModel = CatalogEntry.extend({
   task: z.literal(TEXT_GENERATION),
   context_length: z.number().int().positive().nullish(),
-  provider_details: z.array(ProviderDetail).length(1).nullish(),
+  // A model can have several upstreams (moonshotai/kimi-k3.1-pro: moonshot, then primalabs). The first is the
+  // price Cloudflare publishes on the model's page (https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3.1-pro/),
+  // so that's the one read (provider_details[0]).
+  provider_details: z.array(ProviderDetail).min(1).nullish(),
 });
 
 export type MediaType = "speech" | "transcription" | "image" | "video";
@@ -141,7 +144,10 @@ const UNSYNCED_TASKS = new Set([
 const MediaCatalogModel = CatalogEntry.extend({
   task: z.string().refine((task) => MEDIA_TASKS[task] !== undefined, "task must be a synced media task"),
   name: z.string().min(1).optional(),
-  provider_details: z.array(ProviderDetail).length(1).nullish(),
+  // A model can have several upstreams (moonshotai/kimi-k3.1-pro: moonshot, then primalabs). The first is the
+  // price Cloudflare publishes on the model's page (https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3.1-pro/),
+  // so that's the one read (provider_details[0]).
+  provider_details: z.array(ProviderDetail).min(1).nullish(),
 });
 
 const FlatPricing = z.object({
@@ -215,7 +221,7 @@ const CuratedModel = z.object({
     z.literal(true),
     z.object({ field: z.enum(["reasoning_content", "reasoning_details"]) }).strict(),
   ]).optional(),
-  // Media models only: what the /ai/run route accepts and returns, when its request
+  // Media and decision models only: what the /ai/run route accepts and returns, when its request
   // schema doesn't list it (e.g. a TTS model with no output format field).
   modalities: z.object({
     input: z.array(z.string().min(1)).min(1),
@@ -400,6 +406,14 @@ export function buildCloudflareAiGatewayModel(
 
   const native = NATIVE_API[id.split("/")[0]!];
   if (native !== undefined) model.provider = { npm: native.npm, api: native.api };
+  // v1 publishes a decision model's /ai/run base URL as provider.api (see DECISION_RUN_API).
+  if (labType(baseModel) === "decision") model.provider = { api: RUN_BASE_URL };
+  if (curated.modalities !== undefined && labType(baseModel) === "decision") {
+    model.modalities = {
+      input: toV1Modalities(curated.modalities.input) as NonNullable<SyncedBaseModel["modalities"]>["input"],
+      output: toV1Modalities(curated.modalities.output) as NonNullable<SyncedBaseModel["modalities"]>["input"],
+    };
+  }
   return model;
 }
 
@@ -452,6 +466,7 @@ const IMAGE_FORMATS: Record<string, string> = {
   jpg: "image/jpeg",
   png: "image/png",
   webp: "image/webp",
+  gif: "image/gif",
   svg: "image/svg+xml",
 };
 const VIDEO_FORMATS: Record<string, string> = {
