@@ -1,0 +1,10 @@
+# Runix currently exposes this model through the public Messages endpoint.
+# The provider entry is beta until per-model public pricing and broad account
+# availability are documented independently of account-specific routing.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+status = "beta"
+
+[api.messages]
+base_url = "https://router.runixcloud.io/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
