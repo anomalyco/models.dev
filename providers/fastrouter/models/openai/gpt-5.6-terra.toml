@@ -7,7 +7,9 @@
 #   effort = none disables reasoning on FastRouter (same as reasoning.enabled = false), so no separate toggle.
 #   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
 # Limit: not overridden. The catalog reports context_length 1050000 and max_completion_tokens 128000, the same as the lab (context 1_050_000, input 922_000, output 128_000).
+# Cache write: one rate, the 30m rate (catalog input_cache_write = input_cache_write_30m; the catalog's input_cache_write_12h is not authored because FastRouter's prompt-caching doc says OpenAI accepts only a 30m TTL on this surface).
 # Cache: automatic (min 1,024 tokens) plus explicit prompt_cache_breakpoint with ttl 30m on GPT-5.6 and newer, per https://docs.fastrouter.ai/explore-features/prompt-caching (accessed 2026-11-18).
+# Custom tools: no tools.freeform is authored. FastRouter's docs describe function tools only (https://docs.fastrouter.ai/explore-features/function-calling and the chat-completions and responses references mention no custom tools or grammars), and no API key was available for a live regex-grammar probe, so no freeform format is claimed on either API.
 schema = 2
 base_model = "openai/gpt-5.6-terra"
 
@@ -19,12 +21,12 @@ service_tier = ["flex", "fast"]
 
 [cost.text.input]
 price = 2
-cache = { read = 0.2, write = { "30m" = 2.5, "12h" = 5 } }
+cache = { read = 0.2, write = 2.5 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
 price = 4
-cache = { read = 0.4, write = { "30m" = 5, "12h" = 10 } }
+cache = { read = 0.4, write = 5 }
 
 [cost.text.output]
 price = 12
