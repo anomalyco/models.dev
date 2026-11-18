@@ -63,6 +63,7 @@ import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
+import { siliconflow, siliconflowCn } from "./providers/siliconflow.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -233,6 +234,8 @@ export const providers: {
   requesty: SyncProvider<any>;
   sambanova: SyncProvider<any>;
   morph: SyncProvider<any>;
+  siliconflow: SyncProvider<any>;
+  "siliconflow-cn": SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -284,6 +287,8 @@ export const providers: {
   requesty,
   sambanova: sambaNova,
   morph,
+  siliconflow,
+  "siliconflow-cn": siliconflowCn,
   tinfoil,
   vercel,
   venice,
@@ -315,7 +320,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "siliconflow", "siliconflow-cn", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
