@@ -1,0 +1,46 @@
+# Availability, APIs, and limits: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#gpt-62
+# Reasoning and custom tools: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning#python-lark
+# Azure documents Lark custom tools on both APIs. Other freeform formats are not verified for this deployment.
+# Strict function tools are listed on Responses only: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/structured-outputs
+# Cache controls: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/prompt-caching
+# Standard pricing, cache write TTLs, and Data Zone rates: https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/gpt-6-2-astra-and-gpt-6-2-sol-now-generally-available-in-microsoft-foundry/4574122
+# The 272K long-context cutoff follows the OpenAI model card and the existing Azure GPT-6.1 Sol entry:
+# https://developers.openai.com/api/docs/models/gpt-6.2-sol
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+
+[capabilities]
+tools = { supported = true, freeform = ["lark"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
+
+[api.responses]
+capabilities = { tools = { strict = true } }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "30m" = 2.5, "12h" = 5 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2, write = { "30m" = 5, "12h" = 10 } }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = { text = 1.1 }
+
+[[cost.multipliers]]
+when = { region = { in = ["eu", "apac"] } }
+factor = { text = 1.2 }
