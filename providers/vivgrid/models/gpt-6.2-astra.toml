@@ -3,6 +3,7 @@
 # Limit: Vivgrid serves a 1,000,000-token context window (the lab entry says 1,050,000).
 # Vivgrid publishes no separate input limit, so the lab's input = 922_000 is omitted.
 # APIs: Responses and Chat Completions. https://vivgrid.com/docs/models/gpt-6.2-astra (accessed 2026-11-18)
+# tools.freeform on [api.responses] only: /v1/responses accepted text, lark and regex custom tools and enforced the grammars (asked to pass "hello world", regex ZZ[0-9]{3} and the equivalent lark grammar both returned ZZ000; live 2026-11-18 on this model). /v1/chat/completions rejects custom tools of every format (400 "invalid request body: missing field `function`", live 2026-11-18).
 schema = 2
 base_model = "openai/gpt-6.2-astra"
 base_model_omit = ["limit.input"]
@@ -15,6 +16,7 @@ structured_output = true
 context = 1_000_000
 
 [api.responses]
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [api.chat-completions]
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
