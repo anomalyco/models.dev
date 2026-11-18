@@ -1,6 +1,6 @@
 # Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
 # Input: text only. Ironlane's request to this model's provider carries message text, not image or file parts.
-# Reasoning: off. Thinking is off by default for this model (providers/google/models/gemini-2.5-flash-lite.toml) and Ironlane sends no thinkingConfig, so it can't be turned on.
+# Reasoning: off. Thinking is off by default for this model (providers/google/models/gemini-2.5-flash-lite.toml), and Ironlane sends no thinkingConfig: no documented field turns it on.
 # Cache: implicit; cached input bills at Google's cached price (https://ironlane.ai/docs/api/chat-completions).
 schema = 2
 base_model = "google/gemini-2.5-flash-lite"
