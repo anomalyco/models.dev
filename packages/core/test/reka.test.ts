@@ -134,7 +134,7 @@ test("reasoning controls follow the published efforts and are never invented", (
   }
 });
 
-test("prices convert exactly, a zero cache read is no cache price, and max_output_length is not a limit", () => {
+test("prices convert exactly, a zero cache read is no cache price, and both limits are the host's", () => {
   const translated = reka.translateModel(model(), context)!;
   expect(translated.model).toEqual({
     base_model: "zhipuai/glm-5.3-flash",
@@ -143,9 +143,8 @@ test("prices convert exactly, a zero cache read is no cache price, and max_outpu
     interleaved: { field: "reasoning_content" },
     structured_output: true,
     cost: { input: 0.15, output: 0.5, cache_read: 0.015 },
-    // The lab's 1,000,000 differs from the served window; output is inherited (and
-    // capped at the context by the runner), never taken from max_output_length.
-    limit: { context: 1_048_576 },
+    // The lab's 1,000,000 / 131,072 differ from the host's documented caps.
+    limit: { context: 1_048_576, output: 1_048_576 },
     modalities: { input: ["text", "image"] },
   });
   expect(translated.v2Set).toEqual({
@@ -161,6 +160,7 @@ test("prices convert exactly, a zero cache read is no cache price, and max_outpu
     hugging_face_id: "RekaAI/reka-flash-3",
     input_modalities: ["text"],
     context_length: 65_536,
+    max_output_length: 65_536,
     pricing: { prompt: "0.0000001", completion: "0.0000002", image: "0", request: "0", input_cache_read: "0" },
     supported_features: ["structured_outputs", "reasoning", "streaming"],
     reasoning_efforts: [],
@@ -171,6 +171,8 @@ test("prices convert exactly, a zero cache read is no cache price, and max_outpu
     interleaved: { field: "reasoning_content" },
     structured_output: true,
     cost: { input: 0.1, output: 0.2 },
+    // The lab's 58,982 is OpenRouter's 90% figure; Reka documents the full window.
+    limit: { output: 65_536 },
   });
   expect(unpriced.v2Set).toBeUndefined();
   expect(unpriced.header).not.toContain("Cache:");
@@ -181,6 +183,26 @@ test("prices convert exactly, a zero cache read is no cache price, and max_outpu
     v2: () => ({ capabilities: { cache: { implicit: { note: "authored" } } } }),
   })!;
   expect(authored.v2Set).not.toHaveProperty("capabilities.cache");
+
+  // Hand-authored facts the list cannot carry ride along from the file's own values.
+  const enriched = reka.translateModel(model(), {
+    ...context,
+    authored: () => ({
+      base_model: "zhipuai/glm-5.3-flash",
+      description: "Served by Reka with a 1M window.",
+      knowledge: "2026-04",
+      release_date: "2026-06-01",
+      last_updated: "2026-07-01",
+      status: "beta",
+    }) as never,
+  })!;
+  expect(enriched.model).toMatchObject({
+    description: "Served by Reka with a 1M window.",
+    knowledge: "2026-04",
+    release_date: "2026-06-01",
+    last_updated: "2026-07-01",
+    status: "beta",
+  });
 });
 
 test("the published list generates the provider, prices follow the list, and a retired model's file goes", async () => {
@@ -205,7 +227,7 @@ test("the published list generates the provider, prices follow the list, and a r
   expect(Object.keys(generated).sort()).toEqual(body.data.map((row) => row.id).sort());
   const glm = generated["glm5.3-flash"]!;
   expect(glm.cost).toEqual({ input: 0.15, output: 0.5, cache_read: 0.015 });
-  expect(glm.limit).toEqual({ context: 1_048_576, output: 131_072 });
+  expect(glm.limit).toEqual({ context: 1_048_576, output: 1_048_576 });
   expect(glm.reasoning_options).toEqual([{ type: "effort", values: [...ALL_EFFORTS] }]);
   expect(glm.modalities.input).toEqual(["text", "image"]);
   const flash3 = generated["reka-flash-3"]!;
@@ -215,14 +237,22 @@ test("the published list generates the provider, prices follow the list, and a r
   const edge = generated["reka-edge-2603"]!;
   expect(edge.reasoning).toBe(false);
   expect(edge.name).toBe("Reka Edge 2603");
-  // The lab's output is capped at the window this host serves.
-  expect(generated["deepseek4-flash"]!.limit).toEqual({ context: 262_144, output: 262_144 });
+  // Output is Reka's documented cap, not the lab's.
+  expect(generated["deepseek4-flash"]!.limit).toEqual({ context: 262_144, output: 131_072 });
+  expect(generated["qwen3.6-27b"]!.limit).toEqual({ context: 262_144, output: 32_768 });
   expect(generated["qwen3.6-27b"]!.modalities.input).toEqual(["text"]);
 
   const second = await syncProvider(provider, { openIssues: false });
   expect(second).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 7 });
 
-  // A price change on the list lands in the file; everything else stays.
+  // A price change on the list lands in the file; everything else stays, including
+  // hand-authored facts the list cannot carry (a knowledge cutoff, a description).
+  const file = Bun.file(path.join(modelsDir, "glm5.3-flash.toml"));
+  const authoredText = (await file.text()).replace(
+    "\nschema = 2\n",
+    "\nschema = 2\nknowledge = \"2026-04\"\ndescription = \"Served by Reka with a 1M window.\"\n",
+  );
+  await Bun.write(file, authoredText);
   body = {
     ...body,
     data: body.data.map((row) => row.id === "glm5.3-flash"
@@ -230,10 +260,11 @@ test("the published list generates the provider, prices follow the list, and a r
       : row),
   };
   expect((await syncProvider(provider, { openIssues: false })).updated).toBe(1);
-  const file = Bun.file(path.join(modelsDir, "glm5.3-flash.toml"));
   const updated = Bun.TOML.parse(await file.text()) as Record<string, any>;
   expect(updated.cost.text.input.price).toBe(0.2);
   expect(updated.capabilities.cache).toEqual({ implicit: true });
+  expect(updated.knowledge).toBe("2026-04");
+  expect(updated.description).toBe("Served by Reka with a 1M window.");
 
   // A model gone from the list is retired here too; an empty list never deletes.
   body = { ...body, data: body.data.filter((row) => row.id !== "qwen3.6-27b") };

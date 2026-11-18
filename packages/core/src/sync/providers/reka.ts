@@ -26,7 +26,7 @@ export const RekaModel = z.object({
   input_modalities: z.array(z.string()).min(1),
   output_modalities: z.array(z.string()).min(1),
   context_length: z.number().int().positive().optional(),
-  // An OpenRouter eligibility figure, not a generation cap (see translateModel).
+  // "Maximum tokens the model generates" (https://docs.reka.ai/chat/models.md).
   max_output_length: z.number().int().positive().optional(),
   // USD per token as decimal strings (OpenRouter's flat shape). Absent on a model
   // Reka lists without a price.
@@ -117,7 +117,6 @@ export const reka = {
   name: "Reka",
   modelsDir: "providers/reka/models",
   preserveBaseModels: false,
-  preserveDescriptions: false,
   // Rows without a lab base or published reasoning controls are reported and keep their files.
   trackMissingModels: false,
   fetchModels: fetchRekaModels,
@@ -144,8 +143,10 @@ export const reka = {
     ];
   },
   translateModel(model, context) {
-    const existing = context.existing(model.id);
-    const baseModel = context.authored(model.id)?.base_model ?? rekaBaseModel(model);
+    // The file's own values (not merged with the lab): what a hand edit added
+    // and the sync must carry, since it rewrites the whole file.
+    const authored = context.authored(model.id);
+    const baseModel = authored?.base_model ?? rekaBaseModel(model);
     if (baseModel === undefined) return undefined;
     const base = modelMetadata(baseModel);
     const controls = rekaReasoningControls(model);
@@ -162,17 +163,20 @@ export const reka = {
 
     const features = new Set(model.supported_features ?? []);
     const sampling = new Set(model.supported_sampling_parameters ?? []);
-    // `max_output_length` is not synced: Reka's catalog states it is an OpenRouter
-    // eligibility figure (it must cover the served context so auctions are not
-    // filtered out), not a generation ceiling. The output limit is the lab's,
-    // capped at the context by the runner, or a hand-authored value.
+    // Both limits are the host's documented caps for this model.
     const limit = {
-      context: model.context_length ?? existing?.limit?.context,
-      output: existing?.limit?.output,
+      context: model.context_length ?? authored?.limit?.context,
+      output: model.max_output_length ?? authored?.limit?.output,
     };
     const cacheRead = model.pricing?.input_cache_read;
     const translated = factorBaseModel(baseModel, {
       name: model.name,
+      // Hand-authored overrides the list cannot carry.
+      description: authored?.description,
+      knowledge: authored?.knowledge,
+      release_date: authored?.release_date,
+      last_updated: authored?.last_updated,
+      status: authored?.status,
       attachment: input.some((value) => value !== "text"),
       reasoning: controls.reasoning,
       reasoning_options: controls.options,
@@ -182,8 +186,7 @@ export const reka = {
       tool_call: features.has("tools"),
       structured_output: features.has("structured_outputs") ? true : undefined,
       temperature: sampling.size > 0 ? sampling.has("temperature") : undefined,
-      status: existing?.status,
-      cost: model.pricing === undefined ? existing?.cost : {
+      cost: model.pricing === undefined ? authored?.cost : {
         input: perTokenToPerMillion(model.pricing.prompt),
         output: perTokenToPerMillion(model.pricing.completion),
         cache_read: cacheRead === undefined || perTokenToPerMillion(cacheRead) === 0
