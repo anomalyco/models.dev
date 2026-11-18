@@ -1,0 +1,25 @@
+# AKI.IO uses reasoning_effort = none to disable reasoning
+# Output limit: output is capped to aki.io supported limit for this model
+# Prices: GET /openai/v1/models (checked 2026-11-17) list EUR per 1M tokens (net); converted
+# to USD at the ECB reference rate of 1.0989 USD/EUR (2026-11-17).
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 81_920
+
+[cost.text.input]
+price = 0.153846
+cache = { read = 0.0153846 }
+
+[cost.text.output]
+price = 0.43956
