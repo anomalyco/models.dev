@@ -8928,3 +8928,11 @@ test("Tinfoil's auto effort is left out of the published levels", () => {
   const built = buildTinfoilModel(model!, { ...existingTinfoilGLM, reasoning: true });
   expect(built.reasoning_options).toContainEqual({ type: "effort", values: ["none", "low", "high"] });
 });
+
+test("Hugging Face caps a new file's output at a served context below the lab's output", () => {
+  const doc = buildHuggingFaceModel(huggingFaceModel({
+    id: "meta-llama/Llama-3.2-3B-Instruct",
+    providers: [{ provider: "only", status: "live", context_length: 80_000, pricing: { input: 0.02, output: 0.02 }, throughput: 50 }],
+  }), "meta/llama-3.2-3b-instruct");
+  expect(doc.limit).toEqual({ context: 80_000, output: 80_000 });
+});
