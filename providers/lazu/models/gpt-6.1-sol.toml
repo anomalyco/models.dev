@@ -4,8 +4,7 @@
 # Effort: reasoning.effort (Responses) / reasoning_effort (Chat Completions) = low|medium|high|xhigh|max,
 # as on providers/openai and relay peers (teamorouter, 302ai).
 # Cache: OpenAI automatic prompt caching (implicit); cache_write_5m_per_mtok is $2.50 ($5.00 above 272K) in https://lazu.ai/api/pricing.
-# freeform: custom tools with text/lark/regex grammars have not been live-probed with a restrictive grammar on this host yet
-# (and Lazu's cross-protocol codec rejects tools[].type != "function" when bridging), so freeform is left unset.
+# tools.freeform (live 2026-11-18): /v1/responses accepted text, lark and regex custom tools and enforced the grammars (regex ZZ[0-9]{3} and start: /ZZ[0-9]{3}/ returned ZZ000; text returned OK). On /v1/chat/completions, custom tools with omitted reasoning_effort return 400 (the gateway's GPT-6 Chat tool helper injects reasoning_effort = "none", which gpt-6.1-sol rejects; explicit reasoning_effort = "low" succeeded with ZZ001), so freeform is set on [api.responses] only.
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
@@ -16,6 +15,7 @@ cache = { implicit = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [api.chat-completions]
 

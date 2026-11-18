@@ -4,8 +4,7 @@
 # Effort: reasoning.effort (Responses) / reasoning_effort (Chat Completions) = none|low|medium|high|xhigh|max;
 # off is effort = "none", so no separate toggle is authored (providers/openai).
 # Cache: OpenAI automatic prompt caching (implicit).
-# freeform: custom tools with text/lark/regex grammars have not been live-probed with a restrictive grammar on this host yet
-# (and Lazu's cross-protocol codec rejects tools[].type != "function" when bridging), so freeform is left unset.
+# tools.freeform (live 2026-11-18): both /v1/responses and /v1/chat/completions accepted text, lark and regex custom tools and enforced the grammars (regex ZZ[0-9]{3} and start: /ZZ[0-9]{3}/ returned ZZ000/ZZ001; text returned OK).
 schema = 2
 base_model = "openai/gpt-6-luna"
 
@@ -16,8 +15,10 @@ cache = { implicit = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [api.chat-completions]
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [cost.text.input]
 price = 0.1
