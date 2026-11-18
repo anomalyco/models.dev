@@ -1,10 +1,12 @@
-# Custom tools (freeform text/lark/regex) have not been probed on this host; `freeform` is left unset.
+# Custom tools (freeform text/lark/regex) are passed through; formats per the first-party OpenAI entry.
 schema = 2
 base_model = "openai/gpt-5.6-luna"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
 
 [api.chat-completions]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }

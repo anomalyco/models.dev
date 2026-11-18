@@ -5,6 +5,7 @@ base_model = "zhipuai/glm-5.3-flash"
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 top_k = false
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }

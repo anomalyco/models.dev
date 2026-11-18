@@ -4,6 +4,7 @@ base_model = "anthropic/claude-haiku-4-5"
 [capabilities]
 reasoning = { supported = true, budget = { min = 1024 } }
 structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [api.messages]
 base_url = "https://api.openai-proxy.org/anthropic/v1"

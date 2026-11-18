@@ -4,6 +4,7 @@ base_model = "google/gemini-4-carbon"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { implicit = { min_tokens = 4_096 } }
 
 [api.generate-content]
 base_url = "https://api.openai-proxy.org/google/v1beta"
