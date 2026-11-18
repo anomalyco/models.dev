@@ -1,11 +1,11 @@
+schema = 2
 base_model = "moonshotai/kimi-k3"
 
-[[reasoning_options]]
-type = "effort"
-values = ["low", "high", "max"]
-
-[interleaved]
-field = "reasoning_content"
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [limit]
 output = 1048576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

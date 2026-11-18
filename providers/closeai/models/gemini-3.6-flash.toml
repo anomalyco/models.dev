@@ -1,9 +1,9 @@
+schema = 2
 base_model = "google/gemini-3.6-flash"
 
-[[reasoning_options]]
-type = "effort"
-values = ["minimal", "low", "medium", "high"]
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 
-[provider]
-npm = "@ai-sdk/google"
-api = "https://api.openai-proxy.org/google/v1beta"
+[api.generate-content]
+base_url = "https://api.openai-proxy.org/google/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
