@@ -2,7 +2,8 @@
 # The base ID and this Ultra ID serve the same weights at different speeds and prices; LithosAI lists
 # no Fast tier for GLM-5.3-Flash.
 # Model docs: https://docs.lithosai.com/models/glm-5-3-flash
-# Four live tool_choice="required" requests on 2026-11-18 hit the output cap without a tool call.
+# Tools (live 2026-11-18): required, auto and named tool_choice all work; 5/5 required requests on
+# this ID (default and low effort, temperature 0 and unset) returned the forced call within 43 tokens.
 # Thinking is always on. reasoning_effort defaults to max and maps minimal, medium and xhigh to max.
 # Pricing (https://www.lithosai.com/pricing, accessed 2026-11-17): standard rates in USD per 1M tokens, no
 # early-access discount shown for this model. Cached input is implicit, with no write price.
@@ -26,7 +27,7 @@ cache = { implicit = true }
 context = 1_048_576
 
 [api.chat-completions]
-capabilities = { tools = { choice = ["auto", "none", "tool"] } }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
