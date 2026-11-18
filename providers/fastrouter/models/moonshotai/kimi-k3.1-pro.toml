@@ -1,0 +1,19 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-11-18); prices are USD per token there, per MTok here.
+# Effort: reasoning_effort = low|high|max (always thinks; no off toggle)
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-11-18): supported_params_details.reasoning_effort enum is exactly low|high|max (default max).
+#   Baseline: lab providers/moonshotai kimi-k3.1-pro = effort low|high|max.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+# Limit: not overridden. The catalog reports context_length 1048576, the same as the lab; its max_completion_tokens 1048576 equals the lab output.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

@@ -1,0 +1,24 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-11-18); prices are USD per token there, per MTok here.
+# Service tiers: catalog flex_service_tier_pricing as a multiplier of the default prices (x0.5).
+# Not represented: flex cache read is $0.02 in the catalog, x0.6667 rather than x0.5 (rounding).
+# Not represented: web search $14 per 1K requests (no v2 per-request field).
+# Reasoning: the catalog lists thinking in supported_parameters (schema empty, no enum), so the control set is the lab's (providers/google gemini-3.5-flash-lite).
+# Limit: not overridden. The catalog reports context_length 1048576 and max_completion_tokens 65536, the same as the lab.
+schema = 2
+base_model = "google/gemini-3.5-flash-lite"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+service_tier = ["flex"]
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5

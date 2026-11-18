@@ -1,0 +1,44 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-11-18); prices are USD per token there, per MTok here.
+# Service tiers: catalog <tier>_service_tier_pricing as multipliers of the default prices (flex x0.5, fast x2, ultrafast x6).
+# Not represented: web search $0.01 per request (no v2 per-request field).
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-11-18): supported_params_details.reasoning enum is exactly none|low|medium|high|xhigh|max.
+#   Baseline: lab providers/openai gpt-6.1-sol = effort low|medium|high|xhigh|max; the catalog also lists none.
+#   effort = none disables reasoning on FastRouter (same as reasoning.enabled = false), so no separate toggle.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+# Limit: not overridden. The catalog reports context_length 1050000 and max_completion_tokens 128000, the same as the lab (context 1_050_000, input 922_000, output 128_000).
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+service_tier = ["flex", "fast", "ultrafast"]
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = 2.0
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" } }
+factor = 6.0
