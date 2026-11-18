@@ -1,0 +1,15 @@
+# Verified on https://router-api.0g.ai/v1 (2026-11-18): chat and a tool call (get_weather), image input.
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-18).
+# Reasoning probed 2026-11-18, three runs per level: reasoning_effort none (or thinking.type=disabled) gives 0 reasoning tokens;
+# low ~84, high ~136, max hits the 600-token cap. chat_template_kwargs.enable_thinking=false does not turn it off.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[cost.text.input]
+price = 3.375
+
+[cost.text.output]
+price = 16.875
