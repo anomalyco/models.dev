@@ -10,6 +10,10 @@
 # Aliases: minimal maps to low, medium and xhigh to high, and ultra to max.
 # Live 2026-10-20 (Base, Fast and Ultra): chat, tool calls and strict json_schema response_format work. Reasoning
 # arrives in reasoning_content and reasoning_tokens is reported.
+# Default (live 2026-11-18): with no reasoning_effort or thinking field, thinking runs on all three
+# tiers, matching an explicit reasoning_effort=high within run-to-run variance (the 2026-10-20
+# zero-reasoning-tokens observation no longer reproduces). reasoning_effort=none and
+# thinking.type=disabled both turn it off cleanly; no toggle is listed because effort includes none.
 # Image input (live 2026-10-20): all three tiers read JPEG, PNG, GIF and WebP images.
 # Model docs: https://docs.lithosai.com/models/deepseek-v4-1-flash
 # Context (live 2026-10-20): with a 43-token prompt, max_completion_tokens=1048533 fit the
