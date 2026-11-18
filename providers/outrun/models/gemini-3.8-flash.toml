@@ -3,9 +3,9 @@
 # - Prices: https://api.outrun.to/pricing and https://outrun.to/model/gemini-3.8-flash
 # - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/gemini-3.8-flash
 # Cache: automatic prefix caching (live 2026-10-30: repeated 9,025-token prompt returned 6,978 cached_tokens).
-# Output limit: no verified Outrun-specific cap; inherit the lab limit instead of an unverified 64,000 override.
-# The 2026-10-30 probe accepted max_tokens = 65,536; this verifies request acceptance only, not a full-length
-# completion. The public model page still lists 64,000 (checked 2026-11-02); no site change is included here.
+# Output limit: 64,000, as published on https://outrun.to/model/gemini-3.8-flash (checked 2026-11-02). A 2026-10-30
+# probe accepted max_tokens = 65,536, but that verifies request acceptance only, not a full-length completion, so the
+# published host limit is used instead of the inherited lab limit.
 schema = 2
 base_model = "google/gemini-3.8-flash"
 
@@ -13,6 +13,9 @@ base_model = "google/gemini-3.8-flash"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
+
+[limit]
+output = 64_000
 
 [cost.text.input]
 price = 0.315

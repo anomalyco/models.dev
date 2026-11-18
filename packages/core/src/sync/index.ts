@@ -53,6 +53,7 @@ import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
 import { openrouter } from "./providers/openrouter.js";
+import { outrun } from "./providers/outrun.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
@@ -218,6 +219,7 @@ export const providers: {
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
   openrouter: SyncProvider<any>;
+  outrun: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
   prime: SyncProvider<any>;
@@ -264,6 +266,7 @@ export const providers: {
   "ollama-cloud": ollamaCloud,
   openai,
   openrouter,
+  outrun,
   ovhcloud,
   pioneer,
   prime,
@@ -293,6 +296,7 @@ export const groups = {
     "ofox",
     "requesty",
     "openrouter",
+    "outrun",
     "prime",
     "vercel",
   ],
