@@ -6,6 +6,7 @@ base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262144 } }
+structured_output = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

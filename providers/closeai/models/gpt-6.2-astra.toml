@@ -1,8 +1,10 @@
+# Custom tools (freeform text/lark/regex) have not been probed on this host; `freeform` is left unset.
 schema = 2
 base_model = "openai/gpt-6.2-astra"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [api.chat-completions]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible" }

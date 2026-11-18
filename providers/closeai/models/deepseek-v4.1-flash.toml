@@ -5,9 +5,8 @@ base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
-
-[limit]
-output = 393216
+structured_output = true
+top_k = false
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
