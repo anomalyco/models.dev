@@ -13,8 +13,8 @@ base_url = "https://openrouter.ai/api/v1"
 sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "@opencode/ai/providers/openrouter/videos" }
 
 [cost.video.output]
-price = 4.2
+price = 5.6
 
 [[cost.video.output.overrides]]
 when = { input_video = { equals = true } }
-price = 2.475
+price = 3.3
