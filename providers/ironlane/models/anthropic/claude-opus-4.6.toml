@@ -1,7 +1,7 @@
 # Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
 # Input: text only. Ironlane's request to this model's provider carries message text, not image or file parts.
 # Reasoning: off. Extended thinking needs Anthropic's `thinking` parameter, which Ironlane doesn't send.
-# Cache: none. Claude caches only on cache_control markers, which Ironlane doesn't add.
+# Cache: none. On Anthropic's API, Claude caches only on cache_control markers, which Ironlane doesn't add.
 schema = 2
 base_model = "anthropic/claude-opus-4-6"
 
