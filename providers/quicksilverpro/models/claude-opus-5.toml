@@ -19,7 +19,7 @@ output = ["text"]
 
 [cost.text.input]
 price = 1.25
-cache = { read = 0.125, write = { 5m = 1.5625, 1h = 2.5 } }
+cache = { read = 0.125, write = { "5m" = 1.5625, "1h" = 2.5 } }
 
 [cost.text.output]
 price = 6.25
