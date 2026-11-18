@@ -3,6 +3,7 @@
 # Low cost route: text and tool calls. Image and file input need the model's :official route.
 # Limits: Infer's published figures for the model; the route publishes none of its own.
 # Reasoning controls copied from the lab's own entry, as AGENTS.md asks of relays.
+# No freeform: Infer's docs (https://infer.flow7.org/docs, Responses API) say custom tools the client runs pass through; with no paid probe, grammar enforcement is unverified, so freeform is left out.
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 base_model_omit = ["limit.input"]
@@ -15,6 +16,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 271_999

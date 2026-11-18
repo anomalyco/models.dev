@@ -42,6 +42,7 @@ import { hyper } from "./providers/hyper.js";
 import { hostingerRouter } from "./providers/hostinger-router.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
+import { infer } from "./providers/infer.js";
 import { keln } from "./providers/keln.js";
 import { kenari } from "./providers/kenari.js";
 import { kilo } from "./providers/kilo.js";
@@ -211,6 +212,7 @@ export const providers: {
   "hostinger-router": SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
+  infer: SyncProvider<any>;
   keln: SyncProvider<any>;
   kenari: SyncProvider<any>;
   kilo: SyncProvider<any>;
@@ -262,6 +264,7 @@ export const providers: {
   "hostinger-router": hostingerRouter,
   huggingface,
   inceptron,
+  infer,
   keln,
   kenari,
   kilo,
@@ -300,6 +303,7 @@ export const groups = {
     "hostinger-router",
     "huggingface",
     "inceptron",
+    "infer",
     "keln",
     "kenari",
     "kilo",

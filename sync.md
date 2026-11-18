@@ -27,6 +27,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync infer` syncs only Infer by Flow7.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -207,6 +208,32 @@ EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
 - Reasoning options come from the published `reasoning` object: `supported_efforts` becomes an effort option (with `none` when thinking can be switched off), an on/off-only model gets a toggle, and an always-on model with no published levels gets `[]`. Each file's header names the wire field.
 - Only rows whose `output_modalities` include `text` sync. Keln also lists decision-output models (e.g. `cloudflare/clef`); they cannot serve chat, so they are filtered out at parse time and their files are removed like retired models.
 - Rows without a lab base or published controls are reported and keep their files; models absent from the API are removed. Empty, malformed and duplicate-ID inventories fail before writes.
+
+## Infer Notes
+
+- Run with `bun models:sync infer` or `bun infer:sync`. Registration enables the scheduled provider-specific workflow; no API key or new workflow secret is required.
+- Source: the public `https://infer.flow7.org/api/public/catalog`. Each model lists its routes as tiers (`low-cost`, `balanced`, `stable`, `official`), and a tier's `selector` (`infer/gpt-6-astra:low-cost`) is the file id under `providers/infer/models`. Prices are already USD per 1M tokens. A cache price of `0` means none is quoted, so it is left out rather than written as free.
+- A text model gets a `:low-cost` file when its Low cost tier:
+  - takes Responses requests;
+  - is priced below the lab's own list price on both input and output (`market.discounts.input_percent` and `output_percent` above 0);
+  - has a lab model to base the file on. The lab comes from the id's prefix (`claude-`, `gpt-`, `grok-` and `gemini-` for `anthropic`, `openai`, `xai` and `google`), and both `models/<lab>/<model>.toml` and the lab's own `providers/<lab>/models/<model>.toml` must exist.
+- The new file overrides the lab model:
+  - a "(Low cost)" name suffix;
+  - text-only input and output, since these routes take no image or file input;
+  - `structured_output` as the route reports it;
+  - the lab entry's reasoning controls, default effort included.
+- Effort levels go on the Responses `reasoning.effort` and a token budget on `reasoning.max_tokens`, as Infer documents (https://infer.flow7.org/docs); a budget file's header names the field. A lab entry with a thinking toggle isn't copied, since Infer documents no field that switches thinking on or off. Those routes, and routes without a lab file, are reported for hand authoring.
+- `:official` files are added by hand, and the sync only prices them.
+- A file whose route quotes a cache-read price gets `capabilities.cache = { implicit = true }` through `v2Set`, as in the CrossModel sync. Infer meters cache reads without any cache control from the client ("Prompt cache reads and writes are first-class metered usage", https://infer.flow7.org/docs). A file's own cache kinds are kept, and the sync's own value goes once the route quotes no cache-read price.
+- Generated headers for OpenAI GPT-5 and later say why `freeform` is left out, as AGENTS.md asks: Infer's docs say custom tools the client runs pass through, but no paid probe has checked that a grammar is enforced.
+- The catalog owns prices and limits:
+  - A published limit below the lab's goes in the file: the route's own, else the model's (the lowest across its routes).
+  - One at or above the lab's leaves the lab's, and a file keeps its own limit while the catalog publishes none.
+  - Output is capped at the context, and the lab's `limit.input` is omitted (`base_model_omit`) when it would exceed the context.
+  - Names, modalities, reasoning controls, APIs and header comments stay as each file has them.
+- An existing Low cost file keeps its prices synced when the catalog stops showing it below list, and the report names it.
+- Nothing is removed (`deleteMissing: false`). The catalog lists only routes passing Infer's health checks at that moment, so a route or model missing from it is kept and named in the report. A person removes it once Infer has stopped serving it.
+- These fail the run before any write: an empty or non-live catalog, duplicate slugs, and a selector that doesn't match its tier.
 
 ## OpenRouter Notes
 
