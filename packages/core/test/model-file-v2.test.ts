@@ -222,6 +222,23 @@ test("patchModelV2 keeps a file's other API tables and OpenCode package", () => 
   ]);
 });
 
+test("recommended_api is v2 only and survives sync patches", () => {
+  const api = { "generate-content": {}, interactions: { sdk: { opencodeai: "@opencode/ai/providers/google/interactions" } } };
+  const doc = { schema: 2, base_model: "google/gemini-3.8-flash", api, cost: { text: { input: { price: 1 }, output: { price: 2 } } } };
+  const recommended = { ...doc, recommended_api: "interactions" };
+
+  // v1 is the same with or without it.
+  expect(modelV2ToV1({ ...recommended, id: "m" })).toEqual(modelV2ToV1({ ...doc, id: "m" }));
+
+  const before = modelV2ToV1({ ...recommended, id: "m" });
+  const { id: _id, ...after } = { ...before, cost: { input: 3, output: 4 } };
+  const next = patchModelV2(recommended, before, after);
+  expect(next.recommended_api).toBe("interactions");
+  const written = formatModelV2(next);
+  expect(written).toContain('base_model = "google/gemini-3.8-flash"\nrecommended_api = "interactions"\n\n[api.generate-content]');
+  expect((Bun.TOML.parse(written) as Record<string, unknown>).recommended_api).toBe("interactions");
+});
+
 test('patchModelV2 keeps aisdk = "none" when sync rewrites the first table', () => {
   const api = { systemone: { base_url: "https://example.com/v1", sdk: { aisdk: "none" } } };
   const doc = { schema: 2, base_model: "typesafe/jev-1.13", api, cost: { text: { input: { price: 1 }, output: { price: 2 } } } };
