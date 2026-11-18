@@ -4,12 +4,13 @@
 # https://help.aliyun.com/zh/model-studio/qwen4-max
 # https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-chat-completions
 # qwen4-max is listed on both Token Plan editions (Personal and Team).
-# Toggle: enable_thinking true|false (hybrid, thinking on by default; Chat Completions; Responses accepts it but plans to drop it in favor of effort). Messages: thinking.type = enabled|disabled.
-# Effort: reasoning_effort = low|high|xhigh (Chat Completions), reasoning.effort (Responses), output_config.effort (Messages); default high.
-# Aliases (Chat/Responses): minimal→low, medium→high, max→xhigh; none disables thinking. Messages maps medium→high and max→xhigh; off is thinking.type = disabled (none not accepted).
-# Budget: thinking_budget (Chat Completions), a positive integer (0 rejected) that cannot be combined with reasoning_effort;
-# 1-4,096 maps to low, 4,097-131,072 to high, 131,073-262,144 to xhigh; default 131,072. Messages takes thinking.budget_tokens
-# (slated for deprecation); Responses takes no budget.
+# Effort: reasoning_effort (Chat), reasoning.effort (Responses), output_config.effort (Messages); default high.
+# none disables thinking on Chat/Responses; Messages has no none and turns thinking off with thinking.type = disabled.
+# Aliases: minimal→low, medium→high, max→xhigh.
+# Budget: thinking_budget (Chat), thinking.budget_tokens (Messages, slated for deprecation): a positive integer up to
+# 262,144, mutually exclusive with effort; bands 1-4,096→low, 4,097-131,072→high, 131,073-262,144→xhigh; default 131,072.
+# Responses has no budget field. enable_thinking true|false is the legacy toggle, slated for removal in favor of effort.
+# Controls per the Model Studio API docs; checked on dashscope.aliyuncs.com 2026-11-18, not on the plan endpoint.
 # Cache: cached tokens are billed at a discount on the shared plan surface; the mechanism isn't documented, so implicit only.
 # structured_output and stream_usage: JSON Object/Schema per the model page; json_schema/json_object and
 # stream_options.include_usage were probed on token-plan.ap-southeast-1.maas.aliyuncs.com 2026-11-13 with the preview id.
@@ -21,7 +22,7 @@ base_model = "alibaba/qwen4-max"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "tool"] }
-reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "xhigh"], budget = { min = 1, max = 262_144 } }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "xhigh"], budget = { min = 1, max = 262_144 } }
 structured_output = true
 stream_usage = true
 cache = { implicit = true }
