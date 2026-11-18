@@ -8,11 +8,11 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max
 structured_output = true
 
 [cost.text.input]
-price = 2
-cache = { read = 0.1, write = 2.5 }
+price = 4
+cache = { read = 0.2, write = 5 }
 
 [cost.text.output]
-price = 10
+price = 20
 reasoning = 0
 
 [cost.web_search]

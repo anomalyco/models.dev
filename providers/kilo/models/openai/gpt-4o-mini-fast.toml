@@ -7,11 +7,11 @@ description = "GPT-4o mini from OpenAI is their most advanced and cost-efficient
 structured_output = true
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.075, write = 0 }
+price = 0.25
+cache = { read = 0.125, write = 0 }
 
 [cost.text.output]
-price = 0.6
+price = 1
 reasoning = 0
 
 [cost.web_search]
