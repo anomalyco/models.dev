@@ -1,0 +1,409 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "qwen3.6-27b",
+      "object": "model",
+      "created": 1777255064,
+      "owned_by": "reka",
+      "name": "Qwen3.6 27B",
+      "description": "Qwen3.6 27B is an open-weight general-purpose model with a 262k context window, hosted by Reka. It is served as an OpenAI-compatible passthrough with native tool calling, reasoning and streaming.",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "context_length": 262144,
+      "max_output_length": 32768,
+      "pricing": {
+        "prompt": "0.00000029",
+        "completion": "0.00000195",
+        "image": "0",
+        "request": "0",
+        "input_cache_read": "0.000000029"
+      },
+      "supported_sampling_parameters": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "max_tokens",
+        "stop",
+        "seed",
+        "frequency_penalty",
+        "presence_penalty"
+      ],
+      "supported_features": [
+        "tools",
+        "json_mode",
+        "structured_outputs",
+        "logprobs",
+        "reasoning",
+        "streaming"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "hugging_face_id": "Qwen/Qwen3.6-27B",
+      "is_ready": true,
+      "capacity_tpm": 200000,
+      "openrouter": {
+        "slug": "qwen/qwen3.6-27b"
+      },
+      "capacity": {
+        "prompt_tokens_per_minute": 200000,
+        "completion_tokens_per_minute": 24000,
+        "concurrency": 8,
+        "requests_per_minute": null
+      }
+    },
+    {
+      "id": "qwen3.8-27b",
+      "object": "model",
+      "created": 1786978800,
+      "owned_by": "reka",
+      "name": "Qwen3.8 27B",
+      "description": "Qwen3.8 27B is an open-weight general-purpose model with a 262k context window, hosted by Reka. It is served as an OpenAI-compatible passthrough with native tool calling and streaming.",
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "context_length": 262144,
+      "max_output_length": 262144,
+      "pricing": {
+        "prompt": "0.0000002",
+        "completion": "0.0000025",
+        "image": "0",
+        "request": "0",
+        "input_cache_read": "0.00000005"
+      },
+      "supported_sampling_parameters": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "max_tokens",
+        "stop",
+        "seed",
+        "frequency_penalty",
+        "presence_penalty",
+        "repetition_penalty",
+        "min_p",
+        "logit_bias"
+      ],
+      "supported_features": [
+        "tools",
+        "json_mode",
+        "structured_outputs",
+        "logprobs",
+        "reasoning",
+        "streaming"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "hugging_face_id": "Qwen/Qwen3.8-27B",
+      "is_ready": true,
+      "capacity_tpm": 20000000,
+      "openrouter": {
+        "slug": "qwen/qwen3.8-27b"
+      },
+      "capacity": {
+        "prompt_tokens_per_minute": 20000000,
+        "completion_tokens_per_minute": 35000,
+        "concurrency": 32,
+        "requests_per_minute": null
+      }
+    },
+    {
+      "id": "reka-edge-2603",
+      "object": "model",
+      "created": 1773154800,
+      "owned_by": "reka",
+      "name": "Reka Edge 2603",
+      "description": "Reka Edge 2603 provides frontier-level intelligence for physical AI. It excels at visual understanding (videos, images), object detection, and tool use, and with its CONVNEXT vision encoder, it processes images with 3x fewer tokens, leading to significant gains in latency.",
+      "input_modalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "context_length": 16384,
+      "max_output_length": 16384,
+      "pricing": {
+        "prompt": "0.0000001",
+        "completion": "0.0000001",
+        "image": "0",
+        "request": "0",
+        "input_cache_read": "0"
+      },
+      "supported_sampling_parameters": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "max_tokens",
+        "stop",
+        "seed",
+        "frequency_penalty",
+        "presence_penalty"
+      ],
+      "supported_features": [
+        "tools",
+        "json_mode",
+        "structured_outputs",
+        "logprobs",
+        "streaming"
+      ],
+      "hugging_face_id": "RekaAI/reka-edge-2603",
+      "is_ready": true,
+      "openrouter": {
+        "slug": "rekaai/reka-edge"
+      }
+    },
+    {
+      "id": "reka-flash-3",
+      "object": "model",
+      "created": 1741359600,
+      "owned_by": "reka",
+      "name": "Reka Flash 3",
+      "description": "Reka Flash 3 is a 21B general-purpose reasoning LLM which excels at chat, coding, and instruction-following while maintaining a level of performance competitive with significantly larger models.\n    Note: Reka Flash 3 is primarily an English model with limited multilingual understanding capabilities.",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "context_length": 65536,
+      "max_output_length": 65536,
+      "pricing": {
+        "prompt": "0.0000001",
+        "completion": "0.0000002",
+        "image": "0",
+        "request": "0",
+        "input_cache_read": "0"
+      },
+      "supported_sampling_parameters": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "max_tokens",
+        "stop",
+        "seed",
+        "frequency_penalty",
+        "presence_penalty"
+      ],
+      "supported_features": [
+        "json_mode",
+        "structured_outputs",
+        "logprobs",
+        "reasoning",
+        "streaming"
+      ],
+      "reasoning_efforts": [],
+      "hugging_face_id": "RekaAI/reka-flash-3",
+      "is_ready": true,
+      "openrouter": {
+        "slug": "rekaai/reka-flash-3"
+      }
+    },
+    {
+      "id": "deepseek4-flash",
+      "object": "model",
+      "created": 1786986000,
+      "owned_by": "reka",
+      "name": "DeepSeek V4 Flash",
+      "description": "DeepSeek V4 Flash is an open-weight reasoning model with a 262k context window, hosted by Reka. It is served as an OpenAI-compatible passthrough with native tool calling, structured outputs, logprobs, and streaming.",
+      "input_modalities": [
+        "text"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "context_length": 262144,
+      "max_output_length": 131072,
+      "pricing": {
+        "prompt": "0.00000011",
+        "completion": "0.00000066",
+        "image": "0",
+        "request": "0",
+        "input_cache_read": "0.000000007"
+      },
+      "supported_sampling_parameters": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "max_tokens",
+        "stop"
+      ],
+      "supported_features": [
+        "tools",
+        "json_mode",
+        "structured_outputs",
+        "logprobs",
+        "reasoning",
+        "streaming"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "hugging_face_id": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "is_ready": true,
+      "capacity_tpm": 50000000,
+      "openrouter": {
+        "slug": "deepseek/deepseek-v4-flash-0731"
+      },
+      "capacity": {
+        "prompt_tokens_per_minute": 50000000,
+        "completion_tokens_per_minute": 600000,
+        "concurrency": 256,
+        "requests_per_minute": null
+      }
+    },
+    {
+      "id": "deepseek41-flash",
+      "object": "model",
+      "created": 1788998400,
+      "owned_by": "reka",
+      "name": "DeepSeek V4.1 Flash",
+      "description": "DeepSeek V4.1 Flash is an open-weight reasoning model with a 1M context window, hosted by Reka. It is served as an OpenAI-compatible passthrough with native tool calling, structured outputs, reasoning, logprobs, and streaming.",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "context_length": 1048576,
+      "max_output_length": 393216,
+      "pricing": {
+        "prompt": "0.0000003",
+        "completion": "0.0000012",
+        "image": "0",
+        "request": "0",
+        "input_cache_read": "0.000000006"
+      },
+      "supported_sampling_parameters": [
+        "temperature",
+        "top_p",
+        "max_tokens",
+        "stop"
+      ],
+      "supported_features": [
+        "tools",
+        "json_mode",
+        "structured_outputs",
+        "logprobs",
+        "reasoning",
+        "streaming"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "hugging_face_id": "deepseek-ai/DeepSeek-V4.1-Flash",
+      "is_ready": true,
+      "capacity_tpm": 3000000,
+      "openrouter": {
+        "slug": "deepseek/deepseek-v4.1-flash"
+      },
+      "capacity": {
+        "prompt_tokens_per_minute": 3000000,
+        "completion_tokens_per_minute": 150000,
+        "concurrency": 32,
+        "requests_per_minute": null
+      }
+    },
+    {
+      "id": "glm5.3-flash",
+      "object": "model",
+      "created": 1787761875,
+      "owned_by": "reka",
+      "name": "GLM 5.3 Flash",
+      "description": "GLM 5.3 Flash is an open-weight 321B-parameter (18B active) reasoning model with a 1M context window, hosted by Reka. It is served as an OpenAI-compatible passthrough with native tool calling, structured outputs, logprobs, and streaming.",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "context_length": 1048576,
+      "max_output_length": 1048576,
+      "pricing": {
+        "prompt": "0.00000015",
+        "completion": "0.0000005",
+        "image": "0",
+        "request": "0",
+        "input_cache_read": "0.000000015"
+      },
+      "supported_sampling_parameters": [
+        "temperature",
+        "top_p",
+        "top_k",
+        "max_tokens",
+        "stop",
+        "seed",
+        "frequency_penalty",
+        "presence_penalty",
+        "repetition_penalty"
+      ],
+      "supported_features": [
+        "tools",
+        "json_mode",
+        "structured_outputs",
+        "logprobs",
+        "reasoning",
+        "streaming"
+      ],
+      "reasoning_efforts": [
+        "none",
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "hugging_face_id": "zai-org/GLM-5.3-Flash",
+      "is_ready": true,
+      "capacity_tpm": 1000000,
+      "openrouter": {
+        "slug": "z-ai/glm-5.3-flash"
+      },
+      "capacity": {
+        "prompt_tokens_per_minute": 1000000,
+        "completion_tokens_per_minute": 160000,
+        "concurrency": 32,
+        "requests_per_minute": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+# Reka's API gateway: OpenAI-compatible POST https://api.reka.ai/v1/chat/completions,
+# hosting Reka's own models and open-weight models from other labs (Qwen, DeepSeek,
+# GLM) at retail prices. Model files are synced by `bun models:sync reka` from the
+# keyless https://api.reka.ai/v1/site/chat-models (the customer view of /v1/models);
+# reasoning controls come from each model's published `reasoning_efforts`, and every
+# reasoner returns its thinking in message.reasoning_content.
+# Docs: https://docs.reka.ai/chat/models.md, https://docs.reka.ai/chat/api-reference/create-chat-completion.md
+name = "Reka"
+env = ["REKA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.reka.ai/v1"
+doc = "https://docs.reka.ai/chat/models.md"
