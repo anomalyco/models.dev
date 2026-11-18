@@ -1,0 +1,12 @@
+# Sources (accessed 2026-11-18):
+# - Each account gets its own gateway base URL: activation shows it, and Settings -> Inferock keys
+#   copies it; the docs call it GATEWAY_BASE_URL and save the key as INFEROCK_API_KEY
+#   (https://inferock.ai/docs/serve-setup/, https://huggingface.co/Inferock/DANE).
+# - Chat is POST `${GATEWAY_BASE_URL}/v1/chat/completions` with `Authorization: Bearer <key>`
+#   (https://inferock.ai/docs/dane/).
+name = "Inferock"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["GATEWAY_BASE_URL", "INFEROCK_API_KEY"]
+api = "${GATEWAY_BASE_URL}/v1"
+doc = "https://inferock.ai/docs/dane/"
