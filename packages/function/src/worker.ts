@@ -8,6 +8,7 @@ import {
 } from "@models.dev/core/src/filter.js";
 import type { ModelTypeValue } from "@models.dev/core/src/filter.js";
 import { hitEvent } from "@models.dev/core/src/hit.js";
+import { includedProviders } from "@models.dev/core/src/provider-view.js";
 
 export interface Env {
   ASSETS: any;
@@ -201,7 +202,12 @@ async function catalogResponse(
       : filter.length === 1
         ? `-${filter[0]}`
         : undefined;
-  assetUrl.pathname = `/_${endpoint}${suffix ?? "-all"}.json`;
+  const view =
+    endpoint === "experimental_v2.0_api" &&
+    includedProviders(url.searchParams).has("openai-codex")
+      ? "-optin"
+      : "";
+  assetUrl.pathname = `/_${endpoint}${view}${suffix ?? "-all"}.json`;
   assetUrl.search = "";
   // A filtered body depends only on the full file and the types, so its ETag is
   // the file's ETag plus the types, and revalidation is passed to the file.

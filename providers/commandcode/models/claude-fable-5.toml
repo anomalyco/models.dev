@@ -2,11 +2,12 @@
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
 # Mid-conversation flags follow Anthropic's own API for this model: Command Code serves it via @ai-sdk/anthropic. See providers/anthropic/models/claude-fable-5.toml.
+# tools.updates follows Anthropic's own Messages API, which this route proxies (live 2026-11-17 there: add, redefine and removal 3/3); not re-tested here (no key).
 schema = 2
 base_model = "anthropic/claude-fable-5"
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true, updates = ["add", "remove", "replace"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 system_updates = true
 

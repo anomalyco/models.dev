@@ -22,6 +22,8 @@ const IGNORED_IDS = new Set([
   "nvrouter/fusion",
   "zai-org/glm-4.7-h",
   "zai-org/glm-5.3-p",
+  // Placeholder route (2026-11-17): $0 prices, empty description, no published target model.
+  "zai-org/glm-new",
 ]);
 
 const Price = z.object({

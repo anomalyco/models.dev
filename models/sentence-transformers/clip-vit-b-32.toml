@@ -1,0 +1,30 @@
+# https://huggingface.co/sentence-transformers/clip-ViT-B-32: OpenAI CLIP ViT-B/32 packaged for sentence-transformers;
+# maps text and images into a shared 512-dimensional space. Text encoder takes 77 tokens. No image file formats are
+# documented, so image input stays generic.
+# Released 2021-06-22: initial commit of the model repository (https://huggingface.co/sentence-transformers/clip-ViT-B-32/commits/main)
+schema = 2
+v2_only = true
+type = "embedding"
+name = "CLIP ViT-B-32"
+description = "CLIP model that embeds text and images into a shared vector space"
+open_weights = true
+release_date = "2021-06-22"
+
+[modalities]
+input = ["text", "image"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 77
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/sentence-transformers/clip-ViT-B-32"

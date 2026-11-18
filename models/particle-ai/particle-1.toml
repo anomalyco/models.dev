@@ -1,0 +1,30 @@
+# Sources (accessed 2026-11-16):
+# https://particle.ai/blog/introducing-particle-1 (launch 2026-10-28; post-trained on DeepSeek V4.1 Flash, weights not released)
+# https://docs.particle.ai/models (context, output ceiling, text and image input, default effort high)
+# https://docs.particle.ai/chat-completions (temperature, top_p, top_k, tools)
+# Image formats: the docs name inline data URLs and public HTTPS URLs but no MIME types for Particle-1, so the lane stays generic.
+schema = 2
+name = "Particle-1"
+description = "Token-efficient agentic coding model post-trained on DeepSeek V4.1 Flash to finish software engineering tasks with fewer reasoning and tool-call tokens"
+open_weights = false
+release_date = "2026-10-28"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[[links]]
+label = "Announcement"
+url = "https://particle.ai/blog/introducing-particle-1"
+type = "announcement"

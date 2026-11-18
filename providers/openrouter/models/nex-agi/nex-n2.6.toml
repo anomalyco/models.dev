@@ -1,0 +1,35 @@
+schema = 2
+name = "Nex-N2.6"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+family = "agi"
+open_weights = true
+release_date = "2026-11-10"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 235_929
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.12
+cache = { read = 0.024 }
+
+[cost.text.output]
+price = 0.4

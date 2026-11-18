@@ -1,0 +1,27 @@
+schema = 2
+name = "OrcaCyber DeepSeek V4.1 Flash Thinking"
+description = "An OrcaCyber model built on DeepSeek V4.1 Flash for authorized security research, coding, and tool use. Accepts text and images, with reasoning on by default. Supports a 1M-token context window, up to 393K output tokens, tool calling, and structured output. Offensive work is permitted only within an authorized security engagement."
+family = "deepseek"
+open_weights = false
+release_date = "2026-11-09"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_064
+input = 1_048_064
+output = 393_216
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 1.6

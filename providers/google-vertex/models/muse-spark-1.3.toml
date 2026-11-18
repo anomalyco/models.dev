@@ -1,0 +1,45 @@
+# Sources:
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/meta/muse-spark-1-3 (Preview, global endpoint only)
+# - https://cloud.google.com/model-garden/partner-models/pricing (Meta's models, global)
+# On Vertex since 2026-09-24 (Preview, per the model page); Meta and Google announced it with Muse Ember and Muse Wonder on 2026-11-09: https://x.com/finkd/status/2119910354369257529
+# Muse models are served only through the stateless Responses API on the global endpoint:
+# POST https://aiplatform.googleapis.com/v1/projects/PROJECT_ID/locations/global/publishers/meta/v1/responses
+# with the bare model ID in `model` (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/meta#use-meta-models).
+# store: true is not supported there, so store is left out.
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh|max. Vertex lists reasoning as supported without its own
+# effort table, so the levels follow Meta's API for this model (https://dev.meta.ai/docs/reasoning; "none" returns 400).
+# Tools: tool_choice "auto" only, as on Meta's API (https://dev.meta.ai/docs/tool-calling#guidelines). Vertex does not document
+# tool search, so it is left out.
+# Cache: Vertex bills a "Cache Hit" price and supports prompt caching on the global endpoint, with no cache API
+# (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/use-partner-models#global-endpoint).
+# Mid-conversation updates: false. Vertex documents no in-place system message, per-turn effort or tool-change mechanism
+# for Meta models; the Meta API's Responses system_updates was checked only on api.meta.ai.
+# Not verified live (no working Vertex credentials when added, 2026-11-09).
+# v2_only: Vertex serves Muse only on the Responses API, so the v1 entry would be @ai-sdk/openai, which older clients
+# reading v1 call without a key (Vertex uses OAuth) and fail. v2 clients route it to google-vertex/responses.
+# Inputs: Text, Image, PDF (Vertex model page). Image MIME types are Meta's (https://dev.meta.ai/docs/media-understanding).
+schema = 2
+v2_only = true
+base_model = "meta/muse-spark-1.3"
+status = "beta"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.responses]
+base_url = "https://aiplatform.googleapis.com/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/global/publishers/meta/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/google-vertex/responses" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

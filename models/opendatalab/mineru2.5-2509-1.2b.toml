@@ -1,0 +1,37 @@
+# Sources (accessed 2026-10-29):
+# - Model card: https://huggingface.co/opendatalab/MinerU2.5-2509-1.2B (agpl-3.0, 1.2B Qwen2-VL based,
+#   createdAt 2025-09-17)
+# - Paper: https://arxiv.org/abs/2509.22186 (MinerU2.5: A Decoupled Vision-Language Model for Efficient
+#   High-Resolution Document Parsing)
+# - https://github.com/opendatalab/MinerU
+# Input images: Qwen2-VL processor formats (jpeg/png/webp); PDFs are pre-rendered to page images
+#   (mineru-vl-utils). Native context 16,384 = max_position_embeddings in config.json.
+schema = 2
+name = "MinerU2.5 2509 1.2B"
+description = "1.2B-parameter vision-language model from OpenDataLab for two-step document parsing: global layout analysis on downsampled images, then fine-grained text, formula, and table recognition at native resolution"
+open_weights = true
+release_date = "2025-09-17"
+license = "AGPL-3.0"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 16_384
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/opendatalab/MinerU2.5-2509-1.2B"
+
+[[links]]
+label = "Paper"
+url = "https://arxiv.org/abs/2509.22186"
+type = "paper"

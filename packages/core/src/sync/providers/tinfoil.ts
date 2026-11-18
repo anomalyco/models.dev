@@ -24,6 +24,12 @@ export const TinfoilModel = z.object({
   context_window: z.number().int().positive().optional(),
   pricing: TinfoilPricing,
   reasoning: z.boolean(),
+  // "auto" (Inkling 2 Small) isn't in Tinfoil's reasoning docs (https://docs.tinfoil.sh/guides/reasoning.md) or any
+  // catalog level, and clients send effort values verbatim, so it's left out rather than renamed.
+  supported_efforts: z
+    .array(z.enum(["none", "minimal", "low", "medium", "auto", "high", "xhigh", "max"]))
+    .transform((efforts) => efforts.filter((effort): effort is Exclude<typeof effort, "auto"> => effort !== "auto"))
+    .optional(),
   tool_calling: z.boolean(),
   multimodal: z.boolean(),
   type: z.string().min(1),
@@ -86,6 +92,20 @@ function isRepresentableTokenModel(model: TinfoilModel) {
     );
 }
 
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
+
+// The catalog's supported_efforts are the reasoning_effort values Tinfoil accepts (minus auto, see above); they replace the authored effort
+// list and keep any other authored control. Without them, the authored controls stay as they are.
+function tinfoilReasoningOptions(model: TinfoilModel, existing: ExistingModel) {
+  const efforts = model.supported_efforts ?? [];
+  if (efforts.length === 0) return existing.reasoning_options;
+  const values = EFFORT_ORDER.filter((value) => efforts.includes(value));
+  return [
+    ...(existing.reasoning_options ?? []).filter((option) => option.type !== "effort"),
+    { type: "effort" as const, values },
+  ];
+}
+
 export function buildTinfoilModel(
   model: TinfoilModel,
   existing: ExistingModel,
@@ -93,7 +113,8 @@ export function buildTinfoilModel(
   if (existing.cost === undefined || existing.limit?.context === undefined) {
     throw new Error(`Tinfoil model ${model.id} has incomplete local pricing or limits required for sync`);
   }
-  if (model.reasoning && existing.reasoning_options === undefined) {
+  const reasoningOptions = tinfoilReasoningOptions(model, existing);
+  if (model.reasoning && reasoningOptions === undefined) {
     throw new Error(`Tinfoil model ${model.id} requires hand-authored reasoning_options; the catalog exposes no reasoning controls`);
   }
 
@@ -111,7 +132,7 @@ export function buildTinfoilModel(
   const values = {
     ...current,
     reasoning: model.reasoning,
-    reasoning_options: model.reasoning ? existing.reasoning_options : undefined,
+    reasoning_options: model.reasoning ? reasoningOptions : undefined,
     cost,
     limit,
   } as SyncedFullModel;

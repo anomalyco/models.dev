@@ -6,6 +6,7 @@
 #   xhigh|max) is documented for Thinking Machines models and "Not all models support effort" (400), so it is listed only
 #   for those; images via base64 or URL; no audio blocks;
 #   cache_control is ignored, prefill tokens that hit the prompt cache bill at 80% off.
+# Output limit: no host-specific cap is documented, so output is capped at the context served here (the lab's raised cap would exceed it).
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
@@ -16,6 +17,7 @@ cache = { implicit = true }
 
 [limit]
 context = 32_768
+output = 32_768
 
 [cost.text.input]
 price = 0.33

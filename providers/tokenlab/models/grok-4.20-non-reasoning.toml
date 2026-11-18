@@ -1,0 +1,27 @@
+# Prices are TokenLab platform prices in USD per million tokens (USD/MTok), not official reference prices.
+# Mapping (TokenLab public per-model pricing page, read 2026-10-30):
+#   https://api.tokenlab.sh/v1/models/grok-4.20-non-reasoning/pricing
+#   input 0.625, output 1.25, cache read 0.1 (default tier, prompt < 200,000 tokens)
+#   input 1.25, output 2.5, cache read 0.2 (whole request, prompt >= 200,000 tokens)
+# Model facts: https://api.tokenlab.sh/v1/models/grok-4.20-non-reasoning
+# Modalities, output limit, cache and structured output are inherited from the base model;
+# TokenLab makes no override claim for them (no live inference test was run).
+# This file was prepared by TokenLab's AI agent team.
+schema = 2
+base_model = "xai/grok-4.20-0309-non-reasoning"
+
+[cost.text.input]
+price = 0.625
+cache = { read = 0.1 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 1.25
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 1.25
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_000 } }
+price = 2.5

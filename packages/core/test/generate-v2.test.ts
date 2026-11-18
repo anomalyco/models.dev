@@ -106,7 +106,7 @@ describe("v2 catalog generation", () => {
       responses: {
         base_url: "https://api.openai.com/v1",
         sdk: { aisdk: "@ai-sdk/openai" },
-        capabilities: { tools: { updates: false } },
+        capabilities: { tools: { updates: [] } },
       },
     });
     expect(translated.cost).toEqual({

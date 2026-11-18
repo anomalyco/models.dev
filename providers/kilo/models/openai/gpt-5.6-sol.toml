@@ -9,13 +9,14 @@ description = "GPT-5.6 Sol is the flagship model in OpenAI's GPT-5.6 series. It 
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+temperature = false
 
 [cost.text.input]
-price = 4
-cache = { read = 0.4, write = 5 }
+price = 8
+cache = { read = 0.8, write = 10 }
 
 [cost.text.output]
-price = 20
+price = 30
 
 [cost.web_search]
 price = 10

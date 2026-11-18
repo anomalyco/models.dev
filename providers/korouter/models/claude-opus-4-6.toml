@@ -1,0 +1,20 @@
+# Prices read from https://korouter.ai/models/claude-opus-4-6 on 2026-10-30 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# Effort: reasoning_effort = low|medium|high|max → output_config.effort; medium and above also send thinking.type = enabled with a budget; low or no reasoning_effort sends no thinking block (the value none is rejected upstream)
+# No toggle: the /v1 chat-completions parser reads only reasoning_effort; the thinking object and reasoning.enabled are dropped before the upstream call.
+# Live-tested 2026-10-07: thinking.type=enabled + budget_tokens=10 → 200 (dropped; the upstream minimum is 1024); reasoning.enabled=true + reasoning.effort=bogus → 200 (dropped); reasoning_effort=bogus → 400 "output_config.effort: Input should be 'low', 'medium', 'high', 'xhigh' or 'max'" (forwarded).
+# xhigh: the 400 above is the generic output_config.effort validator, not this model's level list. reasoning_effort=xhigh is accepted (live 2026-10-30, max_tokens 64000: 200 with reasoning_content, as high and max) but shows no distinct effect, so the list follows Anthropic's own entry.
+# Cache: automatic on /v1, no cache_control markers needed — live 2026-10-30 (claude-sonnet-5): three identical 18.9K-token requests → cache_creation_tokens 18926, then cached_tokens 18926 twice.
+schema = 2
+base_model = "anthropic/claude-opus-4-6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 3.25
+cache = { read = 0.325, write = 4.06 }
+
+[cost.text.output]
+price = 16.25

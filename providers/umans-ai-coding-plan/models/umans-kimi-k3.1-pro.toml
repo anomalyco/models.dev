@@ -1,0 +1,32 @@
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables)
+# Effort: reasoning_effort = low|high|max (default max)
+# Live card, checked 2026-11-14: https://api.code.umans.ai/v1/models/info
+# (levels none/low/high/max, default max, can_disable true, supports_vision
+# true, context_window 1048576, max_completion_tokens 131072).
+# limit.output is cap-1 on purpose: the Umans API 400s max_tokens >=
+# max_completion_tokens (131072), so 131071 is the largest value that serves
+# (its advertised `recommended_max_tokens`).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 131_071
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0

@@ -5,10 +5,6 @@ base_model = "deepseek/deepseek-v3.1"
 name = "DeepSeek V3.1"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
 
-[modalities]
-input = ["text", "application/pdf"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = false }
 structured_output = false

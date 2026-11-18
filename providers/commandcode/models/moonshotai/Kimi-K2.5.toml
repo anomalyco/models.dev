@@ -1,0 +1,25 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Limit: the 256_000 context and output are the host's live catalog context_length (the lab
+#   serves 262_144).
+# Reasoning: always on, reasoning inline. Live 2026-10-29: the response carries no reasoning or
+#   reasoning_details field and 0 reasoning tokens at omitted, low, medium, high and
+#   thinking.type = disabled; the step-by-step text is part of the content, and
+#   reasoning_effort = off is rejected, so there is no caller control.
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 256_000
+output = 256_000
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 3

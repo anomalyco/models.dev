@@ -3,7 +3,7 @@
 # https://docs.cortecs.ai/usage/reasoning
 # Effort: reasoning_effort = low|high|max, matching the lab and relay peers.
 # Thinking is always enabled; no toggle or reasoning-token budget.
-# Output limit: https://api.cortecs.ai/v1/models (max_output_tokens, not context_size).
+# Output limit: the catalog's max_output_tokens (https://api.cortecs.ai/v1/models) equals its context_size, which is not a per-request output cap, so the lab's output limit is inherited.
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
 # Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities).
 schema = 2
@@ -20,7 +20,6 @@ structured_output = true
 
 [limit]
 context = 1_048_576
-output = 1_048_576
 
 [cost.text.input]
 price = 0.1

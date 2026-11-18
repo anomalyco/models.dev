@@ -334,8 +334,11 @@ test("readLabMetadata reads a v2 lab.toml and rejects v1 or unknown fields", () 
   try {
     expect(readLabMetadata(write("v2.toml", 'schema = 2\ndescription = "A lab."\n'))).toEqual({ description: "A lab." });
     expect(() => readLabMetadata(write("v1.toml", 'description = "A lab."\n'))).toThrow("schema = 2");
-    expect(() => readLabMetadata(write("extra.toml", 'schema = 2\ndescription = "A lab."\nname = "Lab"\n'))).toThrow();
+    expect(readLabMetadata(write("name.toml", 'schema = 2\nname = "Lab AI"\n'))).toEqual({ name: "Lab AI" });
+    expect(() => readLabMetadata(write("extra.toml", 'schema = 2\ndescription = "A lab."\nwebsite = "https://lab.ai"\n'))).toThrow();
     expect(() => readLabMetadata(write("empty.toml", 'schema = 2\ndescription = ""\n'))).toThrow();
+    expect(() => readLabMetadata(write("blank-name.toml", 'schema = 2\nname = ""\n'))).toThrow();
+    expect(() => readLabMetadata(write("bare.toml", "schema = 2\n"))).toThrow();
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -348,10 +351,10 @@ base_model = "lab/model"
 [capabilities]
 system_updates = true
 effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true, updates = [] }
 
 [api.messages]
-capabilities = { system_updates = false, tools = { updates = true } }
+capabilities = { system_updates = false, tools = { updates = ["add", "remove", "replace"] } }
 `) as Record<string, unknown>;
   expect(explicitFalseFlags(toml)).toEqual([
     "capabilities.effort_updates",

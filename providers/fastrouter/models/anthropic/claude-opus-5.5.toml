@@ -1,0 +1,19 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-10-25); prices are USD per token there, per MTok here.
+# Not represented: web search $0.01 per request (no v2 per-request field).
+# Effort: reasoning.effort = low|medium|high|xhigh|max
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-10-25): supported_parameters lists include_reasoning, reasoning; published enum include_reasoning = True|False; reasoning = low|medium|high|xhigh|max.
+#   Baseline: lab providers/anthropic claude-opus-5-5 = effort low|medium|high|xhigh|max; peer providers/openrouter anthropic/claude-opus-5.5 = effort low|medium|high|xhigh|max.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
+
+[cost.text.output]
+price = 20

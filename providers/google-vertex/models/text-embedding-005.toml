@@ -1,0 +1,21 @@
+# Sources (checked 2026-11-08):
+# - Supported models: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/embeddings/get-text-embeddings
+# - Lifecycle: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions
+#   (stable; scheduled retirement April 1, 2027)
+# - Pricing: https://cloud.google.com/vertex-ai/generative-ai/pricing ("Embeddings for Text (Excluding Gemini
+#   Embedding)": $0.000025 per 1,000 characters online = $0.025 per 1M characters; output no charge)
+# - API: POST .../publishers/google/models/text-embedding-005:predict (same route @ai-sdk/google-vertex uses for
+#   gemini-embedding-001). Confirmed live via express-mode :predict on 2026-11-08.
+schema = 2
+v2_only = true
+base_model = "google/text-embedding-005"
+
+[api.predict]
+sdk = { opencodeai = "@opencode/ai/providers/google-vertex/embeddings" }
+
+[cost.text.input]
+unit = "character"
+price = 0.025
+
+[cost.text.output]
+price = 0

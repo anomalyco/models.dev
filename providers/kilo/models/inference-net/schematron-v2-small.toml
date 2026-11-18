@@ -9,6 +9,9 @@ description = "Schematron V2 Small is a 3B-parameter HTML-to-JSON extraction mod
 [capabilities]
 structured_output = true
 
+[limit]
+output = 8_192
+
 [cost.text.input]
 price = 0.05
 cache = { read = 0.05 }

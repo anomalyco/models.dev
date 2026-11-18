@@ -2,6 +2,7 @@
 # Pricing is rebuilt from the gateway's billing_config projection and rendered
 # only when its billable unit is USD per million tokens.
 # Catalog: https://aihubmix.com/api/v1/models?type=image_generation&sort_by=order
+# Billing lines (2026-11-15): completion_tokens=10, output_image_tokens=32 USD/MTok.
 # Canon export SHA: 1109e82ee0263621ec4bc0e0b43a12c11a8faec4
 # Prices, limits and input modalities: AIHubMix catalog GET https://aihubmix.com/api/v1/models (2026-10-21).
 # Images: POST /v1/images/generations (https://aihubmix.com/call/schema/models/gpt-image-1.5/endpoints)
@@ -15,4 +16,7 @@ sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 price = 5
 
 [cost.text.output]
+price = 10
+
+[cost.image.output]
 price = 32

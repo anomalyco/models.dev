@@ -1,0 +1,24 @@
+# Effort: reasoning_effort = none|low|high|xhigh, no separate toggle. The gateway's catalog lists the reasoning_effort
+#   parameter for the alibaba mapping but no levels. low|high|xhigh follow Alibaba's documentation
+#   (https://www.alibabacloud.com/help/en/model-studio/qwen4-max). The off state (none) follows the gateway's docs
+#   (https://docs.llmgateway.io/features/reasoning) and the Novita peer (providers/novita-ai/models/qwen/qwen4-max.toml,
+#   live-probed there). Not probed on the gateway. No budget: Alibaba documents no thinking budget for Qwen4 Max.
+#   https://api.llmgateway.io/v1/models?mapped=true (alibaba/qwen4-max, 2026-11-16)
+schema = 2
+base_model = "alibaba/qwen4-max"
+name = "Qwen4 Max (Alibaba Cloud)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 983_616
+output = 131_072
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, write = 1.875 }
+
+[cost.text.output]
+price = 4.5

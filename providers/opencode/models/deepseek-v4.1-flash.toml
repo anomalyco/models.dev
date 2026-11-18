@@ -1,3 +1,4 @@
+# Serves DeepSeek-V4.1-Flash-1017, the October 17 build.
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
 # thinking.type = disabled (or reasoning_effort = none) turns reasoning off (live: 53 -> 0 reasoning tokens).
 # Toggle: thinking.type = enabled|disabled
@@ -6,7 +7,7 @@
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/deepseek/models/deepseek-v4-flash.toml (Zen passes requests through).
 # Tools follow DeepSeek's API: https://api-docs.deepseek.com/api/create-chat-completion (tool_choice; strict needs DeepSeek's beta base URL, so it is left out); Zen passes requests through.
 schema = 2
-base_model = "deepseek/deepseek-v4.1-flash"
+base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
