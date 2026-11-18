@@ -174,6 +174,7 @@ export function patchModelV2(
     if (api === undefined) delete next.api;
     else next.api = api;
   }
+  if (doc.privacy !== undefined) next.privacy = doc.privacy;
   if (doc.metadata !== undefined) next.metadata = doc.metadata;
   if (doc.v2_only !== undefined) next.v2_only = doc.v2_only;
   return next;
@@ -399,7 +400,7 @@ export function formatModelV2(doc: Doc) {
   for (const key of ["schema", "v2_only", "base_model", "base_model_omit", ...IDENTITY]) {
     if (doc[key] !== undefined) out.push(`${key} = ${formatTomlValue(doc[key])}`);
   }
-  for (const table of ["modalities", "capabilities", "limit"]) {
+  for (const table of ["modalities", "capabilities", "limit", "privacy"]) {
     if (doc[table] !== undefined) out.push("", `[${table}]`, ...tableLines(doc[table]));
   }
   for (const [protocol, entry] of Object.entries<Doc>(doc.api ?? {})) {
