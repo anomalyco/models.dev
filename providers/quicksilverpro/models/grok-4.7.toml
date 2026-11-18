@@ -4,6 +4,9 @@
 # Reasoning baseline: providers/xai/models/grok-4.7.toml
 # Relay controls: https://quicksilverpro.io/docs/quickstart/
 # Effort: reasoning_effort = low|medium|high|xhigh
+# Verified host billing: machinefi/qspro-backend@d4e49f456f5e5ff53a40fc597b387cf52d3b443e
+# catalog/models.json:2644-2654 sets prompt_tokens_over = 200000; the model-page FAQ says
+# base rates apply up to 200000 tokens and the long-context tier applies strictly above it.
 schema = 2
 base_model = "xai/grok-4.7"
 
