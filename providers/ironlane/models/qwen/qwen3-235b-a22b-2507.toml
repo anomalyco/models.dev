@@ -1,8 +1,12 @@
 # Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
 # Served by Scaleway through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
 # Cache: none listed; Scaleway has no cached-input price in Ironlane's catalog.
+# Limits: the lower of Ironlane's catalog and Scaleway's own entry (providers/scaleway/models/qwen3-235b-a22b-instruct-2507.toml); a request past the host's cap fails there.
 schema = 2
 base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
+
+[limit]
+context = 260_000
 
 [cost.text.input]
 price = 0.838425

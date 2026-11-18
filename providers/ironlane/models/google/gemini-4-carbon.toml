@@ -2,6 +2,7 @@
 # Input: text only. Ironlane's request to this model's provider carries message text, not image or file parts.
 # Reasoning: no caller control. Ironlane sends no thinkingConfig.
 # Cache: implicit; cached input bills at Google's cached price (https://ironlane.ai/docs/api/chat-completions).
+# Limits: the lower of Ironlane's catalog and Google's own entry (providers/google/models/gemini-4-carbon.toml); a request past the host's cap fails there.
 schema = 2
 base_model = "google/gemini-4-carbon"
 
@@ -12,6 +13,9 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true }
 cache = { implicit = true }
+
+[limit]
+output = 32_768
 
 [cost.text.input]
 price = 2

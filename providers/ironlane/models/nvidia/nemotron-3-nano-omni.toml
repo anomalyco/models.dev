@@ -3,6 +3,7 @@
 # Input: as DigitalOcean takes this model (providers/digitalocean/models/nemotron-3-nano-omni.toml).
 # Reasoning: no caller control. Ironlane documents reasoning_effort for OpenAI models only ("other models ignore it") and passes no other field to the provider (https://ironlane.ai/docs/api/chat-completions).
 # Cache: implicit; cached input bills at DigitalOcean's cached price (https://ironlane.ai/docs/api/chat-completions).
+# Limits: the lower of Ironlane's catalog and DigitalOcean's own entry (providers/digitalocean/models/nemotron-3-nano-omni.toml); a request past the host's cap fails there.
 schema = 2
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
 

@@ -2,6 +2,7 @@
 # Served by io.net (IO Intelligence) through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
 # Reasoning: no caller control. Ironlane documents reasoning_effort for OpenAI models only ("other models ignore it") and passes no other field to the provider (https://ironlane.ai/docs/api/chat-completions).
 # Cache: implicit; cached input bills at io.net (IO Intelligence)'s cached price (https://ironlane.ai/docs/api/chat-completions).
+# Limits: the lower of Ironlane's catalog and io.net (IO Intelligence)'s own entry (providers/io-net/models/deepseek-ai/DeepSeek-R1-0528.toml); a request past the host's cap fails there.
 schema = 2
 base_model = "deepseek/deepseek-r1-0528"
 
@@ -11,6 +12,7 @@ cache = { implicit = true }
 
 [limit]
 context = 128_000
+output = 4096
 
 [cost.text.input]
 price = 0.523667

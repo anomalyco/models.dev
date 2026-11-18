@@ -2,12 +2,16 @@
 # Served by Nebius Token Factory through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
 # Reasoning: no caller control. Ironlane documents reasoning_effort for OpenAI models only ("other models ignore it") and passes no other field to the provider (https://ironlane.ai/docs/api/chat-completions).
 # Cache: implicit; cached input bills at Nebius Token Factory's cached price (https://ironlane.ai/docs/api/chat-completions).
+# Limits: the lower of Ironlane's catalog and Nebius Token Factory's own entry (providers/nebius/models/NousResearch/Hermes-4-405B.toml); a request past the host's cap fails there.
 schema = 2
 base_model = "nousresearch/hermes-4-405b"
 
 [capabilities]
 reasoning = { supported = true }
 cache = { implicit = true }
+
+[limit]
+output = 8192
 
 [cost.text.input]
 price = 1

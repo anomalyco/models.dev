@@ -2,6 +2,7 @@
 # Served by NEAR AI Cloud through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
 # Input: as NEAR AI Cloud takes this model (providers/nearai/models/Qwen/Qwen3-VL-30B-A3B-Instruct.toml).
 # Cache: implicit; cached input bills at NEAR AI Cloud's cached price (https://ironlane.ai/docs/api/chat-completions).
+# Limits: the lower of Ironlane's catalog and NEAR AI Cloud's own entry (providers/nearai/models/Qwen/Qwen3-VL-30B-A3B-Instruct.toml); a request past the host's cap fails there.
 schema = 2
 base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
 

@@ -1,11 +1,15 @@
 # Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
 # Served by Nebius Token Factory through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
 # Cache: implicit; cached input bills at Nebius Token Factory's cached price (https://ironlane.ai/docs/api/chat-completions).
+# Limits: the lower of Ironlane's catalog and Nebius Token Factory's own entry (providers/nebius/models/Qwen/Qwen3-30B-A3B-Instruct-2507.toml); a request past the host's cap fails there.
 schema = 2
 base_model = "alibaba/qwen3-30b-a3b-instruct-2507"
 
 [capabilities]
 cache = { implicit = true }
+
+[limit]
+output = 8192
 
 [cost.text.input]
 price = 0.1

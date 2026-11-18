@@ -2,6 +2,7 @@
 # Served by DigitalOcean through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
 # Effort: reasoning_effort = low|medium|high (https://ironlane.ai/docs/api/chat-completions, request fields); levels from providers/digitalocean/models/openai-gpt-oss-120b.toml.
 # Cache: none listed; DigitalOcean has no cached-input price in Ironlane's catalog.
+# Limits: the lower of Ironlane's catalog and DigitalOcean's own entry (providers/digitalocean/models/openai-gpt-oss-120b.toml); a request past the host's cap fails there.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
@@ -9,7 +10,8 @@ base_model = "openai/gpt-oss-120b"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
-output = 65_536
+context = 128_000
+output = 4096
 
 [cost.text.input]
 price = 0.1

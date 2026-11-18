@@ -1,6 +1,7 @@
 # Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
 # Served by io.net (IO Intelligence) through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
 # Cache: implicit; cached input bills at io.net (IO Intelligence)'s cached price (https://ironlane.ai/docs/api/chat-completions).
+# Limits: the lower of Ironlane's catalog and io.net (IO Intelligence)'s own entry (providers/io-net/models/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8.toml); a request past the host's cap fails there.
 schema = 2
 base_model = "meta/llama-4-maverick-17b-instruct"
 
@@ -9,6 +10,7 @@ cache = { implicit = true }
 
 [limit]
 context = 128_000
+output = 4096
 
 [cost.text.input]
 price = 0.26875

@@ -3,6 +3,7 @@
 # Input: as NEAR AI Cloud takes this model (providers/nearai/models/x-ai/grok-4.6.toml).
 # Reasoning: no caller control. Ironlane documents reasoning_effort for OpenAI models only ("other models ignore it") and passes no other field to the provider (https://ironlane.ai/docs/api/chat-completions).
 # Cache: implicit; cached input bills at NEAR AI Cloud's cached price (https://ironlane.ai/docs/api/chat-completions).
+# Limits: Ironlane's catalog lists these, lower than the lab's.
 schema = 2
 base_model = "xai/grok-4.6"
 
