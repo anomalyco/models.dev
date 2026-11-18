@@ -1,28 +1,37 @@
 # Availability, APIs, and limits: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#gpt-62
-# The GPT-6.2 model guide lists tools on Responses only. Chat Completions custom tools were not verified on Astra.
 # Responses tool choice and custom formats (text, Lark, regex): https://learn.microsoft.com/en-us/rest/api/microsoft-foundry/azureopenai/responses
+# Live on Azure (2026-11-18): text, Lark, and regex worked on both APIs; a restrictive grammar enforced ZZ plus three digits.
+# Chat Completions accepts named custom tools but rejects function tools with reasoning effort; strict stays Responses-only.
 # Responses tool search (GPT-5.4+) and in-history tool additions: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/tool-search
-# Only tool addition is documented for this Azure model; other in-history changes were not verified.
+# Live on Azure (2026-11-18): in-history developer messages preserve the cached prefix on both APIs.
+# On Responses, tool search, additions, and developer-message removals worked. The replacement probe used the old schema.
+# configuration_update was accepted and preserved the prefix, but the effective effort change was not confirmed.
 # Store: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses and https://learn.microsoft.com/en-us/azure/foundry/openai/latest
 # Cache controls: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/prompt-caching
 # Web search is billed separately per 1,000 Bing requests: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing
 # https://www.microsoft.com/en-us/bing/apis/grounding-pricing
 # Standard pricing, cache write TTLs, and Data Zone rates: https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/gpt-6-2-astra-and-gpt-6-2-sol-now-generally-available-in-microsoft-foundry/4574122
+# Data Zone is +10% in the US and +20% in the EU and APAC. Short-context input per million tokens is $8.00 global, $8.80 US, and $9.60 EU/APAC.
+# Responses on EU Data Zone (2026-11-18): Flex returned flex; Priority returned default.
+# Flex token pricing is 50% of Standard: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/flex-processing
+# The Flex guide's availability table does not yet list GPT-6.2 and describes Global Standard only.
 # The 272K long-context cutoff follows the OpenAI model card and the existing Azure GPT-6 Astra entry:
 # https://developers.openai.com/api/docs/models/gpt-6.2-astra
 schema = 2
 base_model = "openai/gpt-6.2-astra"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+system_updates = true
 store = true
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
 prompt_cache_key = true
+service_tier = ["flex"]
 
 [api.responses]
-capabilities = { tools = { strict = true, choice = ["auto", "none", "required", "tool"], search = true, freeform = ["text", "lark", "regex"], updates = ["add"] } }
+capabilities = { tools = { strict = true, search = true, updates = ["add", "remove"] } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
@@ -45,6 +54,10 @@ price = 60
 
 [cost.web_search]
 price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }
 
 [[cost.multipliers]]
 when = { region = { equals = "us" } }

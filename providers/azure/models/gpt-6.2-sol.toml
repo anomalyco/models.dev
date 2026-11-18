@@ -11,6 +11,10 @@
 # Web search is billed separately per 1,000 Bing requests: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing
 # https://www.microsoft.com/en-us/bing/apis/grounding-pricing
 # Standard pricing, cache write TTLs, and Data Zone rates: https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/gpt-6-2-astra-and-gpt-6-2-sol-now-generally-available-in-microsoft-foundry/4574122
+# Data Zone is +10% in the US and +20% in the EU and APAC. Short-context input per million tokens is $2.00 global, $2.20 US, and $2.40 EU/APAC.
+# Responses on EU Data Zone (2026-11-18): Flex returned flex; Priority returned default.
+# Flex token pricing is 50% of Standard: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/flex-processing
+# The Flex guide's availability table does not yet list GPT-6.2 and describes Global Standard only.
 # The 272K long-context cutoff follows the OpenAI model card and the existing Azure GPT-6.1 Sol entry:
 # https://developers.openai.com/api/docs/models/gpt-6.2-sol
 schema = 2
@@ -24,6 +28,7 @@ system_updates = true
 store = true
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
 prompt_cache_key = true
+service_tier = ["flex"]
 
 [api.responses]
 capabilities = { tools = { strict = true, search = true, updates = ["add", "remove"] } }
@@ -49,6 +54,10 @@ price = 15
 
 [cost.web_search]
 price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }
 
 [[cost.multipliers]]
 when = { region = { equals = "us" } }
