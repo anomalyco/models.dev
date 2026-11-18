@@ -4,8 +4,11 @@
 # Chat Completions accepts named custom tools but rejects function tools with reasoning effort; strict stays Responses-only.
 # Responses tool search (GPT-5.4+) and in-history tool additions: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/tool-search
 # Live on Azure (2026-11-18): in-history developer messages preserve the cached prefix on both APIs.
-# On Responses, tool search, additions, and developer-message removals worked. The replacement probe used the old schema.
-# configuration_update was accepted and preserved the prefix, but the effective effort change was not confirmed.
+# On Responses, tool search, additions, and developer-message removals worked.
+# Live Responses continuation via previous_response_id (2026-11-18): replacing a tool with additional_tools
+# returned HTTP 200 and preserved the cached prefix, but the call still used old_field rather than new_field.
+# configuration_update from low to medium also returned HTTP 200 and preserved the cached prefix, but the
+# response reported low. A request-level medium control reported medium.
 # Store: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses and https://learn.microsoft.com/en-us/azure/foundry/openai/latest
 # Cache controls: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/prompt-caching
 # Web search is billed separately per 1,000 Bing requests: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing
