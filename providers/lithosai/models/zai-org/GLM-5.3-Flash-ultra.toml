@@ -1,0 +1,37 @@
+# LithosAI Chat Completions (https://api.lithosai.cloud/v1), model "zai-org/GLM-5.3-Flash-ultra".
+# The base ID and this Ultra ID serve the same weights at different speeds and prices; LithosAI lists
+# no Fast tier for GLM-5.3-Flash.
+# Model docs: https://docs.lithosai.com/models/glm-5-3-flash
+# Four live tool_choice="required" requests on 2026-11-18 hit the output cap without a tool call.
+# Thinking is always on. reasoning_effort defaults to max and maps minimal, medium and xhigh to max.
+# Pricing (https://www.lithosai.com/pricing, accessed 2026-11-17): standard rates in USD per 1M tokens, no
+# early-access discount shown for this model. Cached input is implicit, with no write price.
+# Input on both IDs (live 2026-11-18): JPEG, PNG, static GIF and WebP images are read. PDF file parts returned
+# HTTP 400, and both inline and remote MP4 returned HTTP 500, so PDF and video are omitted here.
+# API reference: https://docs.lithosai.com/openapi.yaml
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3-Flash Ultra"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+capabilities = { tools = { choice = ["auto", "none", "tool"] } }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1
