@@ -1,7 +1,8 @@
 # Pricing: https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing (accessed 2026-11-18): $0.05 input / $0.005 cached / $0.25 output
 #   per 1M until 2027-05-17 (launch promo), then double. No date multiplier: the Copilot sync owns these prices and will pick up the new rates from GitHub's table.
 # Effort: low|medium|high|xhigh|max, the model card's set. Copilot's other entries carry their vendor's full effort set, so this follows the card.
-#   Not probed on Copilot (no Copilot token). The API layout follows MAI-Code-1.1-Flash on this host.
+#   VS Code's Copilot extension reads effort levels from Copilot's per-model metadata and hardcodes none per model.
+#   The API layout and structured_output follow MAI-Code-1.1-Flash on this host.
 schema = 2
 base_model = "microsoft/mai-code-2-flash"
 
