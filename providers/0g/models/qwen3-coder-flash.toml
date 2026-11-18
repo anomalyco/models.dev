@@ -1,0 +1,10 @@
+# Verified on https://router-api.0g.ai/v1 (2026-11-18): chat and tool call (get_weather) answered correctly.
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd.
+schema = 2
+base_model = "alibaba/qwen3-coder-flash"
+
+[cost.text.input]
+price = 0.145833
+
+[cost.text.output]
+price = 0.583333
