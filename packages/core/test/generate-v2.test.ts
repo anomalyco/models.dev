@@ -109,6 +109,7 @@ describe("v2 catalog generation", () => {
         capabilities: { tools: { updates: [] } },
       },
     });
+    expect(translated.recommended_api).toBe("responses");
     expect(translated.cost).toEqual({
       text: {
         input: {
@@ -159,6 +160,12 @@ describe("v2 catalog generation", () => {
       },
     });
     expect(providersV2["cloudflare-workers-ai"]?.models["@cf/cloudflare/clairic"]?.type).toBe("extraction");
+    // Without its own recommended_api, a model recommends its first API.
+    expect(providersV2.openai?.models["gpt-5.5"]?.recommended_api).toBe("responses");
+    // An explicit one wins, and the table order (the default) is unchanged.
+    const gemini = providersV2.google?.models["gemini-3.8-flash"];
+    expect(gemini?.recommended_api).toBe("interactions");
+    expect(Object.keys(gemini?.api ?? {})).toEqual(["generate-content", "chat-completions", "interactions"]);
     expect(
       providersV2["google-vertex"]?.models["gemini-2.5-pro"]?.api[
         "generate-content"

@@ -210,6 +210,7 @@ Rules:
 - Plain tables (`[limit]`, `[modalities]`, `[capabilities]`, inline tables) deep-merge; arrays and primitives replace.
 - `base_model_omit` removes inherited fields after merging, e.g. `base_model_omit = ["limit.input"]`.
 - Lifecycle goes in `status` (`alpha`, `beta`, `deprecated`). A model served through a different SDK, base URL, or reasoning field gets an `[api.<protocol>]` table, e.g. `[api.chat-completions] compatibility = { reasoning_field = "reasoning_content" }`.
+- Tables are in order and the first one is the default. `recommended_api = "<protocol>"` (v2 only) names the API we recommend when a client supports it; it must be one of the model's tables, and the v2 API publishes the first table when it's left out.
 - A full definition without `base_model` is only for first-party labs and host-unique models. It has every lab field plus the provider fields.
 
 **Reasoning controls (short):** classify first-party lab vs multi-model relay (not by npm). Copy the underlying model’s controls from the lab's provider entry and same-surface peers: often `effort = ["low", "medium", "high"]` on GPT-style relays, but DeepSeek V4 is `toggle = true` with `effort = ["low", "high", "max"]`, etc. Don't drop controls from uncertainty on relays. Full policy: `AGENTS.md`.
