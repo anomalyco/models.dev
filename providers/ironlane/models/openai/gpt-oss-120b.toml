@@ -1,18 +1,16 @@
-# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-04;
-# list prices of the default provider, USD per 1M tokens (or per stated unit).
-# Capabilities: Ironlane's POST /v1/chat/completions takes text messages with no tools, response_format or image/pdf parts.
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Effort: reasoning_effort = low|medium|high (https://ironlane.ai/docs/api/chat-completions, request fields); levels from providers/digitalocean/models/openai-gpt-oss-120b.toml.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = true }
-cache = { implicit = true }
-structured_output = false
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[limit]
+output = 65_536
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.015 }
+price = 0.1
 
 [cost.text.output]
-price = 0.6
+price = 0.7

@@ -1,0 +1,19 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Effort: reasoning_effort = low|medium|high (https://ironlane.ai/docs/api/chat-completions, request fields); levels from providers/io-net/models/openai/gpt-oss-20b.toml.
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
+
+[limit]
+context = 128_000
+output = 117_964
+
+[cost.text.input]
+price = 0.055
+cache = { read = 0.0275 }
+
+[cost.text.output]
+price = 0.176

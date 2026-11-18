@@ -1,18 +1,11 @@
-# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-04;
-# list prices of the default provider, USD per 1M tokens (or per stated unit).
-# Capabilities: Ironlane's POST /v1/chat/completions takes text messages with no tools, response_format or image/pdf parts.
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Reasoning: no caller control. Ironlane documents reasoning_effort for OpenAI models only ("other models ignore it") and passes no other field to the provider (https://ironlane.ai/docs/api/chat-completions).
 schema = 2
 base_model = "fireworks/ember-1"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true }
 cache = { implicit = true }
-structured_output = false
 
 [limit]
 context = 1_040_000

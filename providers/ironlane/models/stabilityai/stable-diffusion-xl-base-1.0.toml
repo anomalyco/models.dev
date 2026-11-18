@@ -1,0 +1,16 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Input: text only. Ironlane serves POST /v1/images/generations (a text prompt), not image edits.
+schema = 2
+v2_only = true
+base_model = "stabilityai/stable-diffusion-xl-base-1.0"
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.002

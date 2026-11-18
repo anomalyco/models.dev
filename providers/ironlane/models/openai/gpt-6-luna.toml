@@ -1,18 +1,13 @@
-# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-04;
-# list prices of the default provider, USD per 1M tokens (or per stated unit).
-# Capabilities: Ironlane's POST /v1/chat/completions takes text messages with no tools, response_format or image/pdf parts.
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Effort: reasoning_effort = none|low|medium|high|xhigh (https://ironlane.ai/docs/api/chat-completions, request fields); levels from providers/openai/models/gpt-6-luna.toml.
+# max: refused by Ironlane (400 for any reasoning_effort outside none..xhigh).
+# Custom tools: none. Ironlane takes function tools only ("function tools, in OpenAI's format", https://ironlane.ai/docs/api/chat-completions); a "custom" tool is a 400 invalid_tools, so no freeform.
 schema = 2
 base_model = "openai/gpt-6-luna"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 cache = { implicit = true }
-structured_output = false
 
 [cost.text.input]
 price = 0.1

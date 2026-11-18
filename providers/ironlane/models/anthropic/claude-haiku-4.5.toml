@@ -1,0 +1,20 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Input: text only. Ironlane's request to this model's provider carries message text, not image or file parts.
+# Reasoning: off. Extended thinking needs Anthropic's `thinking` parameter, which Ironlane doesn't send.
+# Cache: none. Anthropic caches only on cache_control markers, which Ironlane doesn't send.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+cache = false
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 5
