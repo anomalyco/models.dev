@@ -5,6 +5,7 @@
 #   Surface: Responses carries the in-history messages (additional_tools, but tools.updates is left out: see below).
 # Tools follow OpenAI's Responses API: https://developers.openai.com/api/docs/guides/function-calling (strict, tool_choice, custom tools with text, lark or regex format), tool_search per model page https://developers.openai.com/api/docs/models; Zen passes requests through.
 # tools.updates is left out: on GPT-5.5 and earlier, calls to tools added through additional_tools come back namespaced and replaying them without the namespace fails ("Missing namespace for function_call", live 2026-11-16), so callers fold tool changes into the top-level tools list.
+# Fast mode (priority service tier): pricing and mode follow providers/openai/models/gpt-5.4-mini.toml (Zen passes requests through).
 schema = 2
 base_model = "openai/gpt-5.4-mini"
 name = "GPT-5.4 Mini"
@@ -19,6 +20,7 @@ tools = { supported = true, strict = true, choice = ["auto", "none", "required",
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
 system_updates = true
+service_tier = ["priority"]
 
 [api.responses]
 base_url = "https://opencode.ai/inference/openai/v1"
@@ -30,3 +32,11 @@ cache = { read = 0.075 }
 
 [cost.text.output]
 price = 4.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }
