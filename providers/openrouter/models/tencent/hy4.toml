@@ -1,3 +1,4 @@
+# Mid-conversation, tool and cache flags backfilled 2026-11-18 from hy4-preview.toml on this host (same API layout; the sync doesn't carry them).
 schema = 2
 base_model = "tencent/hy4"
 description = "Tencent Hy reasoning model for coding, instruction following, and agent tasks"
@@ -8,6 +9,7 @@ reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

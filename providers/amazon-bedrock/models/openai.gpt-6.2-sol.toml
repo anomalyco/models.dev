@@ -11,6 +11,7 @@
 # Mid-conversation developer messages preserve cache on both APIs (live 2026-11-17): https://developers.openai.com/api/docs/guides/keep-prefix-unchanged
 # Responses add/remove/replace preserves cache for tools declared through additional_tools; initialize mutable tools there (live 2026-11-17). Replacing a top-level declaration loses its cache on the Astra peer.
 # tools.search: client-side Responses tool_search with namespaced results completes a round trip; flat results omit function_call.namespace and fail replay (live 2026-11-18): https://developers.openai.com/api/docs/guides/tools-tool-search
+# Mid-conversation, tool and cache flags backfilled 2026-11-18 from openai.gpt-6.1-sol.toml on this host (same API layout; the sync doesn't carry them).
 schema = 2
 base_model = "openai/gpt-6.2-sol"
 
@@ -29,7 +30,7 @@ cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_bre
 [api.responses]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
 sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/responses" }
-capabilities = { tools = { strict = true, search = true, updates = ["add", "remove", "replace"] } }
+capabilities = { tools = { strict = true, search = true, updates = ["add", "remove", "replace"] }, system_updates = true }
 
 [api.chat-completions]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
