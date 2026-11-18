@@ -12,9 +12,9 @@
 # /v1/messages, $.reasoning_effort on /v1/chat/completions, both forwarded unchanged.
 # https://api.topxai.xyz/docs/api-reference (accessed 2026-10-23)
 # Default effort (2026-11-18): https://api.topxai.xyz/api/pricing
-# Shared-pool price, 50% of Anthropic's list on every lane; cache writes for the 5m and
+# Claude route price, 80% of Anthropic's list on every lane; cache writes for the 5m and
 # 1h TTLs from the same table.
-# https://api.topxai.xyz/pricing/claude-opus-5-5 (accessed 2026-10-23)
+# https://api.topxai.xyz/pricing/claude-opus-5-5 (accessed 2026-11-18)
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
@@ -29,8 +29,8 @@ structured_output = true
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 2
-cache = { read = 0.1, write = { "5m" = 2.5, "1h" = 4 } }
+price = 3.2
+cache = { read = 0.16, write = { "5m" = 4, "1h" = 6.4 } }
 
 [cost.text.output]
-price = 10
+price = 16

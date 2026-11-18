@@ -1,8 +1,9 @@
-# Model and shared-pool rates: https://api.topxai.xyz/pricing/gpt-6.2-sol
+# Model and OpenAI route rates, 80% of OpenAI's list on every lane and in the long-context
+# tier: https://api.topxai.xyz/pricing/gpt-6.2-sol (accessed 2026-11-18)
 # Text and image inputs: https://api.topxai.xyz/blog/gpt-6-2-astra-and-sol
 # Reasoning controls and medium default: https://api.topxai.xyz/api/pricing (2026-11-18).
 # Whole-request tier applies above 272,000 input tokens, including cached tokens.
-# TopxAI shared route, 2026-11-18: on /v1/chat/completions and /v1/responses,
+# TopxAI OpenAI route (openai-shared), 2026-11-18: on /v1/chat/completions and /v1/responses,
 # a forced custom tool returned 42 as text and ZZ042 with either Lark or regex
 # (ZZ[0-9]{3}) when asked for 42. Both APIs also enforced a strict JSON schema
 # with a singleton enum despite the conflicting prompt.
@@ -31,17 +32,17 @@ capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 1
-cache = { read = 0.05, write = 1.25 }
+price = 1.6
+cache = { read = 0.08, write = 2 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
-price = 2
-cache = { read = 0.1, write = 2.5 }
+price = 3.2
+cache = { read = 0.16, write = 4 }
 
 [cost.text.output]
-price = 5
+price = 8
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
-price = 7.5
+price = 12

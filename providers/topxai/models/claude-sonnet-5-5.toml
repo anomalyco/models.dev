@@ -14,10 +14,9 @@
 # /v1/chat/completions; disabled thinking is normalised to between_tools at low effort.
 # https://api.topxai.xyz/blog/claude-sonnet-5-5 and https://api.topxai.xyz/docs/api-reference (accessed 2026-10-23)
 # Default effort (2026-11-18): https://api.topxai.xyz/api/pricing
-# Shared-pool price, 50% of Anthropic's list on every lane; cache read is $0.05, half of
-# Anthropic's $0.10 (5% of input) since 2026-10-23. Cache writes for the 5m and 1h TTLs
-# from the same table.
-# https://api.topxai.xyz/pricing/claude-sonnet-5-5 and https://api.topxai.xyz/api/pricing (accessed 2026-10-23)
+# Claude route price, 80% of Anthropic's list on every lane; cache writes for the 5m and
+# 1h TTLs from the same table.
+# https://api.topxai.xyz/pricing/claude-sonnet-5-5 and https://api.topxai.xyz/api/pricing (accessed 2026-11-18)
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
@@ -32,8 +31,8 @@ structured_output = true
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 1
-cache = { read = 0.05, write = { "5m" = 1.25, "1h" = 2 } }
+price = 1.6
+cache = { read = 0.08, write = { "5m" = 2, "1h" = 3.2 } }
 
 [cost.text.output]
-price = 5
+price = 8
