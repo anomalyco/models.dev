@@ -1,0 +1,19 @@
+# Pricing and context: GET https://api.azet.io/v1/models (accessed 2026-11-18):
+# moonshotai/Kimi-K2.6 context_length 262144, input 0.4095 / output 1.89 USD per 1M tokens.
+# Toggle: chat_template_kwargs.thinking = true|false (live POST /v1/chat/completions, 2026-11-18:
+# default returns 126 reasoning tokens; {"thinking": false} returns 0 reasoning tokens and
+# 2 completion tokens). Reasoning text is returned in message.reasoning_content.
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.4095
+
+[cost.text.output]
+price = 1.89
