@@ -1,0 +1,32 @@
+# Source: model card https://huggingface.co/0G-AI/0GM-1.0-35B-A3B-0427 (accessed 2026-11-18): license apache-2.0,
+#   base_model Qwen/Qwen3.6-35B-A3B, pipeline_tag image-text-to-text ("Causal Language Model with Vision Encoder"),
+#   "Context Length: 262,144 natively", MoE with 35B total / ~3B active parameters, thinking mode by default,
+#   recommended sampling parameters temperature, top_p and top_k. Uploaded 2026-04-27 (Preview-0427).
+# 0G confirms the checkpoint served as 0gm-1.0-35b-a3b is these weights.
+# Image input: the card documents no image formats, so the generic "image" modality is used rather than MIME types.
+# Output limit: the card gives none; 65,536 is the base model's (models/alibaba/qwen3.6-35b-a3b.toml), same architecture.
+schema = 2
+name = "0GM-1.0-35B-A3B"
+description = "0G's open MoE fine-tune of Qwen3.6 35B-A3B, trained on 0G Compute's decentralized network, for agentic coding and tool use"
+open_weights = true
+license = "Apache-2.0"
+release_date = "2026-04-27"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/0G-AI/0GM-1.0-35B-A3B-0427"
