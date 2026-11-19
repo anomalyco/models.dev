@@ -1,0 +1,38 @@
+# Sources (accessed 2026-11-20):
+# - https://www.radixark.com/blog/daisyrose-27b
+# - https://huggingface.co/RadixArk/DaisyRose-27B (Apache-2.0, BF16/FP8/NVFP4)
+# Retains Qwen3.8-27B architecture, image understanding, 256K context. RL-only post-training on long-horizon agent tasks.
+schema = 2
+name = "DaisyRose-27B"
+description = "Open-weight multimodal reasoning model based on Qwen3.8-27B, post-trained with RL on long-horizon agent tasks"
+family = "qwen"
+open_weights = true
+release_date = "2026-11-18"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[[weights]]
+label = "Hugging Face (BF16/FP8/NVFP4)"
+url = "https://huggingface.co/RadixArk/DaisyRose-27B"
+
+[[links]]
+url = "https://www.radixark.com/blog/daisyrose-27b"
+type = "announcement"
+
+[[links]]
+url = "https://huggingface.co/RadixArk/DaisyRose-27B"
+type = "weights"
