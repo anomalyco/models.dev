@@ -5,8 +5,21 @@ import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
 // Azure Retail Prices API, no key: https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices
 const API_BASE = "https://prices.azure.com/api/retail/prices";
-// GPT-5.6 and later price with one regular meter format; older families use irregular, one-off meter names.
-const PRODUCTS = ["Azure OpenAI GPT6", "Azure OpenAI GPT5"];
+// GPT-5.6 and later share one meter format. Other recent models are listed in PARTNER_MODELS below.
+const PRODUCTS = ["Azure OpenAI GPT6", "Azure OpenAI GPT5", "Azure Grok Models", "Azure Kimi", "Azure Deepseek Models"];
+
+// Partner models name their meters by a display label (`4.7 Inp glbl L`, `K2.7 Code cached DZ`, `V4.1 Flash Output Glbl`)
+// with no model ID, so each local file lists the labels its meters use. Only models from the last few months are here;
+// older ones keep hand-written prices.
+export const PARTNER_MODELS: Record<string, { product: string; labels: string[] }> = {
+  "grok-4.6": { product: "Azure Grok Models", labels: ["4.6"] },
+  "grok-4.7": { product: "Azure Grok Models", labels: ["4.7"] },
+  "kimi-k2.6": { product: "Azure Kimi", labels: ["K2.6 Thinking", "K2.6"] },
+  "kimi-k2.7-code": { product: "Azure Kimi", labels: ["K2.7 Code"] },
+  "deepseek-v4-flash": { product: "Azure Deepseek Models", labels: ["V4 Flash"] },
+  "deepseek-v4-pro": { product: "Azure Deepseek Models", labels: ["V4 Pro"] },
+  "deepseek-v4.1-flash": { product: "Azure Deepseek Models", labels: ["V4.1 Flash"] },
+};
 const REGION = "eastus2";
 const MODELS_DIR = path.resolve(import.meta.dir, "../../../../../providers/azure/models");
 
@@ -57,17 +70,58 @@ export function parseMeter(skuName: string): ({ key: string } & Omit<AzurePrice,
   };
 }
 
-/** Rows per model key. Only per-1M consumption meters are kept. */
+// `<label> <kind> <route>[ L]`, where L marks the long-context rate.
+const PARTNER_METER = /^(.+?) (cached inp|cached|inp|input|in|outp|output|opt) (glbl|dz)( l)?$/i;
+const PARTNER_KINDS: Record<string, AzurePrice["kind"]> = {
+  "cached inp": "cache_read", cached: "cache_read", inp: "input", input: "input", in: "input", outp: "output", output: "output", opt: "output",
+};
+
+export function parsePartnerMeter(skuName: string): ({ label: string } & Omit<AzurePrice, "usd">) | undefined {
+  const match = PARTNER_METER.exec(skuName.trim());
+  if (match === null) return undefined;
+  return {
+    label: match[1]!.toLowerCase(),
+    kind: PARTNER_KINDS[match[2]!.toLowerCase()]!,
+    longContext: match[4] !== undefined,
+    tier: "standard",
+    global: match[3]!.toLowerCase() === "glbl",
+  };
+}
+
+const perMillion = (item: z.infer<typeof PriceItem>) =>
+  item.unitOfMeasure === "1M" ? item.unitPrice : item.unitOfMeasure === "1K" ? Number((item.unitPrice * 1000).toFixed(6)) : undefined;
+
+/** Rows per GPT model key. */
 export function priceRows(items: z.infer<typeof PriceItem>[]) {
   const byKey = new Map<string, AzurePrice[]>();
   for (const item of items) {
-    if (item.type !== "Consumption" || item.unitOfMeasure !== "1M") continue;
+    const usd = item.type === "Consumption" ? perMillion(item) : undefined;
+    if (usd === undefined) continue;
     const meter = parseMeter(item.skuName);
     if (meter === undefined) continue;
     const { key, ...row } = meter;
-    byKey.set(key, [...(byKey.get(key) ?? []), { ...row, usd: item.unitPrice }]);
+    byKey.set(key, [...(byKey.get(key) ?? []), { ...row, usd }]);
   }
   return byKey;
+}
+
+/** Rows for each PARTNER_MODELS file. */
+export function partnerRows(items: z.infer<typeof PriceItem>[]) {
+  const byID = new Map<string, AzurePrice[]>();
+  for (const [id, { product, labels }] of Object.entries(PARTNER_MODELS)) {
+    const wanted = new Set(labels.map((label) => label.toLowerCase()));
+    const rows: AzurePrice[] = [];
+    for (const item of items) {
+      if (item.productName !== product || item.type !== "Consumption") continue;
+      const usd = perMillion(item);
+      const meter = usd === undefined ? undefined : parsePartnerMeter(item.skuName);
+      if (meter === undefined || !wanted.has(meter.label)) continue;
+      const { label: _label, ...row } = meter;
+      rows.push({ ...row, usd: usd! });
+    }
+    if (rows.length > 0) byID.set(id, rows);
+  }
+  return byID;
 }
 
 // Global standard-tier prices, which the files publish as their base rate. Flex, priority and the data-zone uplift
@@ -89,7 +143,8 @@ export function buildAzureModel(model: AzureModel, authored: ExistingModel): Syn
     ...cost,
     input,
     output,
-    ...(cost.cache_read === undefined || read === undefined ? {} : { cache_read: read }),
+    // A listed cache read is a real price, so it's added when the file has none.
+    ...(read === undefined ? {} : { cache_read: read }),
     ...(cost.cache_write === undefined || write === undefined ? {} : { cache_write: write }),
   } as Record<string, unknown>;
   if (cost.tiers !== undefined && cost.tiers.length === 1) {
@@ -145,15 +200,16 @@ export const azure = {
   async fetchModels() {
     const items = (await Promise.all(PRODUCTS.map(fetchProduct))).flat();
     const files: string[] = [];
-    for await (const file of new Bun.Glob("gpt-*.toml").scan(MODELS_DIR)) files.push(file.slice(0, -".toml".length));
+    for await (const file of new Bun.Glob("*.toml").scan(MODELS_DIR)) files.push(file.slice(0, -".toml".length));
     return { items, files };
   },
   parseModels(raw) {
     const { items, files } = raw as { items: z.infer<typeof PriceItem>[]; files: string[] };
     const rows = priceRows(items);
     if (rows.size === 0) throw new Error("Azure prices had no GPT token meters; refusing to sync");
+    const partners = partnerRows(items);
     return files.flatMap((id) => {
-      const prices = rows.get(modelKey(id));
+      const prices = partners.get(id) ?? (id.startsWith("gpt-") ? rows.get(modelKey(id)) : undefined);
       return prices === undefined ? [] : [{ id, prices }];
     });
   },
