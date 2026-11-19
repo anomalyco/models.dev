@@ -8,14 +8,20 @@
 # Toggle: enable_thinking true|false (Alibaba's default applies).
 # Effort: reasoning_effort = low|medium|xhigh (default xhigh), Model Studio's levels.
 # Budget: thinking_budget (reasoning tokens), forwarded to Model Studio; same controls as providers/alibaba.
+# Tools: tool_choice auto, none, required and a named function each behaved as asked, reasoning off (probed
+# 2026-11-19). providers/alibaba lists no required on Chat Completions; a required request returned the tool call.
+# Structured output: a JSON Schema response_format was enforced against a prompt asking for a haiku (probed
+# 2026-11-19).
 # Lebrel's rates for this model are flat (no peak schedule).
 # Input: input_modalities in /v1/models lists text, image and file. The lab's image formats are kept. Video is
 # left out because the catalog does not list it, and no document type is declared for file because the lab
 # file has none and it was not probed.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
-# Stream usage: the router sets stream_options.include_usage on every streamed request itself.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself, and a stream sent
+# with it ended with a usage chunk (probed 2026-11-19).
 # Checked live 2026-11-17: enable_thinking false gave no reasoning, and thinking_budget 32 gave exactly 32 reasoning tokens
 # against 576 without it.
+# Probed 2026-11-19: a PNG was read.
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
@@ -24,7 +30,9 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
 stream_usage = true
 cache = { implicit = true }
 

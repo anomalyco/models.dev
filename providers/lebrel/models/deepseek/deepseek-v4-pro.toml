@@ -16,6 +16,12 @@
 # Output cap: max_tokens. Model Studio takes max_completion_tokens too (probed 2026-11-19 on DeepSeek V4.1 Flash: a
 # cap of 16 was applied), but the router forwards the client's field as sent and DeepSeek's own API, the last
 # fallback, only takes max_tokens (see providers/deepseek). The fallback was not reached in the probes.
+# Tools: tool_choice auto, none, required and a named function each behaved as asked, reasoning off (probed
+# 2026-11-19). The first required request failed with HTTP 400 from Model Studio (grammar compile timed out);
+# the second returned the tool call.
+# Structured output: a JSON Schema response_format was enforced against a prompt asking for a haiku on the
+# second of two attempts (probed 2026-11-19); the first failed with the same grammar timeout. Plain JSON mode
+# (json_object) also worked.
 # Peak schedule: Lebrel's rates double on weekdays 01:00-04:00 and 06:00-10:00 UTC, except Chinese public holidays.
 # Input: input_modalities in /v1/models lists text and file. Text only is declared, as in the lab file: no
 # document type was probed on this route.
@@ -24,14 +30,17 @@
 # V4.1 Flash). Context stays at the lab's 1,000,000, which the Model Studio entries here carry. Lebrel's catalog
 # admits 1,048,576, DeepSeek's own API figure, which was not probed through Model Studio.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
-# Stream usage: the router sets stream_options.include_usage on every streamed request itself.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself, and a stream sent
+# with it ended with a usage chunk (probed 2026-11-19).
 # Checked live 2026-11-17: reasoning_effort low accepted, reasoning returned in reasoning_content.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 name = "DeepSeek V4 Pro"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 top_k = false
 stream_usage = true
 cache = { implicit = true }

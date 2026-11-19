@@ -13,6 +13,12 @@
 # Output cap: max_tokens. Model Studio takes max_completion_tokens too (probed 2026-11-19 on DeepSeek V4.1 Flash: a
 # cap of 16 was applied), but the router forwards the client's field as sent and DeepSeek's own API, the last
 # fallback, only takes max_tokens (see providers/deepseek). The fallback was not reached in the probes.
+# Tools: tool_choice auto and none behaved as asked, reasoning off. required and a named function failed twice
+# with HTTP 400 from Model Studio's model serving (std::bad_alloc), so they are not listed, although
+# providers/alibaba lists them for this model. Probed 2026-11-19.
+# Structured output: not declared. A JSON Schema response_format failed twice with the same HTTP 400, although
+# providers/alibaba records structured output for this model; plain JSON mode (json_object) worked. Probed
+# 2026-11-19.
 # Lebrel's rates for this model are flat (no peak schedule).
 # Input: input_modalities in /v1/models lists text, image and file. The lab file's image formats stand, and no
 # document type is declared: a PDF file part was refused by the upstream.
@@ -21,13 +27,15 @@
 # V4.1 Flash). Context stays at the lab's 1,000,000, which the Model Studio entries here carry. Lebrel's catalog
 # admits 1,048,576, DeepSeek's own API figure, which was not probed through Model Studio.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
-# Stream usage: the router sets stream_options.include_usage on every streamed request itself.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself, and a stream sent
+# with it ended with a usage chunk (probed 2026-11-19).
 # Checked live 2026-11-17: thinking.type disabled gave 0 reasoning tokens against 39 by default, reasoning came back in
 # reasoning_content, a PNG was read, and a PDF file part was refused by the upstream.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
 top_k = false
 stream_usage = true

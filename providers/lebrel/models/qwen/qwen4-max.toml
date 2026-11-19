@@ -9,13 +9,19 @@
 # Budget: thinking_budget (reasoning tokens), forwarded to Model Studio. providers/llmgateway-providers notes
 # that Alibaba documents none for Qwen4 Max, but it is honoured here: 32 gave exactly 32 reasoning tokens.
 # Bounds were not checked, so none are set.
+# Tools: tool_choice auto, none, required and a named function each behaved as asked, reasoning off (probed
+# 2026-11-19).
+# Structured output: a JSON Schema response_format was enforced against a prompt asking for a haiku (probed
+# 2026-11-19).
 # Lebrel's rates for this model are flat (no peak schedule).
 # Input: input_modalities in /v1/models lists text, image and file. The lab's image formats and PDF are kept (a
 # file part is forwarded to Model Studio) and video, which the catalog does not list, is left out.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
-# Stream usage: the router sets stream_options.include_usage on every streamed request itself.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself, and a stream sent
+# with it ended with a usage chunk (probed 2026-11-19).
 # Checked live 2026-11-17: enable_thinking false gave no reasoning, thinking_budget 32 gave exactly 32 reasoning tokens, and a
 # PDF file part was read.
+# Probed 2026-11-19: a PNG was read.
 schema = 2
 base_model = "alibaba/qwen4-max"
 
@@ -24,7 +30,9 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "xhigh"], budget = {} }
+structured_output = true
 stream_usage = true
 cache = { implicit = true }
 

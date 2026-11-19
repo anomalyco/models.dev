@@ -9,13 +9,19 @@
 # it), as on Kimi K3 and as the Novita and Umans entries here record for this model. providers/moonshotai
 # records no off switch on Moonshot's own API, the fallback, so a request served there may still reason.
 # Effort: reasoning_effort = low|high|max (default max).
+# Tools: tool_choice auto, none, required and a named function each behaved as asked, reasoning off (probed
+# 2026-11-19).
+# Structured output: a JSON Schema response_format was enforced against a prompt asking for a haiku (probed
+# 2026-11-19).
 # Lebrel's rates for this model are flat (no peak schedule).
 # Input: input_modalities in /v1/models lists text, image and file. The lab's image formats are kept. Video is
 # left out because the catalog does not list it, and no document type is declared for file because the lab
 # file has none and it was not probed.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
-# Stream usage: the router sets stream_options.include_usage on every streamed request itself.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself, and a stream sent
+# with it ended with a usage chunk (probed 2026-11-19).
 # Checked live 2026-11-17: thinking.type disabled gave 0 reasoning tokens against 50 at low effort.
+# Probed 2026-11-19: a PNG was read.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -24,7 +30,9 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 stream_usage = true
 cache = { implicit = true }
 
