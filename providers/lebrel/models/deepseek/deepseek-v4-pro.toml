@@ -4,13 +4,17 @@
 # - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README)
 # Relayed by Lebrel's router. First upstream: alibaba/model-studio (deepseek-v4-pro-0813). The model's data note
 # names the fallbacks, and the signed route receipt names which upstream served.
+# Snapshot: every upstream serves DeepSeek-V4-Pro-0813. Model Studio and OpenRouter take the dated ID, and
+# DeepSeek's own API serves it as deepseek-v4-pro (see providers/deepseek). So this builds on the dated lab
+# file and keeps the name Lebrel lists for the route.
 # Toggle: thinking.type = enabled|disabled (default enabled); enable_thinking true|false is also accepted.
 # Effort: reasoning_effort = low|high|max (default high).
 # Peak schedule: Lebrel's rates double on weekdays 01:00-04:00 and 06:00-10:00 UTC, except Chinese public holidays.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
 # Checked live 2026-11-17: reasoning_effort low accepted, reasoning returned in reasoning_content.
 schema = 2
-base_model = "deepseek/deepseek-v4-pro"
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
