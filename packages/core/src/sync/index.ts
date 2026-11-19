@@ -19,6 +19,7 @@ import {
 import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from "../translate.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
+import { abacus } from "./providers/abacus.js";
 import { aiand } from "./providers/aiand.js";
 import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
@@ -110,6 +111,18 @@ export interface SyncProvider<SourceModel> {
   /** Report remote-only models skipped by skipCreates as GitHub issues. */
   trackMissingModels?: boolean;
   deleteMissing?: boolean;
+  /**
+   * With deletion on, keep local files for source models the provider skips
+   * through `sourceID`. Defaults to false: a skipped id is deleted like any
+   * other model the provider does not translate.
+   */
+  retainSkipped?: boolean;
+  /**
+   * Refuse to sync when the source has fewer than this fraction of the local
+   * catalog's models, before any file is written. Protects providers whose
+   * deletions are authoritative from a truncated but schema-valid response.
+   */
+  minSourceFraction?: number;
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
   preserveDescriptions?: boolean;
@@ -188,6 +201,7 @@ export interface SyncResult {
 }
 
 export const providers: {
+  abacus: SyncProvider<any>;
   aiand: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
@@ -239,6 +253,7 @@ export const providers: {
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  abacus,
   aiand,
   aimlapi,
   ambient,
@@ -293,6 +308,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "abacus",
     "aimlapi",
     "crossmodel",
     "edenai",
@@ -349,6 +365,7 @@ export async function syncProvider<SourceModel>(
   const desiredV2 = new Map<string, { content: string }>();
   const caseNormalizedDesiredPaths = new Map<string, string>();
   const skippedRemote: string[] = [];
+  const skippedRemoteIDs = new Set<string>();
   const missingRemote = new Set<string>();
   const missingReasoning = new Map<string, string>();
   const translateNotices: string[] = [];
@@ -388,7 +405,10 @@ export async function syncProvider<SourceModel>(
     }
     if (translated === undefined) {
       const skippedID = provider.sourceID?.(sourceModel);
-      if (skippedID !== undefined) skippedRemote.push(skippedID);
+      if (skippedID !== undefined) {
+        skippedRemote.push(skippedID);
+        if (provider.retainSkipped === true) skippedRemoteIDs.add(skippedID);
+      }
       const missingID = provider.missingModelID?.(sourceModel);
       if (missingID !== undefined) missingRemote.add(missingID);
       continue;
@@ -479,6 +499,19 @@ export async function syncProvider<SourceModel>(
       header,
       v2Set: translated.v2Set,
     });
+  }
+
+  const localCount = existing.size + brokenSymlinks.size;
+  if (
+    provider.minSourceFraction !== undefined
+    && options.newOnly !== true
+    && localCount > 0
+    && sourceModels.length < localCount * provider.minSourceFraction
+  ) {
+    throw new Error(
+      `${provider.name}: refusing to sync ${sourceModels.length} source models against ${localCount} local models `
+      + `(the source is under ${provider.minSourceFraction * 100}% of the catalog); it may be truncated`,
+    );
   }
 
   const files: SyncResult["files"] = [];
@@ -598,6 +631,13 @@ export async function syncProvider<SourceModel>(
       continue;
     }
     if (missingReasoning.has(relativePath.slice(0, -5))) {
+      unchanged++;
+      continue;
+    }
+    // A provider can name a source model it deliberately does not translate;
+    // its local file is the hand-authored entry for that skip, so keep it even
+    // when deleteMissing would otherwise remove every untranslated model.
+    if (skippedRemoteIDs.has(relativePath.slice(0, -5))) {
       unchanged++;
       continue;
     }
