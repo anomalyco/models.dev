@@ -1,0 +1,25 @@
+# Hand-authored: OpenRouter prices this router dynamically ("-1"), so the sync treats it
+# as an unavailable stub and drops it unless an authored file exists. No [cost]: the
+# price is decided per routed request.
+# https://openrouter.ai/openrouter/auto-code
+schema = 2
+v2_only = true
+name = "Auto Code"
+description = "OpenRouter's router built for coding agents and harnesses, using the same routing engine as the Auto Router"
+family = "auto"
+open_weights = false
+release_date = "2026-11-05"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "audio/wav", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mp4", "application/pdf", "video/mp4", "video/mpeg", "video/mov", "video/webm"]
+output = ["text", "image/png", "image/jpeg", "image/webp"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 2_000_000
+output = 128_000
