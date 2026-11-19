@@ -1,0 +1,12 @@
+# Effort: reasoning_effort = none|low|high|max (top-level field on /v1/chat/completions). Off is effort=none; no toggle.
+# The catalog row lists reasoning_effort (GET https://api.surplusintelligence.ai/v1/models, 2026-11-19) and Surplus forwards it to the seller as sent (https://www.surplusintelligence.ai/docs/reference/reasoning). Levels mirror providers/openrouter/models/deepseek/deepseek-v4-flash-0731.toml.
+# Host deltas: limit is the catalog row's context_length / max_completion_tokens where smaller than the lab's.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+output = 65_536

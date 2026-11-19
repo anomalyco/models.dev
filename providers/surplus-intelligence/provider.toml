@@ -1,0 +1,16 @@
+# Inference marketplace: sellers list their own upstream provider keys and each
+# request goes to the cheapest healthy seller for the model. Routing is limited
+# to a curated list of provider hosts by default (GET /v1/providers, `trusted`).
+# https://www.surplusintelligence.ai/docs/marketplace/provider-verification
+# No [cost] on purpose: the price is set per request by whichever offer wins, so
+# there is no fixed per-token price to publish. The catalog's `pricing` fields are
+# reference prices that offers are discounted from, not what a buyer pays.
+# https://www.surplusintelligence.ai/docs/marketplace/pricing
+# Chat Completions takes top-level `reasoning_effort` and forwards it as sent.
+# https://www.surplusintelligence.ai/docs/reference/reasoning
+name = "Surplus Intelligence"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["SURPLUS_API_KEY"]
+api = "https://api.surplusintelligence.ai/v1"
+doc = "https://www.surplusintelligence.ai/docs"

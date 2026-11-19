@@ -1,0 +1,13 @@
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh (top-level field on /v1/chat/completions).
+# The catalog row lists reasoning_effort (GET https://api.surplusintelligence.ai/v1/models, 2026-11-19) and Surplus forwards it to the seller as sent (https://www.surplusintelligence.ai/docs/reference/reasoning). Levels mirror providers/openrouter/models/qwen/qwen3.8-max-0902.toml.
+# Host deltas: input is narrowed to the catalog row's input_modalities (no file).
+schema = 2
+base_model = "alibaba/qwen3.8-max-0902"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
