@@ -10,9 +10,12 @@ tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
 
+[limit]
+context = 128_000
+output = 32_000
+
 [cost.text.input]
-price = 0.5
-cache = { read = 0.35 }
+price = 0.571
 
 [cost.text.output]
-price = 2.15
+price = 2.286

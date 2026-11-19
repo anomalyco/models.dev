@@ -5,11 +5,12 @@ name = "Minimax M2.7"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, budget = {} }
-cache = { implicit = true, explicit = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
 
 [limit]
-output = 131_000
+context = 196_608
+output = 196_608
 
 [api.chat-completions]
 
@@ -22,8 +23,8 @@ base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
 
 [cost.text.input]
-price = 0.3
-cache = { read = 0.06, write = 0.375 }
+price = 0.21
+cache = { read = 0.042 }
 
 [cost.text.output]
-price = 1.2
+price = 0.84

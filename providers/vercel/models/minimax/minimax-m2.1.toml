@@ -6,7 +6,7 @@ name = "MiniMax M2.1"
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, budget = {} }
-cache = { implicit = true, explicit = true }
+cache = { implicit = true }
 
 [api.chat-completions]
 legacy_interleaved = true
@@ -21,7 +21,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel
 
 [cost.text.input]
 price = 0.3
-cache = { read = 0.03, write = 0.375 }
+cache = { read = 0.15 }
 
 [cost.text.output]
 price = 1.2

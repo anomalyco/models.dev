@@ -9,7 +9,8 @@ reasoning = { supported = true, budget = {} }
 cache = { implicit = true, explicit = true }
 
 [limit]
-output = 131_000
+context = 1_000_000
+output = 8_192
 
 [api.chat-completions]
 
@@ -23,7 +24,6 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel
 
 [cost.text.input]
 price = 0.3
-cache = { read = 0.03, write = 0.375 }
 
 [cost.text.output]
 price = 1.2

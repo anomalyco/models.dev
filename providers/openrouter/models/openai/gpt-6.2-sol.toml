@@ -1,0 +1,40 @@
+# Mid-conversation, tool and cache flags backfilled 2026-11-18 from gpt-6.2-astra.toml on this host (same API layout; the sync doesn't carry them).
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tokens = 1_024 } }
+system_updates = true
+effort_updates = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"], updates = ["add", "remove"] } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15
+
+[cost.web_search]
+price = 10
