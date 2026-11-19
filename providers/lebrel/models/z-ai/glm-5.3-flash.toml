@@ -8,6 +8,8 @@
 # Effort: reasoning_effort = low|high|max (default max).
 # top_k: off. The router forwards it unchanged and Z.ai's Chat API takes temperature and top_p only (see
 # providers/zai). Not probed live.
+# Output cap: max_tokens. The router accepts max_completion_tokens too but forwards it as sent, and Z.ai's
+# Chat API only takes max_tokens (see providers/zai). Not probed live.
 # Lebrel's rates for this model are flat (no peak schedule).
 # Input: input_modalities in /v1/models lists text and file. PDF is kept; the router refuses images for this
 # route and the catalog does not list video.
@@ -30,7 +32,7 @@ cache = { implicit = true }
 context = 1_048_576
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.17
