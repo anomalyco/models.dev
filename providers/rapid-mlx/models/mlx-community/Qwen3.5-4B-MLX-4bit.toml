@@ -1,5 +1,9 @@
 # Local checkpoint: https://huggingface.co/mlx-community/Qwen3.5-4B-MLX-4bit
 # Text and tool-call smoke: https://github.com/raullenchai/Rapid-MLX/blob/62f78a767/docs/engineering/community/pr-revival-2026-11-06.md
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Verified live 2026-11-19 on Rapid-MLX 1.0.4 /v1/chat/completions: reasoning_content
+# present when on, absent when off. Top-level enable_thinking also toggles thinking.
+# Top-level reasoning_effort accepted none (off), low/medium/high (on); graded differences not verified.
 schema = 2
 base_model = "alibaba/qwen3.5-4b"
 name = "Qwen3.5 4B MLX 4-bit"
@@ -11,7 +15,10 @@ price = 0
 price = 0
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [modalities]
 input = ["text"]
