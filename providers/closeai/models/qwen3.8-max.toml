@@ -16,3 +16,4 @@ cache = { implicit = { min_tokens = 1024 }, explicit = { ttl = ["5m"], max_break
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }

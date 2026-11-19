@@ -15,3 +15,4 @@ cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tool
 [api.messages]
 base_url = "https://api.openai-proxy.org/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+capabilities = { system_updates = true, tools = { strict = true, search = true } }

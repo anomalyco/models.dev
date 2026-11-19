@@ -13,5 +13,5 @@ cache = { implicit = { min_tokens = 1024 }, explicit = { ttl = ["30m", "12h"], m
 prompt_cache_key = true
 
 [api.chat-completions]
-capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible" }
+capabilities = { system_updates = true, tools = { strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] } }

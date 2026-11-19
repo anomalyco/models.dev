@@ -15,3 +15,4 @@ cache = { implicit = { ttl = ["5m", "1h"] } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { tools = { updates = ["add"] } }
