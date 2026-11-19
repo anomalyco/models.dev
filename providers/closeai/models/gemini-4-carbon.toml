@@ -2,9 +2,14 @@ schema = 2
 base_model = "google/gemini-4-carbon"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
 structured_output = true
-cache = { implicit = { min_tokens = 4_096 } }
+cache = { implicit = { min_tokens = 4096 } }
+temperature = true
+
+[limit]
+output = 32768
 
 [api.generate-content]
 base_url = "https://api.openai-proxy.org/google/v1beta"

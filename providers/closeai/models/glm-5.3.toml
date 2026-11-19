@@ -2,7 +2,8 @@ schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
 top_k = false
 cache = { implicit = true }

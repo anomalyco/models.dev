@@ -5,9 +5,11 @@ schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262144 } }
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262144 } }
 structured_output = true
-cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+stream_usage = true
+cache = { implicit = { min_tokens = 1024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1024 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
