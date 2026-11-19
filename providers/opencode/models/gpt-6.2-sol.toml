@@ -11,6 +11,7 @@
 #   Surface: Responses carries the in-history messages (configuration_update for effort_updates; additional_tools for tools.updates).
 # Tools follow OpenAI's Responses API: https://developers.openai.com/api/docs/guides/function-calling (strict, tool_choice, custom tools with text, lark or regex format), tool_search per model page https://developers.openai.com/api/docs/models; Zen passes requests through.
 # Responses cache writes: 30m at 1.25x input, 12h at 2.5x. https://developers.openai.com/api/docs/guides/prompt-caching
+# Fast mode (priority service tier): pricing and mode follow providers/openai/models/gpt-6.2-sol.toml (Zen passes requests through).
 schema = 2
 base_model = "openai/gpt-6.2-sol"
 
@@ -21,6 +22,7 @@ structured_output = true
 cache = { implicit = true }
 system_updates = true
 effort_updates = true
+service_tier = ["priority"]
 
 [api.responses]
 base_url = "https://opencode.ai/inference/openai/v1"
@@ -41,3 +43,11 @@ price = 10
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 15
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }
