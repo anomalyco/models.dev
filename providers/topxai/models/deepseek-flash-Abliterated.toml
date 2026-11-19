@@ -9,7 +9,8 @@
 # Effort: reasoning_effort = none|low|high|max on Chat Completions (default low).
 # none disables reasoning, so there is no additional toggle. Text/image input,
 # limits, protocols and prices: https://api.topxai.xyz/docs/deepseek-flash-abliterated
-# and https://api.topxai.xyz/api/pricing (accessed 2026-11-10).
+# and https://api.topxai.xyz/api/pricing (accessed 2026-11-19; since that day it runs on
+# a faster deployment at the prices below).
 # The host sets distinct output budgets on the two 1017 deployments: 131,072
 # on this fine-tune and 262,144 on the standard-weights Fast variant (host guide above).
 # Fixed prices at every hour and context length; automatic cache reads, no separate
@@ -49,8 +50,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.42
-cache = { read = 0.105 }
+price = 0.36
+cache = { read = 0.075 }
 
 [cost.text.output]
-price = 1.5
+price = 1.35

@@ -1,0 +1,54 @@
+# Kimi K3.1 Pro with its refusal alignment removed (abliterated), served from TopxAI's
+# private deployment, not Moonshot's API. It replaced kimi-k3.1-pro on this host on
+# 2026-11-19; the old ID returns 403 and has no forwarding alias.
+# https://api.topxai.xyz/docs/kimi-k3-1-pro-abliterated (checked 2026-11-19).
+# Text and image input (base64 data URIs only; remote image URLs are refused),
+# a 1,048,576-token context and 131,072 output tokens. The base identifies the source
+# architecture; the altered weights have no published cutoff or benchmark results.
+# Effort: reasoning_effort = low|high|max on Chat Completions (default low); reasoning
+# is always on, with no separate toggle.
+# Per the host guide (2026-11-19): json_object and json_schema response formats work;
+# tool_choice auto, required and a named function work, tool_choice none returns an
+# empty answer and is not claimed; parallel_tool_calls false is ignored.
+# The private deployment guide asks clients to replay complete assistant messages.
+# Fixed prices at every hour; caching is automatic and no cache-write price is
+# published: https://api.topxai.xyz/pricing/kimi-k3.1-pro-abliterated and
+# https://api.topxai.xyz/api/pricing (accessed 2026-11-19).
+# Responses is stateless; send the full conversation. Messages converts to Chat.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+base_model_omit = ["knowledge"]
+name = "Kimi K3.1 Pro Abliterated"
+description = "Abliterated Kimi K3.1 Pro on a private TopxAI deployment with text and image input, 1M context and always-on reasoning"
+open_weights = false
+release_date = "2026-11-19"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+temperature = true
+top_p = true
+structured_output = true
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "high", "max"] }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+capabilities = { tools = { choice = ["auto", "required", "tool"] } }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 3.25
+cache = { read = 0.325 }
+
+[cost.text.output]
+price = 6.5
