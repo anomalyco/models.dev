@@ -1,16 +1,19 @@
 # Sources (accessed 2026-11-17):
 # - Models table, limits and routed-model notes: https://lebrel.ai/docs
 # - Prices, limits and data note: https://lebrel.ai/api/models and https://attested.lebrel.ai/v1/models
-# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README)
-# Relayed by Lebrel's router. First upstream: alibaba/model-studio (qwen4-max). The model's data note
-# names the fallbacks, and the signed route receipt names which upstream served.
+# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README section
+#   "Production: Alibaba Model Studio first", routes.production.json and internal/router/server.go)
+# Relayed by Lebrel's router to alibaba/model-studio (qwen4-max), this route's only upstream: there is no fallback.
 # Toggle: enable_thinking true|false.
 # Effort: reasoning_effort = low|high|xhigh (high when none is named), as the model's data note states.
-# Budget: thinking_budget (reasoning tokens), forwarded to Model Studio.
+# Budget: thinking_budget (reasoning tokens), forwarded to Model Studio. providers/llmgateway-providers notes
+# that Alibaba documents none for Qwen4 Max, but it is honoured here: 32 gave exactly 32 reasoning tokens.
+# Bounds were not checked, so none are set.
 # Lebrel's rates for this model are flat (no peak schedule).
 # Input: input_modalities in /v1/models lists text, image and file. The lab's image formats and PDF are kept (a
 # file part is forwarded to Model Studio) and video, which the catalog does not list, is left out.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself.
 # Checked live 2026-11-17: enable_thinking false gave no reasoning, thinking_budget 32 gave exactly 32 reasoning tokens, and a
 # PDF file part was read.
 schema = 2

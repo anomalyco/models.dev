@@ -1,16 +1,20 @@
 # Sources (accessed 2026-11-17):
 # - Models table, limits and routed-model notes: https://lebrel.ai/docs
 # - Prices, limits and data note: https://lebrel.ai/api/models and https://attested.lebrel.ai/v1/models
-# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README)
+# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README section
+#   "Production: Alibaba Model Studio first", routes.production.json and internal/router/server.go)
 # Relayed by Lebrel's router. First upstream: alibaba/model-studio (kimi-k3.1-pro). The model's data note
 # names the fallbacks, and the signed route receipt names which upstream served.
-# Toggle: thinking.type = enabled|disabled (default enabled). The upstream note for moonshot/api-k3.1-pro in
-# /v1/models says clients turn reasoning off with thinking disabled.
+# Toggle: enable_thinking true|false when Model Studio serves (thinking.type = enabled|disabled is mapped onto
+# it), as on Kimi K3 and as the Novita and Umans entries here record for this model. providers/moonshotai
+# records no off switch on Moonshot's own API, the fallback, so a request served there may still reason.
 # Effort: reasoning_effort = low|high|max (default max).
 # Lebrel's rates for this model are flat (no peak schedule).
-# Input: input_modalities in /v1/models lists text, image and file. The lab's image formats are kept and video,
-# which the catalog does not list, is left out.
+# Input: input_modalities in /v1/models lists text, image and file. The lab's image formats are kept. Video is
+# left out because the catalog does not list it, and no document type is declared for file because the lab
+# file has none and it was not probed.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself.
 # Checked live 2026-11-17: thinking.type disabled gave 0 reasoning tokens against 50 at low effort.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"

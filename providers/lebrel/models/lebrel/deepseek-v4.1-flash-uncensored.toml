@@ -7,10 +7,15 @@
 # Toggle: top-level "thinking": true|false on Chat Completions (default false). Reasoning text comes back in
 # message.reasoning, and in delta.reasoning when streaming. That field is not declared below because the v1
 # output cannot carry it: its interleaved field only takes "reasoning_content" or "reasoning_details".
-# Prices are the list rates. Lebrel also admits requests at 40% to 100% of list while the node is quiet
-# (GET https://lebrel.ai/api/drop/policy) and at twice list for accounts with priority enabled. Neither is
+# No effort levels: thinking is on or off. The request normaliser in Lebrel's router repository
+# (internal/meter/meter.go) takes reasoning_effort only as "high" with thinking on and refuses it with thinking
+# off. Not probed live.
+# top_k: off. The docs' request fields name temperature, top_p and stop only; not probed live.
+# Prices are the list rates. Lebrel admits requests from 40% of list while the node is quiet up to list with
+# normal use (GET https://lebrel.ai/api/drop/policy), and at twice list on the priority line. Neither is
 # modelled here.
-# Context is prompt plus requested output: 1,048,544 tokens. Output: 1 to 393,216 tokens per call.
+# Context is prompt plus requested output: 1,048,544 tokens. Output: 1 to 393,216 tokens per call. Lebrel's
+# own tool configs ask for 32,768 per step to keep balance holds small; the API cap is the figure above.
 # Checked live 2026-11-17 on Chat Completions:
 # - reasoning: 0 reasoning tokens by default and with thinking false, 39 with thinking true
 # - input: PNG, JPEG, GIF and WebP read; a file part refused with HTTP 400 (the model reads text and images)
@@ -28,6 +33,7 @@ description = "Lebrel's uncensored edition of DeepSeek V4.1 Flash 1017. Every an
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = false } }
 structured_output = true
+top_k = false
 stream_usage = true
 cache = { implicit = true }
 

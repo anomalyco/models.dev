@@ -1,14 +1,26 @@
 # Sources (accessed 2026-11-17):
 # - Models table, limits and routed-model notes: https://lebrel.ai/docs
 # - Prices, limits and data note: https://lebrel.ai/api/models and https://attested.lebrel.ai/v1/models
-# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README)
+# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README section
+#   "Production: Alibaba Model Studio first", routes.production.json and internal/router/server.go)
 # Relayed by Lebrel's router. First upstream: alibaba/model-studio (glm-5.3). The model's data note
 # names the fallbacks, and the signed route receipt names which upstream served.
 # No off switch: a request that disables thinking is served at the lowest effort (router README).
 # Effort: reasoning_effort = low|high|max (default max).
+# top_k: on, as on Model Studio (providers/alibaba keeps the lab's value). The Z.ai fallback takes temperature and
+# top_p only.
+# Output cap: max_tokens. Model Studio takes max_completion_tokens too, but the router forwards the client's field
+# as sent and Z.ai's API, the fallback, only takes max_tokens (see providers/zai). Not probed live.
 # Lebrel's rates for this model are flat (no peak schedule).
+# Input: input_modalities in /v1/models lists text and file. Text only is declared, as in the lab file: no
+# document type was probed on this route.
+# Context: 1,048,576 as Lebrel's catalog lists it and as providers/llmgateway-providers lists for GLM-5.3 on Model
+# Studio; not probed.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
-# Checked live 2026-11-17: reasoning_effort low accepted, and a request with thinking disabled was answered, not refused.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself.
+# Checked live 2026-11-17: reasoning_effort low accepted, and a request with thinking disabled was answered, not refused. Both
+# answers reported 0 reasoning tokens and no reasoning text, so reasoning_field follows
+# providers/alibaba/models/glm-5.3.toml.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
@@ -21,7 +33,7 @@ cache = { implicit = true }
 context = 1_048_576
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 1.26
