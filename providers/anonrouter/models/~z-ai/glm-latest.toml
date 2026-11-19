@@ -1,0 +1,29 @@
+# Limits retain the documented checkpoint caps; larger catalog claims are not qualified here.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Reviewed Latest alias: https://docs.anonrouter.ai/models#latest-model-aliases.
+# Effort: top-level reasoning_effort = low|medium|high|max.
+# Controls are accepted across eligible routes: https://docs.anonrouter.ai/reasoning.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM Latest"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+
+[limit]
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.2
+
+[cost.text.output]
+price = 7
+
+[metadata]
+anonrouter = { alias_target = "z-ai/glm-5.3", alias_revision = 1 }

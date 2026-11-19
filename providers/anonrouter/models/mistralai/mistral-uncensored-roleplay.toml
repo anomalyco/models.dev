@@ -1,0 +1,37 @@
+# Sampling: Chat Completions forwards temperature and top_p; top_k is not in the request contract.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Host-specific fine-tune/serving alias. Checkpoint identity is not shared across its routes.
+# Metadata: https://github.com/anomalyco/models.dev/blob/dev/providers/venice/models/venice-uncensored-role-play.toml.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+name = "Mistral Uncensored Roleplay"
+description = "Multimodal model for analyzing text, images, documents, and rich media"
+family = "venice"
+open_weights = true
+release_date = "2026-02-20"
+last_updated = "2026-06-11"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 128_000
+output = 4_096
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.58
+
+[cost.text.output]
+price = 2.3

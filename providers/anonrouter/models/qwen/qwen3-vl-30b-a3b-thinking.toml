@@ -1,0 +1,31 @@
+# Reasoning support follows the native model; route profiles expose no configurable effort or off control.
+# Default-chat qualification remained unavailable after a retry (502 provider_http_error, 2026-11-17).
+# Live tickets rejected reasoning_effort=low with HTTP 400 reasoning_not_supported (2026-11-17).
+# AnonRouter rejected a forced-function request with HTTP 400 tools_not_supported (live 2026-11-17).
+# Host catalog capabilities.tools (2026-11-17): surplusintelligence/qwen3-vl-30b-a3b-thinking=false.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+base_model = "alibaba/qwen3-vl-30b-a3b-thinking"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+
+[limit]
+context = 128_000
+output = 4_096
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.35
+
+[cost.text.output]
+price = 1.25

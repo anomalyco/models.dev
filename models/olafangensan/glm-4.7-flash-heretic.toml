@@ -1,0 +1,29 @@
+# https://huggingface.co/Olafangensan/GLM-4.7-Flash-heretic
+# Repository created 2026-01-21 (Hugging Face API createdAt).
+# Architecture and base capabilities follow zhipuai/glm-4.7-flash; serving limits belong to the host.
+schema = 2
+family = "glm-flash"
+open_weights = true
+knowledge = "2025-04"
+name = "GLM 4.7 Flash Heretic"
+description = "Abliterated GLM-4.7-Flash checkpoint for open-ended chat and reasoning"
+release_date = "2026-01-21"
+license = "mit"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 202752
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Olafangensan/GLM-4.7-Flash-heretic"

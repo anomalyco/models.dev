@@ -1,0 +1,33 @@
+# Limits retain the documented checkpoint caps; larger catalog claims are not qualified here.
+# Reasoning support follows the native model; route profiles expose no configurable effort or off control.
+# The small default-chat probe returned a plain answer; native reasoning support is retained.
+# Live tickets rejected reasoning_effort=low with HTTP 400 reasoning_not_supported (2026-11-17).
+# AnonRouter rejected a forced-function request with HTTP 400 tools_not_supported (live 2026-11-17).
+# Host catalog capabilities.tools (2026-11-17): sail/nvidia-gemma-4-31b-it-nvfp4=false.
+# Callable plaintext routes advertise capabilities.vision=false; this host entry accepts text only.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B Instruct NVFP4"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+
+[limit]
+context = 260_834
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.161
+
+[cost.text.output]
+price = 0.46

@@ -1,0 +1,31 @@
+# Reasoning support follows the native model; route profiles expose no configurable effort or off control.
+# Default chat returned reasoning_content despite the route profile reasoning=false flag (live 2026-11-17).
+# Live tickets rejected reasoning_effort=low with HTTP 400 reasoning_not_supported (2026-11-17).
+# AnonRouter rejected a forced-function request with HTTP 400 tools_not_supported (live 2026-11-17).
+# Host catalog capabilities.tools (2026-11-17): cheaperinference/inkling=false.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+base_model = "thinkingmachines/inkling"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.3
+
+[cost.text.output]
+price = 5.25

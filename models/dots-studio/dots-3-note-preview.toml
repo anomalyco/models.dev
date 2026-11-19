@@ -1,0 +1,30 @@
+# Generic lab modalities describe decoded image/video inputs and audio waveforms, without an HTTP MIME allowlist.
+# Sources: https://huggingface.co/dots-studio/dots3-note-prev and https://huggingface.co/docs/transformers/en/model_doc/dots3_note.
+# Weights and native multimodal inputs: https://huggingface.co/dots-studio/dots3-note-prev.
+# Sampling uses the published checkpoint with standard Transformers generation settings.
+# Model metadata recorded in providers/openrouter/models/dots-studio/dots-3-note-preview:free.toml.
+# https://openrouter.ai/dots-studio/dots-3-note-preview:free
+# Per-host reasoning controls and pricing are recorded in provider files.
+schema = 2
+name = "Dots3 Note Preview"
+description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+open_weights = true
+release_date = "2026-08-14"
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
+
+[limit]
+context = 524288
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/dots-studio/dots3-note-prev"

@@ -1,0 +1,21 @@
+# Reasoning is supported; accepted effort strings do not establish distinct checkpoint controls.
+# R1-0528 is always-on; the relay forwards effort strings without a checkpoint-specific mapping.
+# Live 2026-11-17: reasoning_effort = "medium" returned HTTP 200 and reasoning_content via deepinfra/deepseek-ai-deepseek-r1-0528.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+base_model = "deepseek/deepseek-r1-0528"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.58
+
+[cost.text.output]
+price = 2.5

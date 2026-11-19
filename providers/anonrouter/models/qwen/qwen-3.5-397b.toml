@@ -1,0 +1,26 @@
+# Limits retain the documented checkpoint caps; larger catalog claims are not qualified here.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Effort: top-level reasoning_effort = none|low|medium|high.
+# Controls are accepted across eligible routes: https://docs.anonrouter.ai/reasoning.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
+name = "Qwen 3.5 397B A17B"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.66
+
+[cost.text.output]
+price = 4.2

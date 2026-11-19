@@ -1,0 +1,40 @@
+# Sampling: Chat Completions forwards temperature and top_p; top_k is not in the request contract.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Host-specific fine-tune/serving alias. Checkpoint identity is not shared across its routes.
+# Metadata: https://github.com/anomalyco/models.dev/blob/dev/providers/nano-gpt/models/z-ai/glm-5.3-uncensored.toml.
+# Effort: top-level reasoning_effort = low|medium|high.
+# Controls are accepted across eligible routes: https://docs.anonrouter.ai/reasoning.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+name = "GLM 5.3 Uncensored"
+description = "An experimental uncensored version of the full GLM 5.3 reasoning model for chat, creative writing, coding, and tool use. It may show unusual behavior or inconsistent response quality."
+family = "glm"
+open_weights = true
+release_date = "2026-09-26"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.15
+
+[cost.text.output]
+price = 2.3

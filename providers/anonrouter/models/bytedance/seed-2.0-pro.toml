@@ -1,0 +1,27 @@
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Effort: top-level reasoning_effort = low|medium|high.
+# Controls are accepted across eligible routes: https://docs.anonrouter.ai/reasoning.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+base_model = "bytedance-seed/seed-2.0-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[limit]
+output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.53
+
+[cost.text.output]
+price = 3.15

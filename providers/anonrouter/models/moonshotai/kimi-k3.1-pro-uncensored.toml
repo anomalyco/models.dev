@@ -1,0 +1,39 @@
+# Sampling: Chat Completions forwards temperature and top_p; top_k is not in the request contract.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Release date: The date is the upstream serving alias introduction, not the native lab checkpoint release.
+# Host-specific serving alias with no published exact shared checkpoint.
+# Serving alias creation date: GET https://api.silkcompute.com/models (verified 2026-11-17).
+# Effort: top-level reasoning_effort = none|low|medium|high.
+# Controls are accepted across eligible routes: https://docs.anonrouter.ai/reasoning.
+# Chat Completions accepts text/image_url input and function tools: https://docs.anonrouter.ai/compatibility.
+schema = 2
+name = "Kimi K3.1 Pro Uncensored"
+description = "Silk-hosted uncensored Kimi K3.1 Pro serving alias for text generation and reasoning"
+open_weights = false
+release_date = "2026-11-05"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.9
+
+[cost.text.output]
+price = 5.75
