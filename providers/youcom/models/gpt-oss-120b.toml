@@ -1,6 +1,7 @@
 # Context and prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
 # Effort: reasoning_effort = low|medium|high
 # gpt-oss levels; reasoning length grows low → high (reasoning_content). Tested live 2026-10-22.
+# Output: GET https://api.you.com/v1/models reports max_tokens = 117964 for gpt-oss-120b (checked 2026-11-19).
 schema = 2
 base_model = "openai/gpt-oss-120b"
 
@@ -9,6 +10,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [limit]
 context = 128_000
+output = 117_964
 
 [cost.text.input]
 price = 0.097
