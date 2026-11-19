@@ -199,6 +199,18 @@ EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
 - A `cache` or `prompt_cache` feature sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet. Authored `implicit` / `explicit` details are kept.
 - `base_model` files never carry model facts (dates, `family`, `knowledge`, `open_weights`); they come from the lab. Only standalone files keep them.
 
+## Isoquant Notes
+
+Isoquant is implemented in `packages/core/src/sync/providers/isoquant.ts` and is in the `direct` group.
+
+- Run with `bun models:sync isoquant` or `bun isoquant:sync`. The `https://api.isoquant.ai/v1/models` catalog is public, so no API key or new workflow secret is required.
+- Prices are published in nano-USD per token and converted to USD per million tokens. Context limits, `output_limit.max_tokens` and published effort lists override the authored values when the catalog provides them; absent fields keep the authored value.
+- A model without a fixed output cap publishes only `output_limit.policy = "remaining_context"`, so the resolved model-level output limit is kept.
+- `capabilities.reasoning.default` follows the published `default_effort` through `v2Set`, but only when the published effort list is known and contains that value. An absent, empty or unknown list leaves the authored controls untouched rather than inventing one. Effort lists are deduplicated and sorted, and a preserved toggle is dropped when the list includes `none`.
+- Input formats, `store`, `top_k`, the `cache` capability, tools and API tables are not synced; they stay authored or inherited from the lab. The catalog reports generic `text`/`image` modalities and this module does not translate its per-API tool metadata. The cached-input price is synced and removed when unpublished.
+- New remote-only models are skipped (`skipCreates`) and, when issue opening is enabled (`--open-issues` or GitHub Actions), each opens a missing-model issue. Entries absent from the catalog are retained and reported.
+- An unpriceable or malformed upstream row fails the run before any write. A local file with incomplete pricing or limits is retained and reported instead of being deleted.
+
 ## Keln Notes
 
 - Run with `bun models:sync keln` or `bun keln:sync`. Registration enables the hourly provider-specific workflow; no API key or new workflow secret is required.

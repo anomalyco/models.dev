@@ -42,6 +42,7 @@ import { hyper } from "./providers/hyper.js";
 import { hostingerRouter } from "./providers/hostinger-router.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
+import { isoquant } from "./providers/isoquant.js";
 import { keln } from "./providers/keln.js";
 import { kenari } from "./providers/kenari.js";
 import { kilo } from "./providers/kilo.js";
@@ -211,6 +212,7 @@ export const providers: {
   "hostinger-router": SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
+  isoquant: SyncProvider<any>;
   keln: SyncProvider<any>;
   kenari: SyncProvider<any>;
   kilo: SyncProvider<any>;
@@ -262,6 +264,7 @@ export const providers: {
   "hostinger-router": hostingerRouter,
   huggingface,
   inceptron,
+  isoquant,
   keln,
   kenari,
   kilo,
@@ -315,7 +318,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "isoquant", "meta", "mistral", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

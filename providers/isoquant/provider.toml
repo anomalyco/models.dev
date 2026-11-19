@@ -3,8 +3,9 @@
 # Chat Completions and Responses are OpenAI-compatible at https://api.isoquant.ai/v1;
 # Messages is Anthropic-compatible at https://api.isoquant.ai/v1/messages and requires
 # `anthropic-version: 2023-06-01`. Explicit `cache_control` is unsupported; repeated
-# prompt prefixes use an automatic cache. Zero data retention is opt-in per request
-# with `Isoquant-ZDR: required`.
+# prompt prefixes use an automatic cache. `Isoquant-ZDR: required` opts a request into
+# zero data retention; when the header is omitted, any account-level ZDR requirement
+# still applies (https://isoquant.ai/privacy). Both models publish `zdr_supported: true`.
 name = "Isoquant"
 env = ["ISOQUANT_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
