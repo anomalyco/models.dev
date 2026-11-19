@@ -9,6 +9,8 @@
 # file and keeps the name Lebrel lists for the route.
 # Toggle: thinking.type = enabled|disabled (default enabled); enable_thinking true|false is also accepted.
 # Effort: reasoning_effort = low|high|max (default high).
+# top_k: off. The router forwards it unchanged and Model Studio does not take it for the DeepSeek series (see
+# providers/alibaba), although DeepSeek's own API, the last fallback, does. Not probed live.
 # Peak schedule: Lebrel's rates double on weekdays 01:00-04:00 and 06:00-10:00 UTC, except Chinese public holidays.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
 # Checked live 2026-11-17: reasoning_effort low accepted, reasoning returned in reasoning_content.
@@ -18,6 +20,7 @@ name = "DeepSeek V4 Pro"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+top_k = false
 stream_usage = true
 cache = { implicit = true }
 

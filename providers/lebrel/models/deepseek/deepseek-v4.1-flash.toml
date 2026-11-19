@@ -6,6 +6,8 @@
 # names the fallbacks, and the signed route receipt names which upstream served.
 # Toggle: thinking.type = enabled|disabled (default enabled); enable_thinking true|false is also accepted.
 # Effort: reasoning_effort = low|high|max (default high).
+# top_k: off. The router forwards it unchanged and Model Studio does not take it for the DeepSeek series (see
+# providers/alibaba), although DeepSeek's own API, the last fallback, does. Not probed live.
 # Lebrel's rates for this model are flat (no peak schedule).
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
 # Checked live 2026-11-17: thinking.type disabled gave 0 reasoning tokens against 39 by default, reasoning came back in
@@ -15,6 +17,7 @@ base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+top_k = false
 stream_usage = true
 cache = { implicit = true }
 

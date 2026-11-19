@@ -6,6 +6,8 @@
 # names the fallbacks, and the signed route receipt names which upstream served.
 # No off switch: a request that disables thinking is refused with HTTP 400 (the model always thinks).
 # Effort: reasoning_effort = low|high|max (default max).
+# top_k: off. The router forwards it unchanged and Z.ai's Chat API takes temperature and top_p only (see
+# providers/zai). Not probed live.
 # Lebrel's rates for this model are flat (no peak schedule).
 # Input: input_modalities in /v1/models lists text and file. PDF is kept; the router refuses images for this
 # route and the catalog does not list video.
@@ -20,6 +22,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+top_k = false
 stream_usage = true
 cache = { implicit = true }
 
