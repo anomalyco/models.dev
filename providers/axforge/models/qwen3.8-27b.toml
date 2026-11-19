@@ -1,0 +1,22 @@
+# Served by AxForge as qwen3.8-27b: https://api.axforge.ai/v1/public/models (read 2026-11-14).
+# Reads pictures (our vision model); videos are not served. Context 262,144 tokens (as the lab's); our API caps an
+# answer at 65,536 tokens.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (off by default)
+# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16: reasoning_content present only with
+# enable_thinking = true; reasoning_effort does not change it here.
+# No cost: our prices are in EUR and follow a live price sheet, https://axforge.ai/pricing/
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+output = 65_536

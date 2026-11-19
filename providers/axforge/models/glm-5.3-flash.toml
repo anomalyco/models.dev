@@ -1,0 +1,28 @@
+# Served by AxForge as glm-5.3-flash: https://api.axforge.ai/v1/public/models (read 2026-11-14).
+# Context 500,000 tokens on our servers (the engine's max_model_len, read 2026-11-14); our API caps an answer at
+# 65,536 tokens.
+# Reads pictures (jpeg, png, webp, tried live on our servers 2026-11-16); videos and PDFs are not served.
+# Effort: reasoning_effort = low|high|max (always thinks on our servers; there is no off switch)
+# Verified live on POST https://api.axforge.ai/v1/chat/completions 2026-11-16 and 2026-11-17: reasoning_content
+# present by default and at low, high and max. none is not an off switch here: reasoning_content is then empty but
+# the thinking comes inside the answer.
+# Default high: our vLLM sets the chat template's reasoning_effort default to high, and only low, high and max pass
+# through from a request. Tried live 2026-11-17, median reasoning tokens over 4 calls (max: 2) on two prompts:
+# plain 25 and 137, low 14 and 97.5, high 19.5 and 126.5, max 233 and 215.
+# No cost: our prices are in EUR and follow a live price sheet, https://axforge.ai/pricing/
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 500_000
+output = 65_536
