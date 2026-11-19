@@ -10,6 +10,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
 - `bun models:sync aiand` syncs only ai&.
+- `bun models:sync aki-io` syncs only AKI.IO.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
@@ -506,4 +507,15 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `preserveDescriptions` is off: the runner must not re-inject a pre-factor authored description when the translator leaves it unset, or a full-inline → factored transition would recreate a lab-identical override. Created files get a leading header from `translateModel` naming the single reasoning wire path (`reasoning_effort`, "none" = off). `toggle` and `budget_tokens` controls are parsed (so a feed that publishes one never aborts the run) but never written, from feed or authored file: ai& has no separate on/off or token-budget field, so they cannot be true of this host.
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
+
+## AKI.IO Notes
+
+- Run it with `bun models:sync aki-io` or `bun aki-io:sync`.
+- Source endpoint: `https://aki.io/api/models`; no auth required.
+- Provider TOMLs are named after the OpenAI-compatible ID in `openai.id`, not the canonical catalog `id`, so the sync matches and writes that ID.
+- The endpoint lists EUR prices in `pricing.in_token_price`, `pricing.out_token_price` and `pricing.cached_token_price`, quoted per `pricing.in_token_unit` / `out_token_unit` / `cached_token_unit` tokens (1M today). They are scaled to per-1M tokens and converted to USD at the fixed ECB reference rate in the module (`1.0989 USD/EUR`, 2026-11-17), rounded to seven decimals. Refresh the constant when the catalog's hand-authored headers are updated.
+- Only existing TOMLs are updated (`skipCreates`, `trackMissingModels: false`): the endpoint lists trust-level variants and non-chat surfaces the catalog does not carry, and creating one would need hand-authored reasoning controls and lab metadata.
+- The list is scoped to the API key's account and can omit retired routes, so local files missing from a response are retained (`deleteMissing: false`).
+- `cache_read` is written only when the API reports a positive cache price. A reported `0` does not add a cache price to a file that has none, and does not overwrite an authored one.
+- Every other authored field (limits, modalities, reasoning controls, headers) is preserved; the endpoint is only authoritative for token prices.
 
