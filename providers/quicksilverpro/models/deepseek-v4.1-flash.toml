@@ -1,6 +1,6 @@
 # Pricing and host limits: https://quicksilverpro.io/models/deepseek-v4.1-flash/
 # Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
-# Pricing: https://quicksilverpro.io/pricing.json
+# Pricing: https://quicksilverpro.io/pricing.json (version 84, updated 2026-11-18)
 # Reasoning baseline: providers/deepseek/models/deepseek-flash.toml
 # Relay controls: https://quicksilverpro.io/docs/quickstart/
 # Toggle: reasoning.enabled = true|false
@@ -26,8 +26,8 @@ context = 1048576
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.125
-cache = { read = 0.0125 }
+price = 0.154
+cache = { read = 0.0046 }
 
 [cost.text.output]
-price = 0.55
+price = 0.462
