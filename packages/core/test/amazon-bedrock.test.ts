@@ -1,0 +1,48 @@
+import { expect, test } from "bun:test";
+
+import type { ExistingModel } from "../src/sync/index.js";
+import { buildBedrockModel, matchModels, offerPrices, parseUsageType, type BedrockModel } from "../src/sync/providers/amazon-bedrock.js";
+
+test("Bedrock reads token kind, TTL, long context, route and tier from a usage type", () => {
+  expect(parseUsageType("USE1-MP:USE1_cache_write_tokens_1h_long_ctx_global_standard-Units")).toEqual({
+    kind: "cache_write", ttl: "1h", longContext: true, global: true, tier: "standard",
+  });
+  expect(parseUsageType("USE1-MP:USE1_input_tokens_ultrafast-Units")).toEqual({
+    kind: "input", longContext: false, global: false, tier: "ultrafast",
+  });
+  expect(parseUsageType("USE1-ProvisionedThroughput")).toBeUndefined();
+});
+
+const offer = {
+  products: Object.fromEntries([
+    ["A", "input_tokens_standard"], ["B", "input_tokens_global_standard"], ["C", "output_tokens_standard"],
+    ["D", "output_tokens_global_standard"], ["E", "cache_read_tokens_standard"], ["F", "input_tokens_ultrafast"],
+    ["G", "input_tokens_long_ctx_standard"], ["H", "output_tokens_long_ctx_standard"],
+  ].map(([sku, usage]) => [sku, { sku, attributes: { model: "OpenAI GPT-6.1 Sol", usagetype: `USE1-MP:USE1_${usage}-Units` } }])),
+  terms: { OnDemand: Object.fromEntries(Object.entries({ A: 2.2, B: 2, C: 11, D: 10, E: 0.11, F: 13.2, G: 4.4, H: 16.5 })
+    .map(([sku, usd]) => [sku, { t: { priceDimensions: { d: { unit: "1M tokens", pricePerUnit: { USD: String(usd) } } } } }])) },
+};
+
+test("Bedrock matches an AWS model name to the local files of its lab model", () => {
+  const files = new Map([["gpt-6.1 sol", ["openai.gpt-6.1-sol", "global.openai.gpt-6.1-sol"]]]);
+  expect(matchModels(offerPrices(offer), files).map((model) => [model.id, model.global])).toEqual([
+    ["openai.gpt-6.1-sol", false],
+    ["global.openai.gpt-6.1-sol", true],
+  ]);
+});
+
+test("Bedrock updates standard-tier prices for the file's route and keeps the rest", () => {
+  const rows = offerPrices(offer).get("OpenAI GPT-6.1 Sol")!;
+  const authored = {
+    base_model: "openai/gpt-6.1-sol",
+    cost: { input: 1, output: 1, cache_read: 1, tiers: [{ tier: { type: "context", size: 272_000 }, input: 1, output: 1 }] },
+  } as unknown as ExistingModel;
+  const regional = buildBedrockModel({ id: "openai.gpt-6.1-sol", name: "", global: false, prices: rows } as BedrockModel, authored) as unknown as ExistingModel;
+  expect(regional.cost).toEqual({
+    input: 2.2, output: 11, cache_read: 0.11,
+    tiers: [{ tier: { type: "context", size: 272_000 }, input: 4.4, output: 16.5 }],
+  });
+  const global = buildBedrockModel({ id: "global.openai.gpt-6.1-sol", name: "", global: true, prices: rows } as BedrockModel, authored) as unknown as ExistingModel;
+  expect(global.cost?.input).toBe(2);
+  expect(global.cost?.output).toBe(10);
+});
