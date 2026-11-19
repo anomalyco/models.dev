@@ -22,6 +22,7 @@ import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
 import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
+import { amazonBedrock } from "./providers/amazon-bedrock.js";
 import { anthropic } from "./providers/anthropic.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
@@ -191,6 +192,7 @@ export const providers: {
   aiand: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
+  "amazon-bedrock": SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
@@ -242,6 +244,7 @@ export const providers: {
   aiand,
   aimlapi,
   ambient,
+  "amazon-bedrock": amazonBedrock,
   anthropic,
   baseten,
   chutes,
@@ -315,7 +318,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "amazon-bedrock", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
