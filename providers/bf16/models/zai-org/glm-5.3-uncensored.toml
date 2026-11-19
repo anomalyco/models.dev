@@ -1,0 +1,33 @@
+# Catalog & pricing: https://api.bf16.ai/v1/models and https://bf16.ai/models/glm-5-3-uncensored (accessed 2026-11-19).
+# Reasoning effort: reasoning_effort (Chat) / reasoning.effort (Responses) = none|low|medium|high|max; effort=none disables reasoning (no separate toggle per AGENTS.md).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 Flagship (Uncensored)"
+description = "Uncensored variant of GLM-5.3 hosted by bf16.ai for frontier coding, security analysis, and multi-step agent sessions."
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+stream_usage = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.bf16.ai/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.35
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 4.2
