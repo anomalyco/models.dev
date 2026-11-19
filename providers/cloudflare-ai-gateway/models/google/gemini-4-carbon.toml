@@ -2,7 +2,6 @@
 # Live 2026-10-19 on Gemini 4 Argon: a mid-conversation system message misses the warm cache (hoisted into the system instruction), so system_updates = false; response_format json_schema is enforced.
 # Effort: reasoning_effort = low|medium|high (maps to Gemini's thinking level; live 2026-11-11, 0 / 210 / 232 reasoning tokens).
 # Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/models/gemini-4-carbon
-# Mid-conversation, tool and cache flags backfilled 2026-11-18 from gemini-4-argon.toml on this host (same API layout; the sync doesn't carry them).
 schema = 2
 base_model = "google/gemini-4-carbon"
 
