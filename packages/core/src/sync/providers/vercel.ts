@@ -969,9 +969,20 @@ const CONDITION_FIELDS: Record<string, string> = {
   audio: "generate_audio",
   voice_control: "voice_control",
   input_video: "input_video",
+  max_pixels: "megapixels",
+  min_pixels: "megapixels",
+  duration_over_seconds: "duration",
+};
+// Range fields: `max_pixels` is an upper bound (written in megapixels), `duration_over_seconds` a lower one.
+const RANGE_FIELDS: Record<string, (value: number) => Range> = {
+  max_pixels: (value) => ({ lte: value / 1_000_000 }),
+  min_pixels: (value) => ({ gte: value / 1_000_000 }),
+  duration_over_seconds: (value) => ({ gt: value }),
 };
 
-type Conditions = Record<string, string | number | boolean>;
+type Range = { lte: number } | { gte: number } | { gt: number };
+type Conditions = Record<string, string | number | boolean | Range>;
+const sameCondition = (a: Conditions[string] | undefined, b: Conditions[string]) => JSON.stringify(a) === JSON.stringify(b);
 type Priced = { when: Conditions; price: number };
 
 class Unrepresentable extends Error {}
@@ -1106,6 +1117,14 @@ function conditions(entry: Record<string, unknown>, priceKeys: string[], skip: s
     }
     // An image size of "default" is the price when no size is requested.
     if (key === "size" && value === "default") continue;
+    // A band with both bounds is written by its upper bound; overrides are ordered so a narrower band applies last.
+    if (key === "min_pixels" && entry.max_pixels !== undefined) continue;
+    const range = RANGE_FIELDS[key];
+    if (range !== undefined) {
+      if (typeof value !== "number") throw new Unrepresentable(`${key} is not a number`);
+      when[field] = range(value);
+      continue;
+    }
     when[field] = value as string | number | boolean;
   }
   return Object.fromEntries(
@@ -1163,6 +1182,10 @@ function videoTokenPrices(value: unknown) {
   return entries;
 }
 
+// The tightest upper bound in an entry's conditions, so wider bands sort before narrower ones.
+const upperBound = (when: Conditions) =>
+  Math.min(...Object.values(when).map((item) => (typeof item === "object" && "lte" in item ? item.lte : Number.POSITIVE_INFINITY)));
+
 // One base price plus overrides. The base is the explicit price, else the entry
 // without conditions, else the first entry. Overrides are ordered by how many
 // conditions they have, so the most specific match is applied last, and entries
@@ -1176,12 +1199,14 @@ function conditionalPrice(entries: Priced[], base?: number) {
   const rest = entries
     .filter((entry) => entry !== fallback)
     .map((entry, index) => ({ entry, index }))
-    .sort((a, b) => Object.keys(a.entry.when).length - Object.keys(b.entry.when).length || a.index - b.index)
+    .sort((a, b) => Object.keys(a.entry.when).length - Object.keys(b.entry.when).length
+      || upperBound(b.entry.when) - upperBound(a.entry.when)
+      || a.index - b.index)
     .map(({ entry }) => entry);
   for (const entry of rest) {
     const current = overrides.reduce(
       (value, override) =>
-        Object.entries(override.when).every(([key, item]) => entry.when[key] === item) ? override.price : value,
+        Object.entries(override.when).every(([key, item]) => sameCondition(entry.when[key], item)) ? override.price : value,
       price,
     );
     if (current === entry.price) continue;
@@ -1192,7 +1217,7 @@ function conditionalPrice(entries: Priced[], base?: number) {
     ...(overrides.length > 0
       ? {
           overrides: overrides.map((override) => ({
-            when: Object.fromEntries(Object.entries(override.when).map(([key, item]) => [key, { equals: item }])),
+            when: Object.fromEntries(Object.entries(override.when).map(([key, item]) => [key, typeof item === "object" ? item : { equals: item }])),
             price: override.price,
           })),
         }
