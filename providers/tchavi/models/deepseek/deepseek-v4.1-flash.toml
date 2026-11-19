@@ -8,8 +8,8 @@
 # Limits: context 1,048,576 and output 393,216 are what Tchavi serves
 # (contextWindow / maxOutput on the same endpoint); both differ from the
 # publisher's entry, so they are stated rather than inherited.
-# Reasoning: Tchavi refuses no effort value on this row, measured on both of its
-# routes on 2026-10-20 and 2026-10-21.
+# Reasoning: Tchavi refuses no effort value on this row (measured on Chat
+# Completions, 2026-10-20 and 2026-10-21).
 # Tools: a forced tool_choice (required or a named tool) is refused with a 400,
 # so choice is auto/none. Also refused: a json_schema response_format (so no
 # structured_output), n greater than 1, logprobs, parallel_tool_calls and

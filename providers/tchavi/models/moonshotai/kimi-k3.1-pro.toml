@@ -12,7 +12,8 @@
 # wrote reasoning until max_tokens and returned no answer, billed in full, so
 # Tchavi refuses them with a 400 before the call. `none` and the default `max`
 # answered normally. xhigh is refused too.
-# Structured output: not probed on Tchavi, so left unset.
+# Structured output: probed live on Tchavi on 2026-11-19 (reasoning_effort none):
+# a strict json_schema response_format returned conforming JSON with a 200.
 # Cache: Moonshot's automatic prompt caching; cached tokens bill at the cache
 # read price.
 schema = 2
@@ -20,6 +21,7 @@ base_model = "moonshotai/kimi-k3.1-pro"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "max"], default = { type = "effort", value = "max" } }
+structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]

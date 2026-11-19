@@ -17,19 +17,24 @@
 # parameter: 'tools[0].custom'"), so `freeform` sits on [api.responses] only.
 # Structured output: json_schema is passed through to OpenAI and is not refused.
 # Cache: OpenAI's automatic prompt caching (1,024-token minimum) applies to the
-# passed-through request. prompt_cache_retention is refused with a 400, so the
-# extended-retention tier is not offered.
+# passed-through request. Explicit breakpoints pass through too, probed live on
+# Tchavi on 2026-11-19 on Chat Completions: prompt_cache_options.mode = explicit
+# with prompt_cache_breakpoint on a 1,815-token developer block wrote 1,803
+# tokens (cache_write_tokens) on the first call and read 1,803 (cached_tokens)
+# on the identical second call. Only the default 30m lifetime was probed;
+# prompt_cache_retention is refused with a 400, so the 12h tier is not offered.
 schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-cache = { implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tokens = 1_024 } }
 
 [api.chat-completions]
 
 [api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [cost.text.input]
