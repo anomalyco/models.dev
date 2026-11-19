@@ -1,0 +1,54 @@
+# Sources (accessed 2026-11-19):
+# - https://api.abliteratedllm.dev/v1/models (fields: https://abliteratedllm.dev/docs/models) for this ID:
+#   context_length 1048576, max_output_tokens 131072 (larger output budgets are lowered to it),
+#   input_modalities text, precision FP8, USD per 1M tokens input 0.90 / cached input 0.135 / output 1.80.
+#   No priority tier (pricing.priority is null). No charge for cache writes.
+# - https://abliteratedllm.dev/docs/chat-completions: reasoning_effort and unlisted fields are passed through unchanged;
+#   reasoning arrives in reasoning_content; image or video parts for a model that doesn't list them, and audio and file/PDF
+#   parts, fail with 400 unsupported_content; response_format json_schema works; prompt caching is automatic; every stream
+#   ends with a usage chunk.
+# - Same base URL also serves https://abliteratedllm.dev/docs/responses and https://abliteratedllm.dev/docs/messages.
+# Abliterated weights: https://huggingface.co/dealignai/GLM-5.3-CYBERSECURITY-FP8, open weights. A weight edit (no fine-tune)
+#   of zai-org/GLM-5.3, by way of the FP8 build JANGQ-AI/GLM-5.3-FP8, whose refusal removal targets cybersecurity work.
+#   Served in FP8 (e4m3), not compressed further to INT8, INT4 or FP4 (https://abliteratedllm.dev/docs/models, Precision),
+#   on dedicated GPUs operated by our infrastructure provider, Fireworks.
+# Input: text only, as in the lab file.
+# Reasoning: always on, no toggle. The model's chat template honors reasoning_effort "low" and "high" and runs any other
+#   value at max (https://abliteratedllm.dev/docs/chat-completions, Reasoning; runtime notes on the model card above).
+#   Live probe through this API (2026-11-19): none, minimal, low, medium, high, xhigh and max all returned 200, so no value
+#   is rejected; the levels that differ are low, high and max. The card's note that reasoning arrives in message.reasoning
+#   describes its own vLLM setup; on this host it arrives in reasoning_content.
+#   Same effort set, no toggle, as the other abliterated GLM-5.3 relays and the stock GLM-5.3 entries:
+#   providers/uncensuredai/models/glm-5.3-abliterated.toml, providers/refuseless/models/glm-5.3-abliterated.toml,
+#   providers/oathbreaker/models/oathbreaker-glm-5.3.toml, providers/fireworks-ai/models/accounts/fireworks/models/glm-5p3.toml
+# Effort: reasoning_effort = low|high|max
+# Also live 2026-11-19: a forced tool_choice and a strict json_schema response_format returned 200; Responses worked.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 Cyber Abliterated"
+description = "Abliterated GLM-5.3 (open weights: dealignai/GLM-5.3-CYBERSECURITY-FP8) whose refusal removal targets cybersecurity work, served in FP8 by AbliteratedLLM"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.135 }
+
+[cost.text.output]
+price = 1.8
