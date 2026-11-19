@@ -5,7 +5,8 @@
 # Prices are listed in NOK per 1M tokens (input 10, cached input 2, output 40), converted to USD at
 #   1 USD = 9.2978 NOK (mid-market, 2026-11-02, https://currencybeacon.com/rates/USD/NOK).
 # Cache: a cached-input price is published but the mechanism isn't documented, so implicit.
-# Effort: reasoning_effort = low|high|max, copied from the Z.AI entry for GLM-5.3-Flash (not probed on this host).
+# Effort: reasoning_effort = low|high|max (default max). Served on vLLM with the stock GLM-5.3-Flash chat template,
+#   which maps low and high and treats any other value as Max: https://huggingface.co/zai-org/GLM-5.3-Flash/blob/main/chat_template.jinja
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 status = "beta"
@@ -15,7 +16,7 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 
