@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { syncProvider, syncProviderMatrix } from "../src/sync/index.js";
@@ -81,13 +82,13 @@ test("new models and non-token services are skipped without creating issues", ()
 });
 
 test("runner keeps MIME types, header, Kimi cap and absent routes, and converges on a second sync", async () => {
-  const root = await mkdtemp("/private/tmp/modelsdev-quicksilver-test-");
+  const root = await mkdtemp(path.join(tmpdir(), "modelsdev-quicksilver-test-"));
   const repo = path.resolve(import.meta.dirname, "../../..");
   const modelsDir = path.join(root, "providers/quicksilverpro/models");
   try {
     await mkdir(modelsDir, { recursive: true });
     await copyFile(path.join(repo, "providers/quicksilverpro/provider.toml"), path.join(root, "providers/quicksilverpro/provider.toml"));
-    for (const [id, lab] of [["gpt-5.6-sol", "openai"], ["kimi-k3.1-pro", "moonshotai"]]) {
+    for (const [id, lab] of [["gpt-5.6-sol", "openai"], ["kimi-k3.1-pro", "moonshotai"], ["glm-5.3", "zhipuai"], ["qwen3.8-max", "alibaba"]]) {
       await mkdir(path.join(root, "models", lab), { recursive: true });
       await copyFile(path.join(repo, `models/${lab}/${id}.toml`), path.join(root, `models/${lab}/${id}.toml`));
       await copyFile(path.join(repo, `providers/quicksilverpro/models/${id}.toml`), path.join(modelsDir, `${id}.toml`));
@@ -95,12 +96,13 @@ test("runner keeps MIME types, header, Kimi cap and absent routes, and converges
     const kimiBefore = await readFile(path.join(modelsDir, "kimi-k3.1-pro.toml"), "utf8");
     const provider = { ...quicksilverpro, modelsDir, async fetchModels() {
       // Kimi's absence is not proof of retirement; it must remain byte-for-byte.
-      return response([model({ input_per_1m: 1.7 }), model({ id: "unknown-new-route" })]);
+      return response([model({ input_per_1m: 1.7 }), model({ id: "unknown-new-route" }),
+        model({ id: "glm-5.3" }), model({ id: "qwen3.8-max" })]);
     } };
     const first = await syncProvider(provider, { openIssues: false });
     expect(first.created).toBe(0);
     expect(first.deleted).toBe(0);
-    expect(first.updated).toBe(1);
+    expect(first.updated).toBe(3);
     const gpt = await readFile(path.join(modelsDir, "gpt-5.6-sol.toml"), "utf8");
     expect(gpt).toContain("# Output inherits the lab cap");
     const parsed = Bun.TOML.parse(gpt) as any;
@@ -110,6 +112,10 @@ test("runner keeps MIME types, header, Kimi cap and absent routes, and converges
     expect(parsed.cost.text.input.price).toBe(1.7);
     expect(parsed.capabilities.reasoning.effort).toEqual(["none", "low", "medium", "high", "xhigh", "max"]);
     expect(await readFile(path.join(modelsDir, "kimi-k3.1-pro.toml"), "utf8")).toBe(kimiBefore);
+    for (const id of ["glm-5.3", "qwen3.8-max"]) {
+      const synced = Bun.TOML.parse(await readFile(path.join(modelsDir, `${id}.toml`), "utf8")) as any;
+      expect(synced.limit?.context).toBeUndefined();
+    }
     const second = await syncProvider(provider, { openIssues: false });
     expect(second.updated).toBe(0);
     expect(second.deleted).toBe(0);

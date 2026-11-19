@@ -4,15 +4,14 @@
 # Reasoning baseline: providers/zhipuai/models/glm-5.3.toml
 # Relay controls: https://quicksilverpro.io/docs/quickstart/
 # Effort: reasoning_effort = low|high|max
+# Context inherits the lab's 1000000: the model page documents 1M; the catalog's
+# rounded 1048576 is not evidence of a larger host window.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
-
-[limit]
-context = 1048576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
