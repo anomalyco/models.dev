@@ -2,11 +2,14 @@
 #   contextLength 400000, input text and image, endpoint v1/chat/completions.
 #   Docs: https://build.intility.com/docs/external/inference/get-started/
 # Modalities: Intility lists only text and image (no video or PDF); the image formats are the JPEG/PNG the lab documents.
+#   PNG input checked live 2026-11-19.
 # Prices are listed in NOK per 1M tokens (input 10, cached input 2, output 40), converted to USD at
 #   1 USD = 9.2978 NOK (mid-market, 2026-11-02, https://currencybeacon.com/rates/USD/NOK).
 # Cache: a cached-input price is published but the mechanism isn't documented, so implicit.
 # Effort: reasoning_effort = low|high|max (default max). Served on vLLM with the stock GLM-5.3-Flash chat template,
 #   which maps low and high and treats any other value as Max: https://huggingface.co/zai-org/GLM-5.3-Flash/blob/main/chat_template.jinja
+# Reasoning comes back in delta.reasoning (checked live on POST /v1/chat/completions, 2026-11-19). reasoning_field = "reasoning"
+#   is valid in v2, but v1's interleaved.field only allows reasoning_content|reasoning_details, so it is left unset rather than wrong.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 status = "beta"

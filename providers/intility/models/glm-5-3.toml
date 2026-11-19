@@ -6,6 +6,8 @@
 # Cache: a cached-input price is published but the mechanism isn't documented, so implicit.
 # Effort: reasoning_effort = low|high|max (default max). Served on vLLM with the stock GLM-5.3 chat template,
 #   which maps low and high and treats any other value as Max: https://huggingface.co/zai-org/GLM-5.3/blob/main/chat_template.jinja
+# Reasoning comes back in delta.reasoning (checked live on POST /v1/chat/completions, 2026-11-19). reasoning_field = "reasoning"
+#   is valid in v2, but v1's interleaved.field only allows reasoning_content|reasoning_details, so it is left unset rather than wrong.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 

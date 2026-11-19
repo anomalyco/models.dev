@@ -3,9 +3,13 @@
 #   Docs: https://build.intility.com/docs/external/inference/get-started/
 # Prices are listed in NOK per 1M tokens (input 1, cached input 0.3), converted to USD at
 #   1 USD = 9.2978 NOK (mid-market, 2026-11-02, https://currencybeacon.com/rates/USD/NOK).
+# Cache: a cached-input price is published but the mechanism isn't documented, so implicit.
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen3-embedding-8b"
+
+[capabilities]
+cache = { implicit = true }
 
 [limit]
 context = 8_000
