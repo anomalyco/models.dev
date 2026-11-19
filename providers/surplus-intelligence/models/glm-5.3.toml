@@ -1,7 +1,14 @@
 # Effort: reasoning_effort = low|high|max (top-level field on /v1/chat/completions).
 # The catalog row lists reasoning_effort (GET https://api.surplusintelligence.ai/v1/models, 2026-11-19) and Surplus forwards it to the seller as sent (https://www.surplusintelligence.ai/docs/reference/reasoning). Levels mirror providers/openrouter/models/z-ai/glm-5.3.toml.
+# Live 2026-11-19, one request per level: every level above accepted; reasoning_content returned at low|high|max.
+# reasoning_field: reasoning comes back in reasoning_content, and Surplus accepted it back on an assistant tool-call turn (live 2026-11-19).
+# structured_output: the catalog row lists only response_format; a strict json_schema request returned the schema's enum value (live 2026-11-19).
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

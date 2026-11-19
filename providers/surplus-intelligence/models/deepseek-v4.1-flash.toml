@@ -1,7 +1,14 @@
 # Effort: reasoning_effort = none|low|high|max (top-level field on /v1/chat/completions). Off is effort=none; no toggle.
 # The catalog row lists reasoning_effort (GET https://api.surplusintelligence.ai/v1/models, 2026-11-19) and Surplus forwards it to the seller as sent (https://www.surplusintelligence.ai/docs/reference/reasoning). Levels mirror providers/openrouter/models/deepseek/deepseek-v4.1-flash.toml.
+# Live 2026-11-19, one request per level: every level above accepted; reasoning_content returned at low|high|max, none at none.
+# reasoning_field: reasoning comes back in reasoning_content, and Surplus accepted it back on an assistant tool-call turn (live 2026-11-19).
+# structured_output: the catalog row lists only response_format; a strict json_schema request returned the schema's enum value (live 2026-11-19).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

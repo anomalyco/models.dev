@@ -1,5 +1,6 @@
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max (top-level field on /v1/chat/completions). Off is effort=none; no toggle.
 # The catalog row lists reasoning_effort (GET https://api.surplusintelligence.ai/v1/models, 2026-11-19) and Surplus forwards it to the seller as sent (https://www.surplusintelligence.ai/docs/reference/reasoning). Levels mirror providers/openrouter/models/openai/gpt-5.6-luna.toml.
+# Live 2026-11-19, one request per level: every level above accepted; reasoning_content returned at low|medium|high|xhigh|max, none at none.
 schema = 2
 base_model = "openai/gpt-5.6-luna"
 

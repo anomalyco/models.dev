@@ -6,7 +6,9 @@
 # there is no fixed per-token price to publish. The catalog's `pricing` fields are
 # reference prices that offers are discounted from, not what a buyer pays.
 # https://www.surplusintelligence.ai/docs/marketplace/pricing
-# Chat Completions takes top-level `reasoning_effort` and forwards it as sent.
+# Chat Completions takes top-level `reasoning_effort` and forwards it to the seller,
+# rewritten for upstreams that need another shape (named in X-SI-Adapted-Params).
+# Reasoning comes back in `reasoning_content`.
 # https://www.surplusintelligence.ai/docs/reference/reasoning
 name = "Surplus Intelligence"
 npm = "@ai-sdk/openai-compatible"
