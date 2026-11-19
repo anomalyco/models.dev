@@ -5,11 +5,12 @@
 # Values verified against the production API. See https://docs.greenpt.ai/chat-completion
 # cache_read: discounted rate for cached prompt tokens. Cache writes are not
 # charged. See https://docs.greenpt.ai/prompt-caching
+# Input: JPEG, PNG, GIF and WebP images are read (checked on api.greenpt.ai 2026-11-19).
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
