@@ -1,5 +1,5 @@
 # AKI.IO uses reasoning_effort = none to disable reasoning
-# conext limit removed, now full context is supported (2026-11-17).
+# Context: aki.io lists a 256K-token context at https://aki.io/models (2026-11-17).
 # modalities image/jpeg and image/png input are now supported. Vision capability is listed 
 # at aki.io model catalog at https://aki.io/models (2026-11-17).
 # Prices: GET /api/models (checked 2026-11-17) list EUR per 1M tokens (net); converted
@@ -14,6 +14,9 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
+
+[limit]
+context = 256_000
 
 [cost.text.input]
 price = 0.10989
