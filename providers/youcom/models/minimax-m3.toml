@@ -5,11 +5,13 @@
 # but doesn't change reasoning length, and none doesn't disable it (tested live).
 # Controls: reasoning_effort is the only documented reasoning parameter (https://you.com/docs/api-reference/inference-router/create-chat-completion);
 # thinking and enable_thinking are not part of the public API, and thinking.type=disabled doesn't stop reasoning_content (tested live 2026-10-22).
+# Cache: automatic prefix caching, no markers; a repeated ~17k-token prompt returned usage.prompt_tokens_details.cached_tokens on the next request (tested live 2026-11-19).
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [capabilities]
 reasoning = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 524_288

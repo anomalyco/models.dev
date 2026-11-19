@@ -2,11 +2,13 @@
 # Effort: reasoning_effort = none|low|high|max
 # Moonshot's levels (low/high/max); none disables thinking (0 reasoning tokens). Tested live 2026-10-22.
 # Output: GET https://api.you.com/v1/models reports max_tokens = 131072 for kimi-k3 (checked 2026-11-19).
+# Cache: automatic prefix caching, no markers; a repeated ~17k-token prompt returned usage.prompt_tokens_details.cached_tokens on the next request (tested live 2026-11-19).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
 
 [limit]
 context = 1_000_000
