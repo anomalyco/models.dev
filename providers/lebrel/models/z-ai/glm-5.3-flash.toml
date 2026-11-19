@@ -7,9 +7,11 @@
 # No off switch: a request that disables thinking is refused with HTTP 400 (the model always thinks).
 # Effort: reasoning_effort = low|high|max (default max).
 # top_k: off. The router forwards it unchanged and Z.ai's Chat API takes temperature and top_p only (see
-# providers/zai). Not probed live.
+# providers/zai). A request carrying it was still answered (probed 2026-11-19); whether it has any effect was not
+# measured.
 # Output cap: max_tokens. The router accepts max_completion_tokens too but forwards it as sent, and Z.ai's
-# Chat API only takes max_tokens (see providers/zai). Not probed live.
+# Chat API only takes max_tokens (see providers/zai). Probed 2026-11-19: max_completion_tokens 16 was ignored
+# (the answer ran to 124 tokens) and max_tokens 16 was applied.
 # Lebrel's rates for this model are flat (no peak schedule).
 # Input: input_modalities in /v1/models lists text and file. PDF is kept; the router refuses images for this
 # route and the catalog does not list video.

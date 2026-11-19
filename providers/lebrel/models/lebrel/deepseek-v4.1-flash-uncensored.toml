@@ -7,10 +7,12 @@
 # Toggle: top-level "thinking": true|false on Chat Completions (default false). Reasoning text comes back in
 # message.reasoning, and in delta.reasoning when streaming. That field is not declared below because the v1
 # output cannot carry it: its interleaved field only takes "reasoning_content" or "reasoning_details".
-# No effort levels: thinking is on or off. The request normaliser in Lebrel's router repository
-# (internal/meter/meter.go) takes reasoning_effort only as "high" with thinking on and refuses it with thinking
-# off. Not probed live.
-# top_k: off. The docs' request fields name temperature, top_p and stop only; not probed live.
+# No effort levels are declared. With thinking on, reasoning_effort low, high and max are all accepted, but two
+# samples of each on one question showed no grading: 90 and 141, 112 and 187, 120 and 150 reasoning tokens, and
+# 137 with none named. With thinking off, a request that names reasoning_effort is refused with HTTP 400.
+# Probed 2026-11-19.
+# top_k: accepted as an integer (probed 2026-11-19: top_k 1 was answered, a string was refused with HTTP 400),
+# so the lab's value stands. Its effect on sampling was not measured.
 # Prices are the list rates. Lebrel admits requests from 40% of list while the node is quiet up to list with
 # normal use (GET https://lebrel.ai/api/drop/policy), and at twice list on the priority line. Neither is
 # modelled here.
@@ -33,7 +35,6 @@ description = "Lebrel's uncensored edition of DeepSeek V4.1 Flash 1017. Every an
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = false } }
 structured_output = true
-top_k = false
 stream_usage = true
 cache = { implicit = true }
 

@@ -8,6 +8,7 @@
 # Snapshot: Model Studio is called as qwen3.8-max, so this builds on the undated lab file, like
 # providers/alibaba/models/qwen3.8-max.toml. The OpenRouter fallback is pinned to qwen3.8-max-0902, which
 # Alibaba documents as an upgraded snapshot of it, and Lebrel's /v1/models names that snapshot as the revision.
+# Probed 2026-11-19: the receipt of a request served by Model Studio reports the served model as qwen3.8-max.
 # Toggle: enable_thinking true|false when Model Studio serves; the OpenRouter fallback always reasons.
 # Effort: reasoning_effort = low|medium|xhigh (default xhigh), Model Studio's levels.
 # Budget: thinking_budget (reasoning tokens), forwarded to Model Studio; same controls as providers/alibaba.

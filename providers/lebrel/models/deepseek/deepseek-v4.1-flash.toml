@@ -8,14 +8,17 @@
 # Toggle: thinking.type = enabled|disabled (default enabled); enable_thinking true|false is also accepted.
 # Effort: reasoning_effort = low|high|max (default high).
 # top_k: off. The router forwards it unchanged, and neither Model Studio nor DeepSeek's own API takes it for the
-# DeepSeek series (see providers/alibaba and providers/deepseek). Not probed live.
-# Output cap: max_tokens. Model Studio takes max_completion_tokens too, but the router forwards the client's field
-# as sent and DeepSeek's own API, the last fallback, only takes max_tokens (see providers/deepseek). Not probed live.
+# DeepSeek series (see providers/alibaba and providers/deepseek). A request carrying it was still answered (probed
+# 2026-11-19 on DeepSeek V4.1 Flash); whether it has any effect was not measured.
+# Output cap: max_tokens. Model Studio takes max_completion_tokens too (probed 2026-11-19 on DeepSeek V4.1 Flash: a
+# cap of 16 was applied), but the router forwards the client's field as sent and DeepSeek's own API, the last
+# fallback, only takes max_tokens (see providers/deepseek). The fallback was not reached in the probes.
 # Lebrel's rates for this model are flat (no peak schedule).
 # Input: input_modalities in /v1/models lists text, image and file. The lab file's image formats stand, and no
 # document type is declared: a PDF file part was refused by the upstream.
 # Limits: output 393,216 as Lebrel's catalog lists it and as providers/llmgateway-providers lists for DeepSeek on
-# Model Studio. Context stays at the lab's 1,000,000, which the Model Studio entries here carry. Lebrel's catalog
+# Model Studio; a request with max_tokens 393,216 was answered through Model Studio (probed 2026-11-19 on DeepSeek
+# V4.1 Flash). Context stays at the lab's 1,000,000, which the Model Studio entries here carry. Lebrel's catalog
 # admits 1,048,576, DeepSeek's own API figure, which was not probed through Model Studio.
 # Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
 # Stream usage: the router sets stream_options.include_usage on every streamed request itself.
