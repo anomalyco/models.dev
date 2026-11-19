@@ -8,7 +8,10 @@
 #   could be measured: completion tokens were 1200 and 1200 for low, 1200 and 1200 for medium, 929 and 1007 for xhigh,
 #   554 and 814 with the field omitted (1200 = cut at the cap). The levels listed are the lab's set, which the chat
 #   template reads; this test does not show a graded effect.
-# Top-level reasoning_effort was not tested.
+# No budget is listed: chat_template_kwargs.thinking_budget = 64 did not shorten the reasoning. Two requests per value
+#   at max_tokens 3000, none cut at the cap: completion tokens were 1120 and 741 with 64, 718 and 933 with 2048, 549
+#   and 444 with no budget.
+# Top-level reasoning_effort and thinking_budget were not tested.
 # Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
 # Output limit: 65,536 is where the VoltageGPU relay caps max_tokens for this id (the maximum output of the deployment
 #   serving it). GET /v1/models does not publish that value today. A request with max_tokens 200000 was answered 200

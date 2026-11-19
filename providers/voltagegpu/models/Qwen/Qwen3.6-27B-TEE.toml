@@ -10,6 +10,10 @@
 #   cut at the cap; 2097 characters with 2048, 2541 and 2299 with no budget). One request per value.
 # Top-level reasoning_effort and thinking_budget were not tested.
 # Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
+# Output limit: 65,536 is where the VoltageGPU relay caps max_tokens for this id (the maximum output of the deployment
+#   serving it). GET /v1/models does not publish that value today. A request with max_tokens 200000 was answered 200
+#   on 2026-11-19: the cap is applied without an error. It equals the lab file's value, so it is inherited, not
+#   repeated here.
 # Input: text and images, no video; image MIME types from the lab file. Image and video input were not tested on this
 #   id.
 schema = 2
