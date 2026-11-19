@@ -25,6 +25,7 @@ import { ambient } from "./providers/ambient.js";
 import { amazonBedrock } from "./providers/amazon-bedrock.js";
 import { cerebras } from "./providers/cerebras.js";
 import { anthropic } from "./providers/anthropic.js";
+import { azure } from "./providers/azure.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareAiGateway } from "./providers/cloudflare-ai-gateway.js";
@@ -194,6 +195,7 @@ export const providers: {
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
   "amazon-bedrock": SyncProvider<any>;
+  azure: SyncProvider<any>;
   cerebras: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
@@ -247,6 +249,7 @@ export const providers: {
   aimlapi,
   ambient,
   "amazon-bedrock": amazonBedrock,
+  azure,
   cerebras,
   anthropic,
   baseten,
@@ -321,7 +324,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "amazon-bedrock", "ambient", "anthropic", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
