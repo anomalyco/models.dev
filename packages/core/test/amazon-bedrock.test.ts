@@ -24,7 +24,7 @@ const offer = {
 };
 
 test("Bedrock matches an AWS model name to the local files of its lab model", () => {
-  const files = new Map([["gpt-6.1 sol", ["openai.gpt-6.1-sol", "global.openai.gpt-6.1-sol"]]]);
+  const files = [{ id: "openai.gpt-6.1-sol", name: "gpt-6.1 sol" }, { id: "global.openai.gpt-6.1-sol", name: "gpt-6.1 sol" }];
   expect(matchModels(offerPrices(offer), files).map((model) => [model.id, model.global])).toEqual([
     ["openai.gpt-6.1-sol", false],
     ["global.openai.gpt-6.1-sol", true],
@@ -45,4 +45,24 @@ test("Bedrock updates standard-tier prices for the file's route and keeps the re
   const global = buildBedrockModel({ id: "global.openai.gpt-6.1-sol", name: "", global: true, prices: rows } as BedrockModel, authored) as unknown as ExistingModel;
   expect(global.cost?.input).toBe(2);
   expect(global.cost?.output).toBe(10);
+});
+
+test("Bedrock reads Amazon-sold usage types, with the model ID when they carry one", () => {
+  expect(parseUsageType("USE1-moonshotai.kimi-k3-mantle-cache-write-tokens-30m-global-standard")).toEqual({
+    usageID: "moonshotai.kimi-k3", mantle: true, kind: "cache_write", ttl: "30m", longContext: false, global: true, tier: "standard",
+  });
+  expect(parseUsageType("USE1-Llama3-3-70B-input-tokens")).toEqual({
+    mantle: false, kind: "input", longContext: false, global: false, tier: "standard",
+  });
+  expect(parseUsageType("USE1-NovaPro-cache-read-input-token-count")).toMatchObject({ kind: "cache_read", tier: "standard" });
+  expect(parseUsageType("USE1-NovaPro-input-tokens-custom-model")).toBeUndefined();
+  expect(parseUsageType("USE1-NovaPro-input-video-token-count-flex")).toBeUndefined();
+});
+
+test("Bedrock prefers rows that name the file's model ID over a name match", () => {
+  const prices = new Map([["Kimi K3", [
+    { usageID: "moonshotai.kimi-k3", mantle: true, kind: "input" as const, longContext: false, global: false, tier: "standard", usd: 3.3 },
+  ]]]);
+  expect(matchModels(prices, [{ id: "moonshotai.kimi-k3", name: "something else" }]).map((model) => model.id)).toEqual(["moonshotai.kimi-k3"]);
+  expect(matchModels(prices, [{ id: "moonshot.kimi-k3-v1:0", name: "kimi k3" }])).toEqual([]);
 });

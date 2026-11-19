@@ -30,6 +30,9 @@ const Offer = z.object({
 
 // One price row, read from a usage type such as `USE1-MP:USE1_cache_write_tokens_1h_long_ctx_global_standard-Units`.
 export interface BedrockPrice {
+  // The model ID some usage types carry (`moonshotai.kimi-k3` in `USE1-moonshotai.kimi-k3-mantle-input-tokens-standard`).
+  usageID?: string;
+  mantle?: boolean;
   kind: "input" | "output" | "cache_read" | "cache_write";
   ttl?: string;
   longContext: boolean;
@@ -46,17 +49,52 @@ export interface BedrockModel {
   prices: BedrockPrice[];
 }
 
-const USAGE = /_(input|output|cache_read|cache_write)_tokens(?:_(\d+[mh]))?(_long_ctx)?(_global)?_([a-z]+)-Units$/;
+// Marketplace models: `USE1-MP:USE1_cache_write_tokens_1h_long_ctx_global_standard-Units`.
+const MARKETPLACE = /_(input|output|cache_read|cache_write)_tokens(?:_(\d+[mh]))?(_long_ctx)?(_global)?_([a-z]+)-Units$/;
+// Amazon-sold models: `USE1-<name>[-mantle]-<kind>-tokens[-<modifier>...]`, where name is a display slug
+// (`Llama3-3-70B`) or a model ID (`deepseek.v3.2`), and modifiers come in any order.
+const FIRST_PARTY = /^[A-Z0-9]+-(.+?)-(mantle-)?(input|output|cache-read|cache-write)(?:-input)?-tokens?(?:-count)?((?:-[a-z0-9]+)*)$/;
+const TIERS = new Set(["standard", "flex", "priority", "batch", "ultrafast"]);
 
 export function parseUsageType(usageType: string): Omit<BedrockPrice, "usd"> | undefined {
-  const match = USAGE.exec(usageType);
-  if (match === null) return undefined;
+  const marketplace = MARKETPLACE.exec(usageType);
+  if (marketplace !== null) {
+    return {
+      kind: marketplace[1] as BedrockPrice["kind"],
+      ...(marketplace[2] === undefined ? {} : { ttl: marketplace[2] }),
+      longContext: marketplace[3] !== undefined,
+      global: marketplace[4] !== undefined,
+      tier: marketplace[5]!,
+    };
+  }
+  const firstParty = FIRST_PARTY.exec(usageType);
+  if (firstParty === null) return undefined;
+  const modifiers = firstParty[4]!
+    .replace("-long-ctx", "-longctx")
+    .replace("-cross-region-global", "-global")
+    .split("-")
+    .filter((part) => part !== "");
+  let ttl: string | undefined;
+  let longContext = false;
+  let global = false;
+  let tier = "standard";
+  for (const part of modifiers) {
+    if (/^\d+[mh]$/.test(part)) ttl = part;
+    else if (part === "longctx") longContext = true;
+    else if (part === "global") global = true;
+    else if (TIERS.has(part)) tier = part;
+    // custom-model, latency-optimized and anything unknown aren't on-demand token prices for a catalog model.
+    else return undefined;
+  }
+  const name = firstParty[1]!;
   return {
-    kind: match[1] as BedrockPrice["kind"],
-    ...(match[2] === undefined ? {} : { ttl: match[2] }),
-    longContext: match[3] !== undefined,
-    global: match[4] !== undefined,
-    tier: match[5]!,
+    ...(name.includes(".") ? { usageID: name } : {}),
+    mantle: firstParty[2] !== undefined,
+    kind: firstParty[3]!.replace("-", "_") as BedrockPrice["kind"],
+    ...(ttl === undefined ? {} : { ttl }),
+    longContext,
+    global,
+    tier,
   };
 }
 
@@ -72,8 +110,9 @@ export function offerPrices(raw: unknown) {
     if (parsed === undefined) continue;
     for (const term of Object.values(offer.terms.OnDemand[product.sku] ?? {})) {
       for (const dimension of Object.values(term.priceDimensions)) {
-        if (dimension.unit !== "1M tokens") continue;
-        const usd = Number(dimension.pricePerUnit.USD);
+        const scale = dimension.unit === "1M tokens" ? 1 : dimension.unit === "1K tokens" ? 1000 : undefined;
+        if (scale === undefined) continue;
+        const usd = Number(dimension.pricePerUnit.USD) * scale;
         if (!Number.isFinite(usd)) continue;
         const rows = byModel.get(model) ?? [];
         rows.push({ ...parsed, usd: Number(usd.toFixed(6)) });
@@ -89,35 +128,48 @@ export function offerPrices(raw: unknown) {
 function route(id: string): "regional" | "global" | undefined {
   if (id.startsWith("global.")) return "global";
   if (id.startsWith("us.")) return "regional";
-  if (/^(eu|apac|jp|au|ca|us-gov)\./.test(id)) return undefined;
+  if (/^(eu|apac|jp|au|ca|in|us-gov)\./.test(id)) return undefined;
   return "regional";
 }
 
 const normalize = (name: string) => name.toLowerCase().replace(/^(openai|anthropic|amazon|meta|mistral|cohere)\s+/, "").trim();
 
-/** Local files by the normalized name of their lab model, read from `base_model`. */
-export async function localFilesByName(dir = MODELS_DIR) {
-  const byName = new Map<string, string[]>();
+export interface LocalFile {
+  id: string;
+  // The normalized lab name, or undefined when the file has no `base_model`.
+  name?: string;
+}
+
+/** Local files this offer can price, with their lab model's normalized name. */
+export async function localFiles(dir = MODELS_DIR): Promise<LocalFile[]> {
+  const files: LocalFile[] = [];
   for await (const file of new Bun.Glob("*.toml").scan(dir)) {
     const id = file.slice(0, -".toml".length);
     if (route(id) === undefined) continue;
-    const parsed = Bun.TOML.parse(await Bun.file(path.join(dir, file)).text()) as { base_model?: string };
-    if (parsed.base_model === undefined) continue;
-    const name = (modelMetadata(parsed.base_model) as { name?: string }).name;
-    if (name === undefined) continue;
-    const key = normalize(name);
-    byName.set(key, [...(byName.get(key) ?? []), id]);
+    const parsed = Bun.TOML.parse(await Bun.file(path.join(dir, file)).text()) as { base_model?: string; name?: string };
+    const name = parsed.base_model === undefined ? parsed.name : (modelMetadata(parsed.base_model) as { name?: string }).name;
+    files.push({ id, ...(name === undefined ? {} : { name: normalize(name) }) });
   }
-  return byName;
+  return files;
 }
 
-/** One entry per local file an AWS model name matches exactly. */
-export function matchModels(prices: Map<string, BedrockPrice[]>, files: Map<string, string[]>): BedrockModel[] {
+const stem = (id: string) => id.replace(/^(global|us)\./, "");
+
+/**
+ * Price rows per local file: rows whose usage type names the file's model ID, otherwise rows of the AWS model whose
+ * name matches the file's lab name (leaving out Mantle rows, which carry their own IDs).
+ */
+export function matchModels(prices: Map<string, BedrockPrice[]>, files: LocalFile[]): BedrockModel[] {
+  const all = [...prices].flatMap(([name, rows]) => rows.map((row) => ({ name, row })));
   const models: BedrockModel[] = [];
-  for (const [name, rows] of prices) {
-    for (const id of files.get(normalize(name)) ?? []) {
-      models.push({ id, name, global: route(id) === "global", prices: rows });
-    }
+  for (const file of files) {
+    const byID = all.filter(({ row }) => row.usageID === stem(file.id));
+    const byName = byID.length > 0 || file.name === undefined
+      ? []
+      : all.filter(({ name, row }) => normalize(name) === file.name && row.mantle !== true);
+    const rows = byID.length > 0 ? byID : byName;
+    if (rows.length === 0) continue;
+    models.push({ id: file.id, name: rows[0]!.name, global: route(file.id) === "global", prices: rows.map(({ row }) => row) });
   }
   return models;
 }
@@ -189,14 +241,14 @@ export const amazonBedrock = {
       if (!response.ok) throw new Error(`Bedrock price list ${offer} failed: ${response.status} ${response.statusText}`);
       return response.json();
     }));
-    return { offers, files: Object.fromEntries(await localFilesByName()) };
+    return { offers, files: await localFiles() };
   },
   parseModels(raw) {
-    const { offers, files } = raw as { offers: unknown[]; files: Record<string, string[]> };
+    const { offers, files } = raw as { offers: unknown[]; files: LocalFile[] };
     const prices = new Map<string, BedrockPrice[]>();
     for (const offer of offers) for (const [name, rows] of offerPrices(offer)) prices.set(name, [...(prices.get(name) ?? []), ...rows]);
     if (prices.size === 0) throw new Error("Bedrock price list had no token prices; refusing to sync");
-    return matchModels(prices, new Map(Object.entries(files)));
+    return matchModels(prices, files);
   },
   translateModel(model, context) {
     const authored = context.authored(model.id);
