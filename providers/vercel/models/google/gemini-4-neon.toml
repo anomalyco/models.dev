@@ -1,0 +1,32 @@
+schema = 2
+base_model = "google/gemini-4-neon"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 15
