@@ -1,0 +1,38 @@
+# https://novita.ai/models/model-detail/tencent-hy4-flash
+# GET https://api.novita.ai/openai/v1/models (2026-11-16): $0.07 input / $0.281 output / $0.003 cache read per MTok
+#   (matches Tencent's list price, https://hy.tencent.ai/research/hy4-flash), context_size 1_000_000,
+#   max_output_tokens 64_000, input text + image, endpoints chat/completions, anthropic, responses.
+# Effort: reasoning_effort = none|high; none (or thinking.type = disabled) suppresses reasoning and an unknown value is
+#   rejected with a 400 (live 2026-11-16). Same native set as novita-ai/tencent/hy4; other accepted values are aliases.
+# Cache: implicit prefix cache (cached_tokens 10752 of 10830 on a repeated prompt, live 2026-11-16).
+# system_updates = true (Chat Completions only, the API tested): cache hit right after a mid-conversation system message (live 2026-11-16, 10752 of 10856 prompt tokens cached).
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.035
+cache = { read = 0.0015 }
+
+[cost.text.output]
+price = 0.1405

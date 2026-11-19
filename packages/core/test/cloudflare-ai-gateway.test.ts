@@ -447,12 +447,12 @@ test("takes tool_choice values from the catalog schema when it names them", () =
 
 test("native routes take the lab's own tool fields, with the schema's choice when the lab has none", () => {
   const schema = { properties: { tool_choice: { type: "string", enum: ["auto", "none"] } } };
-  const current = { supported: true, updates: true, strict: true, search: true, choice: ["auto"] };
+  const current = { supported: true, updates: ["add", "remove", "replace"], strict: true, search: true, choice: ["auto"] };
   // The lab's fields replace the file's, keeping fields the lab doesn't own (updates).
   expect(gatewayTools(current, { strict: true, choice: ["auto", "none", "required", "tool"] }, undefined))
-    .toEqual({ supported: true, updates: true, strict: true, choice: ["auto", "none", "required", "tool"] });
-  expect(gatewayTools(current, { strict: true }, schema)).toEqual({ supported: true, updates: true, choice: ["auto", "none"], strict: true });
-  expect(gatewayTools(current, { choice: ["auto"] }, schema)).toEqual({ supported: true, updates: true, choice: ["auto"] });
+    .toEqual({ supported: true, updates: ["add", "remove", "replace"], strict: true, choice: ["auto", "none", "required", "tool"] });
+  expect(gatewayTools(current, { strict: true }, schema)).toEqual({ supported: true, updates: ["add", "remove", "replace"], choice: ["auto", "none"], strict: true });
+  expect(gatewayTools(current, { choice: ["auto"] }, schema)).toEqual({ supported: true, updates: ["add", "remove", "replace"], choice: ["auto"] });
   expect(gatewayTools({ supported: false }, { strict: true }, schema)).toEqual({ supported: false });
 });
 
@@ -476,12 +476,12 @@ test("each gateway API takes the lab's tool fields for its protocol", () => {
 
   const main = "@opencode/ai/providers/cloudflare-ai-gateway";
   const current = {
-    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { search: true, updates: true } } },
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { search: true, updates: ["add", "remove", "replace"] } } },
     "chat-completions": { base_url: "stale", capabilities: { tools: { search: true } } },
   };
   // Tool fields are replaced per table; other capabilities and `updates` are kept, and an empty table loses capabilities.
   expect(gatewayApis(current, "responses", ["responses", "chat-completions"], { responses: { strict: true }, "chat-completions": {} })).toEqual({
-    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { strict: true, updates: true } } },
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { strict: true, updates: ["add", "remove", "replace"] } } },
     "chat-completions": {
       base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
       sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: main },
@@ -523,6 +523,8 @@ test("syncs Jev through shared TypeSafe metadata without inventing tool support"
       base_model: "typesafe/jev-1.13.0",
       cost: { input: 0.042, output: 0 },
       limit: { context: 32_000 },
+      provider: { api: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai" },
+      modalities: { input: ["text"], output: ["text"] },
     });
   } finally {
     globalThis.fetch = originalFetch;
@@ -1066,6 +1068,33 @@ test("reads image and video route modalities from the request schema", () => {
     .toThrow("the route takes video input but the lab lists no video MIME types");
   // Inputs carried in a content-parts array aren't read; the lab's modalities apply.
   expect(routeModalities("video", { properties: { content: {}, duration: {} } }, lab)).toBeUndefined();
+});
+
+test("reads image output formats including gif", () => {
+  const lab = { modalities: { input: ["text"], output: ["image/png", "image/gif"] } };
+  expect(routeModalities("image", {
+    properties: { prompt: {}, output_format: { enum: ["png", "webp", "jpeg", "gif"] } },
+  }, lab)).toEqual({ input: ["text"], output: ["image/png", "image/webp", "image/jpeg", "image/gif"] });
+});
+
+test("prices a model with several upstreams from the first one", () => {
+  const upstreams = [
+    { id: "first", pricing: { input_tokens: 2, output_tokens: 10, input_cached_tokens: 0.2 } },
+    { id: "second", pricing: { input_tokens: 1.8, output_tokens: 9, input_cached_tokens: 0.18 } },
+  ];
+  const catalog = { model_id: "openai/gpt-4.1", task: "Text Generation", context_length: 1_000_000, provider_details: upstreams };
+  expect(buildCloudflareAiGatewayModel(catalog).cost).toEqual({ input: 2, output: 10, cache_read: 0.2 });
+
+  const { doc } = buildCloudflareAiGatewayMediaModel(
+    { model_id: "minimax/h3", task: "Text-to-Video", provider_details: [
+      { id: "first", pricing: { default: 0.5 } },
+      { id: "second", pricing: { default: 0.4 } },
+    ] },
+    undefined,
+    { base_model: "minimax/MiniMax-H3" },
+  );
+  expect(JSON.stringify(doc.cost)).toContain("0.5");
+  expect(JSON.stringify(doc.cost)).not.toContain("0.4");
 });
 
 function testSyncProvider(modelsDir: string, id: string) {

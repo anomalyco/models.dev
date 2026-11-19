@@ -1,0 +1,28 @@
+# Released 2025-12-03: https://ir.kuaishou.com/news-releases/news-release-details/kling-ai-launches-video-26-model-simultaneous-audio-visual
+# Sources (accessed 2026-11-12):
+# - https://kling.ai/document-api/guides/capability-map/video (Kling 2.6, API ID kling-v2-6; motion control is available for 3.0 and 2.6)
+# - https://kling.ai/document-api/api/video/2-6/image-to-video (images .jpg/.jpeg/.png)
+# - https://kling.ai/document-api/api/video/motion-control (reference motion video .mp4/.mov)
+# Output: MP4; generated sound is a track inside the MP4, so no audio MIME type is listed.
+schema = 2
+v2_only = true
+type = "video"
+name = "Kling VIDEO 2.6"
+description = "Kling video model with simultaneous audio-visual generation, first and last frame control and motion control"
+open_weights = false
+release_date = "2025-12-03"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -8,7 +8,7 @@
 #   system_updates = true: after a system message sent after the first turn, 8056 of 8122 prompt tokens still came from the cache, so it stays in place.
 #   effort_updates = false: changing reasoning_effort low → high on the last turn left 0/0 cached tokens in 2 trials.
 #   Changing the top-level tools list on the last turn left 0/0 cached tokens in 2 trials (tools render before the messages), which doesn't count as tools.updates.
-# Mid-conversation, live Chat Completions test (2026-10-27): tools.updates = true (add only): Kimi's tool-carrying system message
+# Mid-conversation, live Chat Completions test (2026-10-27): tools.updates = ["add"] (add only): Kimi's tool-carrying system message
 #   ({role: "system", tools: [...]}, no content) after the last user turn was answered with a call to the added tool and kept the cache
 #   [cached/prompt tokens, control -> test: 8230/8231 -> 8192/8341]. A late system message was obeyed in the same run [8230/8231 -> 8192/8250].
 #   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested,
@@ -30,7 +30,7 @@ cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-capabilities = { system_updates = true, tools = { updates = true } }
+capabilities = { system_updates = true, tools = { updates = ["add"] } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

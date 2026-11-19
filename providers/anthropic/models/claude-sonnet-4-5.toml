@@ -6,6 +6,7 @@
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }

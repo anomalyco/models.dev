@@ -1,0 +1,28 @@
+# Source (accessed 2026-10-25): https://inference.phala.com/v1/models
+# Effort: reasoning_effort = low|high|max (accepted 2026-10-25)
+# Modalities: catalog input_modalities text,image,video (no pdf listed); video uses lab MIME types.
+# Limits: catalog context_length 1048576, max_output_length 131072; cache: pricing.input_cache_read.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

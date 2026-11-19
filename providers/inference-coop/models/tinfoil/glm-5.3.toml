@@ -1,0 +1,23 @@
+# Source: https://git.inference.coop/co-op/docs/src/branch/main/models.md (accessed 2026-11-01):
+# served on the Tinfoil tier (TEE enclaves), $1.80/$5.75 per 1M tokens with $0.45 cached input, 1M context.
+# Reasoning surface, cache, and context copied from the underlying host entry
+# (providers/tinfoil/models/glm-5-3.toml); reasoning_effort accepted by the
+# gateway (probe, 2026-11-01). Implicit caching verified live through the gateway
+# (2026-11-02): a repeated prompt returned a nonzero prompt_tokens_details.cached_tokens.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 5.75

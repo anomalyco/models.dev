@@ -11,8 +11,8 @@ reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
 [cost.text.input]
-price = 0.325
-cache = { write = 0.40625 }
+price = 0.5
+cache = { write = 0.625, read = 0.05 }
 
 [cost.text.output]
-price = 1.95
+price = 3

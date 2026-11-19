@@ -463,7 +463,7 @@ last_updated = "2026-09-15"
 reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = true
 system_updates = true
-tools = { supported = true, updates = false }
+tools = { supported = true, updates = [] }
 cache = { implicit = true }
 
 [cost.text.input]

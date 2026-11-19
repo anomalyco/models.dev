@@ -12,7 +12,7 @@ context = 8_192
 
 [api.embeddings]
 base_url = "https://router.huggingface.co/deepinfra/v1/openai"
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.01

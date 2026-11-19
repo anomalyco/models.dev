@@ -1,9 +1,7 @@
 schema = 2
+base_model = "google/gemini-omni-1.2-flash"
 name = "Google: Gemini Omni 1.2 Flash"
 description = "Gemini Omni 1.2 Flash is Google's native multimodal video generation and editing model, the successor to Gemini Omni 1.1 Flash. It generates clips up to 15 seconds long with native..."
-family = "gemini"
-open_weights = false
-release_date = "2026-11-05"
 
 [modalities]
 input = ["text", "image", "video", "application/pdf"]
@@ -14,10 +12,6 @@ tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "high"] }
 structured_output = false
 temperature = true
-
-[limit]
-context = 131_072
-output = 65_536
 
 [cost.text.input]
 price = 1.5

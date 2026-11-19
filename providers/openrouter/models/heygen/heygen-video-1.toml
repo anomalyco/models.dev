@@ -10,4 +10,4 @@ base_model = "heygen/heygen-video-1"
 
 [api.videos]
 base_url = "https://openrouter.ai/api/v1"
-sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "none" }
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "@opencode/ai/providers/openrouter/videos" }

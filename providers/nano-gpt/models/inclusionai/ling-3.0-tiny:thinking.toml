@@ -1,13 +1,6 @@
 schema = 2
+base_model = "inclusionai/ling-3.0-tiny"
 name = "Ling 3.0 Tiny Thinking"
-description = "Ling 3.0 Tiny Thinking enables visible reasoning on inclusionAI's compact 7.9B-parameter Mixture-of-Experts model for harder agent tasks, coding, planning, function calling, and long-context workflows."
-family = "ling"
-open_weights = false
-release_date = "2026-11-07"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
@@ -17,7 +10,6 @@ structured_output = false
 [limit]
 context = 262_144
 input = 262_144
-output = 32_768
 
 [cost.text.input]
 price = 0.015

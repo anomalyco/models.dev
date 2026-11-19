@@ -9,7 +9,7 @@ description = "Embedding model for semantic search, retrieval, clustering, and r
 output = 1_024
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.01

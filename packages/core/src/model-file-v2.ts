@@ -176,6 +176,7 @@ export function patchModelV2(
   }
   if (doc.metadata !== undefined) next.metadata = doc.metadata;
   if (doc.v2_only !== undefined) next.v2_only = doc.v2_only;
+  if (doc.recommended_api !== undefined) next.recommended_api = doc.recommended_api;
   return next;
 }
 
@@ -396,7 +397,7 @@ function uniformFactor(base: Record<string, number>, mode: Record<string, number
 // Writes a v2 provider model file body (no header).
 export function formatModelV2(doc: Doc) {
   const out: string[] = [];
-  for (const key of ["schema", "v2_only", "base_model", "base_model_omit", ...IDENTITY]) {
+  for (const key of ["schema", "v2_only", "base_model", "base_model_omit", ...IDENTITY, "recommended_api"]) {
     if (doc[key] !== undefined) out.push(`${key} = ${formatTomlValue(doc[key])}`);
   }
   for (const table of ["modalities", "capabilities", "limit"]) {

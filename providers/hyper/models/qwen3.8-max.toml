@@ -9,7 +9,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 
 [limit]
 output = 65_536

@@ -1,0 +1,29 @@
+# Pricing: https://ai.klavo.ru/models/gpt-oss-120b lists 13 / 4 / 50 RUB per 1M input / cached input / output tokens
+# (checked 2026-11-11); RUB converted to USD at the CBR rate 82.5486 RUB/USD (2026-11-11), rounded to 4 decimals.
+# Klavo AI is a relay. Input types, structured_output and cache follow the same-model entry
+# providers/openrouter/models/openai/gpt-oss-120b.toml. Limits and reasoning controls are this API's own.
+# Limits: GET https://api.klavo.ru/v1/models reports context_length 131_072 and meta.max_output 117_964 (checked
+# 2026-11-11); a request with max_tokens = 117_964 was accepted live on 2026-11-10. The OpenRouter endpoints of this
+# model report the same max_completion_tokens (https://openrouter.ai/api/v1/models/openai/gpt-oss-120b/endpoints).
+# Cache: implicit, done by the hosts behind the API. Cached input tokens come back in
+# usage.prompt_tokens_details.cached_tokens and are billed at the cache price below. No TTL is published.
+# Effort: reasoning_effort = low|medium|high; other levels map to the nearest.
+# Live check 2026-11-10 through https://api.klavo.ru/v1, 2 requests per variant, median reasoning tokens: none keeps
+# reasoning (104 tokens), so there is no off switch; low 22, medium 82, high 204.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 117_964
+
+[cost.text.input]
+price = 0.1575
+cache = { read = 0.0485 }
+
+[cost.text.output]
+price = 0.6057

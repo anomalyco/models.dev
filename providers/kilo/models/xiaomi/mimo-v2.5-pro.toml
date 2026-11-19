@@ -19,8 +19,8 @@ output = 235_929
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.435
-cache = { read = 0.0036 }
+price = 0.48
+cache = { read = 0.096 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
@@ -28,7 +28,7 @@ price = 2
 cache = { read = 0.4 }
 
 [cost.text.output]
-price = 0.87
+price = 1.8
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 256_000 } }

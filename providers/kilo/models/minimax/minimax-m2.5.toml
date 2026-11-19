@@ -11,11 +11,11 @@ reasoning = { supported = true, effort = ["high"] }
 structured_output = true
 
 [limit]
-context = 65_536
-output = 58_982
+context = 196_608
+output = 176_947
 
 [cost.text.input]
-price = 0.3
+price = 0.295
 cache = { read = 0.06 }
 
 [cost.text.output]

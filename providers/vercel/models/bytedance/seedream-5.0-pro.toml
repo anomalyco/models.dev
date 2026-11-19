@@ -26,10 +26,3 @@ output = 0
 [api.images]
 base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/images" }
-
-[cost.text.input]
-price = 0.003
-
-[cost.image.output]
-unit = "image"
-price = 0.035

@@ -1,0 +1,23 @@
+schema = 2
+base_model = "google/gemini-4-carbon"
+name = "Google: Gemini 4 Carbon"
+description = "Gemini 4 Carbon is a frontier Gemini 4 model from Google for coding, agentic and complex reasoning work. It takes text, image, audio, video and file input, supports long decode..."
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+output = 943_718
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 0.1875 }
+
+[cost.text.output]
+price = 10
+reasoning = 10
+
+[cost.web_search]
+price = 28

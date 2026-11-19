@@ -1,3 +1,4 @@
+# Output limit: max_completion_tokens defaults to 131072 and "can be set up to 1048576" for the K3-series models, listed as kimi-k3.1-pro, kimi-k3.1-pro-highspeed and kimi-k3 (https://platform.kimi.ai/docs/api/chat, accessed 2026-11-13). The limit is the maximum, not the default.
 # Sources:
 # - Release: https://www.kimi.com/blog/kimi-k3, https://platform.kimi.ai/docs/guide/kimi-k3-quickstart
 # - 1M context, max_completion_tokens default 131072: https://platform.kimi.ai/docs/api/chat
@@ -46,7 +47,7 @@ top_k = false
 
 [limit]
 context = 1_048_576
-output = 131_072
+output = 1_048_576
 
 [[benchmarks]]
 name = "DeepSWE"

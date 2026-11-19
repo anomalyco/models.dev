@@ -1,0 +1,39 @@
+# Sources (accessed 2026-11-18):
+# - https://commandline.microsoft.com/microsoft-decision-model-ga/ (GA 2026-11-17): based on Gemma 4 26B A4B; input
+#   $0.042 per 1M tokens (Foundry Global Standard), output free.
+# - https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision: judges
+#   text, JSON or images (base64 assets referenced from the state) and returns typed numerical decisions; nothing is
+#   generated. No sampling parameters. Its image example is a PNG asset (`"format": "png"`); no other type is documented.
+# Context: Microsoft documents none; 32,768 is OpenRouter's /api/v1/models context_length.
+schema = 2
+v2_only = true
+type = "decision"
+name = "Microsoft-Decision-1.1"
+description = "Microsoft decision model that returns calibrated probabilities for typed yes/no, choice and score questions about text, JSON and images"
+open_weights = false
+release_date = "2026-11-17"
+
+[modalities]
+input = ["text", "image/png"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0
+
+[[links]]
+label = "Announcement"
+url = "https://commandline.microsoft.com/microsoft-decision-model-ga/"
+type = "announcement"
+
+[[links]]
+label = "Docs"
+url = "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision"
+type = "docs"

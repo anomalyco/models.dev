@@ -158,6 +158,21 @@ describe("v2 API tables", () => {
     ]);
   });
 
+  test("recommended_api must name one of the model's tables", () => {
+    const recommended = (api: Record<string, unknown> | undefined, recommended_api: string) => {
+      const result = AuthoredModelV2.safeParse({ id: "m", base_model: "lab/m", api, recommended_api });
+      return result.success ? [] : result.error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`);
+    };
+    expect(recommended({ "generate-content": {}, interactions: {} }, "interactions")).toEqual([]);
+    expect(recommended({ "generate-content": {}, "chat-completions": {} }, "interactions")).toEqual([
+      'recommended_api: recommended_api = "interactions" must name one of the model\'s [api.*] tables: generate-content, chat-completions',
+    ]);
+    expect(recommended(undefined, "interactions")).toEqual([
+      'recommended_api: recommended_api = "interactions" needs an [api.interactions] table, but the model has no [api.*] tables',
+    ]);
+    expect(recommended({ responses: {} }, "not-a-protocol")).not.toEqual([]);
+  });
+
   test("reasoning_field is only allowed on chat-completions tables", () => {
     expect(issues({ "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } })).toEqual([]);
     expect(issues({ responses: { compatibility: { reasoning_field: "reasoning_content" } } })).toEqual([

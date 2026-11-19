@@ -5,7 +5,7 @@ base_model = "google/gemini-3.1-flash-image"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = false
 system_updates = true
 

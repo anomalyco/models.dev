@@ -11,7 +11,7 @@ v2_only = true
 base_model = "google/gemini-embedding-2"
 
 [api.embed-content]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/google-vertex/embeddings" }
 
 [cost.text.input]
 price = 0.2

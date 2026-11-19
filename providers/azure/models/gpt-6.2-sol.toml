@@ -1,0 +1,72 @@
+# Availability, APIs, and limits: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#gpt-62
+# Responses tool choice and custom formats (text, Lark, regex): https://learn.microsoft.com/en-us/rest/api/microsoft-foundry/azureopenai/responses
+# Live on Azure (2026-11-18): text, Lark, and regex worked on both APIs; a restrictive grammar enforced ZZ plus three digits.
+# Chat Completions accepts named custom tools but rejects function tools with reasoning effort; strict stays Responses-only.
+# Responses tool search (GPT-5.4+) and in-history tool additions: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/tool-search
+# Live on Azure (2026-11-18): in-history developer messages preserve the cached prefix on both APIs.
+# On Responses, tool search, additions, and developer-message removals worked.
+# Live Responses continuation via previous_response_id (2026-11-18): replacing a tool with additional_tools
+# returned HTTP 200 and preserved the cached prefix, but the call still used old_field rather than new_field.
+# configuration_update from low to medium also returned HTTP 200 and preserved the cached prefix, but the
+# response reported low. A request-level medium control reported medium.
+# Store: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses and https://learn.microsoft.com/en-us/azure/foundry/openai/latest
+# Cache controls: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/prompt-caching
+# Web search is billed separately per 1,000 Bing requests: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing
+# https://www.microsoft.com/en-us/bing/apis/grounding-pricing
+# Standard pricing, cache write TTLs, and Data Zone rates: https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/gpt-6-2-astra-and-gpt-6-2-sol-now-generally-available-in-microsoft-foundry/4574122
+# Data Zone is +10% in the US and +20% in the EU and APAC. Short-context input per million tokens is $2.00 global, $2.20 US, and $2.40 EU/APAC.
+# Responses on EU Data Zone (2026-11-18): Flex returned flex; Priority returned default.
+# Flex token pricing is 50% of Standard: https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/flex-processing
+# The Flex guide's availability table does not yet list GPT-6.2 and describes Global Standard only.
+# The 272K long-context cutoff follows the OpenAI model card and the existing Azure GPT-6.1 Sol entry:
+# https://developers.openai.com/api/docs/models/gpt-6.2-sol
+# Mid-conversation, tool and cache flags backfilled 2026-11-18 from gpt-6.1-sol.toml on this host (same API layout; the sync doesn't carry them).
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+store = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["flex"]
+
+[api.responses]
+capabilities = { tools = { strict = true, search = true, updates = ["add", "remove"] }, effort_updates = true }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "30m" = 2.5, "12h" = 5 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2, write = { "30m" = 5, "12h" = 10 } }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = { text = 1.1 }
+
+[[cost.multipliers]]
+when = { region = { in = ["eu", "apac"] } }
+factor = { text = 1.2 }

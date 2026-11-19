@@ -11,6 +11,7 @@
 # tools.choice: auto only. Converse toolChoice has auto/any/tool and no none (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ToolChoice.html); this model rejects any/tool (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-forced-tool-use and the model card).
 # tools.search: on [api.messages] only. AWS documents the tool search tool through InvokeModel, not Converse (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-tool-search-tool); Mantle Messages ran tool_search_tool_regex_20251119 with deferred tools live (2026-10-26).
 # Per-API tools.choice: Mantle Messages takes Anthropic's tool_choice, including none (auto/none only, live 2026-10-26), so choice is set per API: Converse's list on [api.converse], the same plus none on [api.messages]. Strict tools hold on both APIs (Mantle Messages rejected a strict schema without additionalProperties: false; structured outputs list Mantle Messages: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html).
+# tools.updates (live 2026-11-17 on Mantle, the request shapes @opencode/ai sends: claude-opus-5-5 and opus-4-8 on /anthropic/v1/messages, gpt-6-astra and gpt-5.6-sol on /openai/v1/responses): add, a redefinition (the call uses the new schema) and a removal all work, 3/3 each.
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
@@ -27,7 +28,7 @@ capabilities = { tools = { choice = ["auto"] } }
 [api.messages]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/messages" }
-capabilities = { effort_updates = true, tools = { updates = true, choice = ["auto", "none"], search = true } }
+capabilities = { effort_updates = true, tools = { updates = ["add", "remove", "replace"], choice = ["auto", "none"], search = true } }
 
 [cost.text.input]
 price = 4
