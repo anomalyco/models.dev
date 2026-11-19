@@ -1,0 +1,13 @@
+# Sources (accessed 2026-11-19):
+# - Provider name, provider ID, model ID, API base URL, auth and OpenCode setup:
+#   https://agentaus.com.au/eng/docs/developers/agents-and-harnesses
+# - Chat Completions endpoint and OpenAI-compatible request format:
+#   https://agentaus.com.au/eng/docs/developers/chat-completions-api
+# - API overview and OpenAI compatibility:
+#   https://agentaus.com.au/eng/docs/developers/getting-started
+name = "Trellis Data"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["AGENTAUS_API_KEY"]
+api = "https://agentaus.com.au/api/v1"
+doc = "https://agentaus.com.au/eng/docs/developers/getting-started"

@@ -1,0 +1,51 @@
+# Sources (accessed 2026-11-19):
+# - Provider ID, model ID, API base URL and auth:
+#   https://agentaus.com.au/eng/docs/developers/agents-and-harnesses
+#   `trellisdata/agentaus.v1`, `https://agentaus.com.au/api/v1`, `AGENTAUS_API_KEY`.
+# - Request fields, modalities, limits, tools, reasoning and sampling:
+#   https://agentaus.com.au/eng/docs/developers/chat-completions-api
+#   Messages are text; tool calling uses custom functions; `tool_choice` accepts
+#   auto|none|required (and `allowed_tools`); `reasoning_effort` accepts
+#   none|low|high with default low; `temperature` is 0-2; `top_p` is 0-1
+#   excluding 0; `max_completion_tokens` is 1-131072 and defaults to 131072;
+#   `response_format` and `structured_outputs` are supported.
+#   No separate context-window figure is published, so `limit.context` uses the
+#   documented 131,072 ceiling.
+# - First-party model: the FAQ says "Agentaus 1 ... using our own proprietary
+#   model hosted by Trellis Data", and no weights are published:
+#   https://agentaus.com.au/eng/docs/faq
+# - Release date: the List models example reports `created` 1781059264, which is
+#   2026-06-10 UTC:
+#   https://agentaus.com.au/eng/docs/developers/agents-and-harnesses#list-models
+# - Price: AUD 1.70 (USD 1.14) input and AUD 6.70 (USD 4.51) output per
+#   million tokens, excluding GST: https://agentaus.com.au/eng/docs/pricing
+#   USD converted at 0.67313 USD/AUD on 2026-11-18
+#   (https://api.frankfurter.app/latest?from=AUD&to=USD).
+# Effort: reasoning_effort = none|low|high (default low)
+schema = 2
+name = "Agentaus V1"
+description = "Australia's AI model from Trellis Data, served with protected, encrypted inference"
+open_weights = false
+release_date = "2026-06-10"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required"] }
+reasoning = { supported = true, effort = ["none", "low", "high"], default = { type = "effort", value = "low" } }
+structured_output = true
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 1.14
+
+[cost.text.output]
+price = 4.51
