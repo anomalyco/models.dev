@@ -1,21 +1,30 @@
 # Toggle: chat_template_kwargs.thinking = true|false (default off)
-# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19, one request per setting:
-#   reasoning_content carries text with true and none with false; with the field omitted it carries none.
-# chat_template_kwargs.enable_thinking had the same effect in the same test.
-# reasoning_effort was not tested, so no effort level is listed.
+# Effort: chat_template_kwargs.reasoning_effort = low|high|max
+# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19.
+# Toggle, one request per setting: reasoning_content carries text with true and none with false; with the field
+#   omitted it carries none. chat_template_kwargs.enable_thinking had the same effect.
+# Effort, two requests per level at max_tokens 1200: every level was accepted (HTTP 200). Each level also turned
+#   reasoning on; with the field omitted reasoning_content stayed empty. No ordering between levels could be measured:
+#   completion tokens were 1118 and 478 for low, 780 and 1082 for high, 181 and 245 for max. The levels listed are the
+#   lab's set; this test does not show a graded effect.
+# Top-level reasoning_effort was not tested.
 # Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
-# Output limit: maximum output of the deployment serving this id; the API caps max_tokens there.
+# Output limit: 131,072 is where the VoltageGPU relay caps max_tokens for this id (the maximum output of the
+#   deployment serving it). GET /v1/models does not publish that value today.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 name = "DeepSeek V4 Flash 0731 TEE"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [limit]
 context = 1_048_576
 output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.88

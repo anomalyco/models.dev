@@ -5,13 +5,18 @@
 # context_length, prices in USD per million tokens, live status) and https://docs.voltagegpu.com/inference.
 # POST /v1/chat/completions forwards request fields other than model, messages, stream,
 # stream_options and fallback_models to the model unchanged (tools, response_format,
-# chat_template_kwargs, ...) and caps max_tokens at the model's maximum output, so the reasoning
-# switch of each model is a chat-template kwarg.
-# Reasoning switches were tested live on 2026-11-19, one request per setting: on each of the ten
-# models listed, chat_template_kwargs.thinking and chat_template_kwargs.enable_thinking both turned
-# reasoning_content on and off. Each file names one of the two. reasoning_effort was not tested.
+# chat_template_kwargs, ...) and caps max_tokens at the maximum output of the deployment serving
+# the id, without an error. GET /v1/models does not publish that maximum today.
+# Reasoning controls were tested live on 2026-11-19 on the ten models listed.
+# - Toggle (one request per setting): chat_template_kwargs.thinking and
+#   chat_template_kwargs.enable_thinking both turned reasoning_content on and off on every model.
+#   Each file names one of the two.
+# - Effort (two requests per level): chat_template_kwargs.reasoning_effort was accepted at every
+#   level tried and turned reasoning on where it is off by default, but no ordering between levels
+#   could be measured. Files list the lab's levels where the lab has graded levels, and each header
+#   says what was measured. Top-level reasoning_effort was not tested.
 # Qwen/Qwen3.5-397B-A17B-TEE is listed by /v1/models but is left out: it was reported saturated at
-# each of four reads that day (07:05 to 08:49 UTC) and answered 429 to every test request.
+# each read that day (07:05 to 10:16 UTC) and answered 429 to every test request.
 # No cached-input price is published, so none is listed.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) are left out: none is documented.
 name = "VoltageGPU"

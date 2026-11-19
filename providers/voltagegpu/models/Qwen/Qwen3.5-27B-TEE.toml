@@ -1,12 +1,19 @@
 # Toggle: chat_template_kwargs.enable_thinking = true|false (default on)
-# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19, one request per setting:
-#   reasoning_content carries text with true and none with false; with the field omitted it carries text.
-# chat_template_kwargs.thinking had the same effect in the same test.
+# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19.
+# Toggle, one request per setting: reasoning_content carries text with true and none with false; with the field
+#   omitted it carries text. chat_template_kwargs.thinking had the same effect.
 # enable_thinking is the name the chat template reads (https://huggingface.co/Qwen/Qwen3.5-27B-FP8).
-# reasoning_effort was not tested, so no effort level is listed.
+# No effort level is listed. chat_template_kwargs.reasoning_effort (low, medium, high; two requests per level at
+#   max_tokens 1200) was accepted (HTTP 200) with no visible effect: every reply, with or without it, was cut at the
+#   cap. The lab's own API lists a toggle and a budget for this checkpoint in this catalog, no effort levels.
+# No budget is listed: the request with chat_template_kwargs.thinking_budget = 64 timed out (120 s), and 2048 gave
+#   2670 characters of reasoning against 2730 and 2697 with no budget. No effect was shown. One request per value.
+# Top-level reasoning_effort and thinking_budget were not tested.
 # Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
-# Output limit: maximum output of the deployment serving this id; the API caps max_tokens there.
-# Input: text and images, no video; image MIME types from the lab file.
+# Output limit: 262,144 is where the VoltageGPU relay caps max_tokens for this id (the maximum output of the
+#   deployment serving it). GET /v1/models does not publish that value today.
+# Input: text and images, no video; image MIME types from the lab file. A PNG image (data URL) was accepted on
+#   2026-11-19; the other image types and video were not tested, so video is not listed.
 schema = 2
 base_model = "alibaba/qwen3.5-27b"
 name = "Qwen3.5 27B TEE"

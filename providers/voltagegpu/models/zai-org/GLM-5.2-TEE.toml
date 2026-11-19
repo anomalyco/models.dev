@@ -1,17 +1,24 @@
 # Toggle: chat_template_kwargs.thinking = true|false (default on)
-# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19, one request per setting:
-#   reasoning_content carries text with true and none with false; with the field omitted it carries text.
-# chat_template_kwargs.enable_thinking had the same effect in the same test.
+# Effort: chat_template_kwargs.reasoning_effort = high|max
+# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19.
+# Toggle, one request per setting: reasoning_content carries text with true and none with false; with the field
+#   omitted it carries text. chat_template_kwargs.enable_thinking had the same effect.
 # enable_thinking is the name the chat template reads (https://huggingface.co/nvidia/GLM-5.2-NVFP4).
-# The template also reads reasoning_effort (high|max), which was not tested, so no effort level is listed.
+# Effort, two requests per level at max_tokens 1200: every level was accepted (HTTP 200). No ordering between levels
+#   could be measured: every reply, with or without the field, was cut at the cap (1200 tokens). The levels listed are
+#   the lab's set, which the chat template reads; this test does not show a graded effect.
+# Top-level reasoning_effort was not tested.
 # Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
-# Output limit: maximum output of the deployment serving this id; the API caps max_tokens there.
+# Output limit: 65,535 is where the VoltageGPU relay caps max_tokens for this id (the maximum output of the deployment
+#   serving it). GET /v1/models does not publish that value today. A request with max_tokens 200000 was answered 200
+#   on 2026-11-19: the cap is applied without an error.
+# Input: text only. A request with a PNG image was answered 400 on 2026-11-19.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 TEE"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, effort = ["high", "max"] }
 structured_output = true
 
 [limit]
