@@ -1,0 +1,38 @@
+# Sources (accessed 2026-11-17):
+# - Models table, limits and routed-model notes: https://lebrel.ai/docs
+# - Prices, limits and data note: https://lebrel.ai/api/models and https://attested.lebrel.ai/v1/models
+# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README)
+# Relayed by Lebrel's router. First upstream: alibaba/model-studio (kimi-k3.1-pro). The model's data note
+# names the fallbacks, and the signed route receipt names which upstream served.
+# Toggle: thinking.type = enabled|disabled (default enabled). The upstream note for moonshot/api-k3.1-pro in
+# /v1/models says clients turn reasoning off with thinking disabled.
+# Effort: reasoning_effort = low|high|max (default max).
+# Lebrel's rates for this model are flat (no peak schedule).
+# Input: input_modalities in /v1/models lists text, image and file. The lab's image formats are kept and video,
+# which the catalog does not list, is left out.
+# Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
+# Checked live 2026-11-17: thinking.type disabled gave 0 reasoning tokens against 50 at low effort.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.95
+cache = { read = 0.195 }
+
+[cost.text.output]
+price = 9.75

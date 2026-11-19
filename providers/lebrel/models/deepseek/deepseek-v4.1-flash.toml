@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-17):
+# - Models table, limits and routed-model notes: https://lebrel.ai/docs
+# - Prices, limits and data note: https://lebrel.ai/api/models and https://attested.lebrel.ai/v1/models
+# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README)
+# Relayed by Lebrel's router. First upstream: alibaba/model-studio (deepseek-v4.1-flash-1017). The model's data note
+# names the fallbacks, and the signed route receipt names which upstream served.
+# Toggle: thinking.type = enabled|disabled (default enabled); enable_thinking true|false is also accepted.
+# Effort: reasoning_effort = low|high|max (default high).
+# Lebrel's rates for this model are flat (no peak schedule).
+# Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
+# Checked live 2026-11-17: thinking.type disabled gave 0 reasoning tokens against 39 by default, reasoning came back in
+# reasoning_content, a PNG was read, and a PDF file part was refused by the upstream.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.6
