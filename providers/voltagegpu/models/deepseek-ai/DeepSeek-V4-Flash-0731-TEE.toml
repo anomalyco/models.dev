@@ -1,0 +1,24 @@
+# Toggle: chat_template_kwargs.thinking = true|false (default off)
+# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19, one request per setting:
+#   reasoning_content carries text with true and none with false; with the field omitted it carries none.
+# chat_template_kwargs.enable_thinking had the same effect in the same test.
+# reasoning_effort was not tested, so no effort level is listed.
+# Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
+# Output limit: maximum output of the deployment serving this id; the API caps max_tokens there.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 TEE"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 0.88
+
+[cost.text.output]
+price = 2.64

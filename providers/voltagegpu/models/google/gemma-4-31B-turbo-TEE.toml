@@ -1,0 +1,25 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default off)
+# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19, one request per setting:
+#   reasoning_content carries text with true and none with false; with the field omitted it carries none.
+# chat_template_kwargs.thinking had the same effect in the same test.
+# enable_thinking is the name the chat template reads (https://huggingface.co/nvidia/Gemma-4-31B-IT-NVFP4).
+# reasoning_effort was not tested, so no effort level is listed.
+# Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
+# Output limit: maximum output of the deployment serving this id; the API caps max_tokens there.
+schema = 2
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B Turbo TEE"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+structured_output = true
+
+[limit]
+context = 131_072
+output = 65_536
+
+[cost.text.input]
+price = 0.24
+
+[cost.text.output]
+price = 0.74

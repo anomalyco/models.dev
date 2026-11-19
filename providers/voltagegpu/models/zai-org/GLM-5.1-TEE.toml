@@ -1,0 +1,28 @@
+# Toggle: chat_template_kwargs.thinking = true|false (default on)
+# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19, one request per setting:
+#   reasoning_content carries text with true and none with false; with the field omitted it carries text.
+# chat_template_kwargs.enable_thinking had the same effect in the same test.
+# enable_thinking is the name the chat template reads (https://huggingface.co/zai-org/GLM-5.1-FP8).
+# reasoning_effort was not tested, so no effort level is listed.
+# Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
+# Output limit: maximum output of the deployment serving this id; the API caps max_tokens there.
+schema = 2
+base_model = "zhipuai/glm-5.1"
+name = "GLM 5.1 TEE"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+
+[limit]
+context = 202_752
+output = 65_535
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.8
+
+[cost.text.output]
+price = 5.8

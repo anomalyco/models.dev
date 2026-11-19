@@ -1,0 +1,25 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default on)
+# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19, one request per setting:
+#   reasoning_content carries text with true and none with false; with the field omitted it carries text.
+# chat_template_kwargs.thinking had the same effect in the same test.
+# enable_thinking is the name the chat template reads (https://huggingface.co/Qwen/Qwen3.6-27B).
+# reasoning_effort was not tested, so no effort level is listed.
+# Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
+# Input: text and images, no video; image MIME types from the lab file.
+schema = 2
+base_model = "alibaba/qwen3.6-27b"
+name = "Qwen3.6 27B TEE"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 4
