@@ -1,0 +1,24 @@
+# Source: Intility AI model catalog (provided by Intility, 2026-11-19): id glm-5-3, "GLM-5.3 744B",
+#   contextLength 400000, input text only, endpoint v1/chat/completions.
+#   Docs: https://build.intility.com/docs/external/inference/get-started/
+# Prices are listed in NOK per 1M tokens (input 20, cached input 5, output 75), converted to USD at
+#   1 USD = 9.2978 NOK (mid-market, 2026-11-02, https://currencybeacon.com/rates/USD/NOK).
+# Cache: a cached-input price is published but the mechanism isn't documented, so implicit.
+# Effort: reasoning_effort = low|high|max, copied from the Z.AI entry for GLM-5.3 (not probed on this host).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 400_000
+
+[cost.text.input]
+price = 2.15
+cache = { read = 0.54 }
+
+[cost.text.output]
+price = 8.07
