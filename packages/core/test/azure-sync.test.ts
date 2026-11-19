@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 
 import type { ExistingModel } from "../src/sync/index.js";
-import { buildAzureModel, modelKey, parseMeter, priceRows } from "../src/sync/providers/azure.js";
+import { buildAzureModel, modelKey, parseMeter, parsePartnerMeter, partnerRows, priceRows } from "../src/sync/providers/azure.js";
 
 test("Azure reduces meter and file names to the same model key", () => {
   expect(["6.1-sol", "61sol", "gpt-6.1-sol"].map(modelKey)).toEqual(["61sol", "61sol", "61sol"]);
@@ -31,4 +31,20 @@ test("Azure updates global standard prices and the long-context band", () => {
     input: 2, output: 10, cache_read: 0.1, cache_write: 2.5,
     tiers: [{ tier: { type: "context", size: 272_000 }, input: 4, output: 15, cache_read: 0.2 }],
   });
+});
+
+test("Azure reads partner meters by label, kind, route and long-context flag", () => {
+  expect(parsePartnerMeter("4.7 Inp glbl L")).toEqual({ label: "4.7", kind: "input", longContext: true, tier: "standard", global: true });
+  expect(parsePartnerMeter("K2.7 Code cached DZ")).toMatchObject({ label: "k2.7 code", kind: "cache_read", global: false });
+  expect(parsePartnerMeter("V4.1 Flash Output Glbl")).toMatchObject({ label: "v4.1 flash", kind: "output" });
+  expect(parsePartnerMeter("Provisioned Managed Global")).toBeUndefined();
+});
+
+test("Azure matches partner rows to their file by exact label and converts per-1K prices", () => {
+  const item = (skuName: string, unitPrice: number, unitOfMeasure = "1K") => ({ productName: "Azure Deepseek Models", skuName, unitPrice, unitOfMeasure, type: "Consumption" });
+  const rows = partnerRows([item("V4 Flash Inp glbl", 0.00019), item("V4 Flash 0731 Inp glbl", 0.00044), item("V4 Flash cached glbl", 0.000028)]);
+  expect(rows.get("deepseek-v4-flash")).toEqual([
+    { kind: "input", longContext: false, tier: "standard", global: true, usd: 0.19 },
+    { kind: "cache_read", longContext: false, tier: "standard", global: true, usd: 0.028 },
+  ]);
 });
