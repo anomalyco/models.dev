@@ -517,7 +517,8 @@ const MEDIA_PROTOCOLS: Record<MediaType, string> = {
 // GPT-Live has its own Live endpoint (wss .../v4/ai/live-model), not the
 // realtime one, and @ai-sdk/gateway has no Live model:
 // https://vercel.com/docs/ai-gateway/modalities/realtime/gpt-live
-const LIVE_MODELS = new Set(["openai/gpt-live-1"]);
+// Every GPT-Live version (gpt-live-1, gpt-live-1.1, ...); not gpt-live-transcribe.
+const LIVE_MODEL = /^openai\/gpt-live-\d+(?:\.\d+)?$/;
 // The gateway's other endpoints have no standard equivalent:
 // POST /v1/audio/speech, /v1/audio/transcriptions and /v1/videos return 404.
 const MEDIA_SDK = { opencodeai: "none" };
@@ -706,7 +707,7 @@ export function buildVercelMediaModel(
     doc.limit = mediaLimit(model, type, undefined, existing?.limit?.context);
   }
 
-  doc.api = LIVE_MODELS.has(model.id)
+  doc.api = LIVE_MODEL.test(model.id)
     ? { live: { base_url: MEDIA_BASE_URL, sdk: { ...LIVE_SDK } } }
     : { [MEDIA_PROTOCOLS[type]]: structuredClone(STANDARD_MEDIA_APIS[type] ?? { base_url: MEDIA_BASE_URL, sdk: MEDIA_SDK }) };
   const { cost, issue } = vercelMediaCost(model, type);
