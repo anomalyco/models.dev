@@ -1,9 +1,10 @@
+# Effort: same set as z-ai/glm-5.2 on NanoGPT (reasoning_effort none|high|max); the catalog row lists none.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 TEE"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "high", "max"] }
 structured_output = true
 
 [limit]
