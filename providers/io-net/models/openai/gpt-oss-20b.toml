@@ -1,6 +1,8 @@
-# Prices: GET https://api.intelligence.io.solutions/api/v1/models input/output/cache_read_token_price (USD per token, 2026-10-21); io.net documents this endpoint as the pricing source and lists no cache-write price.
-# Effort: reasoning.effort = none|low|medium|high (none disables); GET /api/v1/models lists supports_reasoning = true (2026-10-21). https://io.net/docs/guides/intelligence/reasoning-for-chat-completions
-# gpt-oss always reasons, so none is not listed.
+# io.net IO Intelligence listing of openai/gpt-oss-20b.
+# Effort: reasoning.effort = low|medium|high
+# Live check 2026-10-13: reasoning.effort = "none" and reasoning.enabled = false are rejected with HTTP 400; reasoning_tokens low 206-327, medium 480-617, high 725-1702.
+# Prices, limits, modalities and capability flags come from GET https://api.intelligence.io.solutions/api/v1/models (public, USD per token, read 2026-10-26); reasoning controls were verified live against POST /chat/completions on 2026-10-13 (see provider.toml).
+# Cache: /api/v1/models reports supports_prompt_cache = false for this deployment, so no cache price is listed.
 # knowledge: unsourced host value kept from the v1 file so v1 doesn't change.
 schema = 2
 base_model = "openai/gpt-oss-20b"
@@ -10,14 +12,16 @@ knowledge = "2024-10"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = false
 
 [limit]
 context = 64_000
-output = 4_096
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.055
-cache = { read = 0.0275 }
+price = 0.049
 
 [cost.text.output]
-price = 0.194
+price = 0.18

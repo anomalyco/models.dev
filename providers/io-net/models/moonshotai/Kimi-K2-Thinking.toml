@@ -1,14 +1,18 @@
-# Prices: GET https://api.intelligence.io.solutions/api/v1/models input/output/cache_read_token_price (USD per token, 2026-10-21); io.net documents this endpoint as the pricing source and lists no cache-write price.
+# io.net IO Intelligence listing of moonshotai/Kimi-K2-Thinking.
+# Always reasons: reasoning.effort = "none" and reasoning.enabled = false are rejected with HTTP 400 (no caller control).
+# Live check 2026-10-13: effort levels are accepted but do not order the trace (reasoning_tokens low 1696-3256, high 890-1962, max 1538-1846).
+# Prices, limits, modalities and capability flags come from GET https://api.intelligence.io.solutions/api/v1/models (public, USD per token, read 2026-10-26); reasoning controls were verified live against POST /chat/completions on 2026-10-13 (see provider.toml).
+# Cache: /api/v1/models reports supports_prompt_cache = true and a cache_read_token_price; prefixes are cached automatically with no cache_control markers, so the cache is implicit.
 schema = 2
 base_model = "moonshotai/kimi-k2-thinking"
 description = "Kimi reasoning model for long-horizon research, planning, and tool use"
 
 [capabilities]
 reasoning = { supported = true }
+cache = { implicit = true }
 
-[limit]
-context = 32_768
-output = 4_096
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.6
