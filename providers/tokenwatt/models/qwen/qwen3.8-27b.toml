@@ -1,7 +1,9 @@
 # API model id: qwen/qwen3.8-27b (exactly as GET https://api.tokenwatt.io/v1/models lists it). Weights:
 # Qwen/Qwen3.8-27B-FP8, served with vLLM on one H200 in the US (shared with Qwen3.6-35B-A3B), text only
-# (--language-model-only, so no image or video input). Output up to 65,536 tokens per request (the host's limit;
-# the lab file's 32,768 is the lab API's default).
+# (--language-model-only, so no image or video input). Output up to 65,536 tokens per request: GET
+# https://api.tokenwatt.io/v1/models lists output_modalities[0].max_length = 65,536 for this model, and
+# https://www.tokenwatt.io/api.html says thinking counts toward its "65,536-token output limit" (both read
+# 2026-11-19; a request with max_tokens 65,536 was accepted the same day). The lab file's 32,768 is the lab API's.
 # Effort: reasoning_effort = none|low|medium|xhigh, as the model's chat template takes them (none turns thinking off);
 # the gateway also accepts high (sent as xhigh) and minimal (sent as low). Thinking is on by default.
 # Checked live on POST https://api.tokenwatt.io/v1/chat/completions, 2026-11-19: default, high, minimal and none all
