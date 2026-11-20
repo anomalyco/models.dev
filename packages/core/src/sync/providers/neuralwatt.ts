@@ -203,7 +203,7 @@ export const neuralwatt = {
       },
       limit,
       modalities: { input, output: ["text"] },
-    }, limit, kept?.base_model_omit), kept);
+    }, limit, kept?.base_model_omit), kept, limit.context);
 
     const v2Set: Record<string, unknown> = {};
     const labInput = labInputModalities(baseModel, labs);
@@ -264,12 +264,14 @@ function unknownInput(model: NeuralwattModel) {
 }
 
 // The translated row plus every field of the same-lab file the sync doesn't own.
-function withAuthoredFields(translated: SyncedModel, kept: ExistingModel | undefined): SyncedModel {
+// An authored input cap is bounded by the host context, which can shrink.
+function withAuthoredFields(translated: SyncedModel, kept: ExistingModel | undefined, context: number): SyncedModel {
   if (kept === undefined) return translated;
   const unowned = (value: unknown, owned: Set<string>) =>
     isRecord(value) ? Object.fromEntries(Object.entries(value).filter(([key, item]) => !owned.has(key) && item !== undefined)) : {};
   const result: Record<string, any> = { ...unowned(kept, new Set([...OWNED, "id"])), ...translated };
   const limit = unowned(kept.limit, OWNED_LIMIT);
+  if (typeof limit.input === "number" && limit.input > context) limit.input = context;
   if (Object.keys(limit).length > 0) result.limit = { ...limit, ...result.limit };
   const cost = unowned(kept.cost, OWNED_COST);
   if (Object.keys(cost).length > 0) result.cost = { ...cost, ...result.cost };

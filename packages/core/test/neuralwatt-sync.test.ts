@@ -123,7 +123,7 @@ test("Neuralwatt is registered and fetches the public list without credentials",
   expect(request!.headers.get("authorization")).toBeNull();
 
   const unavailable = (async () => new Response("Unavailable", { status: 503 })) as unknown as typeof fetch;
-  expect(fetchNeuralwattModels(unavailable)).rejects.toThrow("503");
+  await expect(fetchNeuralwattModels(unavailable)).rejects.toThrow("503");
 });
 
 test("short, duplicate and non-public lists fail before any catalog writes", () => {
@@ -305,7 +305,7 @@ test("a listed row the sync can't translate keeps its file, and a truncated list
     // Fewer rows than the floor fails the run before anything is written.
     fixture.state.padded = false;
     fixture.state.data = [model({ id: "other" })];
-    expect(fixture.sync()).rejects.toThrow("below the 12");
+    await expect(fixture.sync()).rejects.toThrow("below the 12");
     expect(await file.text()).toBe(original);
   } finally {
     await fixture.cleanup();
@@ -662,6 +662,12 @@ test("a same-lab price update keeps authored fields the sync doesn't own", async
     expect(updated.limit.input).toBe(65_536);
     expect(updated.api["chat-completions"]).toEqual({ base_url: "https://example.test/v1", legacy_interleaved: true });
     expect(updated.cost.text.input.price).toBe(1.2);
+    // A smaller host context bounds the authored input cap, so the file still validates.
+    fixture.state.data = [model({ max_model_len: 32_768, metadata: { pricing: { ...model().metadata.pricing, input_per_million: 1.2 }, limits: { ...model().metadata.limits, max_context_length: 32_768 } } })];
+    expect((await fixture.sync()).updated).toBe(1);
+    const shrunk = Bun.TOML.parse(await file.text()) as Record<string, any>;
+    expect([shrunk.limit.context, shrunk.limit.input]).toEqual([32_768, 32_768]);
+    expect((await fixture.sync()).unchanged).toBe(1);
   } finally {
     await fixture.cleanup();
   }
