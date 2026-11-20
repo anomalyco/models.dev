@@ -1,0 +1,33 @@
+# API model id: qwen/qwen3.8-27b (exactly as GET https://api.tokenwatt.io/v1/models lists it). Weights:
+# Qwen/Qwen3.8-27B-FP8, served with vLLM on one H200 in the US (shared with Qwen3.6-35B-A3B), text only
+# (--language-model-only, so no image or video input). Output up to 65,536 tokens per request (the host's limit;
+# the lab file's 32,768 is the lab API's default).
+# Effort: reasoning_effort = none|low|medium|xhigh, as the model's chat template takes them (none turns thinking off);
+# the gateway also accepts high (sent as xhigh) and minimal (sent as low). Thinking is on by default.
+# Checked live on POST https://api.tokenwatt.io/v1/chat/completions, 2026-11-19: default, high, minimal and none all
+# returned 200, none with 0 reasoning tokens; response_format json_schema (strict) worked; 20/20 on our tool-call check.
+# Reasoning is returned in message.reasoning; reasoning_field = "reasoning" is v2-only, so none is set.
+# Cache: automatic vLLM prefix caching, no cache_control. Checked live 2026-11-19: the same 8,204-token prompt sent
+# twice, the second reported usage.prompt_tokens_details.cached_tokens = 7,488.
+# Prices from https://api.tokenwatt.io/v1/models and https://www.tokenwatt.io/api.html (accessed 2026-11-19).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2.0
