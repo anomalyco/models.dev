@@ -137,14 +137,28 @@ test("new Kimi versions preserve curated host MIME and sampling restrictions and
     authored: (id: string) => id === kimiPeer ? kimiAuthored : undefined,
     existing: (id: string) => id === kimiPeer ? { ...kimiAuthored, reasoning: true, limit: existing.limit } : undefined,
     v2: (id: string) => id === kimiPeer ? {
-      modalities: preciseModalities, api, capabilities: { top_k: false, cache: { implicit: true } }, cost: { text: { input: { price: 9 } } },
+      modalities: preciseModalities, api, recommended_api: "messages", capabilities: { top_k: false, cache: { implicit: true }, system_updates: true, tools: { choice: ["auto"] } }, cost: { text: { input: { price: 9 } } },
     } : undefined,
   })!;
   expect(translated.model.modalities).toEqual(modalities);
-  expect(translated.v2Set).toEqual({ modalities: preciseModalities, api, "capabilities.top_k": false });
+  expect(translated.v2Set).toEqual({ modalities: preciseModalities, api, recommended_api: "messages", "capabilities.cache": { implicit: true }, "capabilities.system_updates": true, "capabilities.tools.choice": ["auto"], "capabilities.top_k": false });
   expect(translated.model.cost).toBeUndefined();
-  expect(translated.header).toContain("curate this exact ID before merging");
-  expect(translated.notices?.join(" ")).toContain(`${kimiNew}: curate exact-version cache support`);
+  expect(translated.header).toContain("Hand-set capabilities");
+  expect(translated.header).toContain(kimiPeer);
+});
+
+test("documented capabilities win while missing labels retain the curated peer's support", () => {
+  const model = parseVolcengineModels({ models: modelDocs([modelRow(newID)]) })[0]!;
+  const peer = (structured: boolean) => ({
+    ...context,
+    v2: () => ({ capabilities: { structured_output: structured } }),
+  });
+  const documented = volcengine.translateModel(model, peer(false))!;
+  expect(documented.model.structured_output).toBe(true);
+  expect(documented.v2Set?.["capabilities.structured_output"]).toBeUndefined();
+  const inherited = volcengine.translateModel({ ...model, structured: false }, peer(true))!;
+  expect(inherited.model.structured_output).toBe(true);
+  expect(inherited.v2Set?.["capabilities.structured_output"]).toBe(true);
 });
 
 test("updates exact limits and positive capabilities while preserving curated fields", () => {
@@ -236,7 +250,13 @@ env = ["ARK_API_KEY"]
 doc = "https://ark.volcengine.com/region:cn-beijing/docs/model-list"
 `);
     await Bun.write(filename, original);
-    await Bun.write(absent, original);
+    // The shared finder selects this older canonical rather than the mapped
+    // same-canonical peer. Explicit peer values must win, while other missing
+    // flags can still use the shared inheritance mechanism.
+    await Bun.write(path.join(root, "models", "bytedance-seed", "seed-2.0-pro.toml"), await canonicalText("bytedance-seed/seed-2.0-pro"));
+    const older = original.replace('base_model = "bytedance-seed/seed-2.1-pro"', 'base_model = "bytedance-seed/seed-2.0-pro"')
+      .replace('cache = { implicit = true, explicit = { ttl = ["5m", "1h"] } }', 'cache = false\nprompt_cache_key = true');
+    await Bun.write(absent, older);
     const provider = { ...volcengine, modelsDir, fetchModels: async () => ({ models: modelDocs([modelRow(peerID, "`即将下线`"), modelRow(newID), modelRow(unknownID), modelRow(retiringID, "`即将下线`")]) }) };
     const dry = await syncProvider(provider, { dryRun: true, openIssues: false });
     expect(dry).toMatchObject({ created: 1, updated: 1, deleted: 0 });
@@ -246,7 +266,6 @@ doc = "https://ark.volcengine.com/region:cn-beijing/docs/model-list"
     expect(first).toMatchObject({ created: 1, updated: 1, deleted: 0 });
     expect(first.notices.join(" ")).toContain(unknownID);
     expect(first.notices.join(" ")).not.toContain(retiringID);
-    expect(first.notices.join(" ")).toContain(`${newID}: curate exact-version cache support`);
     expect(await Bun.file(path.join(modelsDir, `${retiringID}.toml`)).exists()).toBe(false);
     const text = await Bun.file(filename).text();
     const updated = Bun.TOML.parse(text) as Record<string, any>;
@@ -258,11 +277,12 @@ doc = "https://ark.volcengine.com/region:cn-beijing/docs/model-list"
     expect(updated.api).toEqual(before.api);
     expect((updated.capabilities as any).reasoning).toEqual((before.capabilities as any).reasoning);
     expect((updated.capabilities as any).cache).toEqual((before.capabilities as any).cache);
-    expect(await Bun.file(absent).text()).toBe(original);
+    expect(await Bun.file(absent).text()).toBe(older);
     const created = Bun.TOML.parse(await Bun.file(path.join(modelsDir, `${newID}.toml`)).text()) as Record<string, any>;
     expect(created.base_model).toBe(before.base_model);
     expect(created.cost).toBeUndefined();
-    expect(created.capabilities.cache).toBeUndefined();
+    expect(created.capabilities.cache).toEqual(before.capabilities.cache);
+    expect(created.capabilities.prompt_cache_key).toBe(true);
     const decision = await classifyAutoMerge(
       [{ status: "created", path: `providers/volcengine/models/${newID}.toml` }],
       (file) => Bun.file(path.join(root, file)).text(),
@@ -275,7 +295,6 @@ doc = "https://ark.volcengine.com/region:cn-beijing/docs/model-list"
     }
     const second = await syncProvider(provider, { openIssues: false });
     expect(second).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 3 });
-    expect(second.notices.join(" ")).not.toContain("curate exact-version cache support");
     expect(await Bun.file(filename).text()).toBe(text);
     await expect(syncProvider({ ...provider, fetchModels: async () => ({ models: "Unavailable" }) }, { openIssues: false })).rejects.toThrow();
     expect(await Bun.file(filename).text()).toBe(text);
@@ -301,6 +320,7 @@ doc = "https://ark.volcengine.com/region:cn-beijing/docs/model-list"
 `);
     await Bun.write(path.join(modelsDir, `${kimiPeer}.toml`), `schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
+recommended_api = "messages"
 [modalities]
 input = ["text", "image/png", "video/mp4"]
 output = ["text"]
@@ -325,6 +345,7 @@ price = 30
     expect(created.modalities).toEqual({ input: ["text", "image/png", "video/mp4"], output: ["text"] });
     expect((created.capabilities as any).top_k).toBe(false);
     expect(Object.keys(created.api as object)).toEqual(["chat-completions", "messages"]);
+    expect(created.recommended_api).toBe("messages");
     expect(created.cost).toBeUndefined();
     expect({ ...base.limit, ...created.limit }).toEqual(limits);
     expect(await syncProvider(provider, { openIssues: false })).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 2 });

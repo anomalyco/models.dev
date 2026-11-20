@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import { inheritCapabilities } from "../inherit.js";
 import { factorBaseModel, modelMetadata } from "./openrouter.js";
 
 const MODELS_ENDPOINT = "https://ark.volcengine.com/region:cn-beijing/docs/model-list.md";
@@ -215,11 +216,20 @@ export const volcengine = {
     const effort = controls.find((option) => option.type === "effort");
     const peerV2 = context.v2?.(peerID);
     const peerCapabilities = peerV2?.capabilities as Record<string, unknown> | undefined;
-    // Preserve the host restrictions already curated for this family. These
-    // are authored overrides only; cache, tiers and prices are not copied.
+    // Same-canonical dated versions are not selected by the shared predecessor
+    // finder. Use our explicitly audited peer with the shared capability merge;
+    // source-declared values win, and prices/limits are never inherited here.
+    const inherited: Record<string, unknown> = {
+      capabilities: model.structured ? { structured_output: true } : {},
+      ...(peerV2?.api === undefined ? {} : { api: structuredClone(peerV2.api) }),
+    };
+    const copied = peerV2 === undefined ? [] : inheritCapabilities(inherited, peerV2);
+    const hostCapabilities = inherited.capabilities as Record<string, unknown>;
     const v2Set = Object.fromEntries([
       ["modalities", peerV2?.modalities],
-      ["api", peerV2?.api],
+      ["api", inherited.api],
+      ["recommended_api", peerV2?.api === undefined ? undefined : peerV2.recommended_api],
+      ...copied.map((key) => [key, key.split(".").reduce<unknown>((value, part) => (value as Record<string, unknown> | undefined)?.[part], inherited)]),
       ...["temperature", "top_p", "top_k"].map((key) => [`capabilities.${key}`, peerCapabilities?.[key]]),
     ].filter(([, value]) => value !== undefined));
     const header = [
@@ -228,7 +238,7 @@ export const volcengine = {
       ...(controls.some((option) => option.type === "toggle") ? ["# Toggle: thinking.type = enabled|disabled"] : []),
       ...(effort === undefined ? [] : [`# Effort: reasoning_effort = ${effort.values.join("|")}`]),
       "# Pricing is not provided by the model list and is intentionally omitted.",
-      "# Cache support is not inferred from other versions; curate this exact ID before merging.",
+      ...(copied.length === 0 ? [] : [`# Hand-set capabilities (${copied.join(", ")}) come from curated ${peerID}, this host/family/API peer.`]),
     ].join("\n");
     return {
       id: model.id,
@@ -238,7 +248,7 @@ export const volcengine = {
           reasoning: model.reasoning,
           reasoning_options: peer.reasoning_options,
           tool_call: model.tools ? true : undefined,
-          structured_output: model.structured ? true : undefined,
+          structured_output: typeof hostCapabilities.structured_output === "boolean" ? hostCapabilities.structured_output : undefined,
           temperature: peer.temperature,
           modalities: peer.modalities,
           limit: limits,
@@ -251,7 +261,6 @@ export const volcengine = {
       } as SyncedModel,
       header,
       v2Set,
-      notices: [`Volcengine ${model.id}: curate exact-version cache support before merging this new model; cache settings are not copied from ${peerID}.`],
     };
   },
 } satisfies SyncProvider<VolcengineModel>;
