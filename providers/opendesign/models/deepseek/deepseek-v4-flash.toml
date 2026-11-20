@@ -1,0 +1,26 @@
+# Reasoning controls follow the OpenRouter relay entry for this model
+# (providers/openrouter/models/deepseek/deepseek-v4-flash.toml): effort
+# off is effort=none; graded levels high/xhigh. DeepSeek thinking docs:
+# https://api-docs.deepseek.com/guides/thinking_mode
+# reasoning_content is DeepSeek's Chat Completions reasoning field
+# (https://api-docs.deepseek.com/api/create-chat-completion).
+# APIs: OpenDesign Cloud API serves Chat Completions, Responses and Messages
+# (https://open-design.ai/help/cloud-api/, accessed 2026-11-20).
+# No per-token prices: OpenDesign bills by subscription/workspace credits,
+# so no [cost.*] is published. Cache behaviour is undocumented; left out.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
