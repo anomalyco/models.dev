@@ -1,0 +1,10 @@
+# Lazu is an open-source multi-model LLM gateway (https://github.com/lazu-ai/lazu) and hosted API at https://api.lazu.ai/v1.
+# Protocols served under https://api.lazu.ai/v1: OpenAI Chat Completions (/v1/chat/completions),
+# OpenAI Responses (/v1/responses), and Anthropic Messages (/v1/messages); Google Generate Content is at /v1beta.
+# Catalog and USD per-MTok direct-lane rates: https://lazu.ai/api/pricing and https://api.lazu.ai/v1/models (accessed 2026-11-18).
+name = "Lazu"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["LAZU_API_KEY"]
+api = "https://api.lazu.ai/v1"
+doc = "https://lazu.ai/models"

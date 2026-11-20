@@ -1,0 +1,35 @@
+# Pricing: https://lazu.ai/api/pricing (`channel_group = "direct"`, USD per MTok, accessed 2026-11-18).
+# Context pricing: prompts above 100,000 tokens bill 5x across input, output, cache read and cache write (`context_tier.threshold = 100000`).
+# APIs: Anthropic Messages at https://api.lazu.ai/v1/messages and OpenAI-compatible Chat Completions (https://api.lazu.ai/v1/models).
+# Toggle: thinking.type = adaptive|disabled (disabled is accepted at effort high or below on Messages; reasoning_effort = none on Chat Completions)
+# Effort: output_config.effort (Messages) / reasoning_effort (Chat Completions) = low|medium|high|xhigh|max,
+# passed through to Anthropic as on providers/anthropic and relay peers (vivgrid, openrouter).
+# Cache: Anthropic cache_control passed through with 5m and 1h TTLs.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = { "5m" = 0.625, "1h" = 1 } }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5
