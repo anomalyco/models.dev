@@ -1,0 +1,50 @@
+# Sources (accessed 2026-11-17):
+# - Models table, limits and routed-model notes: https://lebrel.ai/docs
+# - Prices, limits and data note: https://lebrel.ai/api/models and https://attested.lebrel.ai/v1/models
+# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README section
+#   "Production: Alibaba Model Studio first", routes.production.json and internal/router/server.go)
+# Relayed by Lebrel's router. First upstream: alibaba/model-studio (qwen3.8-max). The model's data note
+# names the fallbacks, and the signed route receipt names which upstream served.
+# Snapshot: Model Studio is called as qwen3.8-max, so this builds on the undated lab file, like
+# providers/alibaba/models/qwen3.8-max.toml. The OpenRouter fallback is pinned to qwen3.8-max-0902, which
+# Alibaba documents as an upgraded snapshot of it, and Lebrel's /v1/models names that snapshot as the revision.
+# Probed 2026-11-19: the receipt of a request served by Model Studio reports the served model as qwen3.8-max.
+# Toggle: enable_thinking true|false when Model Studio serves; the OpenRouter fallback always reasons.
+# Effort: reasoning_effort = low|medium|xhigh (default xhigh), Model Studio's levels.
+# Budget: thinking_budget (reasoning tokens), forwarded to Model Studio; same controls as providers/alibaba.
+# Tools: tool_choice auto, none, required and a named function each behaved as asked, reasoning off (probed
+# 2026-11-19). providers/alibaba lists no required on Chat Completions; a required request returned the tool call.
+# Structured output: a JSON Schema response_format was enforced against a prompt asking for a haiku (probed
+# 2026-11-19).
+# Lebrel's rates for this model are flat (no peak schedule).
+# Input: input_modalities in /v1/models lists text, image and file. The lab's image formats and PDF are kept (a
+# file part is forwarded to Model Studio) and video, which the catalog does not list, is left out.
+# Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself, and a stream sent
+# with it ended with a usage chunk (probed 2026-11-19).
+# Checked live 2026-11-17: thinking_budget 32 gave exactly 32 reasoning tokens. PDF input was checked on qwen/qwen4-max and
+# z-ai/glm-5.3-flash, not on this model.
+# Probed 2026-11-19: a PNG was read.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

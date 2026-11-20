@@ -1,0 +1,55 @@
+# Sources (accessed 2026-11-17):
+# - Models table, limits and routed-model notes: https://lebrel.ai/docs
+# - Prices, limits and data note: https://lebrel.ai/api/models and https://attested.lebrel.ai/v1/models
+# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README section
+#   "Production: Alibaba Model Studio first", routes.production.json and internal/router/server.go)
+# Relayed by Lebrel's router. First upstream: alibaba/model-studio (deepseek-v4.1-flash-1017). The model's data note
+# names the fallbacks, and the signed route receipt names which upstream served.
+# Toggle: thinking.type = enabled|disabled (default enabled); enable_thinking true|false is also accepted.
+# Effort: reasoning_effort = low|high|max (default high).
+# top_k: off. The router forwards it unchanged, and neither Model Studio nor DeepSeek's own API takes it for the
+# DeepSeek series (see providers/alibaba and providers/deepseek). A request carrying it was still answered (probed
+# 2026-11-19 on DeepSeek V4.1 Flash); whether it has any effect was not measured.
+# Output cap: max_tokens. Model Studio takes max_completion_tokens too (probed 2026-11-19 on DeepSeek V4.1 Flash: a
+# cap of 16 was applied), but the router forwards the client's field as sent and DeepSeek's own API, the last
+# fallback, only takes max_tokens (see providers/deepseek). The fallback was not reached in the probes.
+# Tools: tool_choice auto and none behaved as asked, reasoning off. required and a named function failed twice
+# with HTTP 400 from Model Studio's model serving (std::bad_alloc), so they are not listed, although
+# providers/alibaba lists them for this model. Probed 2026-11-19.
+# Structured output: not declared. A JSON Schema response_format failed twice with the same HTTP 400, although
+# providers/alibaba records structured output for this model; plain JSON mode (json_object) worked. Probed
+# 2026-11-19.
+# Lebrel's rates for this model are flat (no peak schedule).
+# Input: input_modalities in /v1/models lists text, image and file. The lab file's image formats stand, and no
+# document type is declared: a PDF file part was refused by the upstream.
+# Limits: output 393,216 as Lebrel's catalog lists it and as providers/llmgateway-providers lists for DeepSeek on
+# Model Studio; a request with max_tokens 393,216 was answered through Model Studio (probed 2026-11-19 on DeepSeek
+# V4.1 Flash). Context stays at the lab's 1,000,000, which the Model Studio entries here carry. Lebrel's catalog
+# admits 1,048,576, DeepSeek's own API figure, which was not probed through Model Studio.
+# Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself, and a stream sent
+# with it ended with a usage chunk (probed 2026-11-19).
+# Checked live 2026-11-17: thinking.type disabled gave 0 reasoning tokens against 39 by default, reasoning came back in
+# reasoning_content, a PNG was read, and a PDF file part was refused by the upstream.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+top_k = false
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.6

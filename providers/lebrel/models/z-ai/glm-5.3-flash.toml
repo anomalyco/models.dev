@@ -1,0 +1,56 @@
+# Sources (accessed 2026-11-17):
+# - Models table, limits and routed-model notes: https://lebrel.ai/docs
+# - Prices, limits and data note: https://lebrel.ai/api/models and https://attested.lebrel.ai/v1/models
+# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README section
+#   "Production: Alibaba Model Studio first", routes.production.json and internal/router/server.go)
+# Relayed by Lebrel's router to zai/api-flash (glm-5.3-flash), Z.ai's own API and this route's only upstream: there is no fallback.
+# No off switch: a request that disables thinking is refused with HTTP 400 (the model always thinks).
+# Effort: reasoning_effort = low|high|max (default max).
+# top_k: off. The router forwards it unchanged and Z.ai's Chat API takes temperature and top_p only (see
+# providers/zai). A request carrying it was still answered (probed 2026-11-19); whether it has any effect was not
+# measured.
+# Output cap: max_tokens. The router accepts max_completion_tokens too but forwards it as sent, and Z.ai's
+# Chat API only takes max_tokens (see providers/zai). Probed 2026-11-19: max_completion_tokens 16 was ignored
+# (the answer ran to 124 tokens) and max_tokens 16 was applied.
+# Tools: only auto. With tool_choice none the tool was still called, and with required or a named function it
+# was not (probed 2026-11-19 at low effort), as providers/zai records.
+# Structured output: a JSON Schema response_format was enforced against a prompt asking for a haiku (probed
+# 2026-11-19).
+# Lebrel's rates for this model are flat (no peak schedule).
+# Input: input_modalities in /v1/models lists text and file. PDF is kept; the router refuses images for this
+# route and the catalog does not list video.
+# Context: 1,048,576 as Lebrel's catalog lists it and as providers/llmgateway-providers lists for GLM-5.3 Flash on
+# Z.ai; not probed.
+# Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself, and a stream sent
+# with it ended with a usage chunk (probed 2026-11-19).
+# Checked live 2026-11-17: thinking disabled refused with HTTP 400, reasoning_effort low accepted, a PDF file part read, and an
+# image refused by the router. No reasoning text came back in its two answers, so reasoning_field follows
+# providers/zai/models/glm-5.3-flash.toml.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0.17
+cache = { read = 0.034 }
+
+[cost.text.output]
+price = 0.56

@@ -1,0 +1,49 @@
+# Sources (accessed 2026-11-17):
+# - Models table, limits and routed-model notes: https://lebrel.ai/docs
+# - Prices, limits and data note: https://lebrel.ai/api/models and https://attested.lebrel.ai/v1/models
+# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README section
+#   "Production: Alibaba Model Studio first", routes.production.json and internal/router/server.go)
+# Relayed by Lebrel's router. First upstream: alibaba/model-studio (kimi-k3). The model's data note
+# names the fallbacks, and the signed route receipt names which upstream served.
+# Toggle: enable_thinking true|false when Model Studio serves (thinking.type is mapped onto it), the same
+# controls as providers/alibaba/models/kimi-k3.toml; the Moonshot fallback always reasons.
+# Effort: reasoning_effort = low|high|max (default max).
+# Tools: tool_choice none, required and a named function each behaved as asked, reasoning off; left to auto, the
+# model answered without calling the tool in the one sample. Probed 2026-11-19.
+# Structured output: a JSON Schema response_format was enforced against a prompt asking for a haiku (probed
+# 2026-11-19).
+# Lebrel's rates for this model are flat (no peak schedule).
+# Input: input_modalities in /v1/models lists text, image and file. The lab's image formats are kept. Video is
+# left out because the catalog does not list it, and no document type is declared for file because the lab
+# file has none and it was not probed.
+# Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself, and a stream sent
+# with it ended with a usage chunk (probed 2026-11-19).
+# Checked live 2026-11-17: enable_thinking false gave 0 reasoning tokens against 59 at low effort.
+# Probed 2026-11-19: a PNG was read.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3.3
+cache = { read = 0.33 }
+
+[cost.text.output]
+price = 16.5

@@ -1,0 +1,9 @@
+# API, authentication and models (accessed 2026-11-17): https://lebrel.ai/docs
+# Logo mark: https://lebrel.ai/lebrel-mark.svg (redrawn in currentColor)
+# One OpenAI-compatible endpoint serves Lebrel's own edition (lebrel/...) and routed lab models.
+name = "Lebrel"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["LEBREL_API_KEY"]
+api = "https://attested.lebrel.ai/v1"
+doc = "https://lebrel.ai/docs"

@@ -1,0 +1,50 @@
+# Sources (accessed 2026-11-17):
+# - Model, limits, request fields and published tool configs: https://lebrel.ai/docs
+# - List prices and limits: https://lebrel.ai/api/models and https://lebrel.ai/pricing
+# - Served catalog: https://attested.lebrel.ai/v1/models
+# - Weights and signed file records: https://models.lebrel.ai
+# Lebrel's own edition of DeepSeek V4.1 Flash 1017, so it builds on that lab file and keeps its input types.
+# Toggle: top-level "thinking": true|false on Chat Completions (default false). Reasoning text comes back in
+# message.reasoning, and in delta.reasoning when streaming. That field is not declared below because the v1
+# output cannot carry it: its interleaved field only takes "reasoning_content" or "reasoning_details".
+# No effort levels are declared. With thinking on, reasoning_effort low, high and max are all accepted, but two
+# samples of each on one question showed no grading: 90 and 141, 112 and 187, 120 and 150 reasoning tokens, and
+# 137 with none named. With thinking off, a request that names reasoning_effort is refused with HTTP 400.
+# Probed 2026-11-19.
+# top_k: accepted as an integer (probed 2026-11-19: top_k 1 was answered, a string was refused with HTTP 400),
+# so the lab's value stands. Its effect on sampling was not measured.
+# Prices are the list rates. Lebrel admits requests from 40% of list while the node is quiet up to list with
+# normal use (GET https://lebrel.ai/api/drop/policy), and at twice list on the priority line. Neither is
+# modelled here.
+# Context is prompt plus requested output: 1,048,544 tokens. Output: 1 to 393,216 tokens per call. Lebrel's
+# own tool configs ask for 32,768 per step to keep balance holds small; the API cap is the figure above.
+# Checked live 2026-11-17 on Chat Completions:
+# - reasoning: 0 reasoning tokens by default and with thinking false, 39 with thinking true
+# - input: PNG, JPEG, GIF and WebP read; a file part refused with HTTP 400 (the model reads text and images)
+# - tools: tool_choice auto, none, required and a named function each behaved as asked
+# - structured output: a JSON Schema response_format was enforced against a prompt asking for something else
+# - cache: a repeated 1,659-token prompt reported 1,408 cached tokens in usage.prompt_tokens_details
+# - output cap: max_tokens 40,000 accepted and 393,217 refused
+# - streaming ended with a usage chunk and [DONE]; max_completion_tokens accepted
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash · Lebrel Uncensored"
+description = "Lebrel's uncensored edition of DeepSeek V4.1 Flash 1017. Every answer carries a signed receipt."
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = false } }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_544
+output = 393_216
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 1.32
