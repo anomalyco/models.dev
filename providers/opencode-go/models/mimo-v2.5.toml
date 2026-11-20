@@ -1,4 +1,7 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
+# Toggle: reasoning_effort = none|low|medium|high (none turns thinking off; the graded levels behave identically —
+#   Xiaomi has one thinking switch, https://mimo.mi.com/docs/zh-CN/api/chat/responses). Live on Go 2026-10-26:
+#   none -> 0 reasoning tokens, default/high -> thinking on; thinking.type = disabled is accepted but ignored.
 # family: kept as "mimo-v2.5" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/xiaomi/models/mimo-v2.5.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 schema = 2
@@ -8,7 +11,7 @@ name = "MiMo V2.5"
 description = "MiMo omni model for text, image, video, audio, and agents"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
 
 [limit]
 context = 1_000_000
