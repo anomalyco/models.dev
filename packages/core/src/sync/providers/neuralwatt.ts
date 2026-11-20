@@ -3,7 +3,7 @@ import path from "node:path";
 import { z } from "zod";
 
 import { ReasoningOption } from "../../schema.js";
-import type { ExistingModel, SyncProvider } from "../index.js";
+import type { ExistingModel, SyncedModel, SyncProvider } from "../index.js";
 import { exactInput } from "./keln.js";
 import { factorBaseModel } from "./openrouter.js";
 
@@ -22,6 +22,9 @@ const LAB_OVERRIDES: Record<string, string> = {
 // Quantized republications (Qwen/Qwen3.8-27B-FP8, nvidia/Gemma-4-31B-IT-NVFP4)
 // serve the lab model named without the suffix.
 const QUANT_SUFFIX = /-(fp8|fp4|nvfp4|mxfp4|int4|int8|awq|gptq|bf16|w4a16|w8a8)$/i;
+// The public list had 24 rows when this was written. A shorter list is taken
+// as truncated rather than as mass retirement, and the run fails.
+const MIN_LIVE_MODELS = 20;
 
 const Price = z.number().nonnegative();
 const Effort = z.string().min(1);
@@ -70,7 +73,7 @@ export const NeuralwattResponse = z.object({
   // An authenticated list adds the account's private grants. Only the public
   // list may feed the catalog, so anything else fails the run.
   scope: z.literal("public"),
-  data: z.array(NeuralwattModel).min(1, "Neuralwatt returned an empty catalog; refusing to remove local models"),
+  data: z.array(NeuralwattModel),
 }).passthrough().refine(
   (response) => new Set(response.data.map((model) => model.id)).size === response.data.length,
   "Neuralwatt returned duplicate model IDs",
@@ -84,37 +87,52 @@ export const neuralwatt = {
   modelsDir: "providers/neuralwatt/models",
   fetchModels: fetchNeuralwattModels,
   parseModels(raw) {
-    return NeuralwattResponse.parse(raw).data;
+    const models = NeuralwattResponse.parse(raw).data;
+    if (models.length < MIN_LIVE_MODELS) {
+      throw new Error(
+        `Neuralwatt returned ${models.length} models, below the ${MIN_LIVE_MODELS} needed to tell a retirement from a truncated list`,
+      );
+    }
+    return models;
   },
   sourceID(model) {
     return model.id;
   },
-  // A priced model without a lab file or published reasoning levels gets a
-  // missing-model issue, and an existing file for it is kept meanwhile.
+  // A priced model whose checkpoint has no lab file, whose decision lab isn't a
+  // decision model, or that publishes no reasoning levels gets a missing-model
+  // issue, and an existing file for it is kept meanwhile.
   missingModelID(model) {
-    if (!priced(model)) return undefined;
-    // Embedding rows (task "embed") have no catalog shape here; skip them quietly.
-    const task = model.metadata.capabilities.task;
-    if (task !== "decision" && !model.architecture.output_modalities.includes("text")) return undefined;
-    const unpublished = model.metadata.capabilities.reasoning && reasoningOptions(model.metadata.reasoning, undefined) === undefined;
-    return neuralwattBaseModel(model.metadata.huggingface_id) === undefined || unpublished ? model.id : undefined;
+    if (!priced(model) || !syncable(model)) return undefined;
+    const baseModel = neuralwattBaseModel(model.metadata.huggingface_id);
+    if (baseModel === undefined) return model.id;
+    if (isDecision(model)) return labModel(baseModel)?.type === "decision" ? undefined : model.id;
+    const levelsUnpublished = model.metadata.capabilities.reasoning
+      && reasoningOptions(model.metadata.reasoning, undefined) === undefined;
+    return levelsUnpublished ? model.id : undefined;
   },
   skippedNotice(ids) {
     return ids.length === 0 ? [] : [
-      `Neuralwatt models not synced (no lab model for their huggingface_id, unpriced, or no published reasoning levels): ${ids.join(", ")}`,
+      `Neuralwatt models not synced (unpriced, not a chat or decision model, no lab model for their huggingface_id, or no published reasoning levels): ${ids.join(", ")}`,
     ];
   },
   translateModel(model, context) {
-    if (!priced(model)) return undefined;
+    // A listed row the sync can't use keeps its file as written. Returning
+    // undefined would let the runner delete it as retired.
+    if (!priced(model) || !syncable(model)) return republish(model.id, context);
     const authored = context.authored(model.id);
-    const baseModel = neuralwattBaseModel(model.metadata.huggingface_id) ?? authored?.base_model;
+    const existingV2 = context.v2?.(model.id);
+    // Fall back to the file's base_model only when the row names no checkpoint.
+    // An unknown checkpoint goes to missingModelID, which keeps the file.
+    const checkpoint = model.metadata.huggingface_id?.trim();
+    const baseModel = checkpoint
+      ? neuralwattBaseModel(checkpoint)
+      : authored?.base_model ?? (existingV2?.base_model as string | undefined);
     if (baseModel === undefined) return undefined;
 
-    if (model.metadata.capabilities.task === "decision") {
-      const v2 = buildDecisionModel(model, baseModel);
+    if (isDecision(model)) {
+      const v2 = buildDecisionModel(model, baseModel, existingV2);
       return v2 === undefined ? undefined : { id: model.id, v2, header: DECISION_HEADER };
     }
-    if (!model.architecture.output_modalities.includes("text")) return undefined;
 
     const reasoning = model.metadata.capabilities.reasoning;
     const controls = reasoning ? reasoningOptions(model.metadata.reasoning, authored) : undefined;
@@ -152,9 +170,9 @@ export const neuralwatt = {
     const labInput = labInputModalities(baseModel);
     if (translated.modalities?.input !== undefined && labInput !== undefined) {
       // Keep the file's exact MIME types while it lists the same kinds;
-      // otherwise take the lab's for each kind the API lists.
-      v2Set["modalities.input"] = (current: unknown) =>
-        Array.isArray(current) && sameKinds(current, input) ? current : exactInput(input, labInput);
+      // otherwise (and for a new file) take the lab's for each kind the API lists.
+      const current = (existingV2?.modalities as { input?: unknown } | undefined)?.input;
+      v2Set["modalities.input"] = Array.isArray(current) && sameKinds(current, input) ? current : exactInput(input, labInput);
     }
 
     return {
@@ -166,9 +184,28 @@ export const neuralwatt = {
   },
 } satisfies SyncProvider<NeuralwattModel>;
 
+type TranslateContext = Parameters<SyncProvider<NeuralwattModel>["translateModel"]>[1];
+
 function priced(model: NeuralwattModel) {
   const pricing = model.metadata.pricing;
   return !pricing.pricing_tbd && pricing.input_per_million != null && pricing.output_per_million != null;
+}
+
+function isDecision(model: NeuralwattModel) {
+  return model.metadata.capabilities.task === "decision";
+}
+
+// Chat and decision models have a catalog shape. Embedding rows (task "embed") don't.
+function syncable(model: NeuralwattModel) {
+  return isDecision(model) || model.architecture.output_modalities.includes("text");
+}
+
+// The existing file, unchanged, or undefined when there is none (a quiet skip).
+function republish(id: string, context: TranslateContext) {
+  const v2 = context.v2?.(id);
+  if (v2?.v2_only === true) return { id, v2 };
+  const authored = context.authored(id);
+  return authored === undefined ? undefined : { id, model: authored as SyncedModel };
 }
 
 /** The API's levels, low to high, plus a budget the file already documents. */
@@ -196,7 +233,7 @@ function outputLimit(model: NeuralwattModel, authored: ExistingModel | undefined
 }
 
 function kinds(values: string[]) {
-  return [...new Set(values.map((value) => (value === "file" ? "pdf" : value.toLowerCase())))]
+  return [...new Set(values.map((value) => value.toLowerCase()))]
     .filter((value): value is "text" | "audio" | "image" | "video" | "pdf" => MODALITIES.has(value));
 }
 
@@ -233,28 +270,63 @@ const DECISION_HEADER = [
 ].join("\n") + "\n";
 
 // Decision models only answer on /v1/systemone, so they are v2-only files.
-export function buildDecisionModel(model: NeuralwattModel, baseModel: string) {
+// An existing file is the starting point, so fields the sync doesn't own survive.
+export function buildDecisionModel(model: NeuralwattModel, baseModel: string, existing?: Record<string, unknown>) {
   const lab = labModel(baseModel);
   if (lab?.type !== "decision") return undefined;
   const pricing = model.metadata.pricing;
-  const doc: Record<string, unknown> = { schema: 2, v2_only: true, base_model: baseModel };
+  const doc: Record<string, any> = structuredClone(existing ?? {});
+  Object.assign(doc, { schema: 2, v2_only: true, base_model: baseModel });
+
+  const name = model.metadata.display_name?.trim();
+  if (name && name !== lab.name) doc.name = name;
+  else delete doc.name;
   if (model.metadata.deprecated) doc.status = "deprecated";
+  else if (doc.status === "deprecated") delete doc.status;
+
   const input = model.architecture.input_modalities.includes("text") ? kinds(model.architecture.input_modalities) : undefined;
   const labModalities = lab.modalities as { input?: string[]; output?: string[] } | undefined;
   if (input !== undefined && labModalities?.input !== undefined && !sameKinds(labModalities.input, input)) {
-    doc.modalities = { input: exactInput(input, labModalities.input), output: labModalities.output ?? ["decision"] };
+    const current = doc.modalities?.input;
+    doc.modalities = {
+      ...doc.modalities,
+      input: Array.isArray(current) && sameKinds(current, input) ? current : exactInput(input, labModalities.input),
+      output: doc.modalities?.output ?? labModalities.output ?? ["decision"],
+    };
+  } else if (doc.modalities !== undefined) {
+    delete doc.modalities.input;
+    if (Object.keys(doc.modalities).every((key) => key === "output")) delete doc.modalities;
   }
+
   const context = model.metadata.limits.max_context_length ?? model.max_model_len;
-  if (context !== (lab.limit as { context?: number } | undefined)?.context) doc.limit = { context };
+  if (context !== (lab.limit as { context?: number } | undefined)?.context) doc.limit = { ...doc.limit, context };
+  else if (doc.limit !== undefined) {
+    delete doc.limit.context;
+    if (Object.keys(doc.limit).length === 0) delete doc.limit;
+  }
+
   // Neuralwatt has no @opencode/ai package of its own; see AGENTS.md "APIs".
   doc.api = {
-    systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/typesafe-ai/decisions" } },
+    ...doc.api,
+    systemone: {
+      ...doc.api?.systemone,
+      sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/typesafe-ai/decisions" },
+    },
   };
+
   const cacheRead = pricing.cached_input_per_million;
+  const textInput = { ...doc.cost?.text?.input, price: pricing.input_per_million! };
+  if (cacheRead != null) textInput.cache = { ...textInput.cache, read: cacheRead };
+  else if (textInput.cache !== undefined) {
+    delete textInput.cache.read;
+    if (Object.keys(textInput.cache).length === 0) delete textInput.cache;
+  }
   doc.cost = {
+    ...doc.cost,
     text: {
-      input: { price: pricing.input_per_million!, ...(cacheRead != null && { cache: { read: cacheRead } }) },
-      output: { price: pricing.output_per_million! },
+      ...doc.cost?.text,
+      input: textInput,
+      output: { ...doc.cost?.text?.output, price: pricing.output_per_million! },
     },
   };
   return doc;
