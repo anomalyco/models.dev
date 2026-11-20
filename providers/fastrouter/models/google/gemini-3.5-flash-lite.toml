@@ -1,0 +1,29 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-11-18); prices are USD per token there, per MTok here.
+# Service tiers: catalog flex_service_tier_pricing as a multiplier of the default prices (x0.5).
+# Flex: the catalog flex cache read is $0.02 (x0.6667 of the $0.03 base) and prompt/completion are x0.5, so the multiplier scales cache read separately, as in providers/google gemini-3.5-flash-lite.
+# Web search: catalog web_search_per_1000_requests = 14, so [cost.web_search] price = 14; the flex multiplier is text-only so the search fee stays unscaled.
+# Cache: implicit (Google AI Studio and Vertex cache automatically, https://docs.fastrouter.ai/explore-features/prompt-caching, accessed 2026-11-18). The catalog lists no cache storage price for this route (checked over 24 requests on 2026-11-18), so none is authored.
+# Reasoning: the catalog lists thinking in supported_parameters (schema empty, no enum), so the control set is the lab's (providers/google gemini-3.5-flash-lite).
+# Limit: not overridden. The catalog reports context_length 1048576 and max_completion_tokens 65536, the same as the lab.
+schema = 2
+base_model = "google/gemini-3.5-flash-lite"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+service_tier = ["flex"]
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2.5
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.6667 } }, output = 0.5 } }
