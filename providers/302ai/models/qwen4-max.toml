@@ -1,0 +1,21 @@
+# Toggle: enable_thinking true|false — on a fixed task the default produced 728 reasoning tokens and enable_thinking=false produced 0.
+# Effort: reasoning_effort = low|high|xhigh, the Alibaba qwen4-max set (https://www.alibabacloud.com/help/en/model-studio/qwen4-max, cited by the four same-model peers). Measured reasoning tokens on a fixed task: low 756, high 1132, xhigh 1007. The host also accepts medium (668) and minimal (714), which collapse to the low level, and max (1450), which no lab or peer document lists for this model — all three are left out.
+# Budget: not published — the native thinking_budget field is rejected here (400) and thinking.budget_tokens is accepted but returns a flat ~50-char trace, so there is no working budget control on this host.
+# Limit: the catalog reports max_completion_tokens 64000, but max_tokens 64001 and 262144 are both accepted, so the lab cap of 262144 is inherited.
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (2026-11-20), platform rate 1.2 applied: input $1.71, output $5.13, cache read $0.0855, cache write $2.1372.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "xhigh"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.71
+cache = { read = 0.0855, write = 2.1372 }
+
+[cost.text.output]
+price = 5.13

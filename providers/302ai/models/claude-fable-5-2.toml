@@ -1,0 +1,19 @@
+# Effort: output_config.effort = low|medium|high|xhigh|max on the Messages API (none and invalid values rejected). Measured output tokens on a fixed task: low 960, medium 1019, xhigh 1223, max 1500 (client cap). Chat Completions ignores reasoning_effort — reasoning tokens stayed flat across none/low/max — so the effort set belongs to [api.messages].
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (2026-11-20): input $8, output $40, cache read $0.2, cache write $10 (cache_creation_input_tokens reported, e.g. 3003 on an explicit 5m breakpoint).
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = 10 }
+
+[cost.text.output]
+price = 40
