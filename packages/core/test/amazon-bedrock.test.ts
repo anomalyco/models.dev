@@ -24,7 +24,7 @@ const offer = {
 };
 
 test("Bedrock matches an AWS model name to the local files of its lab model", () => {
-  const files = [{ id: "openai.gpt-6.1-sol", name: "gpt-6.1 sol" }, { id: "global.openai.gpt-6.1-sol", name: "gpt-6.1 sol" }];
+  const files = [{ id: "openai.gpt-6.1-sol", name: normalize("GPT-6.1 Sol") }, { id: "global.openai.gpt-6.1-sol", name: normalize("GPT-6.1 Sol") }];
   expect(matchModels(offerPrices(offer), files).map((model) => [model.id, model.global])).toEqual([
     ["openai.gpt-6.1-sol", false],
     ["global.openai.gpt-6.1-sol", true],
