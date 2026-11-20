@@ -1,3 +1,5 @@
+# Reasoning toggle on Dulus's Chat Completions API: top-level `enable_thinking`
+# (boolean), i.e. enable_thinking = true|false.
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.6"
@@ -6,7 +8,3 @@ base_model = "moonshotai/kimi-k2.6"
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-
-[api.chat-completions]
-base_url = "https://control.dulus.ai/v1"
-sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }

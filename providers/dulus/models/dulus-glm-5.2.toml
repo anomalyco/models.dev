@@ -6,7 +6,3 @@ base_model = "zhipuai/glm-5.2"
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
 structured_output = true
-
-[api.chat-completions]
-base_url = "https://control.dulus.ai/v1"
-sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }

@@ -6,7 +6,3 @@ base_model = "deepseek/deepseek-v4-flash-0731"
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-
-[api.chat-completions]
-base_url = "https://control.dulus.ai/v1"
-sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }

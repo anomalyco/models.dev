@@ -6,7 +6,3 @@ base_model = "moonshotai/kimi-k2.7-code"
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 structured_output = true
-
-[api.chat-completions]
-base_url = "https://control.dulus.ai/v1"
-sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
