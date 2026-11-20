@@ -1,0 +1,32 @@
+# Pricing and host limits: https://quicksilverpro.io/models/minimax-m3/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/minimax/models/MiniMax-M3.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
+# Toggle: reasoning.enabled = true|false
+# Verified host surface: machinefi/qspro-backend@d4e49f456f5e5ff53a40fc597b387cf52d3b443e
+# catalog/models.json:2681-2699 lists text input and json_schema on the OpenRouter route.
+# Strict-schema enforcement: https://quicksilverpro.io/docs/json-schema/#model-support
+# https://quicksilverpro.io/models/minimax-m3/ explicitly documents strict mode and text-only input.
+# Reasoning replay: worker/src/worker.js:1216-1228 preserves reasoning_content; retain the lab field.
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.24
+cache = { read = 0.048 }
+
+[cost.text.output]
+price = 0.96
