@@ -1,13 +1,12 @@
 # Pricing, limits and API surface (Chat Completions only):
 # https://vivgrid.com/docs/models/gemini-4-hydrogen (accessed 2026-11-20)
-# Effort: reasoning_effort = low|medium|high. Google also documents xhigh for
-# this model, but Vivgrid's Chat Completions endpoint does not forward it yet:
-# such requests fall back to the model's default thinking level (high).
+# Effort: reasoning_effort = low|medium|high|xhigh, as on Google's
+# OpenAI-compatible endpoint for this model.
 schema = 2
 base_model = "google/gemini-4-hydrogen"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 
 [api.chat-completions]
