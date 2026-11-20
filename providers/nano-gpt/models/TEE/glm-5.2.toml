@@ -1,0 +1,19 @@
+# Effort: same set as z-ai/glm-5.2 on NanoGPT (reasoning_effort none|high|max); the catalog row lists none.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 TEE"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 3.95

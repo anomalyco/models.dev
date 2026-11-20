@@ -23,17 +23,17 @@ system_updates = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [cost.text.input]
-price = 0.1
-cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
+price = 0.11
+cache = { read = 0.011, write = { "5m" = 0.1375, "1h" = 0.22 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 100_000 } }
-price = 0.5
-cache = { read = 0.05, write = { "5m" = 0.625, "1h" = 1 } }
+price = 0.55
+cache = { read = 0.055, write = { "5m" = 0.6875, "1h" = 1.1 } }
 
 [cost.text.output]
-price = 0.5
+price = 0.55
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 100_000 } }
-price = 2.5
+price = 2.75

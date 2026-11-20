@@ -8936,3 +8936,20 @@ test("Hugging Face caps a new file's output at a served context below the lab's 
   }), "meta/llama-3.2-3b-instruct");
   expect(doc.limit).toEqual({ context: 80_000, output: 80_000 });
 });
+
+test("Vercel writes pixel and duration bands as range conditions", () => {
+  const image = vercelMediaCost(vercelMedia({ id: "bytedance/seedream-5.5", type: "image", pricing: { image: "0.035", image_dimension_quality_pricing: [
+    { max_pixels: 2_601_123, cost: "0.02" },
+    { min_pixels: 2_601_124, max_pixels: 4_624_220, cost: "0.035" },
+  ] } }), "image");
+  expect(image.cost?.image?.output).toEqual({
+    unit: "image", price: 0.035, overrides: [{ when: { megapixels: { lte: 2.601123 } }, price: 0.02 }],
+  });
+  const video = vercelMediaCost(vercelMedia({ id: "heygen/heygen-video-1", type: "video", pricing: { video_duration_pricing: [
+    { resolution: "480p", cost_per_second: "0.01" },
+    { resolution: "480p", duration_over_seconds: 15, cost_per_second: "0.045" },
+  ] } }), "video");
+  expect(video.cost?.video?.output?.overrides).toEqual([
+    { when: { resolution: { equals: "480p" }, duration: { gt: 15 } }, price: 0.045 },
+  ]);
+});

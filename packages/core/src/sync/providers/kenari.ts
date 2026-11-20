@@ -87,7 +87,8 @@ const CatalogModel = z
       .optional(),
     // kenari's own retirement date. Absence of an id is not proof of retirement, which is why
     // `MIN_LIVE_MODELS` exists; this field is the explicit signal when it is populated.
-    sunset_at: z.string().nullable().optional(),
+    // ISO date string, or Unix seconds (qwen4-max:free lists 1795435200).
+    sunset_at: z.union([z.string(), z.number()]).nullable().optional(),
   })
   .passthrough();
 
@@ -466,9 +467,9 @@ function fileHeader(model: SyncedModel, rate: number): string {
 }
 
 /** An id kenari has already retired; it is dropped so the runner removes the stale file. */
-function isRetired(sunsetAt: string | null | undefined): boolean {
+export function isRetired(sunsetAt: string | number | null | undefined): boolean {
   if (sunsetAt === null || sunsetAt === undefined) return false;
-  const at = Date.parse(sunsetAt);
+  const at = typeof sunsetAt === "number" ? sunsetAt * 1000 : Date.parse(sunsetAt);
   return Number.isFinite(at) && at <= Date.now();
 }
 
