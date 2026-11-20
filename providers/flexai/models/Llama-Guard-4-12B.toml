@@ -5,6 +5,7 @@
 # Output: FlexAI publishes no output cap (max_output_length is null), so output is set to the served context,
 # as the lab entry does for its own window; the lab's 163_840 would exceed the served 16_384.
 schema = 2
+v2_only = true
 base_model = "meta/llama-guard-4-12b"
 
 [limit]
