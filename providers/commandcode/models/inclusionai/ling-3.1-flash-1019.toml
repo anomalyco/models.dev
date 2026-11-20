@@ -1,0 +1,17 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-11-15)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: the three graded levels this host publishes for Ling 3.1 Flash
+#   (providers/commandcode/models/inclusionai/ling-3.1-flash.toml).
+schema = 2
+base_model = "inclusionai/ling-3.1-flash-1019"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.9

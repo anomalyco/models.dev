@@ -1,0 +1,23 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-11-15)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: always on, no caller control. The lab entry is a toggle plus a thinking budget, and the
+#   same-generation Qwen3.6 Plus and Qwen3.7 entries on this host were probed as always on: the lab
+#   switches are not forwarded and graded values make no consistent difference, so no levels are
+#   published (providers/commandcode/models/Qwen/Qwen3.6-Plus.toml).
+# Limit: the 200_000 context is the host's live catalog context_length (the lab serves 262_144).
+schema = 2
+base_model = "alibaba/qwen3.6-max-preview"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 200_000
+
+[cost.text.input]
+price = 1.3
+cache = { read = 0.26, write = 1.63 }
+
+[cost.text.output]
+price = 7.8

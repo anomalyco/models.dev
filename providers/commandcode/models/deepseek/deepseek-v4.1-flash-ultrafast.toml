@@ -1,0 +1,22 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-11-15)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# The accelerated V4.1 Flash endpoint. Its pricing row is flat — "DeepSeek V4.1 Flash Ultrafast |
+#   1M | $2.40 | $9.60 | $0.048" — with no off-peak note, unlike V4.1 Flash and V4.1 Flash Fast on
+#   the same page, so it carries no peak multiplier.
+# Reasoning follows the same model on this host (deepseek-v4.1-flash): toggle through
+#   reasoning_effort = off, graded low|high|max.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash Ultrafast"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2.4
+cache = { read = 0.048 }
+
+[cost.text.output]
+price = 9.6

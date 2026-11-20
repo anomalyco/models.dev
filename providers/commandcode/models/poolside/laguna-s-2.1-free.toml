@@ -5,8 +5,12 @@
 #   can turn thinking off support it"), while omitted and low both ran at the reasoning ceiling.
 #   The native switches are not forwarded either: chat_template_kwargs.enable_thinking = false
 #   and thinking.type = disabled both still reason (500 reasoning tokens each).
+# Retired: the free tier ended on 2026-11-04. GET https://api.commandcode.ai/provider/v1/models
+#   (2026-11-15) no longer lists it, https://commandcode.ai/models has no free Laguna row, and a
+#   live call to the :free id returned HTTP 403 "The free Laguna S 2.1 tier ended on November 4, 2026."
 schema = 2
 base_model = "poolside/laguna-s-2.1"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }
