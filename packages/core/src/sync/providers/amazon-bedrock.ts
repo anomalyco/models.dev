@@ -56,7 +56,24 @@ const MARKETPLACE = /_(input|output|cache_read|cache_write)_tokens(?:_(\d+[mh]))
 const FIRST_PARTY = /^[A-Z0-9]+-(.+?)-(mantle-)?(input|output|cache-read|cache-write)(?:-input)?-tokens?(?:-count)?((?:-[a-z0-9]+)*)$/;
 const TIERS = new Set(["standard", "flex", "priority", "batch", "ultrafast"]);
 
+// Older marketplace models (Claude 4.x, Palmyra): `USE1-MP:USE1_CacheWrite1hInputTokenCount_Global-Units`.
+const MARKETPLACE_COUNT = /_(input|output|cacheread|cachewrite(1h)?)(?:input)?tokencount((?:_[a-z]+)*)-units$/i;
+
 export function parseUsageType(usageType: string): Omit<BedrockPrice, "usd"> | undefined {
+  const count = MARKETPLACE_COUNT.exec(usageType);
+  if (count !== null) {
+    const kinds: Record<string, BedrockPrice["kind"]> = { input: "input", output: "output", cacheread: "cache_read", cachewrite: "cache_write", cachewrite1h: "cache_write" };
+    const modifiers = count[3]!.split("_").filter((part) => part !== "").map((part) => part.toLowerCase());
+    // Only on-demand standard and global rows; batch, latency-optimized and anything else are other products.
+    if (modifiers.some((part) => part !== "global")) return undefined;
+    return {
+      kind: kinds[count[1]!.toLowerCase()]!,
+      ...(count[2] === undefined ? {} : { ttl: "1h" }),
+      longContext: false,
+      global: modifiers.includes("global"),
+      tier: "standard",
+    };
+  }
   const marketplace = MARKETPLACE.exec(usageType);
   if (marketplace !== null) {
     return {
@@ -132,7 +149,17 @@ function route(id: string): "regional" | "global" | undefined {
   return "regional";
 }
 
-const normalize = (name: string) => name.toLowerCase().replace(/^(openai|anthropic|amazon|meta|mistral|cohere)\s+/, "").trim();
+// Names compare without punctuation, the word "instruct", a ".0" minor version or a vendor prefix, so AWS's
+// "Qwen3 Coder 30B A3B", "Nova 2.0 Lite" and "R1" match the labs' "Qwen3-Coder 30B-A3B Instruct", "Nova 2 Lite" and
+// "DeepSeek-R1".
+export const normalize = (name: string) => name
+  .toLowerCase()
+  .replace(/[-_()]/g, " ")
+  .replace(/\binstruct\b/g, " ")
+  .replace(/(\d)\.0\b/g, "$1")
+  .replace(/\s+/g, " ")
+  .trim()
+  .replace(/^(openai|anthropic|amazon|meta|mistral|cohere|writer|deepseek)\s+/, "");
 
 export interface LocalFile {
   id: string;

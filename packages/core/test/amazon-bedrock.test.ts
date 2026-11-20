@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 
 import type { ExistingModel } from "../src/sync/index.js";
-import { buildBedrockModel, matchModels, offerPrices, parseUsageType, type BedrockModel } from "../src/sync/providers/amazon-bedrock.js";
+import { buildBedrockModel, matchModels, normalize, offerPrices, parseUsageType, type BedrockModel } from "../src/sync/providers/amazon-bedrock.js";
 
 test("Bedrock reads token kind, TTL, long context, route and tier from a usage type", () => {
   expect(parseUsageType("USE1-MP:USE1_cache_write_tokens_1h_long_ctx_global_standard-Units")).toEqual({
@@ -24,7 +24,7 @@ const offer = {
 };
 
 test("Bedrock matches an AWS model name to the local files of its lab model", () => {
-  const files = [{ id: "openai.gpt-6.1-sol", name: "gpt-6.1 sol" }, { id: "global.openai.gpt-6.1-sol", name: "gpt-6.1 sol" }];
+  const files = [{ id: "openai.gpt-6.1-sol", name: normalize("GPT-6.1 Sol") }, { id: "global.openai.gpt-6.1-sol", name: normalize("GPT-6.1 Sol") }];
   expect(matchModels(offerPrices(offer), files).map((model) => [model.id, model.global])).toEqual([
     ["openai.gpt-6.1-sol", false],
     ["global.openai.gpt-6.1-sol", true],
@@ -65,4 +65,22 @@ test("Bedrock prefers rows that name the file's model ID over a name match", () 
   ]]]);
   expect(matchModels(prices, [{ id: "moonshotai.kimi-k3", name: "something else" }]).map((model) => model.id)).toEqual(["moonshotai.kimi-k3"]);
   expect(matchModels(prices, [{ id: "moonshot.kimi-k3-v1:0", name: "kimi k3" }])).toEqual([]);
+});
+
+test("Bedrock reads the older marketplace TokenCount usage types", () => {
+  expect(parseUsageType("USE1-MP:USE1_CacheWrite1hInputTokenCount_Global-Units")).toEqual({
+    kind: "cache_write", ttl: "1h", longContext: false, global: true, tier: "standard",
+  });
+  expect(parseUsageType("USE1-MP:USE1_InputTokenCount-Units")).toMatchObject({ kind: "input", global: false });
+  expect(parseUsageType("USE1-MP:USE1_outputTokenCount_Global-Units")).toMatchObject({ kind: "output", global: true });
+  expect(parseUsageType("USE1-MP:USE1_InputTokenCount_Global_Batch-Units")).toBeUndefined();
+  expect(parseUsageType("USE1-MP:USE1_InputTokenCount_LatencyOptimized-Units")).toBeUndefined();
+});
+
+test("Bedrock compares AWS and lab names without punctuation, instruct, .0 or vendor prefixes", () => {
+  expect(normalize("Qwen3 Coder 30B A3B")).toBe(normalize("qwen3-coder 30b-a3b instruct"));
+  expect(normalize("Nova 2.0 Lite")).toBe(normalize("Nova 2 Lite"));
+  expect(normalize("R1")).toBe(normalize("DeepSeek-R1"));
+  expect(normalize("Pixtral Large 25.02")).toBe(normalize("Pixtral Large (25.02)"));
+  expect(normalize("Llama 3.3 70B")).toBe(normalize("llama-3.3-70b-instruct"));
 });
