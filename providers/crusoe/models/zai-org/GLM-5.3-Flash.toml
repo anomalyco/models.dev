@@ -1,0 +1,28 @@
+# Sources: https://docs.crusoe.ai/serverless-inference/index.html and
+# https://www.crusoe.ai/cloud/pricing (accessed 2026-11-16); GET /v1/models.
+# Live: Chat Completions tool call, continuation, strict JSON schema and PNG vision.
+# Implicit cache live: second identical request reused 11,520 of 11,751 input tokens.
+# reasoning_effort none/low/high/max, three same-prompt runs: reasoning tokens
+# 338/338/338, 48/48/48, 105/105/289 and 338/373/373. None did not disable reasoning.
+# Chat Completions reasoning text is returned in message.reasoning (live 2026-11-16).
+# reasoning_field = "reasoning" fails v1 schema validation, so it is left unset.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.50
