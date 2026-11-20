@@ -15,6 +15,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]
