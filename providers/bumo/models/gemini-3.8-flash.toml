@@ -1,0 +1,18 @@
+# Bumo Router (multi-model relay, OpenAI-compatible Chat Completions), billed in USD.
+# Prices: https://router.bumo.ai/api/v1/models (accessed 2026-11-02); flat rate, the catalog row has no tiers.
+# Docs: https://bumo.ai/docs/api
+# Effort: reasoning_effort = low|medium|high (request body is forwarded unchanged)
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true, explicit = true }
+
+[cost.text.input]
+price = 0.795
+cache = { read = 0.0795 }
+
+[cost.text.output]
+price = 3.975

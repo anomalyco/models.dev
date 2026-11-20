@@ -1,5 +1,6 @@
 # Image input: POST https://ai-gateway.vercel.sh/v1/images/edits uses the input image (verified live 2026-10-28)
 # Modalities: Seedream 5.0 output_format png | jpeg, https://ai.byteplus.com/ark/region:ap-southeast-1/docs/image-generation-api
+# Price: AI Gateway catalog pricing.image 0.09 per image, image_dimension_quality_pricing max_pixels 2,610,000 at 0.045 (https://ai-gateway.vercel.sh/v1/models, 2026-11-19).
 schema = 2
 type = "image"
 name = "Seedream 5.0 Pro"
@@ -27,9 +28,10 @@ output = 0
 base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/images" }
 
-[cost.text.input]
-price = 0.003
-
 [cost.image.output]
 unit = "image"
-price = 0.035
+price = 0.09
+
+[[cost.image.output.overrides]]
+when = { megapixels = { lte = 2.61 } }
+price = 0.045

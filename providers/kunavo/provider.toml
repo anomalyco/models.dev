@@ -1,0 +1,15 @@
+# Kunavo is an OpenAI-compatible API gateway. `api` is its OpenAI surface
+# (POST /v1/chat/completions), where every model below is served under
+# Kunavo's own id. Ids are matched exactly; date-suffixed names
+# (e.g. claude-sonnet-4-5-20250929) do not resolve.
+# Price list with context limits and capabilities, no key needed:
+# https://kunavo.com/pricing.json (built from the live catalog, cached 10 min).
+# Claude models are also served on the Anthropic Messages API at the origin
+# https://api.kunavo.com (the client appends /v1/messages,
+# https://kunavo.com/docs/messages); this entry registers the OpenAI surface.
+name = "Kunavo"
+env = ["KUNAVO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.kunavo.com/v1"
+doc = "https://kunavo.com/docs/quickstart?utm_source=models.dev&utm_medium=directory"

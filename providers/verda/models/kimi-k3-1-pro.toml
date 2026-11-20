@@ -1,0 +1,27 @@
+# Model: https://docs.verda.com/inference/models/kimi-k3-1-pro/
+# Model card: https://huggingface.co/moonshotai/Kimi-K3.1-Pro#2-model-summary
+# Modalities: Verda documents Text/Image input; engineering confirms no video support yet.
+# Exact image MIME types are not specified in Verda's documentation.
+# Reasoning controls: https://docs.verda.com/inference/models/kimi-k3-1-pro/#reasoning
+# Reasoning wire format: https://docs.verda.com/inference/openai-compatibility/#reasoning
+# Pricing: Verda console, USD per million tokens.
+
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities] 
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

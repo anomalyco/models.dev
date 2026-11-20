@@ -1,0 +1,25 @@
+# Listed on https://lyceum.technology/models/moonshotai/kimi-k3.1-pro/: text and images, 1M context, 2.00 / 0.20 / 10.00 USD per million tokens.
+# Limits and input: GET https://api.lyceum.technology/openai/v1/models (2026-11-11) reports context_length 1,048,576, max_output_tokens 65,536 and text and image input, so the lab's video formats are dropped.
+# Effort: reasoning_effort low|high|max, the lab's levels (providers/moonshotai/models/kimi-k3.1-pro.toml). In a live check on 2026-11-07 Lyceum accepted each one and reasoned more at each step (71, 170 and 259 reasoning tokens on one prompt).
+# The model always reasons at the lab, and no off switch is documented or was tested on Lyceum, so none isn't listed.
+# Reasoning field unpinned: the trace came back in message.reasoning in that check, which v1 can't express.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

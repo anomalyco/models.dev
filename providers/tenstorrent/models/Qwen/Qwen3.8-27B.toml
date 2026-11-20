@@ -1,0 +1,34 @@
+# Catalog: https://console.tenstorrent.com/v1/openrouter/models (2026-11-04): 262K context, 64K max output, fp4,
+# USD per token prompt 0.00000015, cached_prompt 0.00000005, completion 0.000002.
+# Effort: reasoning_effort = none|low|medium|xhigh. Live probe 2026-11-04 on /v1/chat/completions: none turns thinking off
+#   (0 reasoning tokens); minimal, high and max are rejected with 400 ("Supported types are xhigh (default), medium, and low").
+#   chat_template_kwargs.enable_thinking also works but duplicates effort=none; thinking.type is ignored.
+# Reasoning is returned in message.reasoning only. reasoning_field = "reasoning" is valid in v2 but v1's interleaved.field
+#   only allows reasoning_content|reasoning_details, so it is left unset.
+# Tools: tool_choice auto, required and named return a tool call; none returns text only (live 2026-11-04).
+# structured_output: response_format json_schema (strict, enum field) is enforced (live 2026-11-04).
+# Modalities: the feed lists text only, but live 2026-11-05 the host reads images and video. PNG, JPEG, WebP, BMP and
+#   TIFF image_url parts and MP4 and QuickTime video_url parts all returned the right color. HEIC returns 400
+#   ("Failed to load image: cannot identify image file"), so it is dropped. AVI, MKV, FLV and WMV weren't tested.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 2

@@ -1,3 +1,4 @@
+# Output limit: 25,000 tokens, the cap its upstream documents (providers/databricks/models/databricks-gpt-oss-20b.toml); the lab's raised cap would exceed it.
 schema = 2
 base_model = "openai/gpt-oss-20b"
 name = "GPT OSS 20B (Databricks)"
@@ -6,6 +7,9 @@ name = "GPT OSS 20B (Databricks)"
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = false
+
+[limit]
+output = 25_000
 
 [cost.text.input]
 price = 0.07

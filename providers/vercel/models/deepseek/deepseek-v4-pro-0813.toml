@@ -9,6 +9,9 @@ reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 
+[limit]
+context = 1_048_600
+
 [api.chat-completions]
 
 [api.responses]

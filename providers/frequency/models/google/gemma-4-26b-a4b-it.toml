@@ -1,0 +1,49 @@
+# Served on POST https://llm.scalefrequency.com/v2/chat/completions. The host also accepts `mira-llm`
+# as an alias for this model; google/gemma-4-26b-a4b-it is the canonical id.
+# Prices: https://scalefrequency.com/pricing (accessed 2026-10-28). Billed in INR: ₹15 input, ₹9.30 cached
+# input, ₹55 output per 1M tokens. The page lists USD reference prices of $0.15 / $0.093 / $0.55 (₹100 = $1),
+# which are used here.
+# API reference: https://docs.miraiminds.co/v2/llm ("What the API reads" and "Limits", accessed 2026-10-30).
+# Reasoning: none, and no switch under any field name. We run this host; probed 2026-10-30:
+# - The host builds the model request from a fixed field list (messages, tools, tool_choice, sampling
+#   controls, max_tokens, stop, seed, response_format, stream). A request carrying `reasoning`
+#   ({enabled, effort}), `reasoning_effort`, `thinking`, `enable_thinking`,
+#   `chat_template_kwargs.enable_thinking`, `include_reasoning` and `extra_body` together reached the
+#   model as messages, max_tokens, temperature and stream only.
+# - Thinking is off in the chat template and the model server runs without a reasoning parser. A plain
+#   request and one whose system message starts with `<|think|>` both answered directly (6 and 10
+#   completion tokens on a short arithmetic question), with no `reasoning` / `reasoning_content` field
+#   and no reasoning tokens in usage.
+# - Thought-channel text the model writes on its own is removed from `content` before it is returned.
+# - Public endpoint, 2026-10-31, production key: the same reasoning fields on POST
+#   https://llm.scalefrequency.com/v2/chat/completions answered in 10 completion tokens, with
+#   `reasoning: null` and no reasoning tokens in usage.
+# Modalities: text in, text out. The docs say any message part other than text (images, audio) is refused.
+# Limits (docs "Limits"): 32,768-token context, the request and the reply together. Replies are at most
+# 8,192 tokens per request, for every key: a larger `max_tokens` (or `max_completion_tokens`) is lowered to
+# 8,192, and 400 is used when neither is set. 16,000 characters of message text per request.
+# structured_output: response_format {"type": "json_schema", ...} is accepted (same docs page).
+# Cache: implicit prefix caching. Per the docs, cached input is the part of a prompt that repeats the start
+# of a recent request; it is billed at the cached input price with no cache markers.
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 32_768
+output = 8_192
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.093 }
+
+[cost.text.output]
+price = 0.55

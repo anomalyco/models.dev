@@ -16,8 +16,10 @@
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Grounding keeps its price under Priority, Flex and the scheduled increases (https://ai.google.dev/gemini-api/docs/pricing).
 # APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Gemini 4 Carbon confirmed live 2026-11-10: generateContent with thinkingLevel low|medium|high (minimal is rejected with a 400), the OpenAI-compatible Chat Completions endpoint with reasoning_effort, Interactions with generation_config.thinking_level, and function calling mode VALIDATED. cachedContents.create is rejected ("Explicit caching is not supported"). /v1beta/models reports outputTokenLimit 32,768 (a single synchronous segment; the model page documents 65,536, up to 1,048,576 with long decode).
 # tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
+# recommended_api: Google recommends Interactions for all new projects and lists this model as supported: https://ai.google.dev/gemini-api/docs/interactions-overview#supported-models-agents
 schema = 2
 base_model = "google/gemini-4-carbon"
+recommended_api = "interactions"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }

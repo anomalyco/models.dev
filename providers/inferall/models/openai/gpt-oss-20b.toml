@@ -1,0 +1,19 @@
+# Served through NVIDIA NIM. $0 per token (see provider.toml).
+# Effort: top-level reasoning_effort = low|medium|high. Live 2026-10-22 through
+# api.inferall.ai: low 25, medium 100, high 399 reasoning characters on the same prompt;
+# reasoning returned in message.reasoning_content. Tool calls and json_schema output verified live.
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

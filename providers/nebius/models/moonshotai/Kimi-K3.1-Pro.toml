@@ -1,0 +1,57 @@
+# Sources (accessed 2026-11-04):
+# - https://tokenfactory.nebius.com/api/public/models_info (pricing, max_model_len = 1_048_576, type image2text,
+#   input_cached_price_per_million_tokens = 0.2)
+# - https://tokenfactory.nebius.com/endpoints?modals=endpoint-details&model-id=moonshotai/Kimi-K3.1-Pro
+# Live checks 2026-11-04 against api.tokenfactory.nebius.com (/v1/chat/completions unless noted):
+# - Effort: reasoning_effort = none|low|medium|high|max (none = thinking off). The gateway schema accepts
+#   none|minimal|low|medium|high|xhigh|max (422 otherwise), but the backend rejects minimal and xhigh with 400
+#   "kimi_k31 supports thinking_effort values: low, medium, high, max". Median completion tokens on a test
+#   prompt: low 231, medium 434, high 394, max 743.
+# - Default: omitting reasoning_effort renders the same prompt as max (92 prompt tokens vs 93 for low/medium/high),
+#   so default = max, matching the first-party API.
+# - chat_template_kwargs.enable_thinking = false also turns thinking off (same as none); thinking.type is ignored.
+#   Off is covered by effort none, so there is no toggle.
+# - Responses (/v1/responses): returns reasoning + message items; reasoning.effort = none|low work, but max is
+#   rejected with 422 (the Responses schema stops at xhigh). Effort can't be set per API, so the Chat Completions
+#   list is kept.
+# - Reasoning is returned in both message.reasoning_content and message.reasoning.
+# - Modalities: a PNG data URL is read correctly; video_url returns 400 "This model does not support video input",
+#   so input is text + the lab entry's image types (catalog use_cases list image but not video).
+# - Tools: tool_choice auto|required|named function|none all work; multi-turn tool loops complete with reasoning
+#   sent back as reasoning_content, as reasoning, or not at all.
+# - structured_output: response_format json_schema (strict, enum field) and json_object are enforced.
+# - Cache: automatic prefix cache, no markers; a repeated ~8.4k-token prompt reports created_cache_tokens = 8064,
+#   then cached_tokens = 8064 on every repeat.
+# - Limit: max_tokens = 1_048_000 accepted; 1_048_577 rejected ("cannot be greater than max_model_len=1048576").
+# - Sampling: temperature, top_p and top_k are applied, unlike the first-party API where they are fixed.
+#   temperature = 1.5 gives garbled text, while top_p = 0.01 or top_k = 1 at the same temperature stays coherent.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

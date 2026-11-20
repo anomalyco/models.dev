@@ -1,0 +1,22 @@
+# Sources (accessed 2026-11-11):
+# - https://turion.ai/docs/guides/decision-models/#turion-jev-31b and https://turion.ai/docs/reference/rest-api/#post-v1systemone:
+#   Turion hosts a copy that every workspace calls as `turion-jev-31b` on POST https://api.turion.ai/v1/systemone with
+#   TypeSafe's System One {model, state, questions} body and answer shapes; TypeSafe's SDK works with
+#   base_url = "https://api.turion.ai". Chat completions answer 409 decision_model.
+# - Limits: a prompt over 16,320 tokens (the state with every question) answers 422 context_length_exceeded; nothing is cut.
+# - Price: https://turion.ai/docs/guides/usage/#pricing ($0.021 per 1M input tokens; output tokens are always 0).
+schema = 2
+v2_only = true
+base_model = "turion/turion-jev-31b"
+
+[limit]
+input = 16_320
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.021
+
+[cost.text.output]
+price = 0

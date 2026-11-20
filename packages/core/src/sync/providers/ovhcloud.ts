@@ -2,7 +2,9 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
-import { factorBaseModel } from "./openrouter.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { exactModalities, inheritedOutput, type CortecsModel } from "./cortecs.js";
+import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter";
 
@@ -53,19 +55,55 @@ export const ovhcloud = {
     return OvhcloudResponse.parse(raw).data;
   },
   translateModel(model, context) {
+    const id = model.id.toLowerCase();
+    const existing = context.existing(id);
+    if (existing !== undefined) {
+      return { id, model: buildOvhcloudModel(model, existing, context.authored(id)) };
+    }
+    // A model with no published price isn't on sale yet, and its catalog
+    // `created` is a placeholder, so it isn't written until the catalog is real.
+    if (!hasPrice(model)) return undefined;
+    const canonical = resolveOvhcloudBaseModel(model);
+    // The catalog lists no reasoning controls, so a new reasoning model needs
+    // them researched before it's created.
+    const labReasons = canonical !== undefined && modelMetadata(canonical).reasoning === true;
+    if (model.supported_features?.includes("reasoning") || labReasons) {
+      throw new MissingReasoningOptionsError(model.id, "OVHcloud lists no reasoning controls; author them before creating this model");
+    }
     return {
-      id: model.id.toLowerCase(),
-      model: buildOvhcloudModel(model, context.existing(model.id.toLowerCase())),
+      id,
+      model: buildOvhcloudModel(model, canonical === undefined ? undefined : { base_model: canonical }, undefined),
+      v2Set: canonical === undefined ? undefined : exactModalities(asCortecs(model, id)),
     };
   },
 } satisfies SyncProvider<OvhcloudModel>;
+
+function hasPrice(model: OvhcloudModel) {
+  return price(model.pricing?.prompt) !== undefined && price(model.pricing?.completion) !== undefined;
+}
+
+function resolveOvhcloudBaseModel(model: OvhcloudModel) {
+  const byID = resolveModelMetadataBaseModel(model.id.toLowerCase());
+  if (byID !== undefined) return byID;
+  const repo = model.hugging_face_id?.split("/").at(-1);
+  return repo === undefined ? undefined : resolveModelMetadataBaseModel(repo.toLowerCase());
+}
+
+// exactModalities only reads the id and the modality kinds.
+function asCortecs(model: OvhcloudModel, id: string) {
+  return {
+    id,
+    input_modalities: modalities(model.input_modalities ?? ["text"], ["text"]),
+    output_modalities: modalities(model.output_modalities ?? ["text"], ["text"]),
+  } as unknown as CortecsModel;
+}
 
 function dateFromTimestamp(timestamp: number) {
   return new Date(timestamp * 1000).toISOString().slice(0, 10);
 }
 
 function price(value: string | undefined) {
-  if (value === undefined) return undefined;
+  if (value === undefined || value.trim() === "") return undefined;
   const number = Number(value);
   return Number.isFinite(number) && number >= 0
     ? Math.round(number * 1_000_000_000_000) / 1_000_000
@@ -86,6 +124,7 @@ function modalities(values: string[], fallback: Modality[]): Modality[] {
 export function buildOvhcloudModel(
   model: OvhcloudModel,
   existing: ExistingModel | undefined,
+  authored?: ExistingModel,
 ): SyncedModel {
   const features = new Set(model.supported_features ?? []);
   const samplingParameters = new Set(model.supported_sampling_parameters ?? []);
@@ -104,9 +143,10 @@ export function buildOvhcloudModel(
   const outputCost = price(model.pricing?.completion);
   const cacheRead = price(model.pricing?.input_cache_reads);
   const cacheWrite = price(model.pricing?.input_cache_writes);
-  const cost = {
-    input: inputCost ?? 0,
-    output: outputCost ?? 0,
+  // A catalog row without prices keeps the authored ones instead of writing 0.
+  const cost = inputCost === undefined && outputCost === undefined ? existing?.cost : {
+    input: inputCost ?? existing?.cost?.input,
+    output: outputCost ?? existing?.cost?.output,
     cache_read: cacheRead !== undefined && cacheRead > 0 ? cacheRead : undefined,
     cache_write: cacheWrite !== undefined && cacheWrite > 0 ? cacheWrite : undefined,
   };
@@ -114,7 +154,11 @@ export function buildOvhcloudModel(
   const limit = {
     context: model.context_length,
     input: existing?.limit?.input,
-    output: model.max_output_length ?? existing?.limit?.output ?? model.context_length,
+    output: existing?.base_model !== undefined
+      ? model.max_output_length !== undefined && model.max_output_length < model.context_length
+        ? model.max_output_length
+        : authored?.limit?.output ?? inheritedOutput(existing.base_model, model.context_length)
+      : model.max_output_length ?? existing?.limit?.output ?? model.context_length,
   };
   const modalitiesValue = { input, output };
 

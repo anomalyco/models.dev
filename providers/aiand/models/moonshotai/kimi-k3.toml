@@ -22,6 +22,9 @@ cache = { implicit = true }
 structured_output = true
 temperature = true
 
+[limit]
+output = 131_072
+
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 

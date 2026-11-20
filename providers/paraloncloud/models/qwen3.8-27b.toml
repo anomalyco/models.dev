@@ -1,0 +1,30 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Verified live on POST https://paraloncloud.com/v1/chat/completions (2026-10-11):
+# `reasoning` present and reasoning_tokens > 0 by default, both absent with
+# enable_thinking false. Top-level `reasoning_effort` is accepted and has no effect.
+# Reasoning tokens are counted inside completion_tokens and bill as output.
+# Pricing: https://paraloncloud.com/pricing and https://paraloncloud.com/pricing-api/offers
+# (accessed 2026-11-03), USD per 1M tokens: input 0.12, output 1.70.
+# Context: GET https://paraloncloud.com/v1/models reports max_context 131072.
+# Input: https://paraloncloud.com/inference (accessed 2026-11-03) lists qwen3.8-27b under
+# "Chat + Vision" (text + images); video input is not offered, so the lab's video MIME
+# types are left out and the lab's image list is kept.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 1.70
+reasoning = 1.70

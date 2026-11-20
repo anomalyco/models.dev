@@ -1,6 +1,6 @@
 schema = 2
 base_model = "openai/gpt-6-astra-fast"
-name = "OpenAI: GPT-6 Astra (Fast) ($$$$)"
+name = "OpenAI: GPT-6 Astra (Fast)"
 description = "GPT-6 Astra is OpenAI's most capable model for complex reasoning, coding, computer use, research, and document creation."
 
 [capabilities]
@@ -13,3 +13,7 @@ cache = { read = 2, write = 25 }
 
 [cost.text.output]
 price = 100
+reasoning = 0
+
+[cost.web_search]
+price = 10

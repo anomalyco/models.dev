@@ -167,6 +167,24 @@ test("keeps the file's own API address, which search does not report", () => {
   expect(buildWorkersAiModel(source!, undefined).provider).toBeUndefined();
 });
 
+test("marks a model deprecated once search schedules its retirement", () => {
+  // The flat shape search returns with format=openrouter.
+  const row = {
+    id: "@cf/test/retiring",
+    name: "Retiring",
+    created: 1_782_777_600,
+    context_length: 65_536,
+    pricing: { prompt: "0.000001", completion: "0.000002" },
+  };
+  const [retiring] = cloudflareWorkersAi.parseModels({ data: [{ ...row, deprecation_date: "2026-11-20" }] });
+  expect(buildWorkersAiModel(retiring!, undefined).status).toBe("deprecated");
+  expect(buildWorkersAiModel(retiring!, { status: "beta" }).status).toBe("deprecated");
+
+  const [current] = cloudflareWorkersAi.parseModels({ data: [row] });
+  expect(buildWorkersAiModel(current!, { status: "beta" }).status).toBe("beta");
+  expect(buildWorkersAiModel(current!, undefined).status).toBeUndefined();
+});
+
 test("adds Clef Omni's audio and video inputs, which search leaves out", () => {
   const row = searchRow("@cf/cloudflare/clef-omni", 65_536);
   const [source] = cloudflareWorkersAi.parseModels({
@@ -227,8 +245,8 @@ test("reads tool_choice values from a request schema only when it names them", (
 
 test("sets stated tool fields and keeps the file's others", () => {
   expect(toolsWith(undefined, { choice: ["auto"] })).toEqual({ supported: true, choice: ["auto"] });
-  expect(toolsWith({ supported: true, updates: true, choice: ["auto"] }, { choice: ["auto", "none"] }))
-    .toEqual({ supported: true, updates: true, choice: ["auto", "none"] });
+  expect(toolsWith({ supported: true, updates: ["add", "remove", "replace"], choice: ["auto"] }, { choice: ["auto", "none"] }))
+    .toEqual({ supported: true, updates: ["add", "remove", "replace"], choice: ["auto", "none"] });
   expect(toolsWith({ supported: true, choice: ["auto"] }, { choice: undefined })).toEqual({ supported: true, choice: ["auto"] });
   expect(toolsWith({ supported: false }, { choice: ["auto"] })).toEqual({ supported: false });
 });
