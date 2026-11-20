@@ -1,14 +1,15 @@
 # Cost: SAP AI Core bills capacity units (CU); CU prices aren't comparable to USD.
 #   Per-model GenAI-token rates (SAP Note 3437766; public calculator
 #   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) are multiplied by 1.90385 CU per GenAI token; CU price is contract-specific.
-# SAP orchestration accepts reasoning_effort = none|minimal|low|medium|high in addition to native Bailian controls.
-# https://sap.github.io/ai-sdk/docs/js/orchestration/chat-completion#reasoning-content
-# User-reported probes (2026-11-20): those five levels work; xhigh and max return 400 in orchestration (200 via Direct LLM Access).
-# Budget: config.modules.prompt_templating.model.params.thinking_budget (reasoning tokens; host bounds not documented).
+# Native controls only; SAP's harmonized effort-to-budget mappings are not published as model effort levels.
+# SAP accepts native reasoning options: https://sap.github.io/ai-sdk/docs/js/orchestration/chat-completion#reasoning-content
+# All supported effort levels are internally mapped to thinking-token budgets, not native effort; xhigh is rejected.
+# Toggle: config.modules.prompt_templating.model.params.extra_body.enable_thinking true|false.
+# Budget: config.modules.prompt_templating.model.params.extra_body.thinking_budget (reasoning tokens; host bounds not documented).
 # Native thinking_budget and reasoning_effort are mutually exclusive: https://docs.qwencloud.com/developer-guides/text-generation/thinking
 # Callable model name: https://github.com/SAP/ai-sdk-js/pull/2613 (scripts/sap-models.json; no alibaba-- prefix).
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"], budget = {} }
+reasoning = { supported = true, toggle = true, budget = {} }
