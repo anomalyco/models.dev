@@ -28,6 +28,13 @@ function model(overrides: Partial<AkiModel> = {}): AkiModel {
   }).data[0]!;
 }
 
+function catalog(count: number): AkiModel[] {
+  return Array.from({ length: count }, (_, index) => model({
+    id: `model-${index}`,
+    openai: { id: `model-${index}` },
+  }));
+}
+
 const authored = {
   base_model: "deepseek/deepseek-v4.1-flash-1017",
   cost: { input: 9, output: 9, cache_read: 9 },
@@ -44,7 +51,7 @@ test("AKI.IO is registered for scheduled sync and fetches its public catalog wit
   let request: Request | undefined;
   const fetcher = (async (input: string | URL | Request, init?: RequestInit) => {
     request = input instanceof Request ? new Request(input, init) : new Request(input.toString(), init);
-    return Response.json({ object: "list", data: [model()] });
+    return Response.json({ object: "list", data: catalog(20) });
   }) as unknown as typeof fetch;
   await fetchAkiModels(fetcher);
   expect(request!.url).toBe("https://aki.io/api/models");
@@ -52,6 +59,13 @@ test("AKI.IO is registered for scheduled sync and fetches its public catalog wit
 
   const unavailable = (async () => new Response("Unavailable", { status: 503 })) as unknown as typeof fetch;
   expect(fetchAkiModels(unavailable)).rejects.toThrow("503");
+});
+
+test("a truncated catalog fails closed before deletions", async () => {
+  const truncated = (async () => Response.json({ object: "list", data: catalog(19) })) as unknown as typeof fetch;
+  expect(fetchAkiModels(truncated)).rejects.toThrow("truncated");
+  expect(() => akiIo.parseModels({ object: "list", data: catalog(19) })).toThrow("truncated");
+  expect(() => akiIo.parseModels({ object: "list", data: catalog(20) })).not.toThrow();
 });
 
 test("EUR prices per million tokens become USD per million tokens", () => {

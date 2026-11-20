@@ -11,6 +11,11 @@ const TOKENS_PER_PRICING_UNIT = 1_000_000;
 // (1.0989 USD/EUR, 2026-11-17). Update this constant when the rate is refreshed.
 const EUR_TO_USD = 1.0989;
 
+// The public catalog currently carries about 31 rows (13 are curated locally).
+// Refuse a short read so a truncated response cannot be mistaken for a mass
+// retirement and delete curated files now that deleteMissing is on.
+const MIN_CATALOG_ROWS = 20;
+
 // Accept only real numbers or plain numeric strings. z.coerce.number() would turn
 // null, "" and " " into 0, which is a valid non-negative price, so a missing
 // token price would silently publish a free model instead of failing the run.
@@ -56,6 +61,16 @@ export const AkiResponse = z
 
 export type AkiModel = z.infer<typeof AkiModel>;
 
+function assertCatalogSize(models: AkiModel[]): AkiModel[] {
+  if (models.length < MIN_CATALOG_ROWS) {
+    throw new Error(
+      `AKI.IO returned ${models.length} models, below the ${MIN_CATALOG_ROWS} needed to`
+        + " distinguish a retirement from a truncated response",
+    );
+  }
+  return models;
+}
+
 /**
  * AKI.IO's public `/api/models` lists every catalog entry, including the
  * trust-level variants the provider TOMLs are named after. Only existing TOMLs
@@ -75,7 +90,7 @@ export const akiIo = {
     return fetchAkiModels();
   },
   parseModels(raw) {
-    return AkiResponse.parse(raw).data;
+    return assertCatalogSize(AkiResponse.parse(raw).data);
   },
   translateModel(model, context) {
     const authored = context.authored(model.openai.id);
@@ -92,7 +107,9 @@ export async function fetchAkiModels(fetcher: typeof fetch = fetch) {
   if (!response.ok) {
     throw new Error(`AKI.IO models request failed: ${response.status} ${response.statusText}`);
   }
-  return AkiResponse.parse(await response.json());
+  const parsed = AkiResponse.parse(await response.json());
+  assertCatalogSize(parsed.data);
+  return parsed;
 }
 
 // Prices are EUR per `*_token_unit` tokens (1M today), scaled to USD per 1M.
