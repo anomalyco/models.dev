@@ -6,11 +6,11 @@
 # type=custom freeform text / lark / regex returned HTTP 400,
 # code=request_feature_unsupported ("native Responses bridge cannot preserve custom").
 # This host explicitly does not support freeform; base_model_omit removes it.
+# Host publishes context 258_000; lab context is 1_050_000. Lab input 922_000 exceeds that window, so input is capped to the published context. The page publishes no separate input cap.
 schema = 2
 base_model = "openai/gpt-5.6-terra"
 base_model_omit = ["capabilities.tools.freeform"]
 
-# Host publishes context 258_000; lab context is 1_050_000. Lab input 922_000 exceeds that window, so input is capped to the published context. The page publishes no separate input cap.
 [limit]
 context = 258_000
 input = 258_000
