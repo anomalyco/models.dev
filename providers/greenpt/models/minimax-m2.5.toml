@@ -5,11 +5,23 @@
 # Values verified against the production API. See https://docs.greenpt.ai/chat-completion
 # cache_read: discounted rate for cached prompt tokens. Cache writes are not
 # charged. See https://docs.greenpt.ai/prompt-caching
+# Served by minimax-m3: GreenPT answers this id with minimax-m3 and bills it at that price
+# (https://docs.greenpt.ai/support/changelog, 5 October 2026), so base_model is MiniMax-M3,
+# as green-r points at gpt-oss-120b. On this id JPEG, PNG, GIF and WebP images are read,
+# max_completion_tokens 512000 and a 259k-token prompt are accepted, and reasoning_effort
+# none|minimal|low|medium|high is accepted (xhigh is a 400); tool calls and
+# response_format json_schema work. Checked on api.greenpt.ai 2026-11-20.
 schema = 2
-base_model = "minimax/MiniMax-M2.5"
+base_model = "minimax/MiniMax-M3"
+name = "MiniMax-M2.5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
 
 [cost.text.input]
 price = 0.49346
