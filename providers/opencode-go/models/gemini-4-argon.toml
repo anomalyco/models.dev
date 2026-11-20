@@ -4,8 +4,10 @@
 # Cache: implicit (cached tokens reported without cache markers), as on Zen.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/google/models/gemini-4-argon.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 # Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes (auto/any/none, allowed function names); Go passes requests through.
+# recommended_api: Go exposes /inference/go/google/v1beta/interactions and proxies the same upstreams as Zen, where Interactions was verified on 2026-11-20 for 4 Argon; not re-verified on Go (probe key expired).
 schema = 2
 base_model = "google/gemini-4-argon"
+recommended_api = "interactions"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
@@ -16,6 +18,10 @@ cache = { implicit = true }
 [api.generate-content]
 base_url = "https://opencode.ai/inference/go/google/v1beta"
 sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[api.interactions]
+base_url = "https://opencode.ai/inference/go/google/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google/interactions" }
 
 [cost.text.input]
 price = 2
