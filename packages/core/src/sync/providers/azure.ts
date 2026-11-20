@@ -166,12 +166,23 @@ export function buildAzureModel(model: AzureModel, authored: ExistingModel): Syn
   return { ...authored, cost: next } as SyncedModel;
 }
 
+// The price API rate-limits bursts (429), so requests run one at a time and a 429 waits for Retry-After (or backs off)
+// up to four times.
+async function fetchWithRetry(url: string, attempts = 5): Promise<Response> {
+  for (let attempt = 1; ; attempt++) {
+    const response = await fetch(url);
+    if (response.status !== 429 || attempt >= attempts) return response;
+    const retryAfter = Number(response.headers.get("retry-after"));
+    await Bun.sleep(Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter, 60) * 1000 : 2 ** attempt * 1000);
+  }
+}
+
 async function fetchProduct(product: string) {
   const items: z.infer<typeof PriceItem>[] = [];
   let url: string | null | undefined =
     `${API_BASE}?$filter=${encodeURIComponent(`serviceName eq 'Foundry Models' and productName eq '${product}' and armRegionName eq '${REGION}'`)}`;
   for (let page = 0; url && page < 50; page++) {
-    const response = await fetch(url);
+    const response = await fetchWithRetry(url);
     if (!response.ok) throw new Error(`Azure prices request failed: ${response.status} ${response.statusText}`);
     const parsed = PricePage.parse(await response.json());
     items.push(...parsed.Items);
@@ -198,7 +209,8 @@ export const azure = {
     return [];
   },
   async fetchModels() {
-    const items = (await Promise.all(PRODUCTS.map(fetchProduct))).flat();
+    const items: z.infer<typeof PriceItem>[] = [];
+    for (const product of PRODUCTS) items.push(...await fetchProduct(product));
     const files: string[] = [];
     for await (const file of new Bun.Glob("*.toml").scan(MODELS_DIR)) files.push(file.slice(0, -".toml".length));
     return { items, files };
