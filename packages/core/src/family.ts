@@ -148,11 +148,16 @@ export const ModelFamilyValues = [
 
   // MiniMax
   "minimax",
-  "minimax-m2.5",
-  "minimax-m2.7",
+  "minimax-m",
+  "minimax-m-flash",
   "minimax-m3",
-  "minimax-m3-free",
-  "minimax-free",
+  "minimax-h",
+  "minimax-h-lite",
+  "minimax-h-max",
+  "minimax-h-image",
+  "minimax-image",
+  "minimax-speech",
+  "hailuo",
 
   // Hunyuan
   "hunyuan",
