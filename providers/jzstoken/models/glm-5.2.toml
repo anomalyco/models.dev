@@ -10,7 +10,6 @@ base_model = "zhipuai/glm-5.2"
 
 [modalities]
 input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }

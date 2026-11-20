@@ -86,6 +86,15 @@ export const ModalitiesV2 = z
 
 export type ModalitiesV2 = z.infer<typeof ModalitiesV2>;
 
+// A provider file with `base_model` may override one side. The other side is
+// inherited from the lab when the file leaves it out.
+export const AuthoredModalitiesV2 = ModalitiesV2.partial().refine(
+  (modalities) => modalities.input !== undefined || modalities.output !== undefined,
+  { message: "modalities needs an input or an output" },
+);
+
+export type AuthoredModalitiesV2 = z.infer<typeof AuthoredModalitiesV2>;
+
 export const ModelFamilyV2 = ModelFamily;
 export type ModelFamilyV2 = z.infer<typeof ModelFamilyV2>;
 
@@ -942,7 +951,7 @@ export const AuthoredModelV2 = z
     release_date: DateString.optional(),
     last_updated: DateString.optional(),
     status: z.enum(["alpha", "beta", "deprecated"]).optional(),
-    modalities: ModalitiesV2.optional(),
+    modalities: AuthoredModalitiesV2.optional(),
     capabilities: CapabilitiesOverrideV2.optional(),
     limit: LimitV2.optional(),
     cost: CostV2.optional(),
@@ -966,6 +975,17 @@ export const AuthoredModelV2 = z
           ? `recommended_api = "${model.recommended_api}" needs an [api.${model.recommended_api}] table, but the model has no [api.*] tables`
           : `recommended_api = "${model.recommended_api}" must name one of the model's [api.*] tables: ${tables.join(", ")}`,
     });
+  })
+  .superRefine((model, ctx) => {
+    const modalities = model.modalities;
+    if (model.base_model !== undefined || modalities === undefined) return;
+    if (modalities.input === undefined || modalities.output === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["modalities"],
+        message: "A model without base_model must set both modalities.input and modalities.output",
+      });
+    }
   });
 
 export type AuthoredModelV2 = z.infer<typeof AuthoredModelV2>;

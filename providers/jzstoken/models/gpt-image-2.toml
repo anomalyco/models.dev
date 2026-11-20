@@ -9,7 +9,6 @@ base_model = "openai/gpt-image-2"
 
 [modalities]
 input = ["text"]
-output = ["image/png", "image/jpeg", "image/webp"]
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
