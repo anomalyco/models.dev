@@ -3,7 +3,7 @@
 # Toggle (Messages): thinking.type = enabled|disabled
 # Effort (Messages): output_config.effort = low|medium|xhigh
 # Pricing and endpoint (Anthropic Messages): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
-# Modalities: image and video input as the file already listed (not PDF); MIME types from the lab.
+# Modalities: inherited from the lab, PDF included: Alibaba's Anthropic-compatible Messages API takes PDF document blocks for qwen3.8-max and the qwen4 series (https://www.alibabacloud.com/help/en/model-studio/pdf-understanding, accessed 2026-11-20).
 # Budget: thinking.budget_tokens with thinking.type = enabled (not verified on Go: no Go subscription key was available)
 # family: kept as "qwen3.8-max" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model behind a newer sibling.
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/alibaba/models/qwen3.8-max.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
@@ -12,10 +12,6 @@ schema = 2
 base_model = "alibaba/qwen3.8-max"
 family = "qwen3.8-max"
 description = "2.4-trillion-parameter multimodal flagship for coding, professional work, and long-horizon agentic workflows"
-
-[modalities]
-input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "tool"] }
