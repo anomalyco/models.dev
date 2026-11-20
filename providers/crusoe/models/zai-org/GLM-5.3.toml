@@ -1,0 +1,25 @@
+# Model and context: https://docs.crusoe.ai/serverless-inference/index.html
+# Pricing (USD per million tokens, accessed 2026-11-16): https://www.crusoe.ai/cloud/pricing
+# GET /v1/models confirmed zai-org/GLM-5.3. Chat completions live tested 2026-11-16.
+# Reasoning wire field: reasoning. reasoning_effort none/low/high/max: three runs each,
+# same prompt, temperature 0; reasoning tokens respectively 0/0/0, 66/98/113,
+# 129/179/193, 275/364/362. Strict json_schema and json_object returned valid JSON.
+# Prefix cache: https://docs.crusoe.ai/serverless-inference/overview/index.html
+# Live 2026-11-16: four identical Chat Completions requests with no cache controls,
+# 14,952 input tokens each; cached_tokens 0, 14,848, 14,848, 14,848.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4
