@@ -1,0 +1,28 @@
+# LLMTR serves this Turkey-hosted route as `llmtr/qwen3-6-35b`.
+# Limits, pricing, tools and modalities come from LLMTR's public
+# GET /v1/models catalog as captured on 2026-11-16: $5 / $5 per million
+# tokens, context 262144, output cap 65536, tools listed in
+# supported_parameters, text-only. No live call was made for this change.
+# The previous bare id `qwen3-6-35b` used a 2026-08-16 snapshot (16,384
+# window, $5 / $10, tools pinned false).
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 5
