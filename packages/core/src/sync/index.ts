@@ -17,6 +17,7 @@ import {
   withoutModeCosts,
 } from "../model-file-v2.js";
 import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from "../translate.js";
+import { withPredecessorCapabilities } from "./inherit.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
@@ -110,6 +111,8 @@ export interface SyncProvider<SourceModel> {
    * deduped GitHub issue per missing model ID.
    */
   skipCreates?: boolean;
+  /** Copy hand-set capabilities from the same host's previous model in the family onto new files (default true). */
+  inheritPredecessorCapabilities?: boolean;
   /** Report remote-only models skipped by skipCreates as GitHub issues. */
   trackMissingModels?: boolean;
   deleteMissing?: boolean;
@@ -515,13 +518,16 @@ export async function syncProvider<SourceModel>(
         npm,
       );
       if (content === undefined) continue;
+      const inherited = provider.inheritPredecessorCapabilities === false
+        ? content
+        : withPredecessorCapabilities(content, [...existing].map(([file, entry]) => [file, entry.v2]), modelMetadata);
       files.push({ status: "created", path: filePath });
       if (options.dryRun) {
         console.log(`Would create ${relativePath}`);
       } else {
         await mkdir(path.dirname(filePath), { recursive: true });
         if (await isSymlink(filePath)) await rm(filePath, { force: true });
-        await Bun.write(filePath, content);
+        await Bun.write(filePath, inherited);
       }
       continue;
     }
@@ -585,13 +591,18 @@ export async function syncProvider<SourceModel>(
         continue;
       }
     }
+    let content = file.content;
+    if (current === undefined && provider.inheritPredecessorCapabilities !== false) {
+      modelMetadata ??= await readModelMetadata(provider.modelsDir);
+      content = withPredecessorCapabilities(content, [...existing].map(([path, entry]) => [path, entry.v2]), modelMetadata);
+    }
     files.push({ status: current === undefined ? "created" : "updated", path: filePath });
     if (options.dryRun) {
       console.log(`Would ${current === undefined ? "create" : "update"} ${relativePath}`);
     } else {
       await mkdir(path.dirname(filePath), { recursive: true });
       if (await isSymlink(filePath)) await rm(filePath, { force: true });
-      await Bun.write(filePath, file.content);
+      await Bun.write(filePath, content);
     }
   }
 
