@@ -1,0 +1,26 @@
+# Source: Intility model catalog, https://build.intility.com/inference/models (requires an Intility sign-in, as does
+#   the catalog API behind it; read 2026-11-19): id qwen3-embed-8b, "Qwen3 Embedding 8b",
+#   contextLength 8000, endpoint v1/embeddings (OpenAI-compatible).
+#   Docs: https://build.intility.com/docs/external/inference/get-started/
+# Prices are listed in NOK per 1M tokens (input 1, cached input 0.3), converted to USD at
+#   1 USD = 9.2978 NOK (mid-market, 2026-11-02, https://currencybeacon.com/rates/USD/NOK).
+# Cache: a cached-input price is published but the mechanism isn't documented, so implicit.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-embedding-8b"
+
+[capabilities]
+cache = { implicit = true }
+
+[limit]
+context = 8_000
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0
