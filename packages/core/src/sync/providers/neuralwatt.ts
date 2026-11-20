@@ -16,15 +16,22 @@ const MODALITIES = new Set(["text", "audio", "image", "video", "pdf"]);
 // Hugging Face repos whose lab model publishes different weights, so the
 // weights index can't find it. Keyed by lowercased `metadata.huggingface_id`.
 const LAB_OVERRIDES: Record<string, string> = {
-  // Xiaomi's MOPD build of MiMo-V2.6-Pro; the lab file lists the -RL weights.
+  // Xiaomi's MOPD build of MiMo-V2.6-Pro. The lab file lists the -RL weights.
   "xiaomimimo/mimo-v2.6-pro-mopd": "xiaomi/mimo-v2.6-pro",
+  // NVIDIA's NVFP4 quantization of Google's Gemma 4 31B IT.
+  "nvidia/gemma-4-31b-it-nvfp4": "google/gemma-4-31b-it",
 };
-// Quantized republications (Qwen/Qwen3.8-27B-FP8, nvidia/Gemma-4-31B-IT-NVFP4)
-// serve the lab model named without the suffix.
+// A lab's own quantized repo (Qwen/Qwen3.8-27B-FP8) serves the lab model
+// named without the suffix in the same org.
 const QUANT_SUFFIX = /-(fp8|fp4|nvfp4|mxfp4|int4|int8|awq|gptq|bf16|w4a16|w8a8)$/i;
-// The public list had 24 rows when this was written. A shorter list is taken
-// as truncated rather than as mass retirement, and the run fails.
-const MIN_LIVE_MODELS = 20;
+// The public list had 24 rows when this was written. A list under half that
+// fails the run, so a badly truncated response can't delete most of the
+// catalog. Smaller drops still delete files and rely on the runner's deletion
+// limits and the auto-merge caps.
+const MIN_LIVE_MODELS = 12;
+// Neuralwatt takes audio as WAV only (PCM or float). MP3, FLAC, M4A and other
+// compressed formats are rejected (https://docs.neuralwatt.com/api/chat-completions, "Format").
+const HOST_AUDIO = ["audio/wav"];
 
 const Price = z.number().nonnegative();
 const Effort = z.string().min(1);
@@ -49,7 +56,7 @@ export const NeuralwattModel = z.object({
       // Only decision models set it ("decision").
       task: z.string().nullish(),
     }).passthrough(),
-    // The reasoning_effort contract; null when the model publishes no levels.
+    // The reasoning_effort contract. It is null when the model publishes no levels.
     reasoning: z.object({
       mandatory: z.boolean(),
       supported_efforts: z.array(Effort).nullish(),
@@ -57,7 +64,7 @@ export const NeuralwattModel = z.object({
     }).passthrough().nullish(),
     limits: z.object({
       max_context_length: z.number().int().positive().nullish(),
-      // null: no host cap (the request may use whatever context is left).
+      // null means no host cap, and the request may use whatever context is left.
       max_output_tokens: z.number().int().nonnegative().nullish(),
     }).passthrough(),
     deprecated: z.boolean(),
@@ -120,14 +127,18 @@ export const neuralwatt = {
     // undefined would let the runner delete it as retired.
     if (!priced(model) || !syncable(model)) return republish(model.id, context);
     const authored = context.authored(model.id);
-    const existingV2 = context.v2?.(model.id);
+    const existingV2 = context.v2?.(model.id) as Record<string, any> | undefined;
     // Fall back to the file's base_model only when the row names no checkpoint.
     // An unknown checkpoint goes to missingModelID, which keeps the file.
     const checkpoint = model.metadata.huggingface_id?.trim();
     const baseModel = checkpoint
       ? neuralwattBaseModel(checkpoint)
-      : authored?.base_model ?? (existingV2?.base_model as string | undefined);
+      : authored?.base_model ?? existingV2?.base_model;
     if (baseModel === undefined) return undefined;
+    // Authored host facts (output cap, MIME list) belong to the lab the file
+    // points at, so they are dropped when an alias moves to another lab.
+    const existingBase: string | undefined = authored?.base_model ?? existingV2?.base_model;
+    const sameBase = existingBase === undefined || existingBase === baseModel;
 
     if (isDecision(model)) {
       const v2 = buildDecisionModel(model, baseModel, existingV2);
@@ -136,15 +147,15 @@ export const neuralwatt = {
 
     const reasoning = model.metadata.capabilities.reasoning;
     const controls = reasoning ? reasoningOptions(model.metadata.reasoning, authored) : undefined;
-    // A thinking model needs its levels published; never invent them. An
-    // existing file keeps its authored controls (the runner preserves them).
+    // A thinking model needs its levels published, and they are never invented.
+    // An existing file keeps its authored controls (the runner preserves them).
     if (reasoning && controls === undefined && authored?.reasoning_options === undefined) return undefined;
 
     const input = kinds(model.architecture.input_modalities);
     const pricing = model.metadata.pricing;
     const limit = {
       context: model.metadata.limits.max_context_length ?? model.max_model_len,
-      output: outputLimit(model, authored),
+      output: outputLimit(model, sameBase ? authored : undefined),
     };
     const deprecated = model.metadata.deprecated;
     const translated = factorBaseModel(baseModel, {
@@ -154,7 +165,7 @@ export const neuralwatt = {
       structured_output: model.metadata.capabilities.json_mode,
       reasoning,
       reasoning_options: controls,
-      // The reasoning trace comes back on `reasoning`; see provider.toml.
+      // The reasoning trace comes back on `reasoning` (see provider.toml).
       interleaved: reasoning ? true : authored?.interleaved,
       status: deprecated ? "deprecated" : authored?.status === "deprecated" ? undefined : authored?.status,
       cost: {
@@ -164,15 +175,30 @@ export const neuralwatt = {
       },
       limit,
       modalities: { input, output: ["text"] },
-    }, limit);
+    }, limit, sameBase ? authored?.base_model_omit : undefined);
 
     const v2Set: Record<string, unknown> = {};
     const labInput = labInputModalities(baseModel);
-    if (translated.modalities?.input !== undefined && labInput !== undefined) {
-      // Keep the file's exact MIME types while it lists the same kinds;
-      // otherwise (and for a new file) take the lab's for each kind the API lists.
-      const current = (existingV2?.modalities as { input?: unknown } | undefined)?.input;
-      v2Set["modalities.input"] = Array.isArray(current) && sameKinds(current, input) ? current : exactInput(input, labInput);
+    if (labInput !== undefined) {
+      const host = hostInput(input, labInput, sameBase ? existingV2?.modalities?.input : undefined);
+      // The lab's list is inherited when the host's is the same. Otherwise the
+      // v1 view needs the kinds too, since factoring drops them when they match the lab's.
+      if (sameItems(host, labInput)) v2Set.modalities = undefined;
+      else {
+        v2Set.modalities = { input: host, output: ["text"] };
+        if (!("modalities" in translated) || translated.modalities === undefined) {
+          Object.assign(translated, { modalities: { input, output: ["text"] } });
+        }
+      }
+    }
+    // An authored default effort survives a ladder change while it is still one of the levels.
+    const authoredDefault = existingV2?.capabilities?.reasoning?.default;
+    const effort = controls?.find((option) => option.type === "effort");
+    if (authoredDefault?.type === "effort" && effort?.type === "effort" && effort.values.includes(authoredDefault.value)) {
+      v2Set["capabilities.reasoning"] = (current: unknown) =>
+        current !== null && typeof current === "object" && (current as { supported?: unknown }).supported === true
+          ? (({ supported, default: _old, ...rest }: Record<string, unknown>) => ({ supported, default: authoredDefault, ...rest }))(current as Record<string, unknown>)
+          : current;
     }
 
     return {
@@ -226,7 +252,7 @@ export function reasoningOptions(
   return [effort.data, ...budget];
 }
 
-// A published cap wins; with none (null), keep the file's limit, else inherit the lab's.
+// A published cap wins. With none (null), keep the file's limit, else inherit the lab's.
 function outputLimit(model: NeuralwattModel, authored: ExistingModel | undefined) {
   const cap = model.metadata.limits.max_output_tokens;
   return cap != null && cap > 0 ? cap : authored?.limit?.output;
@@ -246,27 +272,47 @@ function sameKinds(current: unknown[], expected: string[]) {
   return have.size === expected.length && expected.every((kind) => have.has(kind));
 }
 
+function sameItems(a: string[], b: string[]) {
+  return a.length === b.length && [...a].sort().join("\n") === [...b].sort().join("\n");
+}
+
+// The exact input list the host accepts: the file's list while its kinds match
+// the API's, otherwise the lab's MIME types for each kind, with audio as WAV only.
+function hostInput(kinds: string[], labInput: string[], current: unknown) {
+  const list = Array.isArray(current) && sameKinds(current, kinds) ? current.map(String) : exactInput(kinds, labInput);
+  let audioPlaced = false;
+  return list.flatMap((item) => {
+    if (kindOf(item) !== "audio") return [item];
+    if (audioPlaced) return [];
+    audioPlaced = true;
+    return HOST_AUDIO;
+  });
+}
+
 function chatHeader(model: NeuralwattModel, controls: z.infer<typeof ReasoningOption>[] | undefined) {
   const lines = [
     `# Generated by bun models:sync neuralwatt from ${API_ENDPOINT} (public list).`,
-    "# Prices are USD per million tokens from metadata.pricing; lab facts are inherited via base_model.",
+    "# Prices are USD per million tokens from metadata.pricing. Lab facts are inherited via base_model.",
   ];
   const effort = controls?.find((option) => option.type === "effort");
   if (effort?.type === "effort") {
     lines.push(`# Effort: top-level reasoning_effort = ${effort.values.join("|")} (${DOCS}/chat-completions#reasoning-effort).`);
   }
   if (model.metadata.pricing.service_tier === "flex") {
-    lines.push("# Flex tier: requires stream = true, and the listed prices already include the flex discount.");
+    lines.push("# The Flex tier requires stream = true, and its listed prices already include the flex discount.");
   }
   if (model.id.endsWith("-speed")) {
-    lines.push("# Speed lane: billed for measured energy and priced above the listed token price on purpose (https://portal.neuralwatt.com/docs/energy-methodology).");
+    lines.push(
+      "# The Speed tier bills measured energy with no per-server cap on each request's share, so a request costs more than",
+      "# the listed token prices. Accounts billed at token prices get a 403 (https://docs.neuralwatt.com/guides/speed-tier).",
+    );
   }
   return `${lines.join("\n")}\n`;
 }
 
 const DECISION_HEADER = [
   `# Decision model: POST https://api.neuralwatt.com/v1/systemone with the System One {model, state, questions} body (${SYSTEMONE_DOCS}).`,
-  "# Text only: a request with images or videos is a 400. Prices are USD per million tokens from GET /v1/models metadata.pricing.",
+  "# It takes text only, and a request with images or videos is a 400. Prices are USD per million tokens from GET /v1/models metadata.pricing.",
 ].join("\n") + "\n";
 
 // Decision models only answer on /v1/systemone, so they are v2-only files.
@@ -305,7 +351,7 @@ export function buildDecisionModel(model: NeuralwattModel, baseModel: string, ex
     if (Object.keys(doc.limit).length === 0) delete doc.limit;
   }
 
-  // Neuralwatt has no @opencode/ai package of its own; see AGENTS.md "APIs".
+  // Neuralwatt has no @opencode/ai package of its own (see AGENTS.md "APIs").
   doc.api = {
     ...doc.api,
     systemone: {
@@ -367,14 +413,8 @@ export function neuralwattBaseModel(huggingfaceID: string | null | undefined) {
 
   const [org = "", repo = ""] = id.split("/");
   const bare = repo.replace(QUANT_SUFFIX, "");
-  if (bare === repo) return undefined;
-  const sameOrg = unique(index.get(`${org}/${bare}`));
-  if (sameOrg !== undefined) return sameOrg;
-  // A republisher's quantization (nvidia/...-NVFP4): match the repo name in any org.
-  const matches = [...index.entries()]
-    .filter(([key]) => key.split("/")[1] === bare)
-    .flatMap(([, ids]) => ids);
-  return unique(matches);
+  // Another org's quantization goes in LAB_OVERRIDES, never a basename match.
+  return bare === repo ? undefined : unique(index.get(`${org}/${bare}`));
 }
 
 function labModel(modelID: string) {
@@ -390,11 +430,12 @@ function labInputModalities(modelID: string): string[] | undefined {
   return Array.isArray(input) && input.every((item) => typeof item === "string") ? input : undefined;
 }
 
-// Never sends credentials: an authenticated list would add private grants.
-export async function fetchNeuralwattModels(fetcher: typeof fetch = fetch) {
+// Never sends credentials, because an authenticated list would add private grants.
+// parseModels validates the response.
+export async function fetchNeuralwattModels(fetcher: typeof fetch = fetch): Promise<unknown> {
   const response = await fetcher(API_ENDPOINT, { signal: AbortSignal.timeout(30_000) });
   if (!response.ok) {
     throw new Error(`Neuralwatt catalog request failed: ${response.status} ${response.statusText}`);
   }
-  return NeuralwattResponse.parse(await response.json());
+  return response.json();
 }

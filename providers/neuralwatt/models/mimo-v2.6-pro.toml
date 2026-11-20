@@ -16,11 +16,14 @@
 # https://docs.neuralwatt.com/api/models#list-models
 # https://portal.neuralwatt.com/models/mimo-v2.6-pro
 # https://docs.neuralwatt.com/api/chat-completions#reasoning-effort
+# Audio input is WAV only (PCM or float). MP3, FLAC, M4A and other compressed
+# formats are rejected (https://docs.neuralwatt.com/api/chat-completions, "Format",
+# checked 2026-11-20).
 schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "audio/mpeg", "audio/wav", "audio/flac", "audio/mp4", "audio/ogg"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "audio/wav"]
 output = ["text"]
 
 [capabilities]
