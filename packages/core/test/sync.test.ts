@@ -4224,6 +4224,20 @@ test("W&B preserves curated model dates", () => {
   });
 });
 
+test("W&B keeps a standalone file's family instead of guessing one from the id", () => {
+  const model: WandbModel = {
+    id: "example-lab/Kimi-K2-Example",
+    name: "Kimi K2 Example",
+    attachment: false,
+    reasoning: false,
+    tool_call: true,
+    release_date: "2026-10-16",
+    last_updated: "2026-10-16",
+    open_weights: true,
+  };
+  expect((buildWandbModel(model, { family: "kimi" }) as { family?: string }).family).toBe("kimi");
+});
+
 test("W&B keeps hand-authored reasoning effort through a sync", () => {
   const model: WandbModel = {
     id: "zai-org/GLM-5.3",
@@ -4717,6 +4731,12 @@ test("Venice base_model files carry no model facts and keep the catalog display 
   expect(buildVeniceModel(veniceModel(), lab, "anthropic/claude-opus-4-8")).not.toHaveProperty("description");
   const own = { description: "Venice's own description" } as ExistingModel;
   expect(buildVeniceModel(veniceModel(), own, "anthropic/claude-opus-4-8")).toMatchObject(own);
+});
+
+test("Venice sync keeps a standalone file's family instead of guessing one from the id", () => {
+  const model = { ...veniceModel({ name: "MiniMax M3 Preview" }), id: "minimax-m3-preview" } as VeniceModel;
+  expect(buildVeniceModel(model, undefined, null)).toMatchObject({ family: "minimax-m3" });
+  expect(buildVeniceModel(model, { family: "minimax" } as ExistingModel, null)).toMatchObject({ family: "minimax" });
 });
 
 test("Venice sync marks models with a scheduled removal as deprecated", () => {

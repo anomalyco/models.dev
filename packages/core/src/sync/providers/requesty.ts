@@ -84,7 +84,7 @@ export type RequestyModel = z.infer<typeof RequestyModel>;
 // `retires` date is not synced.
 export function buildRequestyModel(
     model: RequestyModel,
-    existing?: Pick<ExistingModel, "base_model" | "status" | "name">,
+    existing?: Pick<ExistingModel, "base_model" | "status" | "name" | "family">,
 ): SyncedModel {
     const toolCall = model.supports_tool_calling;
     const structuredOutput = model.supports_output_json_schema;
@@ -135,7 +135,7 @@ export function buildRequestyModel(
     return {
         name: model.id,
         description: model.description,
-        family: inferFamily(model.id, model.id),
+        family: existing?.family ?? inferFamily(model.id, model.id),
         release_date: releaseDate,
         last_updated: releaseDate,
         attachment: input.some((value) => value !== "text"),
