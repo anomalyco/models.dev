@@ -4,12 +4,14 @@
 # GreenPT accepts reasoning_effort = none|minimal|low|medium|high.
 # Source: https://docs.greenpt.ai/reasoning
 # Cache writes are not charged: https://docs.greenpt.ai/prompt-caching
-# Input: JPEG, PNG, GIF and WebP images are read (checked on api.greenpt.ai 2026-11-19).
+# Input: JPEG, PNG, GIF, WebP, BMP and TIFF images are read; HEIC and HEIF are refused with a 400 (the image cannot be decoded), and a PDF
+# file part is refused. Video is not a documented GreenPT input, so it is not listed
+# (checked on api.greenpt.ai 2026-11-19 and 2026-11-20).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff"]
 output = ["text"]
 
 [capabilities]

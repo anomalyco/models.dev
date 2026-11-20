@@ -7,7 +7,8 @@
 # return no reasoning; low, medium and high reason (about 1.4k to 6k reasoning tokens, with
 # little difference between the levels). A thinking = { type = ... } body field is ignored, so
 # reasoning_effort is the only control and no toggle is authored.
-# Input: JPEG, PNG, GIF and WebP images are read; video is not offered.
+# Input: JPEG, PNG, GIF, WebP, BMP and TIFF images are read; HEIC and HEIF are refused with a 400 (the image cannot be decoded), and PDF
+# file parts are refused. Video is not a documented GreenPT input, so it is not listed.
 # Tool calls and response_format json_schema work; max_completion_tokens 512000 is accepted.
 # Checked on api.greenpt.ai 2026-11-19.
 # Cache writes are not charged: https://docs.greenpt.ai/prompt-caching
@@ -15,12 +16,13 @@ schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.49346
