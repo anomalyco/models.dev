@@ -18,7 +18,6 @@ import {
 } from "../model-file-v2.js";
 import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from "../translate.js";
 import { withPredecessorCapabilities } from "./inherit.js";
-import { parseLeniently } from "./lenient-parse.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
@@ -356,11 +355,7 @@ export async function syncProvider<SourceModel>(
   const existingState = await readExisting(provider.modelsDir, npm);
   const { models: existing, brokenSymlinks } = existingState;
   let { modelMetadata } = existingState;
-  const parsed = parseLeniently((raw) => provider.parseModels(raw), await provider.fetchModels());
-  const sourceModels = parsed.models;
-  // A dropped row's model would look like it left the catalog, so nothing is deleted on a run that dropped rows.
-  const droppedRows = parsed.dropped;
-  for (const row of droppedRows) console.warn(`${provider.name}: skipped catalog row ${row}`);
+  const sourceModels = provider.parseModels(await provider.fetchModels());
   const desired = new Map<string, {
     model: z.infer<typeof SyncedAuthoredModel>;
     header: string;
@@ -629,7 +624,7 @@ export async function syncProvider<SourceModel>(
       unchanged++;
       continue;
     }
-    if (provider.deleteMissing === false || translateFailures.length > 0 || droppedRows.length > 0) {
+    if (provider.deleteMissing === false || translateFailures.length > 0) {
       missingLocal.push(relativePath);
       console.log(`Retaining model missing from source: ${relativePath}`);
       unchanged++;
@@ -653,9 +648,6 @@ export async function syncProvider<SourceModel>(
   const notices = [
     ...translateFailures,
     ...translateNotices,
-    ...(droppedRows.length === 0 ? [] : [
-      `${droppedRows.length} catalog rows didn't match the expected shape and were skipped, so nothing was deleted this run: ${droppedRows.join(", ")}`,
-    ]),
     ...v2Notices,
     ...missingReasoning.values(),
     ...provider.skippedNotice?.(skippedRemote) ?? [],
