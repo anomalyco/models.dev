@@ -1,0 +1,36 @@
+# https://novita.ai/models/model-detail/openai-gpt-6.2-astra
+# GET https://api.novita.ai/openai/v1/models (2026-11-18): $8 input / $40 output / $0.4 cache read per MTok (the sync applies the 2x input, 1.5x output band above 272K),
+#   context_size 1_050_000, max_output_tokens 128_000 (both the lab's), endpoints as the catalog lists them.
+# Effort: reasoning_effort = low|medium|high|xhigh (live 2026-11-18 on chat/completions; none, minimal and max are rejected with a 400 listing those four). Responses also accepts max, but the set has to hold on both APIs.
+# Novita also lists gpt-6.2-astra-es and gpt-6.2-astra-azure-dst at the same price; they're routing variants of this model, ignored in the sync.
+# Cache: implicit (the catalog lists a cache read price and no write price).
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16
+cache = { read = 0.8 }
+
+[cost.text.output]
+price = 40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60

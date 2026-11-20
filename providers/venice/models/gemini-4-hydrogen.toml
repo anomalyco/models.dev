@@ -6,7 +6,7 @@ input = ["text", "image", "audio", "video"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 
 [limit]

@@ -7,7 +7,7 @@ base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-structured_output = false
+structured_output = true
 
 [limit]
 output = 235_929

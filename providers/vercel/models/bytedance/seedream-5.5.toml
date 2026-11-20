@@ -26,3 +26,11 @@ output = 0
 [api.images]
 base_url = "https://ai-gateway.vercel.sh/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.035
+
+[[cost.image.output.overrides]]
+when = { megapixels = { lte = 2.601123 } }
+price = 0.02

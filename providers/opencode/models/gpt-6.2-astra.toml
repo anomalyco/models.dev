@@ -11,6 +11,8 @@
 #   Surface: Responses carries the in-history messages (configuration_update for effort_updates; additional_tools for tools.updates).
 # Tools follow OpenAI's Responses API: https://developers.openai.com/api/docs/guides/function-calling (strict, tool_choice, custom tools with text, lark or regex format), tool_search per model page https://developers.openai.com/api/docs/models; Zen passes requests through.
 # Responses cache writes: 30m at 1.25x input, 12h at 2.5x. https://developers.openai.com/api/docs/guides/prompt-caching
+# Fast (priority) and ultrafast service tiers: pricing follows providers/openai/models/gpt-6.2-astra.toml (Zen passes requests through).
+# No experimental modes for now: the tiers work through the API, but clients don't list them as separate models.
 schema = 2
 base_model = "openai/gpt-6.2-astra"
 
@@ -21,6 +23,7 @@ structured_output = true
 cache = { implicit = true }
 system_updates = true
 effort_updates = true
+service_tier = ["priority", "ultrafast"]
 
 [api.responses]
 base_url = "https://opencode.ai/inference/openai/v1"
@@ -41,3 +44,15 @@ price = 40
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 60
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" }, date = { lt = "2027-03-01" } }
+factor = { text = 3 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" }, date = { gte = "2027-03-01" } }
+factor = { text = 6 }

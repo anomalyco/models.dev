@@ -10,7 +10,7 @@ base_model = "jaredpalmer/kev-4b"
 context = 8_192
 
 [api.systemone]
-sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai" }
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
 
 [cost.text.input]
 price = 0.042

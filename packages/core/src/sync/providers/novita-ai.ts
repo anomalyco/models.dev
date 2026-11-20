@@ -8,6 +8,11 @@ const ENDPOINT = "https://api.novita.ai/openai/v1/models";
 // Unadvertised/development aliases observed in the 2026-10-09 catalog audit.
 // Sao10K is separately deferred until exact IDs have a portable file representation.
 const IGNORED_IDS = new Set([
+  // Routing variants of the same OpenAI models, same price as the plain IDs.
+  "openai/gpt-6.2-astra-azure-dst",
+  "openai/gpt-6.2-astra-es",
+  "openai/gpt-6.2-sol-azure-dst",
+  "openai/gpt-6.2-sol-es",
   "bunny",
   "dev/glm46",
   "deepseek/deepseek-r1/community",

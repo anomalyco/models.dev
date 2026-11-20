@@ -3,7 +3,7 @@
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 # Modalities: Kilo documents no formats; this alias redirects to the latest GPT Astra, and every current GPT Astra model in the lab catalog lists the same formats. OpenAI image inputs PNG, JPEG, WEBP, non-animated GIF: https://platform.openai.com/docs/guides/images-vision
 schema = 2
-name = "OpenAI: GPT Astra Latest ($$$$)"
+name = "OpenAI: GPT Astra Latest"
 description = "This model always redirects to the latest model in the OpenAI GPT Astra family."
 family = "gpt-astra"
 open_weights = false
@@ -24,11 +24,11 @@ context = 1_050_000
 output = 128_000
 
 [cost.text.input]
-price = 16
-cache = { read = 0.8, write = 20 }
+price = 8
+cache = { read = 0.4, write = 10 }
 
 [cost.text.output]
-price = 60
+price = 40
 
 [cost.web_search]
 price = 10
