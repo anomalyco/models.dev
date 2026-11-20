@@ -1,0 +1,19 @@
+# Toggle: reasoning_effort = "none" switches thinking off on this gateway (forwarded to the host as thinking.type = "disabled");
+#   reasoning.enabled = false and thinking.type = "disabled" are accepted too. reasoning_effort levels other than "none" are ignored by the host.
+# Measured on this gateway 2026-11-18: 146 tokens per second, tool call and response_format json_object answered correctly.
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-11-20)
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.78

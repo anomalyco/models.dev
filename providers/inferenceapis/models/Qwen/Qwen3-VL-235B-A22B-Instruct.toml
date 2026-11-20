@@ -1,0 +1,14 @@
+# Instruct (non-reasoning) vision model. Measured on this gateway 2026-09-18: image_url parts, tool calls and response_format json_object work.
+# Context on this host is 262,144 tokens.
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-11-20)
+schema = 2
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.26
+
+[cost.text.output]
+price = 1.15
