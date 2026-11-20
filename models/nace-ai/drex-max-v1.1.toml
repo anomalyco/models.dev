@@ -1,0 +1,32 @@
+# Sources:
+# - https://console.nace.ai/docs/drex/reference/models
+# - https://console.nace.ai/docs/drex/api-reference/systemone (images: top-level `images` list, `drex-max-v1.1` and `drex-max-finance` only, up to 8 PNG, JPEG or WebP, shared by every question)
+# The 262,144-token limit covers the whole packed request: state, images, every question, and formatting and decision markers.
+# Output: decision probabilities, not generated text, so there is nothing to sample.
+schema = 2
+v2_only = true
+type = "decision"
+name = "Drex Max v1.1"
+description = "Multimodal System One decision model that answers typed boolean, choice and score questions over text, structured state and images, returning calibrated probabilities without generating text"
+open_weights = false
+release_date = "2026-10-28"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 0
+
+[[links]]
+label = "Documentation"
+url = "https://console.nace.ai/docs"
+type = "docs"
