@@ -1,0 +1,24 @@
+# Sources (accessed 2026-11-08):
+# - Limits, input types, prices (cheapest upstream route plus 10% markup; prices float with the
+#   routed upstream): https://inference.dagon.so/v1/models
+# - Model page: https://inference.dagon.so/models/abliterated-model
+# - Forwarded Chat Completions fields: https://inference.dagon.so/docs/chat-completions
+#   (reasoning_effort is forwarded; thinking toggles and top_k are not forwarded on Chat Completions)
+# Effort ladder per https://docs.abliteration.ai/capabilities/thinking ("none" disables reasoning).
+schema = 2
+base_model = "abliteration-ai/abliterated-model"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+top_k = false
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.11 }
+
+[cost.text.output]
+price = 3.3
