@@ -1,0 +1,59 @@
+# OCI list price, pay as you go, USD per 1M tokens: Oracle's price list has no separate Multi-Agent
+# SKU, so the "Grok 4.2" parts apply (B111910/B111911/B112076-B112079, priority B112742/B112743/
+# B113299-B113302, accessed 2026-11-05); the higher band applies above 200K prompt tokens. xAI
+# prices this model identically to Grok 4.20. Model is hosted by xAI and called through OCI.
+# Facts from https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4-20-multi-agent.htm:
+# `xai.grok-4.20-multi-agent` is OCI's alias for `xai.grok-4.20-multi-agent-0309`; 1M context;
+# text and base64 JPG/PNG image input (PDF is not declared); structured outputs; cached input
+# tokens; priority processing; on-demand in us-ashburn-1, us-chicago-1, us-phoenix-1 only, and
+# only through the API (not the Console).
+# Responses only: OCI rejects this model on Chat Completions, both the OpenAI-compatible
+# /openai/v1/chat/completions and the native /actions/chat ("Multi Agent requests are not allowed
+# on chat completions", 400). OCI's /openai/v1/responses also requires an `OpenAI-Project` header
+# (a Generative AI Project OCID) or `opc-conversation-store-id` for non-OpenAI models; without
+# one it returns 400 "Non-OpenAI models require 'OpenAI-Project' or 'opc-conversation-store-id'
+# header for the Responses API".
+# Tools: OCI's page says "Function Calling: Yes, through the API", but xAI requires beta access
+# for client-side tools on this model and OCI relays to xAI, so tools stay off until verified live.
+# Reasoning: probed live 2026-11-16 on us-chicago-1 /openai/v1/responses (with OpenAI-Project):
+# no effort, reasoning.effort = low, medium and high all return 200 with reasoning_tokens in usage;
+# high is honoured (~5.2K-5.9K reasoning and ~35K input tokens vs ~1.0K-1.7K and ~6-10K for
+# none/low/medium, consistent with more agents). xhigh is rejected with 400 "unknown variant
+# `xhigh`, expected one of `minimal`, `low`, `medium`, `high`", so it is dropped here even though
+# xAI lists it. `minimal` deserializes but is not an xAI level, so it is not advertised.
+schema = 2
+base_model = "xai/grok-4.20-multi-agent-0309"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
+structured_output = true
+service_tier = ["priority"]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.2 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 2.5
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
