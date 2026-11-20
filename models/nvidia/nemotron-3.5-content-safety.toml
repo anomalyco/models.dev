@@ -4,6 +4,7 @@
 # Sampling: open weights, so temperature/top_p/top_k are runtime features of the host;
 #   the model card's examples pass temperature and top_p.
 schema = 2
+type = "moderation"
 name = "Nemotron 3.5 Content Safety"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 family = "nemotron"

@@ -5,6 +5,7 @@
 # Mid-conversation (Fastino /v1/chat/completions, https://docs.fastino.ai/openapi.json ChatCompletionRequest): no reasoning or tools, so no effort or tool updates.
 # system_updates unset: Fastino renders each request to the upstream's native API and doesn't document where a later system message goes.
 schema = 2
+type = "moderation"
 name = "GLiGuard LLM Guardrails 300M"
 description = "LLM safety, PII, and adversarial-attack guardrails; 300M-param encoder."
 open_weights = true

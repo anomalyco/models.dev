@@ -2,6 +2,7 @@
 # Output is the configured decoder-context ceiling, not a published hosted-API output maximum; prompt, reasoning and final output share the 131,072-token budget.
 # No separate fixed output cap: https://huggingface.co/openai/gpt-oss-safeguard-120b/blob/main/generation_config.json
 schema = 2
+type = "moderation"
 name = "GPT OSS Safeguard 120B"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
 family = "gpt-oss"
