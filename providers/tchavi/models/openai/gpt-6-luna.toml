@@ -1,0 +1,45 @@
+# Source: https://tchavi.com/api/model-tiers (public, no key; accessed 2026-11-19).
+# Prices there are credits per 1K tokens; converted at Tchavi's rate of
+# 1 credit = 0.3333 XOF and 600 XOF per USD, so USD per 1M = credits per 1K x 0.5555.
+# 0.22 / 1.1 credits per 1K in / out; cache read 0.022, cache write 0.275.
+# No promotion runs on this model.
+# Requests are passed through to OpenAI unchanged.
+# Reasoning: the publisher's full set. Tchavi refuses one effort on this row,
+# `minimal`, which is not in the published set, so nothing is narrowed.
+# APIs: both routes are served. Both tables are declared because naming one
+# [api.*] table replaces the inferred set; Chat Completions is listed first so
+# it stays the recommended route.
+# Custom tools, probed live on Tchavi on 2026-11-19: all three formats returned
+# 200 on Responses with tool_choice = "required", and both grammars were
+# enforced, not merely accepted (regex `ZZ[0-9]{3}` returned ZZ001, the
+# equivalent lark grammar returned ZZ482; `format = text` returned prose). The
+# same tool on Chat Completions is refused with a 400 ("Missing required
+# parameter: 'tools[0].custom'"), so `freeform` sits on [api.responses] only.
+# Structured output: json_schema is passed through to OpenAI and is not refused.
+# Cache: OpenAI's automatic prompt caching (1,024-token minimum) applies to the
+# passed-through request. Explicit breakpoints pass through too, probed live on
+# Tchavi on 2026-11-19 on Chat Completions: prompt_cache_options.mode = explicit
+# with prompt_cache_breakpoint on a 1,815-token developer block wrote 1,803
+# tokens (cache_write_tokens) on the first call and read 1,803 (cached_tokens)
+# on the identical second call. Only the default 30m lifetime was probed;
+# prompt_cache_retention is refused with a 400, so the 12h tier is not offered.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tokens = 1_024 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+
+[cost.text.input]
+price = 0.1222
+cache = { read = 0.0122, write = 0.1528 }
+
+[cost.text.output]
+price = 0.6111
