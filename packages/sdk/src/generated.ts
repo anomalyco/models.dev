@@ -227,5 +227,6 @@ export type ModelFamily =
   | "voxtral"
   | "voyage"
   | "whisper"
+  | "xing"
   | "yi"
   | "zephyr"
