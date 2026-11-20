@@ -1,0 +1,42 @@
+# Probed live endpoint 2026-11-16 (POST /v1/chat/completions, temperature 0).
+# Effort: reasoning_effort = low|high|max (default max). Reasoning tokens on a
+# one-step arithmetic prompt: low 7, high 7, max 43, and 43 with the field
+# omitted (low and high returned the same output on that prompt). medium is
+# accepted and returns the same output as the default.
+# Reasoning cannot be turned off: reasoning_effort "none" and
+# chat_template_kwargs.enable_thinking = false are accepted but ignored (360
+# reasoning tokens on a multi-step prompt either way), so "none" is not listed.
+# Reasoning text is returned in message.reasoning, also alongside tool_calls. reasoning_field = "reasoning"
+# is valid in v2, but v1's interleaved.field only allows
+# reasoning_content|reasoning_details, so no reasoning_field is set.
+# Structured output: a strict json_schema response_format returned schema-valid JSON.
+# Input: the pricing page lists text and image for this model, so the lab's video
+# and PDF types are left out. A PNG image_url part was accepted; JPEG was not sent.
+# Model id and context: GET /v1/models reports context_length 1048576 (lab file:
+# 1000000), accessed 2026-11-16. A prompt past the lab's window was not sent.
+# Pricing: https://www.crusoe.ai/cloud/pricing and the pricing object in
+# GET /v1/models (both accessed 2026-11-16).
+# Cache: GET /v1/models prices input_cache_reads for this model and lists
+# prompt_cache_key and cache_salt in supported_parameters, with no
+# cache_control parameter, so implicit. A cache hit was not measured.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5
