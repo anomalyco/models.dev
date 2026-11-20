@@ -1,8 +1,11 @@
 # DeepTime route, rates and capabilities (2026-11-17): https://deeptimetoken.com/en/models/qwen?model=hon%3Aqwen3.8-max
+# DeepTime lists "qwen3.8-max" as the Chat Completions request model ID; hon: is only in the cited page selector.
 # USD per million tokens, converted by DeepTime at 6.7138 CNY/USD (2026-10-30).
 # Model-native control baseline: https://github.com/anomalyco/models.dev/blob/dev/providers/alibaba/models/qwen3.8-max.toml
 # Toggle: enable_thinking = true|false. Effort: reasoning_effort = low|medium|xhigh.
-# The route lists reasoning; passthrough of these individual controls has not been verified.
+# Budget: thinking_budget (reasoning tokens; send separately from reasoning_effort).
+# Controls follow the native Qwen Chat Completions and equivalent relay baselines.
+# DeepTime passthrough and budget bounds have not been verified with an authenticated request.
 # DeepTime lists text, image and video inputs; the lab's PDF input is not listed for this route.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
@@ -12,7 +15,7 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
 structured_output = true
 cache = { implicit = true }
 
