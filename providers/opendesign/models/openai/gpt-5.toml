@@ -1,8 +1,7 @@
 # Reasoning controls follow the OpenRouter relay entry for this model
 # (providers/openrouter/models/openai/gpt-5.toml): graded levels
-# minimal/low/medium/high. Mid-conversation system messages stay in place
-# on the lab API and on the OpenRouter relay peer (probed live 2026-10-23),
-# so system_updates is set.
+# minimal/low/medium/high. system_updates is left out: no host evidence
+# for mid-conversation system messages on this host.
 # tools.freeform is left out: no host evidence for custom-tool formats yet.
 # APIs: OpenDesign Cloud API serves Chat Completions, Responses and Messages
 # (https://open-design.ai/help/cloud-api/, accessed 2026-11-20).
@@ -15,7 +14,6 @@ base_model = "openai/gpt-5"
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-system_updates = true
 
 [api.chat-completions]
 
