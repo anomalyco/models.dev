@@ -9,11 +9,11 @@ input = ["image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "t
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["minimal", "high"] }
+reasoning = { supported = true, effort = ["none", "minimal", "high"] }
 structured_output = true
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 
 [cost.text.input]
 price = 0.5

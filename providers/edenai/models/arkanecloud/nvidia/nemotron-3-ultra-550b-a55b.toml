@@ -1,0 +1,17 @@
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+name = "Nemotron 3 Ultra 550B A55B (Arkanecloud)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+structured_output = false
+
+[limit]
+context = 512_288
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.5

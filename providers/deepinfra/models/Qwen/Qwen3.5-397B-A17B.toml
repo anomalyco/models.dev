@@ -9,10 +9,10 @@ description = "Qwen vision-language model for visual reasoning, documents, and a
 knowledge = "2025-01"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
 

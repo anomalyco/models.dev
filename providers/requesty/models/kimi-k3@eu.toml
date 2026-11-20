@@ -5,18 +5,17 @@ base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 (EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
-output = 262_144
+output = 65_536
 
 [cost.text.input]
 price = 3
-cache = { read = 0.45 }
+cache = { read = 0.75 }
 
 [cost.text.output]
 price = 15

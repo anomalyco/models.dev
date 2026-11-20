@@ -18,17 +18,23 @@ input = ["audio/wav", "audio/mpeg", "audio/aiff", "audio/aac", "audio/ogg", "aud
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
+cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
 
 [limit]
 context = 1_048_576
 output = 943_718
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 2
@@ -49,3 +55,10 @@ price = 18
 
 [cost.image.input]
 price = 2
+
+[cost.audio.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.web_search]
+price = 14

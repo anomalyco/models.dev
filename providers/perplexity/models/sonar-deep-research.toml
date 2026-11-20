@@ -14,8 +14,8 @@
 #   pricing page no longer lists Sonar. This model was not probed live (cost); sonar, sonar-pro and sonar-reasoning-pro
 #   requests on 2026-10-21 were billed at rates that differ from that table, so the listed prices may be stale.
 # Archived pricing page: input $2, output $8, reasoning tokens $3, citation tokens $2 per MTok, search queries $5 per
-#   1,000. Not representable in v2: the citation-token price (no field for a separate input-token class) and the
-#   per-search-query fee (no per-request unit).
+#   1,000 (cost.web_search, billed per search query the model runs). Not representable in v2: the citation-token price (no
+#   field for a separate input-token class).
 schema = 2
 base_model = "perplexity/sonar-deep-research"
 name = "Perplexity Sonar Deep Research"
@@ -31,3 +31,6 @@ price = 2
 [cost.text.output]
 price = 8
 reasoning = 3
+
+[cost.web_search]
+price = 5

@@ -2,6 +2,8 @@
 #   (https://platform.minimaxi.com/docs/faq/models, https://platform.minimaxi.com/docs/m-plan/intro).
 # Caching: requests are served by MiniMax-M3.1-Flash, so they get its automatic prefix cache
 #   (≥512 tokens, no cache_control; https://platform.minimaxi.com/docs/api-reference/text-prompt-caching).
+# Tools: tool_choice supports only auto (ToolChoice schema); no strict tool mode documented
+#   (https://platform.minimaxi.com/docs/api-reference/text-chat-anthropic).
 schema = 2
 name = "MiniMax-M2.5-highspeed"
 description = "High-speed MiniMax model for low-latency coding and agent workflows"
@@ -15,16 +17,27 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true }
 temperature = true
 top_p = true
 top_k = false
-cache = { supported = true, implicit = { min_tokens = 512 }, explicit = false }
+cache = { implicit = { min_tokens = 512 } }
 
 [limit]
 context = 204_800
 output = 131_072
+
+[api.messages]
+
+[api.chat-completions]
+base_url = "https://api.minimax.cn/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/minimax/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+base_url = "https://api.minimax.cn/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/minimax/responses" }
 
 [cost.text.input]
 price = 0

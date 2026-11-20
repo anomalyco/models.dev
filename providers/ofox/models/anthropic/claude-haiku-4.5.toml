@@ -10,11 +10,9 @@ schema = 2
 base_model = "anthropic/claude-haiku-4-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, budget = { min = 1_024 } }
-system_updates = false
-effort_updates = false
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], min_tokens = 4_096 } }
+cache = { explicit = { ttl = ["5m", "1h"], min_tokens = 4_096 } }
 
 [api.messages]
 base_url = "https://api.ofox.ai/anthropic/v1"

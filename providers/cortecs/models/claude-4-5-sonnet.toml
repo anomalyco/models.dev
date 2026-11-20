@@ -6,15 +6,14 @@ schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
-cache = { supported = true, explicit = true }
+cache = { explicit = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
-price = 2.989
-cache = { read = 0.326, write = 4.078 }
+price = 3.411
+cache = { read = 0.341, write = 4.264 }
 
 [cost.text.output]
-price = 14.945
+price = 17.058

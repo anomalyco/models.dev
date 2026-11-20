@@ -1,4 +1,5 @@
 # Sources:
+# - https://docs.typesafe.ai/images.md ("Jev 1.13 and Jev 1.14 both accept images"; PNG or JPEG, 280 to 1568 px per side; the models table still says Text)
 # - https://docs.typesafe.ai/models.md
 # - https://docs.typesafe.ai/api.md
 # - https://typesafe.ai/blog/introducing-system-one-models-and-jev
@@ -13,7 +14,7 @@ open_weights = false
 release_date = "2026-09-15"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/png", "image/jpeg"]
 output = ["decision"]
 
 [capabilities]

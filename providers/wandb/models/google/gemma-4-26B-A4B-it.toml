@@ -5,10 +5,9 @@ name = "Gemma 4 26B A4B"
 description = "Gemma 4 26B A4B is a multimodal MoE model with LoRA support and function calling for agentic workflows."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 262_144

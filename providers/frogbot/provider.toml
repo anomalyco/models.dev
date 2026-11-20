@@ -1,7 +1,8 @@
 name = "FrogBot"
 # Reasoning HTTP format (accessed 2026-06-25): POST /api/v1/chat/completions.
-# JSON reasoning_effort: "low" | "medium" | "high"; Anthropic models also
-# accept thinking = { type = "enabled", budget_tokens = N }.
+# JSON reasoning_effort and thinking are forwarded to the upstream model through
+# FrogBot's LiteLLM proxy without a FrogBot-side enum, so the accepted levels are
+# the upstream model's; each model file lists them.
 # https://docs.frogbot.ai/api-reference/chat-completions
 # Native Claude POST /api/v1/messages documents no thinking field, so the
 # Chat control's native mapping and budget bounds are undocumented.

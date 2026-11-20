@@ -14,5 +14,7 @@ opencodeai = "@opencode/ai/providers/openai-compatible"
 # inference provider the router picks, and no HF_TOKEN was available to probe (2026-10-20).
 # Exact MIME types: the router catalog lists modality kinds only (text, image); files take the
 # lab's types of each kind. https://router.huggingface.co/v1/models
+# Chat models are also served on POST /v1/responses (beta; "All Inference Providers chat completion models
+# should be compatible with the Responses API"): https://huggingface.co/docs/inference-providers/guides/responses-api
 api = "https://router.huggingface.co/v1"
 doc = "https://huggingface.co/docs/inference-providers"

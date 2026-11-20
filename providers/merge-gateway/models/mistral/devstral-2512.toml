@@ -5,9 +5,8 @@ base_model = "mistral/devstral-2512"
 
 [capabilities]
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 256_000

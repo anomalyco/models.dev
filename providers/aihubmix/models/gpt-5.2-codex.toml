@@ -7,7 +7,7 @@ description = "Coding-optimized GPT model for repository edits, reviews, and age
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [cost.text.input]
 price = 1.75

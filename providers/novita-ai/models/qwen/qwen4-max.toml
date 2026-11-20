@@ -1,0 +1,45 @@
+# https://novita.ai/models/model-detail/qwen-qwen4-max
+# GET https://api.novita.ai/openai/v1/models (2026-11-16): $1.413 input / $4.24 output / $0.071 cache read /
+#   $1.767 cache write per MTok (the inventory also lists a 1h write price of $2.827; no request field to select it
+#   was found, so only the base write price is published), context_size 1_000_000, max_output_tokens 131_000,
+#   input text + image + video, endpoints chat/completions, anthropic, responses.
+# Effort: reasoning_effort = none|low|high|xhigh (live 2026-11-16). none (also thinking.type = disabled or
+#   enable_thinking = false) suppresses reasoning, so there is no separate toggle. Native set follows the lab
+#   (https://www.alibabacloud.com/help/en/model-studio/qwen4-max: low|high|xhigh); medium and max are accepted aliases
+#   and an unknown value is rejected with a 400. thinking_budget was not probed.
+# Modalities: Novita lists ["text","image","video"]; exact types are the lab's (alibaba/qwen4-max), without PDF.
+# Cache: implicit prefix cache (cached_tokens 14080 of 14306 on a repeated prompt, live 2026-11-16).
+# system_updates = true (Chat Completions only, the API tested): cache hit right after a mid-conversation system message (live 2026-11-16, 14080 of 14333 prompt tokens cached).
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
+cache = { implicit = true }
+structured_output = true
+
+[limit]
+output = 131_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.413
+cache = { read = 0.071, write = 1.767 }
+
+[cost.text.output]
+price = 4.24

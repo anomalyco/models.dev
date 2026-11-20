@@ -18,13 +18,11 @@ input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_536 } }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_536 } }
 prompt_cache_key = true
-system_updates = false
-effort_updates = false
 
 [cost.text.input]
 price = 2.85

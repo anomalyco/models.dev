@@ -1,0 +1,28 @@
+schema = 2
+type = "decision"
+name = "Drex Max Finance"
+description = "Drex Max Finance is Nace AI's multimodal evaluation model for financial workflows. It answers boolean, choice, and score questions over text and images with calibrated probabilities. Its 262,144-token limit covers the whole request, including shared state, images, questions, formatting, and decision markers."
+open_weights = false
+release_date = "2026-11-09"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 262_144
+output = 0
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.03
+
+[cost.text.output]
+price = 0

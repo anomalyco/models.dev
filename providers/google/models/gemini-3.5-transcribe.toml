@@ -8,7 +8,7 @@ v2_only = true
 base_model = "google/gemini-3.5-transcribe"
 
 [capabilities]
-cache = { supported = false }
+cache = false
 
 [api.transcriptions]
 sdk = { opencodeai = "@opencode/ai/protocols/google-transcription" }

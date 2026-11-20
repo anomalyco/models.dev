@@ -18,7 +18,7 @@ output = ["text"]
 structured_output = true
 store = false
 prompt_cache_key = true
-cache = { supported = true, implicit = { min_tokens = 1_024 } }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]
 context = 128_000

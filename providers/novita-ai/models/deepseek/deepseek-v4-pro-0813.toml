@@ -6,12 +6,10 @@ schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 1_048_576
@@ -19,6 +17,14 @@ output = 393_216
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api.novita.ai/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+base_url = "https://api.novita.ai/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 1.32

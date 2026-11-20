@@ -1,5 +1,6 @@
 # Lab identity: https://huggingface.co/Qwen/Qwen3.5-397B-A17B
 # knowledge: kept from the earlier Hugging Face file; unsourced (no cutoff in the model card or lab docs, checked 2026-10-20).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 name = "Qwen3.5-397B-A17B"
@@ -11,15 +12,17 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
-effort_updates = false
 
 [limit]
 output = 32_768
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.6

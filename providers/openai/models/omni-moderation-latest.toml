@@ -1,9 +1,13 @@
 # Sources:
 # https://developers.openai.com/api/docs/models/omni-moderation-latest
 # https://developers.openai.com/api/docs/pricing
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/omni-moderation-latest
 schema = 2
 v2_only = true
 base_model = "openai/omni-moderation-latest"
+
+[api.moderations]
+sdk = { aisdk = "none", opencodeai = "none" }
 
 [cost.text.input]
 price = 0

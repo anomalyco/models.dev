@@ -1,6 +1,6 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
-# Mid-conversation flags unset: Zen documents none and this model wasn't testable (model access is disabled for the probe key).
 # knowledge: the host's value, unsourced (no official cutoff found). Kept so v1 doesn't lose it.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/minimax/models/MiniMax-M2.7.toml (Zen passes requests through).
 schema = 2
 base_model = "minimax/MiniMax-M2.7"
 knowledge = "2025-01"

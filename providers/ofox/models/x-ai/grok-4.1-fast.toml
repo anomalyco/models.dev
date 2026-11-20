@@ -9,10 +9,9 @@ schema = 2
 base_model = "xai/grok-4.1-fast"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.2

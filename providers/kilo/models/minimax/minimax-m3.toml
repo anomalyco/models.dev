@@ -5,10 +5,9 @@ schema = 2
 base_model = "minimax/MiniMax-M3"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 524_288

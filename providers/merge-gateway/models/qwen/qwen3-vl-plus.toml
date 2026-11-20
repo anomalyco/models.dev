@@ -3,12 +3,15 @@
 schema = 2
 base_model = "alibaba/qwen3-vl-plus"
 
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 
 [limit]
 output = 65_536

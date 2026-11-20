@@ -12,7 +12,7 @@ base_model = "nvidia/nemotron-3.5-lightning"
 reasoning = { supported = true, toggle = true }
 structured_output = true
 system_updates = true
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [cost.text.input]
 price = 0

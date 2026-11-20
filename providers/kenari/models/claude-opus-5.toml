@@ -1,7 +1,9 @@
-# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
-# Price: PAYG per token, micro-IDR per 1M / 1e6 / 17,500 IDR per USD (usd_idr_rate in /api/public/pricing), rounded to 8 decimals.
-# Reasoning: catalog reasoning_options ["low","medium","high","xhigh","max"], reasoning_toggle false (https://kenari.id/en/docs/reasoning).
-# Effort: reasoning_effort (Chat completions), reasoning.effort (Responses), output_config.effort (Messages).
+# Synced from kenari's public API by the kenari sync module.
+# Catalog: GET https://kenari.id/docs/models
+# Pricing: GET https://kenari.id/api/public/pricing (usd_idr_rate = 17500, re-read on every sync)
+# IDR prices were converted to USD by dividing by that rate: per 1M tokens, or per unit for pricing_lines.
+# Docs: https://kenari.id/docs/reasoning
+# Effort: reasoning_effort = low|medium|high|xhigh|max
 schema = 2
 base_model = "anthropic/claude-opus-5"
 
@@ -9,8 +11,8 @@ base_model = "anthropic/claude-opus-5"
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
-price = 5.71428571
-cache = { read = 2.28571429, write = 5.71428571 }
+price = 5.71
+cache = { read = 2.29, write = 5.71 }
 
 [cost.text.output]
-price = 28.57142857
+price = 28.57

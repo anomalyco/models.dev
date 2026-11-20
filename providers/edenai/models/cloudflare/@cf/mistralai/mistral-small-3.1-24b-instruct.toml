@@ -3,9 +3,8 @@ base_model = "mistral/mistral-small-3.1-24b-instruct"
 name = "Mistral Small 3.1 24B (Cloudflare)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.351

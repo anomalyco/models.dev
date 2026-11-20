@@ -7,18 +7,17 @@ name = "NVIDIA: Nemotron 3.5 Super VL"
 description = "NVIDIA Nemotron 3.5 Super VL is an open multimodal mixture-of-experts model from NVIDIA, with 12B active parameters out of 120B total. It takes text, images, documents, GUI screenshots, and video..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 262_144
 output = 235_929
 
 [cost.text.input]
-price = 0.1
-cache = { read = 0.08 }
+price = 0.06
+cache = { read = 0.01 }
 
 [cost.text.output]
-price = 0.4
+price = 0.35

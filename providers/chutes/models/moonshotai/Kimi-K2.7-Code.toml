@@ -1,0 +1,27 @@
+schema = 2
+name = "Kimi K2.7 Code"
+description = "Kimi coding model for software agents, refactors, and repository reasoning"
+family = "kimi-k2"
+open_weights = true
+release_date = "2026-10-26"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+structured_output = true
+
+[limit]
+context = 262_144
+output = 16_384
+
+[cost.text.input]
+price = 0.832
+cache = { read = 0.167 }
+
+[cost.text.output]
+price = 3.5

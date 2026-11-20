@@ -12,22 +12,29 @@
 #   tools.updates = false: adding a tool read 0 between control hits (the repeat of that same request later hit its own entry).
 # Status: beta; listed under Preview Models on https://console.groq.com/docs/models.
 # Flex: https://console.groq.com/docs/flex-processing (all models, paid customers, on-demand pricing).
+# Responses: POST https://api.groq.com/openai/v1/responses ("all models support the Responses API", stateless; https://console.groq.com/docs/responses-api); returned 200 live (2026-10-22).
+# Web search: built-in browser_search, Basic Search $5 per 1,000 requests (Visit Website $1 per 1,000 is not expressible) on the last published price list
+#   (https://web.archive.org/web/20260804151728/https://groq.com/pricing, "Built-In Tools (GPT-OSS)"); supported models: https://console.groq.com/docs/browser-search.
 schema = 2
 base_model = "openai/gpt-oss-safeguard-20b"
 name = "Safety GPT OSS 20B"
 status = "beta"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = { ttl = ["2h"] } }
-system_updates = false
-effort_updates = false
+cache = { implicit = { ttl = ["2h"] } }
 service_tier = ["flex"]
 
 [limit]
 output = 65_536
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.groq.com/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.075
@@ -35,3 +42,6 @@ cache = { read = 0.0375 }
 
 [cost.text.output]
 price = 0.3
+
+[cost.web_search]
+price = 5

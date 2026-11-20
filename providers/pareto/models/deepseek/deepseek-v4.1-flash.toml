@@ -1,0 +1,34 @@
+# Effort: reasoning_effort = none|low|high|max. none turns thinking off; xhigh is accepted and runs as
+#   high; minimal and medium run as low; without one it runs at medium, so low (Pareto model notes and
+#   serving code, checked 2026-11-06).
+# Pricing: https://docs.paretoinference.com/pricing (checked 2026-11-06). Off-peak USD per 1M tokens:
+#   $0.105 input / $0.0021 cache read / $0.42 output. Peak is 2x on DeepSeek's clock: 01:00-04:00 and
+#   06:00-10:00 UTC, Monday-Friday, except Chinese public holidays, which are off-peak all day.
+#   A request costs the price when Pareto accepts it.
+# Catalog: GET https://api.paretoinference.com/v1/models lists deepseek/deepseek-v4.1-flash (its pricing
+#   object shows the peak rate: 0.00000021 / 0.0000000042 / 0.00000084 per token).
+# Input: text and images, not video. 1M context; output is capped at 131,072 tokens
+#   (https://docs.paretoinference.com/api-reference). The API serves streamed requests only.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[limit]
+output = 131_072
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.105
+cache = { read = 0.0021 }
+
+[cost.text.output]
+price = 0.42
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, not = { holiday = { equals = "CN" } }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

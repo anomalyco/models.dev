@@ -66,6 +66,7 @@ export type ModelFamily =
   | "gpt-codex-mini"
   | "gpt-codex-spark"
   | "gpt-image"
+  | "gpt-live"
   | "gpt-luna"
   | "gpt-mini"
   | "gpt-nano"

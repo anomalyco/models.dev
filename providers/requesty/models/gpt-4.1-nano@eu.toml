@@ -5,10 +5,9 @@ base_model = "openai/gpt-4.1-nano"
 name = "GPT-4.1 nano (EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.11

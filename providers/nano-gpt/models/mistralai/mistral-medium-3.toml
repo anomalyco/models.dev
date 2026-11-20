@@ -10,15 +10,14 @@ output = ["text"]
 [capabilities]
 tools = { supported = false }
 structured_output = false
-effort_updates = false
 
 [limit]
 input = 131_072
 output = 32_768
 
 [cost.text.input]
-price = 0.4
-cache = { read = 0.2 }
+price = 0.44
+cache = { read = 0.044 }
 
 [cost.text.output]
-price = 2
+price = 2.2

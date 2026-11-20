@@ -6,7 +6,7 @@ base_model = "moonshotai/kimi-k2.7-code"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.95

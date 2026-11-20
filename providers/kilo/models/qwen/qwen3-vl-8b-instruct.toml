@@ -14,11 +14,10 @@ input = ["image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "im
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 262_144

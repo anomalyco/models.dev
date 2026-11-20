@@ -13,7 +13,7 @@ base_model = "zhipuai/glm-4.7"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-cache = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 200_000

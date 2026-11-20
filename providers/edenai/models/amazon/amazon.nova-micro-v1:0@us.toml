@@ -3,13 +3,12 @@ base_model = "amazon/nova-micro"
 name = "Nova Micro (US)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.035
-cache = { read = 0.00875 }
+cache = { read = 0.011 }
 
 [cost.text.output]
 price = 0.14

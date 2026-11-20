@@ -5,7 +5,7 @@ base_model = "anthropic/claude-sonnet-5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"] } }
 
 [limit]
 output = 64_000

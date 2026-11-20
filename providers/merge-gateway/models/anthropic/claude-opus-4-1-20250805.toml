@@ -9,9 +9,8 @@ name = "Claude Opus 4.1 (20250805)"
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1_024, max = 31_999 } }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true, explicit = true }
+tools = { supported = true }
+cache = { implicit = true, explicit = true }
 
 [cost.text.input]
 price = 15

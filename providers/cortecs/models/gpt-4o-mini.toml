@@ -4,17 +4,16 @@ schema = 2
 base_model = "openai/gpt-4o-mini"
 
 [capabilities]
-tools = { supported = true, updates = false }
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 structured_output = false
-effort_updates = false
 
 [limit]
 output = 16_000
 
 [cost.text.input]
-price = 0.159
-cache = { read = 0.081 }
+price = 0.17
+cache = { read = 0.086 }
 
 [cost.text.output]
-price = 0.638
+price = 0.683

@@ -1,0 +1,29 @@
+schema = 2
+type = "decision"
+name = "Liquid d1.2"
+description = "Liquid d1.2 is a decision model for classification, routing, and scoring across text and images. It answers typed yes/no, multiple-choice, and scale questions about shared state in a single forward pass and returns structured answers with calibrated probabilities, without generating output tokens."
+family = "liquid"
+open_weights = false
+release_date = "2026-11-16"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 65_536
+output = 0
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0

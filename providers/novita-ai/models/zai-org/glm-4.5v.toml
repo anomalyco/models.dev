@@ -1,20 +1,20 @@
 # https://novita.ai/models/model-detail/zai-org-glm-4.5v
 # Toggle: thinking.type = enabled|disabled
+# max_tokens_field: this route ignores max_completion_tokens while max_tokens caps output (live probe 2026-10-24)
 schema = 2
 base_model = "zhipuai/glm-4.5v"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 65_536
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.6

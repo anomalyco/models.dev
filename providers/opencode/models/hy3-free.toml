@@ -1,7 +1,10 @@
+# Input limit: dropped, the base model's 192,000 is larger than this host's 190,000 context and the host documents none.
 # Toggle: thinking.type = enabled|disabled (deprecated; not re-verified on Zen)
 # Effort: reasoning_effort = low|medium|high (deprecated; not re-verified on Zen)
+# Mid-conversation flags left out: tencent has no provider file for tencent/hy3 to follow (Zen passes requests through).
 schema = 2
 base_model = "tencent/hy3"
+base_model_omit = ["limit.input"]
 name = "Hy3 Free"
 status = "deprecated"
 

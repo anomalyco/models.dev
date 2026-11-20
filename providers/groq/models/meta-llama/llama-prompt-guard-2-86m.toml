@@ -3,6 +3,7 @@
 # GET /openai/v1/models). Limits: 512 / 512, same as the lab.
 # Status: beta; listed under Preview Models on https://console.groq.com/docs/models.
 # Flex: https://console.groq.com/docs/flex-processing (all models, paid customers, on-demand pricing).
+# Responses: POST https://api.groq.com/openai/v1/responses ("all models support the Responses API", stateless; https://console.groq.com/docs/responses-api); returned 200 live (2026-10-22).
 schema = 2
 base_model = "meta/llama-prompt-guard-2-86m"
 name = "Prompt Guard 2 86M"
@@ -11,6 +12,12 @@ status = "beta"
 
 [capabilities]
 service_tier = ["flex"]
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.groq.com/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.04

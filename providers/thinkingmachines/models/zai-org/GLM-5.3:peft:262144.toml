@@ -12,7 +12,7 @@ base_model = "zhipuai/glm-5.3"
 [capabilities]
 tools = { supported = true, choice = ["auto", "required", "tool", "none"] }
 reasoning = { supported = true, toggle = true }
-cache = { supported = true, implicit = true, explicit = false }
+cache = { implicit = true }
 
 [limit]
 context = 262_144

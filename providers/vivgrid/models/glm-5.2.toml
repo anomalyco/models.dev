@@ -3,8 +3,11 @@
 # Served on Chat Completions only: every API surface listed for this model uses
 # /chat/completions, so it needs the openai-compatible SDK rather than the
 # provider default (Responses). https://docs.vivgrid.com/models/glm-5.2 (accessed 2026-10-21)
+# Sunset: Vivgrid legacy model, superseded by glm-5.3.
+# https://docs.vivgrid.com/models#legacy-models (accessed 2026-10-23)
 schema = 2
 base_model = "zhipuai/glm-5.2"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["high", "max"] }

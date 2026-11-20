@@ -75,12 +75,12 @@ test("preserves existing Ollama Cloud provider overrides", () => {
 test("leaves shipped v2 files byte-identical, including time-of-day multipliers", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "ollama-cloud-sync-"));
   const modelsDir = path.join(dir, "providers/ollama-cloud/models");
-  const ids = ["deepseek-v4-pro:0813", "glm-5.1", "kimi-k3"];
+  const ids = ["deepseek-v4-pro:0813", "glm-5.2", "kimi-k3"];
   await mkdir(modelsDir, { recursive: true });
   for (const id of ids) {
     await Bun.write(path.join(modelsDir, `${id}.toml`), Bun.file(path.join(REPO, "providers/ollama-cloud/models", `${id}.toml`)));
   }
-  for (const lab of ["deepseek/deepseek-v4-pro-0813", "zhipuai/glm-5.1", "moonshotai/kimi-k3"]) {
+  for (const lab of ["deepseek/deepseek-v4-pro-0813", "zhipuai/glm-5.2", "moonshotai/kimi-k3"]) {
     await mkdir(path.dirname(path.join(dir, "models", lab)), { recursive: true });
     await Bun.write(path.join(dir, "models", `${lab}.toml`), Bun.file(path.join(REPO, "models", `${lab}.toml`)));
   }

@@ -6,10 +6,9 @@ base_model = "aion-labs/aion-2.0"
 name = "AionLabs: Aion-2.0"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
 price = 0.8

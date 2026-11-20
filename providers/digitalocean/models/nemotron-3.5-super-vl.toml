@@ -12,15 +12,22 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 system_updates = true
-effort_updates = false
 prompt_cache_key = true
 
 [limit]
 output = 1_048_576
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.3
@@ -28,3 +35,6 @@ cache = { read = 0.06 }
 
 [cost.text.output]
 price = 0.65
+
+[cost.web_search]
+price = 10

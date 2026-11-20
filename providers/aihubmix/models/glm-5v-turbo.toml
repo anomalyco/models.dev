@@ -9,7 +9,7 @@ description = "GLM vision model for visual reasoning, documents, and multimodal 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-cache = { supported = true }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -6,17 +6,16 @@ base_model = "zhipuai/glm-5.1"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
-context = 202_752
+context = 204_800
 
 [cost.text.input]
-price = 1.4
-cache = { read = 0.26 }
+price = 1.19
+cache = { read = 0.6 }
 
 [cost.text.output]
-price = 4.4
+price = 3.74

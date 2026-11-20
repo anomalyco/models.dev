@@ -11,7 +11,7 @@ base_model_omit = ["limit.input"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 1_024_000
@@ -19,7 +19,7 @@ output = 131_072
 
 [cost.text.input]
 price = 1
-cache = { read = 0.05 }
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 2.7

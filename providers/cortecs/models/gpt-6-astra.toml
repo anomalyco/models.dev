@@ -6,15 +6,14 @@ schema = 2
 base_model = "openai/gpt-6-astra"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
-price = 12.272
-cache = { read = 1.228, write = 15.34 }
+price = 12.408
+cache = { read = 1.241, write = 15.51 }
 
 [cost.text.output]
-price = 61.359
+price = 62.041

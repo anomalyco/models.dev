@@ -12,7 +12,7 @@ base_model = "alibaba/qwen3.8-2.4t-a95b"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
-cache = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 262_000

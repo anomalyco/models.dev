@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = minimal|low|medium|high; FrogBot's LiteLLM proxy
+# (litellm 1.104.0) maps it to generationConfig.thinkingConfig.thinkingLevel.
+# https://docs.frogbot.ai/api-reference/chat-completions
+schema = 2
+base_model = "google/gemini-3.6-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5

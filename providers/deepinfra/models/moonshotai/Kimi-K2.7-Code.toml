@@ -6,7 +6,7 @@ status = "deprecated"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-cache = { supported = true, implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 1_024 } }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
 

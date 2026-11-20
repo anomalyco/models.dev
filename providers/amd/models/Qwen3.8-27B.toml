@@ -6,7 +6,7 @@
 # omitted the model thinks anyway (backend default tier).
 # Thinking is returned on choices[0].message.reasoning, a non-content field.
 # The v1 interleaved field enum only covers reasoning_content /
-# reasoning_details, so it is set bare (replay_reasoning).
+# reasoning_details, so it is set bare (legacy_interleaved).
 # Token Factory catalog (accessed 2026-10-21):
 # https://developer.amd.com.cn/radeon/api/tokenfactory/model?id=model_gateway%3AQwen3.8-27B
 # - capability "VLM (Vision)", vision: true, context_length 262144 (the lab's). The 2026-09-14 deployment was
@@ -30,7 +30,7 @@ structured_output = true
 top_k = false
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 0

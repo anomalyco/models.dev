@@ -4,6 +4,7 @@
 # "Enterprise" with price "Contact Sales"; the cost below is the last public on-demand price (https://groq.com/pricing,
 # archived 2026-08-04: https://web.archive.org/web/20260804151728/https://groq.com/pricing).
 # Limits: https://console.groq.com/docs/models (context window 131_072, max completion tokens 32_768).
+# Responses: POST https://api.groq.com/openai/v1/responses ("all models support the Responses API"; the docs use llama-3.3-70b-versatile in their examples; https://console.groq.com/docs/responses-api). Enterprise-only now, so not probed.
 schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B"
@@ -13,6 +14,12 @@ status = "deprecated"
 [limit]
 context = 131_072
 output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.groq.com/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
 price = 0.59

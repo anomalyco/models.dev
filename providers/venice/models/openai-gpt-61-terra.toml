@@ -1,0 +1,37 @@
+# tools.freeform on [api.responses] only: /api/v1/responses accepted text, lark and regex custom tools and enforced the grammars (regex ZZ[0-9]{3} and the equivalent lark grammar both returned ZZ plus three digits, live 2026-10-28 on this model). /api/v1/chat/completions rejects the nested custom tool (400 "Invalid request parameters") and returns the flat form as a plain function call with no grammar (openai-gpt-54, live 2026-10-28).
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7.5
+
+[cost.web_search]
+price = 10

@@ -19,5 +19,10 @@ opencodeai = "@opencode/ai/providers/venice"
 # https://api.venice.ai/api/v1/models?type=text
 # https://docs.venice.ai/api-reference/endpoint/models/list
 # https://docs.venice.ai/api-reference/endpoint/chat/completions
+# APIs: every synced text model also lists POST /responses ("works with every Venice text model",
+# https://docs.venice.ai/guides/features/responses-api). Web search is $10.00 per 1K requests on models with
+# `supportsWebSearch` (https://docs.venice.ai/overview/pricing, accessed 2026-10-22). Web scraping ($10 per 1K URLs)
+# and X search ($10 per 1K results) have no v2 price field. Image, video, audio, embedding and other model types
+# aren't listed here yet.
 doc = "https://docs.venice.ai"
 # api = "https://api.venice.ai/api/v1"

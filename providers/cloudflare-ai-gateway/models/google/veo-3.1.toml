@@ -14,13 +14,13 @@ unit = "second"
 price = 0.4
 
 [[cost.video.output.overrides]]
+when = { all = [{ resolution = { equals = "4k" } }, { generate_audio = { equals = true } }] }
+price = 0.6
+
+[[cost.video.output.overrides]]
 when = { all = [{ resolution = { equals = "720p" } }, { generate_audio = { equals = false } }] }
 price = 0.2
 
 [[cost.video.output.overrides]]
 when = { all = [{ resolution = { equals = "1080p" } }, { generate_audio = { equals = false } }] }
 price = 0.2
-
-[[cost.video.output.overrides]]
-when = { all = [{ resolution = { equals = "4k" } }, { generate_audio = { equals = true } }] }
-price = 0.6

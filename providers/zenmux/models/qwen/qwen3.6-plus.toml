@@ -12,7 +12,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-cache = { supported = true, implicit = true, explicit = { min_tokens = 256 } }
+cache = { implicit = true, explicit = { min_tokens = 256 } }
 
 [limit]
 output = 64_000

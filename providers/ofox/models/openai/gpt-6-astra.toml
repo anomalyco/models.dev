@@ -11,7 +11,7 @@ base_model = "openai/gpt-6-astra"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [api.responses]
 base_url = "https://api.ofox.ai/v1"

@@ -46,6 +46,29 @@ test("empty, duplicate and malformed upstream inventories fail before any catalo
   expect(() => PrimeResponse.parse({ object: "list", data: [model({ pricing: { input_usd_per_mtok: -1 } })] })).toThrow();
 });
 
+test("zero token limits parse as unpublished, so they neither fail the sync nor become catalog limits", () => {
+  const context = { existing: () => undefined, authored: () => undefined };
+  const transcription = model({
+    id: "openai/whisper-large-v3-turbo",
+    context_window: 0,
+    max_output_tokens: 0,
+    specs: { context_window: 0, max_output_tokens: 0, supports_reasoning: false, modalities: { input: ["audio"], output: ["transcription"] } },
+    supported_parameters: [],
+  });
+  const [parsedTranscription, parsedChat] = PrimeResponse.parse({
+    object: "list",
+    data: [transcription, model({ context_window: 0, max_output_tokens: 0 })],
+  }).data;
+  expect(parsedTranscription!.context_window).toBeNull();
+  expect(parsedTranscription!.specs?.max_output_tokens).toBeNull();
+  expect(prime.translateModel(parsedTranscription!, context)).toBeUndefined();
+  expect(prime.translateModel(parsedChat!, context)?.model).toMatchObject({ limit: { context: 128_000, output: 8192 } });
+  expect(prime.translateModel(
+    PrimeResponse.parse({ object: "list", data: [model({ specs: { ...model().specs, context_window: 0 } })] }).data[0]!,
+    context,
+  )).toBeUndefined();
+});
+
 test("unknown lab identities and unsupported or unpublished reasoning controls are never invented", () => {
   const context = { existing: () => undefined, authored: () => undefined };
   for (const source of [
@@ -100,8 +123,8 @@ test("discovery generates an empty provider, updates prices, preserves incomplet
 
     data = [model({ context_window: 256_000, max_output_tokens: 16_384, pricing: { input_usd_per_mtok: 1, output_usd_per_mtok: 2 } })];
     expect((await syncProvider(provider, { openIssues: false })).updated).toBe(1);
-    const updated = Bun.TOML.parse(await file.text()) as Record<string, unknown>;
-    expect(updated.cost).toEqual({ input: 1, output: 2 });
+    const updated = Bun.TOML.parse(await file.text()) as Record<string, any>;
+    expect(updated.cost.text).toEqual({ input: { price: 1 }, output: { price: 2 } });
     expect(updated.limit).toEqual({ context: 256_000, output: 16_384 });
     const previous = await file.text();
 

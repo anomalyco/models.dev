@@ -11,15 +11,25 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"] } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 system_updates = true
-effort_updates = false
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 10
-cache = { read = 0.25, write = 12.5 }
+cache = { read = 0.25, write = { "5m" = 12.5, "1h" = 20 } }
 
 [cost.text.output]
 price = 50
+
+[cost.web_search]
+price = 0

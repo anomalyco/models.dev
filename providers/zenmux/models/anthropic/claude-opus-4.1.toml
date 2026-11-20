@@ -6,7 +6,7 @@ name = "Claude Opus 4.1"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
 [api.messages]
 base_url = "https://zenmux.ai/api/anthropic/v1"

@@ -18,7 +18,6 @@ tools = { supported = false }
 reasoning = { supported = false }
 structured_output = false
 temperature = true
-effort_updates = false
 
 [limit]
 context = 127_072
@@ -26,6 +25,10 @@ output = 114_364
 
 [cost.text.input]
 price = 1
+cache = { write = 0.0625 }
 
 [cost.text.output]
-price = 1
+price = 2.5
+
+[cost.web_search]
+price = 5

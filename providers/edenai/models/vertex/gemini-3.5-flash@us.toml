@@ -5,19 +5,18 @@ base_model = "google/gemini-3.5-flash"
 name = "Gemini 3.5 Flash (Vertex AI, US)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
-cache = { supported = true, explicit = true }
+cache = { explicit = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
-price = 1.5
-cache = { read = 0.15, write = 0.083333 }
+price = 1.65
+cache = { read = 0.165, write = 0.091667 }
 
 [cost.text.output]
-price = 9
-reasoning = 9
+price = 9.9
+reasoning = 9.9
 
 [cost.audio.input]
-price = 3
+price = 3.3

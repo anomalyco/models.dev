@@ -6,7 +6,7 @@ base_model = "deepseek/deepseek-r1-0528"
 
 [capabilities]
 reasoning = { supported = true }
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 structured_output = true
 
 [cost.text.input]

@@ -19,7 +19,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["low", "medium", "high"] }
 structured_output = true
 stream_usage = true
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.1

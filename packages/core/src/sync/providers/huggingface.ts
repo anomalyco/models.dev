@@ -101,7 +101,7 @@ export const huggingface = {
     // Existing files are curated (prices differ per inference provider), so the
     // sync only creates new ones and writes existing files back unchanged.
     const v2 = context.v2?.(model.id);
-    if (v2 !== undefined) return { id: model.id, v2 };
+    if (v2 !== undefined) return { id: model.id, v2: { ...v2, api: chatApis(v2.api) } };
     const authored = context.authored(model.id);
     if (authored !== undefined) return { id: model.id, model: authored as SyncedModel };
 
@@ -196,29 +196,66 @@ export function buildHuggingFaceModel(
 ): Record<string, unknown> {
   if (lab === undefined) throw new Error(`Hugging Face model ${model.id}: no lab file for ${baseModel}`);
   const labModalities = lab.modalities as { input: string[]; output: string[] };
+  // A served context below the lab's output cap would publish an output larger than the
+  // window, so the output is capped at the context.
+  const labOutput = (lab.limit as { output?: number } | undefined)?.output;
+  const output = labOutput !== undefined && aggregate.context !== undefined && labOutput > aggregate.context
+    ? aggregate.context
+    : undefined;
   const factored = factorBaseModel(baseModel, {
     structured_output: aggregate.structuredOutput || undefined,
     cost: aggregate.cost,
-    limit: { context: aggregate.context } as SyncedFullModel["limit"],
+    limit: { context: aggregate.context, ...(output === undefined ? {} : { output }) } as SyncedFullModel["limit"],
   }, { context: aggregate.context });
   const doc = providerModelToV2(factored);
 
   const input = exactModalities(model.architecture.input_modalities, labModalities.input);
-  const output = exactModalities(model.architecture.output_modalities, labModalities.output);
+  const outputKinds = exactModalities(model.architecture.output_modalities, labModalities.output);
   const kinds = (values: string[]) => [...new Set(values.map((value) => value.split("/")[0]))].sort().join();
-  if (input.length > 0 && output.length > 0
-    && (kinds(input) !== kinds(labModalities.input) || kinds(output) !== kinds(labModalities.output))) {
-    doc.modalities = { input, output };
+  if (input.length > 0 && outputKinds.length > 0
+    && (kinds(input) !== kinds(labModalities.input) || kinds(outputKinds) !== kinds(labModalities.output))) {
+    doc.modalities = { input, output: outputKinds };
   }
 
   // Chat Completions takes tools and reasoning_effort per request, with no
   // per-turn effort or tool-change message.
   // Tool support comes from the router (any live provider); otherwise it's inherited.
   const next: Record<string, unknown> = {};
-  if (aggregate.tools) next.tools = { supported: true, updates: false };
-  Object.assign(next, doc.capabilities, { effort_updates: false });
+  if (aggregate.tools) next.tools = { supported: true };
+  Object.assign(next, doc.capabilities);
   doc.capabilities = next;
+  doc.api = chatApis(undefined);
   return doc;
+}
+
+// The router serves every chat model on POST /v1/responses too ("All Inference Providers chat
+// completion models should be compatible with the Responses API"):
+// https://huggingface.co/docs/inference-providers/guides/responses-api
+const RESPONSES_API = {
+  sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" },
+};
+
+// The router's Chat Completions API documents max_tokens, not max_completion_tokens:
+// https://huggingface.co/docs/inference-providers/tasks/chat-completion (accessed 2026-10-24)
+const MAX_TOKENS_FIELD = { max_tokens_field: "max_tokens" };
+
+// A chat model's APIs: its own first table (what v1 reads; an empty table takes the
+// provider's Chat Completions API), then Responses.
+export function chatApis(current: unknown): Record<string, unknown> {
+  const { responses: _responses, ...own } = isRecord(current) ? current : {};
+  const tables: Record<string, unknown> = Object.keys(own).length > 0 ? own : { "chat-completions": {} };
+  const chat = tables["chat-completions"];
+  if (isRecord(chat)) {
+    tables["chat-completions"] = {
+      ...chat,
+      compatibility: { ...(isRecord(chat.compatibility) ? chat.compatibility : {}), ...MAX_TOKENS_FIELD },
+    };
+  }
+  return { ...tables, responses: structuredClone(RESPONSES_API) };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 function labModel(modelID: string) {

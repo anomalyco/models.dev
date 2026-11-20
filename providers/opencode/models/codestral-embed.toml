@@ -1,0 +1,16 @@
+# Endpoint (OpenAI Embeddings): POST https://opencode.ai/inference/openai/v1/embeddings, served through Zen's
+#   mistral-embeddings endpoint by Mistral's codestral-embed.
+# Pricing: what Zen bills for this model, the upstream's price (https://mistral.ai/pricing#api-pricing).
+schema = 2
+v2_only = true
+base_model = "mistral/codestral-embed-2505"
+
+[api.embeddings]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0

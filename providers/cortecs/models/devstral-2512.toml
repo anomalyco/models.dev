@@ -1,14 +1,14 @@
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
 # Cache: not supported by the routed providers (amazon_ireland). https://docs.cortecs.ai/routing/prompt-caching
+# Output limit: the catalog's max_output_tokens equals its context_size (256,000), which is not a per-request cap; the lab's 262,144 would exceed the context served here, so output is capped at the context.
 schema = 2
 base_model = "mistral/devstral-2512"
 description = "Mistral coding agent model for repository tasks and software engineering workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
-cache = { supported = false }
+tools = { supported = true }
+cache = false
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 256_000

@@ -5,6 +5,8 @@
 #     Its FAQ lists formats by extension; these are their registered MIME types. Also accepted but not listed, because
 #     the v1 translation has no modality for other application/* types or they have no registered MIME type: Word
 #     (.docx, .doc), PowerPoint (.pptx, .ppt), Excel (.xlsx), EPUB, RTF, ODT, .bib, .fb2, .ipynb, .tex and .opml.
+#   GET https://api.mistral.ai/v1/models (live 2026-11-09): max_context_length 16384 for this model and its aliases.
+#     The 1,000-page file limit above is limit.pdf.max_pages; output stays 0 because no output token limit is published.
 #   Extracted images come back as JPEG: every OCR response example shows data:image/jpeg;base64 / img-N.jpeg, and live
 #   2026-10-19 both OCR models returned data:image/jpeg for an arXiv PDF page.
 schema = 2
@@ -26,5 +28,6 @@ top_p = false
 top_k = false
 
 [limit]
-context = 0
+context = 16_384
 output = 0
+pdf = { max_pages = 1_000 }

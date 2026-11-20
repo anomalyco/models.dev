@@ -1,0 +1,26 @@
+# https://docs.bigmodel.cn/cn/guide/models/embedding/embedding-2 (8K context window, 1,024 dimensions;
+#   array inputs are limited to 512 tokens per item). Accessed 2026-11-08.
+# Release month is approximate: Zhipu publishes no release date; embedding-2 shipped with the v4 API,
+#   whose Python SDK added embeddings on 2023-12-13 (MetaGLM/zhipuai-sdk-python-v4).
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Embedding-2"
+description = "Zhipu second-generation text embedding model producing 1,024-dimensional vectors"
+open_weights = false
+release_date = "2023-12"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0

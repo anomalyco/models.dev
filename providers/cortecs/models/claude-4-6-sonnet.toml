@@ -7,18 +7,17 @@ base_model = "anthropic/claude-sonnet-4-6"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"], budget = { min = 1_024 } }
-cache = { supported = true, explicit = true }
+cache = { explicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 128_000
 
 [cost.text.input]
-price = 3.196
-cache = { read = 0.32, write = 3.999 }
+price = 3.411
+cache = { read = 0.341, write = 4.264 }
 
 [cost.text.output]
-price = 15.94
+price = 17.058

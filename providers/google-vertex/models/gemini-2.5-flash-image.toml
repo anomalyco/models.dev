@@ -1,7 +1,6 @@
 # v2 capabilities and prices:
 # - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/context-cache/context-cache-overview
-# text.output keeps the image output price that v1 `output` carries; cost.image.output is the real image price.
 # Mid-conversation updates: false. Vertex takes system instructions, thinking config and tools only as request-level
 # fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-image
@@ -15,12 +14,10 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-system_updates = false
-effort_updates = false
-cache = { supported = false }
+cache = false
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+sdk = { opencodeai = "@opencode/ai/providers/google-vertex/images" }
 
 [api.generate-content]
 
@@ -28,7 +25,7 @@ sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
 price = 0.3
 
 [cost.text.output]
-price = 30
+price = 2.5
 
 [cost.image.output]
 price = 30

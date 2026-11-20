@@ -8,16 +8,15 @@ name = "GPT 5.6 Sol Pro"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
-cache = { supported = true, implicit = true }
+tools = { supported = true }
+cache = { implicit = true }
 
 [limit]
 input = 1_050_000
 
 [cost.text.input]
-price = 2
-cache = { read = 0.2, write = 2.5 }
+price = 4
+cache = { read = 0.4, write = 5 }
 
 [cost.text.output]
-price = 10
+price = 20

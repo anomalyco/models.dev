@@ -16,7 +16,7 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 temperature = true
-cache = { supported = true }
+cache = { implicit = true }
 
 [limit]
 context = 256_000

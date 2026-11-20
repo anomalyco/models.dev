@@ -1,0 +1,22 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api-singapore.klingai.com/text-to-video/kling-3.0-turbo and /image-to-video/kling-3.0-turbo
+#   (https://kling.ai/document-api/api/video/3-0-turbo/image-to-video); resolution 720p (default) or 1080p.
+# - Pricing: https://kling.ai/document-api/pricing/base/video ("Balance" tab, USD per second of output). Prepaid
+#   resource packages (https://kling.ai/dev/pricing) bill in units at a lower effective rate and are not recorded.
+#   Kling 3.0 Turbo is only listed with native audio.
+# Cost conditions: resolution uses the API's own values ("720p", "1080p").
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v3.0-turbo"
+
+[api.videos]
+base_url = "https://api-singapore.klingai.com"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.112
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.14

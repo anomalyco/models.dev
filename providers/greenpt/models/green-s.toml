@@ -1,3 +1,4 @@
+# API: Deepgram-compatible POST /v1/listen (https://docs.greenpt.ai/audio-prerecorded)
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards (accessed 2026-10-21).
 # Speech-to-text, billed per hour of audio: EUR 0.23/hour pre-recorded (standard rate; the 50% launch promotion
 # ended 2026-08-31). Converted at 1.14 USD/EUR (rate captured 2026-07-24): 0.23 * 1.14 / 60 = USD 0.00437 per minute.
@@ -24,6 +25,10 @@ temperature = false
 [limit]
 context = 0
 output = 8_192
+
+[api.transcriptions]
+base_url = "https://api.greenpt.ai"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/protocols/deepgram-transcription" }
 
 [cost.audio.input]
 unit = "minute"

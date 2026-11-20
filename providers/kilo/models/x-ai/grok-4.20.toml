@@ -3,7 +3,7 @@
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 # Modalities: Kilo documents no formats; assumed to relay xAI's Grok 4.20 (xai/grok-4.20-0309-reasoning). xAI image inputs jpg/jpeg and png: https://docs.x.ai/docs/guides/image-understanding
 schema = 2
-name = "SpaceXAI: Grok 4.20"
+name = "SpaceXSI: Grok 4.20"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 family = "grok"
 open_weights = false
@@ -14,11 +14,10 @@ input = ["text", "image/jpeg", "image/png", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 2_000_000
@@ -30,3 +29,6 @@ cache = { read = 0.2 }
 
 [cost.text.output]
 price = 2.5
+
+[cost.web_search]
+price = 5

@@ -13,10 +13,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 131_072
@@ -25,7 +24,7 @@ output = 8_192
 
 [cost.text.input]
 price = 0.36
-cache = { read = 0.1785 }
+cache = { read = 0.18 }
 
 [cost.text.output]
 price = 0.4

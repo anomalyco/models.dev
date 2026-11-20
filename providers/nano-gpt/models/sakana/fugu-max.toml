@@ -6,8 +6,7 @@ base_model = "sakana/fugu-max"
 [capabilities]
 reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 1_000_000

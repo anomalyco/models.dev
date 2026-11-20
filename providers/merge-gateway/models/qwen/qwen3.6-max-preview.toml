@@ -5,8 +5,7 @@ base_model = "alibaba/qwen3.6-max-preview"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [limit]
 context = 256_000

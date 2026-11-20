@@ -1,6 +1,7 @@
 # Chat `reasoning_effort` and Messages `output_config.effort` accept
 # low/medium/high (accessed 2026-06-25).
 # https://platform.stepfun.ai/docs/en/guides/models/step-3.7-flash
+# max_tokens_field: StepFun's Chat Completions API documents max_tokens and not max_completion_tokens (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create, accessed 2026-10-24)
 schema = 2
 base_model = "stepfun/step-3.7-flash"
 
@@ -8,4 +9,4 @@ base_model = "stepfun/step-3.7-flash"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }

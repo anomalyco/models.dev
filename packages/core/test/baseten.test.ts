@@ -7,7 +7,9 @@ import { syncProvider } from "../src/sync/index.js";
 import {
   baseten,
   basetenV2Set,
+  buildBasetenDecisionModel,
   buildBasetenModel,
+  chatApis,
   type BasetenModel,
 } from "../src/sync/providers/baseten.js";
 
@@ -89,10 +91,10 @@ test("reads Baseten cache-read prices from the catalog", () => {
   expect(built.cost).toMatchObject({ input: 0.3, output: 1.2, cache_read: 0.007 });
 
   expect(basetenV2Set(0.007, undefined)).toEqual({
-    "capabilities.cache": { supported: true, implicit: true },
+    "capabilities.cache": { implicit: true },
   });
   expect(basetenV2Set(undefined, undefined)).toBeUndefined();
-  expect(basetenV2Set(undefined, { capabilities: { cache: { supported: true } } })).toEqual({
+  expect(basetenV2Set(undefined, { capabilities: { cache: { implicit: true } } })).toEqual({
     "capabilities.cache": undefined,
   });
 });
@@ -141,4 +143,67 @@ test("keeps an authored Baseten knowledge override on base_model entries", () =>
     { base_model: "zhipuai/glm-5", knowledge: "2026-01" },
   );
   expect(built).toMatchObject({ knowledge: "2026-01" });
+});
+
+test("Baseten decision models get the systemone table, new or stale", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-baseten-decision-"));
+  const modelsDir = path.join(root, "providers", "baseten", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  const stale = "decision-models/baseten-elephant-9b-latest";
+  const fresh = "decision-models/baseten-mammoth-27b-latest";
+
+  try {
+    await mkdir(path.join(modelsDir, "decision-models"), { recursive: true });
+    await mkdir(path.join(root, "models", "baseten"), { recursive: true });
+    for (const lab of ["elephant-1", "mammoth-1"]) {
+      await copyFile(path.join(repo, "models", "baseten", `${lab}.toml`), path.join(root, "models", "baseten", `${lab}.toml`));
+    }
+    const shipped = (id: string) => readFile(path.join(repo, "providers", "baseten", "models", `${id}.toml`), "utf8");
+    const staleShipped = await shipped(stale);
+    expect(staleShipped).toContain("[api.systemone]");
+    // An older file with a wrong table is corrected; a new model gets the table too.
+    await writeFile(
+      path.join(modelsDir, `${stale}.toml`),
+      staleShipped.replace(/sdk = \{[^\n]*\}/, 'sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/baseten" }'),
+    );
+
+    const lab = (name: string) => readFile(path.join(repo, "models", "baseten", `${name}.toml`), "utf8")
+      .then((text) => (Bun.TOML.parse(text) as { limit: { context: number } }).limit.context);
+    const source = async (id: string, name: string) => basetenModel({
+      id,
+      name,
+      context_length: await lab(name),
+      max_completion_tokens: undefined,
+      pricing: { prompt: "0", completion: "0" },
+      supported_features: [],
+    });
+    const models = [await source(stale, "elephant-1"), await source(fresh, "mammoth-1")];
+    expect(buildBasetenDecisionModel(models[1]!, undefined)?.api).toEqual({
+      systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/baseten/decisions" } },
+    });
+
+    const provider = { ...baseten, modelsDir, fetchModels: async () => ({ data: models }) };
+    const result = await syncProvider(provider);
+    expect(result).toMatchObject({ created: 1, updated: 1, deleted: 0 });
+    expect(await readFile(path.join(modelsDir, `${stale}.toml`), "utf8")).toBe(staleShipped);
+    expect(await readFile(path.join(modelsDir, `${fresh}.toml`), "utf8")).toBe(await shipped(fresh));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("Baseten chat models list the Messages API after their first table", () => {
+  const messages = { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } };
+  // No table: the provider's Chat Completions API comes first.
+  expect(chatApis(undefined)).toEqual({ "chat-completions": {}, messages });
+  const first = { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } };
+  const once = chatApis(first);
+  expect(Object.keys(once)).toEqual(["chat-completions", "messages"]);
+  expect(once).toEqual({ ...first, messages });
+  expect(chatApis(once)).toEqual(once);
+  const translated = baseten.translateModel(basetenModel(), {
+    existing: () => undefined,
+    authored: () => undefined,
+  });
+  expect(translated?.v2Set?.api).toBe(chatApis);
 });

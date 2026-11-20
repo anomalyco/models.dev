@@ -12,7 +12,7 @@ base_model = "anthropic/claude-sonnet-4-5"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
-cache = { supported = true, explicit = { ttl = ["5m", "1h"] } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
 price = 3

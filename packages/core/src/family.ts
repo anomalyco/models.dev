@@ -19,6 +19,7 @@ export const ModelFamilyValues = [
   "gpt-astra",
   "gpt-oss",
   "gpt-image",
+  "gpt-live",
 
   // OpenAI o-series (reasoning models)
   "o",
@@ -62,6 +63,7 @@ export const ModelFamilyValues = [
   "qwen3.7-plus",
   "qwen3.7-max",
   "qwen3.8-max",
+  "qwen4-max",
   "qwen-free",
 
   // DeepReinforce

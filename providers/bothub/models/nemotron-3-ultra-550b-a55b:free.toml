@@ -7,7 +7,7 @@ name = "Nemotron 3 Ultra (free)"
 reasoning = { supported = true, effort = ["none", "medium", "high"] }
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 0

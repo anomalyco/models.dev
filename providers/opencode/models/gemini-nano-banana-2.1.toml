@@ -1,0 +1,34 @@
+# Model: https://ai.google.dev/gemini-api/docs/models/gemini-nano-banana-2.1
+# Standard pricing: https://ai.google.dev/gemini-api/docs/pricing#gemini-nano-banana-2.1
+#   $1.50 per 1M input tokens (text/image/video), $7.50 per 1M text and thinking output tokens,
+#   and $30.00 per 1M image output tokens.
+# Effort: generationConfig.thinkingConfig.thinkingLevel = minimal|medium|high, default medium.
+# APIs: Google generateContent and streamGenerateContent through OpenCode's public inference endpoint.
+schema = 2
+v2_only = true
+base_model = "google/gemini-nano-banana-2.1"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["minimal", "medium", "high"] }
+structured_output = false
+temperature = true
+top_p = true
+top_k = true
+cache = false
+
+[api.images]
+base_url = "https://opencode.ai/inference/google/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google/images" }
+
+[api.generate-content]
+base_url = "https://opencode.ai/inference/google/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5
+
+[cost.image.output]
+price = 30

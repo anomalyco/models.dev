@@ -5,7 +5,7 @@ import path from "node:path";
 import { mkdir, rm, readdir, stat } from "node:fs/promises";
 
 import { formatModelV2, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
-import { isSchemaV2, modelV2ToV1, roundPrice } from "../src/translate.js";
+import { modelV2ToV1, roundPrice } from "../src/translate.js";
 
 // Helicone public model registry endpoint
 const DEFAULT_ENDPOINT =
@@ -133,7 +133,6 @@ export function newModelToml(model: HeliconeModel) {
 // Returns undefined when the price is unchanged, so the file is left as is.
 export function updatedModelToml(text: string, model: HeliconeModel) {
   const doc = Bun.TOML.parse(text) as Record<string, any>;
-  if (!isSchemaV2(doc)) throw new Error("not a v2 file; migrate it with migrate-v2.ts first");
   const { id: _id, ...before } = modelV2ToV1({ ...doc, id: model.id });
   const cost = heliconeCost(model);
   if (stable(before.cost) === stable(cost)) return undefined;

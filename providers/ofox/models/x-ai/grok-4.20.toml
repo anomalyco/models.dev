@@ -9,11 +9,10 @@ schema = 2
 base_model = "xai/grok-4.20-0309-reasoning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
-cache = { supported = true, implicit = true }
+cache = { implicit = true }
 
 [limit]
 context = 2_000_000

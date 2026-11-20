@@ -12,24 +12,31 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"] } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 200_000
 output = 8_192
 
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
 price = 3
-cache = { read = 0.3, write = 3.75 }
+cache = { read = 0.3, write = { "5m" = 3.75, "1h" = 6 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 200_000 } }
 price = 6
-cache = { read = 0.6, write = 7.5 }
+cache = { read = 0.6, write = { "5m" = 7.5, "1h" = 12 } }
 
 [cost.text.output]
 price = 15
@@ -37,3 +44,6 @@ price = 15
 [[cost.text.output.overrides]]
 when = { context = { gt = 200_000 } }
 price = 22.5
+
+[cost.web_search]
+price = 0

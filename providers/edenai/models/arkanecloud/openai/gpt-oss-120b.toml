@@ -1,0 +1,14 @@
+schema = 2
+base_model = "openai/gpt-oss-120b"
+name = "GPT OSS 120B (Arkanecloud)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 0.6

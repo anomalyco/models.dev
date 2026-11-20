@@ -7,7 +7,7 @@ base_model = "anthropic/claude-sonnet-4-5"
 
 [capabilities]
 reasoning = { supported = true }
-cache = { supported = true, implicit = false, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
 structured_output = true
 
 [api.chat-completions]

@@ -2,20 +2,13 @@
 # tools.updates = false: NanoGPT's Chat Completions API has no mid-conversation tool-change message (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion)
 # Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
 schema = 2
+base_model = "lightonai/lightonocr-2-1b"
 name = "LightOnOCR 2"
-description = "LightOnOCR 2 hosted by IONOS in Berlin, Germany. Zero data retention."
-open_weights = true
-release_date = "2026-09-10"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 32_768
