@@ -1,3 +1,4 @@
+# Prices: list prices from https://api.unorouter.com/api/pricing (accessed 2026-11-08), before group discounts.
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
@@ -5,7 +6,7 @@ base_model = "anthropic/claude-sonnet-5"
 reasoning = { supported = true }
 
 [cost.text.input]
-price = 1.44
+price = 2
 
 [cost.text.output]
-price = 7.2
+price = 10

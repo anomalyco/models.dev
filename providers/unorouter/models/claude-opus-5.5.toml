@@ -1,0 +1,12 @@
+# Prices: list prices from https://api.unorouter.com/api/pricing (accessed 2026-11-08), before group discounts.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 4
+
+[cost.text.output]
+price = 20

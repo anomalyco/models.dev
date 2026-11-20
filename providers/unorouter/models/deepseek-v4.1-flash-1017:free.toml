@@ -1,0 +1,19 @@
+# Free: is_free = true in https://api.unorouter.com/api/pricing (accessed 2026-11-08).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
