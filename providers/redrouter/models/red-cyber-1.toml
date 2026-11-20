@@ -1,0 +1,39 @@
+# Public host-unique opaque model: https://redrouter.org/models/red-cyber-1
+# Prices, capabilities and limits: https://redrouter.org/api/catalog (2026-11-20)
+# Beta publicly documented: https://redrouter.org/blog/red-cyber-1-authorized-pentest-workflow
+# Release date uses the month of the public beta; underlying weights are not disclosed.
+# Chat reasoning_effort=low|medium|high|max is advisory; other APIs ignore effort.
+# https://docs.redrouter.org/reasoning
+schema = 2
+name = "red-cyber-1"
+description = "RedRouter's beta model for authorized penetration testing and red-team work, with reduced refusals and tool calling."
+open_weights = false
+release_date = "2026-11"
+status = "beta"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+structured_output = true
+temperature = true
+top_p = true
+top_k = false
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.28
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 1.10
