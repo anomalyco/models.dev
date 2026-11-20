@@ -1,0 +1,17 @@
+# Prices: https://you.com/product/inference-router/models (accessed 2026-10-22)
+# Effort: reasoning_effort = low|high|max
+# Z.ai's levels (low/high/max); none is accepted but still reasons, so it is not listed. Tested live 2026-10-22.
+# Cache: automatic prefix caching, no markers; a repeated ~17k-token prompt returned usage.prompt_tokens_details.cached_tokens on the next request (tested live 2026-11-19).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.145
+cache = { read = 0.029 }
+
+[cost.text.output]
+price = 0.484
