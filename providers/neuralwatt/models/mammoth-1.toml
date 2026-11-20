@@ -1,0 +1,22 @@
+# Decision model: POST https://api.neuralwatt.com/v1/systemone with the System One {model, state, questions} body (https://portal.neuralwatt.com/docs/api/systemone).
+# Text only: a request with images or videos is a 400. Prices are USD per million tokens from GET /v1/models metadata.pricing.
+schema = 2
+v2_only = true
+base_model = "baseten/mammoth-1"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[limit]
+context = 32_753
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.18
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 0

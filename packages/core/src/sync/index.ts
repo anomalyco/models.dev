@@ -56,6 +56,7 @@ import { mistral } from "./providers/mistral.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { nearai } from "./providers/nearai.js";
 import { nebius } from "./providers/nebius.js";
+import { neuralwatt } from "./providers/neuralwatt.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
@@ -232,6 +233,7 @@ export const providers: {
   "nano-gpt": SyncProvider<any>;
   nearai: SyncProvider<any>;
   nebius: SyncProvider<any>;
+  neuralwatt: SyncProvider<any>;
   "novita-ai": SyncProvider<any>;
   obscurify: SyncProvider<any>;
   ofox: SyncProvider<any>;
@@ -287,6 +289,7 @@ export const providers: {
   "nano-gpt": nanoGpt,
   nearai,
   nebius,
+  neuralwatt,
   "novita-ai": novitaAi,
   obscurify,
   ofox,
@@ -330,7 +333,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "nebius", "neuralwatt", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

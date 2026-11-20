@@ -27,6 +27,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync neuralwatt` syncs only Neuralwatt.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -365,6 +366,20 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - A new model whose lab entry has `reasoning = true` is not created. The endpoint says nothing about how a route turns reasoning on, off or up, so the run opens a deduped GitHub issue asking for the route's controls to be researched and hand-authored in `capabilities.reasoning`. Once that file exists, the sync keeps it priced like any other. Reasoning is judged from the lab entry, never from `supported_features`.
 - A live model with no lab entry is not created either, and opens a missing-model issue. `openai/privacy-filter` is skipped silently because the token-cost schema cannot describe it.
 - Absence removes a model, so the fetch refuses a response carrying fewer than twenty models: a truncated list that still parses would otherwise be indistinguishable from a mass retirement. A local entry the catalog cannot price is republished unchanged rather than dropped, because dropping it would delete a route that is still served.
+
+## Neuralwatt Notes
+
+- Neuralwatt is implemented in `packages/core/src/sync/providers/neuralwatt.ts`. Run it with `bun models:sync neuralwatt` or `bun neuralwatt:sync`.
+- Source endpoint: the public `https://api.neuralwatt.com/v1/models`; no credentials. An authenticated list adds an account's private grants, so the parser requires `scope = "public"` and fails otherwise. Empty and duplicate-ID lists fail before writes.
+- Every row is its own model ID: flex variants (`-flex`), speed lanes (`-speed`) and tracking aliases (`nw-large`, `nw-small`, `nw-flash`) are separate files. Flex rows list prices with the flex discount already applied (`metadata.pricing.service_tier = "flex"`), so prices are written as published.
+- `base_model` comes from `metadata.huggingface_id`, matched against the `[[weights]]` Hugging Face repos in `models/`. Quantized repos (`-FP8`, `-NVFP4`, …) match the repo without the suffix, in the same org or, when unique, any org. A short override table covers builds the lab files don't list (MiMo-V2.6-Pro-MOPD). When a tracking alias is pointed at a new model, its `base_model` follows. A row with no lab match keeps an existing file's `base_model`, or else opens a missing-model issue.
+- API-authoritative: display `name` (written only when it differs from the lab's), prices (`input_per_million`, `output_per_million`, `cached_input_per_million`), `limits.max_context_length`, `limits.max_output_tokens` when set, input modalities (kinds; the file's MIME list is kept while the kinds match, else the lab's MIME types per kind), `capabilities.tools`, `json_mode` (as `structured_output`), `reasoning`, `deprecated` (as `status = "deprecated"`), and `metadata.reasoning.supported_efforts` (as the effort ladder, low to high).
+- `max_output_tokens = null` means no host cap: the request may use whatever context is left. The file's authored `limit.output` is kept, else the lab's is inherited (capped at the context).
+- `thinking_token_budget` is accepted per model but the endpoint doesn't say where, so a `budget` is only carried over from the authored file, never added.
+- `metadata.reasoning.default_effort` and `capabilities.cache` are not synced. A reasoning `default` or cache kind in the file is kept as authored.
+- Decision models (`capabilities.task = "decision"`, e.g. `mammoth-1`) are written as v2-only `[api.systemone]` files using the generic `typesafe-ai/decisions` entry point.
+- A reasoning model with no published levels keeps an existing file's controls, or else opens a missing-model issue. Rows with `pricing_tbd = true` are skipped. Models absent from the list are removed.
+- Existing header comments are kept; new files get a generated header.
 
 ## Obscurify.ai Notes
 
