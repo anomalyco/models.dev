@@ -1,4 +1,4 @@
-# Pricing: https://jzstoken.com/model-pricing/claude-sonnet-5 (2026-10-30).
+# Pricing: https://jzstoken.com/model-pricing/claude-sonnet-5 (checked 2026-11-20).
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
@@ -9,8 +9,8 @@ structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.7784
-cache = { read = 0.0778, write = 0.9731 }
+price = 0.7773
+cache = { read = 0.0777, write = 0.9716 }
 
 [cost.text.output]
 price = 3.89

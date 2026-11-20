@@ -1,0 +1,19 @@
+# Pricing: https://jzstoken.com/model-pricing/qwen3.7-plus (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: alibaba/qwen3.7-plus
+# Upstream control shape from providers/alibaba/models/qwen3.7-plus.toml (JZSTOKEN does not certify reasoning per model):
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget (integer reasoning tokens)
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {} }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3109
+cache = { read = 0.0311, write = 0.3109 }
+
+[cost.text.output]
+price = 1.55

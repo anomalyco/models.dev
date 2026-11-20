@@ -1,0 +1,19 @@
+# Pricing: https://jzstoken.com/model-pricing/LongCat-2.0 (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: meituan/longcat-2.0
+# Request id LongCat-2.0 is the JZSTOKEN id; the lab id differs only by case or a documented alias.
+# Upstream control shape from providers/longcat/models/LongCat-2.0.toml (JZSTOKEN does not certify reasoning per model):
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "meituan/longcat-2.0"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0777
+cache = { read = 0.0078, write = 0.0777 }
+
+[cost.text.output]
+price = 0.3109

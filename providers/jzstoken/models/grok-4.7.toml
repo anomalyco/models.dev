@@ -1,4 +1,4 @@
-# Pricing: https://jzstoken.com/model-pricing/grok-4.7 (2026-10-30).
+# Pricing: https://jzstoken.com/model-pricing/grok-4.7 (checked 2026-11-20).
 # Effort: reasoning_effort = low|medium|high|xhigh (default high).
 schema = 2
 base_model = "xai/grok-4.7"
@@ -9,8 +9,8 @@ structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.3892
-cache = { read = 0.0389, write = 0.4865 }
+price = 0.3886
+cache = { read = 0.0389, write = 0.4858 }
 
 [cost.text.output]
-price = 1.95
+price = 1.94

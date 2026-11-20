@@ -1,0 +1,25 @@
+# Pricing: https://jzstoken.com/model-pricing/doubao-seed-2.0-code (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: bytedance-seed/seed-2.0-code
+# Request id doubao-seed-2.0-code is the JZSTOKEN id; the lab id differs only by case or a documented alias.
+# Host publishes context 200_000; lab context is 262_144.
+# JZSTOKEN id doubao-seed-2.0-code is the id already used by other providers for bytedance-seed/seed-2.0-code.
+# Effort list copied from Volcengine's Seed 2.0 code preview entry, which uses the same effort enum as the other Seed 2.0/2.1 Volcengine files. No undated first-party file exists.
+# Upstream control shape from providers/volcengine/models/doubao-seed-2-0-code-preview-260215.toml (JZSTOKEN does not certify reasoning per model):
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+schema = 2
+base_model = "bytedance-seed/seed-2.0-code"
+
+[limit]
+context = 200_000
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.2332
+cache = { read = 0.0233, write = 0.2332 }
+
+[cost.text.output]
+price = 1.17

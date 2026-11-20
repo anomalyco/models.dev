@@ -1,0 +1,19 @@
+# Pricing: https://jzstoken.com/model-pricing/claude-opus-4-6 (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: anthropic/claude-opus-4-6
+# Upstream control shape from providers/anthropic/models/claude-opus-4-6.toml (JZSTOKEN does not certify reasoning per model):
+# Effort: reasoning_effort = low|medium|high|max
+# Budget: thinking.budget_tokens >= 1_024
+schema = 2
+base_model = "anthropic/claude-opus-4-6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.17
+cache = { read = 0.1166, write = 1.46 }
+
+[cost.text.output]
+price = 5.83
