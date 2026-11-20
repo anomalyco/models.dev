@@ -172,6 +172,22 @@ test("updates exact limits and positive capabilities while preserving curated fi
   expect(noLabels.model).toEqual(authored);
 });
 
+test("reports reasoning-label disagreements in both directions without inventing controls", () => {
+  const model = parseVolcengineModels({ models: modelDocs([modelRow(peerID)]) })[0]!;
+  for (const documented of [true, false]) {
+    const local = { ...authored, reasoning: !documented, reasoning_options: documented ? undefined : controls };
+    const localContext = { authored: () => local, existing: () => local };
+    const translated = volcengine.translateModel({ ...model, reasoning: documented }, localContext)!;
+    expect(translated.model.reasoning).toBe(local.reasoning);
+    expect(translated.model.reasoning_options).toEqual(local.reasoning_options);
+    expect(translated.notices?.join(" ")).toContain(peerID);
+    expect(translated.notices?.join(" ")).toContain("reasoning");
+    expect(translated.notices?.join(" ")).toContain("manually review");
+    const matching = volcengine.translateModel({ ...model, reasoning: local.reasoning }, localContext)!;
+    expect(matching.notices?.join(" ")).not.toContain("reasoning");
+  }
+});
+
 test("unknown limit units never become a numeric prefix", () => {
   for (const display of ["1M", "1 M", "1 MB", "1e6", "1024kB", "1.5M"]) {
     const model = parseVolcengineModels({ models: modelDocs([modelRow(peerID, "", [display, "1024k", "256k"])]) })[0]!;

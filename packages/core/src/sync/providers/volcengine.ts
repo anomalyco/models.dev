@@ -192,7 +192,10 @@ export const volcengine = {
           ...(model.retiring ? { status: "deprecated" } : {}),
           ...(Object.keys(changes).length > 0 ? { limit: { ...authored.limit, ...changes } } : {}),
         } as SyncedModel,
-        notices: unresolved.length === 0 ? [] : [`Volcengine ${model.id}: retained precise limits for ambiguous documentation values (${unresolved.map(([key, value]) => `${key}=${value}`).join(", ")}).`],
+        notices: [
+          ...(unresolved.length === 0 ? [] : [`Volcengine ${model.id}: retained precise limits for ambiguous documentation values (${unresolved.map(([key, value]) => `${key}=${value}`).join(", ")}).`]),
+          ...(model.reasoning === Boolean(existing?.reasoning) ? [] : [`Volcengine ${model.id}: documentation reasoning=${model.reasoning} differs from curated reasoning=${Boolean(existing?.reasoning)}; manually review this model's host reasoning controls. Existing controls were retained.`]),
+        ],
       };
     }
 
