@@ -66,6 +66,10 @@ export const ModelFamilyValues = [
   "qwen4-max",
   "qwen-free",
 
+  // Hanzo
+  "enso",
+  "zen",
+
   // DeepReinforce
   "ornith",
 
