@@ -1,0 +1,38 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default on)
+# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19.
+# Toggle, one request per setting: reasoning_content carries text with true and none with false; with the field
+#   omitted it carries text. chat_template_kwargs.thinking had the same effect.
+# enable_thinking is the name the chat template reads (https://huggingface.co/Qwen/Qwen3.6-27B).
+# No effort level is listed. chat_template_kwargs.reasoning_effort (low, medium, high; two requests per level at
+#   max_tokens 1200) was accepted (HTTP 200) with no visible effect: every reply, with or without it, was cut at the
+#   cap. The lab's own API lists a toggle and a budget for this checkpoint in this catalog, no effort levels.
+# No budget is listed: chat_template_kwargs.thinking_budget = 64 did not shorten the reasoning (2343 characters, reply
+#   cut at the cap; 2097 characters with 2048, 2541 and 2299 with no budget). One request per value.
+# Top-level reasoning_effort and thinking_budget were not tested.
+# Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
+# Output limit: 65,536 is where the VoltageGPU relay caps max_tokens for this id (the maximum output of the deployment
+#   serving it). GET /v1/models does not publish that value today. A request with max_tokens 200000 was answered 200
+#   on 2026-11-19: the cap is applied without an error. It equals the lab file's value, so it is inherited, not
+#   repeated here.
+# Input: text and images, no video; image MIME types from the lab file. Image and video input were not tested on this
+#   id.
+schema = 2
+base_model = "alibaba/qwen3.6-27b"
+name = "Qwen3.6 27B TEE"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 4
