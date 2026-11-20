@@ -52,6 +52,15 @@ test("refuses customer-scoped catalogs", () => {
   expect(() => neuralwatt.parseModels({ data: [model] })).toThrow();
 });
 
+test("skips decision models", () => {
+  const chat = sourceModel("kimi-k3.1-pro");
+  const decision = sourceModel("mammoth-1", {
+    capabilities: { tools: false, json_mode: false, vision: false, reasoning: false, task: "decision" },
+    reasoning: null,
+  });
+  expect(neuralwatt.parseModels({ scope: "public", data: [chat, decision] })).toEqual([chat]);
+});
+
 test("keeps the discounted flex prices reported by the API", () => {
   const source = sourceModel("glm-5.2-flex", {
     pricing: { input_per_million: 0.9425, output_per_million: 2.925, cached_input_per_million: 0.09425 },

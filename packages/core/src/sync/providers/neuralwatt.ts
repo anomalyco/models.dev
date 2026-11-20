@@ -54,12 +54,13 @@ const Metadata = z.object({
     vision: z.boolean(),
     audio_input: z.boolean().optional(),
     reasoning: z.boolean(),
+    task: z.string().optional(),
   }).passthrough(),
-  // Optional: `capabilities.reasoning` is the authoritative flag, and a model
+  // Nullish: `capabilities.reasoning` is the authoritative flag, and a model
   // with no reasoning at all has no reason to carry an effort ladder.
   reasoning: z.object({
     supported_efforts: z.array(z.string()),
-  }).passthrough().optional(),
+  }).passthrough().nullish(),
   limits: z.object({
     max_context_length: z.number().nullish(),
     max_output_tokens: z.number().nullish(),
@@ -112,7 +113,10 @@ export const neuralwatt = {
     return response.json();
   },
   parseModels(raw) {
-    return NeuralwattResponse.parse(raw).data;
+    // Decision models are served on /v1/systemone; not synced yet.
+    return NeuralwattResponse.parse(raw).data.filter(
+      (model) => model.metadata.capabilities.task !== "decision",
+    );
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
