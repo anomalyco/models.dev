@@ -5,6 +5,10 @@
 # metadata.limits.max_output_tokens = null; no host cap is reported.
 # Inherited lab output (131,072) is a fallback, not a verified host cap.
 # Budget: thinking_token_budget (integer reasoning tokens)
+# Reasoning comes back in choices[].message.reasoning_content (delta.reasoning_content
+# when streaming) and not in `reasoning`. The chat-completions docs name
+# kimi-k3.1-pro as the exception (https://docs.neuralwatt.com/api/chat-completions,
+# checked 2026-11-20).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -21,7 +25,7 @@ context = 1_048_560
 output = 1_048_560
 
 [api.chat-completions]
-legacy_interleaved = true
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 2

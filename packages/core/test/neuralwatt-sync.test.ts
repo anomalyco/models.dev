@@ -72,11 +72,15 @@ const mammothRow = (overrides: Overrides = {}) => model({
     limits: { max_context_length: 32_753, max_output_tokens: 0 },
     ...overrides.metadata,
   },
-  architecture: { input_modalities: ["text"], output_modalities: ["decisions"] },
+  architecture: overrides.architecture ?? { input_modalities: ["text"], output_modalities: ["decisions"] },
 });
 
-// Embedding rows the sync skips quietly, to bring a test list above the truncation floor.
+// Unpriced chat rows the sync skips quietly, to bring a test list up to the truncation floor.
 const filler = Array.from({ length: 12 }, (_, index) => model({
+  id: `tbd-${index}`,
+  metadata: { pricing: { ...model().metadata.pricing, pricing_tbd: true } },
+}));
+const embeddings = Array.from({ length: 12 }, (_, index) => model({
   id: `embed-${index}`,
   metadata: { huggingface_id: null, capabilities: { tools: false, json_mode: false, reasoning: false, task: "embed" }, reasoning: null },
   architecture: { input_modalities: ["text"], output_modalities: ["embeddings"] },
@@ -125,6 +129,8 @@ test("short, duplicate and non-public lists fail before any catalog writes", () 
   expect(() => neuralwatt.parseModels({ object: "list", scope: "public", data: [] })).toThrow("below the 12");
   expect(() => neuralwatt.parseModels({ object: "list", scope: "public", data: filler.slice(0, 11) })).toThrow("below the 12");
   expect(neuralwatt.parseModels({ object: "list", scope: "public", data: filler })).toHaveLength(12);
+  // Rows without a catalog shape don't count toward the floor.
+  expect(() => neuralwatt.parseModels({ object: "list", scope: "public", data: [...embeddings, model()] })).toThrow("below the 12");
   expect(() => NeuralwattResponse.parse({ object: "list", scope: "public", data: [model(), model()] })).toThrow("duplicate model IDs");
   // An authenticated list can include an account's private grants.
   expect(() => NeuralwattResponse.parse({ object: "list", scope: "customer", data: [model()] })).toThrow();
@@ -199,6 +205,11 @@ test("unpriced rows keep an existing file, and unknown labs are reported as miss
   const misfiled = mammothRow({ id: "decider", metadata: { huggingface_id: "zai-org/GLM-5.3" } });
   expect(neuralwatt.translateModel(misfiled, noFiles)).toBeUndefined();
   expect(neuralwatt.missingModelID(misfiled)).toBe("decider");
+
+  // A decision row that takes media needs a hand-written file, so it is reported.
+  const media = mammothRow({ architecture: { input_modalities: ["text", "image", "video"], output_modalities: ["decisions"] } });
+  expect(neuralwatt.translateModel(media, noFiles)).toBeUndefined();
+  expect(neuralwatt.missingModelID(media)).toBe("mammoth-1");
 });
 
 test("a decision model becomes a v2-only System One file", () => {
@@ -349,45 +360,81 @@ test("a new multimodal file gets the lab's MIME types, and an authored MIME list
     await fixture.sync();
     expect(await file.text()).toBe(narrowed);
 
-    // The API adds video, so the kinds match the lab's and the file inherits the lab's full MIME list.
-    fixture.state.data = [qwenRow({ architecture: { input_modalities: ["text", "image", "video"], output_modalities: ["text"] } })];
-    await fixture.sync();
-    const widened = Bun.TOML.parse(await file.text()) as Record<string, any>;
-    expect(widened.modalities).toBeUndefined();
+    // The API lists video, which chat completions doesn't accept, so the route stays text and PNG.
+    fixture.state.data = [qwenRow({
+      architecture: { input_modalities: ["text", "image", "video"], output_modalities: ["text"] },
+      metadata: { pricing: { ...model().metadata.pricing, input_per_million: 2 } },
+    })];
+    expect((await fixture.sync()).unchanged).toBe(1);
+    expect(await file.text()).toBe(narrowed);
   } finally {
     await fixture.cleanup();
   }
 });
 
-test("a narrower MIME list survives when the API's kinds equal the lab's", async () => {
-  const fixture = await syncFixture();
-  const file = fixture.file("qwen-new");
-  const allKinds = { input_modalities: ["text", "image", "video"], output_modalities: ["text"] };
-  try {
-    fixture.state.data = [qwenRow({ architecture: allKinds })];
-    expect((await fixture.sync()).created).toBe(1);
-    expect((Bun.TOML.parse(await file.text()) as Record<string, any>).modalities).toBeUndefined();
+const mimoRow = (overrides: Overrides = {}) => qwenRow({
+  id: "mimo-new",
+  max_model_len: 1_048_560,
+  ...overrides,
+  metadata: {
+    huggingface_id: "XiaomiMiMo/MiMo-V2.6-Pro-MOPD",
+    limits: { max_context_length: 1_048_560, max_output_tokens: null },
+    reasoning: { mandatory: false, supported_efforts: ["none", "high"], default_effort: "high" },
+    ...overrides.metadata,
+  },
+});
 
-    const authored = (await file.text()).replace("[capabilities]", '[modalities]\ninput = ["text", "image/png", "video/mp4"]\noutput = ["text"]\n\n[capabilities]');
+test("a narrower MIME list survives when the API's kinds equal the lab's, and a new kind doesn't widen it", async () => {
+  const fixture = await syncFixture();
+  const file = fixture.file("mimo-new");
+  const textImage = { input_modalities: ["text", "image"], output_modalities: ["text"] };
+  const withAudio = { input_modalities: ["text", "image", "audio"], output_modalities: ["text"] };
+  try {
+    fixture.state.data = [mimoRow({ architecture: withAudio })];
+    expect((await fixture.sync()).created).toBe(1);
+
+    const authored = (await file.text()).replace(/^input = \[.*\]$/m, 'input = ["text", "image/png", "audio/wav"]');
     await Bun.write(file, authored);
     expect((await fixture.sync()).unchanged).toBe(1);
     expect(await file.text()).toBe(authored);
-    fixture.state.data = [qwenRow({ architecture: allKinds, metadata: { pricing: { ...model().metadata.pricing, input_per_million: 2 } } })];
+    fixture.state.data = [mimoRow({ architecture: withAudio, metadata: { pricing: { ...model().metadata.pricing, input_per_million: 2 } } })];
     expect((await fixture.sync()).updated).toBe(1);
-    expect((Bun.TOML.parse(await file.text()) as Record<string, any>).modalities.input).toEqual(["text", "image/png", "video/mp4"]);
+    expect((Bun.TOML.parse(await file.text()) as Record<string, any>).modalities.input).toEqual(["text", "image/png", "audio/wav"]);
+
+    // Audio leaves and comes back. The PNG-only image list is never widened to the lab's formats.
+    fixture.state.data = [mimoRow({ architecture: textImage })];
+    await fixture.sync();
+    expect((Bun.TOML.parse(await file.text()) as Record<string, any>).modalities.input).toEqual(["text", "image/png"]);
+    fixture.state.data = [mimoRow({ architecture: withAudio })];
+    await fixture.sync();
+    expect((Bun.TOML.parse(await file.text()) as Record<string, any>).modalities.input).toEqual(["text", "image/png", "audio/wav"]);
   } finally {
     await fixture.cleanup();
   }
 });
 
-test("an alias retarget drops the old lab's MIME types and output cap", async () => {
+test("an alias retarget drops the old lab's MIME types, output cap, reasoning controls and reasoning field", async () => {
   const fixture = await syncFixture();
   const file = fixture.file("qwen-new");
   try {
     fixture.state.data = [qwenRow()];
     await fixture.sync();
-    await Bun.write(file, (await file.text()).replace(/^context = (.*)$/m, "context = $1\noutput = 200_000"));
+    await Bun.write(file, (await file.text())
+      .replace(/^context = (.*)$/m, "context = $1\noutput = 200_000")
+      .replace(/^reasoning = \{ supported = true, effort = (\[[^\]]*\]) \}$/m, 'reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = $1, budget = {} }')
+      .replace("legacy_interleaved = true", 'compatibility = { reasoning_field = "reasoning_content" }'));
     expect((await fixture.sync()).unchanged).toBe(1);
+    const onQwen = await file.text();
+    expect(onQwen).toContain("budget = {}");
+    expect(onQwen).toContain('reasoning_field = "reasoning_content"');
+
+    // A retarget to a model that publishes no levels keeps the file unchanged and reports it.
+    const unpublished = qwenRow({ metadata: { huggingface_id: "XiaomiMiMo/MiMo-V2.6-Pro-MOPD", reasoning: null } });
+    fixture.state.data = [unpublished];
+    const held = await fixture.sync();
+    expect([held.updated, held.deleted]).toEqual([0, 0]);
+    expect(await file.text()).toBe(onQwen);
+    expect(neuralwatt.missingModelID(unpublished)).toBe("qwen-new");
 
     // The alias now serves MiMo, whose lab lists no TIFF, HEIC or BMP-only Qwen formats, and the API publishes no cap.
     fixture.state.data = [qwenRow({
@@ -403,6 +450,9 @@ test("an alias retarget drops the old lab's MIME types and output cap", async ()
     expect(moved.base_model).toBe("xiaomi/mimo-v2.6-pro");
     expect(moved.modalities.input).toEqual(["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]);
     expect(moved.limit.output).toBeUndefined();
+    // The new ladder, without Qwen's budget, default or reasoning field.
+    expect(moved.capabilities.reasoning).toEqual({ supported: true, effort: ["none", "high"] });
+    expect(moved.api?.["chat-completions"]?.compatibility).toBeUndefined();
   } finally {
     await fixture.cleanup();
   }
@@ -412,16 +462,7 @@ test("a new audio route lists WAV as its only audio format", async () => {
   const fixture = await syncFixture();
   const file = fixture.file("mimo-new");
   try {
-    fixture.state.data = [qwenRow({
-      id: "mimo-new",
-      max_model_len: 1_048_560,
-      metadata: {
-        huggingface_id: "XiaomiMiMo/MiMo-V2.6-Pro-MOPD",
-        limits: { max_context_length: 1_048_560, max_output_tokens: null },
-        reasoning: { mandatory: false, supported_efforts: ["none", "high"], default_effort: "high" },
-      },
-      architecture: { input_modalities: ["text", "image", "audio"], output_modalities: ["text"] },
-    })];
+    fixture.state.data = [mimoRow({ architecture: { input_modalities: ["text", "image", "audio"], output_modalities: ["text"] } })];
     expect((await fixture.sync()).created).toBe(1);
     const input = (Bun.TOML.parse(await file.text()) as Record<string, any>).modalities.input as string[];
     expect(input.filter((item) => item.startsWith("audio/"))).toEqual(["audio/wav"]);
@@ -450,6 +491,45 @@ test("an authored default effort survives a ladder change while it is still a le
     fixture.state.data = ladder(["low"]);
     await fixture.sync();
     expect((Bun.TOML.parse(await file.text()) as Record<string, any>).capabilities.reasoning.default).toBeUndefined();
+  } finally {
+    await fixture.cleanup();
+  }
+});
+
+test("an authored budget default survives a ladder change while the budget control stays", async () => {
+  const fixture = await syncFixture();
+  const file = fixture.file("glm-5.3");
+  try {
+    await fixture.sync();
+    await Bun.write(file, (await file.text()).replace(
+      /^reasoning = \{ supported = true, effort = (\[[^\]]*\]) \}$/m,
+      'reasoning = { supported = true, default = { type = "budget", value = 4096 }, effort = $1, budget = {} }',
+    ));
+    fixture.state.data = [model({ metadata: { reasoning: { mandatory: true, supported_efforts: ["low", "high"], default_effort: "high" } } })];
+    expect((await fixture.sync()).updated).toBe(1);
+    const reasoning = (Bun.TOML.parse(await file.text()) as Record<string, any>).capabilities.reasoning;
+    expect(reasoning).toEqual({ supported: true, default: { type: "budget", value: 4096 }, effort: ["low", "high"], budget: {} });
+  } finally {
+    await fixture.cleanup();
+  }
+});
+
+test("an authored reasoning field and base_model_omit survive a price update on the same lab", async () => {
+  const fixture = await syncFixture();
+  const file = fixture.file("glm-5.3");
+  try {
+    await fixture.sync();
+    const authored = (await file.text())
+      .replace("legacy_interleaved = true", 'compatibility = { reasoning_field = "reasoning_content" }')
+      .replace('base_model = "zhipuai/glm-5.3"', 'base_model = "zhipuai/glm-5.3"\nbase_model_omit = ["temperature"]');
+    await Bun.write(file, authored);
+    expect((await fixture.sync()).unchanged).toBe(1);
+    fixture.state.data = [model({ metadata: { pricing: { ...model().metadata.pricing, input_per_million: 1.2 } } })];
+    expect((await fixture.sync()).updated).toBe(1);
+    const updated = Bun.TOML.parse(await file.text()) as Record<string, any>;
+    expect(updated.api["chat-completions"].compatibility).toEqual({ reasoning_field: "reasoning_content" });
+    expect(updated.base_model_omit).toEqual(["temperature"]);
+    expect(updated.cost.text.input.price).toBe(1.2);
   } finally {
     await fixture.cleanup();
   }

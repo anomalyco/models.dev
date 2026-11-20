@@ -1,16 +1,14 @@
 import { z } from "zod";
-import { readFileSync } from "node:fs";
-import path from "node:path";
 
 import { AuthoredModelShape, ReasoningOption } from "../../schema.js";
 import type { SyncProvider } from "../index.js";
+import { kindOf, labInputModalities } from "../lab-metadata.js";
 import { perTokenToPerMillion } from "./inceptron.js";
 import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.keln.ai/v1/models";
-const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
 const REASONING_DOCS = "https://docs.keln.ai/capabilities/reasoning/";
-const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"];
+export const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"];
 // Facts about one model that Keln states but its catalog row has no field for.
 const MODEL_NOTES: Record<string, string> = {
   "nvidia/nemotron-3-ultra-550b-a55b":
@@ -181,23 +179,6 @@ export const keln = {
     };
   },
 } satisfies SyncProvider<KelnTextModel>;
-
-/** The lab file's v2 input list (MIME types), or undefined when it has none. */
-function labInputModalities(modelID: string): string[] | undefined {
-  try {
-    const lab = Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8")) as {
-      modalities?: { input?: unknown };
-    };
-    const input = lab.modalities?.input;
-    return Array.isArray(input) && input.every((item) => typeof item === "string") ? input : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
-function kindOf(item: string) {
-  return item === "application/pdf" ? "pdf" : item.split("/")[0]!;
-}
 
 /** Keln lists kinds (text, image); each kind takes the lab's exact MIME types of that kind. */
 export function exactInput(kinds: string[], lab: string[]) {

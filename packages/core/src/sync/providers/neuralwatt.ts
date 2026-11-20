@@ -1,18 +1,17 @@
-import { readdirSync, readFileSync } from "node:fs";
-import path from "node:path";
 import { z } from "zod";
 
 import { ReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncedModel, SyncProvider } from "../index.js";
-import { exactInput } from "./keln.js";
+import { kindOf, labInputModalities, labsDir, labWeightsIndex, readLabModel } from "../lab-metadata.js";
+import { EFFORT_ORDER, exactInput } from "./keln.js";
 import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.neuralwatt.com/v1/models";
-const MODELS_DIR = path.join(import.meta.dirname, "..", "..", "..", "..", "..", "models");
-const DOCS = "https://docs.neuralwatt.com/api";
 const SYSTEMONE_DOCS = "https://portal.neuralwatt.com/docs/api/systemone";
-const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"];
 const MODALITIES = new Set(["text", "audio", "image", "video", "pdf"]);
+// The architecture lists describe the model itself, and chat completions
+// doesn't accept video (https://docs.neuralwatt.com/api/models#architecture).
+const CHAT_INPUT = new Set(["text", "image", "audio"]);
 // Hugging Face repos whose lab model publishes different weights, so the
 // weights index can't find it. Keyed by lowercased `metadata.huggingface_id`.
 const LAB_OVERRIDES: Record<string, string> = {
@@ -24,10 +23,11 @@ const LAB_OVERRIDES: Record<string, string> = {
 // A lab's own quantized repo (Qwen/Qwen3.8-27B-FP8) serves the lab model
 // named without the suffix in the same org.
 const QUANT_SUFFIX = /-(fp8|fp4|nvfp4|mxfp4|int4|int8|awq|gptq|bf16|w4a16|w8a8)$/i;
-// The public list had 24 rows when this was written. A list under half that
-// fails the run, so a badly truncated response can't delete most of the
-// catalog. Smaller drops still delete files and rely on the runner's deletion
-// limits and the auto-merge caps.
+// The public list had 24 chat and decision rows when this was written. A list
+// with fewer than 12 of those fails the run, so a badly truncated response
+// can't delete most of the catalog. The runner itself has no deletion limit.
+// Smaller drops are held for review only in the scheduled job (auto-merge.ts
+// and .github/sync-models/publish.sh), and a local run deletes them.
 const MIN_LIVE_MODELS = 12;
 // Neuralwatt takes audio as WAV only (PCM or float). MP3, FLAC, M4A and other
 // compressed formats are rejected (https://docs.neuralwatt.com/api/chat-completions, "Format").
@@ -95,9 +95,10 @@ export const neuralwatt = {
   fetchModels: fetchNeuralwattModels,
   parseModels(raw) {
     const models = NeuralwattResponse.parse(raw).data;
-    if (models.length < MIN_LIVE_MODELS) {
+    const catalogRows = models.filter(syncable).length;
+    if (catalogRows < MIN_LIVE_MODELS) {
       throw new Error(
-        `Neuralwatt returned ${models.length} models, below the ${MIN_LIVE_MODELS} needed to tell a retirement from a truncated list`,
+        `Neuralwatt returned ${catalogRows} chat or decision models, below the ${MIN_LIVE_MODELS} needed to tell a retirement from a truncated list`,
       );
     }
     return models;
@@ -106,56 +107,62 @@ export const neuralwatt = {
     return model.id;
   },
   // A priced model whose checkpoint has no lab file, whose decision lab isn't a
-  // decision model, or that publishes no reasoning levels gets a missing-model
-  // issue, and an existing file for it is kept meanwhile.
+  // decision model, that is a decision model taking more than text, or that
+  // publishes no reasoning levels gets a missing-model issue, and an existing
+  // file for it is kept meanwhile.
   missingModelID(model) {
     if (!priced(model) || !syncable(model)) return undefined;
-    const baseModel = neuralwattBaseModel(model.metadata.huggingface_id);
+    const labs = labsDir(this.modelsDir);
+    const baseModel = neuralwattBaseModel(model.metadata.huggingface_id, labs);
     if (baseModel === undefined) return model.id;
-    if (isDecision(model)) return labModel(baseModel)?.type === "decision" ? undefined : model.id;
+    if (isDecision(model)) {
+      return readLabModel(baseModel, labs)?.type === "decision" && textOnly(model) ? undefined : model.id;
+    }
     const levelsUnpublished = model.metadata.capabilities.reasoning
       && reasoningOptions(model.metadata.reasoning, undefined) === undefined;
     return levelsUnpublished ? model.id : undefined;
   },
   skippedNotice(ids) {
     return ids.length === 0 ? [] : [
-      `Neuralwatt models not synced (unpriced, not a chat or decision model, no lab model for their huggingface_id, or no published reasoning levels): ${ids.join(", ")}`,
+      `Neuralwatt models not synced (unpriced, not a chat or text-only decision model, no lab model for their huggingface_id, or no published reasoning levels): ${ids.join(", ")}`,
     ];
   },
   translateModel(model, context) {
     // A listed row the sync can't use keeps its file as written. Returning
     // undefined would let the runner delete it as retired.
     if (!priced(model) || !syncable(model)) return republish(model.id, context);
+    const labs = labsDir(this.modelsDir);
     const authored = context.authored(model.id);
-    const existingV2 = context.v2?.(model.id) as Record<string, any> | undefined;
+    const existingV2 = context.v2?.(model.id);
+    const existingBase = authored?.base_model ?? stringAt(existingV2, "base_model");
     // Fall back to the file's base_model only when the row names no checkpoint.
     // An unknown checkpoint goes to missingModelID, which keeps the file.
     const checkpoint = model.metadata.huggingface_id?.trim();
-    const baseModel = checkpoint
-      ? neuralwattBaseModel(checkpoint)
-      : authored?.base_model ?? existingV2?.base_model;
+    const baseModel = checkpoint ? neuralwattBaseModel(checkpoint, labs) : existingBase;
     if (baseModel === undefined) return undefined;
-    // Authored host facts (output cap, MIME list) belong to the lab the file
-    // points at, so they are dropped when an alias moves to another lab.
-    const existingBase: string | undefined = authored?.base_model ?? existingV2?.base_model;
-    const sameBase = existingBase === undefined || existingBase === baseModel;
+    // Authored host facts (reasoning controls and default, output cap, MIME
+    // list, reasoning field, omissions) describe the lab the file points at,
+    // so none of them carry over when an alias moves to another lab.
+    const kept = existingBase === undefined || existingBase === baseModel ? authored : undefined;
+    const keptV2 = kept === undefined ? undefined : existingV2;
 
     if (isDecision(model)) {
-      const v2 = buildDecisionModel(model, baseModel, existingV2);
+      if (!textOnly(model)) return undefined;
+      const v2 = buildDecisionModel(model, baseModel, existingV2, labs);
       return v2 === undefined ? undefined : { id: model.id, v2, header: DECISION_HEADER };
     }
 
     const reasoning = model.metadata.capabilities.reasoning;
-    const controls = reasoning ? reasoningOptions(model.metadata.reasoning, authored) : undefined;
+    const controls = reasoning ? reasoningOptions(model.metadata.reasoning, kept) : undefined;
     // A thinking model needs its levels published, and they are never invented.
-    // An existing file keeps its authored controls (the runner preserves them).
-    if (reasoning && controls === undefined && authored?.reasoning_options === undefined) return undefined;
+    // An existing file on the same lab keeps its authored controls (the runner preserves them).
+    if (reasoning && controls === undefined && kept?.reasoning_options === undefined) return undefined;
 
-    const input = kinds(model.architecture.input_modalities);
+    const input = kinds(model.architecture.input_modalities).filter((kind) => CHAT_INPUT.has(kind));
     const pricing = model.metadata.pricing;
     const limit = {
       context: model.metadata.limits.max_context_length ?? model.max_model_len,
-      output: outputLimit(model, sameBase ? authored : undefined),
+      output: outputLimit(model, kept),
     };
     const deprecated = model.metadata.deprecated;
     const translated = factorBaseModel(baseModel, {
@@ -165,8 +172,10 @@ export const neuralwatt = {
       structured_output: model.metadata.capabilities.json_mode,
       reasoning,
       reasoning_options: controls,
-      // The reasoning trace comes back on `reasoning` (see provider.toml).
-      interleaved: reasoning ? true : authored?.interleaved,
+      // The API doesn't say where the reasoning trace comes back, so an authored
+      // field (reasoning_content on Kimi) is kept. Otherwise it is `reasoning`
+      // (see provider.toml).
+      interleaved: kept?.interleaved ?? (reasoning ? true : undefined),
       status: deprecated ? "deprecated" : authored?.status === "deprecated" ? undefined : authored?.status,
       cost: {
         input: pricing.input_per_million!,
@@ -175,12 +184,12 @@ export const neuralwatt = {
       },
       limit,
       modalities: { input, output: ["text"] },
-    }, limit, sameBase ? authored?.base_model_omit : undefined);
+    }, limit, kept?.base_model_omit);
 
     const v2Set: Record<string, unknown> = {};
-    const labInput = labInputModalities(baseModel);
+    const labInput = labInputModalities(baseModel, labs);
     if (labInput !== undefined) {
-      const host = hostInput(input, labInput, sameBase ? existingV2?.modalities?.input : undefined);
+      const host = hostInput(input, labInput, valueAt(keptV2, "modalities", "input"));
       // The lab's list is inherited when the host's is the same. Otherwise the
       // v1 view needs the kinds too, since factoring drops them when they match the lab's.
       if (sameItems(host, labInput)) v2Set.modalities = undefined;
@@ -191,26 +200,29 @@ export const neuralwatt = {
         }
       }
     }
-    // An authored default effort survives a ladder change while it is still one of the levels.
-    const authoredDefault = existingV2?.capabilities?.reasoning?.default;
-    const effort = controls?.find((option) => option.type === "effort");
-    if (authoredDefault?.type === "effort" && effort?.type === "effort" && effort.values.includes(authoredDefault.value)) {
-      v2Set["capabilities.reasoning"] = (current: unknown) =>
-        current !== null && typeof current === "object" && (current as { supported?: unknown }).supported === true
-          ? (({ supported, default: _old, ...rest }: Record<string, unknown>) => ({ supported, default: authoredDefault, ...rest }))(current as Record<string, unknown>)
-          : current;
+    // The runner rebuilds the reasoning table from the controls when they
+    // change, so an authored default is put back while a control still backs it.
+    const authoredDefault = valueAt(keptV2, "capabilities", "reasoning", "default");
+    if (reasoning && controls !== undefined) {
+      const restored = backedDefault(authoredDefault, controls);
+      v2Set["capabilities.reasoning"] = (current: unknown) => {
+        if (!isRecord(current) || current.supported !== true) return current;
+        const { supported, default: _old, ...rest } = current;
+        return restored === undefined ? { supported, ...rest } : { supported, default: restored, ...rest };
+      };
     }
 
     return {
       id: model.id,
       model: translated,
-      header: chatHeader(model, controls),
+      header: chatHeader(model),
       v2Set,
     };
   },
 } satisfies SyncProvider<NeuralwattModel>;
 
 type TranslateContext = Parameters<SyncProvider<NeuralwattModel>["translateModel"]>[1];
+type Controls = z.infer<typeof ReasoningOption>[];
 
 function priced(model: NeuralwattModel) {
   const pricing = model.metadata.pricing;
@@ -226,12 +238,30 @@ function syncable(model: NeuralwattModel) {
   return isDecision(model) || model.architecture.output_modalities.includes("text");
 }
 
+// Media decision models need hand-written files (media_input, output, header).
+function textOnly(model: NeuralwattModel) {
+  return kinds(model.architecture.input_modalities).every((kind) => kind === "text");
+}
+
 // The existing file, unchanged, or undefined when there is none (a quiet skip).
 function republish(id: string, context: TranslateContext) {
   const v2 = context.v2?.(id);
   if (v2?.v2_only === true) return { id, v2 };
   const authored = context.authored(id);
   return authored === undefined ? undefined : { id, model: authored as SyncedModel };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function valueAt(doc: unknown, ...keys: string[]) {
+  return keys.reduce<unknown>((node, key) => (isRecord(node) ? node[key] : undefined), doc);
+}
+
+function stringAt(doc: unknown, key: string) {
+  const value = valueAt(doc, key);
+  return typeof value === "string" ? value : undefined;
 }
 
 /** The API's levels, low to high, plus a budget the file already documents. */
@@ -242,7 +272,7 @@ export function reasoningOptions(
   if (reasoning == null) return undefined;
   const values = [...new Set(reasoning.supported_efforts ?? [])]
     .sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
-  // No published levels: reasoning is always on and nothing controls it.
+  // With no published levels, reasoning is always on and nothing controls it.
   if (values.length === 0) return reasoning.mandatory ? [] : undefined;
   const effort = ReasoningOption.safeParse({ type: "effort", values });
   if (!effort.success) return undefined;
@@ -250,6 +280,18 @@ export function reasoningOptions(
   // where, so a budget is only ever carried over from the authored file.
   const budget = authored?.reasoning_options?.filter((option) => option.type === "budget_tokens") ?? [];
   return [effort.data, ...budget];
+}
+
+// An authored v2 `default`, while the controls still offer it.
+function backedDefault(value: unknown, controls: Controls) {
+  if (!isRecord(value)) return undefined;
+  if (value.type === "effort") {
+    const effort = controls.find((option) => option.type === "effort");
+    return effort?.type === "effort" && effort.values.includes(value.value as never) ? value : undefined;
+  }
+  if (value.type === "budget") return controls.some((option) => option.type === "budget_tokens") ? value : undefined;
+  if (value.type === "toggle") return controls.some((option) => option.type === "toggle") ? value : undefined;
+  return undefined;
 }
 
 // A published cap wins. With none (null), keep the file's limit, else inherit the lab's.
@@ -263,10 +305,6 @@ function kinds(values: string[]) {
     .filter((value): value is "text" | "audio" | "image" | "video" | "pdf" => MODALITIES.has(value));
 }
 
-function kindOf(item: string) {
-  return item === "application/pdf" ? "pdf" : item.split("/")[0]!;
-}
-
 function sameKinds(current: unknown[], expected: string[]) {
   const have = new Set(current.map((item) => kindOf(String(item))));
   return have.size === expected.length && expected.every((kind) => have.has(kind));
@@ -276,28 +314,23 @@ function sameItems(a: string[], b: string[]) {
   return a.length === b.length && [...a].sort().join("\n") === [...b].sort().join("\n");
 }
 
-// The exact input list the host accepts: the file's list while its kinds match
-// the API's, otherwise the lab's MIME types for each kind, with audio as WAV only.
-function hostInput(kinds: string[], labInput: string[], current: unknown) {
-  const list = Array.isArray(current) && sameKinds(current, kinds) ? current.map(String) : exactInput(kinds, labInput);
-  let audioPlaced = false;
-  return list.flatMap((item) => {
-    if (kindOf(item) !== "audio") return [item];
-    if (audioPlaced) return [];
-    audioPlaced = true;
-    return HOST_AUDIO;
+// The exact input list the host accepts, per kind: the file's MIME types for
+// a kind it already lists, else the lab's, with audio as WAV only.
+function hostInput(inputKinds: string[], labInput: string[], current: unknown) {
+  const authored = Array.isArray(current) ? current.map(String) : [];
+  return inputKinds.flatMap((kind) => {
+    if (kind === "text") return ["text"];
+    if (kind === "audio") return HOST_AUDIO;
+    const own = authored.filter((item) => kindOf(item) === kind);
+    return own.length > 0 ? own : exactInput([kind], labInput);
   });
 }
 
-function chatHeader(model: NeuralwattModel, controls: z.infer<typeof ReasoningOption>[] | undefined) {
+function chatHeader(model: NeuralwattModel) {
   const lines = [
     `# Generated by bun models:sync neuralwatt from ${API_ENDPOINT} (public list).`,
     "# Prices are USD per million tokens from metadata.pricing. Lab facts are inherited via base_model.",
   ];
-  const effort = controls?.find((option) => option.type === "effort");
-  if (effort?.type === "effort") {
-    lines.push(`# Effort: top-level reasoning_effort = ${effort.values.join("|")} (${DOCS}/chat-completions#reasoning-effort).`);
-  }
   if (model.metadata.pricing.service_tier === "flex") {
     lines.push("# The Flex tier requires stream = true, and its listed prices already include the flex discount.");
   }
@@ -316,9 +349,15 @@ const DECISION_HEADER = [
 ].join("\n") + "\n";
 
 // Decision models only answer on /v1/systemone, so they are v2-only files.
-// An existing file is the starting point, so fields the sync doesn't own survive.
-export function buildDecisionModel(model: NeuralwattModel, baseModel: string, existing?: Record<string, unknown>) {
-  const lab = labModel(baseModel);
+// Only text-only rows are built. An existing file is the starting point, so
+// fields the sync doesn't own survive.
+export function buildDecisionModel(
+  model: NeuralwattModel,
+  baseModel: string,
+  existing?: Record<string, unknown>,
+  labs?: string,
+) {
+  const lab = readLabModel(baseModel, labs);
   if (lab?.type !== "decision") return undefined;
   const pricing = model.metadata.pricing;
   const doc: Record<string, any> = structuredClone(existing ?? {});
@@ -330,15 +369,9 @@ export function buildDecisionModel(model: NeuralwattModel, baseModel: string, ex
   if (model.metadata.deprecated) doc.status = "deprecated";
   else if (doc.status === "deprecated") delete doc.status;
 
-  const input = model.architecture.input_modalities.includes("text") ? kinds(model.architecture.input_modalities) : undefined;
   const labModalities = lab.modalities as { input?: string[]; output?: string[] } | undefined;
-  if (input !== undefined && labModalities?.input !== undefined && !sameKinds(labModalities.input, input)) {
-    const current = doc.modalities?.input;
-    doc.modalities = {
-      ...doc.modalities,
-      input: Array.isArray(current) && sameKinds(current, input) ? current : exactInput(input, labModalities.input),
-      output: doc.modalities?.output ?? labModalities.output ?? ["decision"],
-    };
+  if (labModalities?.input !== undefined && !sameKinds(labModalities.input, ["text"])) {
+    doc.modalities = { ...doc.modalities, input: ["text"], output: doc.modalities?.output ?? labModalities.output ?? ["decision"] };
   } else if (doc.modalities !== undefined) {
     delete doc.modalities.input;
     if (Object.keys(doc.modalities).every((key) => key === "output")) delete doc.modalities;
@@ -378,35 +411,12 @@ export function buildDecisionModel(model: NeuralwattModel, baseModel: string, ex
   return doc;
 }
 
-let weightsIndex: Map<string, string[]> | undefined;
-
-// Lab model IDs keyed by each Hugging Face repo their [[weights]] list.
-function labWeights() {
-  if (weightsIndex !== undefined) return weightsIndex;
-  weightsIndex = new Map();
-  for (const lab of readdirSync(MODELS_DIR, { withFileTypes: true })) {
-    if (!lab.isDirectory()) continue;
-    for (const file of readdirSync(path.join(MODELS_DIR, lab.name), { recursive: true }) as string[]) {
-      if (!file.endsWith(".toml")) continue;
-      const id = `${lab.name}/${file.slice(0, -5).split(path.sep).join("/")}`;
-      const weights = (labModel(id)?.weights ?? []) as Array<{ url?: unknown }>;
-      for (const { url } of weights) {
-        const repo = typeof url === "string" ? /^https:\/\/huggingface\.co\/([^/]+\/[^/?#]+)/.exec(url)?.[1] : undefined;
-        if (repo === undefined) continue;
-        const key = repo.toLowerCase();
-        weightsIndex.set(key, [...(weightsIndex.get(key) ?? []), id]);
-      }
-    }
-  }
-  return weightsIndex;
-}
-
 /** The lab model served under a `metadata.huggingface_id`, or undefined when no single one matches. */
-export function neuralwattBaseModel(huggingfaceID: string | null | undefined) {
+export function neuralwattBaseModel(huggingfaceID: string | null | undefined, labs?: string) {
   if (huggingfaceID == null || !huggingfaceID.includes("/")) return undefined;
   const id = huggingfaceID.toLowerCase();
   if (LAB_OVERRIDES[id] !== undefined) return LAB_OVERRIDES[id];
-  const index = labWeights();
+  const index = labWeightsIndex(labs);
   const unique = (ids: string[] | undefined) => (ids !== undefined && new Set(ids).size === 1 ? ids[0] : undefined);
   const exact = unique(index.get(id));
   if (exact !== undefined) return exact;
@@ -415,19 +425,6 @@ export function neuralwattBaseModel(huggingfaceID: string | null | undefined) {
   const bare = repo.replace(QUANT_SUFFIX, "");
   // Another org's quantization goes in LAB_OVERRIDES, never a basename match.
   return bare === repo ? undefined : unique(index.get(`${org}/${bare}`));
-}
-
-function labModel(modelID: string) {
-  try {
-    return Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8")) as Record<string, unknown>;
-  } catch {
-    return undefined;
-  }
-}
-
-function labInputModalities(modelID: string): string[] | undefined {
-  const input = (labModel(modelID)?.modalities as { input?: unknown } | undefined)?.input;
-  return Array.isArray(input) && input.every((item) => typeof item === "string") ? input : undefined;
 }
 
 // Never sends credentials, because an authenticated list would add private grants.
