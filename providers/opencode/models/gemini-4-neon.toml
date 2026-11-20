@@ -3,8 +3,8 @@
 # Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high|xhigh, default high (https://ai.google.dev/gemini-api/docs/whats-new-gemini-4-neon).
 # Cache: implicit only (explicit caching is not supported).
 # Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes; Zen passes requests through.
-schema = 2
 # recommended_api: Zen serves this model on Google's Interactions API (/inference/google/v1beta/interactions), verified 2026-11-20 with streamed tool calls.
+schema = 2
 base_model = "google/gemini-4-neon"
 recommended_api = "interactions"
 
@@ -20,7 +20,7 @@ sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
 
 [api.interactions]
 base_url = "https://opencode.ai/inference/google/v1beta"
-sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google/interactions" }
 
 [cost.text.input]
 price = 3

@@ -4,8 +4,8 @@
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/google/models/gemini-3.5-flash-lite.toml (Zen passes requests through).
 #   system_updates left out: undocumented. Google's generateContent spec lists only "user" and "model" for Content.role (https://ai.google.dev/api/caching#Content). A contents entry with role system kept the cache and was followed on Zen (live 2026-10-23), but server behavior alone is not a documented mechanism.
 # Tools follow Google's Gemini API: https://ai.google.dev/gemini-api/docs/function-calling#function-calling-modes (auto/any/none, allowed function names); Zen passes requests through.
-schema = 2
 # recommended_api: Zen serves this model on Google's Interactions API (/inference/google/v1beta/interactions), verified 2026-11-20 with streamed tool calls.
+schema = 2
 base_model = "google/gemini-3.5-flash-lite"
 recommended_api = "interactions"
 
@@ -21,7 +21,7 @@ sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
 
 [api.interactions]
 base_url = "https://opencode.ai/inference/google/v1beta"
-sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google/interactions" }
 
 [cost.text.input]
 price = 0.3
