@@ -1,0 +1,13 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-11-20), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+schema = 2
+base_model = "microsoft/microsoft-decision-1"
+
+[capabilities]
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 0.0464
+
+[cost.text.output]
+price = 0

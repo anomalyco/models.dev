@@ -1,0 +1,13 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-11-20), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.6015
+
+[cost.text.output]
+price = 4.8044
