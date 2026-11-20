@@ -66,6 +66,7 @@ import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
+import { redrouter, type RedRouterModel } from "./providers/redrouter.js";
 import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
 import { tinfoil } from "./providers/tinfoil.js";
@@ -242,6 +243,7 @@ export const providers: {
   pioneer: SyncProvider<any>;
   prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
+  redrouter: SyncProvider<RedRouterModel>;
   sambanova: SyncProvider<any>;
   morph: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
@@ -297,6 +299,7 @@ export const providers: {
   pioneer,
   prime,
   requesty,
+  redrouter,
   sambanova: sambaNova,
   morph,
   tinfoil,
@@ -325,6 +328,7 @@ export const groups = {
     "novita-ai",
     "ofox",
     "requesty",
+    "redrouter",
     "openrouter",
     "prime",
     "vercel",
