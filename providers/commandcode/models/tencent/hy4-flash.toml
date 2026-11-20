@@ -1,0 +1,23 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-11-17)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Context: 1_024_000 from the live catalog (the page shows it rounded to 1M). limit.input is left
+#   to the base model.
+# Reasoning: the base model and its peers publish the omission-versus-high switch
+#   (providers/kilo/models/tencent/hy4-flash.toml, providers/vercel/models/tencent/hy4-flash.toml);
+#   only the high level is kept because this host rejects none. Same as this host's Hy4 Preview.
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+
+[limit]
+context = 1_024_000
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.281

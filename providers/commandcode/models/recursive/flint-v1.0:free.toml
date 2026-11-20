@@ -1,0 +1,24 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-11-17)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Free while the free tier lasts (up to 1000 requests a day), billed $0 per request.
+# Pricing & Limits: https://commandcode.ai/docs/resources/pricing-limits#flint-free
+# Same model as providers/opencode/models/flint-40b-free.toml: the free route for recursive/flint,
+#   which the live catalog serves as recursive/flint-v1.0 at 262_144 tokens of context.
+# Reasoning: always on. No live probe was run (no Command Code key was available), so no graded
+#   levels are claimed even though other hosts of the same model publish them: this host rejects
+#   reasoning_effort = none/minimal (see provider.toml), and its sibling entries (Ling 3.1 Flash,
+#   LongCat 2.0, Qwen 3.6 Plus) all came back with no caller control exposed.
+schema = 2
+base_model = "recursive/flint"
+name = "Flint (free)"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
