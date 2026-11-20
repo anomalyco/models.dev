@@ -595,7 +595,7 @@ test("a mandatory model that delists its levels keeps the authored budget", asyn
   }
 });
 
-test("a file with no API table that gains reasoning gets the provider's chat-completions table", async () => {
+test("a file with no API table that gains reasoning gets the provider's chat-completions table, and loses the field when reasoning stops", async () => {
   const fixture = await syncFixture();
   const file = fixture.file("glm-5.3");
   try {
@@ -608,6 +608,14 @@ test("a file with no API table that gains reasoning gets the provider's chat-com
     const updated = Bun.TOML.parse(await file.text()) as Record<string, any>;
     expect(updated.capabilities.reasoning).toEqual({ supported: true, effort: ["low", "high", "max"] });
     expect(updated.api).toEqual({ "chat-completions": { legacy_interleaved: true } });
+
+    // Reasoning goes away again. The reasoning field goes with it and an unrelated API setting stays.
+    await Bun.write(file, (await file.text()).replace("legacy_interleaved = true", 'base_url = "https://example.test/v1"\nlegacy_interleaved = true'));
+    fixture.state.data = [model({ metadata: { capabilities: { tools: true, json_mode: true, reasoning: false }, reasoning: null } })];
+    expect((await fixture.sync()).updated).toBe(1);
+    const stopped = Bun.TOML.parse(await file.text()) as Record<string, any>;
+    expect(stopped.capabilities.reasoning).toEqual({ supported: false });
+    expect(stopped.api).toEqual({ "chat-completions": { base_url: "https://example.test/v1" } });
   } finally {
     await fixture.cleanup();
   }
@@ -634,6 +642,72 @@ test("a decision retarget drops the old lab's limits and omissions and keeps rou
     expect(moved.modalities).toBeUndefined();
     expect(moved.description).toBe("Hosted on Neuralwatt");
     expect(moved.capabilities.cache).toEqual({ implicit: true });
+  } finally {
+    await fixture.cleanup();
+  }
+});
+
+test("a same-lab price update keeps authored fields the sync doesn't own", async () => {
+  const fixture = await syncFixture();
+  const file = fixture.file("glm-5.3");
+  try {
+    await fixture.sync();
+    await Bun.write(file, (await file.text())
+      .replace("context = 1_048_560", "context = 1_048_560\ninput = 65_536")
+      .replace("legacy_interleaved = true", 'base_url = "https://example.test/v1"\nlegacy_interleaved = true'));
+    expect((await fixture.sync()).unchanged).toBe(1);
+    fixture.state.data = [model({ metadata: { pricing: { ...model().metadata.pricing, input_per_million: 1.2 } } })];
+    expect((await fixture.sync()).updated).toBe(1);
+    const updated = Bun.TOML.parse(await file.text()) as Record<string, any>;
+    expect(updated.limit.input).toBe(65_536);
+    expect(updated.api["chat-completions"]).toEqual({ base_url: "https://example.test/v1", legacy_interleaved: true });
+    expect(updated.cost.text.input.price).toBe(1.2);
+  } finally {
+    await fixture.cleanup();
+  }
+});
+
+test("a chat row with an input kind the API doesn't document keeps its file and is reported", async () => {
+  const fixture = await syncFixture();
+  const file = fixture.file("glm-5.3");
+  try {
+    await fixture.sync();
+    const original = await file.text();
+    const odd = model({ architecture: { input_modalities: ["text", "document"], output_modalities: ["text"] } });
+    expect(neuralwatt.missingModelID(odd)).toBe("glm-5.3");
+    fixture.state.data = [odd];
+    const result = await fixture.sync();
+    expect([result.updated, result.deleted]).toEqual([0, 0]);
+    expect(await file.text()).toBe(original);
+    // Video is documented and only dropped on chat routes.
+    expect(neuralwatt.missingModelID(model({ architecture: { input_modalities: ["text", "video"], output_modalities: ["text"] } }))).toBeUndefined();
+  } finally {
+    await fixture.cleanup();
+  }
+});
+
+test("with no published levels, a file keeps its authored controls as sync.md describes", async () => {
+  const fixture = await syncFixture();
+  try {
+    // Optional reasoning delists every level and the file has no budget, so the file stays as written.
+    fixture.state.data = [qwenRow()];
+    await fixture.sync();
+    const qwen = fixture.file("qwen-new");
+    const ladder = await qwen.text();
+    expect(ladder).toContain('effort = ["none", "low"]');
+    fixture.state.data = [qwenRow({ metadata: { reasoning: { mandatory: false, supported_efforts: [], default_effort: null } } })];
+    expect((await fixture.sync()).updated).toBe(0);
+    expect(await qwen.text()).toBe(ladder);
+
+    // metadata.reasoning = null keeps the whole authored ladder and budget.
+    fixture.state.data = [model()];
+    await fixture.sync();
+    const glm = fixture.file("glm-5.3");
+    await Bun.write(glm, (await glm.text()).replace(/^reasoning = \{ supported = true, effort = (\[[^\]]*\]) \}$/m, "reasoning = { supported = true, effort = $1, budget = {} }"));
+    const authored = await glm.text();
+    fixture.state.data = [model({ metadata: { reasoning: null } })];
+    expect((await fixture.sync()).updated).toBe(0);
+    expect(await glm.text()).toBe(authored);
   } finally {
     await fixture.cleanup();
   }

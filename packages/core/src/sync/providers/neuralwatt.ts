@@ -12,6 +12,16 @@ const MODALITIES = new Set(["text", "audio", "image", "video", "pdf"]);
 // The architecture lists describe the model itself, and chat completions
 // doesn't accept video (https://docs.neuralwatt.com/api/models#architecture).
 const CHAT_INPUT = new Set(["text", "image", "audio"]);
+// The input kinds the models API documents. Any other kind is reported, not dropped.
+const DOCUMENTED_INPUT = new Set(["text", "image", "audio", "video"]);
+// The v1 fields the sync writes from a row. A same-lab file keeps every other
+// authored field (limit.input, provider settings such as base_url, family, ...).
+const OWNED = new Set([
+  "base_model", "base_model_omit", "name", "attachment", "tool_call", "structured_output", "reasoning",
+  "reasoning_options", "interleaved", "status", "cost", "limit", "modalities",
+]);
+const OWNED_LIMIT = new Set(["context", "output"]);
+const OWNED_COST = new Set(["input", "output", "cache_read"]);
 // Hugging Face repos whose lab model publishes different weights, so the
 // weights index can't find it. Keyed by lowercased `metadata.huggingface_id`.
 const LAB_OVERRIDES: Record<string, string> = {
@@ -124,6 +134,7 @@ export const neuralwatt = {
     if (isDecision(model)) {
       return readLabModel(baseModel, labs)?.type === "decision" && textOnly(model) ? undefined : model.id;
     }
+    if (unknownInput(model)) return model.id;
     const levelsUnpublished = model.metadata.capabilities.reasoning
       && reasoningOptions(model.metadata.reasoning, undefined) === undefined;
     return levelsUnpublished ? model.id : undefined;
@@ -159,6 +170,7 @@ export const neuralwatt = {
       return v2 === undefined ? undefined : { id: model.id, v2, header: DECISION_HEADER };
     }
 
+    if (unknownInput(model)) return undefined;
     const reasoning = model.metadata.capabilities.reasoning;
     const controls = reasoning ? reasoningOptions(model.metadata.reasoning, kept) : undefined;
     // A thinking model needs its levels published, and they are never invented.
@@ -172,7 +184,7 @@ export const neuralwatt = {
       output: outputLimit(model, kept),
     };
     const deprecated = model.metadata.deprecated;
-    const translated = factorBaseModel(baseModel, {
+    const translated = withAuthoredFields(factorBaseModel(baseModel, {
       name: model.metadata.display_name?.trim() || undefined,
       attachment: input.some((value) => value !== "text"),
       tool_call: model.metadata.capabilities.tools,
@@ -182,7 +194,7 @@ export const neuralwatt = {
       // The API doesn't say where the reasoning trace comes back, so an authored
       // field is kept on the same lab. Otherwise the lab's documented field
       // applies, else `reasoning` (see provider.toml).
-      interleaved: kept?.interleaved ?? (reasoning ? reasoningField(baseModel) : undefined),
+      interleaved: reasoning ? kept?.interleaved ?? reasoningField(baseModel) : undefined,
       status: deprecated ? "deprecated" : authored?.status === "deprecated" ? undefined : authored?.status,
       cost: {
         input: pricing.input_per_million!,
@@ -191,7 +203,7 @@ export const neuralwatt = {
       },
       limit,
       modalities: { input, output: ["text"] },
-    }, limit, kept?.base_model_omit);
+    }, limit, kept?.base_model_omit), kept);
 
     const v2Set: Record<string, unknown> = {};
     const labInput = labInputModalities(baseModel, labs);
@@ -245,6 +257,23 @@ function isDecision(model: NeuralwattModel) {
 function syncable(model: NeuralwattModel) {
   const output = model.architecture.output_modalities;
   return isDecision(model) || (output.length === 1 && output[0] === "text");
+}
+
+function unknownInput(model: NeuralwattModel) {
+  return model.architecture.input_modalities.some((kind) => !DOCUMENTED_INPUT.has(kind.toLowerCase()));
+}
+
+// The translated row plus every field of the same-lab file the sync doesn't own.
+function withAuthoredFields(translated: SyncedModel, kept: ExistingModel | undefined): SyncedModel {
+  if (kept === undefined) return translated;
+  const unowned = (value: unknown, owned: Set<string>) =>
+    isRecord(value) ? Object.fromEntries(Object.entries(value).filter(([key, item]) => !owned.has(key) && item !== undefined)) : {};
+  const result: Record<string, any> = { ...unowned(kept, new Set([...OWNED, "id"])), ...translated };
+  const limit = unowned(kept.limit, OWNED_LIMIT);
+  if (Object.keys(limit).length > 0) result.limit = { ...limit, ...result.limit };
+  const cost = unowned(kept.cost, OWNED_COST);
+  if (Object.keys(cost).length > 0) result.cost = { ...cost, ...result.cost };
+  return result as SyncedModel;
 }
 
 function reasoningField(baseModel: string) {
