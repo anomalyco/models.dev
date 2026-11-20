@@ -167,15 +167,11 @@ function withV2Fields(
     mergeDeep(lab?.capabilities ?? {}, model.capabilities),
     authored.capabilities ?? {},
   ) as Omit<ModelV2["capabilities"], "tools"> & { tools: AuthoredToolsSupportV2 };
-  const modalities = authored.modalities === undefined
-    ? (lab !== undefined && inheritsModalities ? lab.modalities : model.modalities)
-    : {
-        input: authored.modalities.input ?? lab?.modalities.input ?? model.modalities.input,
-        output: authored.modalities.output ?? lab?.modalities.output ?? model.modalities.output,
-      };
   const result: ModelV2 = {
     ...model,
-    modalities,
+    modalities:
+      authored.modalities ??
+      (lab !== undefined && inheritsModalities ? lab.modalities : model.modalities),
     capabilities: { ...capabilities, tools: { supported: capabilities.tools.supported } },
   };
   // v1 leaves v2-only types out, so they come from the files.

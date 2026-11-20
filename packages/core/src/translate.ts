@@ -158,8 +158,7 @@ export function modelV2ToV1(
   }
   const model = parsed.data;
   const capabilities = model.capabilities ?? {};
-  const input = model.modalities?.input && toV1Modalities(model.modalities.input);
-  const output = model.modalities?.output && toV1Modalities(model.modalities.output);
+  const input = model.modalities && toV1Modalities(model.modalities.input);
   const cost = model.cost && costV2ToV1(model.cost);
 
   return withoutV1ReasoningCost(withoutUndefined({
@@ -179,7 +178,10 @@ export function modelV2ToV1(
     knowledge: model.knowledge,
     release_date: model.release_date,
     last_updated: model.last_updated ?? model.release_date,
-    modalities: input || output ? withoutUndefined({ input, output }) : undefined,
+    modalities: model.modalities && {
+      input,
+      output: toV1Modalities(model.modalities.output),
+    },
     open_weights: model.open_weights,
     limit:
       model.limit &&

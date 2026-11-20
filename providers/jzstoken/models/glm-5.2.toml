@@ -1,15 +1,12 @@
 # Pricing: https://jzstoken.com/model-pricing/glm-5.2 (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
 # USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
 # base_model: zhipuai/glm-5.2
-# Modalities: page says image input is supported and lists no MIME types.
+# The JZSTOKEN page says "Image input Supported" and lists image understanding, but names no formats (checked 2026-11-20). The lab model is text-only, so this file inherits that input.
 # Upstream control shape from providers/zhipuai/models/glm-5.2.toml (JZSTOKEN does not certify reasoning per model):
 # Toggle: thinking.type = enabled|disabled (default enabled)
 # Effort: reasoning_effort = high|max (default max). none and minimal skip thinking, low and medium map to high, xhigh maps to max.
 schema = 2
 base_model = "zhipuai/glm-5.2"
-
-[modalities]
-input = ["text", "image"]
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
