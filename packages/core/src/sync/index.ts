@@ -565,7 +565,8 @@ export async function syncProvider<SourceModel>(
       current.authored,
       model,
       v2Notices,
-      undefined,
+      // A file with no [api.*] table that gains reasoning takes the provider's protocol, as a new file does.
+      current.v2.api === undefined ? await newModelProtocol(provider.modelsDir, file.model) : undefined,
       resolved,
       resolved.after.reasoning,
       file.v2Set,
@@ -719,7 +720,7 @@ function v2Content(
     const after = withoutModeCosts(synced, carried);
     const next = doc === undefined || before === undefined
       ? providerModelToV2(after, protocol, providerNpm)
-      : patchModelV2(doc, withoutModeCosts(before, carried), after, resolved, providerNpm);
+      : patchModelV2(doc, withoutModeCosts(before, carried), after, resolved, providerNpm, protocol);
     for (const [key, value] of Object.entries(v2Set ?? {})) setPath(next, key, value);
     const content = header + formatModelV2(next);
     const translated = withoutV1ReasoningCost(

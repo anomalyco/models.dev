@@ -11,8 +11,9 @@ opencodeai = "@opencode/ai/providers/openai-compatible"
 # tier. The flex-tier guide states a 0.65 pricing multiplier (35% off), applied
 # to token billing and energy billing alike (accessed 2026-08-27).
 # The reasoning trace comes back on a `reasoning` field, streaming and
-# non-streaming alike, never `reasoning_content`/`reasoning_details`, so
-# `interleaved` is the bare boolean rather than a field name.
+# non-streaming alike, so `interleaved` is the bare boolean rather than a field
+# name. Kimi K3.1 Pro is the documented exception. It returns
+# `reasoning_content`, so its model files set that field (checked 2026-11-20).
 # https://portal.neuralwatt.com/docs/api/chat-completions (accessed 2026-06-25)
 # https://portal.neuralwatt.com/docs/guides/flex-tier (accessed 2026-08-27)
 # https://portal.neuralwatt.com/docs/energy-methodology (accessed 2026-06-28)

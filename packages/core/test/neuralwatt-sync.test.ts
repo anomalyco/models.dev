@@ -91,7 +91,8 @@ async function syncFixture() {
   const modelsDir = path.join(root, "providers/neuralwatt/models");
   await mkdir(modelsDir, { recursive: true });
   const repo = path.join(import.meta.dirname, "../../..");
-  for (const lab of ["zhipuai/glm-5.3", "alibaba/qwen3.8-27b", "baseten/mammoth-1", "xiaomi/mimo-v2.6-pro"]) {
+  const labs = ["zhipuai/glm-5.3", "alibaba/qwen3.8-27b", "baseten/mammoth-1", "xiaomi/mimo-v2.6-pro", "moonshotai/kimi-k3.1-pro", "turion/turion-jev-31b"];
+  for (const lab of labs) {
     await mkdir(path.join(root, "models", path.dirname(lab)), { recursive: true });
     await copyFile(path.join(repo, `models/${lab}.toml`), path.join(root, `models/${lab}.toml`));
   }
@@ -210,6 +211,16 @@ test("unpriced rows keep an existing file, and unknown labs are reported as miss
   const media = mammothRow({ architecture: { input_modalities: ["text", "image", "video"], output_modalities: ["decisions"] } });
   expect(neuralwatt.translateModel(media, noFiles)).toBeUndefined();
   expect(neuralwatt.missingModelID(media)).toBe("mammoth-1");
+  // An input kind the sync doesn't know is not read as text.
+  const document = mammothRow({ architecture: { input_modalities: ["text", "document"], output_modalities: ["decisions"] } });
+  expect(neuralwatt.translateModel(document, noFiles)).toBeUndefined();
+  expect(neuralwatt.missingModelID(document)).toBe("mammoth-1");
+
+  // A chat row must output text alone. Any other shape is skipped and doesn't count toward the floor.
+  const mixed = model({ id: "glm-image", architecture: { input_modalities: ["text"], output_modalities: ["text", "image"] } });
+  expect(neuralwatt.translateModel(mixed, noFiles)).toBeUndefined();
+  expect(neuralwatt.missingModelID(mixed)).toBeUndefined();
+  expect(() => neuralwatt.parseModels({ object: "list", scope: "public", data: [...filler.slice(0, 11), mixed] })).toThrow("below the 12");
 });
 
 test("a decision model becomes a v2-only System One file", () => {
@@ -530,6 +541,99 @@ test("an authored reasoning field and base_model_omit survive a price update on 
     expect(updated.api["chat-completions"].compatibility).toEqual({ reasoning_field: "reasoning_content" });
     expect(updated.base_model_omit).toEqual(["temperature"]);
     expect(updated.cost.text.input.price).toBe(1.2);
+  } finally {
+    await fixture.cleanup();
+  }
+});
+
+const kimiRow = (overrides: Overrides = {}) => model({
+  max_model_len: 1_048_560,
+  ...overrides,
+  metadata: {
+    display_name: "Kimi K3.1 Pro",
+    huggingface_id: "moonshotai/Kimi-K3.1-Pro",
+    reasoning: { mandatory: false, supported_efforts: ["none", "low", "high"], default_effort: "high" },
+    ...overrides.metadata,
+  },
+});
+
+test("a new or retargeted route on Kimi K3.1 Pro gets its reasoning_content field", async () => {
+  const fixture = await syncFixture();
+  try {
+    fixture.state.data = [kimiRow({ id: "kimi-new" }), model({ id: "nw-alias" })];
+    expect((await fixture.sync()).created).toBe(2);
+    const created = Bun.TOML.parse(await fixture.file("kimi-new").text()) as Record<string, any>;
+    expect(created.api["chat-completions"]).toEqual({ compatibility: { reasoning_field: "reasoning_content" } });
+    expect(await fixture.file("nw-alias").text()).toContain("legacy_interleaved = true");
+
+    // The alias moves from GLM to Kimi.
+    fixture.state.data = [kimiRow({ id: "kimi-new" }), kimiRow({ id: "nw-alias" })];
+    expect((await fixture.sync()).updated).toBe(1);
+    const moved = Bun.TOML.parse(await fixture.file("nw-alias").text()) as Record<string, any>;
+    expect(moved.base_model).toBe("moonshotai/kimi-k3.1-pro");
+    expect(moved.api["chat-completions"]).toEqual({ compatibility: { reasoning_field: "reasoning_content" } });
+  } finally {
+    await fixture.cleanup();
+  }
+});
+
+test("a mandatory model that delists its levels keeps the authored budget", async () => {
+  const fixture = await syncFixture();
+  const file = fixture.file("glm-5.3");
+  try {
+    await fixture.sync();
+    await Bun.write(file, (await file.text()).replace(
+      /^reasoning = \{ supported = true, effort = (\[[^\]]*\]) \}$/m,
+      'reasoning = { supported = true, default = { type = "budget", value = 4096 }, effort = $1, budget = {} }',
+    ));
+    fixture.state.data = [model({ metadata: { reasoning: { mandatory: true, supported_efforts: [], default_effort: null } } })];
+    expect((await fixture.sync()).updated).toBe(1);
+    const reasoning = (Bun.TOML.parse(await file.text()) as Record<string, any>).capabilities.reasoning;
+    expect(reasoning).toEqual({ supported: true, default: { type: "budget", value: 4096 }, budget: {} });
+  } finally {
+    await fixture.cleanup();
+  }
+});
+
+test("a file with no API table that gains reasoning gets the provider's chat-completions table", async () => {
+  const fixture = await syncFixture();
+  const file = fixture.file("glm-5.3");
+  try {
+    fixture.state.data = [model({ metadata: { capabilities: { tools: true, json_mode: true, reasoning: false }, reasoning: null } })];
+    expect((await fixture.sync()).created).toBe(1);
+    expect(await file.text()).not.toContain("[api.");
+
+    fixture.state.data = [model()];
+    expect((await fixture.sync()).updated).toBe(1);
+    const updated = Bun.TOML.parse(await file.text()) as Record<string, any>;
+    expect(updated.capabilities.reasoning).toEqual({ supported: true, effort: ["low", "high", "max"] });
+    expect(updated.api).toEqual({ "chat-completions": { legacy_interleaved: true } });
+  } finally {
+    await fixture.cleanup();
+  }
+});
+
+test("a decision retarget drops the old lab's limits and omissions and keeps route fields", async () => {
+  const fixture = await syncFixture();
+  const file = fixture.file("mammoth-1");
+  try {
+    fixture.state.data = [mammothRow()];
+    await fixture.sync();
+    await Bun.write(file, (await file.text())
+      .replace('base_model = "baseten/mammoth-1"', 'base_model = "baseten/mammoth-1"\nbase_model_omit = ["temperature"]\ndescription = "Hosted on Neuralwatt"')
+      .replace("context = 32_753", "context = 32_753\noutput = 0")
+      .replace("[limit]", "[capabilities]\ncache = { implicit = true }\n\n[limit]"));
+    expect((await fixture.sync()).unchanged).toBe(1);
+
+    fixture.state.data = [mammothRow({ max_model_len: 16_384, metadata: { huggingface_id: "turion-ai/turion-jev-31b", limits: { max_context_length: 16_384, max_output_tokens: 0 } } })];
+    expect((await fixture.sync()).updated).toBe(1);
+    const moved = Bun.TOML.parse(await file.text()) as Record<string, any>;
+    expect(moved.base_model).toBe("turion/turion-jev-31b");
+    expect(moved.limit).toBeUndefined();
+    expect(moved.base_model_omit).toBeUndefined();
+    expect(moved.modalities).toBeUndefined();
+    expect(moved.description).toBe("Hosted on Neuralwatt");
+    expect(moved.capabilities.cache).toEqual({ implicit: true });
   } finally {
     await fixture.cleanup();
   }

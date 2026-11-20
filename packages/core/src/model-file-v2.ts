@@ -113,8 +113,10 @@ export function patchModelV2(
   after: Record<string, any>,
   resolved?: { before: InheritedFlags; after: InheritedFlags },
   providerNpm?: string,
+  // The protocol for a file with no `[api.*]` table that gains `provider` or `interleaved`.
+  fallbackProtocol?: string,
 ): Doc {
-  const next = providerModelToV2(after, Object.keys(doc.api ?? {})[0], providerNpm);
+  const next = providerModelToV2(after, Object.keys(doc.api ?? {})[0] ?? fallbackProtocol, providerNpm);
   // `reasoning` and `tool_call` may be inherited from the lab on one side, as in
   // sameV1Model. With the lab's values (`resolved`), they compare resolved.
   const same = (...keys: string[]) =>

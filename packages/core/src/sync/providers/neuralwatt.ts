@@ -32,6 +32,12 @@ const MIN_LIVE_MODELS = 12;
 // Neuralwatt takes audio as WAV only (PCM or float). MP3, FLAC, M4A and other
 // compressed formats are rejected (https://docs.neuralwatt.com/api/chat-completions, "Format").
 const HOST_AUDIO = ["audio/wav"];
+// Reasoning comes back in `reasoning` (see provider.toml) except on these labs.
+// "kimi-k3.1-pro is the exception: it returns reasoning in
+// choices[].message.reasoning_content" (https://docs.neuralwatt.com/api/chat-completions).
+const REASONING_FIELD: Record<string, "reasoning_content"> = {
+  "moonshotai/kimi-k3.1-pro": "reasoning_content",
+};
 
 const Price = z.number().nonnegative();
 const Effort = z.string().min(1);
@@ -143,12 +149,13 @@ export const neuralwatt = {
     // Authored host facts (reasoning controls and default, output cap, MIME
     // list, reasoning field, omissions) describe the lab the file points at,
     // so none of them carry over when an alias moves to another lab.
-    const kept = existingBase === undefined || existingBase === baseModel ? authored : undefined;
-    const keptV2 = kept === undefined ? undefined : existingV2;
+    const sameBase = existingBase === undefined || existingBase === baseModel;
+    const kept = sameBase ? authored : undefined;
+    const keptV2 = sameBase ? existingV2 : undefined;
 
     if (isDecision(model)) {
       if (!textOnly(model)) return undefined;
-      const v2 = buildDecisionModel(model, baseModel, existingV2, labs);
+      const v2 = buildDecisionModel(model, baseModel, existingV2, labs, sameBase);
       return v2 === undefined ? undefined : { id: model.id, v2, header: DECISION_HEADER };
     }
 
@@ -173,9 +180,9 @@ export const neuralwatt = {
       reasoning,
       reasoning_options: controls,
       // The API doesn't say where the reasoning trace comes back, so an authored
-      // field (reasoning_content on Kimi) is kept. Otherwise it is `reasoning`
-      // (see provider.toml).
-      interleaved: kept?.interleaved ?? (reasoning ? true : undefined),
+      // field is kept on the same lab. Otherwise the lab's documented field
+      // applies, else `reasoning` (see provider.toml).
+      interleaved: kept?.interleaved ?? (reasoning ? reasoningField(baseModel) : undefined),
       status: deprecated ? "deprecated" : authored?.status === "deprecated" ? undefined : authored?.status,
       cost: {
         input: pricing.input_per_million!,
@@ -234,13 +241,21 @@ function isDecision(model: NeuralwattModel) {
 }
 
 // Chat and decision models have a catalog shape. Embedding rows (task "embed") don't.
+// Chat rows output text and nothing else. Any other shape is skipped and listed.
 function syncable(model: NeuralwattModel) {
-  return isDecision(model) || model.architecture.output_modalities.includes("text");
+  const output = model.architecture.output_modalities;
+  return isDecision(model) || (output.length === 1 && output[0] === "text");
+}
+
+function reasoningField(baseModel: string) {
+  const field = REASONING_FIELD[baseModel];
+  return field === undefined ? true : { field };
 }
 
 // Media decision models need hand-written files (media_input, output, header).
+// The raw list is checked, so a kind the sync doesn't know is reported too.
 function textOnly(model: NeuralwattModel) {
-  return kinds(model.architecture.input_modalities).every((kind) => kind === "text");
+  return model.architecture.input_modalities.every((kind) => kind.toLowerCase() === "text");
 }
 
 // The existing file, unchanged, or undefined when there is none (a quiet skip).
@@ -270,15 +285,17 @@ export function reasoningOptions(
   authored: ExistingModel | undefined,
 ) {
   if (reasoning == null) return undefined;
-  const values = [...new Set(reasoning.supported_efforts ?? [])]
-    .sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
-  // With no published levels, reasoning is always on and nothing controls it.
-  if (values.length === 0) return reasoning.mandatory ? [] : undefined;
-  const effort = ReasoningOption.safeParse({ type: "effort", values });
-  if (!effort.success) return undefined;
   // `thinking_token_budget` is accepted per model but /v1/models doesn't say
   // where, so a budget is only ever carried over from the authored file.
   const budget = authored?.reasoning_options?.filter((option) => option.type === "budget_tokens") ?? [];
+  const values = [...new Set(reasoning.supported_efforts ?? [])]
+    .sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
+  // With no published levels there is no effort ladder. An authored budget
+  // stays. Otherwise mandatory reasoning is always on with no controls, and
+  // optional reasoning has nothing to publish.
+  if (values.length === 0) return budget.length > 0 ? budget : reasoning.mandatory ? [] : undefined;
+  const effort = ReasoningOption.safeParse({ type: "effort", values });
+  if (!effort.success) return undefined;
   return [effort.data, ...budget];
 }
 
@@ -290,7 +307,6 @@ function backedDefault(value: unknown, controls: Controls) {
     return effort?.type === "effort" && effort.values.includes(value.value as never) ? value : undefined;
   }
   if (value.type === "budget") return controls.some((option) => option.type === "budget_tokens") ? value : undefined;
-  if (value.type === "toggle") return controls.some((option) => option.type === "toggle") ? value : undefined;
   return undefined;
 }
 
@@ -350,17 +366,25 @@ const DECISION_HEADER = [
 
 // Decision models only answer on /v1/systemone, so they are v2-only files.
 // Only text-only rows are built. An existing file is the starting point, so
-// fields the sync doesn't own survive.
+// fields the sync doesn't own survive. On a retarget (`sameBase` false) the
+// host facts authored for the old lab (limits, modalities, omissions) are
+// dropped, while route fields such as description and cache stay.
 export function buildDecisionModel(
   model: NeuralwattModel,
   baseModel: string,
   existing?: Record<string, unknown>,
   labs?: string,
+  sameBase = true,
 ) {
   const lab = readLabModel(baseModel, labs);
   if (lab?.type !== "decision") return undefined;
   const pricing = model.metadata.pricing;
   const doc: Record<string, any> = structuredClone(existing ?? {});
+  if (!sameBase) {
+    delete doc.limit;
+    delete doc.modalities;
+    delete doc.base_model_omit;
+  }
   Object.assign(doc, { schema: 2, v2_only: true, base_model: baseModel });
 
   const name = model.metadata.display_name?.trim();
