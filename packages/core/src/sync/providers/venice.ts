@@ -231,7 +231,7 @@ export function buildVeniceModel(
   }
 
   const releaseDate = new Date(model.created * 1000).toISOString().slice(0, 10);
-  const family = inferFamily(model.id, spec.name) ?? existing?.family;
+  const family = existing?.family ?? inferFamily(model.id, spec.name);
   const openWeights = spec.modelSource?.toLowerCase().includes("huggingface")
     ?? existing?.open_weights
     ?? false;
