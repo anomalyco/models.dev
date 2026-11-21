@@ -1,0 +1,45 @@
+# Source: https://ai.azure.com/catalog/models/DeepSeek-V4.1-Flash-1017
+# Version 2026-10-17, lifecycle Preview; inference deprecation 2027-03-06.
+# Pricing: Azure Deepseek Models product, global deployment, USD per 1M tokens,
+# effective 2026-10-01. input 0.30, output 1.20, cached input 0.006.
+# Azure bills a flat rate equal to DeepSeek's peak rate (off-peak is half), so
+# these are 2x the off-peak figures recorded on providers/deepseek.
+# https://api-docs.deepseek.com/quick_start/pricing
+# Data-zone deployment is 0.33/1.32/0.0066.
+# US Gov regions are 0.375/1.5/0.0075.
+# https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Deepseek Models'
+# Azure catalog lists context 1000k (same as the base model) and output 128k (base is 384k).
+# Direct endpoint: POST /models/chat/completions?api-version=2024-05-01-preview.
+# Effort: reasoning_effort = none|high|max. Off when omitted or none; the model then
+# returns its chain of thought in `reasoning_content`.
+# Live probe 2026-11-17 via POST /models/chat/completions on the 1017 deployment:
+# reasoning_effort=low returns 400, "Allowed values are: none, high, max". The older
+# v4.1-flash probe predates this deployment and lists none|low|high|max. thinking.type
+# is ignored here, so off is effort=none rather than a toggle. Microsoft documents
+# `reasoning_content` for non-OpenAI reasoning models:
+# https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+schema = 2
+v2_only = true
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek-V4.1-Flash-1017"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
+
+[limit]
+output = 128_000
+
+[api.chat-completions]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2
