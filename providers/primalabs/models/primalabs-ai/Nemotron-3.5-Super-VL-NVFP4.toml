@@ -1,0 +1,46 @@
+# Sources (accessed 2026-11-20):
+# - https://docs.primalabs.ai/inference/models (catalog, feature support, reasoning controls per endpoint)
+# - GET https://api.primalabs.ai/v1/models (authenticated; context_length, max_output_tokens, pricing in USD per token,
+#   input_modalities, supports_* capability checks, reasoning_effort_accepted per endpoint). A capability field the
+#   catalog leaves out is "not verified", so it is not authored here.
+# - Every model is served on /v1/chat/completions, /v1/responses and /v1/messages and reasons by default; reasoning
+#   comes back as message.reasoning_content on Chat Completions. Effort below is the Chat Completions list.
+# Served as an NVFP4 quantization of Nemotron 3.5 Super VL.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max (none = thinking off, so no toggle).
+# Modalities: input_modalities = text, image (video is not checked on any PrimaLabs model), so input is text + the
+#   lab entry's image MIME types.
+# Limit: context_length = max_output_tokens = 1_048_576.
+#   max_output_tokens is the served window (input + output share it, no separate output cap), so output = context,
+#   as on other hosts that serve the full window (e.g. providers/nebius).
+# Cache: supports_prompt_caching = true (automatic prefix cache).
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.primalabs.ai/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1.5

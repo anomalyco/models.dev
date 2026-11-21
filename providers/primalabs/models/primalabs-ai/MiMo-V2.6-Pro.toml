@@ -1,0 +1,40 @@
+# Sources (accessed 2026-11-20):
+# - https://docs.primalabs.ai/inference/models (catalog, feature support, reasoning controls per endpoint)
+# - GET https://api.primalabs.ai/v1/models (authenticated; context_length, max_output_tokens, pricing in USD per token,
+#   input_modalities, supports_* capability checks, reasoning_effort_accepted per endpoint). A capability field the
+#   catalog leaves out is "not verified", so it is not authored here.
+# - Every model is served on /v1/chat/completions, /v1/responses and /v1/messages and reasons by default; reasoning
+#   comes back as message.reasoning_content on Chat Completions. Effort below is the Chat Completions list.
+# This model's capability checks are all "not verified" in the catalog (no input_modalities, effort lists, cache or
+#   max_output_tokens), so only what the docs state is authored: reasoning on by default, thinking off via
+#   reasoning_effort = none on Chat Completions (docs feature table: "Turning thinking off: all three APIs").
+#   No graded effort is authored until the catalog reports one.
+# Toggle: reasoning_effort = none (off); omitted = on
+# Modalities: the docs say a modality missing from input_modalities shouldn't be relied on, so input is text only.
+# Sampling: with thinking on, temperature 1.0 and top_p 0.95 are forced, as on Xiaomi's API.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.primalabs.ai/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.036 }
+
+[cost.text.output]
+price = 8

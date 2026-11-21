@@ -1,0 +1,10 @@
+name = "PrimaLabs"
+env = ["PRIMALABS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# OpenAI-compatible POST /v1/chat/completions with bearer-key auth; the same models are also served on
+# /v1/responses (OpenAI Responses) and /v1/messages (Anthropic Messages). Anthropic's own SDKs take
+# https://api.primalabs.ai (they append /v1/messages); @ai-sdk/anthropic takes .../v1, as the model files set.
+# https://docs.primalabs.ai/api-reference/introduction (accessed 2026-11-20)
+api = "https://api.primalabs.ai/v1"
+doc = "https://docs.primalabs.ai/inference/models"

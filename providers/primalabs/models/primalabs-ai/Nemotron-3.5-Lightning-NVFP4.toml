@@ -1,0 +1,40 @@
+# Sources (accessed 2026-11-20):
+# - https://docs.primalabs.ai/inference/models (catalog, feature support, reasoning controls per endpoint)
+# - GET https://api.primalabs.ai/v1/models (authenticated; context_length, max_output_tokens, pricing in USD per token,
+#   input_modalities, supports_* capability checks, reasoning_effort_accepted per endpoint). A capability field the
+#   catalog leaves out is "not verified", so it is not authored here.
+# - Every model is served on /v1/chat/completions, /v1/responses and /v1/messages and reasons by default; reasoning
+#   comes back as message.reasoning_content on Chat Completions. Effort below is the Chat Completions list.
+# Served as an NVFP4 quantization of Nemotron 3.5 Lightning.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max (none = thinking off, so no toggle).
+# Limit: context_length = max_output_tokens = 1_048_576 (served window is larger than the lab default).
+#   max_output_tokens is the served window (input + output share it, no separate output cap), so output = context,
+#   as on other hosts that serve the full window (e.g. providers/nebius).
+# Cache: supports_prompt_caching = false in the catalog, so no cache capability is authored; the cached-input rate is
+#   still the published price.
+schema = 2
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.primalabs.ai/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5
