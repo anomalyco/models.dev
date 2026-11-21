@@ -3,11 +3,13 @@
 # Billed in GBP: £0.03 input / £0.01 cached input / £0.20 output per 1M tokens (launch price until 2027-01-31,
 #   https://mallardai.co.uk/pricing/); converted at the ECB reference rate of 2026-10-23: 1 GBP = 1.3368 USD
 #   (exact products: $0.040104, $0.013368, $0.26736), the rate of the prices at https://api.mallardai.co.uk/v1/models.
-# Off is reasoning_effort = none; graded levels none|minimal|low|medium|high, default high (no toggle).
+# Reasoning cannot be turned off: reasoning_effort = none is the lowest level and still reasons briefly; graded levels
+#   none|minimal|low|medium|high, default high (no toggle).
 # Context is 262,144 tokens here (the lab's model allows 1,048,576). Prefix caching is automatic per API key.
 # Images: PNG, JPEG and WebP, 16 per request.
 # Verified 2026-11-21 on POST /v1/chat/completions: streaming returns a usage block (stream_options.include_usage), tool
-#   calls, response_format json_object, image input inline and by URL, reasoning in a separate field, cached_tokens reported.
+#   calls (tool_choice auto, none, required and a named function), response_format json_object and strict json_schema,
+#   image input inline and by URL, reasoning in a separate field, cached_tokens reported.
 schema = 2
 base_model = "thinkingmachines/inkling-2-mini"
 
