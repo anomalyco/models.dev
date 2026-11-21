@@ -1,0 +1,14 @@
+# Source: https://aisa.one/models (AIsa pricing API https://aisa.one/api/pricing/models,
+# catalog cached_at 2026-10-26, accessed 2026-10-26). All cost values USD per 1M tokens as published by AIsa.
+# AIsa is a multi-model relay: reasoning controls mirror the underlying lab API (pass-through).
+# Published through v2 with the model-specific API; non-chat prices are not exposed as chat token prices.
+# AIsa bills embedding, rerank and classify models per input token: https://aisa.one/docs/guides/pricing
+# The generic catalog repeats an output rate, but this route has no billed output tokens; only input cost is authored.
+schema = 2
+v2_only = true
+base_model = "jina/jina-embeddings-v3"
+
+[api.embeddings]
+
+[cost.text.input]
+price = 0.05
