@@ -1,0 +1,13 @@
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.0975
+cache = { read = 0.0104, write = 0.13 }
+
+[cost.text.output]
+price = 0.3055
