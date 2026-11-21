@@ -1,0 +1,19 @@
+# Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
+# Relayed by Tapix AI (https://tapixai.com/v1); upstream model is deepseek/deepseek-v4.1-flash.
+# Reasoning: reasoning_effort = low, high, max on /v1/chat/completions; forwarded verbatim.
+# Streams reasoning via reasoning_content deltas.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.22
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

@@ -1,0 +1,19 @@
+# Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
+# Relayed by Tapix AI (https://tapixai.com/v1); upstream model is moonshotai/kimi-k2.6.
+# Reasoning: no caller-side control is published — the upstream route returned errors on 2026-11-17, so no effort ladder or off switch could be verified.
+# Streams reasoning via reasoning_content deltas.
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.94
+
+[cost.text.output]
+price = 4.91
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
