@@ -1,0 +1,16 @@
+# Pricing is per account: the effective per-token price depends on the account's plan and is
+# only shown in the console after sign-in (https://platform.closeai-asia.com/pricing).
+# Cost is intentionally omitted.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, budget = { min = 1024 } }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4096 } }
+
+[api.messages]
+base_url = "https://api.openai-proxy.org/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+capabilities = { tools = { strict = true, search = true } }
