@@ -22,8 +22,10 @@ structured_output = true
 stream_usage = true
 cache = { implicit = true }
 
+# Live test 2026-11-21 on POST /v1/chat/completions: max_tokens 65,537 and 262,000 accepted, 262,200 refused (max_model_len 262,144).
 [limit]
 context = 262_144
+output = 262_144
 
 [cost.text.input]
 price = 0.040104

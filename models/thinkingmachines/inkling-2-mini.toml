@@ -2,6 +2,8 @@
 # - https://thinkingmachines.ai/news/inkling-2-mini/ (announced Nov 20, 2026; 26.4B total, 3.4B active)
 # - https://thinkingmachines.ai/model-card/inkling-2-mini/ (License: Apache 2.0; "any pixel-based image input";
 #   "context window of up to 1M tokens")
+# Output: the model card and generation_config.json state no separate output cap, so the output limit is the
+#   context window (1,048,576), cited from the model card line "context window of up to 1M tokens".
 # - https://huggingface.co/thinkingmachines/Inkling-2-Mini (Apache-2.0 weights)
 # Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
 # Input: the model card lists "any pixel-based image input" without naming formats, so the generic image modality is used.
@@ -26,7 +28,7 @@ top_k = true
 
 [limit]
 context = 1_048_576
-output = 65_536
+output = 1_048_576
 
 [[weights]]
 label = "Hugging Face"
