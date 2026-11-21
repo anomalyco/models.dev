@@ -85,14 +85,12 @@ export const ModelFamilyValues = [
   "glm-turbo",
   "glm-image",
   "glm-embedding",
-  "glm-free",
   "glm-z",
 
   // Meta Llama
   "llama",
 
   // Meta Muse
-  "muse-free",
 
   // Alibaba Qwen
   "qwen",
@@ -132,7 +130,6 @@ export const ModelFamilyValues = [
   "qwen-omni-realtime",
   "qwen-livetranslate",
   "qwen-tts",
-  "qwen-free",
 
   // DeepReinforce
   "ornith",
@@ -143,7 +140,6 @@ export const ModelFamilyValues = [
   "deepseek-ocr",
   "deepseek-pro",
   "deepseek-r",
-  "deepseek-flash-free",
   "deepseek-flash-think",
 
   // Microsoft Phi
@@ -153,7 +149,6 @@ export const ModelFamilyValues = [
   "kimi",
   "kimi-code",
   "kimi-pro",
-  "kimi-free",
 
   // Motif Technologies
   "motif",
@@ -209,13 +204,11 @@ export const ModelFamilyValues = [
   "command-r",
   "command-a",
   "command-light",
-  "north-free",
 
   // AI21 Jamba
 
   // NVIDIA Nemotron
   "nemotron",
-  "nemotron-free",
 
   // AWS Titan
   "titan",
@@ -340,10 +333,6 @@ export const ModelFamilyValues = [
   "mimo-asr",
   "mimo-tts",
   "mimo-flash",
-  "mimo-v2.5-free",
-  "mimo-pro-free",
-  "mimo-omni-free",
-  "mimo-flash-free",
 
   // Clarifai
   "mm-poly",
@@ -433,7 +422,6 @@ export const ModelFamilyValues = [
   "rnj",
 
   // Tecent Hy
-  "hy3-free",
 
   // Ling & Ring (InclusionAI)
   "ling-flash",
@@ -441,9 +429,7 @@ export const ModelFamilyValues = [
   "inkling-small",
   "ling-tiny",
   "ming-image",
-  "ling-flash-free",
   "ring",
-  "ring-1t-free",
 
   // Kat Coder
   "kat-coder",
@@ -563,6 +549,55 @@ export const ModelFamilyValues = [
 
   // Elephant
   "elephant",
+
+  // Free variants: the base family plus "-free"
+  "beam-free",
+  "deepseek-flash-free",
+  "deepseek-pro-free",
+  "ernie-free",
+  "fish-s-pro-free",
+  "flint-free",
+  "gemma-free",
+  "glm-flash-free",
+  "glm-free",
+  "glmv-flash-free",
+  "gpt-free",
+  "heygen-voice-turbo-free",
+  "hy-flash-free",
+  "hy-free",
+  "inkling-small-free",
+  "jev-free",
+  "kimi-free",
+  "laguna-s-free",
+  "lfm-free",
+  "ling-flash-free",
+  "ling-tiny-free",
+  "longcat-free",
+  "mimo-flash-free",
+  "mimo-free",
+  "mimo-omni-free",
+  "mimo-pro-free",
+  "minimax-m-flash-free",
+  "minimax-m-free",
+  "muse-glimmer-free",
+  "muse-spark-free",
+  "nemotron-embed-free",
+  "nemotron-lightning-free",
+  "nemotron-nano-free",
+  "nemotron-safety-free",
+  "nemotron-super-free",
+  "nemotron-ultra-free",
+  "north-mini-free",
+  "particle-free",
+  "qwen-flash-free",
+  "qwen-free",
+  "qwen-max-free",
+  "qwen-plus-free",
+  "ring-free",
+  "solar-mini-free",
+  "step-flash-free",
+  "step-free",
+  "trinity-large-free",
 
   // Product lines (one per lab, type and size tier)
   "aion",

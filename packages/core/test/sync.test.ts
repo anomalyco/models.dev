@@ -7458,6 +7458,22 @@ test("OpenRouter rerank and embedding files name the packages that speak their e
   });
 });
 
+test("OpenRouter keeps a free route's \"-free\" family on base_model files and drops any other family", () => {
+  const chat = (family: string) => buildOpenRouterModel(openRouterModel(), { base_model: "anthropic/claude-sonnet-5", family } as ExistingModel);
+  expect(chat("claude-sonnet-free")).toMatchObject({ base_model: "anthropic/claude-sonnet-5", family: "claude-sonnet-free" });
+  expect(chat("claude-sonnet")).not.toHaveProperty("family");
+  expect(chat("llama-free")).not.toHaveProperty("family");
+
+  const media = (family: string) => buildOpenRouterMediaModel(openRouterMediaModel({
+    id: "openai/whisper-1",
+    name: "OpenAI: Whisper 1",
+    architecture: { input_modalities: ["audio"], output_modalities: ["transcription"] },
+    pricing: { prompt: "0", completion: "0" },
+  }), "transcription", { base_model: "openai/whisper-1", family });
+  expect(media("whisper-free")).toMatchObject({ family: "whisper-free" });
+  expect(media("whisper")).not.toHaveProperty("family");
+});
+
 test("OpenRouter media files keep a name only when it differs from the lab", () => {
   const rerank = (id: string, name: string) => buildOpenRouterMediaModel(openRouterMediaModel({
     id,

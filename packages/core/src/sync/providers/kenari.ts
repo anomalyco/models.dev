@@ -5,7 +5,7 @@ import { z } from "zod";
 import { ReasoningOption as CatalogReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
-import { factorBaseModel } from "./openrouter.js";
+import { factorBaseModel, freeFamily } from "./openrouter.js";
 
 const ROOT = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
 const MODELS_DIR = path.join(ROOT, "models");
@@ -605,6 +605,7 @@ export const kenari = {
       {
         ...host,
         name: deltas?.name,
+        family: freeFamily(baseModel, deltas?.family),
         description: deltas?.description,
         release_date: deltas?.release_date,
         last_updated: deltas?.last_updated,
