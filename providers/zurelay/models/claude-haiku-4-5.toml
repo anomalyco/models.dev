@@ -1,0 +1,29 @@
+# API: Anthropic Messages, POST https://api.zurelay.com/v1/messages with x-api-key; cache_control, thinking
+# and output_config pass through (https://zurelay.com/docs/anthropic, accessed 2026-11-15).
+# Only Messages is listed. Zurelay also takes Claude on /v1/chat/completions, but documents cache_control
+# caching (5m/1h writes) only on Messages, and the explicit cache below doesn't hold on chat completions.
+# Live 2026-11-15: a 10,125-token system prompt with cache_control, sent twice, read 0 tokens from the cache on
+# /v1/chat/completions (no cache write reported either); on /v1/messages it was written, then read (10,516 tokens).
+# PDFs: read on /v1/messages (live 2026-11-15: it returned the code word from a one-page PDF document block).
+# Thinking budget tested 2026-11-15 on /v1/messages: budget_tokens = 1024 returned a thinking block.
+# Budget: thinking = { type = "enabled", budget_tokens } on POST /v1/messages; leave it out for no thinking.
+# Prices (USD per 1M tokens): https://zurelay.com/models/claude-haiku-4-5. Input, output and cache read follow
+# https://zurelay.com/prices.json (input_per_1m, output_per_1m, cached_input_per_1m), which the zurelay sync reads.
+# Zurelay sets its own cached price, so the cache read isn't a fixed share of input.
+# Cache writes: 1.25x input for 5 minutes, 2x for 1 hour (https://zurelay.com/docs/anthropic#prompt-caching).
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.54
+cache = { read = 0.054, write = { "5m" = 0.675, "1h" = 1.08 } }
+
+[cost.text.output]
+price = 2.7

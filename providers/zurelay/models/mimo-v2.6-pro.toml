@@ -1,0 +1,30 @@
+# Inputs on this host: text, images, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-15).
+# Earlier on 2026-11-15 none was ignored here (reasoning came back in 4 of 4 tests). Zurelay fixed the route
+# the same day; since then none returns no reasoning tokens and high still reasons.
+# Toggle: reasoning_effort = none turns thinking off;
+# any other level, or leaving it out, thinks (tested 2026-11-15: no reasoning came back with none, and it did without).
+# https://zurelay.com/docs/chat#reasoning (accessed 2026-11-15)
+# Prices (USD per 1M tokens): https://zurelay.com/models/mimo-v2.6-pro. Input, output and cache read follow
+# https://zurelay.com/prices.json (input_per_1m, output_per_1m, cached_input_per_1m), which the zurelay sync reads.
+# Zurelay sets its own cached price, so the cache read isn't a fixed share of input.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.32
+cache = { read = 0.0026 }
+
+[cost.text.output]
+price = 0.64

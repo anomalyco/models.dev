@@ -1,0 +1,17 @@
+# Always reasons; no reasoning control on this host (https://zurelay.com/docs/chat#reasoning, accessed 2026-11-15).
+# Prices (USD per 1M tokens): https://zurelay.com/models/minimax-m2.5. Input, output and cache read follow
+# https://zurelay.com/prices.json (input_per_1m, output_per_1m, cached_input_per_1m), which the zurelay sync reads.
+# Zurelay sets its own cached price, so the cache read isn't a fixed share of input.
+schema = 2
+base_model = "minimax/MiniMax-M2.5"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.39
