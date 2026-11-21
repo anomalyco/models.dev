@@ -1,0 +1,19 @@
+# Pricing: https://jzstoken.com/model-pricing/glm-5.3-flash (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: zhipuai/glm-5.3-flash
+# Upstream control shape from providers/zhipuai/models/glm-5.3-flash.toml (JZSTOKEN does not certify reasoning per model):
+# Effort: reasoning_effort = low|high|max (default max); thinking.type only accepts enabled
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.1555
+cache = { read = 0.0155, write = 0.1555 }
+
+[cost.text.output]
+price = 0.7773

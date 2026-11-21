@@ -1,0 +1,21 @@
+# Pricing: https://jzstoken.com/model-pricing/qwen3.8-flash (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: alibaba/qwen3.8-flash
+# Upstream control shape from providers/alibaba/models/qwen3.8-flash.toml (JZSTOKEN does not certify reasoning per model):
+# Toggle: enable_thinking true|false (hybrid)
+# Effort: reasoning_effort = low|medium|xhigh (default xhigh). The Alibaba file says this is not yet in the API reference; see the Qwen3.8-Flash-Next release blog.
+# Budget: thinking_budget (Max Reasoning 262K)
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.1555
+cache = { read = 0.0155, write = 0.1555 }
+
+[cost.text.output]
+price = 0.7773

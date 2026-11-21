@@ -1,0 +1,30 @@
+# Pricing: https://jzstoken.com/model-pricing/deepseek-v4.1-flash-1017 (checked 2026-11-20; row last updated 2026-11-10 07:20 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: deepseek/deepseek-v4.1-flash-1017
+# Peak: during Mon–Fri 09:00–12:00 ×2, Mon–Fri 14:00–18:00 ×2 (Asia/Shanghai) every rate is multiplied by 2. Asia/Shanghai is UTC+8 with no DST, so Monday-Friday 01:00-04:00 and 06:00-10:00 UTC.
+# Modalities: page says image input is not supported.
+# Upstream control shape from providers/deepseek/models/deepseek-v4-flash.toml (JZSTOKEN does not certify reasoning per model):
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Effort: reasoning_effort = low|high|max (default high). minimal maps to low; medium and xhigh map to high. none is accepted and disables thinking.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0683
+cache = { read = 0.0014, write = 0.0683 }
+
+[cost.text.output]
+price = 0.2730
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

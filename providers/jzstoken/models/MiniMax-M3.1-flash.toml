@@ -1,0 +1,19 @@
+# Pricing: https://jzstoken.com/model-pricing/MiniMax-M3.1-flash (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: minimax/MiniMax-M3.1-Flash
+# Request id MiniMax-M3.1-flash is the JZSTOKEN id; the lab id differs only by case or a documented alias.
+# Upstream control shape from providers/minimax/models/MiniMax-M3.1-Flash.toml (JZSTOKEN does not certify reasoning per model):
+# Effort: output_config.effort = low|medium|high|xhigh|max (default max). Thinking cannot be disabled: thinking.type = disabled or effort none returns 400.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0777
+cache = { read = 0.0078, write = 0.0777 }
+
+[cost.text.output]
+price = 0.3886
