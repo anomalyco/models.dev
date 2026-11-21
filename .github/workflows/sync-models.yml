@@ -113,7 +113,10 @@ jobs:
           failures="$RUNNER_TEMP/sync-failures"
           results="$RUNNER_TEMP/sync-results.md"
           providers="$RUNNER_TEMP/sync-providers"
+          reasons="$RUNNER_TEMP/sync-failure-reasons.md"
+          log="$RUNNER_TEMP/sync-provider.log"
           : > "$failures"
+          : > "$reasons"
           printf '| provider | result |\n| --- | --- |\n' > "$results"
 
           base="$(git rev-parse HEAD)"
@@ -136,9 +139,9 @@ jobs:
             rm -f .sync/model-sync-report.md "$RUNNER_TEMP/auto-merge"
 
             result=ok
-            if ! bun models:sync "$provider" < /dev/null; then
+            if ! bun models:sync "$provider" < /dev/null 2>&1 | tee "$log"; then
               result="sync failed"
-            elif [ -n "$(git status --porcelain -- models providers)" ] && ! bun validate < /dev/null; then
+            elif [ -n "$(git status --porcelain -- models providers)" ] && ! bun validate < /dev/null 2>&1 | tee "$log"; then
               result="validation failed"
             fi
 
@@ -147,6 +150,12 @@ jobs:
               echo "::error::$provider: $result"
               printf '%s: %s\n' "$provider" "$result" >> "$failures"
               printf '| %s | %s |\n' "$provider" "$result" >> "$results"
+              # The end of the log is usually the error, so the run summary says why without opening the logs.
+              {
+                printf '<details><summary><b>%s</b>: %s</summary>\n\n```text\n' "$provider" "$result"
+                grep -vE '^[[:space:]]*$|DeprecationWarning|^[[:space:]]+at ' "$log" | tail -n 25
+                printf '```\n\n</details>\n\n'
+              } >> "$reasons"
               echo "::endgroup::"
               continue
             fi
@@ -184,6 +193,10 @@ jobs:
             echo "failed=true" >> "$GITHUB_OUTPUT"
           fi
           cat "$results" >> "$GITHUB_STEP_SUMMARY"
+          if [ -s "$reasons" ]; then
+            printf '\n### Why providers failed\n\n' >> "$GITHUB_STEP_SUMMARY"
+            cat "$reasons" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload changes
         if: steps.sync.outputs.changed == 'true'
