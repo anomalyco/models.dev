@@ -1,0 +1,21 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-10-22).
+# Effort: reasoning_effort = none|high
+# Measured: no reasoning by default; reasoning_effort = high -> reasoning; thinking.type = enabled is inert.
+# reasoning_effort = low|medium|max -> 400 "does not support reasoning effort ... Supported: none, high".
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0042 }
+
+[cost.text.output]
+price = 0.42

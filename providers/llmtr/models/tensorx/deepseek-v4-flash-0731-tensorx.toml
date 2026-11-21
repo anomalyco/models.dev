@@ -1,0 +1,20 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-10-22).
+# Measured: no reasoning by default or with thinking.type = enabled; reasoning_effort -> 400.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+name = "DeepSeek V4 Flash 0731 (TensorX)"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 0.3
