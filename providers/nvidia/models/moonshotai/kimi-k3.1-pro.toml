@@ -1,0 +1,38 @@
+# NVIDIA NIM wire id: "moonshotai/kimi-k3.1-pro"
+# (build.nvidia.com URL slug is kimi-k3_1-pro; the slug is not the wire id.)
+# Sources (accessed 2026-11-18):
+# - https://build.nvidia.com/moonshotai/kimi-k3_1-pro.md
+# - https://build.nvidia.com/moonshotai/kimi-k3_1-pro/apireference.md
+# - providers/moonshotai/models/kimi-k3.1-pro.toml (first-party reasoning controls)
+# - providers/nvidia/models/moonshotai/kimi-k3.toml (same-host K3 predecessor)
+# Live probing is not possible: the NIM API reference template says this preview
+# endpoint is playground-only and "no API key will authorize it". The schema lists
+# effort low|medium|high|max (default low), but the first-party entry and the K3
+# NIM peer both serve low|high|max, and this repo documents NVIDIA schemas naming
+# values the backend rejects (deepseek-v4.1-flash NIM, 400 on "medium"). Following
+# the peer/lab baseline conservatively; default is left unset.
+# Reasoning is always on: first-party entry says "Always thinks ... there is no
+# off toggle", and the card sets showReasoningToggle=false.
+# Streamed reasoning field is reasoning_content.
+# Context: the card's Specifications section gives ISL 1048576.
+# Output: the NIM OpenAPI schema caps max_tokens at 65536 (default 16384).
+# Pricing: Free Endpoint; NVIDIA publishes no per-token rate (provider.toml).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
