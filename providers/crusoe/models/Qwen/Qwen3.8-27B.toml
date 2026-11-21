@@ -1,0 +1,39 @@
+# Probed live endpoint 2026-11-16 (POST /v1/chat/completions, temperature 0).
+# Effort: reasoning_effort = none|low|medium|xhigh (default xhigh). high and max
+# return HTTP 400 "Unexpected reasoning effort high. Supported types are xhigh
+# (default), medium, and low."; "none" returns no reasoning text.
+# chat_template_kwargs.enable_thinking = false also turns reasoning off.
+# Reasoning text is returned in message.reasoning_content, also alongside
+# tool_calls. usage does not report reasoning tokens.
+# Structured output: a strict json_schema response_format returned schema-valid JSON.
+# Input: the pricing page lists text and image for this model, so the lab's video
+# types are left out. A PNG image_url part was accepted; the other image types
+# were not sent.
+# Model id and context: GET /v1/models (context_length 262144, the lab's window),
+# accessed 2026-11-16.
+# Pricing: https://www.crusoe.ai/cloud/pricing and the pricing object in
+# GET /v1/models (both accessed 2026-11-16).
+# Cache: GET /v1/models prices input_cache_reads for this model and lists
+# prompt_cache_key and cache_salt in supported_parameters, with no
+# cache_control parameter, so implicit. A cache hit was not measured.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2

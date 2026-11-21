@@ -1,0 +1,36 @@
+# Probed live endpoint 2026-11-16 (POST /v1/chat/completions, temperature 0).
+# Effort: reasoning_effort = none|low|high|max (default high). Reasoning tokens on
+# a one-step arithmetic prompt: none 0, low 13, high 15, max 18, and 15 with the
+# field omitted. medium is accepted and returns the same output as high (the
+# lab maps medium to high). chat_template_kwargs.thinking = false also turns
+# reasoning off.
+# Reasoning text is returned in message.reasoning. reasoning_field = "reasoning"
+# is valid in v2, but v1's interleaved.field only allows
+# reasoning_content|reasoning_details, so no reasoning_field is set.
+# A tool-call response carried no reasoning text.
+# Structured output: a strict json_schema response_format returned schema-valid JSON.
+# Image input: a PNG image_url part was accepted.
+# Model id and context: GET /v1/models reports context_length 1048576 (lab file:
+# 1000000), accessed 2026-11-16. A prompt past the lab's window was not sent.
+# Pricing: https://www.crusoe.ai/cloud/pricing and the pricing object in
+# GET /v1/models (both accessed 2026-11-16).
+# Cache: GET /v1/models prices input_cache_reads for this model and lists
+# prompt_cache_key and cache_salt in supported_parameters, with no
+# cache_control parameter, so implicit. A cache hit was not measured.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.29
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 1.2

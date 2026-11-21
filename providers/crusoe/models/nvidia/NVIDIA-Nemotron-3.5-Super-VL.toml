@@ -1,0 +1,32 @@
+# Probed live endpoint 2026-11-16 (POST /v1/chat/completions, temperature 0).
+# Toggle: reasoning_effort = "none" turns reasoning off (0 reasoning tokens);
+# chat_template_kwargs.enable_thinking = false does the same. Reasoning is on by
+# default. low, medium, high and max are accepted but inert (identical output,
+# 115 reasoning tokens each), so no effort list.
+# Reasoning text is returned in message.reasoning, also alongside tool_calls. reasoning_field = "reasoning"
+# is valid in v2, but v1's interleaved.field only allows
+# reasoning_content|reasoning_details, so no reasoning_field is set.
+# Structured output: a strict json_schema response_format returned schema-valid JSON.
+# Image input: a PNG image_url part was accepted. Video was not probed; the
+# pricing page lists text, image and video for this model.
+# Model id and context: GET /v1/models (context_length 1048576, the lab's window),
+# accessed 2026-11-16.
+# Pricing: https://www.crusoe.ai/cloud/pricing and the pricing object in
+# GET /v1/models (both accessed 2026-11-16).
+# Cache: GET /v1/models prices input_cache_reads for this model and lists
+# prompt_cache_key and cache_salt in supported_parameters, with no
+# cache_control parameter, so implicit. A cache hit was not measured.
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 0.4
