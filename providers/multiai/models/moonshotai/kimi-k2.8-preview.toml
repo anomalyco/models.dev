@@ -2,7 +2,10 @@
 # Actual MultiAI API model ID: kimi-k2.8-preview. Tool support reported by MultiAI: true.
 # Reasoning controls are the allowed levels reported in the catalog; live API tests pending.
 # No USD pricing asserted: token multipliers are not USD rates.
+# Temporarily v2-only: neither upstream model metadata nor the MultiAI snapshot provides
+# a verified output-token cap; the legacy v1 schema requires one.
 schema = 2
+v2_only = true
 base_model = "moonshotai/kimi-k2.8-preview"
 
 [capabilities]
