@@ -1,0 +1,67 @@
+# Radium is the first-party provider of this model, so this is a full definition.
+# Sources (accessed 2026-11-16): https://docs.radium.cloud/models/clarke (200,000 context, 16,384
+# output cap, USD prices, cached-input price, reasoning and vision supported),
+# https://docs.radium.cloud/models/overview (capabilities matrix),
+# https://docs.radium.cloud/core-concepts/compatibility-and-limits (temperature 0-2, top_p 0-1;
+# JSON mode and JSON schema on hal-1.0 and clarke-1.0; cache_control on all models; vision
+# JPEG/PNG/GIF/WebP as base64 data URLs or public URLs; no Responses API),
+# https://docs.radium.cloud/core-concepts/tool-calling (strict schema validation on all three),
+# https://docs.radium.cloud/core-concepts/messages (Anthropic Messages, thinking block precedes
+# text when reasoning is enabled), and https://docs.radium.cloud/guides/provenance (initial release).
+# Prices: USD per 1M tokens as published, no conversion: $0.75 in / $0.075 cached in / $4.50 out.
+# Radium states pricing is dynamic (https://radium.cloud/pricing).
+# Cache: cache_control markers are documented, so explicit caching is listed; usage also reports
+# cached_tokens without any marker, so implicit caching is listed too. Cache hits bill at
+# 10% of the input price. No cache write price, TTL or breakpoint limit is published.
+# Effort: Radium documents no reasoning control, so this comes from a live probe (2026-11-16, 3 runs
+# per value). Chat Completions reasoning_effort = none|low|medium|high is accepted, and "none" gave
+# 0 reasoning tokens on every run.
+# Clarke grades clearly: low ~220-310, medium ~280-310, high ~500-860 reasoning tokens.
+# Chat Completions thinking.type = disabled gave 0 reasoning tokens too, but "none" already covers
+# off, so no toggle is authored.
+# Messages: thinking.type = enabled only adds a thinking block, budget_tokens is not honored (10 is
+# accepted, no size change) and output_config.effort has no effect, so no budget is authored.
+# Not probed: minimal, xhigh, max, the default when no field is sent, and reasoning_effort on Messages.
+# Release date: the provenance page gives "Q2 2026" and a version stamp of clarke-1.0-20260101,
+# which disagree; the month the quarter starts is used.
+# top_k: not in Radium's docs, but top_k = 1 gave identical output on 8 of 8 runs at temperature 2
+# against varied output without it, so top_k = true.
+# Reasoning is returned in message.reasoning (live probe 2026-11-16). reasoning_field = "reasoning" is
+# valid in v2, but v1's interleaved.field only allows reasoning_content|reasoning_details, so no
+# reasoning_field is set rather than a wrong one.
+# Knowledge cutoff is not published by Radium.
+schema = 2
+name = "Clarke 1.0"
+description = "Radium's production-default tier for RAG, copilots, code assistance and structured outputs"
+open_weights = false
+release_date = "2026-04"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true, explicit = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 200_000
+output = 16_384
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://api.radium.cloud/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 4.50
