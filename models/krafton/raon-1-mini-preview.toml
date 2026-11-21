@@ -1,0 +1,69 @@
+# Sources (accessed 2026-11-18):
+#   https://huggingface.co/KRAFTON/Raon-1-mini-preview
+# The model card states a 30B-A4B mixture-of-experts model trained from scratch by KRAFTON AI
+# (28.8B total, 4.3B active parameters), a native context of 262,144 tokens, built-in thinking,
+# tool calling, and the Apache-2.0 license. KRAFTON AI announced the preview on 2026-10-21.
+# The card's client config sets output to 32,768 tokens.
+schema = 2
+name = "Raon-1 mini preview"
+description = "KRAFTON AI's 30B-A4B mixture-of-experts model, trained from scratch for Korean conversation and agentic tool use"
+open_weights = true
+release_date = "2026-10-21"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/KRAFTON/Raon-1-mini-preview"
+
+[[benchmarks]]
+name = "MMLU-Pro"
+score = 76.5
+source = "https://huggingface.co/KRAFTON/Raon-1-mini-preview"
+
+[[benchmarks]]
+name = "GPQA Diamond"
+score = 84.3
+source = "https://huggingface.co/KRAFTON/Raon-1-mini-preview"
+
+[[benchmarks]]
+name = "AIME 2026"
+score = 93.3
+source = "https://huggingface.co/KRAFTON/Raon-1-mini-preview"
+
+[[benchmarks]]
+name = "IFBench"
+score = 84.2
+source = "https://huggingface.co/KRAFTON/Raon-1-mini-preview"
+
+[[benchmarks]]
+name = "LiveCodeBench"
+version = "v6"
+score = 81.6
+source = "https://huggingface.co/KRAFTON/Raon-1-mini-preview"
+
+[[benchmarks]]
+name = "SWE-Bench Verified"
+score = 70.8
+harness = "mini-SWE-agent"
+source = "https://huggingface.co/KRAFTON/Raon-1-mini-preview"
+
+[[benchmarks]]
+name = "BFCL"
+version = "v4"
+score = 59.8
+source = "https://huggingface.co/KRAFTON/Raon-1-mini-preview"

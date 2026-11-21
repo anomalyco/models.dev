@@ -1,0 +1,18 @@
+# Reasoning: LM Studio's native POST /api/v1/chat takes
+#   $.reasoning = "off"|"low"|"medium"|"high"|"on"
+#   https://lmstudio.ai/docs/developer/rest/chat (accessed 2026-11-20)
+# Only off|on change behaviour for this model: its chat template exposes a binary
+# `enable_thinking` flag and no graded levels (KRAFTON/Raon-1-mini-preview Quickstart;
+# chat_template.jinja), so low|medium|high all mean on and no effort list is published.
+# LM Studio runs the model locally, so both token prices are 0.
+schema = 2
+base_model = "krafton/raon-1-mini-preview"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
