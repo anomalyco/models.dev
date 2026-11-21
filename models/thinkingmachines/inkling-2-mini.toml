@@ -8,7 +8,7 @@
 schema = 2
 name = "Inkling 2 Mini"
 description = "Open-weight multimodal looped MoE reasoning model (26.4B total, 3.4B active) for agentic coding, vision, and tool use"
-family = "inkling"
+family = "inkling-mini"
 open_weights = true
 release_date = "2026-11-20"
 license = "Apache-2.0"
@@ -39,3 +39,9 @@ type = "announcement"
 [[links]]
 url = "https://thinkingmachines.ai/model-card/inkling-2-mini/"
 type = "model_card"
+
+[[benchmarks]]
+name = "Artificial Analysis Intelligence Index"
+score = 20
+version = "v5.0.1"
+source = "https://artificialanalysis.ai/models/inkling-2-mini"

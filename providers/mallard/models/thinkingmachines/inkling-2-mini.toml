@@ -6,6 +6,8 @@
 # Off is reasoning_effort = none; graded levels none|minimal|low|medium|high, default high (no toggle).
 # Context is 262,144 tokens here (the lab's model allows 1,048,576). Prefix caching is automatic per API key.
 # Images: PNG, JPEG and WebP, 16 per request.
+# Verified 2026-11-21 on POST /v1/chat/completions: streaming returns a usage block (stream_options.include_usage), tool
+#   calls, response_format json_object, image input inline and by URL, reasoning in a separate field, cached_tokens reported.
 schema = 2
 base_model = "thinkingmachines/inkling-2-mini"
 
@@ -17,6 +19,7 @@ output = ["text"]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"], default = { type = "effort", value = "high" } }
 structured_output = true
+stream_usage = true
 cache = { implicit = true }
 
 [limit]
