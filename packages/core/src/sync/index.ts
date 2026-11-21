@@ -49,6 +49,7 @@ import { inceptron } from "./providers/inceptron.js";
 import { keln } from "./providers/keln.js";
 import { kenari } from "./providers/kenari.js";
 import { kilo } from "./providers/kilo.js";
+import { nytokenexchange } from "./providers/nytokenexchange.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
@@ -224,6 +225,7 @@ export const providers: {
   keln: SyncProvider<any>;
   kenari: SyncProvider<any>;
   kilo: SyncProvider<any>;
+  nytokenexchange: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "llmgateway-providers": SyncProvider<any>;
   "merge-gateway": SyncProvider<any>;
@@ -279,6 +281,7 @@ export const providers: {
   keln,
   kenari,
   kilo,
+  nytokenexchange,
   llmgateway,
   "llmgateway-providers": llmgatewayProviders,
   "merge-gateway": mergeGateway,
@@ -318,6 +321,7 @@ export const groups = {
     "keln",
     "kenari",
     "kilo",
+    "nytokenexchange",
     "llmgateway",
     "llmgateway-providers",
     "merge-gateway",

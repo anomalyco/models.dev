@@ -1,0 +1,16 @@
+schema = 2
+base_model = "alibaba/qwen3-coder-flash"
+
+[capabilities]
+structured_output = false
+temperature = false
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.3165
+cache = { read = 0.03165 }
+
+[cost.text.output]
+price = 1.5825
