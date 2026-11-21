@@ -1,0 +1,47 @@
+# Source: https://llm.wiro.ai/v1/models (fetched 2026-11-10), https://wiro.ai/models/claude/fable-5-2
+# and https://wiro.ai/docs/completions-api
+# Upstream: x_wiro.pricing_source.source_model = "anthropic/claude-fable-5-2".
+# Prices: catalog pricing (USD per token) x 1,000,000.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (Chat Completions). reasoning.effort (Responses)
+# and output_config.effort (Messages) take the same levels.
+# These are the model's declared levels (the effort options on its model page), the same set as
+# Anthropic's API.
+# Live 2026-11-10 on this model (Chat Completions, "17 times 23"): low and max were accepted unchanged
+# (no x-wiro-adjusted-parameters or x-wiro-dropped-parameters header; 3 and 48 output tokens),
+# minimal answered with x-wiro-adjusted-parameters: reasoning.effort=low, and none returned HTTP 400
+# "does not support reasoning effort 'none'".
+# No toggle: reasoning.enabled = false (Chat Completions) and thinking.type = disabled (Messages) each
+# returned HTTP 400 "cannot turn reasoning off" (live 2026-11-10); the model page says adaptive
+# thinking is always on.
+# Structured output: json_schema with strict (catalog structured_output_modes, strict_json_schema).
+# Cache: the catalog prices cached input (input_cache_read) and no request field controls caching,
+# so cache = { implicit = true }. Cached tokens are billed at these catalog rates (checked live
+# 2026-11-10 on this model with a repeated long prefix: the charged amount matched tokens x catalog prices).
+# The same Chat Completions request with a tool and a 6,392-token prompt, sent twice: the first wrote
+# 6,388 tokens to the cache and was charged $0.064032, the second read them and was charged $0.0014296.
+# The gateway places the Anthropic cache breakpoints itself, on requests that declare tools or
+# continue a stored turn, so callers need no cache_control markers.
+# The cache write price is the catalog's input_cache_write, the 5-minute rate on the model page.
+# APIs: the catalog lists chat, responses and anthropic for every model; all three use the same base URL.
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = 10 }
+
+[cost.text.output]
+price = 40
