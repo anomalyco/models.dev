@@ -1,0 +1,45 @@
+# Sources (accessed 2026-11-08):
+# https://api.koscompute.com/v1/models (id kosmik/glm-5.3-flash-uncensored)
+# Pricing USD/MTok: GET /v1/models -> data[id="kosmik/glm-5.3-flash-uncensored"].pricing
+# (input=0.15, output=0.45, cache_read=0.03). Context 262,144; max output 65,536.
+# Refusal-removed derivative served by Kosmik, not the unmodified zai-org checkpoint:
+# https://huggingface.co/Piecrust/GLM-5.3-Flash-FP4-Abliterated (rev 5c15d09; base
+# nvidia/GLM-5.3-Flash-FP4-Local, itself from zai-org/GLM-5.3-Flash; NVIDIA Open Model
+# Agreement). Text-only on Kosmik.
+# Release date: generally available on api.koscompute.com since 2026-11-08.
+# Reasoning: always on (server default effort); the API exposes no per-request reasoning
+# control for this model. Reasoning is returned in reasoning_content when
+# include_reasoning = true. Live 2026-11-08: tool call + tool-result continuation and
+# strict json_schema response_format verified.
+schema = 2
+name = "GLM-5.3 Flash Uncensored"
+description = "Refusal-removed GLM-5.3-Flash for coding and long-horizon agent tasks"
+family = "glm-flash"
+open_weights = true
+release_date = "2026-11-08"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.45
