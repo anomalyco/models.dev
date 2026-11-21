@@ -2,10 +2,9 @@
 # Pricing and limits: host catalog, USD per 1M tokens; context 1,310,720.
 # Output inherits the lab's 131,072 limit.
 # APIs: Chat Completions, Responses and Messages returned valid responses (live probes 2026-11-21).
-# Reasoning: the docs describe chat_template_kwargs.enable_thinking=false
-# (https://blazeinfer.ai/docs/guides/reasoning), but live probes on 2026-11-21 did not
-# reliably disable reasoning, so no toggle is published and the lab's always-on
-# reasoning is inherited.
+# Effort: reasoning_effort = low|high|max (default max). Live probes on 2026-11-21
+# accepted all three. The docs' chat_template_kwargs.enable_thinking=false did not
+# reliably disable reasoning, so no toggle is published.
 # Chat returns the trace in `reasoning`. reasoning_field = "reasoning" is valid in v2,
 # but v1's interleaved.field only allows reasoning_content|reasoning_details, so no
 # reasoning_field is set rather than a wrong one.
@@ -19,7 +18,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 
