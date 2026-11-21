@@ -53,6 +53,7 @@ jobs:
             DASHSCOPE_API_KEY,models.dev/release/DASHSCOPE_API_KEY
             CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN,models.dev/release/CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN
             DEEPINFRA_API_KEY,models.dev/release/DEEPINFRA_API_KEY
+            DEEPSEEK_API_KEY,models.dev/release/DEEPSEEK_API_KEY
             DIGITALOCEAN_API_TOKEN,models.dev/release/DIGITALOCEAN_API_TOKEN
             FIREWORKS_API_KEY,models.dev/release/FIREWORKS_API_KEY
             GOOGLE_API_KEY,models.dev/release/GOOGLE_API_KEY
@@ -80,6 +81,7 @@ jobs:
           BASETEN_API_KEY: ${{ env.BASETEN_API_KEY }}
           DASHSCOPE_API_KEY: ${{ env.DASHSCOPE_API_KEY }}
           DEEPINFRA_API_KEY: ${{ env.DEEPINFRA_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ env.DEEPSEEK_API_KEY }}
           DIGITALOCEAN_API_TOKEN: ${{ env.DIGITALOCEAN_API_TOKEN }}
           DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           FIREWORKS_API_KEY: ${{ env.FIREWORKS_API_KEY }}
