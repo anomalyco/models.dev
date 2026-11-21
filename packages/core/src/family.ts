@@ -771,6 +771,8 @@ export const ModelFamilyValues = [
   "pplx-decider-flash",
   "pplx-embed",
   "pplx-embed-context",
+  "raon-mini",
+  "raon-nano",
   "recraft-flash",
   "recraft-pro",
   "relace-apply",

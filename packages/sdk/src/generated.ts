@@ -468,6 +468,8 @@ export type ModelFamily =
   | "qwen-vl-plus"
   | "qwerky"
   | "qwq"
+  | "raon-mini"
+  | "raon-nano"
   | "ray"
   | "recraft"
   | "recraft-flash"

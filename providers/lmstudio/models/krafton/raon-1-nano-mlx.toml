@@ -1,0 +1,31 @@
+# Reasoning: LM Studio's native POST /api/v1/chat takes
+#   $.reasoning = "off"|"low"|"medium"|"high"|"on"
+#   https://lmstudio.ai/docs/developer/rest/chat (accessed 2026-11-20)
+# Only off|on change behaviour for this model: its chat template exposes a binary
+# `enable_thinking` flag and no graded levels (KRAFTON/Raon-1-nano card, "Thinking is
+# enabled by default in the chat template"; chat_template.jinja), so low|medium|high all
+# mean on and no effort list is published.
+# Output limit: the model card states no output-token cap, but v1 requires a resolved
+# limit.output on a hosted model, and LM Studio generates up to the loaded context.
+# 262,144 is the model's context, so that is the effective cap on this host.
+# ID: LM Studio's model index keys this model as "KRAFTON/Raon-1-nano-mlx"
+# (~/.lmstudio/.internal/model-index-cache.json, indexedModelIdentifier), its
+# GET /v1/models returns the basename "raon-1-nano-mlx", and POST /v1/chat/completions
+# resolves either form. The id below is the lowercase publisher/model form this provider
+# uses. The -mlx suffix is the MLX conversion KRAFTON publishes as KRAFTON/Raon-1-nano-mlx
+# on Hugging Face.
+# LM Studio runs the model locally, so both token prices are 0.
+schema = 2
+base_model = "krafton/raon-1-nano"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+output = 262_144
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
