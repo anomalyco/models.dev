@@ -1,0 +1,19 @@
+# Tessera serves GLM-5.3-Flash with a 256K context window and 32K maximum output.
+# Reasoning is always enabled; low and high are the supported effort levels, and Tessera maps
+# medium, max and xhigh requests to high. It also counts cached tokens in pilot usage metrics,
+# but the cache contract has not been documented, so no cache capability is claimed here.
+# Source: https://tesseraai.cloud/en/docs/
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3-Flash (Tessera)"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "high"] }
+
+[limit]
+context = 262_144
+output = 32_768
