@@ -1,0 +1,123 @@
+# Sources (accessed 2026-10-01):
+# - https://apex.callstack.com/models — identity, base model (Qwen, used under licence),
+#   262,144-token context, GA since 2026-10-01
+# - https://apex.callstack.com/legal/training-data-summary — knowledge cutoff: latest data
+#   collection September 2026; weights not distributed (hosted service only)
+# - https://github.com/callstack/apex-cli/blob/beb91307a6a0dcfc627ca758ade41d3cc951546b/src/assistants.js#L48-L57
+#   (accessed 2026-10-14; @callstack/apex 0.4.2) — the limits and capabilities Callstack ships
+#   to coding tools: context 262_144, output 32_768, input ["text","image"] (vision), tools,
+#   reasoning. No separate input budget is set; the CLI README states input limits and
+#   compaction thresholds are left to each harness's defaults. Unchanged in 0.4.5 (a83fde6).
+# - Sampling flags, live on https://api.callstack.ai/v1/chat/completions (2026-10-28), model
+#   callstack/Apex, reasoning_effort "none", 8 samples per setting: temperature 0 returns
+#   only the greedy completions, temperature 1.5 returns 8 distinct ones; at temperature 1.5,
+#   top_p 0.0001 and top_k 1 each collapse back to the greedy completions, and top_k -7 is
+#   rejected by the vLLM backend ("top_k must be 0 (disable), or at least 1"). So all three
+#   are honoured.
+# - Callstack publishes no image format list, so input stays generic "image".
+# - https://rn-evals.vercel.app — React Native agent evals by Callstack, Apex listed by name
+# - https://www.callstack.com/blog/apex-agetic-coding-for-mobile-and-web-spcialied-in-react
+#   (Callstack's GA announcement, 2026-10-01) — "we released Apex anonymously on Vercel AI
+#   Gateway under the name Pixel Canary", and on Vercel's Next.js evaluation (nextjs.org/evals)
+#   "Pixel Canary completed 28 of 31 tasks … With Next.js documentation supplied through
+#   AGENTS.md, it completed 30 of 31". That leaderboard row is the 2026-09-25 run; 28/31 and
+#   30/31 are its pass@4 rates, as Callstack's summary https://apex.callstack.com/llms.txt
+#   also states for Apex.
+# - https://www.reactbench.com (Million's ReactBench v1.2, accessed 2026-10-28; dated by access
+#   since the page doesn't date individual runs) — 39 React tasks across 37 repositories
+#   (28 Writing React, 11 Fixing React; https://github.com/millionco/reactbench, v1.2 tagged
+#   2026-10-08), pass@1 averaged over 5 trials per task, each solution must pass behavioral
+#   tests and React Doctor. Rows callstack/apex:low|medium|xhigh, 195 trials each: pass@1
+#   0.2974 / 0.3538 / 0.3436. The harness used per model isn't published, so it's left out.
+# Apex is general-purpose but strongest on React Native, Next.js, and React.
+schema = 2
+name = "Apex"
+description = "Agentic coding model for React Native and React work on mobile and web"
+family = "apex"
+open_weights = false
+knowledge = "2026-09"
+release_date = "2026-10-01"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[[links]]
+label = "Model page"
+url = "https://apex.callstack.com/models"
+type = "model_card"
+
+[[links]]
+label = "Pricing"
+url = "https://apex.callstack.com/"
+type = "other"
+
+[[links]]
+label = "Setup CLI"
+url = "https://www.npmjs.com/package/@callstack/apex"
+type = "docs"
+
+[[benchmarks]]
+name = "React Native Evals"
+score = 87.8
+metric = "score"
+harness = "React Native Evals"
+dataset = "66 React Native tasks across navigation, animation, async state, lists, and RN APIs"
+source = "https://rn-evals.vercel.app"
+date = "2026-10-01"
+
+[[benchmarks]]
+name = "Next.js Agent Evals"
+score = 96.8
+metric = "pass@4"
+variant = "with Next.js docs in context"
+dataset = "31 Next.js agent tasks, run 2026-09-25"
+source = "https://www.callstack.com/blog/apex-agetic-coding-for-mobile-and-web-spcialied-in-react"
+date = "2026-09-25"
+
+[[benchmarks]]
+name = "Next.js Agent Evals"
+score = 90.3
+metric = "pass@4"
+variant = "without Next.js docs"
+dataset = "31 Next.js agent tasks, run 2026-09-25"
+source = "https://www.callstack.com/blog/apex-agetic-coding-for-mobile-and-web-spcialied-in-react"
+date = "2026-09-25"
+
+[[benchmarks]]
+name = "ReactBench"
+score = 35.4
+metric = "pass@1"
+variant = "medium effort"
+dataset = "ReactBench v1.2: 39 React tasks across 37 repositories, 5 trials each"
+source = "https://www.reactbench.com"
+date = "2026-10-28"
+
+[[benchmarks]]
+name = "ReactBench"
+score = 34.4
+metric = "pass@1"
+variant = "xhigh effort"
+dataset = "ReactBench v1.2: 39 React tasks across 37 repositories, 5 trials each"
+source = "https://www.reactbench.com"
+date = "2026-10-28"
+
+[[benchmarks]]
+name = "ReactBench"
+score = 29.7
+metric = "pass@1"
+variant = "low effort"
+dataset = "ReactBench v1.2: 39 React tasks across 37 repositories, 5 trials each"
+source = "https://www.reactbench.com"
+date = "2026-10-28"

@@ -1,0 +1,19 @@
+name = "Callstack"
+# First-party host of Apex, Callstack's agentic coding model for React Native and React.
+# Callstack is the lab: Apex is a domain post-train of a Qwen (Alibaba Group) base model
+# used under licence, served only from this API (weights are not distributed).
+# Sources (accessed 2026-10-01):
+# - https://apex.callstack.com/models (model IDs, context window, base model, processing location)
+# - https://apex.callstack.com/ (pricing: $0.50 / $0.20 cached / $3.00 per 1M tokens, USD)
+# - https://www.npmjs.com/package/@callstack/apex (official CLI: base URL, auth env var,
+#   model ID, effort levels, limits)
+# Effort: reasoning_effort = none|low|medium|xhigh on POST /v1/chat/completions
+# (OpenAI-compatible surface; the CLI sets "medium" by default).
+# The host also answers POST /v1/messages (Anthropic shape); it isn't listed as an API because
+# reasoning effort isn't honoured there (see models/callstack/Apex.toml).
+# API keys are created in the console at https://platform.callstack.ai.
+env = ["CALLSTACK_AUTH_TOKEN"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.callstack.ai/v1"
+doc = "https://apex.callstack.com/models"
