@@ -1,0 +1,31 @@
+# Served on POST /v1/chat/completions and relayed to OpenAI's Responses API. Prices and limits from GET /v1/models (accessed 2026-10-27).
+# Reasoning: no reasoning field is read, so the model's default applies and the caller has no control.
+# Tools (tools, tool_choice, parallel_tool_calls) and images as data URLs checked live 2026-10-27.
+# The endpoint reads max_tokens; max_completion_tokens is ignored (checked live 2026-10-27).
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 2
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15
