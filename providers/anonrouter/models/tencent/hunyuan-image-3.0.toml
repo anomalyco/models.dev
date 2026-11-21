@@ -1,0 +1,23 @@
+# The file schema requires both modality arrays when either differs from the lab.
+# The shared Venice image adapter requests format="webp"; callers cannot select another format.
+# Venice format contract: https://docs.venice.ai/api-reference/endpoint/image/generate.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Native media requires an operation-bound inference ticket, not bearer-key SDK authentication.
+# Setup: https://github.com/anonrouter/anonrouter-sdk/blob/main/docs/ticketed-media.md.
+schema = 2
+v2_only = true
+base_model = "tencent/hunyuanimage-3.0-instruct"
+name = "Hunyuan Image 3.0"
+
+[modalities]
+input = ["text"]
+output = ["image/webp"]
+
+[api.images]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.output]
+unit = "image"
+price = 0.104

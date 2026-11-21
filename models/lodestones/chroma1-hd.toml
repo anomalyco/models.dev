@@ -1,0 +1,30 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://huggingface.co/lodestones/Chroma1-HD
+# Repository created 2025-08-08 (Hugging Face API createdAt).
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "image"
+name = "Chroma1 HD"
+description = "Open diffusion image model derived from FLUX.1 Schnell by Lodestone Rock"
+open_weights = true
+release_date = "2025-08-08"
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/lodestones/Chroma1-HD"

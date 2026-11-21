@@ -1,0 +1,30 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://huggingface.co/Tongyi-MAI/Z-Image-Turbo
+# Repository created 2025-11-25 (Hugging Face API createdAt).
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "image"
+name = "Z-Image Turbo"
+description = "Distilled open image generation model from Alibaba Tongyi-MAI"
+open_weights = true
+release_date = "2025-11-25"
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Tongyi-MAI/Z-Image-Turbo"

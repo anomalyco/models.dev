@@ -1,0 +1,31 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://civitai.com/models/827184?modelVersionId=1761560
+# https://civitai.com/api/v1/model-versions/1761560
+# AnonRouter links exactversion1761560; Civitai records v14.0 published on May8 2025.
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "image"
+name = "WAI Illustrious SDXL v14"
+description = "Anime image generation checkpoint derived from Illustrious XL by WAI0731"
+open_weights = true
+release_date = "2025-05-08"
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Civitai"
+url = "https://civitai.com/models/827184?modelVersionId=1761560"

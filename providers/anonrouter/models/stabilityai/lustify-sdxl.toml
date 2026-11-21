@@ -1,0 +1,40 @@
+# The shared Venice image adapter requests format="webp"; callers cannot select another format.
+# Venice format contract: https://docs.venice.ai/api-reference/endpoint/image/generate.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Venice lists this unversioned alias separately from lustify-v7/v8, linking only the model family.
+# Source: https://api.venice.ai/api/v1/models?type=image (id=lustify-sdxl, created=1738704152).
+# Its modelSource is https://civitai.com/models/573152/lustify-sdxl-nsfw-checkpoint; no checkpoint version is identified.
+# Release date is the serving alias creation date, not an assertion of a specific weight revision.
+# Native media requires an operation-bound inference ticket, not bearer-key SDK authentication.
+# Setup: https://github.com/anonrouter/anonrouter-sdk/blob/main/docs/ticketed-media.md.
+schema = 2
+v2_only = true
+type = "image"
+name = "Lustify SDXL"
+description = "Unversioned Lustify SDXL image generation route"
+open_weights = true
+release_date = "2025-02-04"
+
+[modalities]
+input = ["text"]
+output = ["image/webp"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[api.images]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.output]
+unit = "image"
+price = 0.0115

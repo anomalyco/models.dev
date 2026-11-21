@@ -1,0 +1,30 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://huggingface.co/tencent/HunyuanImage-3.0-Instruct
+# Model card News records the Instruct release on January 26, 2026.
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "image"
+name = "HunyuanImage 3.0 Instruct"
+description = "Open autoregressive image model for text-to-image generation and image editing"
+open_weights = true
+release_date = "2026-01-26"
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/tencent/HunyuanImage-3.0-Instruct"
