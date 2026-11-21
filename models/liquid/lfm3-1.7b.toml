@@ -1,0 +1,41 @@
+# Liquid AI LFM3-1.7B. Model card: https://huggingface.co/LiquidAI/LFM3-1.7B
+#   Tri-hybrid architecture (24 layers: 13 gated short conv + 5 SWA + 6 global attn), 1.73B parameters;
+#   text in/out; 256K context (input+output); LFM Open License v1.0; released 2026-10-27.
+# Announcement: https://www.liquid.ai/blog/lfm3
+# Sampling: open weights, temperature/top_p/top_k runtime; card recommends temperature 0.1, top_k 50.
+schema = 2
+name = "LFM3-1.7B"
+description = "Open-weight 1.73B text model for local agents, tool calling and structured outputs with 256K context"
+family = "lfm3"
+open_weights = true
+release_date = "2026-10-27"
+license = "LFM Open License v1.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 256_000
+output = 256_000
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LiquidAI/LFM3-1.7B"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/LiquidAI/LFM3-1.7B"
+type = "model_card"
+
+[[links]]
+label = "Introducing LFM3"
+url = "https://www.liquid.ai/blog/lfm3"
+type = "announcement"
