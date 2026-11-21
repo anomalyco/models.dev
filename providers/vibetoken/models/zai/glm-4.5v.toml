@@ -1,0 +1,20 @@
+# Prices: GET https://vibetoken.cn/api/models/zai/glm-4.5v/pricing (2026-10-30), what the host charges:
+# input/output = list x (1 - discount); cache reads and writes bill at list.
+# CNY converted to USD at 1 CNY = 0.15011 USD (ECB reference rate, 2026-10-29).
+# Same upstream controls as providers/novita-ai/models/zai-org/glm-4.5v.toml (VibeToken forwards them unchanged):
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "zhipuai/glm-4.5v"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.570418
+cache = { read = 0.120088 }
+
+[cost.text.output]
+price = 1.711254
