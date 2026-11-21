@@ -1,0 +1,30 @@
+# KovAPI docs for this model: https://docs.kovapi.com/claude-sonnet-4-6 (read 2026-11-21).
+# Prices, USD per 1M tokens: input 1.50, output 7.50, cache hit 0.15 (https://kovapi.com/llms.txt,
+#   https://kovapi.com/api/pricing, 2026-11-21); cache write 1.875 from the price table on the docs page.
+# Reasoning: on KovAPI's Chat Completions endpoint this model answers directly without thinking, and no
+#   request field turns thinking on there (docs page, "Thinking": thinking is only available on KovAPI's
+#   native Messages endpoint, which this entry does not use), so reasoning is marked unsupported.
+# Limit: KovAPI documents a ~200K-token context window for this model (docs page, "At a glance").
+# Input: text and images on Chat Completions (docs page, "At a glance"); PDF input is not offered.
+# Cache: long prompts are cached automatically without cache_control markers; writes bill at the
+#   cache-write rate (docs page, "Prompt caching").
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[limit]
+context = 200_000
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15, write = 1.875 }
+
+[cost.text.output]
+price = 7.5
