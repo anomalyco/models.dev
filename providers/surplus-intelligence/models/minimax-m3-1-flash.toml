@@ -1,0 +1,17 @@
+# Effort: reasoning_effort = low|medium|high|xhigh|max (top-level field on /v1/chat/completions).
+# The catalog row lists reasoning_effort (GET https://api.surplusintelligence.ai/v1/models, 2026-11-19) and Surplus forwards it to the seller as sent (https://www.surplusintelligence.ai/docs/reference/reasoning). Levels mirror providers/openrouter/models/minimax/minimax-m3.1-flash.toml.
+# Live 2026-11-19, one request per level: every level above accepted; reasoning_content returned at low|medium|high|xhigh|max.
+# reasoning_field: reasoning comes back in reasoning_content, and Surplus accepted it back on an assistant tool-call turn (live 2026-11-19).
+# structured_output left out: the catalog row lists neither structured_outputs nor response_format, and a strict json_schema request ignored the schema (live 2026-11-19).
+# Host deltas: limit is the catalog row's context_length / max_completion_tokens where smaller than the lab's.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

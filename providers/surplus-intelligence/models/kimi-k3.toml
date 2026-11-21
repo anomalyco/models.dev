@@ -1,0 +1,22 @@
+# Effort: reasoning_effort = none|low|high|max (top-level field on /v1/chat/completions). Off is effort=none; no toggle.
+# The catalog row lists reasoning_effort (GET https://api.surplusintelligence.ai/v1/models, 2026-11-19) and Surplus forwards it to the seller as sent (https://www.surplusintelligence.ai/docs/reference/reasoning). Levels mirror providers/openrouter/models/moonshotai/kimi-k3.toml.
+# Live 2026-11-19, one request per level: every level above accepted; reasoning_content returned at low|high|max, none at none.
+# reasoning_field: reasoning comes back in reasoning_content, and Surplus accepted it back on an assistant tool-call turn (live 2026-11-19).
+# Host deltas: input is narrowed to the catalog row's input_modalities (no video); limit is the catalog row's context_length / max_completion_tokens where smaller than the lab's.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

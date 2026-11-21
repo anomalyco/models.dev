@@ -1,0 +1,13 @@
+# Effort: reasoning_effort = none|low|medium|high (top-level field on /v1/chat/completions). Off is effort=none; no toggle.
+# The catalog row lists reasoning_effort (GET https://api.surplusintelligence.ai/v1/models, 2026-11-19) and Surplus forwards it to the seller as sent (https://www.surplusintelligence.ai/docs/reference/reasoning).
+# Live 2026-11-19, one request per level: every level above accepted; minimal, xhigh and max were rejected (400 invalid Qwen3.8 reasoning_effort), so the list departs from the OpenRouter entry's none|low|medium|xhigh; reasoning_content returned at low|medium|high, none at none.
+# reasoning_field: reasoning comes back in reasoning_content, and Surplus accepted it back on an assistant tool-call turn (live 2026-11-19 on qwen3.8-max-0902).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
