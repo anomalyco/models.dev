@@ -1,0 +1,27 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash Uncensored"
+description = "DeepSeek V4.1 Flash Uncensored served by HEX."
+base_model_omit = ["weights","benchmarks"]
+open_weights = false
+
+[modalities]
+input = ["text","image/jpeg","image/png","image/webp"]
+output = ["text"]
+
+[limit]
+output = 8192
+input = 988000
+
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.375
+cache = { read = 0.0067265, write = 0.375 }
+
+[cost.text.output]
+price = 1.5

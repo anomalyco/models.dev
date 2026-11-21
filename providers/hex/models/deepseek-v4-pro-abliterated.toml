@@ -1,0 +1,26 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+name = "DeepSeek V4 Pro Abliterated"
+description = "DeepSeek V4 Pro Abliterated served by HEX."
+base_model_omit = ["weights","benchmarks"]
+open_weights = false
+
+[modalities]
+input = ["text","image/jpeg","image/png","image/webp"]
+output = ["text"]
+
+[limit]
+output = 8192
+
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1, write = 1 }
+
+[cost.text.output]
+price = 4

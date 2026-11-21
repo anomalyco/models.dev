@@ -1,0 +1,28 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+# HEX documents local function calling. Custom tool grammar formats are not advertised.
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max
+schema = 2
+base_model = "openai/gpt-5.6-terra"
+base_model_omit = ["limit.input"]
+
+[modalities]
+input = ["text","image/jpeg","image/png","image/webp"]
+output = ["text"]
+
+[limit]
+context = 1000000
+
+[capabilities]
+reasoning = { supported = true, effort = ["none","low","medium","high","xhigh","max"] }
+cache = { implicit = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.3736925
+cache = { read = 0.03736925, write = 0.467115625 }
+
+[cost.text.output]
+price = 2.242155

@@ -1,0 +1,26 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen 3.8 Max Uncensored"
+description = "Qwen 3.8 Max Uncensored served by HEX."
+base_model_omit = ["benchmarks"]
+
+[modalities]
+input = ["text","image/jpeg","image/png","image/webp"]
+output = ["text"]
+
+[limit]
+output = 8192
+input = 983000
+
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.625
+cache = { read = 0.078125, write = 0.78125 }
+
+[cost.text.output]
+price = 1.875

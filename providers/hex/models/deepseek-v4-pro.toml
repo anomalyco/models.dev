@@ -1,0 +1,18 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[limit]
+output = 128000
+
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.375
+cache = { read = 0.004, write = 0.375 }
+
+[cost.text.output]
+price = 0.75

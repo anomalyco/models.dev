@@ -1,0 +1,30 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+# Uses HEX conservative limits until the public client metadata contains this exact ID.
+# HEX documents local function calling. Custom tool grammar formats are not advertised.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+base_model_omit = ["limit.input"]
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 65536
+output = 8192
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.175
+cache = { read = 0.01, write = 0.225 }
+
+[cost.text.output]
+price = 0.875
