@@ -1,4 +1,4 @@
-# Prices read from https://korouter.ai/models/gpt-5.6-terra on 2026-10-30 (the same catalog that bills requests).
+# Prices read from https://korouter.ai/models/gpt-5.6-terra on 2026-11-16 (the same catalog that bills requests).
 # Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max
 # Cache: automatic (OpenAI prompt caching) — live 2026-10-30 (gpt-5.6-terra): a second turn extending a 12.6K-token prompt read 12416 cached_tokens.
@@ -11,17 +11,17 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.74
-cache = { read = 0.074, write = 0.925 }
+price = 0.70
+cache = { read = 0.07, write = 0.875 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
-price = 1.48
-cache = { read = 0.148, write = 1.85 }
+price = 1.40
+cache = { read = 0.14, write = 1.75 }
 
 [cost.text.output]
-price = 4.44
+price = 4.20
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
-price = 6.66
+price = 6.30

@@ -1,4 +1,4 @@
-# Prices read from https://korouter.ai/models/claude-opus-5-5 on 2026-10-30 (the same catalog that bills requests).
+# Prices read from https://korouter.ai/models/claude-opus-5-5 on 2026-11-16 (the same catalog that bills requests).
 # Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
 # Effort: reasoning_effort = low|medium|high|xhigh|max → output_config.effort (adaptive thinking; none is rejected)
 # No toggle: thinking.type other than adaptive / between_tools is rejected on this host.
@@ -11,8 +11,8 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max
 cache = { implicit = true }
 
 [cost.text.input]
-price = 2.60
-cache = { read = 0.13, write = 3.25 }
+price = 2.28
+cache = { read = 0.114, write = 2.85 }
 
 [cost.text.output]
-price = 13.00
+price = 11.40
