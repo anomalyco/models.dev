@@ -1,0 +1,32 @@
+# Prices: https://aigrow.gg/ai-api, price table "US dollars per million input / output tokens", row "Gemini 4 Neon", column "With AIGROW credit" (read 2026-11-21): input $1.50, output $7.50, cache read $0.075, cache write $1.875. These are the USD a buyer pays per 1M tokens, copied with no conversion. One flat rate at every context length; cache writes bill at 1.25x the input rate.
+# API: OpenAI Chat Completions only (POST /v1/chat/completions); the Messages endpoint does not serve this model (404, probed 2026-11-21).
+# Effort: reasoning_effort low, medium, high and xhigh each returned 200 with reasoning tokens reported (2026-11-21). xhigh is passed through, not run as high: on the same counting question, twice at each level, xhigh reported 10,481 and 11,332 reasoning tokens and high 4,192 and 4,442. Default high: with no reasoning_effort the same question reported 5,249 and 4,119. The reasoning comes back in reasoning_content (on 6 of 9 answers; the other three had 102 to 149 reasoning tokens and no text in the field), and an assistant turn sent back with a reasoning_content field was accepted (200).
+# Tools: a function tool returned the right call on Chat Completions with tool_choice "auto", "required", a named function, and with strict true; "none" returned text and no call (probed 2026-11-21).
+# Cache: implicit; minimum copied from providers/google. Three identical 6,825-token prompts reported no cached tokens, then 5,675 and 5,675 (probed 2026-11-21).
+# Output: one request returns at most 65,536 output tokens, thinking included, the limit of the lab file.
+# Structured output: a JSON schema response_format returned bare JSON, also on a prompt that did not ask for JSON (probed 2026-11-21).
+# Input: a PNG image and a PDF file part were read (probed 2026-11-21). Audio and video are left out because they were not tested on this host.
+# Streaming: with stream_options.include_usage the last chunk before [DONE] carried the usage (probed 2026-11-21).
+schema = 2
+base_model = "google/gemini-4-neon"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 4_096 } }
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
+output = ["text"]
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, write = 1.875 }
+
+[cost.text.output]
+price = 7.5

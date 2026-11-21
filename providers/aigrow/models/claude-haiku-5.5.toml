@@ -1,0 +1,44 @@
+# Prices: https://aigrow.gg/ai-api, price table "US dollars per million input / output tokens", row "Claude Haiku 5.5", column "With AIGROW credit" (read 2026-11-16): input $0.04, output $0.20, cache read $0.01, cache write $0.05. Below the table: a request with more than 100,000 prompt tokens, cache reads and writes included, bills all its tokens at $0.20 input, $0.05 cache read, $0.25 cache write and $1.00 output. These are the USD a buyer pays per 1M tokens, copied with no conversion. Cache writes bill at 1.25x the input rate.
+# APIs: Anthropic Messages (POST /v1/messages) and OpenAI Chat Completions (POST /v1/chat/completions) on the same key: https://aigrow.gg/ai-api/guide
+# Effort: output_config.effort (Messages) and reasoning_effort (Chat Completions); levels as on providers/anthropic; each level returned 200 on this host on both APIs (2026-11-16).
+# Toggle: thinking.type = adaptive|disabled. On Messages with output_config.effort = high, adaptive returned a thinking block on two calls and disabled returned 200 with no thinking block on two calls (probed 2026-11-17). providers/anthropic accepts disabled only at high effort or below; xhigh and max were not re-tested on this host. On Chat Completions no reasoning text comes back, but thinking.type = disabled returned 200 with 18 completion tokens for a one-line answer on two calls, against 63 and 34 with reasoning_effort = high (probed 2026-11-17).
+# Cache: cache_control breakpoints work on Messages (a write on the first send, a read on the second), but a breakpoint that asks for the 1-hour TTL is written to the 5-minute cache: the usage split reported it as ephemeral_5m_input_tokens (probed 2026-11-16). So only 5m is listed, and a write bills at 1.25x the input rate. Breakpoints, targets and minimum copied from providers/anthropic.
+# Mid-conversation flags and tool strict/search are left unset: not tested on this host.
+# Structured output: a JSON schema in response_format (Chat Completions) and in output_config.format (Messages) returned bare JSON when the prompt asked for those fields, and plain prose when it did not (probed 2026-11-16), so the schema is not enforced on either API and the flag is false.
+# Input: a PNG image was read on both APIs. A PDF was not: a file part (Chat Completions) and a document block (Messages) were each counted as about 2,100 prompt tokens, but on two attempts per API the model answered that no PDF was attached (probed 2026-11-16), so PDF is left out.
+# Tools: a function tool returned a tool call with the right arguments on Chat Completions with tool_choice "auto" and on Messages with tool_choice auto (probed 2026-11-16).
+# Streaming: with stream_options.include_usage the last chunk before [DONE] carried the usage on Chat Completions, and message_delta carried it on Messages (probed 2026-11-16).
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+stream_usage = true
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[api.messages]
+base_url = "https://aigrow.gg/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.01, write = { "5m" = 0.05 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.2
+cache = { read = 0.05, write = { "5m" = 0.25 } }
+
+[cost.text.output]
+price = 0.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 1
