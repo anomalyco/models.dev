@@ -1,0 +1,18 @@
+# Model ID openai/gpt-6.1-terra, listed by GET https://api.stdcmpt.com/v1/models (public, accessed 2026-11-08).
+# Each request is charged against the plan's monthly compute budget
+# (https://docs.standardcompute.com/budgets-and-limits). Standard Compute does not
+# publish a per-model rate table for this id, so no cost is listed.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+input = 850_000
+output = 50_000
+
+[api.chat-completions]
+sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "@opencode/ai/providers/openrouter" }
+compatibility = { reasoning_field = "reasoning_details" }
