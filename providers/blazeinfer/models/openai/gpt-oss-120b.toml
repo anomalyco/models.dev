@@ -1,0 +1,36 @@
+# Source: BlazeInfer console model card (2026-11-21) and https://blazeinfer.ai/docs.
+# Pricing and limits: 0.03/0.006/0.15 credits per 1M tokens (1 credit = 1 USD, matching the
+# public catalog); context 131,072 and output 118,000.
+# APIs: Chat Completions, Responses and Messages returned valid responses (live probes 2026-11-21).
+# Effort: reasoning_effort = low|medium|high. Live probes on 2026-11-21 accepted all three
+# and each returned a reasoning trace; none still reasoned, so it is not published.
+# Chat returns the trace in `reasoning`. reasoning_field = "reasoning" is valid in v2,
+# but v1's interleaved.field only allows reasoning_content|reasoning_details, so no
+# reasoning_field is set rather than a wrong one.
+# Input: text only; the console card has no Vision tag.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 131_072
+output = 118_000
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.03
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.15
