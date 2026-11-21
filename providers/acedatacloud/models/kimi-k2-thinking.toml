@@ -1,0 +1,20 @@
+# Public catalog: https://platform.acedata.cloud/models/kimi-k2-thinking
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/5c4649ee-22c6-44ea-84d6-6ecc3674f998
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# Always-on reasoning model ID; no caller toggle
+schema = 2
+base_model = "moonshotai/kimi-k2-thinking"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.3360525
+
+[cost.text.output]
+price = 1.34435
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/kimi"
+compatibility = { reasoning_field = "reasoning_content" }

@@ -1,0 +1,27 @@
+# https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp
+# Schema v2 sampling flags follow the current same-family lab record models/deepseek/deepseek-v3.1.toml.
+schema = 2
+name = "DeepSeek V3.2 Exp"
+description = "Experimental DeepSeek V3.2 model with sparse attention and optional reasoning"
+family = "deepseek"
+release_date = "2025-09-29"
+open_weights = true
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+temperature = true
+reasoning = { supported = true }
+top_p = true
+top_k = true
+
+[limit]
+context = 128000
+output = 65536
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp"

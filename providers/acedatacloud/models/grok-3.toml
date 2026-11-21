@@ -1,0 +1,15 @@
+# Public catalog: https://platform.acedata.cloud/models/grok-3
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/aff80c74-b190-445b-9124-6422ed763c50
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+schema = 2
+base_model = "xai/grok-3"
+
+[cost.text.input]
+price = 1.1037985
+
+[cost.text.output]
+price = 5.51899285
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/grok"

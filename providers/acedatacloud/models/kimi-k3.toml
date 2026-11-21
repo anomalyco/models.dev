@@ -1,0 +1,32 @@
+# Public catalog: https://platform.acedata.cloud/models/kimi-k3
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/5c4649ee-22c6-44ea-84d6-6ecc3674f998
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort = low|high|max
+# No documented host-specific output maximum; inherit the lab maximum rather than its 131072 default.
+# No large-output inference probe was performed.
+# Input scope: reviewed OpenAI-compatible text/image path, intersected with lab JPEG/PNG/GIF/WebP.
+# No model-specific PDF/audio/video contract is established here; those formats are not advertised.
+# Cached-token usage is conditionally billed and normalized by this API.
+# Cache policy/controls are not documented on this surface: implicit support only, not a hit/TTL guarantee.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 2.1
+cache = { read = 0.21 }
+
+[cost.text.output]
+price = 10.5
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/kimi"
+compatibility = { reasoning_field = "reasoning_content" }

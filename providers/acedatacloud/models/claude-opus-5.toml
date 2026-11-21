@@ -1,0 +1,33 @@
+# Public catalog: https://platform.acedata.cloud/models/claude-opus-5
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/6b2b437b-b6d5-466c-8750-b16650072593
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort on the Chat Completions endpoint; native Messages thinking/budget fields are not part of this endpoint contract
+# Host API evidence: definition.paths[/v1/chat/completions].post.requestBody
+# .content[application/json].schema.properties.reasoning_effort exposes an effort enum.
+# That schema has no thinking or budget_tokens control; do not copy native Messages controls.
+# cache_write is the default 5-minute cache TTL.
+# Input scope: reviewed OpenAI-compatible text/image path, intersected with lab JPEG/PNG/GIF/WebP.
+# No model-specific PDF/audio/video contract is established here; those formats are not advertised.
+# Cached-token usage is conditionally billed and normalized by this API.
+# Cache policy/controls are not documented on this surface: implicit support only, not a hit/TTL guarantee.
+schema = 2
+base_model = "anthropic/claude-opus-5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1.839664225
+cache = { read = 0.183966475, write = { "5m" = 2.299580325 } }
+
+[cost.text.output]
+price = 9.198321475
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/v1"
