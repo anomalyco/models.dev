@@ -1,0 +1,17 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "glm-5.2" in OpenAI protocol (/v1), $1.1955798/$4.1845294 per MTok input/output.
+# Cache read: $0.298895 per MTok, same snapshot row.
+# Reasoning: on/off plus graded effort, copied from providers/zhipuai/models/glm-5.2.toml; wire path below.
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+
+[cost.text.input]
+price = 1.1955798
+cache = { read = 0.298895 }
+
+[cost.text.output]
+price = 4.1845294

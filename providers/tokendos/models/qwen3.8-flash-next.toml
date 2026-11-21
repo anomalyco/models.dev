@@ -1,0 +1,17 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "Qwen3.8-Flash-Next" in OpenAI protocol (/v1), $0.0148632/$0.0594527 per MTok input/output.
+# Cache read: $0.0014863 per MTok, same snapshot row.
+# Reasoning: no first-party provider entry exists for this id; controls come from the lab metadata models/alibaba/qwen3.8-flash-next.toml, whose header line reads "Thinking always on: reasoning_effort low|medium|xhigh" (that file's [capabilities] only marks reasoning = true, so the ladder is quoted from that line rather than from a capability list).
+# Effort: reasoning_effort = low|medium|xhigh (thinking is always on)
+schema = 2
+base_model = "alibaba/qwen3.8-flash-next"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 0.0148632
+cache = { read = 0.0014863 }
+
+[cost.text.output]
+price = 0.0594527

@@ -1,0 +1,17 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "gemini-2.5-flash-lite" in OpenAI protocol (/v1), $0.0074746/$0.0298984 per MTok input/output.
+# Cache read: $0.0007475 per MTok, same snapshot row.
+# Reasoning: toggle only, following same-surface peer providers/openrouter/models/google/gemini-2.5-flash-lite.toml; that peer exposes no reasoning-token budget on this surface, so none is claimed here.
+# Toggle: reasoning.enabled = true|false, the field that peer documents (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens); the native Gemini thinkingBudget is not claimed, because TokenDos publishes no /v1 parameter reference for this id.
+schema = 2
+base_model = "google/gemini-2.5-flash-lite"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.0074746
+cache = { read = 0.0007475 }
+
+[cost.text.output]
+price = 0.0298984

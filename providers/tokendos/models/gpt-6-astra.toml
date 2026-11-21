@@ -1,0 +1,16 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "gpt-6-astra" in OpenAI protocol (/v1), $0.0744393/$0.3721967 per MTok input/output.
+# Cache read: $0.0074439 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/openai/models/gpt-6-astra.toml, exactly as authored there; no separate on/off field on this surface.
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.0744393
+cache = { read = 0.0074439 }
+
+[cost.text.output]
+price = 0.3721967

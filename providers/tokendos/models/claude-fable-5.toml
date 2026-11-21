@@ -1,0 +1,16 @@
+# Prices: TokenDos public pricing monitor https://www.tokendos.com/tokendos-pricing (snapshot 2026-10-22).
+# Served id: raw_model "claude-fable-5" in OpenAI protocol (/v1), $0.1118905/$0.5594522 per MTok input/output.
+# Cache read: $0.0027973 per MTok, same snapshot row.
+# Reasoning: the effort ladder of providers/anthropic/models/claude-fable-5.toml, exactly as authored there; no separate on/off field on this surface.
+schema = 2
+base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.1118905
+cache = { read = 0.0027973 }
+
+[cost.text.output]
+price = 0.5594522
