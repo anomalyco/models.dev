@@ -1,8 +1,9 @@
 # Source: https://api.powerspring.eu/v1/models (accessed 2026-11-14): context_length 1048576,
 # max_output_tokens 1048576; images, tools, json_schema, reasoning.
-# Effort: reasoning_effort = low|high on Chat Completions. "none" is not listed: it empties
-# reasoning_content, but GLM 5.3 Flash then reasons in its visible answer instead (checked live
-# 2026-11-14), so thinking can't really be switched off.
+# Effort: reasoning_effort = low|high on Chat Completions. Thinking can't be switched off: since
+# 2026-11-15 "none" on Chat Completions and thinking = {"type": "disabled"} on Messages both
+# return 400 (checked live 2026-11-15). Before that they only emptied the reasoning field, and
+# GLM 5.3 Flash reasoned in its visible answer instead (checked live 2026-11-14, both APIs).
 # low|high follow the lab (providers/zhipuai/models/glm-5.3-flash.toml) and relay peers
 # (providers/cortecs/models/glm-5.3-flash.toml); "max" is left out because Powerspring rejects
 # it with 400.
