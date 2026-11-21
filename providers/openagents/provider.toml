@@ -1,0 +1,10 @@
+# OpenAgents demo model gateway. The catalog exposes only its Anthropic Messages
+# API: POST /v1/messages, authenticated with x-api-key or Authorization: Bearer.
+# Inventory and per-model prices: GET https://api-gateway.openagents.org/v1/models
+# (23 models, checked 2026-11-05). https://openagents.org
+name = "OpenAgents"
+env = ["OPENAGENTS_API_KEY"]
+npm = "@ai-sdk/anthropic"
+opencodeai = "@opencode/ai/providers/anthropic-compatible"
+api = "https://api-gateway.openagents.org/v1"
+doc = "https://openagents.org"

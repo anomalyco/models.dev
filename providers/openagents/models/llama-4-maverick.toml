@@ -1,0 +1,11 @@
+﻿# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
+# Reasoning: not offered by this model on this host; the base model's reasoning.supported = false carries over.
+schema = 2
+base_model = "meta/llama-4-maverick-17b-instruct"
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.74
+
