@@ -1,0 +1,13 @@
+# deepseek-chat-v3-0324 on TommyAPI serves deepseek/deepseek-v4.1-flash-1017 (live-probed 2026-11-06: image input verified).
+# The relay maps this legacy name onto the model above (official DeepSeek route since 2026-10-21).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.377
+
+[cost.text.output]
+price = 1.482

@@ -1,0 +1,12 @@
+# muse-spark-open on TommyAPI serves meta/muse-spark-open (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "meta/muse-spark-open"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.625
+
+[cost.text.output]
+price = 5.525

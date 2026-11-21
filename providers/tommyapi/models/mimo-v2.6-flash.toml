@@ -1,0 +1,12 @@
+# mimo-v2.6-flash on TommyAPI serves xiaomi/mimo-v2.6-flash (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.182
+
+[cost.text.output]
+price = 0.364

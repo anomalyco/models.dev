@@ -1,0 +1,12 @@
+# deepseek-v4-pro on TommyAPI serves deepseek/deepseek-v4-pro (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
+
+[cost.text.input]
+price = 10.44
+
+[cost.text.output]
+price = 31.32

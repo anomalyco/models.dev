@@ -1,0 +1,12 @@
+# kimi-k2.7-code-highspeed on TommyAPI serves moonshotai/kimi-k2.7-code-highspeed (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 26.0
+
+[cost.text.output]
+price = 108.0

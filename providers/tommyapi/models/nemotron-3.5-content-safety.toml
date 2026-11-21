@@ -1,0 +1,16 @@
+# nemotron-3.5-content-safety on TommyAPI serves nvidia/nemotron-3.5-content-safety (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "nvidia/nemotron-3.5-content-safety"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.26
+
+[cost.text.output]
+price = 0.26

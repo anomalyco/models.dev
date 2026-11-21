@@ -1,0 +1,12 @@
+# claude-sonnet-4-6 on TommyAPI serves anthropic/claude-sonnet-4-6 (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1024 } }
+
+[cost.text.input]
+price = 3.0
+
+[cost.text.output]
+price = 15.0

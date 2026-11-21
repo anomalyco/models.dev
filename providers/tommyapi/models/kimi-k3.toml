@@ -1,0 +1,12 @@
+# kimi-k3 on TommyAPI serves moonshotai/kimi-k3 (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 3.0
+
+[cost.text.output]
+price = 15.0
