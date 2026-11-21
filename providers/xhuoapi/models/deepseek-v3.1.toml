@@ -1,0 +1,13 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-23); Standard group, the default for new accounts.
+# Toggle: thinking.type = enabled|disabled (Tested on XHuoAPI Chat Completions 2026-10-23: enabled returns reasoning_content, disabled and the default do not)
+schema = 2
+base_model = "deepseek/deepseek-v3.1"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.4638
+
+[cost.text.output]
+price = 1.3915

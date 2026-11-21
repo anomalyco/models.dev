@@ -1,0 +1,25 @@
+# Pricing: https://xhuoapi.ai/en/pricing.html (accessed 2026-10-23); Standard group, the default for new accounts.
+# Toggle: enable_thinking true|false
+# Budget: thinking_budget
+# Long-context price: XHuoAPI bills prompts of <= 256000 tokens at the base price, so the override starts at gt = 256000.
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {  } }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 1.6
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 2.4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 4.8
