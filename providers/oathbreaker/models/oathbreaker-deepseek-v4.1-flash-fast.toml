@@ -1,4 +1,4 @@
-# Sources (checked 2026-11-16):
+# Sources (checked 2026-11-21):
 # - Public aliases, admission budget, output cap, tools, effort and request fields:
 #   https://oathbreaker.ai/docs
 # - USD per million tokens: https://oathbreaker.ai/pricing
@@ -20,9 +20,11 @@
 # "none" is not an accepted value, and no thinking toggle field is accepted.
 # max_tokens and max_completion_tokens are supported (default 8,192); output includes reasoning.
 # Cache reads are implicit and billed only when reported by upstream usage.
-# Chat Completions only; no image input, Responses, Messages or strict tool schemas.
-# This alias serves the same model, limits and prices as oathbreaker-deepseek-v4.1-flash
-# on a separate serving route.
+# No image input or strict tool schemas. Only Chat Completions is listed here; the gateway's
+# stateless /v1/responses and Anthropic-format /v1/messages routes translate into the same pipeline.
+# This alias serves the same model and limits as oathbreaker-deepseek-v4.1-flash on a
+# faster serving route that costs more to run, so it is priced higher ($0.50 / $1.50 vs
+# $0.40 / $1.20 per 1M input / output tokens; cached input $0.05 on both).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "Oathbreaker DeepSeek V4.1 Flash Abliterated Fast"

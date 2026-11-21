@@ -14,7 +14,8 @@
 # Effort: reasoning_effort = low|high|max (default low); no off toggle or reasoning budget.
 # max_tokens and max_completion_tokens are both supported; output includes reasoning.
 # Cache reads are implicit and billed only when reported by upstream usage.
-# Only Chat Completions is exposed; no Responses, Messages or strict JSON Schema.
+# No strict JSON Schema. Only Chat Completions is listed here; the gateway's stateless
+# /v1/responses and Anthropic-format /v1/messages routes translate into the same pipeline.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "Oathbreaker GLM-5.3 Abliterated"
