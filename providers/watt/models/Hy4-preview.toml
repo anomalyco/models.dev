@@ -3,7 +3,7 @@
 # relay peers author exactly this shape)
 # Pricing & limits: Watt catalog (2026-10-23), Hy4-preview row:
 # 0.83/2.5 USD per MTok, context 1_048_576, output 131_072
-# (lab base: 1_024_000/64_000)
+# (lab base: 1_048_576/65_536)
 schema = 2
 base_model = "tencent/hy4-preview"
 
@@ -12,7 +12,6 @@ reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
 [limit]
-context = 1_048_576
 output = 131_072
 
 [api.chat-completions]
