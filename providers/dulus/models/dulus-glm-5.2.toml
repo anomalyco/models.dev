@@ -1,0 +1,8 @@
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
+structured_output = true
