@@ -3,6 +3,8 @@
 # reasoning_effort: this endpoint accepts only the values below; the remaining
 # documented values are rejected with a 400. Verified against the production API.
 # See https://docs.greenpt.ai/chat-completion
+# Limits: the context window is 180000 tokens; a 185k-token prompt is refused with a 400
+# ("This model's maximum context length is 180000 tokens"). Checked on api.greenpt.ai 2026-11-19.
 schema = 2
 base_model = "mistral/mistral-medium-2604"
 
@@ -11,6 +13,7 @@ reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
 [limit]
+context = 180_000
 output = 16_384
 
 [cost.text.input]

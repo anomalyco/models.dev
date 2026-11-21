@@ -11,6 +11,7 @@ base_model = "zhipuai/glm-5.2"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 1.738325
