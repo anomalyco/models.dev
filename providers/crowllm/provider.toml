@@ -1,0 +1,44 @@
+# CrowLLM is a single-endpoint gateway: every model below is served on
+# POST /v1/chat/completions with one key.
+# The headline deal is the pass: $4.99 credits $25 of API usage, $9.99 credits $50,
+# $19.99 credits $110 - five times the same money (5.5x on the top pass), spent
+# through the same key as a plain top-up. The cost below is the rate WITHOUT a
+# pass, so a pass holder's effective rate is a fifth of what is listed here
+# (DeepSeek V4 Flash works out to $0.028/$0.11 per MTok on a pass).
+# That no-pass rate is the gateway's own live billing row, compared field by field against each
+# lab's first-party entry in this repo: of the 110 paid entries, 95 have a lab rate to compare to,
+# 66 of those sit at or under it on every field, and 29 are above on some field (44 fields in total).
+# The above ones are the gateway's live model_ratio/completion_ratio/cache_ratio, not an estimate: the
+# larger gaps are a handful of cached-input and output rates (deepseek-v4-flash 0.014 vs 0.003,
+# deepseek-v4-pro and its -thinking alias 0.055 vs 0.022, minimax-m3 and its -thinking alias 1.25 vs 1.2,
+# glm-5.3-flash and its -thinking alias 0.15 in vs 0.11952 / 0.45 out vs 0.41831) and the always-on Claude
+# -thinking aliases. A pass holder pays a fifth of every one of these, which puts each under first-party.
+# 15 paid entries have no lab host cost to compare against at all.
+# Five served ids are left out as unpriceable rather than mispriced: two carry a zero model_ratio behind a
+# non-zero cache row (deepseek-v4-flash-thinking, kimi-k2.6-thinking) and three share one placeholder ratio
+# of 37.5 across unrelated vendors (qwen3.7-plus, gpt-5.4, gpt-5.5), which would list a relay at many times
+# its own first-party price; each is published only once the gateway sets a real per-model rate.
+# cost is converted from the gateway's live billing ratios at
+# USD/MTok = 2 x model_ratio, output = input x completion_ratio, cached input = input x cache_ratio
+# (service/text_quota.go: cached prompt tokens bill at cache_ratio of a fresh input token, so the
+# cache rate is always below the fresh rate on the same entry).
+# Ids ending in `:free` are the zero-rated shelf: no card and no trial timer. 13 served ids
+# carry that suffix but bill real credit (`qwen-3.8-max:free` 1,
+# `glm-5:free` 0.5, `gemini-3.8-flash:free` 0.375,
+# `nemotron-3-ultra-550b-a55b:free` 0.25, `deepseek-v4.1-flash:free` 0.225,
+# `nemotron-3-5-super-vl:free` 0.15, `glm-5.3-flash-thinking:free` 0.15,
+# `glm-5.3-flash:free` 0.15, `beam-1-0:free` 0.125, `minimax-m2.5:free` 0.125,
+# `minimax-m2.7:free` 0.12, `mimo-v2.6-flash:free` 0.075, `deepseek-v4-flash:free` 0.025)
+# and are left out of this catalog, since `:free` means zero-rated here.
+# Catalog: https://crowllm.com/v1/models (public, no key) | Rates: https://crowllm.com/api/pricing
+# Passes: https://crowllm.com/pricing | Docs: https://crowllm.com/docs
+# Each model's # Toggle/# Effort/# Budget comment names the field as the gateway handles it:
+# the request body is parsed in relaykit/dto/openai_request.go and forwarded per upstream by
+# relaykit/relayconvert (OpenAI -> Gemini/Claude/DeepSeek) and relay/channel/<lab>/adaptor.go.
+# Source: https://github.com/QuantumNous/new-api (CrowLLM runs this gateway).
+name = "CrowLLM"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["CROWLLM_API_KEY"]
+api = "https://crowllm.com/v1"
+doc = "https://crowllm.com/docs"

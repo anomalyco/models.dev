@@ -1,0 +1,21 @@
+# CrowLLM relays this model on POST /v1/chat/completions (OpenAI-compatible).
+# cost is the gateway's live billing rate: USD/MTok = 2 x model_ratio, output = input x completion_ratio,
+# cached input = input x cache_ratio (service/text_quota.go bills a cached prompt token at cache_ratio of a fresh one).
+# Source: https://crowllm.com/api/pricing (accessed 2026-10-23).
+# Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-10-23): "claude-opus-4-6".
+# Effort: reasoning_effort = low|medium|high|max; the gateway maps low/medium/high to Claude thinking budgets of 1280/2048/4096 tokens
+# Budget: reasoning = { max_tokens = N } (top-level OpenRouter-style field; dto/openai_request.go:88, the relay converts it to the upstream's thinking budget)
+# The reasoning controls mirror providers/anthropic for the same model on this surface.
+# Live gateway row: model_ratio=1.5, completion_ratio=5, cache_ratio=0.1, enable_groups=['pro'].
+schema = 2
+base_model = "anthropic/claude-opus-4-6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1024 } }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15
