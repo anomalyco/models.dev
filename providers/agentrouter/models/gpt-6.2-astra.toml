@@ -1,0 +1,14 @@
+# AgentRouter retired gpt-6-astra on 2026-11-16 (server announcement); gpt-6.2-astra replaces it.
+# Not yet listed by https://agentrouter.org/api/pricing (checked 2026-11-21), so sync reports it as absent upstream.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (none is rejected by the model), as on openai/gpt-6.2-astra.
+# Cost omitted: AgentRouter publishes relative token ratios, not USD prices.
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.responses]
+base_url = "https://agentrouter.org/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
