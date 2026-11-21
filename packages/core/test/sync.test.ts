@@ -6571,6 +6571,17 @@ test("Vercel sync preserves Liquid d1 as a decision model via its lab metadata",
   expect(translated?.model).not.toHaveProperty("description"); // don't reintroduce a generic chat description
 });
 
+test("Vercel family inference doesn't read a version number as a family", () => {
+  const [ampersand, v0] = vercel.parseModels({
+    data: [
+      { id: "humansand/ampersand-v0.1", name: "Ampersand v0.1", created: 1_790_000_000, context_window: 128_000, max_tokens: 16_000, type: "language" },
+      { id: "vercel/v0-1.5-md", name: "v0 1.5 MD", created: 1_750_000_000, context_window: 128_000, max_tokens: 32_000, type: "language" },
+    ],
+  });
+  expect(buildVercelModel(ampersand!, undefined).family).not.toBe("v0");
+  expect(buildVercelModel(v0!, undefined).family).toBe("v0");
+});
+
 test("Vercel family inference requires word boundaries", () => {
   const [jev, rerank, o3] = vercel.parseModels({
     data: [

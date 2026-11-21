@@ -258,7 +258,7 @@ function inferFamily(id: string, name: string) {
                     `(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`,
                 ).test(target);
             }
-            return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(
+            return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(
                 target,
             );
         });
