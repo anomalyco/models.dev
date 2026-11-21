@@ -1,0 +1,25 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# taken from the existing curated entry providers/nano-gpt/models/z-ai/glm-5.3-flash-apex-abliterated.toml; provider fields stripped.
+# Source: https://huggingface.co/cantina-security/apex-flash-1-abliterated
+schema = 2
+name = "Apex Flash 1 Abliterated"
+description = "Apex Flash 1 Abliterated is an experimental derivative of Cantina Security and Yeta's Apex Flash 1 with modified refusal behavior."
+family = "glm"
+open_weights = true
+release_date = "2026-10-05"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 32_768

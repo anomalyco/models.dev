@@ -1,0 +1,26 @@
+# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# taken from the existing curated entry providers/nano-gpt/models/deepseek/deepseek-v4.1-flash-1017-uncensored.toml; provider fields stripped.
+# Source: dealignai's release, as named by NanoGPT's entry
+# Sampling flags as on models/dealignai/deepseek-v4.1-flash-0910-uncensored.toml (same maker and base model).
+schema = 2
+name = "DeepSeek V4.1 Flash 1017 Uncensored"
+description = "dealignai's uncensored release based on DeepSeek V4.1 Flash 1017, published October 18. This dated model stays separate from the September release, with optional reasoning and tool calling."
+family = "deepseek"
+open_weights = true
+release_date = "2026-10-27"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 393_216

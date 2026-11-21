@@ -1,0 +1,20 @@
+# Served by Open Uncensored through venice, nanogpt. Price as
+# listed on https://openuncensored.com/models/venice-uncensored
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/venice/models/venice-uncensored-1-2.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+base_model = "venice/venice-uncensored-1.2"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.9

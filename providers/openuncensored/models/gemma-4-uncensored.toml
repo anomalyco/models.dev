@@ -1,0 +1,33 @@
+# Served by Open Uncensored through venice. Price as
+# listed on https://openuncensored.com/models/gemma-4-uncensored
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/venice/models/gemma-4-uncensored.toml
+# Input is text only: the router replaces image parts with a note for text models.
+# Standalone (no base_model): the hosts serving this model do not say whose weights it is, and
+# several unrelated Hugging Face repos share the name, so there is no lab identity to point to.
+schema = 2
+name = "Gemma 4 Uncensored"
+description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
+family = "gemma"
+open_weights = true
+release_date = "2026-04-13"
+last_updated = "2026-06-11"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+context = 256_000
+output = 8_192
+
+[cost.text.input]
+price = 0.1625
+
+[cost.text.output]
+price = 0.5

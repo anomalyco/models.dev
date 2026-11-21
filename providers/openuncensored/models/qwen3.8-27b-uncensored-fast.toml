@@ -1,0 +1,21 @@
+# Served by Open Uncensored through nanogpt. Price as
+# listed on https://openuncensored.com/models/qwen3.8-27b-uncensored-fast
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/heabsy/qwen3.8-27b-uncensored-fast.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+base_model = "heabsy/qwen3.8-27b-uncensored-fast"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3

@@ -1,0 +1,18 @@
+# Served by Open Uncensored through abliteration-ai, venice, nanogpt. Price as
+# listed on https://openuncensored.com/models/abliterated-large-v2
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/abliteration-ai/models/abliterated-model-large-v2.toml
+# Input is text only: the router replaces image parts with a note for text models.
+# Reasoning cannot be disabled (as on abliteration.ai); graded levels low/high/max.
+schema = 2
+base_model = "abliteration-ai/abliterated-model-large-v2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 5
