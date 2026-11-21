@@ -1,0 +1,67 @@
+# TokenSail entry for zhipuai/glm-5.3-flash.
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16 and 2026-11-17):
+#   toggle - `thinking = { "type": "disabled" }` turns reasoning off
+#            (reasoning_tokens 97 -> 0, no reasoning_content; re-probed 2026-11-17:
+#            reasoning_effort="none" and thinking.type=disabled both return
+#            reasoning_tokens 0). The vendor's own API only accepts `type = "enabled"`;
+#            TokenSail implements the off path.
+#            `enable_thinking = false` is accepted but ignored (still 42 tokens).
+#   effort - not declared, because the ladder is flat rather than graded. Probed 2026-11-17,
+#            three runs per level: low returned reasoning_tokens [21, 23, 52] and max
+#            [21, 21, 35] - overlapping and non-monotonic - and the gateway rewrites
+#            `reasoning_effort` into `thinking: {type: enabled}` on this vendor family with
+#            no strength field, so a low|high|max list would promise depth the route cannot
+#            deliver.
+#   budget - `thinking_budget_tokens` 1..131072 passes the gateway bound check and 262145 is
+#            rejected with HTTP 400 ("the maximum for this model is 131072"), but nothing
+#            reaches the vendor as a budget on this family, so it is not declared.
+#   top_k - accepted and ignored. The gateway forwards the raw JSON body, but Zhipu
+#           documents no top_k support (providers/zhipuai sets top_k = false: temperature
+#           and top_p only) and a live probe with top_k = 5 returns HTTP 200 with no
+#           parameter error, so the value never reaches sampling. Declared false.
+# Cache - implicit only. Zhipu's prompt cache is automatic with no write price; hits are
+#         billed at the cache-read price below.
+# Output cap - both fields are honored and behave the same (probe: either one set to 2
+#           -> total 2), so no `max_tokens_field` override is declared.
+# Limit - no override, canonical 1,000,000 / 131,072 inherited. TokenSail publishes
+#         contextWindow 1,048,576 (GET https://api.tokensail.ai/api/public/models), but a
+#         relay cannot enlarge a model's window, no first-party entry corroborates 2^20 for
+#         GLM-5.3 Flash (models/zhipuai/glm-5.3-flash declares 1,000,000), and the
+#         corroboration the DeepSeek routes rely on (their own GET /models) has no GLM
+#         counterpart. Advertising the larger figure would promise prompts the vendor window
+#         cannot hold.
+# structured_output - omitted on purpose: `response_format.type = "json_schema"` returns
+#         HTTP 400 ("`json_schema` is not supported by this mode") on TokenSail, while
+#         `json_object` is accepted. Declaring it true would mislead JSON-schema clients.
+# Modalities - inherited unchanged. TokenSail publishes text/image/video for this route and
+#         never a document bucket, but the published vocabulary across all 28 models it lists
+#         is exactly text/image/audio/video - no model anywhere publishes a pdf or document
+#         token - so the absent `application/pdf` cannot be read as "rejected". A 64x64 PNG
+#         through /v1/chat/completions on 2026-11-17 returned HTTP 200, so the image half is
+#         exercised on this route rather than assumed.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports (officialShape: 0.15 / 0.03 / 0.5), the published
+# 0.09571954 / 0.02751937 / 0.33501840 are 63.8% / 91.7% / 67.0% of list. The earlier "80%"
+# was a rounded guess and is withdrawn; the cache read sits on a different step from the
+# token prices.
+# Sources: https://docs.z.ai/guides/overview/pricing (vendor list)
+#          https://tokensail.ai/pricing-compare (published USD)
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.09571954
+cache = { read = 0.02751937 }
+
+[cost.text.output]
+price = 0.33501840

@@ -1,0 +1,65 @@
+# TokenSail entry for alibaba/qwen4-max.
+# Snapshot - the undated canonical is the right target: Alibaba released Qwen4-Max on
+#           2026-11-16 and TokenSail started serving it the same day
+#           (GET https://api.tokensail.ai/api/public/models -> catalog.publishedAt), with no
+#           dated variant published yet.
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16 and 2026-11-17):
+#   toggle - `thinking = { "type": "disabled" }`, `enable_thinking = false` and
+#            `reasoning_effort = "none"` all stop reasoning (no reasoning_content, no
+#            reasoning_tokens).
+#   effort - accepted, but no effort set is declared. Probed 2026-11-17 with three runs per
+#            level on one prompt: reasoning_tokens low [4, 15, 4], medium [16, 15, 4],
+#            xhigh [4, 15, 15] - overlapping and non-monotonic. DashScope-compatible routes
+#            rewrite `reasoning_effort` into the boolean `enable_thinking` and never forward
+#            a strength, so advertising a ladder would promise depth the route cannot
+#            deliver.
+#   budget - `thinking_budget_tokens` is the depth control and is enforced as a cap, not a
+#            target: probe 2026-11-17 gives 16 -> 16, 256 -> 256 and 2048 -> 1103 (the model
+#            finished before the ceiling), while on a prompt that needs no long reasoning the
+#            same 16 returns 3. 0 returns HTTP 400 validation_error, 262145 returns HTTP 400
+#            capability_unsupported ("the maximum for this model is 262144"), and combining
+#            it with `reasoning_effort` is rejected with HTTP 400.
+# structured_output - omitted on purpose: `response_format.type = "json_schema"` returns
+#            HTTP 400 ("does not support response_format.type='json_schema'; the highest
+#            supported level is 'json_object'"), while `json_object` is accepted. Note this
+#            is a model-level difference from qwen3.8-max-0902 on the same host, which does
+#            accept strict json_schema.
+# Cache - implicit and explicit, both priced below. A repeated 5k-token prompt hits the
+#         cache (prompt_tokens_details.cached_tokens 5120 on the second call) and
+#         `cache_control` is forwarded unchanged and accepted. Creation has no separate
+#         usage counter on this path, so cache-write traffic is not observable per request.
+# Limit - no override. TokenSail publishes contextWindow = 1,000,000, the same as the
+#         canonical value, and max_tokens up to the canonical 262,144 is accepted, so both
+#         limits are inherited. The published maxOutputTokens (131,072) is lower than that
+#         ceiling, so it is not used to narrow the canonical value.
+# top_k - inherited. DeepSeek and Zhipu route need it disabled; DashScope implements it,
+#         and a probe with top_k = 5 returns HTTP 200.
+# Modalities - inherited unchanged. TokenSail publishes text/image/video for this route and
+#         never a document bucket, but the published vocabulary across all 28 models it lists
+#         is exactly text/image/audio/video - no model anywhere publishes a pdf or document
+#         token - so the absent `application/pdf` cannot be read as "rejected". A 64x64 PNG
+#         through /v1/chat/completions on 2026-11-17 returned HTTP 200.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports (1.5 / 0.075 / 4.5), the published
+# 1.19649427 / 0.05982471 / 3.58948282 are 79.8% on all three fields, replacing the
+# unmeasured "80%" this header carried before.
+# Sources: https://www.alibabacloud.com/help/en/model-studio/model-pricing (vendor list)
+#          https://tokensail.ai/pricing-compare (published USD)
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { min = 1, max = 262_144 } }
+cache = { implicit = true, explicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.19649427
+cache = { read = 0.05982471, write = 1.49561784 }
+
+[cost.text.output]
+price = 3.58948282

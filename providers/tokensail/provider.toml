@@ -1,0 +1,22 @@
+# TokenSail - OpenAI-compatible gateway. Per-model reasoning controls, cache support
+# and price sources are documented in a leading comment block in each file under models/.
+#
+# Reasoning controls, live-verified on api.tokensail.ai 2026-11-16:
+#   `thinking = { "type": "disabled" }` is the off switch on every route that has one;
+#   `glm-5.3` is the exception and requires thinking on (HTTP 400 for every off form).
+#   On the DashScope-compatible routes (qwen4-max, qwen3.8-max-0902) `enable_thinking = false`
+#   and `reasoning_effort = "none"` also stop reasoning; on the DeepSeek, GLM-flash and
+#   Moonshot routes `enable_thinking = false` is accepted and ignored, so a client should send
+#   the toggle form.
+# Reasoning streams back in `reasoning_content`.
+# Sync - hand-authored on purpose. GET /api/public/models is authoritative for price and for
+#   the served-model set, but it carries no per-model reasoning/capability detail, and these
+#   files record live probes the endpoint does not expose, so each one is curated by hand with
+#   its sources cited. A sync module for the price/lifecycle fields is a follow-up on shared
+#   packages/core code and is not part of this provider entry.
+name = "TokenSail"
+env = ["TOKENSAIL_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.tokensail.ai/v1"
+doc = "https://tokensail.ai/docs/"

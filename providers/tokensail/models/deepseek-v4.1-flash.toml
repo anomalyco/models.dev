@@ -1,0 +1,72 @@
+# TokenSail entry for deepseek/deepseek-v4.1-flash.
+# Snapshot - the undated canonical is used on purpose. TokenSail publishes version = null for
+#           this route (GET /api/public/models), so there is no evidence it serves the 1017
+#           snapshot; if that is confirmed later this should point at
+#           deepseek/deepseek-v4.1-flash-1017. There is also no first-party
+#           providers/deepseek entry for this model to copy from.
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+#   toggle - `thinking = { "type": "disabled" }` turns reasoning off
+#            (reasoning_tokens 11 -> 0, no reasoning_content).
+#            `enable_thinking = false` is accepted but ignored (still 25 tokens).
+#   effort - `reasoning_effort` low | high | max (default high), inherited from the
+#            DeepSeek V4 Pro family, which has a lab entry for this control; there is no
+#            separate lab entry for this model. The full OpenAI set is accepted and
+#            collapsed upstream: minimal -> low, medium/xhigh -> high, `none` disables.
+#   top_k - accepted and ignored. The gateway forwards the raw JSON body, but DeepSeek
+#           documents no top_k support (providers/deepseek sets top_k = false) and a live
+#           probe with top_k = 5 returns HTTP 200 with no parameter error, so the value
+#           never reaches sampling. Declared false so clients do not send it.
+# Output cap - both fields reach the upstream and they do not mean the same thing here.
+#           `max_completion_tokens` caps reasoning and answer together (probe: 2 -> total 2);
+#           `max_tokens` caps only the visible answer (probe: 2 -> 41 total, 38 of them
+#           reasoning). No `max_tokens_field` override is declared, so the OpenAI-current
+#           field stays the documented one.
+# Cache - implicit only, same automatic disk cache as the rest of the DeepSeek family:
+#         no write price, no TTL, hits billed at the cache-read price below.
+# Limit - context 1,048,576 and output 393,216 are overrides because that is the pair the
+#         lab reports for the family and TokenSail publishes both
+#         (GET https://api.tokensail.ai/api/public/models -> contextWindow and
+#         maxOutputTokens; the same figures appear in DeepSeek's own GET /models, which is
+#         what providers/deepseek documents for the GA sibling). The canonical file rounds
+#         them to 1,000,000 / 384,000, so the override carries the precise numbers and
+#         contradicts nothing the vendor publishes.
+# structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
+#         (strict): HTTP 200 and a schema-valid `{"capital": "Paris"}`. Relay peers built on
+#         the same base model record 400s on their paths, so the probe is what decides it
+#         here rather than the peer files.
+# Modalities - inherited from the lab (text + jpeg/png/gif/webp) even though TokenSail
+#         publishes architecture.inputModalities = ["text"] for this route
+#         (GET https://api.tokensail.ai/api/public/models/deepseek-v4.1-flash). The published
+#         payload contradicts itself - modelType is "vision" - so the modality list is not
+#         affirmative evidence that images are rejected, and a 64x64 PNG sent through
+#         /v1/chat/completions on 2026-11-17 returned HTTP 200 with the right colour.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports for this route (officialShape: 0.30 / 0.006 /
+# 1.20), the published 0.08973707 / 0.00179474 / 0.35894828 are 29.9% / 29.9% / 29.9% of
+# list. The earlier "60%" did not reconcile with either source and is withdrawn.
+# Sources: https://api-docs.deepseek.com/quick_start/pricing (vendor list)
+#          https://tokensail.ai/pricing-compare (published USD)
+schema = 2
+v2_only = true
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[cost.text.input]
+price = 0.08973707
+cache = { read = 0.00179474 }
+
+[cost.text.output]
+price = 0.35894828

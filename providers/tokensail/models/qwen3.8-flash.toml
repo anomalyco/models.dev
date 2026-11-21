@@ -1,0 +1,59 @@
+# TokenSail entry for alibaba/qwen3.8-flash.
+# Reasoning controls - live-verified on api.tokensail.ai, 2026-10-24, 2026-11-16 and
+# 2026-11-17:
+#   toggle - declared. `thinking = { "type": "disabled" }`, `enable_thinking = false` and
+#            `reasoning_effort = "none"` all stop reasoning; the adapter translates the
+#            unified `reasoning_effort` to `enable_thinking` (false only for "none").
+#   effort - not declared. Probed 2026-11-17 with three runs per level on one prompt:
+#            reasoning_tokens low [37, 43, 41], medium [36, 43, 43], xhigh [45, 43, 43] -
+#            overlapping, with no depth ordering. The adapter has no graded effort field and
+#            rewrites the unified key to the boolean `enable_thinking`, so a list would
+#            promise a strength the host cannot deliver.
+#   budget - `thinking_budget_tokens` 1..262144, translated to `thinking_budget` together
+#            with `enable_thinking = true`. Measured on this model on 2026-10-24: budget=16
+#            returns reasoning_tokens == 16; re-measured 2026-11-17: 16 -> 16 and
+#            256 -> 256 exactly, while a budget above what the model needs is only a ceiling
+#            (512 -> 27). 0 or a non-integer is rejected upstream and 262145 returns HTTP
+#            400 capability_unsupported ("the maximum for this model is 262144"). The cap is
+#            this model's own thinking_budget_max (262,144), not a vendor default.
+# Cache - implicit and explicit, both priced below. Implicit hits are billed at cache.read
+#         (1/8 of input); cache-write traffic is billed at cache.write.
+# Limit - no override. TokenSail publishes contextWindow = 1,000,000 for this route
+#         (GET https://api.tokensail.ai/api/public/models), the same as the canonical value,
+#         so context and output are both inherited.
+# structured_output - omitted on purpose: the declared support for this route is
+#         `response_format(json_object)` and `json_schema` has not been verified here. The
+#         sibling qwen3.8-max-0902 route does pass a strict json_schema probe, so this is a
+#         per-route difference and not a family default.
+# Batch - TokenSail publishes batch input/output prices for this model, but the v2 cost
+#         schema has no batch slot, so only the standard prices are recorded here.
+# Modalities - inherited unchanged and consistent with what the host publishes: TokenSail
+#         reports text/image/video for this route, which matches the canonical list once the
+#         MIME types are folded into those three buckets (this is the one route of the three
+#         Alibaba ones whose canonical list carries no `application/pdf`). A 64x64 PNG
+#         through /v1/chat/completions on 2026-11-17 returned HTTP 200.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports (0.15 / - / 0.47; it publishes no official cache
+# read for this route), the published 0.10768449 / 0.01346056 / 0.36343514 are 71.8% and
+# 77.3% of list - the two fields are on different steps, so no single percentage is claimed.
+# Sources: https://docs.modelstudio.console.alibabacloud.com/zh/model-studio/model-pricing
+#          (vendor list)
+#          https://api.tokensail.ai/api/public/models (published USD)
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { min = 1, max = 262_144 } }
+cache = { implicit = true, explicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.10768449
+cache = { read = 0.01346056, write = 0.16825701 }
+
+[cost.text.output]
+price = 0.36343514

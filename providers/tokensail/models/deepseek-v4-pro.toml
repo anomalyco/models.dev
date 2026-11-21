@@ -1,0 +1,69 @@
+# TokenSail entry for deepseek/deepseek-v4-pro.
+# Snapshot - points at the 0813 GA, matching providers/deepseek
+#           (deepseek/deepseek-v4-pro -> deepseek/deepseek-v4-pro-0813). The low|high|max
+#           effort set and the minimal->low / medium/xhigh->high collapse verified below
+#           were introduced by that 2026-08-13 release, so the route behaves like the GA
+#           rather than the 2026-04-24 preview the undated canonical describes. The GA
+#           canonical is named "DeepSeek V4 Pro 0813", so `name` is overridden below to keep
+#           the undated name this route advertises (same override as providers/deepseek and
+#           providers/ruapi over the same base).
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16):
+#   toggle - `thinking = { "type": "disabled" }` turns reasoning off
+#            (reasoning_tokens 30 -> 0, no reasoning_content).
+#            `enable_thinking = false` is accepted but ignored (still 10 tokens).
+#   effort - `reasoning_effort` low | high | max (default high). The full OpenAI set is
+#            accepted and collapsed upstream: minimal -> low, medium/xhigh -> high,
+#            `none` also disables thinking.
+#   top_k - accepted and ignored. The gateway forwards the raw JSON body, but DeepSeek
+#           documents no top_k support (providers/deepseek sets top_k = false) and a live
+#           probe with top_k = 5 returns HTTP 200 with no parameter error, so the value
+#           never reaches sampling. Declared false so clients do not send it.
+# Output cap - both fields reach the upstream and they do not mean the same thing here.
+#           `max_completion_tokens` caps reasoning and answer together (probe: 2 -> total 2);
+#           `max_tokens` caps only the visible answer (probe: 2 -> 41 total, 38 of them
+#           reasoning). No `max_tokens_field` override is declared, so the OpenAI-current
+#           field stays the documented one.
+# Cache - implicit only. DeepSeek's context cache is automatic: no write price, no TTL,
+#         hits billed at the cache-read price below (exactly 1/30 of input).
+# Limit - context 1,048,576 and output 393,216 are overrides because DeepSeek's own
+#         GET /models reports exactly those numbers (context_window 1048576,
+#         max_output_tokens 393216; see providers/deepseek/models/deepseek-v4-pro.toml), and
+#         TokenSail publishes the same pair (GET https://api.tokensail.ai/api/public/models ->
+#         contextWindow). The canonical file rounds context to 1,000,000, so the override
+#         carries the lab figures and contradicts nothing the vendor publishes.
+# structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
+#         (strict): HTTP 200 and a schema-valid `{"capital": "Paris"}`. Relay peers built on
+#         the same base model record 400s on their paths, so the probe is what decides it
+#         here rather than the peer files.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports for this route (officialShape: 1.32 / 0.044 /
+# 3.96), the published 1.07684485 / 0.03589483 / 3.23053454 are 81.6% / 81.6% / 81.6% of
+# list. The earlier "80%" was a rounded guess; the per-field figures are what the sources
+# support.
+# Sources: https://api-docs.deepseek.com/quick_start/pricing (vendor list)
+#          https://tokensail.ai/pricing-compare (published USD)
+schema = 2
+v2_only = true
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[cost.text.input]
+price = 1.07684485
+cache = { read = 0.03589483 }
+
+[cost.text.output]
+price = 3.23053454
