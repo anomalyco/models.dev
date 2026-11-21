@@ -4,7 +4,7 @@ base_model = "zhipuai/glm-5.2"
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high", "max"] }
-structured_output = true
+structured_output = false
 
 [limit]
 context = 1_048_576

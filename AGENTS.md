@@ -63,6 +63,7 @@ output = 128_000
 
 Required: `name`, `description`, `open_weights`, `release_date`, `[modalities]`, `[capabilities]` (`tools`, `reasoning = { supported = … }`, and explicit `temperature`, `top_p`, `top_k`), and `[limit]`. Recommended: `family`, `knowledge`, `type` (defaults to `"chat"`; set it on `image`, `video`, `embedding`, `reranking`, `decision`, `transcription`, `speech`, `realtime`, and `audio` (music and sound effect generation, not speech) models), `license`, `links`, `weights`, `benchmarks`.
 
+- `family` is one product line from one lab, of one model type. It carries the line name and the size tier (`gemini-flash`, `gemini-flash-lite`, `minimax-m`, `minimax-h-lite`), never the version, so a new version joins the existing family. Faster serving of the same model (highspeed, fast) and dated snapshots stay in the base family. A different type (video, image, speech, embedding, …) is a different family: `minimax-h` for MiniMax's video line, `minimax-image`, `minimax-speech`. Use the line's own name when it's distinct (`hailuo`, `seedance`, `nano-banana`), else `<parent>-<line>`, parent first even when the lab's product name isn't (`gemma-embedding`, not `embeddinggemma`). When no value fits, add one to `packages/core/src/family.ts` (then `bun run generate` in `packages/sdk`) instead of reusing the nearest one. OpenCode's model picker shows only the newest model per family and provider by default.
 - There is no `attachment` field. It is derived from whether `modalities.input` has anything besides text.
 - Use MIME types where the lab documents them (`image/png`, `application/pdf`) instead of generic `image` / `pdf`.
 - Reasoning controls, `structured_output`, cache, and service tiers never go in lab files; they are per host.
@@ -101,10 +102,10 @@ body = { speed = "fast" }
   - `system_updates`: the API accepts a system/developer message after the conversation starts and keeps it in place (the cache before it survives; moved to the top or rejected = false).
   - `effort_updates`: a message in the history changes effort for the next turn and keeps the cache: OpenAI Responses `configuration_update`, Anthropic per-message `output_config`. Changing `reasoning_effort`, a thinking toggle or a budget on the next request doesn't count.
   - `tools.updates`: the tool changes a message in the history can make while keeping the cache and the leading tool list, as a list of `"add"` (declare a tool not declared before), `"remove"` (withdraw a declared tool) and `"replace"` (declare a tool under a name declared before: a redefinition, or re-adding a removed tool). Anthropic's `tool_addition`/`tool_removal` take all three. OpenAI Responses `additional_tools` takes all three on GPT-5.6 and GPT-6 (removals are announced in a developer message); on GPT-5.5 and earlier, calls to added tools come back namespaced and replays without the namespace fail, so leave it out. Kimi K3's tool-carrying system message is `["add"]`. List only what the host does by value (Anthropic `tool_reference`-only additions are tool search, not `add`), and note anything partial ("add only") in the file comment. Changing the top-level `tools` list doesn't count. Tool search is `tools.search`. Clients fold every change the list leaves out into the top-level tool list.
-- These three default to false (`tools.updates` to none). Be conservative: set one only when the host has an explicit, documented way to do it (or passes requests through to a lab that documents it) and you're sure it works there; confirm live when you can. A server that happens to keep the cache isn't enough. Otherwise leave it out (don't write `= false` or `updates = []`; `bun validate` rejects them). The v2 API always publishes them: `system_updates` and `effort_updates` as `true` or `false`, `tools.updates` as a list, with a left-out value published as `false` or `[]`.
+- These three default to false (`tools.updates` to none). Set one when a credible source says the host supports it (see **Evidence**): the host's docs or client code, the lab's docs when the host passes requests through to the lab's API, or the same host's previous model in the family on the same API. A live test is welcome, never required. A server that happens to keep the cache isn't enough. Otherwise leave it out (don't write `= false` or `updates = []`; `bun validate` rejects them). The v2 API always publishes them: `system_updates` and `effort_updates` as `true` or `false`, `tools.updates` as a list, with a left-out value published as `false` or `[]`.
 - Put a flag at the top level only when it holds on every API the model lists. When it holds on some of them only, leave the top level out and set it on those APIs instead, e.g. `[api.messages]` with `capabilities = { effort_updates = true }` (`system_updates`, `effort_updates` and `tools = { updates = ["add", "remove", "replace"] }` are allowed there).
 - Tool details (`strict`, `choice`, `search`, `freeform`, `updates`) depend on the API: OpenAI's tool search only works on Responses, Anthropic's OpenAI-compatible Chat Completions ignores `strict`, Moonshot's Responses only takes `tool_choice: "auto"`. Top-level `[capabilities] tools` values hold on every API the model lists; an API's `capabilities = { tools = { … } }` replaces any of them for that API. A value that differs by API is set only on the APIs that have it, never cancelled with `false`. The v2 API publishes the resolved values on each API (`api.<protocol>.capabilities.tools`, `updates` always stated) and keeps only `supported` on the model. `freeform` lists the formats an API accepts for custom tools, whose input is plain text instead of JSON: `"text"` (unconstrained), `"lark"` and `"regex"` (grammar-constrained). Leave it out when the API has no custom tools.
-- When you add or update an OpenAI GPT-5+ model on any host, check which `freeform` formats each of its APIs accepts. Use the host's docs or a live probe with a restrictive grammar (e.g. regex `ZZ[0-9]{3}`) whose output proves the grammar is enforced, not just accepted. Set the formats that work on the APIs where they work, leave `freeform` out where custom tools are rejected, and note the evidence in the file's header comment.
+- When you add or update an OpenAI GPT-5+ model on any host, check which `freeform` formats each of its APIs accepts. Use the host's docs, the same host's previous GPT model on the same API, or a live probe with a restrictive grammar (e.g. regex `ZZ[0-9]{3}`) whose output proves the grammar is enforced, not just accepted. Set the formats that work on the APIs where they work, leave `freeform` out where custom tools are rejected, and note the evidence in the file's header comment.
 
 ```toml
 [capabilities]
@@ -180,6 +181,17 @@ base_model_omit = ["limit.input"]  # drop inherited keys after merge
 - Omitted fields → inherited from `models/`
 - `base_model` / `base_model_omit` are parse-time only; they do not appear in generated JSON
 - Missing `base_model` target → validation error
+
+## Evidence
+
+Every value needs a credible source, not a live test. Use the best one you have:
+
+1. The host's own docs, catalog API or client code. GitHub's docs and VS Code's Copilot extension count for Copilot, for example.
+2. The lab's docs, when the host relays the lab's API.
+3. The same host's previous model in the family, on the same API. A new model keeps the flags, tool details and controls its predecessor has there unless something says otherwise.
+4. Other hosts relaying the same model.
+
+Test live when you have a key and it's cheap, but never leave a value out only because you couldn't test it. Leave it out when nothing supports it or a source contradicts it. Note non-obvious sources in the file's header comment.
 
 ## Restricted models
 

@@ -14,6 +14,23 @@ test.each([
   expect(resolveRequestyBaseModel(id)).toBe(expected);
 });
 
+test("keeps a standalone file's family instead of guessing one from the id", () => {
+  const model = buildRequestyModel(RequestyModel.parse({
+    id: "example/qwen3.8-max-custom",
+    created: Date.parse("2026-09-01") / 1_000,
+    description: "Requesty description",
+    context_window: 128_000,
+    max_output_tokens: 16_000,
+    supports_vision: false,
+    supports_reasoning: false,
+    supports_tool_calling: true,
+    supports_output_json_schema: false,
+    input_price: 0.000001,
+    output_price: 0.000002,
+  }), { family: "qwen" });
+  expect(model).toMatchObject({ family: "qwen" });
+});
+
 test("does not invent a base model for unknown Claude releases", () => {
   expect(resolveRequestyBaseModel("claude-fable-999.1@eu")).toBeUndefined();
 });

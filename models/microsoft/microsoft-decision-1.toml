@@ -1,0 +1,35 @@
+# Sources (accessed 2026-11-18):
+# - https://commandline.microsoft.com/microsoft-decision-1-model-foundry/ (launch 2026-10-09): Qwen3.5-9B post-trained
+#   for single-pass decision scoring; calibrated probabilities for yes/no, multiple-choice and rating questions; input
+#   $0.042 per 1M tokens, output free. Weights are not published.
+# - https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision: the
+#   decision API answers typed questions about a state with numbers; nothing is generated. No sampling parameters.
+# Context: Microsoft documents none; 32,768 is OpenRouter's /api/v1/models context_length and Vercel's model description.
+schema = 2
+v2_only = true
+type = "decision"
+name = "Microsoft-Decision-1"
+family = "microsoft-decision"
+description = "Microsoft decision model that returns calibrated probabilities for typed yes/no, choice and score questions about text and JSON"
+open_weights = false
+release_date = "2026-10-09"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0
+
+[[links]]
+label = "Announcement"
+url = "https://commandline.microsoft.com/microsoft-decision-1-model-foundry/"
+type = "announcement"
