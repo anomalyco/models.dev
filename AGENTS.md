@@ -258,6 +258,7 @@ description = "One or two sentences on what the lab builds."
 - v1's single output price always uses `cost.text.output`; image output prices are v2-only. Models without a per-token text input/output pair have no v1 cost, and per-image or other non-token prices also stay v2-only.
 - Cache writes with several TTLs: `write = { "5m" = 6.25, "1h" = 10 }`. v1 only gets the first TTL listed.
 - **Context-based pricing → overrides** keyed on `context`. The threshold is where that band starts; no duplicate thresholds.
+- **API-specific pricing → overrides** keyed on `api` with `equals` or `in`, using `[api.<protocol>]` keys (e.g. `decisions`), never URLs or paths. Place the API override after context overrides when it must win at every context length. These rules stay v2-only; v1 keeps base prices and pure-context tiers. Consumer semantics: `README.md`.
 - Service tiers, regions, and time-of-day pricing → `[[cost.multipliers]]`.
 
 ```toml
