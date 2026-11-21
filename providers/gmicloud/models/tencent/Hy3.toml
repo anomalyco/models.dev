@@ -1,0 +1,20 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: bf16.
+# Controls: effort-only per audit skill Step 3 ("none" in the enum carries the off-state). "none" maps to
+# thinking.type = disabled; graded values via reasoning_effort (Tencent docs 1823/131208). Enum ["none","high"]
+# copied from first-party tencent-tokenhub/models/hy3.toml.
+schema = 2
+base_model = "tencent/hy3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.035 }
+
+[cost.text.output]
+price = 0.58
