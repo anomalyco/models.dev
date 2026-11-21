@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const ModelFamilyValues = [
   // Arcee
-  "trinity",
   "trinity-mini",
 
   // OpenAI/GPT style
@@ -93,7 +92,6 @@ export const ModelFamilyValues = [
   "llama",
 
   // Meta Muse
-  "muse",
   "muse-free",
 
   // Alibaba Qwen
@@ -161,7 +159,6 @@ export const ModelFamilyValues = [
   "motif",
 
   // Poolside Laguna
-  "laguna",
   "laguna-s",
 
   // Reflection Beam
@@ -212,11 +209,9 @@ export const ModelFamilyValues = [
   "command-r",
   "command-a",
   "command-light",
-  "north",
   "north-free",
 
   // AI21 Jamba
-  "jamba",
 
   // NVIDIA Nemotron
   "nemotron",
@@ -280,7 +275,6 @@ export const ModelFamilyValues = [
   "voyage",
   "mistral-embed",
   "bge",
-  "plamo",
   "codestral-embed",
 
   // Image generation
@@ -358,7 +352,6 @@ export const ModelFamilyValues = [
   "longcat",
 
   // Magistral
-  "magistral",
   "magistral-small",
   "magistral-medium",
 
@@ -390,7 +383,6 @@ export const ModelFamilyValues = [
   "falcon",
 
   // Baichuan
-  "baichuan",
 
   // Skywork
   "skywork",
@@ -478,7 +470,6 @@ export const ModelFamilyValues = [
   "una-cybertron",
 
   // Morph
-  "morph",
 
   // Voxtral
   "voxtral",
@@ -503,7 +494,6 @@ export const ModelFamilyValues = [
   "tako",
 
   // MAI
-  "mai",
 
   // RedNote
   "rednote",
@@ -533,10 +523,8 @@ export const ModelFamilyValues = [
   "unsloth",
 
   // Nousresearch
-  "nousresearch",
 
   // Alpha variants (experimental models)
-  "alpha",
 
   // OSWE
   "oswe",
@@ -545,13 +533,11 @@ export const ModelFamilyValues = [
   "neural-chat",
 
   // Pangu (Ascend Tribe)
-  "pangu",
 
   // LiquidAI
   "liquid",
 
   // Sourceful
-  "sourceful",
 
   // AllenAI
   "allenai",
@@ -563,7 +549,6 @@ export const ModelFamilyValues = [
   "allam",
 
   // Canopy Labs
-  "canopylabs",
 
   // Groq
   "groq",
@@ -578,6 +563,219 @@ export const ModelFamilyValues = [
 
   // Elephant
   "elephant",
+
+  // Product lines (one per lab, type and size tier)
+  "aion",
+  "aion-mini",
+  "aion-rp",
+  "apertus",
+  "apodex-mini",
+  "arrow",
+  "assemblyai-universal",
+  "asure",
+  "aya",
+  "aya-tiny",
+  "aya-vision",
+  "baichuan-m",
+  "bge-base",
+  "bge-large",
+  "bge-reranker",
+  "bge-small",
+  "blink",
+  "chatterbox",
+  "cicero",
+  "clef",
+  "clef-flash",
+  "clip",
+  "cohere-embed-fast",
+  "cohere-embed-light",
+  "cohere-embed-pro",
+  "cohere-rerank",
+  "cohere-rerank-fast",
+  "cohere-rerank-pro",
+  "cohere-transcribe",
+  "command-a-plus",
+  "command-r-plus",
+  "csm",
+  "cydonia",
+  "d3",
+  "d3-flash",
+  "d3-mini",
+  "decider",
+  "deepgram-flux",
+  "deepgram-nova",
+  "devstral-medium",
+  "devstral-small",
+  "dolphin",
+  "dracarys",
+  "drex",
+  "e5-base",
+  "e5-large",
+  "e5-multilingual",
+  "elevenlabs-flash",
+  "elevenlabs-multilingual",
+  "elevenlabs-turbo",
+  "ember",
+  "euryale",
+  "fibo",
+  "fish-drama",
+  "fish-s",
+  "fish-s-pro",
+  "fish-transcribe",
+  "fish-transcribe-pro",
+  "flux-dev",
+  "flux-flex",
+  "flux-klein",
+  "flux-kontext-dev",
+  "flux-kontext-max",
+  "flux-kontext-pro",
+  "flux-max",
+  "flux-pro",
+  "flux-schnell",
+  "flux-video",
+  "fugu-max",
+  "fugu-ultra",
+  "granite-micro",
+  "granite-small",
+  "heygen-avatar",
+  "heygen-video",
+  "heygen-voice",
+  "heygen-voice-turbo",
+  "inworld-tts",
+  "inworld-tts-max",
+  "inworld-tts-mini",
+  "jamba-large",
+  "jamba-mini",
+  "jev",
+  "kev",
+  "kokoro",
+  "kolibri",
+  "krea",
+  "krea-large",
+  "krea-medium",
+  "krea-medium-turbo",
+  "laguna-m",
+  "laguna-xs",
+  "levanto-sage",
+  "lfm",
+  "lfm-embedding",
+  "lightonocr",
+  "liquid-decision",
+  "llama-guard",
+  "llama-prompt-guard",
+  "lunaris",
+  "macaron-tall",
+  "macaron-venti",
+  "magnum",
+  "mai-code",
+  "mai-code-flash",
+  "mai-image",
+  "mai-image-flash",
+  "mai-image-pro",
+  "mai-transcribe",
+  "mai-voice",
+  "mai-voice-flash",
+  "mammoth",
+  "mercury-coder",
+  "mercury-decide",
+  "mercury-edit",
+  "microsoft-decision",
+  "mineru",
+  "minicpm",
+  "minicpm-v",
+  "minilm",
+  "mistral-moderation",
+  "mistral-ocr",
+  "morph-fast",
+  "morph-large",
+  "morph-reflex",
+  "mpnet",
+  "muse-ember",
+  "muse-glimmer",
+  "muse-image",
+  "muse-spark",
+  "muse-transcribe",
+  "muse-video",
+  "muse-wonder",
+  "mxbai-embed",
+  "mythomax",
+  "nemotron-asr",
+  "nemotron-cascade",
+  "nemotron-embed",
+  "nemotron-lightning",
+  "nemotron-mini",
+  "nemotron-nano",
+  "nemotron-rerank",
+  "nemotron-safety",
+  "nemotron-super",
+  "nemotron-ultra",
+  "nemotron-voice",
+  "nex-n",
+  "nex-n-mini",
+  "nex-n-pro",
+  "nomic-embed",
+  "north-mini",
+  "north-small",
+  "nova-premier",
+  "olmocr",
+  "omnivoice",
+  "orpheus",
+  "paddleocr",
+  "pangu-flash",
+  "pangu-pro",
+  "pareto",
+  "particle",
+  "perceptron-mk",
+  "phi-mini",
+  "phocinae-largha",
+  "pixtral-large",
+  "plamo-embedding",
+  "pplx-decider",
+  "pplx-decider-flash",
+  "pplx-embed",
+  "pplx-embed-context",
+  "recraft-flash",
+  "recraft-pro",
+  "relace-apply",
+  "relace-search",
+  "remm",
+  "restyler",
+  "riverflow-fast",
+  "riverflow-pro",
+  "rune",
+  "runway-aleph",
+  "runway-gen",
+  "schematron-small",
+  "schematron-turbo",
+  "scribe",
+  "sea-lion",
+  "skyfall",
+  "sonar-reasoning-pro",
+  "span",
+  "text2vec",
+  "toast",
+  "trinity-large",
+  "trinity-nano",
+  "turion-extract",
+  "turion-jev",
+  "uae",
+  "unslopnemo",
+  "vispark-vision-large",
+  "vispark-vision-medium",
+  "vispark-vision-small",
+  "viv",
+  "voxtral-mini",
+  "voxtral-small",
+  "voxtral-transcribe",
+  "voxtral-tts",
+  "voyage-code",
+  "voyage-large",
+  "voyage-lite",
+  "voyage-multimodal",
+  "voyage-rerank",
+  "voyage-rerank-lite",
+  "weaver",
+  "wizardlm",
 ] as const;
 
 export const ModelFamily = z.enum(ModelFamilyValues);
