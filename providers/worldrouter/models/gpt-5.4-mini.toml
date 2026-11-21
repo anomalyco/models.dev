@@ -1,0 +1,25 @@
+# Pricing: https://router.worldclaw.ai/models/gpt-5.4-mini
+# https://router.worldclaw.ai/models — reviewed 2026-11-19.
+# Prices converted from credits: 100 credits = USD 1; all costs USD / 1M tokens.
+# API: https://router.worldclaw.ai/docs/api (Chat Completions).
+# Reasoning baseline: native openai and OpenRouter provider entries at
+# models.dev fcb75c2d2c177ab3c8ba2af750b138b6610e4ef8, per relay policy.
+# Cache prices are public; the host does not document cache-control details.
+# OpenCode 2.3.0 smoke test: function-tool call and text reply with medium selected.
+# The host documents function tools on Chat Completions. Custom-tool probes
+# for text, Lark, and regex produced HTTP 429 or no custom call (2026-11-19).
+schema = 2
+base_model = "openai/gpt-5.4-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.525
+cache = { read = 0.0525, write = 0.525 }
+
+[cost.text.output]
+price = 3.15
