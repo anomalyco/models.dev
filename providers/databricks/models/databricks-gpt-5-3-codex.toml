@@ -1,0 +1,46 @@
+# Models, inputs and lifecycle (accessed 2026-10-28): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Reasoning (accessed 2026-10-28): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Effort: Responses `reasoning.effort` = none|low|medium|high|xhigh, the lab set from providers/openai/models/gpt-5.3-codex.toml; Databricks lists no per-model values for this endpoint (Responses passes OpenAI parameters through); untested.
+# Pricing (accessed 2026-10-28): DBU rates from https://www.databricks.com/product/pricing/proprietary-foundation-model-serving x USD 0.070/DBU (`prop_model_serving` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json: Anthropic, Google, OpenAI and SpaceXAI on AWS Premium/Enterprise, every region).
+# Standard DBU per 1M input/output/cache-read tokens: 25/200/2.5; no cache-write rate is listed.
+# The pricing page marks this model with a 10% DBU uplift when regional processing (data residency) is enabled: the 1.1x multiplier when region is not global.
+# Priority: request `service_tier = "priority"` (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/priority-mode); priority DBU rates are 2x standard. (50/400/5)
+# Batch inference is billed per DBU-hour, not per token; not modeled.
+# Cache: `cache_control` is Claude-only and no other cache control is documented; the pricing page lists cache-read rates, so caching is implicit.
+# Images: supported-models lists text and image inputs; the vision page has no row for this endpoint, so no per-request cap is set.
+# structured_output: response_format json_schema on pay-per-token chat models (https://docs.databricks.com/aws/en/machine-learning/model-serving/structured-outputs).
+# store = false: "Stored responses is not supported" (Responses API reference above).
+# system_updates = false: Chat Completions takes the system role "only once, as the first message in a conversation" and Responses input roles are user|assistant (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference). effort_updates and tools.updates are undocumented and untested (no Databricks key).
+# APIs: OpenAI Responses API at /serving-endpoints/responses only (https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference#responses-api); supported-models says the model isn't in AI Playground and points to the Responses API.
+schema = 2
+base_model = "openai/gpt-5.3-codex"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+store = false
+cache = { implicit = true }
+service_tier = ["priority"]
+
+[api.responses]
+base_url = "https://${DATABRICKS_HOST}/serving-endpoints"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }
