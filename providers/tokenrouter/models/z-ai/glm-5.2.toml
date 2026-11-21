@@ -1,0 +1,20 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 1.4/4.4, cache read 0.26 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

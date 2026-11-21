@@ -1,0 +1,20 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 4.35/8.7, cache read 0.036 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 4.35
+cache = { read = 0.036 }
+
+[cost.text.output]
+price = 8.7
