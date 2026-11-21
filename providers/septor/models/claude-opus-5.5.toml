@@ -1,0 +1,20 @@
+# Price = midpoint of Septor's published range (input 2.3-4, output 11.5-20 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/claude-opus-5.5
+# Effort: reasoning_effort = low|medium|high (https://septorlabs.com/docs/introduction)
+# Always-on reasoning: reasoning_effort = none is accepted and falls back to low.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 3.15
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 15.75

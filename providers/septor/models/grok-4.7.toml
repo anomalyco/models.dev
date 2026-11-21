@@ -1,0 +1,22 @@
+# Price = midpoint of Septor's published range (input 1.15-2.3, output 3.45-6.9 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/grok-4.7
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 450000
+
+[cost.text.input]
+price = 1.725
+cache = { read = 0.848312 }
+
+[cost.text.output]
+price = 5.175

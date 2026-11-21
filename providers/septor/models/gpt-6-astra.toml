@@ -1,0 +1,19 @@
+# Price = midpoint of Septor's published range (input 1.689928-10, output 7.118976-50 USD per 1M tokens).
+# Range-priced models bill between the floor and the ceiling and never above the ceiling.
+# Source: https://septorlabs.com/models/gpt-6-astra
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 5.844964
+cache = { read = 1.336653 }
+
+[cost.text.output]
+price = 28.559488
