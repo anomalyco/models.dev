@@ -1,0 +1,22 @@
+# DeepTime route, rates and capabilities (2026-11-17): https://deeptimetoken.com/en/models/qwen?model=hon%3Aqwen3.8-flash
+# DeepTime lists "qwen3.8-flash" as the Chat Completions request model ID; hon: is only in the cited page selector.
+# USD per million tokens, converted by DeepTime at 6.7138 CNY/USD (2026-10-30).
+# Model-native control baseline: https://github.com/anomalyco/models.dev/blob/dev/providers/alibaba/models/qwen3.8-flash.toml
+# Toggle: enable_thinking = true|false. Effort: reasoning_effort = low|medium|xhigh.
+# Budget: thinking_budget (reasoning tokens; send separately from reasoning_effort).
+# Controls follow the native Qwen Chat Completions and equivalent relay baselines.
+# DeepTime passthrough and budget bounds have not been verified with an authenticated request.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0714945336
+cache = { read = 0.00893681671 }
+
+[cost.text.output]
+price = 0.241294051
