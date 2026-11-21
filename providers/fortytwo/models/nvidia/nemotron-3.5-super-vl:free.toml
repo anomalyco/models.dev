@@ -1,0 +1,31 @@
+# https://docs.fortytwo.network/docs/models (accessed 2026-11-16)
+# https://docs.fortytwo.network/docs/pricing (USD per million tokens; accessed 2026-11-16)
+# reasoning_effort: none disables reasoning; minimal/low/medium share shorter
+# reasoning, while high/xhigh/max share full reasoning (xhigh is the default).
+# Free tier limits and data collection: https://docs.fortytwo.network/docs/models#free-models
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+name = "Nemotron 3.5 Super VL (Free)"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "xhigh"], default = { type = "effort", value = "xhigh" } }
+cache = { implicit = true }
+structured_output = true
+stream_usage = true
+
+[api.chat-completions]
+
+[limit]
+context = 262_144
+output = 235_929
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
