@@ -6,6 +6,8 @@
 # Reasoning cannot be turned off: reasoning_effort = none is the lowest level and still reasons briefly; graded levels
 #   none|minimal|low|medium|high, default high (no toggle).
 # Context is 262,144 tokens here (the lab's model allows 1,048,576). Prefix caching is automatic per API key.
+# Output limit: live test 2026-11-21 on POST /v1/chat/completions: max_tokens 65,537 and 262,000 accepted, 262,200
+#   refused (max_model_len 262,144), so prompt and output share the 262,144-token window.
 # Images: PNG, JPEG and WebP, 16 per request.
 # Verified 2026-11-21 on POST /v1/chat/completions: streaming returns a usage block (stream_options.include_usage), tool
 #   calls (tool_choice auto, none, required and a named function), response_format json_object and strict json_schema,
@@ -24,7 +26,6 @@ structured_output = true
 stream_usage = true
 cache = { implicit = true }
 
-# Live test 2026-11-21 on POST /v1/chat/completions: max_tokens 65,537 and 262,000 accepted, 262,200 refused (max_model_len 262,144).
 [limit]
 context = 262_144
 output = 262_144
