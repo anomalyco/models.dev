@@ -1,0 +1,16 @@
+# GET https://cloudgpu.app/v1/models checked 2026-11-11: input_modalities ["text"], output_modalities ["text"], context_length 262144. No output token cap is published.
+# Toggle: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (integer reasoning tokens)
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

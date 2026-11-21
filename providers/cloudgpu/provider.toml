@@ -1,0 +1,10 @@
+# CloudGPU OpenAI-compatible API at https://cloudgpu.app/v1 (Bearer: CLOUDGPU_API_KEY).
+# Model IDs, input_modalities, output_modalities and context_length from GET https://cloudgpu.app/v1/models (public, checked 2026-11-11).
+# Only open-weight chat models from that list are included. Pricing fields are intentionally omitted.
+
+name = "CloudGPU"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["CLOUDGPU_API_KEY"]
+api = "https://cloudgpu.app/v1"
+doc = "https://cloudgpu.app/api/docs"

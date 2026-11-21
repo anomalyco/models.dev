@@ -1,0 +1,13 @@
+# GET https://cloudgpu.app/v1/models checked 2026-11-11: input_modalities ["text"], output_modalities ["text"], context_length 131072. No output token cap is published.
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
