@@ -1,0 +1,30 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-17).
+# Confidential (TEE) id; served inside a TEE by the same enclave deployments as
+# https://llm.chutes.ai/v1/models, whose limits and chat-template controls this entry follows.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Input MIME types: the lab's image list; Chutes input_modalities = ["text", "image"] gives
+# no formats. Audio and video are not served.
+# Reasoning output: reasoning_content
+schema = 2
+base_model = "alibaba/qwen3.6-27b"
+name = "Qwen3.6 27B TEE"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2993592
+cache = { read = 0.02993592 }
+
+[cost.text.output]
+price = 1.995728
