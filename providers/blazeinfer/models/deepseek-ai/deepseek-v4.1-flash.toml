@@ -1,8 +1,10 @@
 # Source: https://blazeinfer.ai/models and https://blazeinfer.ai/docs (accessed 2026-11-21).
 # Pricing and limits: host catalog, USD per 1M tokens; context 1,048,576 and output 943,718.
 # APIs: Chat Completions, Responses and Messages returned valid responses (live probes 2026-11-21).
-# Reasoning: docs list none|minimal|low|medium|high|xhigh|max, default high
-# (https://blazeinfer.ai/docs/guides/reasoning, accessed 2026-11-21); none disables it.
+# Effort: reasoning_effort = none|low|high|max (default high). BlazeInfer also accepts
+# the alias names minimal/medium/xhigh, but its docs map them onto these levels
+# (https://blazeinfer.ai/docs/guides/reasoning, accessed 2026-11-21), so only the
+# distinct levels are published. `none` disables reasoning.
 # Chat returns the trace in `reasoning`. reasoning_field = "reasoning" is valid in v2,
 # but v1's interleaved.field only allows reasoning_content|reasoning_details, so no
 # reasoning_field is set rather than a wrong one.
@@ -11,7 +13,7 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 
