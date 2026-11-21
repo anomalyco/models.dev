@@ -674,6 +674,7 @@ export const ModelFamilyValues = [
   "fugu-ultra",
   "granite-micro",
   "granite-small",
+  "harness-adapter",
   "heygen-avatar",
   "heygen-video",
   "heygen-voice",

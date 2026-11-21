@@ -1,0 +1,69 @@
+# Sources (accessed 2026-11-21):
+# https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted (model card: Apache-2.0 LoRA for Qwen/Qwen3.8-27B, trained with
+#   reinforcement learning (TRL AsyncGRPO) as the model behind the pi coding agent, https://github.com/earendil-works/pi,
+#   with thinking off; adapter_config.json: r = 32, lora_alpha = 64 on q/k/v/o_proj and gate/up/down_proj)
+# https://huggingface.co/api/models/harness-hub/Qwen3.8-27B-pi-adapted (base_model Qwen/Qwen3.8-27B, pipeline_tag
+#   image-text-to-text, license apache-2.0)
+# https://huggingface.co/blog/harness-adapters-at-scale (release post, published 2026-11-20)
+# release_date: Hub createdAt 2026-11-16, adapter weights in the same upload; the first public discussion on the repo is
+#   from 2026-11-17.
+# Modalities, tools, reasoning, sampling and limits are the base model's (models/alibaba/qwen3.8-27b.toml): the adapter
+#   only changes the language model's projections and is loaded on, or merged into, Qwen3.8-27B. harness-hub trained and
+#   evaluated it on text only (its card: "the vision tower is not served").
+# Benchmarks: the card's paired results under pi (one attempt per task, 100-step budget, thinking off, temperature 0.8);
+#   SWE-bench Pro is its 51 hardest tasks, Terminal-Bench 2.1 the 86 tasks both runs graded.
+schema = 2
+name = "Qwen3.8 27B pi-adapted"
+description = "LoRA adapter for Qwen3.8 27B from harness-hub, RL-trained to drive the pi coding agent with thinking off"
+family = "harness-adapter"
+open_weights = true
+release_date = "2026-11-16"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[[links]]
+label = "Release post"
+url = "https://huggingface.co/blog/harness-adapters-at-scale"
+type = "blog"
+
+[[weights]]
+label = "Hugging Face (LoRA adapter)"
+url = "https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted"
+format = "safetensors"
+
+[[weights]]
+label = "Hugging Face (GGUF: F16 LoRA adapter and merged Q8_0)"
+url = "https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted-GGUF"
+format = "gguf"
+
+[[benchmarks]]
+name = "SWE-bench Pro"
+score = 64.7
+metric = "resolved"
+harness = "pi"
+variant = "thinking off"
+dataset = "hard 51"
+source = "https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 55.8
+metric = "score"
+version = "2.1"
+harness = "pi"
+variant = "thinking off"
+source = "https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted"

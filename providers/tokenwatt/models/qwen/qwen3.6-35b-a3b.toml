@@ -1,5 +1,5 @@
 # API model id: qwen/qwen3.6-35b-a3b (exactly as GET https://api.tokenwatt.io/v1/models lists it). Weights:
-# Qwen/Qwen3.6-35B-A3B-FP8, served with vLLM on one H200 in the US (shared with Qwen3-Coder-30B-A3B), text only
+# Qwen/Qwen3.6-35B-A3B-FP8, served with vLLM on one H200 in the US (shared with Qwen3.8-27B since 2026-11-19), text only
 # (the engine runs with --language-model-only, so no image or video input).
 # Toggle: thinking is on by default; reasoning_effort = "none" or chat_template_kwargs.enable_thinking = false turns
 # it off per request. Other reasoning_effort values don't grade the thinking, so no effort list. Reasoning is returned
@@ -9,7 +9,8 @@
 # json_schema (strict) and tool_choice "required" worked.
 # Cache: automatic vLLM prefix caching, no cache_control. Checked live 2026-11-18: the same 8,206-token prompt sent
 # twice, the second reported usage.prompt_tokens_details.cached_tokens = 7,616, billed at the cache read rate.
-# Prices from https://api.tokenwatt.io/v1/models and https://www.tokenwatt.io/api.html (accessed 2026-11-18).
+# Prices from https://api.tokenwatt.io/v1/models and https://www.tokenwatt.io/api.html (accessed 2026-11-18, unchanged
+# 2026-11-21).
 schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 
