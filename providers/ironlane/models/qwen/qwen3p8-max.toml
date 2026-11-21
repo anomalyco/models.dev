@@ -1,0 +1,26 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Served by Fireworks AI through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
+# Input: as Fireworks AI takes this model (providers/fireworks-ai/models/accounts/fireworks/models/qwen3p8-max.toml).
+# Reasoning: no caller control. Ironlane documents reasoning_effort for OpenAI models only ("other models ignore it") and passes no other field to the provider (https://ironlane.ai/docs/api/chat-completions).
+# Cache: implicit; cached input bills at Fireworks AI's cached price (https://ironlane.ai/docs/api/chat-completions).
+# Limits: the lower of Ironlane's catalog and Fireworks AI's own entry (providers/fireworks-ai/models/accounts/fireworks/models/qwen3p8-max.toml); a request past the host's cap fails there.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

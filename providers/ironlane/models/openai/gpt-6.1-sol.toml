@@ -1,0 +1,19 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Served by OpenAI through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
+# Effort: reasoning_effort = low|medium|high|xhigh (https://ironlane.ai/docs/api/chat-completions, request fields); levels from providers/openai/models/gpt-6.1-sol.toml.
+# max: refused by Ironlane (400 for any reasoning_effort outside none..xhigh).
+# Custom tools: none. Ironlane takes function tools only ("function tools, in OpenAI's format", https://ironlane.ai/docs/api/chat-completions); a "custom" tool is a 400 invalid_tools, so no freeform.
+# Cache: implicit; cached input bills at OpenAI's cached price (https://ironlane.ai/docs/api/chat-completions).
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10

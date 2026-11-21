@@ -1,0 +1,11 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+schema = 2
+v2_only = true
+base_model = "openai/whisper-1"
+
+[api.transcriptions]
+sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.006
