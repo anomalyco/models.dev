@@ -1,0 +1,39 @@
+# Source: https://blazeinfer.ai/models and https://blazeinfer.ai/docs (accessed 2026-11-21).
+# Pricing and limits: host catalog, USD per 1M tokens; context 16,000 and output 32,000.
+# The schema caps output at context, so the authored output is 16,000.
+# APIs: Chat Completions, Responses and Messages returned valid responses (live probes 2026-11-21).
+# Reasoning: no caller control is documented; the lab's always-on reasoning is inherited.
+# Chat returns the trace in `reasoning_content`.
+# Input: PNG, JPEG, GIF and WebP data URIs were accepted (live probes 2026-11-21);
+# video and the lab's extra formats are not advertised by the host and are excluded.
+schema = 2
+base_model = "alibaba/qwen3.5-9b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 16_000
+output = 16_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.15

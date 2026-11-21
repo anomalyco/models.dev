@@ -1,0 +1,35 @@
+# Source: https://blazeinfer.ai/models and https://blazeinfer.ai/docs (accessed 2026-11-21).
+# Pricing and limits: host catalog, USD per 1M tokens; context 1,048,576 and output 943,718.
+# APIs: Chat Completions, Responses and Messages returned valid responses (live probes 2026-11-21).
+# Reasoning: docs list none|minimal|low|medium|high|xhigh|max, default high
+# (https://blazeinfer.ai/docs/guides/reasoning, accessed 2026-11-21); none disables it.
+# Chat returns the trace in `reasoning`. reasoning_field = "reasoning" is valid in v2,
+# but v1's interleaved.field only allows reasoning_content|reasoning_details, so no
+# reasoning_field is set rather than a wrong one.
+# Input: PNG, JPEG, GIF and WebP data URIs were accepted (live probes 2026-11-21).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.045
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.5
