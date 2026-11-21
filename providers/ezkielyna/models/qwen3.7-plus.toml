@@ -1,0 +1,26 @@
+# Ezkielyna serves alibaba/qwen3.7-plus under the id `qwen3.7-plus` (Standard key group, 1x).
+# Prices: public price list GET https://api.ezkielyna.store/api/pricing (read 2026-11-17 11:16 UTC),
+#   USD/MTok = model_ratio x 2 x group_ratio; output = input x completion_ratio; cache read = input x cache_ratio.
+#   Same prices in IDR: https://ezkielyna.store/harga-api-ai
+# Live status and success rate: https://api.ezkielyna.store/status
+# Reasoning controls follow the underlying model's peers on other relays; the gateway forwards
+#   reasoning_effort / thinking unchanged to an upstream serving the same model.
+# Toggle: enable_thinking = true|false (forwarded unchanged)
+# Budget: thinking_budget (integer reasoning tokens, forwarded unchanged); bounds not verified on this host, so budget = {}
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.263752
+cache = { read = 0.0659379 }
+
+[cost.text.output]
+price = 1.31111
