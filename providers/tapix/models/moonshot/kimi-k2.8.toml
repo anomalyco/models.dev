@@ -1,0 +1,13 @@
+schema = 2
+base_model = "moonshot/kimi-k2.8"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.589157
+
+[cost.text.output]
+price = 3.090808
