@@ -1,0 +1,20 @@
+# Prices: Prentis rate card, USD per 1M tokens (as of 2026-11-13).
+# Effort: reasoning_effort = low|medium|high
+# Reasoning controls copied from providers/deepinfra/models/openai/gpt-oss-120b.toml.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

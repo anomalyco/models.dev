@@ -1,0 +1,22 @@
+# Prices: Prentis rate card, USD per 1M tokens (as of 2026-11-13).
+# Reasoning controls copied from providers/deepinfra/models/MiniMaxAI/MiniMax-M3.toml.
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[limit]
+context = 524_288
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

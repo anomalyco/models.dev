@@ -1,0 +1,20 @@
+# Prices: Prentis rate card, USD per 1M tokens (as of 2026-11-13).
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables)
+# Reasoning controls copied from providers/deepinfra/models/Qwen/Qwen3.8-27B.toml.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.165
+cache = { read = 0.0438 }
+
+[cost.text.output]
+price = 2.09
