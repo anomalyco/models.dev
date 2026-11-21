@@ -1,0 +1,17 @@
+# Price (USD/MTok) = official Anthropic price; source: https://platform.claude.com/docs/en/about-claude/pricing
+# Served via SahabatMobile's OpenAI-compatible API over Anthropic direct.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 10

@@ -1,0 +1,29 @@
+# Price (USD/MTok) = official MiniMax price; source: https://platform.minimax.io/docs/pricing/overview#models/text
+# Toggle: thinking.type = "adaptive"|"disabled" (default disabled; proxied to upstream MiniMax API)
+# https://platform.minimax.io/docs/guides/text-generation
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+
+[limit]
+context = 1_000_000
+output = 524_288
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.30
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 512_000 } }
+price = 0.60
+
+[cost.text.output]
+price = 1.20
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 512_000 } }
+price = 2.40
