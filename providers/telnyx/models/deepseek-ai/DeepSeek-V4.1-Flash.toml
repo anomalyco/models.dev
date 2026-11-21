@@ -1,0 +1,36 @@
+# Prices, context and output cap: GET https://api.telnyx.com/v2/ai/models (accessed 2026-10-28):
+# $0.30 input, $0.006 cached input, $1.20 output per 1M; context 1,048,576; max_completion_tokens 64,000.
+# max_tokens = 64,001 is still accepted, so the cap comes from the catalog and is not enforced.
+# Toggle: reasoning_effort = "low", "high" or "max" turns reasoning on. With the field left out or set to
+# "none" the response has no reasoning_content, so the default is off (live 2026-10-28). The levels are not
+# graded: median reasoning_content length over 4 runs (2 prompts, 2 runs each) was low 322, high 337 and
+# max 356 characters, so only on/off is authored. reasoning.enabled, chat_template_kwargs.enable_thinking and
+# thinking.type change nothing.
+# Inputs: text only. /v2/ai/models lists is_vision_supported = true, but PNG and JPEG image requests failed
+# with HTTP 422 "Internal server error" on every attempt (live 2026-10-28), so the lab's image inputs are removed.
+# structured_output is left unset: a strict json_schema returned valid JSON with reasoning off, but with
+# reasoning_effort = low or high message.content came back empty (live 2026-10-28). Tool calls returned tool_calls.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = false } }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2
