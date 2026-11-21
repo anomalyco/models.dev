@@ -1,0 +1,26 @@
+# Prices and limits: https://velobase.io/api/v1/models (accessed 2026-11-11), USD per token x 1e6
+# Reasoning controls follow the underlying model on other OpenAI-compatible relays
+# Effort: reasoning.effort or reasoning_effort on Chat Completions
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
+
+[cost.text.output]
+price = 20
