@@ -11,7 +11,7 @@ import {
   parseAnthropicPricing,
   type AnthropicModel,
 } from "../src/sync/providers/anthropic.js";
-import { buildCortecsModel, cortecs, exactModalities, type CortecsModel } from "../src/sync/providers/cortecs.js";
+import { buildCortecsModel, cortecs, exactModalities, type CortecsFile, type CortecsModel } from "../src/sync/providers/cortecs.js";
 import {
   buildCrossModel,
   crossmodel,
@@ -4335,6 +4335,121 @@ test("inherits base reasoning options instead of stamping empty ones", () => {
     .toEqual({ reasoning: true });
 });
 
+test("Cortecs latest aliases require a concrete target", () => {
+  for (const resolved_model of [undefined, "", "other:latest"]) {
+    expect(() => cortecs.parseModels({
+      object: "list",
+      data: [cortecsModel({ id: "series:latest", resolved_model })],
+    })).toThrow();
+  }
+  const alias = cortecsModel({ id: "series:latest", resolved_model: "unmapped-model" });
+  expect(cortecs.translateModel(alias, {
+    existing: () => undefined,
+    authored: () => undefined,
+    v2: () => undefined,
+  })).toBeUndefined();
+  expect(cortecs.missingModelID(alias)).toBe("series:latest");
+  expect(cortecs.translateModel(alias, {
+    existing: () => undefined,
+    authored: () => undefined,
+    v2: () => ({ schema: 2, base_model: "anthropic/claude-opus-5-5" }),
+  })).toBeUndefined();
+});
+
+test("Cortecs latest aliases follow the target's authored v2 metadata and refresh on retarget", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-cortecs-latest-"));
+  const modelsDir = path.join(root, "providers/cortecs/models");
+  const repo = path.join(import.meta.dirname, "../../..");
+  const targets = [
+    cortecsModel({
+      id: "claude-opus-5.5",
+      context_size: 1_000_000,
+      max_output_tokens: 128_000,
+      input_modalities: ["text", "image"],
+      supported_features: ["reasoning", "tools", "json_mode"],
+    }),
+    cortecsModel({
+      id: "gpt-4.1",
+      context_size: 1_000_000,
+      max_output_tokens: 32_768,
+      input_modalities: ["text", "image", "pdf"],
+      supported_features: ["tools"],
+    }),
+  ];
+  await mkdir(modelsDir, { recursive: true });
+  await copyFile(path.join(repo, "providers/cortecs/provider.toml"), path.join(root, "providers/cortecs/provider.toml"));
+  for (const [lab, model] of [["anthropic", "claude-opus-5-5"], ["openai", "gpt-4.1"]]) {
+    await mkdir(path.join(root, "models", lab!), { recursive: true });
+    await copyFile(path.join(repo, "models", lab!, `${model}.toml`), path.join(root, "models", lab!, `${model}.toml`));
+  }
+  for (const target of targets) {
+    await copyFile(path.join(repo, "providers/cortecs/models", `${target.id}.toml`), path.join(modelsDir, `${target.id}.toml`));
+  }
+  const firstTarget = path.join(modelsDir, `${targets[0]!.id}.toml`);
+  await writeFile(firstTarget, await readFile(firstTarget, "utf8") + `
+[modalities]
+input = ["text", "image/png"]
+output = ["text"]
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+`);
+  const provider = (target: CortecsModel) => ({
+    ...cortecs,
+    modelsDir,
+    fetchModels: async () => ({
+      object: "list",
+      data: [...targets, { ...target, id: "series:latest", resolved_model: target.id }],
+    }),
+  });
+  const aliasPath = path.join(modelsDir, "series:latest.toml");
+  try {
+    expect((await syncProvider(provider(targets[0]!), { openIssues: false })).created).toBe(1);
+    const first = Bun.TOML.parse(await readFile(aliasPath, "utf8"));
+    expect(first).toMatchObject({
+      schema: 2,
+      base_model: "anthropic/claude-opus-5-5",
+      name: "series:latest (Claude Opus 5.5)",
+      capabilities: {
+        reasoning: { supported: true, effort: ["low", "medium", "high"] },
+        cache: { explicit: true },
+      },
+      cost: { text: { input: { price: 0.123 }, output: { price: 0.368 } } },
+      modalities: { input: ["text", "image/png"], output: ["text"] },
+      api: { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } },
+    });
+    expect(first).not.toHaveProperty("resolved_model");
+    expect((await readFile(aliasPath, "utf8")).split("schema = 2")[0])
+      .toBe((await readFile(firstTarget, "utf8")).split("schema = 2")[0]);
+    expect((await syncProvider(provider(targets[0]!), { openIssues: false }))).toMatchObject({ created: 0, updated: 0, deleted: 0 });
+
+    await syncProvider(provider(targets[1]!), { openIssues: false });
+    const second = Bun.TOML.parse(await readFile(aliasPath, "utf8"));
+    expect(second).toMatchObject({
+      base_model: "openai/gpt-4.1",
+      name: "series:latest (GPT-4.1)",
+      capabilities: { cache: { implicit: true } },
+      limit: { context: 1_000_000 },
+    });
+    // Aliases are v2-only: v1 must not gain them.
+    expect(second).toMatchObject({ v2_only: true });
+    expect((await generate(path.join(root, "providers"))).cortecs?.models["series:latest"]).toBeUndefined();
+    expect((await readFile(aliasPath, "utf8")).split("schema = 2")[0])
+      .toBe((await readFile(path.join(modelsDir, "gpt-4.1.toml"), "utf8")).split("schema = 2")[0]);
+    expect(second).not.toHaveProperty("api");
+    expect(second).not.toHaveProperty("modalities");
+    expect(second).not.toHaveProperty("capabilities.reasoning");
+    expect(second).not.toHaveProperty("capabilities.cache.explicit");
+    expect((await syncProvider(provider(targets[1]!), { openIssues: false }))).toMatchObject({ created: 0, updated: 0, deleted: 0 });
+
+    const before = await readFile(aliasPath, "utf8");
+    await syncProvider(provider({ ...targets[0]!, id: "missing-target" }), { openIssues: false });
+    expect(await readFile(aliasPath, "utf8")).toBe(before);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("normalizes Cortecs file modalities to pdf", () => {
   const [model] = cortecs.parseModels({
     object: "list",
@@ -4351,48 +4466,74 @@ test("normalizes Cortecs file modalities to pdf", () => {
   expect(model.input_modalities).toEqual(["text", "pdf"]);
 });
 
-test("preserves authored Cortecs reasoning options missing from the API", () => {
-  const model: CortecsModel = {
-    id: "deepseek-v4-flash-0731",
-    created: 1_775_088_000,
-    pricing: { currency: "EUR", input_token: 0.224, output_token: 0.269 },
-    context_size: 1_048_576,
-    input_modalities: ["text"],
-    output_modalities: ["text"],
+test("Cortecs preserves authored v2 reasoning controls, even when the lab does not reason", () => {
+  const existing: CortecsFile = {
+    schema: 2,
+    base_model: "swiss-ai/apertus-70b",
+    capabilities: { reasoning: { supported: true, effort: ["low", "medium", "high"] } },
+  };
+  expect(buildCortecsModel(cortecsModel({
+    id: "apertus-70b",
     supported_features: ["reasoning", "tools"],
-  };
-  const existing: ExistingModel = {
-    base_model: "deepseek/deepseek-v4-flash-0731",
-    reasoning: true,
-    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
-  };
-
-  expect(buildCortecsModel(model, existing, existing)).toMatchObject({
-    reasoning_options: [{ type: "effort", values: ["low", "medium", "high"] }],
+  }), existing)).toMatchObject({
+    base_model: existing.base_model,
+    capabilities: { reasoning: existing.capabilities!.reasoning },
   });
 });
 
-test("overrides canonical metadata with Cortecs reasoning support", () => {
-  const model: CortecsModel = {
-    id: "apertus-70b",
-    created: 1_775_088_000,
-    pricing: { currency: "EUR", input_token: 1.25, output_token: 2 },
-    context_size: 65_536,
-    input_modalities: ["text"],
-    output_modalities: ["text"],
-    supported_features: ["reasoning", "tools"],
+test("Cortecs updates v2 prices without losing cache TTLs, tiers or API capabilities", () => {
+  const existing: CortecsFile = {
+    schema: 2,
+    base_model: "mistral/voxtral-small-24b-2507",
+    capabilities: { cache: { explicit: { ttl: ["5m", "1h"] } }, system_updates: true },
+    api: { "chat-completions": { capabilities: { tools: { strict: true } } } },
+    cost: {
+      text: {
+        input: {
+          price: 1,
+          cache: { read: 0.1, write: { "5m": 1.25, "1h": 2 } },
+          overrides: [{ when: { context: { gt: 16_000 } }, price: 2 }],
+        },
+        output: { price: 3, reasoning: 4 },
+      },
+      multipliers: [{ when: { service_tier: { equals: "priority" } }, factor: 2 }],
+    },
   };
-  const existing: ExistingModel = {
-    base_model: "swiss-ai/apertus-70b",
-    reasoning: true,
-    reasoning_options: [],
-  };
-
-  expect(buildCortecsModel(model, existing, existing)).toMatchObject({
-    base_model: "swiss-ai/apertus-70b",
-    reasoning: true,
-    reasoning_options: [],
+  const updated = buildCortecsModel(cortecsModel({
+    pricing: { currency: "EUR", input_token: 0.11, output_token: 0.33, cache_read_cost: 0.05, cache_write_cost: 0.2, cache_write_1h_cost: 0.5 },
+  }), existing);
+  expect(updated).toMatchObject({
+    schema: 2,
+    capabilities: existing.capabilities,
+    api: existing.api,
+    cost: {
+      text: {
+        input: {
+          ...existing.cost!.text!.input,
+          price: 0.123,
+          cache: { read: 0.056, write: { "5m": 0.223, "1h": 0.557 } },
+        },
+        output: { price: 0.368, reasoning: 4 },
+      },
+      multipliers: existing.cost!.multipliers,
+    },
   });
+});
+
+test("Cortecs keeps one-hour-only cache quotes and other authored TTL prices", () => {
+  const model = cortecsModel({
+    pricing: { currency: "EUR", input_token: 1, output_token: 2, cache_write_1h_cost: 2 },
+  });
+  const existing: CortecsFile = {
+    schema: 2,
+    base_model: "mistral/voxtral-small-24b-2507",
+    cost: { text: { input: { price: 1, cache: { write: { "30m": 3 } } } } },
+  };
+  expect(buildCortecsModel(model, existing)?.cost?.text?.input?.cache?.write)
+    .toEqual({ "30m": 3, "1h": 2.228 });
+  const { cost: _cost, ...withoutCache } = existing;
+  expect(buildCortecsModel(model, withoutCache)?.cost?.text?.input?.cache?.write)
+    .toEqual({ "1h": 2.228 });
 });
 
 function cortecsModel(overrides: Partial<CortecsModel> = {}): CortecsModel {
@@ -4409,45 +4550,24 @@ function cortecsModel(overrides: Partial<CortecsModel> = {}): CortecsModel {
   };
 }
 
-test("Cortecs base_model files leave model facts to the lab", () => {
-  const existing: ExistingModel = {
-    base_model: "mistral/voxtral-small-24b-2507",
-    family: "voxtral",
-    release_date: "2020-01-01",
-    last_updated: "2020-01-01",
-    knowledge: "2020-01",
-    open_weights: false,
-  };
-  const model = buildCortecsModel(cortecsModel(), existing, existing);
-  for (const key of ["family", "knowledge", "release_date", "last_updated", "open_weights"]) {
+test("Cortecs v2 base_model files inherit lab facts and keep authored display overrides", () => {
+  const model = buildCortecsModel(cortecsModel({ id: "mistral/voxtral-small-24b-2507" }), undefined);
+  expect(model).toMatchObject({ schema: 2, base_model: "mistral/voxtral-small-24b-2507" });
+  for (const key of ["name", "description", "family", "knowledge", "release_date", "last_updated", "open_weights"]) {
     expect(model).not.toHaveProperty(key);
   }
-});
-
-test("Cortecs linked files keep a display name and description that differ from the lab", async () => {
-  const renamed: ExistingModel = {
+  const existing: CortecsFile = {
+    schema: 2,
     base_model: "mistral/voxtral-small-24b-2507",
-    name: "voxtral-small-2507",
+    name: "Voxtral on Cortecs",
     description: "Host-specific description",
   };
-  expect(buildCortecsModel(cortecsModel(), renamed, renamed)).toMatchObject({
-    name: "voxtral-small-2507",
-    description: "Host-specific description",
+  expect(buildCortecsModel(cortecsModel(), existing)).toMatchObject({
+    name: existing.name,
+    description: existing.description,
   });
-
-  // The sync passes the resolved model, so values inherited from the lab
-  // must not be written back as overrides.
-  const lab = Bun.TOML.parse(
-    await readFile(path.join(import.meta.dir, "../../../models/mistral/voxtral-small-24b-2507.toml"), "utf8"),
-  ) as { name: string; description: string };
-  const inherited: ExistingModel = {
-    base_model: "mistral/voxtral-small-24b-2507",
-    name: lab.name,
-    description: lab.description,
-  };
-  const model = buildCortecsModel(cortecsModel(), inherited, inherited);
-  expect(model).not.toHaveProperty("name");
-  expect(model).not.toHaveProperty("description");
+  expect(cortecs.missingModelID(cortecsModel({ id: "unknown-model" }))).toBe("unknown-model");
+  expect(buildCortecsModel(cortecsModel({ id: "unknown-model" }), undefined)).toBeUndefined();
 });
 
 test("Cortecs ignores an output limit that repeats the context window", () => {
@@ -4457,14 +4577,18 @@ test("Cortecs ignores an output limit that repeats the context window", () => {
     max_output_tokens: 1_048_576,
     supported_features: ["json_mode", "reasoning", "tools"],
   });
-  const linked: ExistingModel = { base_model: "google/gemini-4-hydrogen" };
+  const linked: CortecsFile = {
+    schema: 2,
+    base_model: "google/gemini-4-hydrogen",
+    capabilities: { reasoning: { supported: true, effort: ["low", "medium", "high"] } },
+  };
   // No authored output: the lab's limit is inherited instead of a 1M override.
-  expect(buildCortecsModel(hydrogen, linked, linked)).not.toHaveProperty("limit.output");
+  expect(buildCortecsModel(hydrogen, linked)?.limit?.output).toBeUndefined();
   // An authored output limit stays.
-  const authored: ExistingModel = { base_model: "google/gemini-4-hydrogen", limit: { context: 1_048_576, output: 32_000 } };
-  expect(buildCortecsModel(hydrogen, authored, authored)).toMatchObject({ limit: { output: 32_000 } });
+  const authored: CortecsFile = { ...linked, limit: { context: 1_048_576, output: 32_000 } };
+  expect(buildCortecsModel(hydrogen, authored)).toMatchObject({ limit: { output: 32_000 } });
   // A cap below the window is the host's.
-  expect(buildCortecsModel({ ...hydrogen, max_output_tokens: 65_535 }, linked, linked)).toMatchObject({ limit: { output: 65_535 } });
+  expect(buildCortecsModel({ ...hydrogen, max_output_tokens: 65_535 }, linked)).toMatchObject({ limit: { output: 65_535 } });
 });
 
 test("Cortecs caps an inherited output limit at the served context", () => {
@@ -4475,8 +4599,8 @@ test("Cortecs caps an inherited output limit at the served context", () => {
     max_output_tokens: 256_000,
     supported_features: ["json_mode", "tools"],
   });
-  const linked: ExistingModel = { base_model: "mistral/ministral-3-3b-instruct-2512" };
-  expect(buildCortecsModel(ministral, linked, linked)).toMatchObject({ limit: { context: 256_000, output: 256_000 } });
+  const linked: CortecsFile = { schema: 2, base_model: "mistral/ministral-3-3b-instruct-2512" };
+  expect(buildCortecsModel(ministral, linked)).toMatchObject({ limit: { context: 256_000, output: 256_000 } });
 });
 
 test("Cortecs new files take the lab's MIME types for each listed kind", () => {
@@ -4508,11 +4632,15 @@ test("Cortecs and Deep Infra skip new reasoning models until their controls are 
     context,
   )).toThrow(MissingReasoningOptionsError);
   // Existing files are still patched.
-  const existing: ExistingModel = { base_model: "thinkingmachines/inkling-2-small" };
+  const existing: CortecsFile = {
+    schema: 2,
+    base_model: "thinkingmachines/inkling-2-small",
+    capabilities: { reasoning: { supported: true, effort: ["low", "medium", "high"] } },
+  };
   expect(cortecs.translateModel(cortecsModel({
     id: "inkling-2-small",
     supported_features: ["json_mode", "reasoning", "tools"],
-  }), { existing: () => existing, authored: () => existing })).toMatchObject({ id: "inkling-2-small" });
+  }), { existing: () => undefined, authored: () => undefined, v2: () => existing })).toMatchObject({ id: "inkling-2-small" });
 });
 
 test("syncs OpenRouter reasoning efforts from model metadata", () => {
