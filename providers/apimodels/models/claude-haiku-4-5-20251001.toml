@@ -1,0 +1,21 @@
+# Sources (accessed 2026-11-05):
+# - Pricing: https://apimodels.app/models/claude-haiku-4-5-20251001 and https://apimodels.app/pricing
+#   ($0.353 input / $1.765 output / $0.0353 cache read / $0.441 cache write per 1M tokens)
+#   Cache read is billed at 10% of the input price for this model.
+# - Model ID: https://api.apimodels.app/v1/models ("claude-haiku-4-5-20251001")
+# Served on the Anthropic Messages API (https://api.apimodels.app/v1/messages); thinking and output_config.effort are passed through unchanged.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5-20251001"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.353
+cache = { read = 0.0353, write = 0.441 }
+
+[cost.text.output]
+price = 1.765

@@ -1,0 +1,18 @@
+# Sources (accessed 2026-11-05):
+# - Pricing: https://apimodels.app/models/gpt-5-4 and https://apimodels.app/pricing
+#   ($1.80 input / $10.80 output / $0.25 cache read per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("gpt-5-4")
+# Served on Chat Completions; reasoning_effort is forwarded unchanged.
+# Custom (freeform) tools have not been probed on this host, so `freeform` is left out.
+schema = 2
+base_model = "openai/gpt-5.4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 10.8

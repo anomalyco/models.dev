@@ -1,0 +1,20 @@
+# Sources (accessed 2026-11-05):
+# - Pricing: https://apimodels.app/models/glm-5.2 and https://apimodels.app/pricing
+#   ($1.26 input / $3.96 output / $0.26 cache read per 1M tokens)
+# - Model ID: https://api.apimodels.app/v1/models ("glm-5.2")
+# Served on Chat Completions; reasoning_effort is forwarded unchanged. No toggle: the Chat Completions request body is forwarded through an allowlist that has no `thinking` or `enable_thinking` field for GLM models, so `thinking.type = disabled` never reaches the model.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.26
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 3.96
