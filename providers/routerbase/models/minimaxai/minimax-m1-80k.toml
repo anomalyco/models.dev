@@ -1,0 +1,17 @@
+# Prices: GET https://routerbase.com/api/models/minimaxai/minimax-m1-80k/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Same upstream controls as providers/novita-ai/models/minimaxai/minimax-m1-80k.toml (RouterBase forwards them unchanged):
+schema = 2
+base_model = "minimax/minimax-m1-80k"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 40_000
+
+[cost.text.input]
+price = 0.34
+
+[cost.text.output]
+price = 1.87

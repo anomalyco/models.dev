@@ -1,0 +1,20 @@
+# Prices: GET https://routerbase.com/api/models/openai/gpt-5/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Effort: reasoning_effort = minimal|low|medium|high
+# Live probe on this route (2026-10-30): a custom tool with a regex grammar
+# (ZZ[0-9]{3}) and tool_choice required came back as a plain function call
+# with arguments "{}"; the grammar is not forwarded, so freeform is left out.
+# reasoning_effort = high spends reasoning tokens (usage.completion_tokens_details)
+# but no reasoning text is returned, so no reasoning_field is set.
+schema = 2
+base_model = "openai/gpt-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.0625
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 8.5

@@ -1,0 +1,19 @@
+# Prices: GET https://routerbase.com/api/models/tencent/hy3/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Same upstream controls as providers/novita-ai/models/tencent/hy3.toml (RouterBase forwards them unchanged):
+# Effort: reasoning_effort = none|high; none suppresses reasoning. Native effort baseline retained; accepted aliases are not additional distinct levels.
+schema = 2
+base_model = "tencent/hy3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.126
+cache = { read = 0.035 }
+
+[cost.text.output]
+price = 0.522

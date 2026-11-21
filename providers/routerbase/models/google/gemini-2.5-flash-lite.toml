@@ -1,0 +1,22 @@
+# Prices: GET https://routerbase.com/api/models/google/gemini-2.5-flash-lite/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Control shape follows providers/openrouter/models/google/gemini-2.5-flash-lite.toml (OpenAI-compatible relay of the same model).
+# Toggle: reasoning_effort = "none" (off) | omitted (on), tested 2026-09-29 on this route.
+schema = 2
+base_model = "google/gemini-2.5-flash-lite"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+output = 65_535
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.085
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.34

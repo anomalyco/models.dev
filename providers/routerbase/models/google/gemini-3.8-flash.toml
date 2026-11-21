@@ -1,0 +1,18 @@
+# Prices: GET https://routerbase.com/api/models/google/gemini-3.8-flash/pricing (2026-10-30), what RouterBase
+# charges: input/output = list x (1 - discount); cache reads and writes bill at list.
+# Effort: reasoning_effort = low|medium|high
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.525
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 2.625
