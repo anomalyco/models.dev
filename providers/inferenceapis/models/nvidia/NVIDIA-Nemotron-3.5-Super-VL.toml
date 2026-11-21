@@ -1,0 +1,23 @@
+# Toggle: reasoning_effort = "none" switches thinking off on this gateway; reasoning.enabled = false and thinking.type = "disabled"
+#   map onto the same switch, but reasoning_effort is the canonical field.
+# Measured on this gateway 2026-11-18: an image_url part was answered correctly; tool call and response_format json_object work.
+# Context on this host is 262,144 tokens.
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-11-20)
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.65
