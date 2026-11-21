@@ -1,0 +1,17 @@
+# Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
+# Effective USD per 1M tokens: official list price × KIMI group ratio 0.68.
+# Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
+# Relay accepts reasoning_effort and reasoning={enabled,effort,max_tokens} and maps them to the upstream controls.
+# Effort: reasoning_effort = low|high|max (default max; always thinks, no toggle)
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 2.04
+cache = { read = 0.204, write = { "5m" = 2.04, "1h" = 4.08 } }
+
+[cost.text.output]
+price = 10.2

@@ -1,0 +1,17 @@
+# Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
+# Effective USD per 1M tokens: official list price × Claude group ratio 0.68.
+# Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
+# Relay accepts reasoning_effort and reasoning={enabled,effort,max_tokens} and maps them to the upstream controls.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (adaptive thinking always enabled; no toggle)
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2.72
+cache = { read = 0.136, write = { "5m" = 3.4, "1h" = 5.44 } }
+
+[cost.text.output]
+price = 13.6

@@ -1,0 +1,15 @@
+# Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
+# Effective USD per 1M tokens: official list price × GLM group ratio 0.75.
+# Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
+
+[cost.text.input]
+price = 1.05
+cache = { read = 0.195 }
+
+[cost.text.output]
+price = 3.3
