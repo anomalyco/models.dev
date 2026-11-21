@@ -21,42 +21,42 @@ function makeModel(overrides: Partial<HostlinkuModel> = {}): HostlinkuModel {
       performance: {
         mode: "performance",
         prices: {
-          inputCredits: 0.0553,
-          outputCredits: 0.2765,
-          cacheReadCredits: 0.00553,
-          cacheWrite5mCredits: 0.069125,
-          cacheWrite1hCredits: 0.1106,
-          webSearchPer1kCredits: 15.8,
+          input: 0.0553,
+          output: 0.2765,
+          cacheRead: 0.00553,
+          cacheWrite5m: 0.069125,
+          cacheWrite1h: 0.1106,
+          webSearchPer1k: 15.8,
         },
         tiers: [
           {
             minTokens: 100_000,
-            inputCredits: 0.632,
-            outputCredits: 3.16,
-            cacheReadCredits: 0.0632,
-            cacheWrite5mCredits: 0.79,
-            cacheWrite1hCredits: 1.264,
+            input: 0.632,
+            output: 3.16,
+            cacheRead: 0.0632,
+            cacheWrite5m: 0.79,
+            cacheWrite1h: 1.264,
           },
         ],
       },
       economy: {
         mode: "economy",
         prices: {
-          inputCredits: 0.01875,
-          outputCredits: 0.09375,
-          cacheReadCredits: 0.001875,
-          cacheWrite5mCredits: 0.023438,
-          cacheWrite1hCredits: 0.0375,
-          webSearchPer1kCredits: 12.5,
+          input: 0.01875,
+          output: 0.09375,
+          cacheRead: 0.001875,
+          cacheWrite5m: 0.023438,
+          cacheWrite1h: 0.0375,
+          webSearchPer1k: 12.5,
         },
         tiers: [
           {
             minTokens: 100_000,
-            inputCredits: 0.09375,
-            outputCredits: 0.46875,
-            cacheReadCredits: 0.009375,
-            cacheWrite5mCredits: 0.117188,
-            cacheWrite1hCredits: 0.1875,
+            input: 0.09375,
+            output: 0.46875,
+            cacheRead: 0.009375,
+            cacheWrite5m: 0.117188,
+            cacheWrite1h: 0.1875,
           },
         ],
       },
@@ -79,11 +79,14 @@ test("Hostlinku is registered for scheduled sync and fetches its public catalog 
   let request: Request | undefined;
   const fetcher = (async (input: string | URL | Request, init?: RequestInit) => {
     request = input instanceof Request ? new Request(input, init) : new Request(input.toString(), init);
-    return Response.json({ status: "success", models: fillerModels(10) });
+    return Response.json({
+      status: "success",
+      data: { currency: "USD", unit: "per_1m_tokens", items: fillerModels(10) },
+    });
   }) as unknown as typeof fetch;
 
   await fetchHostlinkuModels(fetcher);
-  expect(request!.url).toBe("https://api.hostlinku.com/api/public/models");
+  expect(request!.url).toBe("https://api.hostlinku.com/api/public/pricing");
   expect(request!.headers.get("authorization")).toBeNull();
 
   const unavailable = (async () => new Response("Unavailable", { status: 503 })) as unknown as typeof fetch;
@@ -91,7 +94,12 @@ test("Hostlinku is registered for scheduled sync and fetches its public catalog 
 });
 
 test("parseModels rejects truncated catalogs below minimum expected model count", () => {
-  expect(() => hostlinku.parseModels({ status: "success", models: [makeModel()] })).toThrow("too few models");
+  expect(() =>
+    hostlinku.parseModels({
+      status: "success",
+      data: { currency: "USD", unit: "per_1m_tokens", items: [makeModel()] },
+    }),
+  ).toThrow("too few models");
 });
 
 test("buildHostlinkuCost updates multi-mode tiers and preserves cache-write policy", () => {
@@ -153,19 +161,19 @@ test("buildHostlinkuCost updates multi-mode tiers and preserves cache-write poli
       performance: {
         mode: "performance",
         prices: {
-          inputCredits: 1.817,
-          outputCredits: 10.902,
-          cacheReadCredits: 0.1817,
-          cacheWrite5mCredits: 2.27125,
-          cacheWrite1hCredits: 3.634,
-          webSearchPer1kCredits: 15.8,
+          input: 1.817,
+          output: 10.902,
+          cacheRead: 0.1817,
+          cacheWrite5m: 2.27125,
+          cacheWrite1h: 3.634,
+          webSearchPer1k: 15.8,
         },
-        tiers: [{ minTokens: 272_000, inputCredits: 12.64, outputCredits: 56.88, cacheReadCredits: 1.264 }],
+        tiers: [{ minTokens: 272_000, input: 12.64, output: 56.88, cacheRead: 1.264 }],
       },
       economy: {
         mode: "economy",
-        prices: { inputCredits: 0.3125, outputCredits: 1.875, cacheReadCredits: 0.03125, webSearchPer1kCredits: 12.5 },
-        tiers: [{ minTokens: 272_000, inputCredits: 0.625, outputCredits: 2.8125, cacheReadCredits: 0.0625 }],
+        prices: { input: 0.3125, output: 1.875, cacheRead: 0.03125, webSearchPer1k: 12.5 },
+        tiers: [{ minTokens: 272_000, input: 0.625, output: 2.8125, cacheRead: 0.0625 }],
       },
       dedicated: null,
     },
@@ -293,10 +301,14 @@ test("listed models with no priceable mode are retained with a notice while deli
       async fetchModels() {
         return {
           status: "success",
-          models: [
-            makeModel({ modes: { performance: null, economy: null, dedicated: null } }),
-            ...fillerModels(10),
-          ],
+          data: {
+            currency: "USD",
+            unit: "per_1m_tokens",
+            items: [
+              makeModel({ modes: { performance: null, economy: null, dedicated: null } }),
+              ...fillerModels(10),
+            ],
+          },
         };
       },
     };
