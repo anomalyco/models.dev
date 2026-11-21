@@ -21,6 +21,7 @@ import { withPredecessorCapabilities } from "./inherit.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
+import { alibaba } from "./providers/alibaba.js";
 import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
 import { amazonBedrock } from "./providers/amazon-bedrock.js";
@@ -34,6 +35,7 @@ import { cloudflareWorkersAi } from "./providers/cloudflare-workers-ai.js";
 import { cortecs } from "./providers/cortecs.js";
 import { crossmodel } from "./providers/crossmodel.js";
 import { deepinfra } from "./providers/deepinfra.js";
+import { deepseek } from "./providers/deepseek.js";
 import { digitalocean } from "./providers/digitalocean.js";
 import { edenai } from "./providers/edenai.js";
 import { empiriolabs } from "./providers/empiriolabs.js";
@@ -42,6 +44,7 @@ import { fireworksAi } from "./providers/fireworks-ai.js";
 import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
+import { groq } from "./providers/groq.js";
 import { hyper } from "./providers/hyper.js";
 import { hostingerRouter } from "./providers/hostinger-router.js";
 import { huggingface } from "./providers/huggingface.js";
@@ -68,6 +71,7 @@ import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
+import { moonshotai } from "./providers/moonshotai.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
@@ -196,6 +200,7 @@ export interface SyncResult {
 
 export const providers: {
   aiand: SyncProvider<any>;
+  alibaba: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
   "amazon-bedrock": SyncProvider<any>;
@@ -209,6 +214,7 @@ export const providers: {
   cortecs: SyncProvider<any>;
   crossmodel: SyncProvider<any>;
   deepinfra: SyncProvider<any>;
+  deepseek: SyncProvider<any>;
   digitalocean: SyncProvider<any>;
   edenai: SyncProvider<any>;
   empiriolabs: SyncProvider<any>;
@@ -217,6 +223,7 @@ export const providers: {
   friendli: SyncProvider<any>;
   "github-copilot": SyncProvider<any>;
   google: SyncProvider<any>;
+  groq: SyncProvider<any>;
   hyper: SyncProvider<any>;
   "hostinger-router": SyncProvider<any>;
   huggingface: SyncProvider<any>;
@@ -244,6 +251,7 @@ export const providers: {
   requesty: SyncProvider<any>;
   sambanova: SyncProvider<any>;
   morph: SyncProvider<any>;
+  moonshotai: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
@@ -251,6 +259,7 @@ export const providers: {
   xai: SyncProvider<any>;
 } = {
   aiand,
+  alibaba,
   aimlapi,
   ambient,
   "amazon-bedrock": amazonBedrock,
@@ -264,6 +273,7 @@ export const providers: {
   cortecs,
   crossmodel,
   deepinfra,
+  deepseek,
   digitalocean,
   edenai,
   empiriolabs,
@@ -272,6 +282,7 @@ export const providers: {
   friendli,
   "github-copilot": githubCopilot,
   google,
+  groq,
   hyper,
   "hostinger-router": hostingerRouter,
   huggingface,
@@ -299,6 +310,7 @@ export const providers: {
   requesty,
   sambanova: sambaNova,
   morph,
+  moonshotai,
   tinfoil,
   vercel,
   venice,
@@ -330,7 +342,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "alibaba", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "deepseek", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "meta", "mistral", "moonshotai", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
