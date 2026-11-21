@@ -42,6 +42,7 @@ import { fireworksAi } from "./providers/fireworks-ai.js";
 import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
 import { google } from "./providers/google.js";
+import { groq } from "./providers/groq.js";
 import { hyper } from "./providers/hyper.js";
 import { hostingerRouter } from "./providers/hostinger-router.js";
 import { huggingface } from "./providers/huggingface.js";
@@ -217,6 +218,7 @@ export const providers: {
   friendli: SyncProvider<any>;
   "github-copilot": SyncProvider<any>;
   google: SyncProvider<any>;
+  groq: SyncProvider<any>;
   hyper: SyncProvider<any>;
   "hostinger-router": SyncProvider<any>;
   huggingface: SyncProvider<any>;
@@ -272,6 +274,7 @@ export const providers: {
   friendli,
   "github-copilot": githubCopilot,
   google,
+  groq,
   hyper,
   "hostinger-router": hostingerRouter,
   huggingface,
@@ -330,7 +333,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "meta", "mistral", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

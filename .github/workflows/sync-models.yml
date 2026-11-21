@@ -54,6 +54,7 @@ jobs:
             DEEPINFRA_API_KEY,models.dev/release/DEEPINFRA_API_KEY
             DIGITALOCEAN_API_TOKEN,models.dev/release/DIGITALOCEAN_API_TOKEN
             FIREWORKS_API_KEY,models.dev/release/FIREWORKS_API_KEY
+            GROQ_API_KEY,models.dev/release/GROQ_API_KEY
             GOOGLE_API_KEY,models.dev/release/GOOGLE_API_KEY
             MERGE_GATEWAY_API_KEY,models.dev/release/MERGE_GATEWAY_API_KEY
             MISTRAL_API_KEY,models.dev/release/MISTRAL_API_KEY
@@ -81,6 +82,7 @@ jobs:
           DIGITALOCEAN_API_TOKEN: ${{ env.DIGITALOCEAN_API_TOKEN }}
           DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           FIREWORKS_API_KEY: ${{ env.FIREWORKS_API_KEY }}
+          GROQ_API_KEY: ${{ env.GROQ_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           OPENROUTER_API_KEY: ${{ env.OPENROUTER_API_KEY }}
           OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
