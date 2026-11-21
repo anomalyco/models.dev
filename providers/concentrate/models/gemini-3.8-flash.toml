@@ -1,0 +1,21 @@
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = { min_tokens = 4_096 }, explicit = true }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75
+
+[cost.web_search]
+price = 14
