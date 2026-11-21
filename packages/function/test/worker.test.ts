@@ -22,10 +22,17 @@ const v2Providers = {
   ...providers,
   "github-copilot": { id: "github-copilot", models: { text: textModel } },
 };
-const expandedProviders = {
-  ...v2Providers,
+const optInProviders = {
+  "openai-chatgpt": { id: "openai-chatgpt", models: { text: textModel } },
   "openai-codex": { id: "openai-codex", models: { text: textModel } },
 };
+const expandedProviders = { ...v2Providers, ...optInProviders };
+function withOptIn(ids: readonly string[]) {
+  return {
+    ...v2Providers,
+    ...Object.fromEntries(Object.entries(optInProviders).filter(([id]) => ids.includes(id))),
+  };
+}
 
 describe("catalog API model type filtering", () => {
   test("omits typed models from api.json by default", async () => {
@@ -126,17 +133,18 @@ describe("experimental provider opt-in", () => {
   const endpoint = "/experimental/v2.0/api.json";
 
   test("requires opt-in even with type=all and leaves existing providers unchanged", async () => {
-    for (const query of ["", "?type=all", "?include=unknown", "?include=openai-chatgpt", "?include=openai,github-copilot"]) {
+    for (const query of ["", "?type=all", "?include=unknown", "?include=openai,github-copilot"]) {
       const response = await request(endpoint + query);
       expect(await response.json()).toEqual(v2Providers);
     }
-    for (const query of [
-      "include=openai-codex",
-      "include=openai-codex,openai-chatgpt",
-      "include= openai-chatgpt, openai-codex,openai-codex &include=unknown",
-    ]) {
+    for (const [query, ids] of [
+      ["include=openai-codex", ["openai-codex"]],
+      ["include=openai-chatgpt&include=unknown", ["openai-chatgpt"]],
+      ["include=openai-codex,openai-chatgpt", ["openai-chatgpt", "openai-codex"]],
+      ["include= openai-chatgpt, openai-codex,openai-codex &include=unknown", ["openai-chatgpt", "openai-codex"]],
+    ] as const) {
       const response = await request(endpoint + "?" + query);
-      expect(await response.json()).toEqual(expandedProviders);
+      expect(await response.json()).toEqual(withOptIn(ids));
     }
   });
 
@@ -153,7 +161,14 @@ describe("experimental provider opt-in", () => {
   });
 
   test("separates static and composed view validators in both directions", async () => {
-    const queries = ["", "?include=openai-codex", "?type=chat,decision", "?include=openai-codex&type=chat,decision"];
+    const queries = [
+      "",
+      "?include=openai-codex",
+      "?include=openai-chatgpt",
+      "?include=openai-chatgpt,openai-codex",
+      "?type=chat,decision",
+      "?include=openai-codex&type=chat,decision",
+    ];
     for (const query of queries) {
       const response = await request(endpoint + query);
       const etag = response.headers.get("etag")!;
@@ -181,7 +196,7 @@ describe("experimental provider opt-in", () => {
   test("prebuilt v2 files retain direct static access", async () => {
     const defaults = await request("/_experimental_v2.0_api.json");
     expect(await defaults.json()).toEqual(v2Providers);
-    const included = await request("/_experimental_v2.0_api-optin-all.json");
+    const included = await request("/_experimental_v2.0_api-include-openai-chatgpt-openai-codex-all.json");
     expect(await included.json()).toEqual(expandedProviders);
   });
 });
@@ -289,9 +304,12 @@ async function request(
       fetch(input: Request) {
         const pathname = new URL(input.url).pathname;
         if (pathname.startsWith("/_experimental_v2.0_api")) {
-          const expanded = pathname.includes("-optin");
-          const type = pathname.replace("/_experimental_v2.0_api", "").replace("-optin", "").replace(".json", "");
-          const source = expanded ? expandedProviders : v2Providers;
+          const view = Object.keys(optInProviders).filter((id) => pathname.includes(id));
+          const type = pathname
+            .replace("/_experimental_v2.0_api", "")
+            .replace(/-include(-openai-(chatgpt|codex))+/, "")
+            .replace(".json", "");
+          const source = withOptIn(view);
           const value = type === "-decision"
             ? { example: { ...providers.example, models: { decision: decisionModel } } }
             : type === "-chat"
@@ -299,7 +317,7 @@ async function request(
                   id, { ...provider, models: { text: textModel } },
                 ]))
               : source;
-          const etag = `"v2${expanded ? "-optin" : ""}${type}"`;
+          const etag = `"v2${view.map((id) => `-${id}`).join("")}${type}"`;
           const headers = { etag, "Cache-Control": "public, max-age=3600" };
           if (input.headers.get("if-none-match")?.includes(etag)) {
             return new Response(null, { status: 304, headers });
