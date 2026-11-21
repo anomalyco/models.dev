@@ -3,25 +3,25 @@ import { z } from "zod";
 import type { SyncProvider, SyncedV2Model } from "../index.js";
 
 // Public Hostlinku catalog (unauthenticated; USD per 1M tokens for text/cache, per 1k queries for web search).
-const API_ENDPOINT = "https://api.hostlinku.com/api/public/models";
+const API_ENDPOINT = "https://api.hostlinku.com/api/public/pricing";
 const MIN_EXPECTED_MODELS = 10;
 
 const HostlinkuPrices = z.object({
-  inputCredits: z.number().nonnegative(),
-  outputCredits: z.number().nonnegative(),
-  cacheReadCredits: z.number().nonnegative().nullable().optional(),
-  cacheWrite5mCredits: z.number().nonnegative().nullable().optional(),
-  cacheWrite1hCredits: z.number().nonnegative().nullable().optional(),
-  webSearchPer1kCredits: z.number().nonnegative().nullable().optional(),
+  input: z.number().nonnegative(),
+  output: z.number().nonnegative(),
+  cacheRead: z.number().nonnegative().nullable().optional(),
+  cacheWrite5m: z.number().nonnegative().nullable().optional(),
+  cacheWrite1h: z.number().nonnegative().nullable().optional(),
+  webSearchPer1k: z.number().nonnegative().nullable().optional(),
 }).passthrough();
 
 const HostlinkuTier = z.object({
   minTokens: z.number().int().positive(),
-  inputCredits: z.number().nonnegative(),
-  outputCredits: z.number().nonnegative(),
-  cacheReadCredits: z.number().nonnegative().nullable().optional(),
-  cacheWrite5mCredits: z.number().nonnegative().nullable().optional(),
-  cacheWrite1hCredits: z.number().nonnegative().nullable().optional(),
+  input: z.number().nonnegative(),
+  output: z.number().nonnegative(),
+  cacheRead: z.number().nonnegative().nullable().optional(),
+  cacheWrite5m: z.number().nonnegative().nullable().optional(),
+  cacheWrite1h: z.number().nonnegative().nullable().optional(),
 }).passthrough();
 
 const HostlinkuMode = z.object({
@@ -32,7 +32,7 @@ const HostlinkuMode = z.object({
 
 export const HostlinkuModel = z.object({
   modelId: z.string().min(1),
-  slug: z.string().min(1),
+  slug: z.string().min(1).optional(),
   defaultMode: z.enum(["performance", "economy", "dedicated"]),
   modes: z.object({
     performance: HostlinkuMode.nullable().optional(),
@@ -43,7 +43,12 @@ export const HostlinkuModel = z.object({
 
 export const HostlinkuResponse = z.object({
   status: z.literal("success").optional(),
-  models: z.array(HostlinkuModel),
+  data: z.object({
+    currency: z.literal("USD").optional(),
+    unit: z.string().optional(),
+    items: z.array(HostlinkuModel),
+    total: z.number().int().nonnegative().optional(),
+  }).passthrough(),
 }).passthrough();
 
 export type HostlinkuModel = z.infer<typeof HostlinkuModel>;
@@ -65,7 +70,7 @@ export const hostlinku = {
     return fetchHostlinkuModels();
   },
   parseModels(raw) {
-    const models = HostlinkuResponse.parse(raw).models;
+    const models = HostlinkuResponse.parse(raw).data.items;
     if (models.length < MIN_EXPECTED_MODELS) {
       throw new Error(`Hostlinku returned too few models (${models.length}); refusing to sync a truncated catalog`);
     }
@@ -113,9 +118,9 @@ function buildCacheEntry(
   const existingWrite = isRecord(existingWriteRaw) ? existingWriteRaw : undefined;
   const { "5m": _w5m, "1h": _w1h, ...restWrite } = existingWrite ?? {};
 
-  const read = prices.cacheReadCredits ?? undefined;
-  const write5m = includeWrite ? (prices.cacheWrite5mCredits ?? undefined) : undefined;
-  const write1h = includeWrite ? (prices.cacheWrite1hCredits ?? undefined) : undefined;
+  const read = prices.cacheRead ?? undefined;
+  const write5m = includeWrite ? (prices.cacheWrite5m ?? undefined) : undefined;
+  const write1h = includeWrite ? (prices.cacheWrite1h ?? undefined) : undefined;
   const hasWrite = write5m !== undefined || write1h !== undefined || (includeWrite && Object.keys(restWrite).length > 0);
   const write = hasWrite
     ? {
@@ -190,7 +195,7 @@ function buildInputOverride(
   return {
     ...rest,
     when,
-    price: prices.inputCredits,
+    price: prices.input,
     ...(cache !== undefined ? { cache } : {}),
   };
 }
@@ -198,14 +203,14 @@ function buildInputOverride(
 function buildOutputOverride(
   existingList: unknown,
   when: Record<string, unknown>,
-  outputCredits: number,
+  output: number,
 ): Record<string, unknown> {
   const existing = findMatchingOverride(existingList, when);
   const { when: _w, price: _p, ...rest } = existing ?? {};
   return {
     ...rest,
     when,
-    price: outputCredits,
+    price: output,
   };
 }
 
@@ -234,19 +239,19 @@ export function buildHostlinkuCost(model: HostlinkuModel, current: Record<string
   for (const tier of sortedTiers(baseMode.tiers)) {
     const when = { context: { gte: tier.minTokens } };
     inputOverrides.push(buildInputOverride(currentInput?.overrides, when, tier, includeWrite));
-    outputOverrides.push(buildOutputOverride(currentOutput?.overrides, when, tier.outputCredits));
+    outputOverrides.push(buildOutputOverride(currentOutput?.overrides, when, tier.output));
   }
 
   const economy = model.defaultMode !== "economy" ? (model.modes.economy ?? undefined) : undefined;
   if (economy !== undefined) {
     const modeWhen = { mode: { equals: "economy" } };
     inputOverrides.push(buildInputOverride(currentInput?.overrides, modeWhen, economy.prices, includeWrite));
-    outputOverrides.push(buildOutputOverride(currentOutput?.overrides, modeWhen, economy.prices.outputCredits));
+    outputOverrides.push(buildOutputOverride(currentOutput?.overrides, modeWhen, economy.prices.output));
 
     for (const tier of sortedTiers(economy.tiers)) {
       const tierModeWhen = { context: { gte: tier.minTokens }, mode: { equals: "economy" } };
       inputOverrides.push(buildInputOverride(currentInput?.overrides, tierModeWhen, tier, includeWrite));
-      outputOverrides.push(buildOutputOverride(currentOutput?.overrides, tierModeWhen, tier.outputCredits));
+      outputOverrides.push(buildOutputOverride(currentOutput?.overrides, tierModeWhen, tier.output));
     }
   }
 
@@ -261,22 +266,22 @@ export function buildHostlinkuCost(model: HostlinkuModel, current: Record<string
   const baseCache = buildCacheEntry(baseMode.prices, includeWrite, currentCache);
   const textInput = {
     ...restInput,
-    price: baseMode.prices.inputCredits,
+    price: baseMode.prices.input,
     ...(baseCache !== undefined ? { cache: baseCache } : {}),
     ...(allInputOverrides.length > 0 ? { overrides: allInputOverrides } : {}),
   };
   const textOutput = {
     ...restOutput,
-    price: baseMode.prices.outputCredits,
+    price: baseMode.prices.output,
     ...(allOutputOverrides.length > 0 ? { overrides: allOutputOverrides } : {}),
   };
 
-  const baseWeb = baseMode.prices.webSearchPer1kCredits ?? undefined;
+  const baseWeb = baseMode.prices.webSearchPer1k ?? undefined;
   const webOverrides: Array<Record<string, unknown>> = [];
-  if (economy?.prices.webSearchPer1kCredits != null) {
+  if (economy?.prices.webSearchPer1k != null) {
     webOverrides.push({
       when: { mode: { equals: "economy" } },
-      price: economy.prices.webSearchPer1kCredits,
+      price: economy.prices.webSearchPer1k,
     });
   }
   const allWebOverrides = [...webOverrides, ...preservedOverrides(currentWebSearch?.overrides)];
