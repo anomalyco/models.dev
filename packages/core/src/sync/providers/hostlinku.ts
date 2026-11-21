@@ -2,8 +2,9 @@ import { z } from "zod";
 
 import type { SyncProvider, SyncedV2Model } from "../index.js";
 
-// Public Hostlinku catalog (unauthenticated; USD per 1M tokens for text/cache, per 1k queries for web search).
-const API_ENDPOINT = "https://api.hostlinku.com/api/public/pricing";
+// Public Hostlinku catalog and pricing endpoints (unauthenticated; USD per 1M tokens for text/cache, per 1k queries for web search).
+const MODELS_ENDPOINT = "https://api.hostlinku.com/api/public/models";
+const PRICING_ENDPOINT = "https://api.hostlinku.com/api/public/pricing";
 const MIN_EXPECTED_MODELS = 10;
 
 const HostlinkuPrices = z.object({
@@ -41,7 +42,19 @@ export const HostlinkuModel = z.object({
   }).passthrough(),
 }).passthrough();
 
-export const HostlinkuResponse = z.object({
+const HostlinkuCatalogItem = z.object({
+  id: z.string().min(1),
+}).passthrough();
+
+export const HostlinkuCatalogResponse = z.object({
+  status: z.literal("success").optional(),
+  data: z.object({
+    items: z.array(HostlinkuCatalogItem),
+    total: z.number().int().nonnegative().optional(),
+  }).passthrough(),
+}).passthrough();
+
+export const HostlinkuPricingResponse = z.object({
   status: z.literal("success").optional(),
   data: z.object({
     currency: z.literal("USD").optional(),
@@ -51,14 +64,21 @@ export const HostlinkuResponse = z.object({
   }).passthrough(),
 }).passthrough();
 
+export const HostlinkuResponse = HostlinkuPricingResponse;
+
+const HostlinkuSyncPayload = z.object({
+  catalog: HostlinkuCatalogResponse,
+  pricing: HostlinkuPricingResponse,
+});
+
 export type HostlinkuModel = z.infer<typeof HostlinkuModel>;
 type HostlinkuPriceFields = z.infer<typeof HostlinkuPrices>;
 type HostlinkuTierFields = z.infer<typeof HostlinkuTier>;
 
 /**
- * Syncs per-mode USD pricing from Hostlinku's unauthenticated public catalog
- * and removes local files that leave the catalog. Lab `base_model` pointers,
- * API surface blocks, and live-probed reasoning controls stay hand-authored.
+ * Syncs per-mode USD pricing from Hostlinku's unauthenticated `/api/public/pricing`
+ * endpoint and removes local files that leave `/api/public/models`. Lab `base_model`
+ * pointers, API surface blocks, and live-probed reasoning controls stay hand-authored.
  */
 export const hostlinku = {
   id: "hostlinku",
@@ -70,7 +90,29 @@ export const hostlinku = {
     return fetchHostlinkuModels();
   },
   parseModels(raw) {
-    const models = HostlinkuResponse.parse(raw).data.items;
+    if (isRecord(raw) && "catalog" in raw && "pricing" in raw) {
+      const { catalog, pricing } = HostlinkuSyncPayload.parse(raw);
+      const catalogItems = catalog.data.items;
+      if (catalogItems.length < MIN_EXPECTED_MODELS) {
+        throw new Error(`Hostlinku returned too few models (${catalogItems.length}); refusing to sync a truncated catalog`);
+      }
+      const pricingByModelId = new Map(
+        pricing.data.items.map((item) => [item.modelId, item] as const),
+      );
+      return catalogItems.map((item): HostlinkuModel => (
+        pricingByModelId.get(item.id) ?? {
+          modelId: item.id,
+          defaultMode: "performance",
+          modes: {
+            performance: null,
+            economy: null,
+            dedicated: null,
+          },
+        }
+      ));
+    }
+
+    const models = HostlinkuPricingResponse.parse(raw).data.items;
     if (models.length < MIN_EXPECTED_MODELS) {
       throw new Error(`Hostlinku returned too few models (${models.length}); refusing to sync a truncated catalog`);
     }
@@ -98,11 +140,21 @@ export const hostlinku = {
 } satisfies SyncProvider<HostlinkuModel>;
 
 export async function fetchHostlinkuModels(fetcher: typeof fetch = fetch) {
-  const response = await fetcher(API_ENDPOINT);
-  if (!response.ok) {
-    throw new Error(`Hostlinku models request failed: ${response.status} ${response.statusText}`);
+  const [catalogResponse, pricingResponse] = await Promise.all([
+    fetcher(MODELS_ENDPOINT),
+    fetcher(PRICING_ENDPOINT),
+  ]);
+  if (!catalogResponse.ok) {
+    throw new Error(`Hostlinku models request failed: ${catalogResponse.status} ${catalogResponse.statusText}`);
   }
-  return response.json();
+  if (!pricingResponse.ok) {
+    throw new Error(`Hostlinku pricing request failed: ${pricingResponse.status} ${pricingResponse.statusText}`);
+  }
+  const [catalog, pricing] = await Promise.all([
+    catalogResponse.json(),
+    pricingResponse.json(),
+  ]);
+  return { catalog, pricing };
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

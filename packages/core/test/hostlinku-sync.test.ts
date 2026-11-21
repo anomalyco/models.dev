@@ -73,12 +73,25 @@ function fillerModels(count: number, prefix = "filler-"): HostlinkuModel[] {
   }));
 }
 
-test("Hostlinku is registered for scheduled sync and fetches its public catalog without auth", async () => {
+function fillerCatalogItems(count: number, prefix = "filler-") {
+  return Array.from({ length: count }, (_, index) => ({
+    id: `${prefix}${index}`,
+  }));
+}
+
+test("Hostlinku is registered for scheduled sync and fetches its public catalog and pricing without auth", async () => {
   expect(syncProviderMatrix().include.some((entry) => entry.provider === hostlinku.id)).toBe(true);
 
-  let request: Request | undefined;
+  const requests: Request[] = [];
   const fetcher = (async (input: string | URL | Request, init?: RequestInit) => {
-    request = input instanceof Request ? new Request(input, init) : new Request(input.toString(), init);
+    const req = input instanceof Request ? new Request(input, init) : new Request(input.toString(), init);
+    requests.push(req);
+    if (req.url === "https://api.hostlinku.com/api/public/models") {
+      return Response.json({
+        status: "success",
+        data: { items: fillerCatalogItems(10) },
+      });
+    }
     return Response.json({
       status: "success",
       data: { currency: "USD", unit: "per_1m_tokens", items: fillerModels(10) },
@@ -86,14 +99,32 @@ test("Hostlinku is registered for scheduled sync and fetches its public catalog 
   }) as unknown as typeof fetch;
 
   await fetchHostlinkuModels(fetcher);
-  expect(request!.url).toBe("https://api.hostlinku.com/api/public/pricing");
-  expect(request!.headers.get("authorization")).toBeNull();
+  expect(requests.map((req) => req.url)).toEqual([
+    "https://api.hostlinku.com/api/public/models",
+    "https://api.hostlinku.com/api/public/pricing",
+  ]);
+  for (const req of requests) {
+    expect(req.headers.get("authorization")).toBeNull();
+  }
 
   const unavailable = (async () => new Response("Unavailable", { status: 503 })) as unknown as typeof fetch;
   await expect(fetchHostlinkuModels(unavailable)).rejects.toThrow("503");
 });
 
 test("parseModels rejects truncated catalogs below minimum expected model count", () => {
+  expect(() =>
+    hostlinku.parseModels({
+      catalog: {
+        status: "success",
+        data: { items: [{ id: "claude-haiku-5-5" }] },
+      },
+      pricing: {
+        status: "success",
+        data: { currency: "USD", unit: "per_1m_tokens", items: [makeModel()] },
+      },
+    }),
+  ).toThrow("too few models");
+
   expect(() =>
     hostlinku.parseModels({
       status: "success",
@@ -243,7 +274,7 @@ test("buildHostlinkuCost updates multi-mode tiers and preserves cache-write poli
   });
 });
 
-test("listed models with no priceable mode are retained with a notice while delisted models are removed", async () => {
+test("listed models missing from pricing or lacking a priceable mode are retained with a notice while delisted models are removed", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "hostlinku-sync-"));
   try {
     const modelsDir = path.join(root, "providers", "hostlinku", "models");
@@ -293,6 +324,7 @@ test("listed models with no priceable mode are retained with a notice while deli
     ].join("\n");
 
     await writeFile(path.join(modelsDir, "claude-haiku-5-5.toml"), retainedToml);
+    await writeFile(path.join(modelsDir, "grok-4-5.toml"), retiredToml);
     await writeFile(path.join(modelsDir, "retired-model.toml"), retiredToml);
 
     const provider: SyncProvider<HostlinkuModel> = {
@@ -300,14 +332,27 @@ test("listed models with no priceable mode are retained with a notice while deli
       modelsDir,
       async fetchModels() {
         return {
-          status: "success",
-          data: {
-            currency: "USD",
-            unit: "per_1m_tokens",
-            items: [
-              makeModel({ modes: { performance: null, economy: null, dedicated: null } }),
-              ...fillerModels(10),
-            ],
+          catalog: {
+            status: "success",
+            data: {
+              items: [
+                { id: "claude-haiku-5-5" },
+                { id: "grok-4-5" },
+                ...fillerCatalogItems(10),
+              ],
+            },
+          },
+          pricing: {
+            status: "success",
+            data: {
+              currency: "USD",
+              unit: "per_1m_tokens",
+              // claude-haiku-5-5 has null modes; grok-4-5 is omitted from pricing while still in catalog
+              items: [
+                makeModel({ modes: { performance: null, economy: null, dedicated: null } }),
+                ...fillerModels(10),
+              ],
+            },
           },
         };
       },
@@ -316,10 +361,12 @@ test("listed models with no priceable mode are retained with a notice while deli
     const result = await syncProvider(provider);
     expect(result.deleted).toBe(1);
     expect(result.updated).toBe(0);
-    expect(result.unchanged).toBe(1);
+    expect(result.unchanged).toBe(2);
     expect(result.notices).toContain("Retained claude-haiku-5-5: public catalog row has no priceable mode.");
+    expect(result.notices).toContain("Retained grok-4-5: public catalog row has no priceable mode.");
     expect(existsSync(path.join(modelsDir, "retired-model.toml"))).toBe(false);
     expect(await readFile(path.join(modelsDir, "claude-haiku-5-5.toml"), "utf8")).toBe(retainedToml);
+    expect(await readFile(path.join(modelsDir, "grok-4-5.toml"), "utf8")).toBe(retiredToml);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

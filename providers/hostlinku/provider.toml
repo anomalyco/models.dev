@@ -4,7 +4,7 @@
 # (`Authorization: Bearer` or `x-api-key`).
 # Service modes: each API key is bound to `performance`, `economy`, or `dedicated` (https://docs.hostlinku.com/service-modes).
 # GET /v1/models returns the active key's callable models and USD per-1M-token prices.
-# Public catalog and per-mode USD pricing (no auth): https://hostlinku.com/models and GET https://api.hostlinku.com/api/public/models.
+# Public catalog and per-mode USD pricing (no auth): https://hostlinku.com/models, GET https://api.hostlinku.com/api/public/models, and GET https://api.hostlinku.com/api/public/pricing.
 name = "Hostlinku"
 env = ["HOSTLINKU_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
