@@ -1,0 +1,29 @@
+# Model: https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash (general availability
+#   2026-11-05: https://ai.google.dev/gemini-api/docs/changelog)
+# Pricing: https://ai.google.dev/gemini-api/docs/pricing#gemini-omni-1.2-flash — OpenCode Zen bills
+#   USD per 1M tokens: text/image/video input $1.50, text and thought output $9.00, video output
+#   $12.00. All input tokens are billed at the text input rate; no cache price or context bands.
+# API: native Google Interactions video API through OpenCode's public inference endpoint
+#   (https://ai.google.dev/gemini-api/docs/omni): POST /interactions on
+#   https://opencode.ai/inference/google/v1beta. Zen only (no Free or Go entry). Inline MP4 output
+#   only: delivery=uri is refused and Files/gs URIs are unavailable.
+schema = 2
+v2_only = true
+base_model = "google/gemini-omni-1.2-flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.videos]
+base_url = "https://opencode.ai/inference/google/v1beta"
+path = "/interactions"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/google/videos" }
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 9
+
+[cost.video.output]
+price = 12
