@@ -1,0 +1,34 @@
+# Provider docs: https://thesmartoken.com/docs
+# Model, advertised context and pricing: https://thesmartoken.com/v1/models
+# Toggle: thinking.type = enabled|disabled. The gateway rejects reasoning_effort.
+# The gateway currently supports text input only and rejects tool and structured-output requests.
+# Temperature is accepted only when thinking is disabled; it is marked unavailable for conservative client defaults.
+# Token prices are published uncached rates. /v1/models publishes no cache-read
+# price or peak/off-peak rates for this model (both peak and off_peak are null).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, toggle = true }
+structured_output = false
+temperature = false
+top_k = false
+top_p = false
+stream_usage = true
+
+[limit]
+output = 393_216
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
