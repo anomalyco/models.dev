@@ -1,0 +1,33 @@
+# Hosted NIM: listed as a Free Endpoint on https://build.nvidia.com/mistralai/mistral-large-4-1t-a52b
+# (released on Build.NVIDIA.com 2026-10-29; page updated 2026-10-29T14:10:58Z).
+# Endpoint: https://integrate.api.nvidia.com/v1/chat/completions, model id "mistralai/mistral-large-4-1t-a52b".
+# Capabilities listed on the model page: Function Calling, Structured Output, Reasoning (all Supported).
+# Limit: the hosted recipe shares one 262,144-token window between prompt and output
+# ("combined prompt and generated response must fit within the 262,144-token context window");
+# the lab's 1,048,576-token context is not served here.
+# https://build.nvidia.com/qc69jvmznzxy/mistral-large-4-1t-a52b/apireference.md
+# Reasoning: top-level `reasoning_effort` = "none" | "high" (default "high"; the request schema names no
+# other values; "low", "medium" and "xhigh" are rejected). enable_thinking is not honored by this recipe.
+# Responses carry reasoning_content separately from the final content.
+# Input: text and images; "up to eight images" per request; the hosted schema exposes no video or
+# PDF content parts (image content parts only, text and image).
+# Pricing: free trial tier on integrate.api.nvidia.com; no per-token list rate is published (see providers/nvidia/provider.toml).
+schema = 2
+base_model = "mistral/mistral-large-4"
+
+[limit]
+context = 262_144
+image = { max_per_request = 8 }
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "high"], default = { type = "effort", value = "high" } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
