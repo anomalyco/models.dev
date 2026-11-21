@@ -1,0 +1,18 @@
+# Video generation: POST https://api.flex.ai/v1/videos/generations, poll GET /v1/videos/generations/{id}
+# (https://docs.flex.ai/inference-api/guides/video).
+# Price: GET /v1/models media_pricing, $0.08 per second of generated video (billing_unit second_video, one untiered
+# row: no resolution, quality or preset tier), 2026-11-17. The row carries no input-video or input-image price.
+# Generation run 2026-11-19 on FlexAI staging (tokens.staging.flex.ai): submit, poll and download completed,
+# returning a 768x768 video/mp4 (6.1 MB). GET /v1/models reports is_ready false on 2026-11-20 for every media row,
+# including whisper-large-v3-turbo and parakeet-tdt-0.6b-v3, which serve requests, so is_ready is not an
+# availability signal on this host. Token limits do not apply.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.08

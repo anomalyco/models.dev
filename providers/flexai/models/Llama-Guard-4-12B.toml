@@ -1,0 +1,23 @@
+# Moderation: POST https://api.flex.ai/v1/moderations (https://docs.flex.ai/inference-api/guides/moderation).
+# Staging probe 2026-11-17: POST /v1/moderations returns 200 with results[{flagged, categories S1..S14}];
+# POST /v1/chat/completions returns 400 ("is a moderation model. Use POST /v1/moderations"), so no chat API is declared.
+# Price and context from GET /v1/models (USD per 1M tokens; context_length is the served window), 2026-11-17.
+# Output: FlexAI publishes no output cap (max_output_length is null), so output is set to the served context,
+# as the lab entry does for its own window; the lab's 163_840 would exceed the served 16_384.
+schema = 2
+v2_only = true
+base_model = "meta/llama-guard-4-12b"
+
+[limit]
+context = 16_384
+output = 16_384
+
+[api.moderations]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.18
+cache = { read = 0.027 }
+
+[cost.text.output]
+price = 0.18
