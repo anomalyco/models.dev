@@ -1,0 +1,22 @@
+# FX: Hubris bills in RUB. USD/MTok below = public RUB price (https://hubris.pw/models, read 2026-11-21) / Bank of Russia official rate 82.1911 RUB/USD (2026-11-21), rounded to 4 decimals.
+# RUB/MTok: input 252.47, output 1262.36, cache read 12.62, cache write 315.59.
+# Reasoning controls: as providers/openrouter/models/openai/gpt-6.2-sol.toml where it exists; Hubris takes the OpenRouter-style reasoning object and normalises reasoning_effort (https://hubris.pw/docs/features/reasoning).
+# Reasoning side channel: message.reasoning / delta.reasoning. reasoning_field is left out on purpose: v2 allows "reasoning" but v1 interleaved.field does not.
+# Cache: automatic; Hubris also bills cache writes (https://hubris.pw/docs/features/prompt-caching).
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 3.0717
+cache = { read = 0.1535, write = 3.8397 }
+
+[cost.text.output]
+price = 15.3588
+
+[cost.web_search]
+price = 15.33
