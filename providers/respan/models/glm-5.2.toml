@@ -1,0 +1,8 @@
+# Effort: reasoning_effort = high|max (low/medium map to high, xhigh to max)
+base_model = "zhipuai/glm-5.2"
+reasoning_options = [{ type = "effort", values = ["high", "max"] }]
+
+[cost]
+input = 0.62
+output = 2.42
+cache_read = 0.14

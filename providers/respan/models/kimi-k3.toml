@@ -1,0 +1,9 @@
+# Always thinks. Effort: reasoning_effort = low|high|max
+base_model = "moonshotai/kimi-k3"
+structured_output = true
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+[cost]
+input = 0.73
+output = 10.00
+cache_read = 0.55
