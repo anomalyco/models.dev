@@ -1,0 +1,42 @@
+# Prices: https://portal.wylon.cn/zh/pricing.html (accessed 2026-11-15).
+# CNY -> USD: divide by 6.689676 CNY/USD, dated 2026-11-15,
+# source: https://open.er-api.com/v6/latest/USD; rounded to six decimals.
+# API: https://portal.wylon.cn/zh/api-chat-completions.html
+# https://portal.wylon.cn/zh/api-messages.html
+# Limits: https://dashboard.wylon.cn/models (read 2026-11-15).
+# Implicit system-level context cache: https://portal.wylon.cn/zh/docs-inference-chat.html
+# Dashboard announcement confirms this alias serves the 1017 update; omit the duplicate dated ID.
+# List prices: CNY 2 input / 0.04 cache read / 8 output per million tokens.
+# Wylon lists fixed prices; DeepSeek's own off-peak discounts do not apply.
+# Toggle baseline: thinking.type = enabled|disabled
+# Effort baseline: reasoning_effort = low|high|max
+# Controls follow the first-party deepseek-flash and same-surface SynthorAI entries;
+# Wylon's individual controls have not been live-probed.
+schema = 2
+v2_only = true
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 0.298968
+cache = { read = 0.005979 }
+
+[cost.text.output]
+price = 1.195873
