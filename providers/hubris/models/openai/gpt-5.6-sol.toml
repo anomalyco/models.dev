@@ -1,0 +1,32 @@
+# FX: Hubris bills in RUB. USD/MTok below = public RUB price (https://hubris.pw/models, read 2026-11-21) / Bank of Russia official rate 82.1911 RUB/USD (2026-11-21), rounded to 4 decimals.
+# RUB/MTok: input 504.95, output 2524.73, cache read 50.49, cache write 631.18.
+# Reasoning controls: as providers/openrouter/models/openai/gpt-5.6-sol.toml where it exists; Hubris takes the OpenRouter-style reasoning object and normalises reasoning_effort (https://hubris.pw/docs/features/reasoning).
+# Reasoning side channel: message.reasoning / delta.reasoning. reasoning_field is left out on purpose: v2 allows "reasoning" but v1 interleaved.field does not.
+# tools.freeform on [api.responses] only: live 2026-11-21, /v1/responses accepted custom tools and enforced the grammars on all 15 routes. regex ZZ[0-9]{3} returned a ZZ code plus three digits on every route, and kept the grammar even when the prompt asked for plain text instead (gpt-6-luna returned ZZ123 for "answer with the plain text ABC-xyz"). text and lark were probed on gpt-6-luna: lark start:/LK[0-9]{2}/ returned LK00, text returned plain input. /v1/chat/completions rejects the same tool (400 "Missing required parameter: 'tools[0].name'", live 2026-11-21).
+# Cache: automatic; Hubris also bills cache writes (https://hubris.pw/docs/features/prompt-caching).
+schema = 2
+base_model = "openai/gpt-5.6-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+# Provider delta: the gateway does not expose temperature, top_p (catalogue supported_parameters).
+temperature = false
+top_p = false
+
+[cost.text.input]
+price = 6.1436
+cache = { read = 0.6143, write = 7.6794 }
+
+[cost.text.output]
+price = 30.7178
+
+[cost.web_search]
+price = 15.33
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
