@@ -6,6 +6,7 @@
 # v2 cache: Converse supports implicit caching only (cachePoint unsupported) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html and the model card; implicit write/read verified live 2026-10-19.
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
 # Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card says Converse rejects document blocks, so no application/pdf here.
+# Sampling (Converse): live 2026-11-14, temperature and topP each return 400 "This model doesn't support the temperature field" / "…topP field" at every reasoning effort, including none, so temperature and top_p are false here although the OpenAI lab file is true.
 schema = 2
 base_model = "openai/gpt-5.6-luna"
 base_model_omit = ["cost.context_over_200k", "experimental.modes.fast"]
@@ -18,6 +19,8 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+temperature = false
+top_p = false
 structured_output = true
 cache = { implicit = { min_tokens = 1_024 } }
 

@@ -7,6 +7,7 @@
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); the GPT-6.1 Sol and 5.6 Terra profiles reject them live. No per-turn effort on Converse.
 # Structured outputs: Converse json_schema via outputConfig.textFormat plus additionalModelRequestFields.text.format.strict (model card "JSON Schema output on bedrock-runtime").
 # Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card says Converse rejects document blocks, so no application/pdf here.
+# Sampling (Converse): live 2026-11-14, temperature and topP each return 400 "This model doesn't support the temperature field" / "…topP field" at every reasoning effort, including none, so temperature and top_p are false here although the OpenAI lab file is true.
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 name = "GPT-6.1 Terra (US)"
@@ -18,6 +19,8 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+temperature = false
+top_p = false
 structured_output = true
 cache = { implicit = { min_tokens = 1_024 } }
 
