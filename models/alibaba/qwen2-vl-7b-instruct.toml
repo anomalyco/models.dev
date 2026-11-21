@@ -1,0 +1,29 @@
+# Source: https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct (model card and config.json, accessed
+# 2026-10-20): 8.29B parameters, images and videos, no audio; the card names no image format.
+# Context is max_position_embeddings in config.json. Its chat template has no tool definitions.
+# Release: Qwen2-VL blog, published 2024-08-29: https://qwenlm.github.io/blog/qwen2-vl/
+schema = 2
+name = "Qwen2-VL 7B Instruct"
+description = "Open 7B Qwen2 vision-language model for image and video understanding, documents and visual question answering"
+family = "qwen"
+open_weights = true
+release_date = "2024-08-29"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct"

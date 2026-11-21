@@ -1,0 +1,13 @@
+# Price: https://api.green-compute.com/platform/pricing (2026-10-20), plus a $0.01 minimum charge
+# per request (https://www.green-compute.com/docs/pricing.md).
+schema = 2
+base_model = "alibaba/qwen2-vl-7b-instruct"
+
+[limit]
+output = 8_192
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.6
