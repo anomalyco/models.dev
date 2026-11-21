@@ -1,0 +1,14 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+schema = 2
+base_model = "bytedance-seed/seed-2.1-turbo"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.4804
+
+[cost.text.output]
+price = 2.4022
