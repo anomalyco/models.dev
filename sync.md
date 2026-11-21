@@ -375,6 +375,14 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - `tools = false` overrides the lab's tool calling. Display names are not synced: the endpoint prefixes the lab name (`Z.ai: GLM 5.3`). Decision models (`decisions = true`) are skipped.
 - New models are not created automatically (`skipCreates`) and open no missing-model issues (`trackMissingModels: false`): the endpoint lists hundreds of models the catalog does not carry. It lists only models serving at that moment, so local files missing from a response are kept (`deleteMissing: false`) and reported.
 
+## AgentRouter Notes
+
+- AgentRouter is implemented in `packages/core/src/sync/providers/agentrouter.ts`.
+- Source endpoint: the public `https://agentrouter.org/api/pricing`; no API key is required.
+- The inventory is used to detect newly served model IDs. New IDs are not synthesized because the endpoint does not publish complete limits, capabilities, or host-specific reasoning controls; each opens a deduplicated missing-model issue for hand-authored metadata.
+- Existing files absent from a response are retained (`deleteMissing: false`) because availability can differ by AgentRouter group or account.
+- Protocols, limits, capabilities, and reasoning controls remain hand-authored from AgentRouter's catalog and the relayed model's API. Relative token ratios are not published as USD prices.
+
 ## OpenAI Notes
 
 - OpenAI is implemented in `packages/core/src/sync/providers/openai.ts`.
