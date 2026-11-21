@@ -1,7 +1,9 @@
 # Pricing, limits and API surface (Chat Completions only):
 # https://vivgrid.com/docs/models/gemini-4-hydrogen (accessed 2026-11-20)
-# Effort: reasoning_effort = low|medium|high|xhigh, as on Google's
-# OpenAI-compatible endpoint for this model.
+# Effort: reasoning_effort = low|medium|high|xhigh. Vivgrid's YoMo Vertex bridge
+# forwards xhigh as thinkingConfig.thinkingLevel = "XHIGH" for Neon and Hydrogen:
+# https://github.com/yomorun/yomo/commit/7e6dfe5c79531c2d86a62546e679e28b220f769a
+# (2026-11-20, #1302; mapping and XHIGH serialization are covered by tests).
 schema = 2
 base_model = "google/gemini-4-hydrogen"
 
