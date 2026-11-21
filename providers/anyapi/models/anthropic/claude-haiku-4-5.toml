@@ -1,9 +1,0 @@
-# AnyAPI accepts thinking.type="enabled" with budget_tokens, but documents no
-# model-specific 1,024..63,999 bounds or off mapping; these remain upstream facts.
-# https://docs.anyapi.ai/guides/parameters
-# https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking
-schema = 2
-base_model = "anthropic/claude-haiku-4-5"
-
-[capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"], budget = { min = 1_024, max = 63_999 } }
