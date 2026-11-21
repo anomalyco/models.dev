@@ -1,0 +1,34 @@
+# Model ID listed in the public catalog https://hop-base.com/models (category video) and in
+# https://api.hop-base.com/api/v1/models/pricing (checked 2026-10-31). No generation was run for
+# this listing.
+# API: asynchronous task with the Seedance content-array body. POST
+# https://api.hop-base.com/v1/video/generate, then poll GET /v1/video/tasks/{task_id}
+# (https://hop-base.com/llms.txt, Seedance 2.5 and 2.0). No AI SDK or @opencode/ai package speaks
+# this task format, so both are "none".
+# Pricing: HopBase price in its public video group, USD per 1M video tokens; requests with a
+# reference video bill at the lower input_video rate.
+schema = 2
+base_model = "bytedance-seed/seedance-2.5"
+
+[api.videos]
+path = "/video/generate"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+price = 8.56
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 9.36
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480p" }, input_video = { equals = true } }
+price = 5.12
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" }, input_video = { equals = true } }
+price = 5.12
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" }, input_video = { equals = true } }
+price = 5.6

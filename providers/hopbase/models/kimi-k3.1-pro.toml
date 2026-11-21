@@ -1,0 +1,40 @@
+# Verified live 2026-11-17 against https://api.hop-base.com with this exact model ID:
+# POST /v1/chat/completions non-streaming and streaming (stream_options.include_usage returns usage),
+# POST /v1/responses (streaming, function call + function_call_output round trip) and
+# POST /v1/messages (streaming, tool_use + tool_result round trip).
+# Limits: 1,048,576-token context; a single 40,000-token output completed normally; max output
+# 131,072 tokens per https://hop-base.com/llms.txt. A ~900K-token input retrieved a fact buried at
+# 60% depth.
+# Images: base64 data URLs only (a red PNG data URL returned "Red"; https image URLs return HTTP 400).
+# Reasoning: always on; the trace is returned in message.reasoning_content by default.
+# reasoning_effort is accepted and ignored, so no effort levels are declared.
+# tool_choice auto|none|required honoured; forcing a named function returns HTTP 400 while thinking.
+# Structured output: json_schema with strict = true returned an enum-valid object.
+# Cache: repeating a ~25K-token prefix hit ~99% from the second call (prompt_tokens_details.cached_tokens).
+# Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required"] }
+reasoning = { supported = true }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.11 }
+
+[cost.text.output]
+price = 5.5

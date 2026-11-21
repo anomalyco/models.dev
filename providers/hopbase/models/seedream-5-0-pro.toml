@@ -1,0 +1,26 @@
+# Model ID listed in the public catalog https://hop-base.com/models (category image) and in
+# https://api.hop-base.com/api/v1/models/pricing (checked 2026-10-31). No generation was run for
+# this listing.
+# API: synchronous OpenAI-compatible POST https://api.hop-base.com/v1/images/generations
+# (optional `image` for image-to-image; up to 10 reference images), plus /v1/images/edits
+# (https://hop-base.com/llms.txt, Seedream Image Models).
+# Pricing: HopBase price in its public image group, USD per image; output above 2.61 MP bills
+# at the higher rate; each reference image bills as image input.
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/seedream-5.0-pro"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.input]
+unit = "image"
+price = 0.00204
+
+[cost.image.output]
+unit = "image"
+price = 0.0306
+
+[[cost.image.output.overrides]]
+when = { megapixels = { gt = 2.61 } }
+price = 0.0612
