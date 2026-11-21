@@ -1,0 +1,38 @@
+# DiscreteStack's balanced tier, serving Zhipu AI's GLM-5.3-Flash.
+# Sources (accessed 2026-11-16):
+# - https://setup.discretestack.eu: the host's published model catalog, which lists
+#   this tier at context 1,000,000 / output 64,000 with low|high|max effort
+#   variants and text+image input, and its API table for /v1/chat/completions,
+#   /v1/responses and /v1/messages.
+# - https://discretestack.com
+# Effort: reasoning_effort = low|high|max. GLM-5.3-Flash has no off switch: its
+# chat template always thinks and the host's thinking profile only lowers effort
+# to `low`, so there is no toggle and `none` is not served.
+# Input: the host serves text and images only, not the lab's video or PDF parts.
+# Prompt caching is automatic: the engine serving this model runs vLLM prefix caching.
+# Flat-rate licensed host: no per-token price is published, so no cost fields.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "DiscreteStack Compact"
+description = "Balanced tier for everyday coding, reasoning and agent work"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
