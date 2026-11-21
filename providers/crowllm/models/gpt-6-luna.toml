@@ -14,6 +14,9 @@ base_model = "openai/gpt-6-luna"
 cache = { implicit = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
 [cost.text.input]
 price = 0.1
 cache = { read = 0.01 }

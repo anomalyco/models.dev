@@ -14,7 +14,11 @@ base_model = "zhipuai/glm-5.3-flash"
 name = "GLM-5.3-Flash (free)"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0

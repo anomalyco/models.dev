@@ -16,6 +16,9 @@ name = "DeepSeek V4 Pro Thinking"
 cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
 [cost.text.input]
 price = 0.55
 cache = { read = 0.055 }

@@ -12,7 +12,11 @@ base_model = "xai/grok-4.7"
 name = "Grok 4.7 (free)"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0

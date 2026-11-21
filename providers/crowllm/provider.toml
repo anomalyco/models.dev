@@ -23,6 +23,8 @@
 # served `:free` ids that bill real credit are `deepseek-v4-flash-0731:free` and its `-thinking`
 # alias, both at model_ratio 0.07; every other served `:free` id is priced at zero. The gateway
 # rotates this shelf, so re-read https://crowllm.com/api/pricing before relying on it.
+# This catalog is hand-authored for now: the sync module that would patch prices from /api/pricing
+# is prepared and will land in a follow-up PR; until then /api/pricing is authoritative and the shelf rotates.
 # Catalog: https://crowllm.com/v1/models (public, no key) | Rates: https://crowllm.com/api/pricing
 # Passes: https://crowllm.com/pricing | Docs: https://crowllm.com/docs
 # Each model's # Toggle/# Effort/# Budget comment names the field as the gateway handles it:

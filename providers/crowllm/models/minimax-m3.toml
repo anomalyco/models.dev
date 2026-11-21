@@ -13,6 +13,9 @@ base_model = "minimax/MiniMax-M3"
 cache = { implicit = true }
 reasoning = { supported = true, toggle = true }
 
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
 [cost.text.input]
 price = 0.3
 cache = { read = 0.06 }

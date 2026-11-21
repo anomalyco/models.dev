@@ -13,6 +13,9 @@ base_model = "xai/grok-4.7"
 cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
 [cost.text.input]
 price = 1.69
 cache = { read = 0.4225 }
