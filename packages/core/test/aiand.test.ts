@@ -86,7 +86,7 @@ test("a vocabulary miss preserves authored reasoning options instead of publishi
 });
 
 test("a curated family wins over the feed's", () => {
-  const built = buildAiandModel(aiandModel({ family: "deepseek-thinking" }), { family: "deepseek" }, null);
+  const built = buildAiandModel(aiandModel({ family: "deepseek-flash" }), { family: "deepseek" }, null);
   expect(built.family).toBe("deepseek");
 });
 

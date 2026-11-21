@@ -78,6 +78,14 @@ export const ModelFamilyValues = [
   "glmv",
   "glm-air",
   "glm-flash",
+  "cogvideox",
+  "glmv-flash",
+  "autoglm",
+  "glm-asr",
+  "glmv-turbo",
+  "glm-turbo",
+  "glm-image",
+  "glm-embedding",
   "glm-free",
   "glm-z",
 
@@ -90,12 +98,42 @@ export const ModelFamilyValues = [
 
   // Alibaba Qwen
   "qwen",
-  "qwen3.5",
-  "qwen3.6",
-  "qwen3.7-plus",
-  "qwen3.7-max",
-  "qwen3.8-max",
-  "qwen4-max",
+  "qwq",
+  "wan",
+  "qwen-coder",
+  "qwen-tts-flash",
+  "qwen-asr-flash",
+  "qwen-embedding",
+  "qwen-flash",
+  "qwen-vl",
+  "qwen-image",
+  "qwen-max",
+  "qwen-vl-plus",
+  "qwen-vl-flash",
+  "qwen-plus",
+  "gte",
+  "qwen-image-pro",
+  "happyhorse",
+  "qwen-omni",
+  "qwen-embedding-flash",
+  "qwen-coder-flash",
+  "qwen-reranker",
+  "qwen-omni-flash",
+  "qwen-asr",
+  "qwen-tts-plus",
+  "qwen-image-turbo",
+  "qwen-vl-max",
+  "qwen-mt-plus",
+  "qwen-turbo",
+  "qwen-coder-plus",
+  "qwen-math-turbo",
+  "qwen-math-plus",
+  "qwen-omni-realtime-flash",
+  "qwen-mt-turbo",
+  "tongyi",
+  "qwen-omni-realtime",
+  "qwen-livetranslate",
+  "qwen-tts",
   "qwen-free",
 
   // DeepReinforce
@@ -103,8 +141,10 @@ export const ModelFamilyValues = [
 
   // DeepSeek
   "deepseek",
-  "deepseek-thinking",
   "deepseek-flash",
+  "deepseek-ocr",
+  "deepseek-pro",
+  "deepseek-r",
   "deepseek-flash-free",
   "deepseek-flash-think",
 
@@ -113,10 +153,9 @@ export const ModelFamilyValues = [
 
   // Moonshot Kimi
   "kimi",
-  "kimi-k2",
-  "kimi-k3",
+  "kimi-code",
+  "kimi-pro",
   "kimi-free",
-  "kimi-thinking",
 
   // Motif Technologies
   "motif",
@@ -203,7 +242,11 @@ export const ModelFamilyValues = [
   "hunyuan",
 
   // Hy
-  "Hy",
+  "hy-mt",
+  "kinfra-embedding",
+  "hy-flash",
+  "hy",
+  "hy-image",
 
   // Yi
   "yi",
@@ -227,6 +270,9 @@ export const ModelFamilyValues = [
 
   // Step (StepFun)
   "step",
+  "step-flash",
+  "step-tts",
+  "step-asr",
 
   // Embedding models
   "text-embedding",
@@ -264,6 +310,7 @@ export const ModelFamilyValues = [
 
   // Baidu Ernie
   "ernie",
+  "cobuddy",
 
   // Hermes
   "hermes",
@@ -296,10 +343,9 @@ export const ModelFamilyValues = [
   "mimo",
   "mimo-pro",
   "mimo-omni",
-  "mimo-v2-pro",
-  "mimo-v2-omni",
-  "mimo-v2.5-pro",
-  "mimo-v2.5",
+  "mimo-asr",
+  "mimo-tts",
+  "mimo-flash",
   "mimo-v2.5-free",
   "mimo-pro-free",
   "mimo-omni-free",
@@ -369,6 +415,21 @@ export const ModelFamilyValues = [
 
   // Seed
   "seed",
+  "seedance-pro",
+  "seed-tts",
+  "seedance",
+  "seed-lite",
+  "seed-mini",
+  "seed-code",
+  "seedream",
+  "seedream-flash",
+  "seed-flash",
+  "seedream-pro",
+  "seed-turbo",
+  "seedream-lite",
+  "seedance-mini",
+  "seed-oss",
+  "seed-pro",
 
   // Ray
   "ray",
@@ -380,11 +441,14 @@ export const ModelFamilyValues = [
   "rnj",
 
   // Tecent Hy
-  "hy3",
   "hy3-free",
 
   // Ling & Ring (InclusionAI)
-  "ling",
+  "ling-flash",
+  "inkling",
+  "inkling-small",
+  "ling-tiny",
+  "ming-image",
   "ling-flash-free",
   "ring",
   "ring-1t-free",
@@ -504,6 +568,14 @@ export const ModelFamilyValues = [
   // Groq
   "groq",
 
+  // Kuaishou Kling
+  "kling-flash",
+  "kling-image",
+  "kling",
+  "kling-omni",
+  "kling-image-omni",
+  "kling-turbo",
+
   // Elephant
   "elephant",
 ] as const;
@@ -513,8 +585,9 @@ export type ModelFamily = z.infer<typeof ModelFamily>;
 
 export function inferKimiFamily(...values: string[]): ModelFamily | undefined {
   const target = values.join(" ").toLowerCase();
-  if (/kimi[^a-z0-9]*k2(?:[^a-z0-9]*\d+)?[^a-z0-9]*thinking/.test(target)) return "kimi-thinking";
-  if (/kimi[\s_-]*k2/.test(target)) return "kimi-k2";
-  if (/kimi[\s_-]*k3/.test(target)) return "kimi-k3";
+  if (!/kimi[\s_-]*k\d/.test(target)) return undefined;
+  if (/code/.test(target)) return "kimi-code";
+  if (/[^a-z0-9]pro(?:$|[^a-z0-9])/.test(target)) return "kimi-pro";
+  return "kimi";
   return undefined;
 }
