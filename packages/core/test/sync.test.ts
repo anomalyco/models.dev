@@ -4734,9 +4734,9 @@ test("Venice base_model files carry no model facts and keep the catalog display 
 });
 
 test("Venice sync keeps a standalone file's family instead of guessing one from the id", () => {
-  const model = { ...veniceModel({ name: "MiniMax M3 Preview" }), id: "minimax-m3-preview" } as VeniceModel;
-  expect(buildVeniceModel(model, undefined, null)).toMatchObject({ family: "minimax-m3" });
-  expect(buildVeniceModel(model, { family: "minimax" } as ExistingModel, null)).toMatchObject({ family: "minimax" });
+  const model = { ...veniceModel({ name: "Kimi K3 Preview" }), id: "kimi-k3-preview" } as VeniceModel;
+  expect(buildVeniceModel(model, undefined, null)).toMatchObject({ family: "kimi" });
+  expect(buildVeniceModel(model, { family: "kimi-pro" } as ExistingModel, null)).toMatchObject({ family: "kimi-pro" });
 });
 
 test("Venice sync marks models with a scheduled removal as deprecated", () => {
