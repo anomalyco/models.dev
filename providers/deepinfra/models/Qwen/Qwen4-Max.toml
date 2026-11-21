@@ -1,0 +1,27 @@
+# https://deepinfra.com/Qwen/Qwen4-Max
+# GET https://api.deepinfra.com/models/list (2026-11-16): $1.413 input / $4.24 output / $0.071 cache read per MTok,
+#   max_tokens 1_000_000, tags reasoning, tools, json, structured-output, multimodal, input-video. Partner model
+#   (is_partner = true), so the route proxies Alibaba Model Studio.
+# Effort: reasoning_effort = none|low|high|xhigh. none disables reasoning (https://docs.deepinfra.com/chat/reasoning), so no
+#   separate toggle. Graded levels follow the lab (https://www.alibabacloud.com/help/en/model-studio/qwen4-max:
+#   low|high|xhigh). Not probed live: no DeepInfra key was available.
+# Modalities: the lab's types without PDF. Deep Infra tags this route multimodal + input-video with no document tag, and PDF input is unverified (no balance to probe).
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 1.413
+cache = { read = 0.071 }
+
+[cost.text.output]
+price = 4.24

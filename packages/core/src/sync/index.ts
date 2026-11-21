@@ -17,12 +17,16 @@ import {
   withoutModeCosts,
 } from "../model-file-v2.js";
 import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from "../translate.js";
+import { withPredecessorCapabilities } from "./inherit.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
 import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
+import { amazonBedrock } from "./providers/amazon-bedrock.js";
+import { cerebras } from "./providers/cerebras.js";
 import { anthropic } from "./providers/anthropic.js";
+import { azure } from "./providers/azure.js";
 import { baseten } from "./providers/baseten.js";
 import { chutes } from "./providers/chutes.js";
 import { cloudflareAiGateway } from "./providers/cloudflare-ai-gateway.js";
@@ -49,9 +53,9 @@ import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
 import { meta } from "./providers/meta.js";
 import { mistral } from "./providers/mistral.js";
-import { modular } from "./providers/modular.js";
 import { nanoGpt } from "./providers/nano-gpt.js";
 import { nearai } from "./providers/nearai.js";
+import { nebius } from "./providers/nebius.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
@@ -108,6 +112,8 @@ export interface SyncProvider<SourceModel> {
    * deduped GitHub issue per missing model ID.
    */
   skipCreates?: boolean;
+  /** Copy hand-set capabilities from the same host's previous model in the family onto new files (default true). */
+  inheritPredecessorCapabilities?: boolean;
   /** Report remote-only models skipped by skipCreates as GitHub issues. */
   trackMissingModels?: boolean;
   deleteMissing?: boolean;
@@ -192,6 +198,9 @@ export const providers: {
   aiand: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
+  "amazon-bedrock": SyncProvider<any>;
+  azure: SyncProvider<any>;
+  cerebras: SyncProvider<any>;
   anthropic: SyncProvider<any>;
   baseten: SyncProvider<any>;
   chutes: SyncProvider<any>;
@@ -220,9 +229,9 @@ export const providers: {
   "merge-gateway": SyncProvider<any>;
   meta: SyncProvider<any>;
   mistral: SyncProvider<any>;
-  modular: SyncProvider<any>;
   "nano-gpt": SyncProvider<any>;
   nearai: SyncProvider<any>;
+  nebius: SyncProvider<any>;
   "novita-ai": SyncProvider<any>;
   obscurify: SyncProvider<any>;
   ofox: SyncProvider<any>;
@@ -244,6 +253,9 @@ export const providers: {
   aiand,
   aimlapi,
   ambient,
+  "amazon-bedrock": amazonBedrock,
+  azure,
+  cerebras,
   anthropic,
   baseten,
   chutes,
@@ -272,9 +284,9 @@ export const providers: {
   "merge-gateway": mergeGateway,
   meta,
   mistral,
-  modular,
   "nano-gpt": nanoGpt,
   nearai,
+  nebius,
   "novita-ai": novitaAi,
   obscurify,
   ofox,
@@ -318,7 +330,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "ambient", "anthropic", "baseten", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "modular", "morph", "nearai", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -509,13 +521,16 @@ export async function syncProvider<SourceModel>(
         npm,
       );
       if (content === undefined) continue;
+      const inherited = provider.inheritPredecessorCapabilities === false
+        ? content
+        : withPredecessorCapabilities(content, [...existing].map(([file, entry]) => [file, entry.v2]), modelMetadata);
       files.push({ status: "created", path: filePath });
       if (options.dryRun) {
         console.log(`Would create ${relativePath}`);
       } else {
         await mkdir(path.dirname(filePath), { recursive: true });
         if (await isSymlink(filePath)) await rm(filePath, { force: true });
-        await Bun.write(filePath, content);
+        await Bun.write(filePath, inherited);
       }
       continue;
     }
@@ -579,13 +594,18 @@ export async function syncProvider<SourceModel>(
         continue;
       }
     }
+    let content = file.content;
+    if (current === undefined && provider.inheritPredecessorCapabilities !== false) {
+      modelMetadata ??= await readModelMetadata(provider.modelsDir);
+      content = withPredecessorCapabilities(content, [...existing].map(([path, entry]) => [path, entry.v2]), modelMetadata);
+    }
     files.push({ status: current === undefined ? "created" : "updated", path: filePath });
     if (options.dryRun) {
       console.log(`Would ${current === undefined ? "create" : "update"} ${relativePath}`);
     } else {
       await mkdir(path.dirname(filePath), { recursive: true });
       if (await isSymlink(filePath)) await rm(filePath, { force: true });
-      await Bun.write(filePath, file.content);
+      await Bun.write(filePath, content);
     }
   }
 

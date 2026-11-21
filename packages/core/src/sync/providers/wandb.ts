@@ -142,7 +142,7 @@ export function buildWandbModel(
   const synced: SyncedFullModel = {
     name: normalizeName(model),
     description: model.description ?? existing?.description,
-    family: resolveFamily(model),
+    family: existing?.family ?? resolveFamily(model),
     attachment: model.attachment,
     reasoning: model.reasoning,
     reasoning_options: model.reasoning

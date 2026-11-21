@@ -5,15 +5,15 @@ name = "DeepSeek V4.1 Flash 1017 (Scaleway)"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
-structured_output = false
+structured_output = true
 
 [limit]
 context = 256_000
 output = 256_000
 
 [cost.text.input]
-price = 0.66312
-cache = { read = 0.132624 }
+price = 0.6594
+cache = { read = 0.13188 }
 
 [cost.text.output]
-price = 1.989359
+price = 1.9782

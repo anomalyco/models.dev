@@ -7,6 +7,7 @@
 # Token-only multipliers (object factor, so cost.web_search is unscaled): web search is billed separately as Grounding with Bing Search (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/web-search#web-search-usage-and-billing).
 # APIs: Responses (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models) and Chat Completions (API and feature support tables at https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/reasoning).
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Mid-conversation developer messages work on both Responses and Chat Completions (OpenAI documents both; Azure Chat kept the cache live on 2026-10-23), so system_updates stays top-level.
+# tools.updates is left out: on GPT-5.5 and earlier, calls to tools added through additional_tools come back namespaced and replaying them without the namespace fails ("Missing namespace for function_call", live 2026-11-16), so callers fold tool changes into the top-level tools list.
 schema = 2
 base_model = "openai/gpt-4o-mini"
 base_model_omit = ["structured_output"]
@@ -19,7 +20,6 @@ cache = { implicit = { min_tokens = 1_024 } }
 system_updates = true
 
 [api.responses]
-capabilities = { tools = { updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }

@@ -6,12 +6,14 @@
 # Image MIME types: https://ai.google.dev/gemini-api/docs/image-understanding (Supported image formats: image/png, image/jpeg, image/webp, image/heic, image/heif)
 # APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
 # tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
+# recommended_api: Google recommends Interactions for all new projects and lists this model as supported: https://ai.google.dev/gemini-api/docs/interactions-overview#supported-models-agents
 schema = 2
 name = "Gemma 4 26B A4B IT"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
 family = "gemma"
 open_weights = true
 release_date = "2026-04-02"
+recommended_api = "interactions"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]

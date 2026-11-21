@@ -3119,7 +3119,7 @@ test("OpenRouter tool_choice sets every documented tool choice and keeps other t
   const choice = ["auto", "none", "required", "tool"];
 
   expect(toolsSet(["tools", "tool_choice"])(undefined)).toEqual({ supported: true, choice });
-  expect(toolsSet(["tools", "tool_choice"])({ supported: true, updates: true })).toEqual({ supported: true, updates: true, choice });
+  expect(toolsSet(["tools", "tool_choice"])({ supported: true, updates: ["add", "remove", "replace"] })).toEqual({ supported: true, updates: ["add", "remove", "replace"], choice });
   expect(toolsSet(["tools"])({ supported: true, choice })).toEqual({ supported: true });
   expect(toolsSet(["tools"])(undefined)).toBeUndefined();
   expect(toolsSet(["tool_choice"])({ supported: false })).toEqual({ supported: false });
@@ -4224,6 +4224,20 @@ test("W&B preserves curated model dates", () => {
   });
 });
 
+test("W&B keeps a standalone file's family instead of guessing one from the id", () => {
+  const model: WandbModel = {
+    id: "example-lab/Kimi-K2-Example",
+    name: "Kimi K2 Example",
+    attachment: false,
+    reasoning: false,
+    tool_call: true,
+    release_date: "2026-10-16",
+    last_updated: "2026-10-16",
+    open_weights: true,
+  };
+  expect((buildWandbModel(model, { family: "kimi" }) as { family?: string }).family).toBe("kimi");
+});
+
 test("W&B keeps hand-authored reasoning effort through a sync", () => {
   const model: WandbModel = {
     id: "zai-org/GLM-5.3",
@@ -4719,6 +4733,12 @@ test("Venice base_model files carry no model facts and keep the catalog display 
   expect(buildVeniceModel(veniceModel(), own, "anthropic/claude-opus-4-8")).toMatchObject(own);
 });
 
+test("Venice sync keeps a standalone file's family instead of guessing one from the id", () => {
+  const model = { ...veniceModel({ name: "Kimi K3 Preview" }), id: "kimi-k3-preview" } as VeniceModel;
+  expect(buildVeniceModel(model, undefined, null)).toMatchObject({ family: "kimi" });
+  expect(buildVeniceModel(model, { family: "kimi-pro" } as ExistingModel, null)).toMatchObject({ family: "kimi-pro" });
+});
+
 test("Venice sync marks models with a scheduled removal as deprecated", () => {
   const deprecation = { date: "2026-10-30T00:00:00.000Z", removesAt: "2026-10-30T00:00:00.000Z", autoRemap: false };
   expect(buildVeniceModel(veniceModel({ deprecation }), undefined, "anthropic/claude-opus-4-8"))
@@ -5019,6 +5039,41 @@ test("factors mapped LLM Gateway entries against the root model metadata", () =>
       cache_write: 12.5,
     },
   });
+});
+
+test("applies the LLM Gateway discount to every token price", () => {
+  const pricing = {
+    prompt: "1.5e-6",
+    completion: "7.5e-6",
+    input_cache_read: "0.15e-6",
+    input_cache_write: "0.16667e-6",
+    internal_reasoning: "3e-6",
+    web_search: "0.014",
+    discount: "0.5000",
+  };
+  const model = buildLLMGatewayModel(llmGatewayModel({ pricing }), undefined);
+  expect(model?.cost).toEqual({
+    input: 0.75,
+    output: 3.75,
+    reasoning: 1.5,
+    cache_read: 0.075,
+    cache_write: 0.083335,
+  });
+
+  const mapped = buildLLMGatewayMappedModel(llmGatewayMappedModel({ pricing }), undefined);
+  expect(mapped?.cost).toMatchObject({ input: 0.75, output: 3.75, cache_read: 0.075 });
+});
+
+test("treats the LLM Gateway discount as a fraction off, not a multiplier", () => {
+  const price = (discount?: string) => buildLLMGatewayModel(llmGatewayModel({
+    pricing: { prompt: "10e-6", completion: "50e-6", discount },
+  }), undefined)?.cost;
+
+  expect(price("0.2000")).toMatchObject({ input: 8, output: 40 });
+  expect(price("0.05")).toMatchObject({ input: 9.5, output: 47.5 });
+  expect(price("0")).toMatchObject({ input: 10, output: 50 });
+  expect(price(undefined)).toMatchObject({ input: 10, output: 50 });
+  expect(price("not-a-number")).toMatchObject({ input: 10, output: 50 });
 });
 
 test("applies deployment capability flags on mapped factored entries", () => {
@@ -6516,6 +6571,17 @@ test("Vercel sync preserves Liquid d1 as a decision model via its lab metadata",
   expect(translated?.model).not.toHaveProperty("description"); // don't reintroduce a generic chat description
 });
 
+test("Vercel family inference doesn't read a version number as a family", () => {
+  const [ampersand, v0] = vercel.parseModels({
+    data: [
+      { id: "humansand/ampersand-v0.1", name: "Ampersand v0.1", created: 1_790_000_000, context_window: 128_000, max_tokens: 16_000, type: "language" },
+      { id: "vercel/v0-1.5-md", name: "v0 1.5 MD", created: 1_750_000_000, context_window: 128_000, max_tokens: 32_000, type: "language" },
+    ],
+  });
+  expect(buildVercelModel(ampersand!, undefined).family).not.toBe("v0");
+  expect(buildVercelModel(v0!, undefined).family).toBe("v0");
+});
+
 test("Vercel family inference requires word boundaries", () => {
   const [jev, rerank, o3] = vercel.parseModels({
     data: [
@@ -6546,8 +6612,8 @@ test("Vercel family inference requires word boundaries", () => {
     ],
   });
 
-  // No fuzzy subsequence matches ("yi") or single-letter substring matches ("o").
-  expect(buildVercelModel(jev!, undefined).family).toBeUndefined();
+  // Whole-word matches only: Jev is its own family, never a fuzzy "yi"; no single-letter substring matches ("o").
+  expect(buildVercelModel(jev!, undefined).family).toBe("jev");
   expect(buildVercelModel(rerank!, undefined).family).toBeUndefined();
   // Genuine o-series IDs still match, and keep their stamp when re-synced.
   expect(buildVercelModel(o3!, undefined).family).toBe("o");
@@ -6649,7 +6715,7 @@ test("Vercel tool_choice sets every documented tool choice for tool-calling mode
   const choice = ["auto", "none", "required", "tool"];
 
   expect(toolsSet(["tool-use"], ["tools", "tool_choice"])(undefined)).toEqual({ supported: true, choice });
-  expect(toolsSet(["tool-use"], ["tools", "tool_choice"])({ supported: true, updates: true })).toEqual({ supported: true, updates: true, choice });
+  expect(toolsSet(["tool-use"], ["tools", "tool_choice"])({ supported: true, updates: ["add", "remove", "replace"] })).toEqual({ supported: true, updates: ["add", "remove", "replace"], choice });
   expect(toolsSet(["tool-use"], ["tools"])({ supported: true, choice })).toEqual({ supported: true });
   // The file's tool_call wins over the catalog tag, as in the v1 fields.
   expect(toolsSet(["tool-use"], ["tools", "tool_choice"], { tool_call: false })({ supported: false })).toEqual({ supported: false });
@@ -7392,6 +7458,22 @@ test("OpenRouter rerank and embedding files name the packages that speak their e
   });
 });
 
+test("OpenRouter keeps a free route's \"-free\" family on base_model files and drops any other family", () => {
+  const chat = (family: string) => buildOpenRouterModel(openRouterModel(), { base_model: "anthropic/claude-sonnet-5", family } as ExistingModel);
+  expect(chat("claude-sonnet-free")).toMatchObject({ base_model: "anthropic/claude-sonnet-5", family: "claude-sonnet-free" });
+  expect(chat("claude-sonnet")).not.toHaveProperty("family");
+  expect(chat("llama-free")).not.toHaveProperty("family");
+
+  const media = (family: string) => buildOpenRouterMediaModel(openRouterMediaModel({
+    id: "openai/whisper-1",
+    name: "OpenAI: Whisper 1",
+    architecture: { input_modalities: ["audio"], output_modalities: ["transcription"] },
+    pricing: { prompt: "0", completion: "0" },
+  }), "transcription", { base_model: "openai/whisper-1", family });
+  expect(media("whisper-free")).toMatchObject({ family: "whisper-free" });
+  expect(media("whisper")).not.toHaveProperty("family");
+});
+
 test("OpenRouter media files keep a name only when it differs from the lab", () => {
   const rerank = (id: string, name: string) => buildOpenRouterMediaModel(openRouterMediaModel({
     id,
@@ -7900,7 +7982,7 @@ test("v2 patches switch tool_call and reasoning between the lab's value and an o
     expect(doc.capabilities).toEqual({ effort_updates: false });
 
     // An explicit value equal to the lab's, with v2-only data, is left alone.
-    await write(["tools = { supported = true, updates = false }"]);
+    await write(["tools = { supported = true, updates = [] }"]);
     expect(await syncProvider(provider)).toMatchObject({ updated: 0, unchanged: 1 });
 
     // Reasoning switches the same way.
@@ -7908,7 +7990,7 @@ test("v2 patches switch tool_call and reasoning between the lab's value and an o
     expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
     doc = Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
     expect(doc.capabilities.reasoning).toEqual({ supported: true });
-    expect(doc.capabilities.tools).toEqual({ supported: true, updates: false });
+    expect(doc.capabilities.tools).toEqual({ supported: true, updates: [] });
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -8126,7 +8208,7 @@ test("lists Responses and Messages after the first API for OpenRouter text-only 
   expect(Object.keys(once)).toEqual(["chat-completions", "responses", "messages"]);
   expect(withTextApis(once)).toEqual(once);
   // Per-API capabilities on the extra tables survive a sync.
-  const flagged = { ...once, messages: { ...extra.messages, capabilities: { tools: { updates: true } } } };
+  const flagged = { ...once, messages: { ...extra.messages, capabilities: { tools: { updates: ["add", "remove", "replace"] } } } };
   expect(withTextApis(flagged)).toEqual(flagged);
 
   // Models that also output images or audio stay on their own APIs.
@@ -8601,7 +8683,7 @@ test("Kilo sync keeps v2-only data and leaves model facts to the lab in v2 files
     last_updated: "2025-02-01",
     modalities: { input: ["text", "image/jpeg", "image/png", "image/gif", "image/webp"], output: ["text"] },
     capabilities: {
-      tools: { supported: true, updates: false },
+      tools: { supported: true, updates: [] },
       reasoning: { supported: true, effort: ["low", "high", "max"] },
       structured_output: true,
       effort_updates: false,
@@ -8624,7 +8706,7 @@ test("Kilo sync keeps v2-only data and leaves model facts to the lab in v2 files
   const next = patchModelV2(doc, existing, after) as Record<string, any>;
   expect(next.modalities).toEqual(doc.modalities);
   expect(next.capabilities).toMatchObject({
-    tools: { supported: true, updates: false },
+    tools: { supported: true, updates: [] },
     effort_updates: false,
     cache: { implicit: true },
   });
@@ -8677,7 +8759,7 @@ test("Ofox sync takes context tiers and audio prices from the catalog and keeps 
     schema: 2,
     base_model: "openai/gpt-5.5",
     capabilities: {
-      tools: { supported: true, updates: false },
+      tools: { supported: true, updates: [] },
       structured_output: true,
       effort_updates: false,
       cache: { implicit: true },
@@ -8882,4 +8964,39 @@ test("OpenRouter media models resolve to their lab files", () => {
   expect(resolveMediaBaseModel("cohere/embed-5-pro")).toBe("cohere/embed-v5.0-pro");
   expect(resolveMediaBaseModel("cohere/rerank-5-fast")).toBe("cohere/rerank-v5.0-fast");
   expect(resolveMediaBaseModel("cohere/rerank-5-pro")).toBe("cohere/rerank-v5.0-pro");
+});
+
+test("Tinfoil's auto effort is left out of the published levels", () => {
+  const [model] = tinfoil.parseModels({
+    object: "list",
+    data: [tinfoilModel({ id: "inkling-2-small", supported_efforts: ["none", "low", "auto", "high"] as never })],
+  });
+  expect(model?.supported_efforts).toEqual(["none", "low", "high"]);
+  const built = buildTinfoilModel(model!, { ...existingTinfoilGLM, reasoning: true });
+  expect(built.reasoning_options).toContainEqual({ type: "effort", values: ["none", "low", "high"] });
+});
+
+test("Hugging Face caps a new file's output at a served context below the lab's output", () => {
+  const doc = buildHuggingFaceModel(huggingFaceModel({
+    id: "meta-llama/Llama-3.2-3B-Instruct",
+    providers: [{ provider: "only", status: "live", context_length: 80_000, pricing: { input: 0.02, output: 0.02 }, throughput: 50 }],
+  }), "meta/llama-3.2-3b-instruct");
+  expect(doc.limit).toEqual({ context: 80_000, output: 80_000 });
+});
+
+test("Vercel writes pixel and duration bands as range conditions", () => {
+  const image = vercelMediaCost(vercelMedia({ id: "bytedance/seedream-5.5", type: "image", pricing: { image: "0.035", image_dimension_quality_pricing: [
+    { max_pixels: 2_601_123, cost: "0.02" },
+    { min_pixels: 2_601_124, max_pixels: 4_624_220, cost: "0.035" },
+  ] } }), "image");
+  expect(image.cost?.image?.output).toEqual({
+    unit: "image", price: 0.035, overrides: [{ when: { megapixels: { lte: 2.601123 } }, price: 0.02 }],
+  });
+  const video = vercelMediaCost(vercelMedia({ id: "heygen/heygen-video-1", type: "video", pricing: { video_duration_pricing: [
+    { resolution: "480p", cost_per_second: "0.01" },
+    { resolution: "480p", duration_over_seconds: 15, cost_per_second: "0.045" },
+  ] } }), "video");
+  expect(video.cost?.video?.output?.overrides).toEqual([
+    { when: { resolution: { equals: "480p" }, duration: { gt: 15 } }, price: 0.045 },
+  ]);
 });

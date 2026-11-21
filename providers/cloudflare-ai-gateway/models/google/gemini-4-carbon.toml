@@ -8,6 +8,7 @@ base_model = "google/gemini-4-carbon"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { implicit = true }
+structured_output = true
 
 [limit]
 context = 1_048_576

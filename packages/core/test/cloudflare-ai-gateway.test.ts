@@ -447,12 +447,12 @@ test("takes tool_choice values from the catalog schema when it names them", () =
 
 test("native routes take the lab's own tool fields, with the schema's choice when the lab has none", () => {
   const schema = { properties: { tool_choice: { type: "string", enum: ["auto", "none"] } } };
-  const current = { supported: true, updates: true, strict: true, search: true, choice: ["auto"] };
+  const current = { supported: true, updates: ["add", "remove", "replace"], strict: true, search: true, choice: ["auto"] };
   // The lab's fields replace the file's, keeping fields the lab doesn't own (updates).
   expect(gatewayTools(current, { strict: true, choice: ["auto", "none", "required", "tool"] }, undefined))
-    .toEqual({ supported: true, updates: true, strict: true, choice: ["auto", "none", "required", "tool"] });
-  expect(gatewayTools(current, { strict: true }, schema)).toEqual({ supported: true, updates: true, choice: ["auto", "none"], strict: true });
-  expect(gatewayTools(current, { choice: ["auto"] }, schema)).toEqual({ supported: true, updates: true, choice: ["auto"] });
+    .toEqual({ supported: true, updates: ["add", "remove", "replace"], strict: true, choice: ["auto", "none", "required", "tool"] });
+  expect(gatewayTools(current, { strict: true }, schema)).toEqual({ supported: true, updates: ["add", "remove", "replace"], choice: ["auto", "none"], strict: true });
+  expect(gatewayTools(current, { choice: ["auto"] }, schema)).toEqual({ supported: true, updates: ["add", "remove", "replace"], choice: ["auto"] });
   expect(gatewayTools({ supported: false }, { strict: true }, schema)).toEqual({ supported: false });
 });
 
@@ -476,12 +476,12 @@ test("each gateway API takes the lab's tool fields for its protocol", () => {
 
   const main = "@opencode/ai/providers/cloudflare-ai-gateway";
   const current = {
-    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { search: true, updates: true } } },
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { search: true, updates: ["add", "remove", "replace"] } } },
     "chat-completions": { base_url: "stale", capabilities: { tools: { search: true } } },
   };
   // Tool fields are replaced per table; other capabilities and `updates` are kept, and an empty table loses capabilities.
   expect(gatewayApis(current, "responses", ["responses", "chat-completions"], { responses: { strict: true }, "chat-completions": {} })).toEqual({
-    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { strict: true, updates: true } } },
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { strict: true, updates: ["add", "remove", "replace"] } } },
     "chat-completions": {
       base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
       sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: main },

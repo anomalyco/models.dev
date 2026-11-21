@@ -1,0 +1,22 @@
+# Toggle: $.reasoning_effort = "none" disables thinking; any other accepted
+# value (or omitting the field) leaves it on. The gateway maps it to the
+# deployment's thinking switch.
+# https://docs.llmgateway.io/features/reasoning
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 (CanopyWave)"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = false
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6

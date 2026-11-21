@@ -5,7 +5,7 @@ import { z } from "zod";
 import { ReasoningOption as CatalogReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
-import { factorBaseModel } from "./openrouter.js";
+import { factorBaseModel, freeFamily } from "./openrouter.js";
 
 const ROOT = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
 const MODELS_DIR = path.join(ROOT, "models");
@@ -87,18 +87,39 @@ const CatalogModel = z
       .optional(),
     // kenari's own retirement date. Absence of an id is not proof of retirement, which is why
     // `MIN_LIVE_MODELS` exists; this field is the explicit signal when it is populated.
-    sunset_at: z.string().nullable().optional(),
+    // ISO date string, or Unix seconds (qwen4-max:free lists 1795435200).
+    sunset_at: z.union([z.string(), z.number()]).nullable().optional(),
   })
   .passthrough();
 
 const CatalogResponse = z.object({ data: z.array(CatalogModel) }).passthrough();
 
-// Only the rate is read here. The feed's `items` carry the same prices the catalog feed already
-// attaches to each model, in the unit `PRICING_UNIT` names, so joining them by id would add a
-// second source of truth for one number rather than a check on it. `.passthrough()` keeps the
-// rest of the payload available if that ever stops being true.
+// Token prices come from the catalog feed. The pricing feed adds the rate and each model's
+// `pricing_lines`: the only place per-unit prices (audio seconds, images, characters) appear,
+// since those models report 0 for their token prices.
+const PricingLine = z
+  .object({
+    billable: z.string(),
+    endpoint: z.string(),
+    micro_idr: z.number().nullable().optional(),
+    unit: z.string(),
+    variant: z.string().nullable().optional(),
+  })
+  .passthrough();
+
+export type KenariPricingLine = z.infer<typeof PricingLine>;
+
 const PricingResponse = z
-  .object({ usd_idr_rate: z.number().positive() })
+  .object({
+    usd_idr_rate: z.number().positive(),
+    items: z
+      .array(
+        z
+          .object({ model: z.string(), pricing_lines: z.array(PricingLine).nullable().optional() })
+          .passthrough(),
+      )
+      .optional(),
+  })
   .passthrough();
 
 export type KenariCatalogModel = z.infer<typeof CatalogModel>;
@@ -107,6 +128,7 @@ export type KenariCatalogModel = z.infer<typeof CatalogModel>;
 export interface KenariModel {
   model: KenariCatalogModel;
   rate: number;
+  lines?: KenariPricingLine[];
 }
 
 interface LabEntry {
@@ -358,6 +380,45 @@ export function toUsd(micro: number | null | undefined, rate: number): number | 
   return rounded === 0 && value > 0 ? Number(value.toPrecision(2)) : rounded;
 }
 
+/** USD for one unit, or per 1M for `character`: kept to 8 decimals so a cent-fraction survives. */
+export function toUnitUsd(micro: number, rate: number, perUnits = 1): number {
+  return Number(((micro / 1_000_000 / rate) * perUnits).toFixed(8));
+}
+
+type UnitCost = { unit: "second" | "image" | "character"; price: number };
+
+/**
+ * `pricing_lines` for the non-token billables, as v2 cost paths. A line that has no CostV2
+ * unit (a song), or a billable priced in several variants, is left out: no cost beats a wrong
+ * one.
+ */
+export function unitCosts(
+  lines: KenariPricingLine[] | undefined,
+  rate: number,
+): Record<string, UnitCost> {
+  const out: Record<string, UnitCost> = {};
+  const byBillable = new Map<string, KenariPricingLine[]>();
+  for (const line of lines ?? []) {
+    if (line.endpoint === "chat" || line.micro_idr === null || line.micro_idr === undefined) continue;
+    byBillable.set(line.billable, [...(byBillable.get(line.billable) ?? []), line]);
+  }
+  for (const [billable, group] of byBillable) {
+    if (group.length !== 1) continue;
+    const line = group[0];
+    const micro = line.micro_idr as number;
+    if (billable === "input_audio" && line.unit === "second") {
+      out["cost.audio.input"] = { unit: "second", price: toUnitUsd(micro, rate) };
+    } else if (billable === "output_image" && line.unit === "image") {
+      out["cost.image.output"] = { unit: "image", price: toUnitUsd(micro, rate) };
+    } else if (billable === "output_video" && line.unit === "second") {
+      out["cost.video.output"] = { unit: "second", price: toUnitUsd(micro, rate) };
+    } else if (billable === "output_audio" && line.unit === "1k_chars" && line.endpoint === "audio_speech") {
+      out["cost.text.input"] = { unit: "character", price: toUnitUsd(micro, rate, 1000) };
+    }
+  }
+  return out;
+}
+
 /** The feed's prices are comparable only in the unit the conversion assumes. */
 function pricingIsMicroIdr(
   pricing: KenariCatalogModel["pricing"],
@@ -383,7 +444,7 @@ function fileHeader(model: SyncedModel, rate: number): string {
     "# Synced from kenari's public API by the kenari sync module.",
     `# Catalog: GET ${CATALOG_DOC}`,
     `# Pricing: GET ${PRICING_DOC} (usd_idr_rate = ${rate}, re-read on every sync)`,
-    "# IDR prices were converted to USD per 1M tokens by dividing by that rate.",
+    "# IDR prices were converted to USD by dividing by that rate: per 1M tokens, or per unit for pricing_lines.",
   ];
   const options = "reasoning_options" in model ? model.reasoning_options : undefined;
   if (options === undefined || options.length === 0) return `${lines.join("\n")}\n`;
@@ -406,9 +467,9 @@ function fileHeader(model: SyncedModel, rate: number): string {
 }
 
 /** An id kenari has already retired; it is dropped so the runner removes the stale file. */
-function isRetired(sunsetAt: string | null | undefined): boolean {
+export function isRetired(sunsetAt: string | number | null | undefined): boolean {
   if (sunsetAt === null || sunsetAt === undefined) return false;
-  const at = Date.parse(sunsetAt);
+  const at = typeof sunsetAt === "number" ? sunsetAt * 1000 : Date.parse(sunsetAt);
   return Number.isFinite(at) && at <= Date.now();
 }
 
@@ -431,11 +492,18 @@ export const kenari = {
     if (!pricing.ok) {
       throw new Error(`kenari pricing request failed: ${pricing.status} ${pricing.statusText}`);
     }
-    const rate = PricingResponse.parse(await pricing.json()).usd_idr_rate;
-    return { catalog: await catalog.json(), rate };
+    const parsed = PricingResponse.parse(await pricing.json());
+    const lines = Object.fromEntries(
+      (parsed.items ?? []).map((item) => [item.model, item.pricing_lines ?? []]),
+    );
+    return { catalog: await catalog.json(), rate: parsed.usd_idr_rate, lines };
   },
   parseModels(raw) {
-    const { catalog, rate } = raw as { catalog: unknown; rate: number };
+    const { catalog, rate, lines } = raw as {
+      catalog: unknown;
+      rate: number;
+      lines?: Record<string, KenariPricingLine[]>;
+    };
     const models = CatalogResponse.parse(catalog).data;
     const live = models.filter((model) => !isRetired(model.sunset_at));
     if (live.length < MIN_LIVE_MODELS) {
@@ -444,7 +512,7 @@ export const kenari = {
           + " needed to distinguish a retirement from a truncated response",
       );
     }
-    return live.map((model) => ({ model, rate }));
+    return live.map((model) => ({ model, rate, lines: lines?.[model.id] }));
   },
   translateModel(source, context) {
     const { model, rate } = source;
@@ -472,8 +540,13 @@ export const kenari = {
       free ? 0 : toUsd(micro, rate);
     const cachePrice = (micro: number | null | undefined): number | undefined =>
       free ? undefined : toUsd(micro, rate);
-    const input = price(pricing?.input);
-    const output = price(pricing?.output);
+    const perUnit = unitCosts(source.lines, rate);
+    // A paid model reporting 0 for both token prices is billed some other way (every one in the
+    // live feed has per-unit `pricing_lines`), never a free tier. Even when its lines are missing
+    // from the feed, no token cost is written rather than $0.
+    const tokenFree = !free && pricing?.input === 0 && pricing?.output === 0;
+    const input = tokenFree ? undefined : price(pricing?.input);
+    const output = tokenFree ? undefined : price(pricing?.output);
     const cacheRead = cachePrice(pricing?.cache_read);
     const cacheWrite = cachePrice(pricing?.cache_write);
     // A price the feed does not publish is not `$0`: writing zero there would publish a fake
@@ -532,6 +605,7 @@ export const kenari = {
       {
         ...host,
         name: deltas?.name,
+        family: freeFamily(baseModel, deltas?.family),
         description: deltas?.description,
         release_date: deltas?.release_date,
         last_updated: deltas?.last_updated,
@@ -545,6 +619,10 @@ export const kenari = {
         ...(reasoningOptions === undefined ? { reasoning: deltas?.reasoning } : {}),
         status: deltas?.status,
         interleaved: deltas?.interleaved,
+        // The feed says nothing about SDK packages or media-model limits, so the authored API
+        // table (v1 `provider`) and a limit it does not narrow stay.
+        provider: deltas?.provider,
+        ...(narrows || deltas?.limit === undefined ? {} : { limit: deltas.limit }),
         ...(preservedTiers === undefined ? {} : { cost: { ...host.cost, tiers: preservedTiers } }),
       },
       // The narrowed limit is what lets `factorBaseModel` record that `limit.input` must not be
@@ -553,7 +631,22 @@ export const kenari = {
       deltas?.base_model_omit,
     ) as SyncedModel;
 
-    return { id: model.id, model: built, header: fileHeader(built, rate) };
+    const v2Set = Object.fromEntries(
+      Object.entries(perUnit).map(([key, cost]) => [
+        key,
+        (current: unknown) => ({
+          ...(typeof current === "object" && current !== null ? current : {}),
+          ...cost,
+        }),
+      ]),
+    );
+
+    return {
+      id: model.id,
+      model: built,
+      header: fileHeader(built, rate),
+      ...(Object.keys(v2Set).length === 0 ? {} : { v2Set }),
+    };
   },
   sourceID(model) {
     return model.model.id;
