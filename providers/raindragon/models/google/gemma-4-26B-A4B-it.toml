@@ -1,0 +1,27 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default off);
+# a reasoning_effort value also turns thinking on, with no graded levels.
+# Text input only on this host; context capped at 204,800 tokens.
+# modalities.output matches the lab; it stays because bun validate requires it
+# whenever [modalities] is overridden.
+# Source: https://inference.raindragon.ai/api-documentation
+# Prices: https://inference.raindragon.ai/api/models
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+cache = { implicit = true }
+
+[limit]
+context = 204_800
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.35
