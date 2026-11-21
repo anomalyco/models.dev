@@ -1,0 +1,41 @@
+# Sources (accessed 2026-11-21):
+# - https://thinkingmachines.ai/news/inkling-2-mini/ (announced Nov 20, 2026; 26.4B total, 3.4B active)
+# - https://thinkingmachines.ai/model-card/inkling-2-mini/ (License: Apache 2.0; "any pixel-based image input";
+#   "context window of up to 1M tokens")
+# - https://huggingface.co/thinkingmachines/Inkling-2-Mini (Apache-2.0 weights)
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+# Input: the model card lists "any pixel-based image input" without naming formats, so the generic image modality is used.
+schema = 2
+name = "Inkling 2 Mini"
+description = "Open-weight multimodal looped MoE reasoning model (26.4B total, 3.4B active) for agentic coding, vision, and tool use"
+family = "inkling"
+open_weights = true
+release_date = "2026-11-20"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/thinkingmachines/Inkling-2-Mini"
+
+[[links]]
+url = "https://thinkingmachines.ai/news/inkling-2-mini/"
+type = "announcement"
+
+[[links]]
+url = "https://thinkingmachines.ai/model-card/inkling-2-mini/"
+type = "model_card"
