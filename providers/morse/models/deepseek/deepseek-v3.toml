@@ -1,0 +1,12 @@
+schema = 2
+base_model = "deepseek/deepseek-v3"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+top_k = false
+
+[cost.text.input]
+price = 0.32
+
+[cost.text.output]
+price = 1.1
