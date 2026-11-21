@@ -20,11 +20,25 @@ export const ModelFamilyValues = [
   "gpt-oss",
   "gpt-image",
   "gpt-live",
+  "gpt-audio",
+  "gpt-audio-mini",
+  "gpt-image-mini",
+  "gpt-realtime",
+  "gpt-realtime-mini",
+  "gpt-realtime-translate",
+  "gpt-transcribe",
+  "gpt-transcribe-mini",
+  "gpt-tts",
+  "gpt-tts-mini",
+  "gpt-oss-safeguard",
+  "omni-moderation",
 
   // OpenAI o-series (reasoning models)
   "o",
   "o-mini",
   "o-pro",
+  "o-deep-research",
+  "o-deep-research-mini",
 
   // Anthropic style
   "claude",
@@ -40,6 +54,24 @@ export const ModelFamilyValues = [
   "gemini-flash",
   "gemini-flash-lite",
   "gemini-embedding",
+  "gemini-live",
+  "gemini-live-translate",
+  "gemini-tts-flash",
+  "gemini-tts-flash-lite",
+  "gemini-tts-pro",
+  "gemini-transcribe",
+  "gemini-omni-flash",
+  "gemini-decision",
+  "gemini-robotics-er",
+  "gemini-robotics-er-live",
+  "gemini-computer-use",
+  "gemini-deep-research",
+  "gemini-deep-research-max",
+  "nano-banana-pro",
+  "nano-banana-lite",
+  "google-text-embedding",
+  "chirp",
+  "genie",
 
   // GLM (zai)
   "glm",
@@ -117,9 +149,18 @@ export const ModelFamilyValues = [
   "grok-build",
   "grok-vision",
   "grok-beta",
+  "grok-code",
+  "grok-imagine-image",
+  "grok-imagine-video",
+  "grok-imagine-video-lite",
+  "grok-tts",
+  "grok-voice",
+  "grok-transcribe",
 
   // Google Gemma
   "gemma",
+  "gemma-embedding",
+  "gemma-diffusion",
 
   // AWS Nova
   "nova",
@@ -209,6 +250,7 @@ export const ModelFamilyValues = [
   // Video generation
   "sora",
   "veo",
+  "veo-lite",
   "runway",
   "dream-machine",
 
@@ -216,6 +258,9 @@ export const ModelFamilyValues = [
   "whisper",
   "elevenlabs",
   "lyria",
+  "lyria-pro",
+  "lyria-clip",
+  "lyria-realtime",
   "melotts",
 
   // Baidu Ernie
