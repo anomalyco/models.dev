@@ -1,0 +1,23 @@
+# Source: Merkium first-party API, https://chat.merkium.nl/api/v1/models (limits, modalities,
+# tools, temperature/top_p ranges; no top_k parameter listed), live-tested Oct 20, 2026.
+# Release date: https://merkium.nl/blog/ganymede-1-1-release
+schema = 2
+name = "Ganymede 1.1"
+description = "Merkium's flagship model for cybersecurity, code and interface work, with a 1M-token context window"
+open_weights = false
+release_date = "2026-10-18"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 16_384
