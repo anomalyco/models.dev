@@ -1,0 +1,18 @@
+# Modelflare ID "deepseek-v4-flash" from GET https://modelflare.dev/v1/models (2026-10-15).
+# Effort: $.reasoning_effort on /v1/chat/completions; matches first-party providers/deepseek effort set; reasoning_effort accepted live.
+# Cost: list price from https://modelflare.dev/api/pricing (2026-10-15): input_price=0.428571 USD/MTok, output = input_price * completion_ratio (3.0), cache_read = input_price * cache_ratio (0.0333333).
+# Cache: official model page lists a Cache Read token price (https://modelflare.dev/pricing/deepseek-v4-flash, accessed 2026-11-15). This declares implicit prompt-cache support, not a guaranteed hit rate; the host does not document cache_control markers, so capabilities.cache = { implicit = true } (AGENTS.md).
+# Official Models & Pricing pages state that prices are in USD (https://modelflare.dev/pricing, accessed 2026-11-15). Numeric list prices below remain the 2026-10-15 /api/pricing snapshot and were not refreshed here.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.428571
+cache = { read = 0.0142857 }
+
+[cost.text.output]
+price = 1.28571
