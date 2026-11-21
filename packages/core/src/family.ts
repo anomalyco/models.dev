@@ -150,7 +150,6 @@ export const ModelFamilyValues = [
   "minimax",
   "minimax-m",
   "minimax-m-flash",
-  "minimax-m3",
   "minimax-h",
   "minimax-h-lite",
   "minimax-h-max",

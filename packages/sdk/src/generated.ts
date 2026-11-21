@@ -134,7 +134,6 @@ export type ModelFamily =
   | "minimax-image"
   | "minimax-m"
   | "minimax-m-flash"
-  | "minimax-m3"
   | "minimax-speech"
   | "ministral"
   | "mistral"
