@@ -4,7 +4,8 @@
 # start with `ag_` and are sent as `Authorization: Bearer` or `x-api-key`.
 # GET /v1/models lists the served ids (it needs a key). Setup:
 # https://aigrow.gg/ai-api/guide
-# Prices: https://aigrow.gg/ai-api (read 2026-11-16). The price table on that
+# Prices: https://aigrow.gg/ai-api (read 2026-11-16; the GPT-6.2 rows on
+# 2026-11-21). The price table on that
 # page reads "US dollars per million input / output tokens" (files read before
 # 2026-11-16 call it the figure "USD per million tokens") and lists, for each
 # model, the USD a buyer pays per 1M tokens. The model files copy those figures
@@ -12,8 +13,9 @@
 # at every context length, except Claude Haiku 5.5: a request with more than
 # 100,000 prompt tokens bills at its higher tier. A prompt-cache write bills at
 # 1.25x the input rate, and at 2x on Claude Opus 5.5, Sonnet 5.5, Fable 5.1 and
-# Fable 5.2, where every write goes to the 1-hour cache. Kimi K3.1 Pro reports
-# no prompt-cache reads, so repeated context bills as input.
+# Fable 5.2, where every write goes to the 1-hour cache. The rows of Kimi K3.1
+# Pro, GPT-6.2 Sol and GPT-6.2 Astra list no cache rate: repeated context bills
+# as input.
 name = "AIGROW"
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"

@@ -1,0 +1,20 @@
+# Prices: https://aigrow.gg/ai-api, price table "US dollars per million input / output tokens", row "GPT-6.2 Sol", column "With AIGROW credit" (read 2026-11-21): input $0.50, output $2.50. These are the USD a buyer pays per 1M tokens, copied with no conversion. One flat rate at every context length (no long-context tier). The row lists no cache rates; it reads "No prompt cache: repeated context bills as input".
+# API: OpenAI Chat Completions (POST /v1/chat/completions); there is no Responses API. /v1/messages also answered this model (200, 2026-11-21), but nothing else was probed there, so it is not listed.
+# Effort: reasoning_effort; levels as on providers/openai; low, medium, high, xhigh and max each returned 200 on this host; "none" returned 400 "Unsupported value", and the lab does not list it either (2026-11-21). A JSON schema response_format, a PNG image and a PDF file part all worked, and the schema held on a prompt that did not ask for JSON (probed 2026-11-21).
+# Cache: none. Three identical 5,988-token prompts reported no cached tokens (probed 2026-11-21), as the price page says.
+# Streaming: with stream_options.include_usage the last chunk before [DONE] carried the usage (probed 2026-11-21).
+# Tools: function tools are forwarded on Chat Completions with reasoning on: a function tool returned a tool call with the right arguments under tool_choice "auto", "required" and a named function, and with strict true (probed 2026-11-21). Custom (freeform) tools do not reach the model on this host, so freeform is left out. Probed 2026-11-21 with one custom tool per format (text, a regex grammar ZZ[0-9]{3}, the same grammar in lark): with tool_choice "required" each request returned 400 "Tool choice 'required' must be specified with 'tools' parameter.", and with no tool_choice each returned 200 with no tool call and empty content.
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+stream_usage = true
+cache = false
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 2.5
