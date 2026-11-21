@@ -1,7 +1,8 @@
 # Source: https://blazeinfer.ai/models and https://blazeinfer.ai/docs (accessed 2026-11-21).
 # Pricing and limits: host catalog, USD per 1M tokens; context 32,000 and output 32,000.
 # APIs: Chat Completions, Responses and Messages returned valid responses (live probes 2026-11-21).
-# Reasoning: no caller control is documented; the lab's always-on reasoning is inherited.
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default off)
+# Live probes on 2026-11-21: true enabled a reasoning trace; false returned none.
 # Chat returns the trace in `reasoning`. reasoning_field = "reasoning" is valid in v2,
 # but v1's interleaved.field only allows reasoning_content|reasoning_details, so no
 # reasoning_field is set rather than a wrong one.
@@ -15,7 +16,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 cache = { implicit = true }
 
