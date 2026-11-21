@@ -1,0 +1,29 @@
+# Modal Shared Endpoint model ID: deepseek-ai/DeepSeek-V4.1-Flash-1017.
+# Library page https://modal.com/library/deepseek/deepseek-v4-1-flash-1017 (accessed 2026-11-21):
+#   prompt $0.25, completion $1.00 per MTok; cached input costs 98% less than uncached input.
+# Precision FP8 with FP4 experts; released Oct 2026.
+# https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 1

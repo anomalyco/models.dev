@@ -1,0 +1,30 @@
+# Modal Shared Endpoint model ID: thinkingmachines/inkling-2-small.
+# Library page https://modal.com/library/thinking-machines/inkling-2-small (accessed 2026-11-21):
+#   prompt $0.30, completion $1.00 per MTok; cached input costs 90% less than uncached input.
+# Effort values: none, minimal, low, medium, high, xhigh, or max (or a number from 0 to 0.99);
+#   defaults to high. Handles up to 1M tokens of context.
+# https://huggingface.co/thinkingmachines/inkling-2-small
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+name = "Inkling 2 Small"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+structured_output = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1
