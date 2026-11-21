@@ -1,0 +1,37 @@
+# Sources (accessed 2026-11-17):
+# - AI Gateway allowlist: https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/89576c6d/ai_gateway/model_selection/models.yml
+#   gpt_6_2_astra maps to gpt-6.2-astra, proxy_provider openai, context 1_050_000, output 128_000.
+# - OpenAI model: https://developers.openai.com/api/docs/models/gpt-6.2-astra
+# - Proxy forwards the request body to OpenAI unchanged:
+#   https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/89576c6d/ai_gateway/proxy/clients/base.py
+#   https://gitlab.com/gitlab-org/modelops/applied-ml/code-suggestions/ai-assist/-/blob/89576c6d/ai_gateway/proxy/clients/openai.py
+# Effort: reasoning.effort on Responses, reasoning_effort on Chat Completions.
+# The Gateway picker lists low|medium|high|xhigh; the proxy forwards the native max level too.
+# Custom tools: text, lark and regex on both APIs, per OpenAI's function-calling guide and the
+# native provider entry's 2026-11-17 probes; inherited through the unchanged proxy body, not tested live here.
+# https://developers.openai.com/api/docs/guides/function-calling
+# Function tools with reasoning require Responses; gitlab-ai-provider mapping must use openaiApiType responses.
+# Preparatory v2-only entry: gitlab-ai-provider main has no mapping yet. Publish in v1 only after
+# OpenCode pins a provider release containing duo-chat-gpt-6-2-astra.
+# Cost: GitLab bills model calls in Credits, not tokens; v2 has no per-call price unit.
+# The Credits table does not yet list this model: https://docs.gitlab.com/subscriptions/gitlab_credits/
+schema = 2
+v2_only = true
+base_model = "openai/gpt-6.2-astra"
+name = "Agentic Chat (GPT-6.2 Astra)"
+
+[capabilities]
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
