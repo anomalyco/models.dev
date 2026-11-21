@@ -21,8 +21,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.0825
-cache = { read = 0.020625 }
+price = 0.132
+cache = { read = 0.033 }
 
 [[cost.text.input.overrides]]
 when = { utc_hours = { lt = "16:00" } }
@@ -35,7 +35,7 @@ price = 0.0825
 cache = { read = 0.020625 }
 
 [cost.text.output]
-price = 0.33
+price = 0.528
 
 [[cost.text.output.overrides]]
 when = { utc_hours = { lt = "16:00" } }
