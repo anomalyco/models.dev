@@ -1,0 +1,29 @@
+# Source: https://router.huggingface.co/v1/models (2026-11-16): novita and zai-org (Z.AI) are live providers, context_length 131072, $0.3 input / $0.9 output per MTok, tools, text + image input, no structured output.
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (zhipuai/glm-4.6v), without video.
+# No toggle: the router documents no on/off field (see provider.toml).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+schema = 2
+base_model = "zhipuai/glm-4.6v"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+
+[limit]
+context = 131_072
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 0.9

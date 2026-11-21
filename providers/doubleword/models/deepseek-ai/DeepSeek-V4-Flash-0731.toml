@@ -1,0 +1,24 @@
+# Pricing: realtime tariff from GET https://api.doubleword.ai/v1/models?include=pricing (2026-11-05),
+# matching https://docs.doubleword.ai/inference-api/models/deepseek-ai-deepseek-v4-flash-0731. Async/batch tiers are cheaper and not modelled here.
+# Reasoning: reasoning_effort only; the gateway rejects `thinking` and `chat_template_kwargs.enable_thinking`
+# with a 400 ("use 'reasoning_effort'"), so there is no toggle. It validates none|minimal|low|medium|high|xhigh|max
+# and maps them to the model's native levels; effort lists the native/peer set. Live probe 2026-11-05:
+# see PR body for per-level reasoning-token counts.
+# Tools and json_schema structured output probed live 2026-11-12.
+# Cache hits verified live 2026-11-12.
+# Cache: implicit by default, explicit via cache_control (ttl 5m|1h, min prefix 1024 tokens):
+# https://docs.doubleword.ai/inference-api/prompt-caching (max 4 breakpoints: #multiple-breakpoints)
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.018, write = { "5m" = 0.1125, "1h" = 0.18 } }
+
+[cost.text.output]
+price = 0.18

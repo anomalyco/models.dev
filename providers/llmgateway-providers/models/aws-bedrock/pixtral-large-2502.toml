@@ -1,0 +1,17 @@
+schema = 2
+base_model = "mistral/pixtral-large-2502"
+name = "Pixtral Large 25.02 (AWS Bedrock)"
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 6

@@ -7,7 +7,7 @@ description = "Efficient GLM model for fast reasoning, coding, and agent workflo
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"], budget = {} }
 structured_output = true
 cache = { implicit = true }
 

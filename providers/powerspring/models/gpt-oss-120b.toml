@@ -1,0 +1,36 @@
+# Source: https://api.powerspring.eu/v1/models (accessed 2026-11-14): context_length 131000,
+# max_output_tokens 131000; text only, tools, json_schema, reasoning, reasoning_off.
+# Effort: reasoning_effort = none|low|medium|high on Chat Completions. "none" turns thinking off.
+# low|medium|high follow the relay peers (providers/ovhcloud/models/gpt-oss-120b.toml,
+# providers/scaleway/models/gpt-oss-120b.toml).
+# Live check 2026-11-14 (Chat Completions, one short prompt): every listed level answered;
+# reasoning text per level: none 0, low 148 chars, medium 393 chars, high 435 chars.
+# Reasoning text: Chat Completions returns it in message.reasoning_content.
+# Cache: not listed. Our public price list gives these models no cached-input discount, and
+# caching depends on the server (https://powerspring.eu/docs/billing), so we don't claim it.
+# Prices: USD per million tokens, converted from Powerspring's EUR prices at the ECB reference
+# rate of 2026-11-13 (1 EUR = 1.1052 USD).
+# Lowest price shown; a request goes to the cheapest available server and can cost up to
+# USD 0.22104 input / USD 0.77364 output per million tokens.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 131_000
+output = 131_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.088416
+
+[cost.text.output]
+price = 0.44208

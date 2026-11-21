@@ -5,15 +5,19 @@
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/anthropic/models/claude-opus-5-5.toml (Zen passes requests through).
 #   Surface: Messages carries the in-history messages (per-message output_config for effort_updates; tool_addition/tool_removal for tools.updates).
 # Tools follow Anthropic's Messages API: https://platform.claude.com/docs/en/build-with-claude/structured-outputs (strict), https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility (search), https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use (choice); Zen passes requests through.
+# tools.updates (live 2026-11-17 through Zen, the request shapes @opencode/ai sends: gpt-6-astra, gpt-5.6-sol, claude-opus-5-5, claude-haiku-5-5): add, a redefinition (the call uses the new schema) and a removal all work, 3/3 each.
+# Fast mode: pricing and the anthropic-beta header follow providers/anthropic/models/claude-opus-5-5.toml (Zen passes requests through).
+# No experimental modes for now: the tiers work through the API, but clients don't list them as separate models.
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none"], search = true, updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none"], search = true, updates = ["add", "remove", "replace"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 system_updates = true
 effort_updates = true
+service_tier = ["fast"]
 
 [api.messages]
 base_url = "https://opencode.ai/inference/anthropic/v1"
@@ -25,3 +29,7 @@ cache = { read = 0.2, write = 5 }
 
 [cost.text.output]
 price = 20
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = { text = 2 }

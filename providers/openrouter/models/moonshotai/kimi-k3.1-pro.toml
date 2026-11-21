@@ -10,6 +10,7 @@ description = "Kimi multimodal agent model for visual understanding, coding, and
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
+temperature = true
 
 [limit]
 output = 943_718
@@ -24,8 +25,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 2
-cache = { read = 0.2 }
+price = 0.253
+cache = { read = 0.18 }
 
 [cost.text.output]
-price = 10
+price = 8.8

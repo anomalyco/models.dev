@@ -1,0 +1,45 @@
+schema = 2
+name = "GPT-6.2 Astra Pro"
+description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
+family = "gpt-pro"
+open_weights = false
+release_date = "2026-11-17"
+last_updated = "2026-11-18"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_050_000
+output = 128_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4, write = 10 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16
+cache = { read = 0.8, write = 20 }
+
+[cost.text.output]
+price = 40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
+
+[cost.web_search]
+price = 10

@@ -17,9 +17,6 @@ reasoning = { supported = true }
 temperature = true
 cache = { implicit = true }
 
-[limit]
-context = 131_072
-
 [api.interactions]
 sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
 

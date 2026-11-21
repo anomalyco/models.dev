@@ -1,3 +1,4 @@
+# Output limit: capped at the 16,384 context; no host cap is documented and the 32,768 from the base model or host listing is larger.
 # Sources:
 # - https://ai.google.dev/gemini-api/docs/pricing (Gemini 3.5 Live Translate: $3.50 input / $21.00 output per 1M audio tokens)
 # - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-live-translate-preview
@@ -13,7 +14,7 @@ cache = false
 
 [limit]
 context = 16_384
-output = 32_768
+output = 16_384
 
 [api.bidi-generate-content]
 sdk = { opencodeai = "none" }

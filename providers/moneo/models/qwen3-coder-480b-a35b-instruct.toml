@@ -1,0 +1,17 @@
+# Moneo catalog row (retrieved 2026-11-11): id/model=`qwen3-coder-480b-a35b-instruct`, context_tokens=256000,
+# has_vision=false, has_tools=true, has_reasoning=false, input_per_1m_usd=0.70, output_per_1m_usd=2.80:
+# https://api.moneo.one/v1/models
+# The route reports has_reasoning=false; the sanitizer drops native thinking controls and the response filter removes all reasoning fields.
+# Tool choice and structured output are omitted as unverified on this host; HTTP 200 alone did not prove enforcement.
+# Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
+schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+
+[limit]
+context = 256_000
+
+[cost.text.input]
+price = 0.70
+
+[cost.text.output]
+price = 2.80

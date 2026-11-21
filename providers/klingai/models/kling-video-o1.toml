@@ -1,0 +1,37 @@
+# Sources (accessed 2026-11-12):
+# - Model ID kling-video-o1 (Kling O1): https://kling.ai/document-api/guides/capability-map/video
+# - API: POST https://api-singapore.klingai.com/omni-video/kling-o1 (https://kling.ai/document-api/api/video/o1/video-omni);
+#   the legacy /v1/videos/omni-video endpoint takes model_name = "kling-video-o1".
+#   Resolution 720p (default) or 1080p. Reference and edited videos (feature_video, base_video) are .mp4/.mov.
+#   No native audio: audio is off or the original sound of the reference video.
+# - Pricing: https://kling.ai/document-api/pricing/base/video ("Balance" tab, USD per second of output). Prepaid
+#   resource packages (https://kling.ai/dev/pricing) bill in units at a lower effective rate and are not recorded.
+# Cost conditions: resolution uses the API's own values ("720p", "1080p");
+#   input_video = a feature_video or base_video item in contents.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-video-o1"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime"]
+output = ["video/mp4"]
+
+[api.videos]
+base_url = "https://api-singapore.klingai.com"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.084
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.112
+
+[[cost.video.output.overrides]]
+when = { input_video = { equals = true } }
+price = 0.126
+
+[[cost.video.output.overrides]]
+when = { input_video = { equals = true }, resolution = { equals = "1080p" } }
+price = 0.168

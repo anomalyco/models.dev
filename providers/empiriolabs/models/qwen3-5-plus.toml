@@ -22,12 +22,12 @@ cache = { read = 0.36 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 256_000 } }
-price = 1.08
-cache = { read = 1.08 }
+price = 0.45
+cache = { read = 0.45 }
 
 [cost.text.output]
 price = 2.21
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 256_000 } }
-price = 6.62
+price = 2.76

@@ -1,0 +1,19 @@
+# ClinePass limits and reasoning levels: https://github.com/cline/cline/blob/72b3d7140553a733242126e51a7c2e87efe75c64/sdk/packages/llms/src/catalog/catalog.generated.ts#L29888-L29922
+# Reference rates, including the two cache-write TTLs: https://docs.cline.bot/getting-started/clinepass#reference-pricing
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 943_718
+
+[cost.text.input]
+price = 2
+cache = { read = 0.20, write = { "5m" = 2, "1h" = 4 } }
+
+[cost.text.output]
+price = 10

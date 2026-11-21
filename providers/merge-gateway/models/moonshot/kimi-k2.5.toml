@@ -5,13 +5,17 @@ schema = 2
 base_model = "moonshotai/kimi-k2.5"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+input = ["text"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, budget = { min = 1, max = 262_144 } }
-structured_output = true
-tools = { supported = true }
+structured_output = false
+tools = { supported = false }
+
+[limit]
+context = 131_072
+output = 32_768
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

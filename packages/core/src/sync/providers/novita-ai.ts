@@ -8,6 +8,11 @@ const ENDPOINT = "https://api.novita.ai/openai/v1/models";
 // Unadvertised/development aliases observed in the 2026-10-09 catalog audit.
 // Sao10K is separately deferred until exact IDs have a portable file representation.
 const IGNORED_IDS = new Set([
+  // Routing variants of the same OpenAI models, same price as the plain IDs.
+  "openai/gpt-6.2-astra-azure-dst",
+  "openai/gpt-6.2-astra-es",
+  "openai/gpt-6.2-sol-azure-dst",
+  "openai/gpt-6.2-sol-es",
   "bunny",
   "dev/glm46",
   "deepseek/deepseek-r1/community",
@@ -22,6 +27,8 @@ const IGNORED_IDS = new Set([
   "nvrouter/fusion",
   "zai-org/glm-4.7-h",
   "zai-org/glm-5.3-p",
+  // Placeholder route (2026-11-17): $0 prices, empty description, no published target model.
+  "zai-org/glm-new",
 ]);
 
 const Price = z.object({

@@ -196,19 +196,25 @@ export function buildHuggingFaceModel(
 ): Record<string, unknown> {
   if (lab === undefined) throw new Error(`Hugging Face model ${model.id}: no lab file for ${baseModel}`);
   const labModalities = lab.modalities as { input: string[]; output: string[] };
+  // A served context below the lab's output cap would publish an output larger than the
+  // window, so the output is capped at the context.
+  const labOutput = (lab.limit as { output?: number } | undefined)?.output;
+  const output = labOutput !== undefined && aggregate.context !== undefined && labOutput > aggregate.context
+    ? aggregate.context
+    : undefined;
   const factored = factorBaseModel(baseModel, {
     structured_output: aggregate.structuredOutput || undefined,
     cost: aggregate.cost,
-    limit: { context: aggregate.context } as SyncedFullModel["limit"],
+    limit: { context: aggregate.context, ...(output === undefined ? {} : { output }) } as SyncedFullModel["limit"],
   }, { context: aggregate.context });
   const doc = providerModelToV2(factored);
 
   const input = exactModalities(model.architecture.input_modalities, labModalities.input);
-  const output = exactModalities(model.architecture.output_modalities, labModalities.output);
+  const outputKinds = exactModalities(model.architecture.output_modalities, labModalities.output);
   const kinds = (values: string[]) => [...new Set(values.map((value) => value.split("/")[0]))].sort().join();
-  if (input.length > 0 && output.length > 0
-    && (kinds(input) !== kinds(labModalities.input) || kinds(output) !== kinds(labModalities.output))) {
-    doc.modalities = { input, output };
+  if (input.length > 0 && outputKinds.length > 0
+    && (kinds(input) !== kinds(labModalities.input) || kinds(outputKinds) !== kinds(labModalities.output))) {
+    doc.modalities = { input, output: outputKinds };
   }
 
   // Chat Completions takes tools and reasoning_effort per request, with no

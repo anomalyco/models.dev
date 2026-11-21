@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { roundPrice } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel } from "./openrouter.js";
 
@@ -110,9 +111,9 @@ export function buildChutesModel(
 
   const cost = model.pricing?.prompt !== undefined && model.pricing?.completion !== undefined
     ? {
-        input: model.pricing.prompt,
-        output: model.pricing.completion,
-        cache_read: model.pricing.input_cache_read,
+        input: roundPrice(model.pricing.prompt),
+        output: roundPrice(model.pricing.completion),
+        cache_read: model.pricing.input_cache_read === undefined ? undefined : roundPrice(model.pricing.input_cache_read),
       }
     : existing?.cost;
 
@@ -229,6 +230,6 @@ function inferFamily(id: string, name: string) {
     .find((family) => {
       const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(target);
     });
 }

@@ -5,7 +5,7 @@ schema = 2
 type = "embedding"
 name = "Qwen3-VL Embedding 8B"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
-family = "qwen"
+family = "qwen-embedding"
 open_weights = true
 release_date = "2026-02-05"
 
@@ -24,7 +24,7 @@ context = 32_000
 output = 4_096
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.09

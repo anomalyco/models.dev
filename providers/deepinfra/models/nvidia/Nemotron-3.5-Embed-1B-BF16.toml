@@ -1,0 +1,20 @@
+# Catalog (accessed 2026-11-08): https://api.deepinfra.com/models/list (type "embeddings", not deprecated); model page https://deepinfra.com/nvidia/Nemotron-3.5-Embed-1B-BF16
+#   price $0.015/MTok text, $0.035/MTok image tokens (cents_per_image_token), max_tokens 32768.
+#   Pricing also at https://deepinfra.com/blog/nvidia-nemotron-3.5-embed-rerank-release (2026-10-21).
+# API: OpenAI-compatible POST https://api.deepinfra.com/v1/openai/embeddings, "supports the OpenAI embeddings API for all embedding models" (https://docs.deepinfra.com/apis/embeddings.md).
+# Images: an input item can be a list of content parts with image_url (data URL or https URL), one image per item.
+schema = 2
+v2_only = true
+base_model = "nvidia/nemotron-3.5-embed-1b"
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/deepinfra/embeddings" }
+
+[cost.text.input]
+price = 0.015
+
+[cost.text.output]
+price = 0
+
+[cost.image.input]
+price = 0.035

@@ -1,3 +1,4 @@
+# Output limit: capped at the 131,072 context; no host cap is documented and the 262,144 from the base model or host listing is larger.
 # Model: https://docs.mistral.ai/models/ministral-3-3b-25-12 (API ID ministral-3b-2512; $0.1 input / $0.1 output). /v1/models reports max_context_length 131072 (docs say 256k).
 # https://mistral.ai/news/mistral-3 (Ministral 3 family, 2025-12-02, Apache 2.0).
 # Mistral API (api.mistral.ai), docs and live checks 2026-10-19:
@@ -32,6 +33,7 @@ cache = { implicit = { min_tokens = 64 } }
 
 [limit]
 context = 131_072
+output = 131_072
 
 [cost.text.input]
 price = 0.1

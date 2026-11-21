@@ -1,0 +1,27 @@
+# Bumo Router (multi-model relay, OpenAI-compatible Chat Completions), billed in USD.
+# Prices: https://router.bumo.ai/api/v1/models (accessed 2026-11-02); the catalog row lists prompt-length tiers, mirrored as overrides.
+# Docs: https://bumo.ai/docs/api
+# Effort: reasoning_effort = low|medium|high (request body is forwarded unchanged)
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true, explicit = true }
+
+[cost.text.input]
+price = 2.12
+cache = { read = 0.212 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4.24
+cache = { read = 0.424 }
+
+[cost.text.output]
+price = 12.72
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 19.08
