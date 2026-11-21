@@ -1,0 +1,11 @@
+# Tadly: OpenAI-compatible POST https://api.tadly.dev/v1/chat/completions, plus
+# Anthropic Messages (POST /v1/messages) and OpenAI Responses (POST /v1/responses).
+# Auth: Authorization: Bearer <key>. Models: GET https://api.tadly.dev/v1/models.
+# OpenAPI: https://api.tadly.dev/openapi.json (accessed 2026-11-15)
+# Docs: https://tadly.dev/docs, https://tadly.dev/docs/opencode (accessed 2026-11-15)
+name = "Tadly"
+env = ["TADLY_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.tadly.dev/v1"
+doc = "https://tadly.dev/docs/opencode"

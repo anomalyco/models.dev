@@ -1,0 +1,33 @@
+# Served as `qwen3.5` on POST https://api.tadly.dev/v1/chat/completions; requests run on Qwen3.5-9B
+# and may fall back to Qwen3.5-0.8B while it starts or is busy (https://tadly.dev/models/qwen3-5, accessed 2026-11-15).
+# Price: $0.15 per 1M tokens, the same rate for input and output (https://tadly.dev/pricing, accessed 2026-11-15).
+# Limits: 131,072-token context and a 16,384-token output cap on this host (https://tadly.dev/models/qwen3-5).
+# Tools: `tools` / `tool_choice` are forwarded (https://tadly.dev/docs#chat-completions, https://api.tadly.dev/openapi.json).
+# Input: text only listed here; image parts are accepted but can be dropped by a text-only fallback (https://tadly.dev/docs).
+# Cache: engine prefix caching, no separate cached-token price.
+# Toggle: chat_template_kwargs.enable_thinking true|false (on by default; the gateway forwards a caller's chat_template_kwargs unchanged).
+# Reasoning is returned in `reasoning_content`, split out of the reply by the gateway.
+schema = 2
+base_model = "alibaba/qwen3.5-9b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[limit]
+context = 131_072
+output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.15
