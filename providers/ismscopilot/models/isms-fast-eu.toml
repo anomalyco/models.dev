@@ -1,0 +1,36 @@
+# Sources (accessed 2026-10-26):
+# - Aliases and serving models: https://docs.ismscopilot.com/docs/api/models-and-regions
+# - Rates (USD per million tokens): https://www.ismscopilot.com/products/api
+# - Wire surface: https://docs.ismscopilot.com/model-api-openapi.json (text-only subset of
+#   OpenAI chat completions: no tools, no response_format, no attachments; streaming supported)
+# Serving: GLM 5.3 on Mistral's EU inference host (EU processing path).
+#   Sources: https://docs.ismscopilot.com/docs/api/models-and-regions (alias table) and
+#   https://www.ismscopilot.com/products/api ("GLM 5.3 hosted by Mistral, EU processing path").
+# top_k: not forwarded by the API (temperature and top_p are).
+# Reasoning: always on, no caller control (thinking is selected by alias, not by a request field).
+#   Evidence: the OpenAPI CreateChatCompletionRequest schema has no reasoning_effort or thinking
+#   field; effort is fixed per alias on the server.
+# Output cap field: max_tokens and max_completion_tokens are both accepted (OpenAPI request schema).
+# Limit: 128,000-token context window per request, enforced with HTTP 400 context_length_exceeded;
+# input and output share it; 64,000 is the default output reserve:
+# https://docs.ismscopilot.com/docs/api/models-and-regions#context-window
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "ISMS Fast EU"
+description = "Compliance fast lane on the EU processing path: GLM 5.3 on Mistral's EU inference host, with curated compliance framework modules injected when relevant and disclosed per response. Text-only chat completions."
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = false
+top_k = false
+
+[limit]
+context = 128_000
+output = 64_000
+
+[cost.text.input]
+price = 2.8
+
+[cost.text.output]
+price = 8.8
