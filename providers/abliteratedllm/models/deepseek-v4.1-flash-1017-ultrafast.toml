@@ -1,7 +1,8 @@
 # Sources (accessed 2026-11-09):
 # - https://api.abliteratedllm.dev/v1/models (fields: https://abliteratedllm.dev/docs/models) for this ID:
 #   context_length 1048576, max_output_tokens 1048576 (larger output budgets are lowered to it),
-#   input_modalities text, USD per 1M tokens input 2.16 / cached input 0.0432 / output 8.64.
+#   input_modalities text|image (text only on 2026-11-09; re-checked 2026-11-14, and a PNG image request returned 200 with
+#   the right answer), USD per 1M tokens input 2.16 / cached input 0.0432 / output 8.64.
 #   No priority tier (pricing.priority is null). No charge for cache writes.
 # - https://abliteratedllm.dev/docs/chat-completions: reasoning_effort and unlisted fields are passed through unchanged;
 #   reasoning arrives in reasoning_content; JPEG, PNG, GIF and WebP images work; audio and file/PDF parts, and image or video
@@ -12,17 +13,13 @@
 #   on shared GPUs at our infrastructure provider, Fireworks (accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast).
 #   Ids ending -fast/-ultrafast serve the same model as the id without the suffix, faster and at higher prices
 #   (https://abliteratedllm.dev/docs/models, Stock models).
-# Input: text only for this ID, so the lab's image types are left out.
-# Reasoning controls copied from the same upstream's entry: providers/fireworks-ai/models/accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast.toml
+# Input: text and images, the lab's JPEG/PNG/GIF/WebP types (inherited from base_model, as for deepseek-v4.1-flash-1017).
+# Image types and reasoning controls follow the same upstream's entry: providers/fireworks-ai/models/accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast.toml
 # Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables)
 # Effort: reasoning_effort = low|high|max
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash 1017 Ultrafast"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
