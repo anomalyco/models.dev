@@ -1,0 +1,9 @@
+# Cohere rerank endpoint: https://mixroute.ai/docs/api-reference/endpoint/rerank
+# Catalog: https://api.mixroute.ai/v1/models
+schema = 2
+v2_only = true
+base_model = "cohere/rerank-v4.0-pro"
+
+[api.rerank]
+base_url = "https://api.mixroute.ai/v1"
+sdk = { aisdk = "@ai-sdk/cohere", opencodeai = "none" }

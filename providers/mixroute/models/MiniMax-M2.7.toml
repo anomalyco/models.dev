@@ -1,0 +1,12 @@
+# Live 2026-11-17 on MixRoute default group: Chat Completions returned HTTP 200, OK, and reasoning_content.
+# Requested max_tokens=128; usage reported 10 completion tokens (7 reasoning). Availability is host-specific despite lab retirement.
+# Catalog: https://api.mixroute.ai/v1/models
+# Reasoning reference: providers/minimax/models/MiniMax-M2.7.toml
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
