@@ -1,0 +1,19 @@
+# Pricing: https://bothub.chat/models ECO mode, ELITE plan API rate
+# (checked 2026-11-12): 2.57 / 12.85 USD per 1M input / output tokens.
+# Price taken from ECO mode; PRO may differ.
+# Effort: reasoning_effort = none|low|high|max
+# Wire: POST /v1/chat/completions only (providers/bothub/provider.toml).
+# No published thinking.type / thinking_budget / enable_thinking controls on this host.
+# Levels: https://bothub.chat/kimi-k3 (checked 2026-11-12).
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2.57
+
+[cost.text.output]
+price = 12.85
