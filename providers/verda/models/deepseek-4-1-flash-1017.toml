@@ -1,0 +1,32 @@
+# Model and context window: https://docs.verda.com/inference/models/deepseek-4-1-flash-1017/
+# Verda documents a context window of 1,048,576 tokens.
+# Modalities: inherit the base model's documented text/image MIME types and text output.
+# Reasoning controls, default, and caching: https://docs.verda.com/inference/models/deepseek-4-1-flash-1017/#reasoning
+# Default: effort=none; Verda documents reasoning off when reasoning_effort is omitted or set to none.
+# Verda ignores DeepSeek's native thinking parameter; use reasoning_effort instead.
+# Verda documents discounted cached input but no explicit cache-control mechanism.
+# Pricing and prompt-caching support: https://verda.com/models/deepseek-v4-1-flash (accessed 2026-11-16).
+# Page identifies model ID deepseek-4-1-flash-1017.
+# USD per million tokens: input 0.15, cached input 0.006, output 0.60.
+# Maximum output: Verda Console model page, accessed 2026-11-16: "Max output tokens: 393,216".
+
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 0.60
