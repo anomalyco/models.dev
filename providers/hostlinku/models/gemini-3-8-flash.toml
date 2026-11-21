@@ -1,0 +1,22 @@
+# Pricing source: https://hostlinku.com/models/gemini-3-8-flash and https://api.hostlinku.com/api/public/models/gemini-3-8-flash/pricing
+#   Performance (USD/MTok): input $0.3555, output $1.7775, cache_read $0.03555, web_search $0.3555/1k
+# Cache note: GET /api/public/models/gemini-3-8-flash/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
+# Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
+# Effort: reasoning_effort = low|medium|high
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3555
+cache = { read = 0.03555 }
+
+[cost.text.output]
+price = 1.7775
+
+[cost.web_search]
+price = 0.3555

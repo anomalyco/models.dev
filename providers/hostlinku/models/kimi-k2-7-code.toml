@@ -1,0 +1,25 @@
+# Pricing source: https://hostlinku.com/models/kimi-k2-7-code and https://api.hostlinku.com/api/public/models/kimi-k2-7-code/pricing
+#   Performance (USD/MTok): input $0.9006, output $3.792, cache_read $0.18012, web_search $6.97096/1k
+# Cache note: GET /api/public/models/kimi-k2-7-code/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
+# Limits source: GET https://api.hostlinku.com/api/public/models/kimi-k2-7-code and GET /v1/models report context_window = 262_144 and max_output_tokens = 262_144, matching base_model.
+# Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.9006
+cache = { read = 0.18012 }
+
+[cost.text.output]
+price = 3.792
+
+[cost.web_search]
+price = 6.97096

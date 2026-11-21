@@ -1,0 +1,29 @@
+# Pricing source: https://hostlinku.com/models/kimi-k3 and https://api.hostlinku.com/api/public/models/kimi-k3/pricing
+#   Performance (USD/MTok): input $2.844, output $14.22, cache_read $0.2844, web_search $6.97096/1k
+# Limits source: GET https://api.hostlinku.com/api/public/models/kimi-k3 and GET /v1/models (maxOutputTokens / max_output_tokens = 131_072, below the lab default).
+# Cache note: GET /api/public/models/kimi-k3/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
+# Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.844
+cache = { read = 0.2844 }
+
+[cost.text.output]
+price = 14.22
+
+[cost.web_search]
+price = 6.97096

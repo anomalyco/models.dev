@@ -507,3 +507,12 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
 
+## Hostlinku Notes
+
+Hostlinku is implemented in `packages/core/src/sync/providers/hostlinku.ts`.
+
+- Source endpoints: `https://api.hostlinku.com/api/public/models` (catalog membership) and `https://api.hostlinku.com/api/public/pricing` (per-mode USD pricing), both public with no auth required.
+- Updates existing models' per-mode (`performance`, `economy`, `dedicated`) USD/MTok input, output, cache, long-context tier, and web-search prices from `/api/public/pricing`, and removes local files that leave `/api/public/models`.
+- `skipCreates: true` and `trackMissingModels: false`: lab `base_model` mappings, API surface tables (`[api.messages]`, `[api.responses]`), and live-probed reasoning controls are hand-authored.
+- Models without a declared explicit cache-write block preserve read-only cache pricing when synced.
+- Listed catalog entries in `/api/public/models` that are absent from `/api/public/pricing` or lack any priceable mode retain their existing TOML unchanged and emit a notice instead of deleting the local file.

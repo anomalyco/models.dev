@@ -1,0 +1,22 @@
+# Pricing source: https://hostlinku.com/models/glm-5-3 and https://api.hostlinku.com/api/public/models/glm-5-3/pricing
+#   Dedicated (USD/MTok): input $1.1865, output $3.729, cache_read $0.22035
+# Limits note: GET https://api.hostlinku.com/api/public/models/glm-5-3 and GET /v1/models report binary 1M/128K figures (1_048_576 context / 131_072 output = 2^20 / 128*1024); [limit] is omitted so the entry inherits the lab's decimal 1_000_000 / 131_072 window without exceeding base_model.
+# Service mode: offered in "dedicated" (runtime pricing & availability via GET /v1/models).
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.1865
+cache = { read = 0.22035 }
+
+[cost.text.output]
+price = 3.729

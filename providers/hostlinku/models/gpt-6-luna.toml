@@ -1,0 +1,42 @@
+# Pricing source: https://hostlinku.com/models/gpt-6-luna and https://api.hostlinku.com/api/public/models/gpt-6-luna/pricing
+#   Economy (USD/MTok): input $0.00625, output $0.03125, cache_read $0.000625, web_search $12.5/1k, (>=272000 tok: in $0.0125, out $0.046875, cache_read $0.00125)
+# Cache note: GET /api/public/models/gpt-6-luna/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
+# Service mode: offered in "economy" (runtime pricing & availability via GET /v1/models).
+# Freeform probe (2026-11-17, live on https://api.hostlinku.com): /v1/responses and /v1/chat/completions
+# were probed with custom tool grammar (syntax "regex" ZZ[0-9]{3} against prompt "APPLE" and syntax
+# "lark" LK[0-9]{3} against prompt "BANANA"). Grammar constraints are not consistently enforced across
+# Hostlinku's gateway (e.g. gpt-6-sol returned "APPLE"/"BANANA" and gpt-5-5 rejected grammar tools with 400),
+# so freeform is omitted.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.responses]
+base_url = "https://api.hostlinku.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]
+base_url = "https://api.hostlinku.com/v1"
+
+[cost.text.input]
+price = 0.00625
+cache = { read = 0.000625 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 272_000 } }
+price = 0.0125
+cache = { read = 0.00125 }
+
+[cost.text.output]
+price = 0.03125
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 272_000 } }
+price = 0.046875
+
+[cost.web_search]
+price = 12.5
