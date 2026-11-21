@@ -1,0 +1,17 @@
+# Verified on https://router-api.0g.ai/v1 (2026-11-18): chat and a tool call (get_weather), image input.
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-18).
+# Toggle: reasoning_effort = "none", chat_template_kwargs.enable_thinking = false or thinking.type = "disabled" turns thinking off; on by default.
+# Budget: thinking_budget (integer reasoning tokens). Probed 2026-11-18, twice each: 64 gave 68-69 completion tokens, 1024 gave 1,029,
+# no budget ~3,000. Bounds were not probed.
+# Reasoning probed 2026-11-18: graded reasoning_effort values are accepted but showed no consistent effect, so they are not listed.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+
+[cost.text.input]
+price = 2.55
+
+[cost.text.output]
+price = 7.65

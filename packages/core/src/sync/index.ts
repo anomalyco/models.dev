@@ -20,6 +20,7 @@ import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from 
 import { withPredecessorCapabilities } from "./inherit.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
+import { zerog } from "./providers/0g.js";
 import { aiand } from "./providers/aiand.js";
 import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
@@ -195,6 +196,7 @@ export interface SyncResult {
 }
 
 export const providers: {
+  "0g": SyncProvider<any>;
   aiand: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
@@ -250,6 +252,7 @@ export const providers: {
   wandb: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
+  "0g": zerog,
   aiand,
   aimlapi,
   ambient,
@@ -330,7 +333,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["0g", "aiand", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "hyper", "meta", "mistral", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

@@ -1,0 +1,17 @@
+# Verified on https://router-api.0g.ai/v1 (2026-11-18): chat and a tool call (get_weather).
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-18).
+# Served in a TEE (catalog: tee_attested, tee_type TDX).
+# Reasoning probed 2026-11-18, three runs per level: reasoning_effort low/medium ~28 reasoning tokens, high/xhigh ~45, max ~600;
+# with no effort the default is max-like (~584). none, minimal, chat_template_kwargs.enable_thinking=false and
+# thinking.type=disabled do not turn thinking off. Levels match zhipuai's low|high|max.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 1.4
+
+[cost.text.output]
+price = 4.4
