@@ -79,8 +79,8 @@ describe("model type filtering", () => {
       expect(defaults.providers["cloudflare-workers-ai"]?.models[id]).toBeUndefined();
       expect(decisions.providers["cloudflare-workers-ai"]?.models[id]?.type).toBe("decision");
     }
-    expect(defaults.providers.vercel?.models["liquid/d1"]).toBeUndefined();
-    expect(decisions.providers.vercel?.models["liquid/d1"]?.type).toBe("decision");
+    expect(defaults.providers.vercel?.models["typesafe-ai/jev"]).toBeUndefined();
+    expect(decisions.providers.vercel?.models["typesafe-ai/jev"]?.type).toBe("decision");
     const typedModels = Object.values(catalog.providers).flatMap((provider) =>
       Object.values(provider.models).filter((model) => model.type === "decision"),
     );
