@@ -1,0 +1,13 @@
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.429888
+
+[cost.text.output]
+price = 1.453417

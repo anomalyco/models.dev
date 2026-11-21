@@ -1,0 +1,13 @@
+schema = 2
+base_model = "qwen/qwen3.8-max"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 2.196357
+
+[cost.text.output]
+price = 5.834768

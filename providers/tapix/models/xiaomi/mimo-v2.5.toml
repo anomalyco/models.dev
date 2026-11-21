@@ -1,0 +1,13 @@
+schema = 2
+base_model = "xiaomi/mimo-v2.5"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.32
+
+[cost.text.output]
+price = 1.6

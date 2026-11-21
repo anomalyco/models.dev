@@ -1,0 +1,13 @@
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.30177
+
+[cost.text.output]
+price = 1.216813

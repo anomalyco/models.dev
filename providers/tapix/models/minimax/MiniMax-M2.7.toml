@@ -1,0 +1,13 @@
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.191681
+
+[cost.text.output]
+price = 0.728471

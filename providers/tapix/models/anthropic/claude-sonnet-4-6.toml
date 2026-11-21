@@ -1,0 +1,13 @@
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 2.1
+
+[cost.text.output]
+price = 10.5
