@@ -566,6 +566,8 @@ export const ModelFamilyValues = [
 
   // Product lines (one per lab, type and size tier)
   "aion",
+  "ampersand",
+  "eva",
   "aion-mini",
   "aion-rp",
   "apertus",
@@ -787,5 +789,4 @@ export function inferKimiFamily(...values: string[]): ModelFamily | undefined {
   if (/code/.test(target)) return "kimi-code";
   if (/[^a-z0-9]pro(?:$|[^a-z0-9])/.test(target)) return "kimi-pro";
   return "kimi";
-  return undefined;
 }
