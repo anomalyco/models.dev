@@ -208,6 +208,16 @@ EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
 - Only rows whose `output_modalities` include `text` sync. Keln also lists decision-output models (e.g. `cloudflare/clef`); they cannot serve chat, so they are filtered out at parse time and their files are removed like retired models.
 - Rows without a lab base or published controls are reported and keep their files; models absent from the API are removed. Empty, malformed and duplicate-ID inventories fail before writes.
 
+## Reka Notes
+
+- Run with `bun models:sync reka`. Registration enables the hourly provider-specific workflow; no API key or new workflow secret is required. `REKA_MODELS_URL` overrides the source URL (a `file://` path works) for local runs.
+- Source: the keyless `https://api.reka.ai/v1/site/chat-models` endpoint. It lists the same models as the authenticated `/v1/models`, with the same fields (OpenRouter's shape: `pricing` in USD per token as decimal strings, `context_length`, `input_modalities`, `supported_features`, `hugging_face_id`) plus `reasoning_efforts`.
+- `hugging_face_id` resolves to the lab via a small prefix table in the module (`Qwen` → `alibaba`, `deepseek-ai` → `deepseek`, `zai-org` → `zhipuai`, `RekaAI` → `rekaai`, …) and a few per-model aliases (`RekaAI/reka-edge-2603` → `rekaai/reka-edge`). Every file is `base_model`-only; an authored `base_model` is kept.
+- Sync owns the model list, `name`, `cost.text.input/output` and `cache.read` (an `input_cache_read` of `"0"` is no cache price), `limit.context` and `limit.output` (`context_length` and `max_output_length`, Reka's documented caps), `modalities.input` (as the lab's exact MIME types for the kinds Reka lists), `structured_output` and tools (from `supported_features`), the reasoning controls and `compatibility.reasoning_field = "reasoning_content"` on reasoners.
+- Reasoning controls come from `reasoning_efforts`: a list becomes an effort option (`none` = off, no toggle), `[]` means always on with no control, and a reasoner without the field is reported and skipped rather than guessed.
+- Where a row has a cache read price, a missing `capabilities.cache` is filled in as `{ implicit = true }` (Reka caches prompt prefixes automatically and bills them at the cached-input rate). Authored cache details are kept by the runner; `description`, `knowledge`, `release_date`, `last_updated` and `status` are read from the file's own values and written back, so a hand-authored override survives every sync.
+- Rows that are not ready (`is_ready = false`) sync and are reported as notices. Rows without a lab base or published controls are reported and keep their files; models absent from the API are removed. Empty, malformed and duplicate-ID inventories fail before writes.
+
 ## OpenRouter Notes
 
 OpenRouter is implemented in `packages/core/src/sync/providers/openrouter.ts`.
