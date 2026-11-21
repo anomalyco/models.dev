@@ -1,0 +1,57 @@
+# Sources (checked 2026-11-21):
+# - Public alias, admission budget, output cap, tools, effort and request fields:
+#   https://oathbreaker.ai/docs and https://oathbreaker.ai/models/kimi-k3-1-pro-abliterated
+# - USD per million tokens (one price for every account; no member rate on this model):
+#   https://oathbreaker.ai/pricing
+# - Public availability and current limits/prices: https://oathbreaker.ai/llms.txt
+# Oathbreaker serves an abliterated variant of Kimi K3.1 Pro through its own gateway; it
+# does not train the underlying Moonshot model. The exact served derivative is not published
+# as downloadable Oathbreaker weights, so open_weights is false. Lab weights and benchmarks
+# are never inherited by provider entries; the canonical model link identifies the Kimi
+# K3.1 Pro lineage, not equivalent results.
+# release_date is when this alias went public on Oathbreaker (2026-11-17), not the base
+# model launch.
+# Limits: the same byte-based admission as Oathbreaker's DeepSeek aliases. A request is
+# admitted when UTF-8 input bytes, message and tool framing and the requested output tokens
+# fit in a 131,072-unit budget, and the request body is at most 262,144 bytes
+# (limit.request_bytes). The budget counts bytes, not tokens, so limit.context is a
+# conservative token estimate: 131,072 / ~4 bytes per token of typical English text = 32,768.
+# Output is capped at 24,576 tokens (default 8,192) and includes reasoning.
+# Effort: reasoning_effort = low|high|max. If the field is omitted, the gateway sends
+# reasoning_effort = low. "none" is not accepted and there is no thinking toggle.
+# Cache reads are implicit and billed only when reported by upstream usage.
+# No image or video input and no strict tool schemas. Only Chat Completions is listed here;
+# the gateway's stateless /v1/responses and Anthropic-format /v1/messages routes translate
+# into the same pipeline.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Oathbreaker Kimi K3.1 Pro Abliterated"
+description = "Kimi K3.1 Pro Abliterated served through Oathbreaker's text-only OpenAI-compatible Chat Completions API"
+open_weights = false
+release_date = "2026-11-17"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
+structured_output = false
+cache = { implicit = true }
+stream_usage = true
+
+[limit]
+context = 32_768
+output = 24_576
+request_bytes = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 4.50
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 9
