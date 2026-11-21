@@ -1,0 +1,33 @@
+# Source: OhMyGPT public catalog, GET https://api.ohmygpt.com/v1/models/tencent/hy4-flash (snapshot 2026-11-17): prices, limits and the serving provider (tencent).
+# Prices: the catalog lists them in Coins, OhMyGPT's billing unit, per 1M tokens (fields named `price_credits`); 1 USD = 250,000 Coins (https://www.ohmygpt.com/docs/costs).
+# API: Chat Completions is this model's native protocol on OhMyGPT; the request is forwarded to the serving provider (Tencent Cloud TokenHub) without protocol conversion (https://www.ohmygpt.com/docs/api/chat-completions#native-and-other-models).
+# Effort: reasoning_effort = none|high; none turns thinking off
+# Checked live 2026-11-17 with each serving provider pinned as `<provider>:tencent/hy4-flash` (https://www.ohmygpt.com/docs/provider-routing): reasoning_effort = none returned no reasoning_content and 0 reasoning tokens, and high returned reasoning_content. The other values (minimal, low, medium, xhigh, max) are accepted and reason like high, so they are not listed. thinking.type = disabled turns thinking off as well; only the effort form is listed because a toggle cannot be paired with a list that contains none, as on tencent/hy4 and tencent/hy4-preview here.
+# top_k: accepted by every serving provider (live 2026-11-17), and none of their own models.dev entries excludes it.
+# Cache: implicit; the catalog prices cached input and requests need no cache markers.
+# Limits: OhMyGPT's own figures (catalog context_length and limits, with the serving provider's override where it has one).
+# Prices: the catalog schedules a price change (valid_from); it is written as a dated rule below.
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+
+[limit]
+input = 960_000
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.0365
+cache = { read = 0.00146 }
+
+[cost.text.output]
+price = 0.146
+
+[[cost.multipliers]]
+when = { date = { gte = "2026-12-01" } }
+factor = { text = 2 }
