@@ -1,0 +1,20 @@
+# MiMo V2.6 Flash. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Toggle: reasoning_effort = "none" disables thinking (forwarded to DeepInfra).
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.146
+
+[cost.text.output]
+price = 0.292
+
+[limit]
+output = 65_536

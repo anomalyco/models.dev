@@ -1,0 +1,13 @@
+# OpenAI-compatible gateway: POST /v1/chat/completions with a prepaid API key
+# (Authorization: Bearer $PHASE_API_KEY). Every call returns a signed receipt.
+# Catalog with prices and limits: GET https://ai.phase.xyz/v1/models (public).
+# Billing: token prices below plus a flat $0.001 per call, which has no v2 field.
+# Reasoning: top-level reasoning_effort is forwarded to the upstream host;
+# other non-standard request fields are dropped.
+# Sources: https://ai.phase.xyz/docs, https://ai.phase.xyz/v1/models (accessed 2026-11-02)
+name = "PHASE MIND"
+env = ["PHASE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://ai.phase.xyz/v1"
+doc = "https://ai.phase.xyz/docs"

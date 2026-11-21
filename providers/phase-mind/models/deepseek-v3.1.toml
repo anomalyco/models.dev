@@ -1,0 +1,17 @@
+# DeepSeek V3.1. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Toggle: reasoning_effort = "none" disables thinking (forwarded to DeepInfra).
+schema = 2
+base_model = "deepseek/deepseek-v3.1"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.26
+
+[cost.text.output]
+price = 0.988
+
+[limit]
+context = 163_840

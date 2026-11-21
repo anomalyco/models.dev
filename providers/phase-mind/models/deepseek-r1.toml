@@ -1,0 +1,14 @@
+# DeepSeek R1 (reasoning). Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Reasoning: always on, no caller control.
+schema = 2
+base_model = "deepseek/deepseek-r1-0528"
+
+[capabilities]
+reasoning = { supported = true }
+tools = { supported = false }
+
+[cost.text.input]
+price = 0.52
+
+[cost.text.output]
+price = 2.236

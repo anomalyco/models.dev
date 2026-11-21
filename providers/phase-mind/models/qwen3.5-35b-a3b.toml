@@ -1,0 +1,18 @@
+# Qwen3.5 35B A3B. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Reasoning: always on, no caller control.
+schema = 2
+base_model = "alibaba/qwen3.5-35b-a3b"
+status = "beta"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.1456
+
+[cost.text.output]
+price = 1.04
