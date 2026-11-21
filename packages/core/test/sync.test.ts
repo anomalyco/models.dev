@@ -6601,8 +6601,8 @@ test("Vercel family inference requires word boundaries", () => {
     ],
   });
 
-  // No fuzzy subsequence matches ("yi") or single-letter substring matches ("o").
-  expect(buildVercelModel(jev!, undefined).family).toBeUndefined();
+  // Whole-word matches only: Jev is its own family, never a fuzzy "yi"; no single-letter substring matches ("o").
+  expect(buildVercelModel(jev!, undefined).family).toBe("jev");
   expect(buildVercelModel(rerank!, undefined).family).toBeUndefined();
   // Genuine o-series IDs still match, and keep their stamp when re-synced.
   expect(buildVercelModel(o3!, undefined).family).toBe("o");
