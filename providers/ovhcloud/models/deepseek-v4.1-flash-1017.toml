@@ -1,0 +1,31 @@
+# Sources (accessed 2026-11-19):
+# https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/deepseek-v4-1-flash-1017/
+# https://oai.endpoints.kepler.ai.cloud.ovh.net/doc/DeepSeek-V4.1-Flash-1017/openapi.json
+# https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter
+# Effort: reasoning_effort on /v1/chat/completions (null or enum) and reasoning.effort on
+# /v1/responses; the endpoint's OpenAPI ReasoningEffort enum is none|minimal|low|medium|high|xhigh|max,
+# but the lab distinguishes low/high/max and maps minimal to low, medium/xhigh to high
+# (https://api-docs.deepseek.com/news/news260910/), so only the distinguishing levels are listed.
+# "none" turns reasoning off; there is no separate toggle.
+# Mid-conversation: OVHcloud AI Endpoints serves this model on POST /v1/chat/completions;
+# reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism
+# (effort_updates = false, tools.updates = false).
+# Prices: the v2/openrouter sync feed reports blank prompt/completion prices for this model;
+# 0.31/1.25 USD per 1M tokens from the public catalog page (accessed 2026-11-19).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek-V4.1-Flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[cost.text.input]
+price = 0.31
+
+[cost.text.output]
+price = 1.25
