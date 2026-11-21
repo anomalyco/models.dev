@@ -1,0 +1,53 @@
+# Sources (accessed 2026-11-16):
+# https://help.aliyun.com/zh/model-studio/qwen4-max
+# https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-chat-completions
+# https://help.aliyun.com/zh/model-studio/explicit-cache-qwen4
+# https://help.aliyun.com/zh/model-studio/model-pricing
+# https://www.alibabacloud.com/help/en/model-studio/web-search
+# CNY list: input ¥10, output ¥30, cache hit ¥0.5, cache create 5m ¥12.5 / 1h ¥20 (per 1M tokens).
+# CNY→USD rate: 6.6784, 2026-11-16, source: https://open.er-api.com/v6/latest/USD
+# Effort: reasoning_effort (Chat), reasoning.effort (Responses), output_config.effort (Messages); default high.
+# none disables thinking on Chat/Responses; Messages has no none and turns thinking off with thinking.type = disabled.
+# Aliases: minimal→low, medium→high, max→xhigh.
+# Budget: thinking_budget (Chat), thinking.budget_tokens (Messages, slated for deprecation): a positive integer up to
+# 262,144, mutually exclusive with effort; bands 1-4,096→low, 4,097-131,072→high, 131,073-262,144→xhigh; default 131,072.
+# Responses has no budget field. enable_thinking true|false is the legacy toggle, slated for removal in favor of effort.
+# Controls confirmed live on dashscope.aliyuncs.com 2026-11-18 (Chat, Responses, Messages).
+# stream_usage: stream_options.include_usage (Chat Completions) returns token usage in the final chunk.
+# Cache: implicit (1,024-token minimum) plus Qwen4 explicit cache: prompt_cache_breakpoint {"mode":"explicit"} on content blocks,
+# prompt_cache_options {mode, ttl} on Chat/Responses, and cache_control on Messages (top-level or block); ttl 5m|1h (default 5m),
+# at most 4 breakpoints, 1,024-token minimum prefix, system/messages targets. Write 5m = 125% of input, 1h = 200%; reads share one price.
+# Web search: $0.573411 per 1,000 calls; qwen4-max doesn't support Chat search_strategy "agent", so agent-style retrieval goes
+# through the Responses web_search tool.
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
+# Not probed live, so system_updates and effort_updates are left unset.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "xhigh"], budget = { min = 1, max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 1.49736
+cache = { read = 0.07487, explicit = { read = 0.07487, write = { "5m" = 1.87171, "1h" = 2.99473 } } }
+
+[cost.text.output]
+price = 4.49209
+
+[cost.web_search]
+price = 0.573411

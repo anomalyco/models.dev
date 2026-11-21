@@ -1,0 +1,46 @@
+# Sources (accessed 2026-11-16):
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-personal-overview
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview
+# https://www.alibabacloud.com/help/en/model-studio/qwen4-max
+# https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+# qwen4-max is listed on both Token Plan editions (Personal and Team).
+# Effort: reasoning_effort (Chat), reasoning.effort (Responses), output_config.effort (Messages); default high.
+# none disables thinking on Chat/Responses; Messages has no none and turns thinking off with thinking.type = disabled.
+# Aliases: minimal→low, medium→high, max→xhigh.
+# Budget: thinking_budget (Chat), thinking.budget_tokens (Messages, slated for deprecation): a positive integer up to
+# 262,144, mutually exclusive with effort; bands 1-4,096→low, 4,097-131,072→high, 131,073-262,144→xhigh; default 131,072.
+# Responses has no budget field. enable_thinking true|false is the legacy toggle, slated for removal in favor of effort.
+# Controls per the Model Studio API docs; checked on dashscope.aliyuncs.com 2026-11-18, not on the plan endpoint.
+# Cache: cached tokens are billed at a discount, but the plan docs don't describe the mechanism, so implicit only.
+# structured_output and stream_usage: JSON Object/Schema per the model page; json_schema/json_object and
+# stream_options.include_usage were probed on this plan gateway 2026-11-13 with the preview id.
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
+# Not probed live for GA, so system_updates and effort_updates are left unset.
+# Cost: Token Plan Credits subscription; no public USD per-token rate.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "xhigh"], budget = { min = 1, max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://token-plan.ap-southeast-1.maas.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 0
+cache = { read = 0, write = 0 }
+
+[cost.text.output]
+price = 0
