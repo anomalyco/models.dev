@@ -59,6 +59,7 @@ jobs:
             GOOGLE_API_KEY,models.dev/release/GOOGLE_API_KEY
             MERGE_GATEWAY_API_KEY,models.dev/release/MERGE_GATEWAY_API_KEY
             MISTRAL_API_KEY,models.dev/release/MISTRAL_API_KEY
+            MOONSHOT_API_KEY,models.dev/release/MOONSHOT_API_KEY
             NOVITA_AI_API_KEY,models.dev/release/NOVITA_AI_API_KEY
             OPENAI_API_KEY,models.dev/release/OPENAI_API_KEY
             OPENROUTER_API_KEY,models.dev/release/OPENROUTER_API_KEY
@@ -92,6 +93,7 @@ jobs:
           LLMGATEWAY_API_KEY: ${{ secrets.LLMGATEWAY_API_KEY }}
           MERGE_GATEWAY_API_KEY: ${{ env.MERGE_GATEWAY_API_KEY }}
           MISTRAL_API_KEY: ${{ env.MISTRAL_API_KEY }}
+          MOONSHOT_API_KEY: ${{ env.MOONSHOT_API_KEY }}
           NOVITA_AI_API_KEY: ${{ env.NOVITA_AI_API_KEY }}
           KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
           GOOGLE_API_KEY: ${{ env.GOOGLE_API_KEY }}
