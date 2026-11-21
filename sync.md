@@ -24,6 +24,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
+- `bun models:sync outrun` syncs only Outrun pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
@@ -291,6 +292,17 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - Display names are converted to file IDs, with minimal special case logic to match existing model entries.
 - Unmatched rows open missing-model issues, and local entries missing from the source are kept.
 - When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model issues. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
+
+## Outrun Notes
+
+Outrun is implemented in `packages/core/src/sync/providers/outrun.ts`.
+
+- Source: `https://api.outrun.to/pricing` (public, keyless, USD per 1M tokens).
+- Price-only, like GitHub Copilot: only existing `providers/outrun/models/*.toml` files are updated. New feed models are not created or reported, and local entries missing from the feed are kept.
+- Only `kind = "text"` rows priced per `1M tokens` are read; image, video and audio rows use other units.
+- Updates `input`, `output`, `cache_read`, `cache_write` (5-minute write), and context tiers. A tier starting at `min_context_tokens = N + 1` becomes `context > N`, matching the feed's "up to N / over N" bands.
+- When the feed publishes `cache_write_1h`, the 5m and 1h write prices are both set on files that already declare a per-TTL write record.
+- Capabilities, limits, API tables and evidence headers stay hand-authored.
 
 ## Novita AI Notes
 

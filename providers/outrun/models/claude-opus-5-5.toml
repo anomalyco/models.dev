@@ -1,0 +1,29 @@
+# Outrun host entry for Claude Opus 5.5.
+# Sources (accessed 2026-10-29):
+# - Prices: https://api.outrun.to/pricing and https://outrun.to/model/claude-opus-5-5
+# - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/claude-opus-5-5
+# APIs: Chat Completions (https://api.outrun.to/v1/chat/completions) and Anthropic Messages
+# (https://api.outrun.to/v1/messages, x-api-key or Bearer auth; live 2026-10-30).
+# Cache: explicit cache_control on the Messages API, 5m and 1h TTLs (live 2026-10-30 on claude-haiku-5-5:
+# 5m write 6,603 tokens then read 6,603; 1h write 6,607 then read 6,607). Chat Completions does not apply
+# cache_control (live: no cache write or read on a repeated 6.6k-token prompt).
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://api.outrun.to/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.24
+cache = { read = 0.112, write = { "5m" = 2.8, "1h" = 4.48 } }
+
+[cost.text.output]
+price = 11.2
