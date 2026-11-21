@@ -13,6 +13,7 @@ base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Thinking"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]

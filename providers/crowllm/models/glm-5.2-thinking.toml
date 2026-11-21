@@ -13,6 +13,7 @@ base_model = "zhipuai/glm-5.2"
 name = "GLM-5.2 Thinking"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["high", "max"] }
 
 [cost.text.input]

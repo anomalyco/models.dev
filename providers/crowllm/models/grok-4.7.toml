@@ -10,6 +10,7 @@ schema = 2
 base_model = "xai/grok-4.7"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 
 [cost.text.input]

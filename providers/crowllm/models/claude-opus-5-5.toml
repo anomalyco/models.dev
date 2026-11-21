@@ -10,6 +10,7 @@ schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]

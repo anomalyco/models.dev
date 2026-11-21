@@ -13,6 +13,7 @@ base_model = "zhipuai/glm-5.3-flash"
 name = "GLM-5.3-Flash Thinking"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]

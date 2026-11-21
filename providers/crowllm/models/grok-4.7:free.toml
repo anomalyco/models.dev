@@ -6,6 +6,7 @@
 # Effort: reasoning_effort = low|medium|high|xhigh (top-level, forwarded verbatim)
 # The reasoning controls mirror providers/xai for the same model on this surface.
 # Live gateway row: model_ratio=0, completion_ratio=2.952662721893, cache_ratio=0.25, enable_groups=['free', 'pro', 'starter'].
+# Re-checked on 2026-11-21 against /v1/models and /api/pricing: still served, still zero-rated.
 schema = 2
 base_model = "xai/grok-4.7"
 name = "Grok 4.7 (free)"

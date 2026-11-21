@@ -10,6 +10,7 @@ schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]

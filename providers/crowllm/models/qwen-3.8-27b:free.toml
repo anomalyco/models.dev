@@ -8,6 +8,7 @@
 # Budget: thinking_budget = 0..262144 reasoning tokens; relaykit/dto/openai_request.go keeps the field for any qwen* upstream model and drops it for the rest
 # The reasoning controls mirror providers/alibaba for the same model on this surface.
 # Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=None, enable_groups=['free', 'pro'].
+# Re-checked on 2026-11-21 against /v1/models and /api/pricing: still served, still zero-rated.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B (free)"

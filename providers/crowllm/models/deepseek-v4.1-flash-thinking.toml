@@ -13,6 +13,7 @@ base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash Thinking"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]

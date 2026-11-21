@@ -13,6 +13,7 @@ base_model = "deepseek/deepseek-v4-pro"
 name = "DeepSeek V4 Pro Thinking"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]

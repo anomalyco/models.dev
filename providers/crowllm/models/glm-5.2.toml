@@ -11,6 +11,7 @@ schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
+cache = { implicit = true }
 reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
 
 [cost.text.input]
