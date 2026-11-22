@@ -1,12 +1,13 @@
+# Toggle: thinking = { type: enabled|disabled } (the router lists `thinking` in supported_parameters)
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 4
-cache = { read = 0, write = 5 }
+cache = { write = 5 }
 
 [cost.text.output]
 price = 20

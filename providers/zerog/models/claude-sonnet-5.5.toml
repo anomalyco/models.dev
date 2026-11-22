@@ -1,12 +1,13 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (the router lists `reasoning_effort`; levels are the lab's own set, as on the OpenRouter peer)
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
 price = 2
-cache = { read = 0, write = 2.5 }
+cache = { write = 2.5 }
 
 [cost.text.output]
 price = 10

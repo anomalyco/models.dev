@@ -1,12 +1,13 @@
+# Reasoning: always on for this id; the router lists neither `thinking` nor `reasoning_effort` in supported_parameters
 schema = 2
 base_model = "anthropic/claude-fable-5-2"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true }
 
 [cost.text.input]
 price = 8
-cache = { read = 0, write = 10 }
+cache = { write = 10 }
 
 [cost.text.output]
 price = 40

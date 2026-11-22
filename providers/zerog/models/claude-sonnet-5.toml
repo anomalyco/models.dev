@@ -1,4 +1,4 @@
-# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (the router lists `reasoning_effort`; levels are the lab's own set, as on the OpenRouter peer)
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
@@ -6,11 +6,11 @@ base_model = "anthropic/claude-sonnet-5"
 output = 131_072
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
 price = 3
-cache = { read = 0, write = 3.75 }
+cache = { write = 3.75 }
 
 [cost.text.output]
 price = 15
