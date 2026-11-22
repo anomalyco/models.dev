@@ -1,4 +1,4 @@
-# abltr serves this deployment with reasoning always on; no request-level reasoning control (toggle/effort/budget) is exposed.
+# Reasoning: reasoning_effort = max, forwarded by abltr's OpenAI-compatible endpoint.
 # Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
@@ -10,7 +10,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["max"] }
 structured_output = true
 
 [limit]
