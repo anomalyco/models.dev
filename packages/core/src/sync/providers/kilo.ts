@@ -127,6 +127,7 @@ function price(value: string | undefined) {
 }
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
+type EffortLevel = Extract<NonNullable<SyncedFullModel["reasoning_options"]>[number], { type: "effort" }>["values"][number];
 
 function modalities(values: string[], fallback: Modality[]): Modality[] {
   const allowed = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);
@@ -304,7 +305,8 @@ function KiloReasoningOptions(opencode: KiloModel["opencode"]): SyncedFullModel[
     });
     options.push({
       type: "effort",
-      values: orderedEfforts as Array<string | null>,
+      // Unknown levels stay and fail validation rather than being dropped silently.
+      values: orderedEfforts as EffortLevel[],
     });
   }
 

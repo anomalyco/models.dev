@@ -1,5 +1,6 @@
 # Previously a symlink to providers/mistral/models/ministral-3b-latest.toml. Copied from origin/dev 67bc657a5 so Vercel's data
 # stays as it was when the Mistral file moved to schema 2 with Mistral-API-specific values.
+# Open weights: false. Mistral released only Ministral 8B's weights; Ministral 3B is API-only (https://mistral.ai/news/ministraux).
 # Modalities: Mistral vision formats PNG, JPEG, WEBP, non-animated GIF, https://docs.mistral.ai/studio/conversations/vision
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message stays in place (cache prefix kept). No per-turn effort or tool-change mechanism reaches this model on this API.
 # Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
@@ -7,7 +8,7 @@ schema = 2
 name = "Ministral 3B (latest)"
 description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
 family = "ministral"
-open_weights = true
+open_weights = false
 knowledge = "2024-10"
 release_date = "2024-10-16"
 last_updated = "2024-10-04"
