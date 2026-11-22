@@ -3,7 +3,7 @@
 # cached input = input x cache_ratio (service/text_quota.go bills a cached prompt token at cache_ratio of a fresh one).
 # Source: https://crowllm.com/api/pricing (accessed 2026-11-21).
 # Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-11-21): "minimax-m3".
-# Toggle: thinking.type = enabled|disabled
+# Toggle: thinking.type = adaptive|disabled (mirrors providers/minimax, which documents adaptive|disabled for this model)
 # The reasoning controls mirror providers/minimax for the same model on this surface.
 # Live gateway row: model_ratio=0.15, completion_ratio=4.166666666667, cache_ratio=0.2, enable_groups=['pro'].
 schema = 2
