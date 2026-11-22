@@ -1,5 +1,6 @@
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
+reasoning_options = [{ type = "toggle" }]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
