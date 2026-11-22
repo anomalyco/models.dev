@@ -1,5 +1,7 @@
 # https://modal.com/library/moonshot/kimi-k3-1-pro documents pricing, the 1,048,576-token context, and text and image input.
-# The image types come from the lab model. Reasoning and structured output follow Kimi K3 on the same Modal API.
+# The image types come from the lab model. Structured output follows Kimi K3 on the same Modal API.
+# Modal's Shared Endpoint is assumed to use Moonshot's native reasoning_effort levels (low, high, max; default max).
+# https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart documents these levels and always-on reasoning.
 # https://modal.com/docs/guide/endpoints documents the supported APIs and automatic prefix caching.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
@@ -9,7 +11,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
 cache = { implicit = true }
 structured_output = true
 
