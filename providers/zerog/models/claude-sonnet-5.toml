@@ -7,3 +7,10 @@ output = 131_072
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 3
+cache = { read = 0, write = 3.75 }
+
+[cost.text.output]
+price = 15

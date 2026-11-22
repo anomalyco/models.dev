@@ -3,3 +3,10 @@ base_model = "anthropic/claude-fable-5-1"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 10
+cache = { read = 0, write = 12.5 }
+
+[cost.text.output]
+price = 50
