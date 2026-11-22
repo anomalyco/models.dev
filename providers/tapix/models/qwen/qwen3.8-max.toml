@@ -1,8 +1,8 @@
 schema = 2
 base_model = "alibaba/qwen3.8-max"
-reasoning_options = [{ type = "toggle" }]
 
 [capabilities]
+reasoning = { supported = true, toggle = true }
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [api.chat-completions]
