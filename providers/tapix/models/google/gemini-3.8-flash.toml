@@ -1,5 +1,6 @@
 schema = 2
 base_model = "google/gemini-3.8-flash"
+reasoning_options = [{ type = "toggle" }]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
