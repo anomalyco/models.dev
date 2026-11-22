@@ -1,0 +1,33 @@
+# Routing alias, not a fixed model: c0mpute's router picks a concrete open-weight model per request
+# (seen in testing: qwen3.5-abliterated 4B, nemotron-3-nano 4B, qwen2.5-coder 7B). Router launched 2026-11-12.
+# No [cost]: c0mpute has no rate card. Each request is a sealed-bid auction among nodes under the
+# caller's cap (lowest bid wins, 5% market fee), billed to a prepaid balance, so there is no fixed
+# per-token price to publish. Same approach as providers/aistupidlevel (routing modes with no fixed price).
+# [limit]: GPU nodes load models with num_ctx 16,384 or 32,768 depending on VRAM
+# (ctx_cap_for_vram in node/crates/c0mpute-core/src/inference_gpu.rs), so 16,384 is the window every
+# node holds; max_tokens is clamped to 8,192. Only max_tokens is read (max_completion_tokens is dropped).
+# Only temperature is forwarded among sampling parameters; top_p and top_k are dropped.
+schema = 2
+name = "Auto"
+description = "Router picks an open-weight model on the network for each request"
+family = "auto"
+open_weights = true
+release_date = "2026-11-12"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 16_384
+output = 8_192
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
