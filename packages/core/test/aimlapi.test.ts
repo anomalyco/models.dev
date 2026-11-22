@@ -39,6 +39,7 @@ test("reads the lab ladder through the provider directory, not the model record"
   // ladder", which is a different claim.
   expect(labEffortValues("zhipuai/glm-5.3-flash")).toEqual(["low", "high", "max"]);
   expect(labEffortValues("deepseek/deepseek-v4-pro")).toEqual(["low", "high", "max"]);
+  expect(labLadder("alibaba/qwen3.8-27b")).toEqual({ kind: "effort", values: ["low", "medium", "xhigh"], source: "lab" });
 });
 
 test("a dated snapshot borrows the ladder of the model it snapshots", () => {
@@ -100,8 +101,12 @@ test("a base with no lab entry falls back to the OpenRouter peer's ladder, inter
   expect(resolveLadder("tencent/hy3", "tencent/hy3", ["low", "medium", "high"])).toEqual(["low", "high"]);
   // A peer-listed `none` is not taken on trust the way a lab-listed one is.
   expect(resolveLadder("tencent/hy3", "tencent/hy3", ["none", "low", "medium", "high"])).toEqual(["low", "high"]);
-  // OpenRouter files Alibaba under `qwen/`.
-  expect(labLadder("alibaba/qwen3.8-27b")).toEqual({ kind: "effort", values: ["low", "medium", "xhigh"], source: "peer" });
+  // OpenRouter files this Alibaba model under qwen/.
+  expect(labLadder("alibaba/qwen3.8-max-prime")).toEqual({
+    kind: "effort",
+    values: ["minimal", "low", "medium", "high", "xhigh"],
+    source: "peer",
+  });
 });
 
 test("a peer that is toggle-only counts as no effort ladder, not as a licence for the host enum", () => {
