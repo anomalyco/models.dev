@@ -1,0 +1,26 @@
+# https://quicksilverpro.io/models/claude-opus-5-5/ (2026-11-21)
+# Catalog v87, model ID confirmed through authenticated /v1/models.
+# Haiku is served without reasoning. Native Messages uses the /v1 base.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { explicit = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://api.quicksilverpro.io/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = { "1h" = 2 } }
+
+[cost.text.output]
+price = 5
