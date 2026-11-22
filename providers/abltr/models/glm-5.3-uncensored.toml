@@ -1,6 +1,7 @@
 # Reasoning: reasoning_effort = low|high|max (default max), forwarded by abltr's OpenAI-compatible endpoint.
 # Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
 schema = 2
+v2_only = true
 base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3 · Uncensored"
 description = "GLM 5.3 · Uncensored serves an uncensored or abliterated community build behind abltr's OpenAI-compatible endpoint. It accepts tools, json, reasoning. Context is 1M. Rates are $1.52 per 1M input tokens and $2.75 per 1M output tokens."
@@ -14,3 +15,6 @@ price = 1.52
 
 [cost.text.output]
 price = 2.75
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

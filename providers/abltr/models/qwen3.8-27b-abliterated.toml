@@ -1,6 +1,7 @@
 # abltr serves this deployment with reasoning always on; no request-level reasoning control (toggle/effort/budget) is exposed.
 # Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
 schema = 2
+v2_only = true
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B · Abliterated"
 description = "Qwen3.8 27B · Abliterated serves an uncensored or abliterated community build behind abltr's OpenAI-compatible endpoint. It accepts tools, reasoning. Context is 256k. Rates are $0.25 per 1M input tokens and $1.13 per 1M output tokens."
@@ -20,3 +21,6 @@ price = 0.25
 
 [cost.text.output]
 price = 1.13
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

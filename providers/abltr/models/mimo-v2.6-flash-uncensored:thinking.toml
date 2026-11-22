@@ -1,6 +1,7 @@
 # Toggle: thinking.type = enabled|disabled (default enabled), forwarded by abltr's OpenAI-compatible endpoint.
 # Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
 schema = 2
+v2_only = true
 base_model = "xiaomi/mimo-v2.6-flash"
 name = "MiMo V2.6 Flash · Uncensored · Thinking"
 description = "MiMo V2.6 Flash · Uncensored · Thinking serves an uncensored or abliterated community build behind abltr's OpenAI-compatible endpoint. It accepts tools, json, reasoning. Context is 1M. Rates are $0.61 per 1M input tokens and $1.83 per 1M output tokens."
@@ -21,3 +22,6 @@ price = 0.61
 
 [cost.text.output]
 price = 1.83
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
