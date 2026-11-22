@@ -1,0 +1,22 @@
+# Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash 1017 · Abliterated"
+description = "DeepSeek V4.1 Flash 1017 · Abliterated serves an uncensored or abliterated community build behind abltr's OpenAI-compatible endpoint. It accepts tools, json. Context is 1M. Rates are $0.14 per 1M input tokens and $0.54 per 1M output tokens."
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[limit]
+context = 1000000
+
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.54

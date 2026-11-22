@@ -1,0 +1,23 @@
+# Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro · Abliterated"
+description = "Kimi K3.1 Pro · Abliterated serves an uncensored or abliterated community build behind abltr's OpenAI-compatible endpoint. It accepts tools, json, reasoning. Context is 1M. Rates are $2.98 per 1M input tokens and $5.95 per 1M output tokens."
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 1000000
+
+[cost.text.input]
+price = 2.98
+
+[cost.text.output]
+price = 5.95

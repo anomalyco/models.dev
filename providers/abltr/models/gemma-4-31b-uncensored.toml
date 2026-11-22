@@ -1,0 +1,22 @@
+# Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
+schema = 2
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B · Uncensored"
+description = "Gemma 4 31B · Uncensored serves an uncensored or abliterated community build behind abltr's OpenAI-compatible endpoint. It accepts tools, json. Context is 128k. Rates are $0.64 per 1M input tokens and $1.93 per 1M output tokens."
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[limit]
+context = 128000
+
+[cost.text.input]
+price = 0.64
+
+[cost.text.output]
+price = 1.93

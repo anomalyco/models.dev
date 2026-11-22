@@ -1,0 +1,22 @@
+# Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash · Uncensored"
+description = "GLM 5.3 Flash · Uncensored serves an uncensored or abliterated community build behind abltr's OpenAI-compatible endpoint. It accepts tools, json. Context is 1M. Rates are $0.24 per 1M input tokens and $0.96 per 1M output tokens."
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[limit]
+context = 1000000
+
+[cost.text.input]
+price = 0.24
+
+[cost.text.output]
+price = 0.96
