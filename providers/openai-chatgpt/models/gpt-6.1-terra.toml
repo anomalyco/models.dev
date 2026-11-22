@@ -5,10 +5,11 @@
 #   comes from GET https://api.openai.com/v1/models with its token
 #   (https://developers.openai.com/siwc/token-sharing-open-source/models-and-inference).
 # Reasoning: same Responses API as `openai`, so the same effort values.
-# Tools: function and custom tools are supported; hosted tools (image generation, file search, Code Interpreter,
-#   computer use, MCP, tool_search) are not
-#   (https://developers.openai.com/siwc/token-sharing-open-source/preview-limitations). Custom tool grammars,
-#   structured output and mid-conversation updates aren't confirmed live on this route yet, so they're left out.
+# Tools and other capabilities: the same Responses API at the same base URL as `openai`, so they follow its files,
+#   minus what this route documents as unsupported: hosted tools (tool_search, image generation, file search,
+#   Code Interpreter, computer use, MCP), prompt_cache_retention, and `temperature` / `top_p`
+#   (https://developers.openai.com/siwc/token-sharing-open-source/preview-limitations). Custom tools and
+#   additional_tools are documented as supported there.
 # Fast: the UI guidelines show a Fast mode toggle that "uses your plan or credits faster"
 #   (https://developers.openai.com/siwc/ui-ux-guidelines); it is the `priority` service tier, as on `openai` and
 #   Codex. Service tiers an account can't use fail with subscription_sharing_unsupported_capability.
@@ -21,8 +22,12 @@ v2_only = true
 base_model = "openai/gpt-6.1-terra"
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"], updates = ["add", "remove", "replace"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+prompt_cache_key = true
 service_tier = ["priority"]
 
 [capabilities.cache]
