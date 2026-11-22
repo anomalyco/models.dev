@@ -11,11 +11,11 @@ structured_output = true
 system_updates = true
 
 [limit]
-output = 262_144
+output = 65_536
 
 [cost.text.input]
 price = 3
-cache = { read = 0.45 }
+cache = { read = 0.75 }
 
 [cost.text.output]
 price = 15

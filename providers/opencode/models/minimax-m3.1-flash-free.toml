@@ -4,7 +4,9 @@
 # Tools follow MiniMax's API: https://platform.minimax.io/docs/api-reference/text-chat-anthropic (ToolChoice: only auto); Zen passes requests through.
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
+family = "minimax-m-flash-free"
 name = "MiniMax M3.1 Flash Free"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true, choice = ["auto"] }

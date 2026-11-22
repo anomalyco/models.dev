@@ -50,13 +50,17 @@ jobs:
           secret-ids: |
             ANTHROPIC_API_KEY,models.dev/release/ANTHROPIC_API_KEY
             BASETEN_API_KEY,models.dev/release/BASETEN_API_KEY
+            DASHSCOPE_API_KEY,models.dev/release/DASHSCOPE_API_KEY
             CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN,models.dev/release/CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN
             DEEPINFRA_API_KEY,models.dev/release/DEEPINFRA_API_KEY
+            DEEPSEEK_API_KEY,models.dev/release/DEEPSEEK_API_KEY
             DIGITALOCEAN_API_TOKEN,models.dev/release/DIGITALOCEAN_API_TOKEN
             FIREWORKS_API_KEY,models.dev/release/FIREWORKS_API_KEY
+            GROQ_API_KEY,models.dev/release/GROQ_API_KEY
             GOOGLE_API_KEY,models.dev/release/GOOGLE_API_KEY
             MERGE_GATEWAY_API_KEY,models.dev/release/MERGE_GATEWAY_API_KEY
             MISTRAL_API_KEY,models.dev/release/MISTRAL_API_KEY
+            MOONSHOT_API_KEY,models.dev/release/MOONSHOT_API_KEY
             NOVITA_AI_API_KEY,models.dev/release/NOVITA_AI_API_KEY
             OPENAI_API_KEY,models.dev/release/OPENAI_API_KEY
             OPENROUTER_API_KEY,models.dev/release/OPENROUTER_API_KEY
@@ -77,10 +81,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           ANTHROPIC_API_KEY: ${{ env.ANTHROPIC_API_KEY }}
           BASETEN_API_KEY: ${{ env.BASETEN_API_KEY }}
+          DASHSCOPE_API_KEY: ${{ env.DASHSCOPE_API_KEY }}
           DEEPINFRA_API_KEY: ${{ env.DEEPINFRA_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ env.DEEPSEEK_API_KEY }}
           DIGITALOCEAN_API_TOKEN: ${{ env.DIGITALOCEAN_API_TOKEN }}
           DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           FIREWORKS_API_KEY: ${{ env.FIREWORKS_API_KEY }}
+          GROQ_API_KEY: ${{ env.GROQ_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           OPENROUTER_API_KEY: ${{ env.OPENROUTER_API_KEY }}
           OPENAI_API_KEY: ${{ env.OPENAI_API_KEY }}
@@ -88,6 +95,7 @@ jobs:
           LLMGATEWAY_API_KEY: ${{ secrets.LLMGATEWAY_API_KEY }}
           MERGE_GATEWAY_API_KEY: ${{ env.MERGE_GATEWAY_API_KEY }}
           MISTRAL_API_KEY: ${{ env.MISTRAL_API_KEY }}
+          MOONSHOT_API_KEY: ${{ env.MOONSHOT_API_KEY }}
           NOVITA_AI_API_KEY: ${{ env.NOVITA_AI_API_KEY }}
           KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
           GOOGLE_API_KEY: ${{ env.GOOGLE_API_KEY }}
@@ -105,7 +113,10 @@ jobs:
           failures="$RUNNER_TEMP/sync-failures"
           results="$RUNNER_TEMP/sync-results.md"
           providers="$RUNNER_TEMP/sync-providers"
+          reasons="$RUNNER_TEMP/sync-failure-reasons.md"
+          log="$RUNNER_TEMP/sync-provider.log"
           : > "$failures"
+          : > "$reasons"
           printf '| provider | result |\n| --- | --- |\n' > "$results"
 
           base="$(git rev-parse HEAD)"
@@ -128,9 +139,9 @@ jobs:
             rm -f .sync/model-sync-report.md "$RUNNER_TEMP/auto-merge"
 
             result=ok
-            if ! bun models:sync "$provider" < /dev/null; then
+            if ! bun models:sync "$provider" < /dev/null 2>&1 | tee "$log"; then
               result="sync failed"
-            elif [ -n "$(git status --porcelain -- models providers)" ] && ! bun validate < /dev/null; then
+            elif [ -n "$(git status --porcelain -- models providers)" ] && ! bun validate < /dev/null 2>&1 | tee "$log"; then
               result="validation failed"
             fi
 
@@ -139,6 +150,12 @@ jobs:
               echo "::error::$provider: $result"
               printf '%s: %s\n' "$provider" "$result" >> "$failures"
               printf '| %s | %s |\n' "$provider" "$result" >> "$results"
+              # The end of the log is usually the error, so the run summary says why without opening the logs.
+              {
+                printf '<details><summary><b>%s</b>: %s</summary>\n\n```text\n' "$provider" "$result"
+                grep -vE '^[[:space:]]*$|DeprecationWarning|^[[:space:]]+at ' "$log" | tail -n 25
+                printf '```\n\n</details>\n\n'
+              } >> "$reasons"
               echo "::endgroup::"
               continue
             fi
@@ -176,6 +193,10 @@ jobs:
             echo "failed=true" >> "$GITHUB_OUTPUT"
           fi
           cat "$results" >> "$GITHUB_STEP_SUMMARY"
+          if [ -s "$reasons" ]; then
+            printf '\n### Why providers failed\n\n' >> "$GITHUB_STEP_SUMMARY"
+            cat "$reasons" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload changes
         if: steps.sync.outputs.changed == 'true'

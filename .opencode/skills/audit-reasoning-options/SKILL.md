@@ -100,7 +100,8 @@ Not toggle: split model IDs; UI-only; `effort=low` as “off”; pairing `toggle
 | --- | --- |
 | Effort/toggle/budget matching first-party lab entry on that lab | Lab docs or existing lab TOML |
 | Same options on a relay | Lab + peer relays, or this host docs/test; no contradiction |
-| Extra levels beyond lab/peers | This host docs or live meaningful effect |
+| Same host's previous model in the family | Inherit its controls when the lab keeps the same set |
+| Extra levels beyond lab/peers | This host's docs, catalog or client code, or a live test |
 | No controls | Affirmative no control — not “I didn’t check” |
 
 ## Anti-patterns

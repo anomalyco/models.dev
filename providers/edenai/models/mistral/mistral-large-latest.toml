@@ -11,6 +11,9 @@ output = ["text"]
 tools = { supported = true }
 structured_output = true
 
+[limit]
+context = 1_048_576
+
 [cost.text.input]
 price = 2
 cache = { read = 0.2 }

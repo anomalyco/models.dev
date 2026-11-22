@@ -1,3 +1,4 @@
+# Output limit: https://api.venice.ai/api/v1/models lists maxCompletionTokens 131072 (accessed 2026-11-13); the lab's raised cap would exceed this host's context.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -11,6 +12,7 @@ structured_output = true
 
 [limit]
 context = 1_000_000
+output = 131_072
 
 [api.chat-completions]
 

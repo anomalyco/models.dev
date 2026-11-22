@@ -18,6 +18,14 @@ const providers = {
   },
 };
 const models = { text: textModel, decision: decisionModel };
+const v2Providers = {
+  ...providers,
+  "github-copilot": { id: "github-copilot", models: { text: textModel } },
+};
+const expandedProviders = {
+  ...v2Providers,
+  "openai-codex": { id: "openai-codex", models: { text: textModel } },
+};
 
 describe("catalog API model type filtering", () => {
   test("omits typed models from api.json by default", async () => {
@@ -102,7 +110,7 @@ describe("catalog API model type filtering", () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(body).toEqual(providers);
+    expect(body).toEqual(v2Providers);
   });
 
   test("serves one experimental v2.0 type from its prebuilt file", async () => {
@@ -111,6 +119,70 @@ describe("catalog API model type filtering", () => {
 
     expect(response.headers.get("etag")).toBe('"v2-decision"');
     expect(Object.keys(body.example.models)).toEqual(["decision"]);
+  });
+});
+
+describe("experimental provider opt-in", () => {
+  const endpoint = "/experimental/v2.0/api.json";
+
+  test("requires opt-in even with type=all and leaves existing providers unchanged", async () => {
+    for (const query of ["", "?type=all", "?include=unknown", "?include=openai-chatgpt", "?include=openai,github-copilot"]) {
+      const response = await request(endpoint + query);
+      expect(await response.json()).toEqual(v2Providers);
+    }
+    for (const query of [
+      "include=openai-codex",
+      "include=openai-codex,openai-chatgpt",
+      "include= openai-chatgpt, openai-codex,openai-codex &include=unknown",
+    ]) {
+      const response = await request(endpoint + "?" + query);
+      expect(await response.json()).toEqual(expandedProviders);
+    }
+  });
+
+  test("composes with single, repeated, and comma-separated type filters", async () => {
+    for (const query of ["type=chat", "type=chat&type=decision", "type=decision,chat"]) {
+      const expanded = await request(endpoint + "?include=openai-codex&" + query);
+      expect((await expanded.json())["openai-codex"]).toEqual(expandedProviders["openai-codex"]);
+      const defaults = await request(endpoint + "?" + query);
+      expect((await defaults.json())["openai-codex"]).toBeUndefined();
+    }
+    const decision = await request(endpoint + "?include=openai-codex&type=decision");
+    expect((await decision.json())["openai-codex"]).toBeUndefined();
+    expect((await request(endpoint + "?include=openai-codex&type=invalid")).status).toBe(400);
+  });
+
+  test("separates static and composed view validators in both directions", async () => {
+    const queries = ["", "?include=openai-codex", "?type=chat,decision", "?include=openai-codex&type=chat,decision"];
+    for (const query of queries) {
+      const response = await request(endpoint + query);
+      const etag = response.headers.get("etag")!;
+      const again = await request(endpoint + query, { "if-none-match": etag });
+      expect(again.status).toBe(304);
+      expect(again.headers.get("etag")).toBe(etag);
+      for (const other of queries.filter((value) => value !== query)) {
+        expect((await request(endpoint + other, { "if-none-match": etag })).status).toBe(200);
+      }
+    }
+  });
+
+  test("include cannot add the provider to any v1 view, even with type=all", async () => {
+    for (const path of ["/api.json", "/models.json", "/catalog.json", "/model-schema.json"]) {
+      for (const query of ["", "type=all&"]) {
+        const response = await request(path + "?" + query + "include=openai-codex,openai-chatgpt");
+        const body = await response.text();
+        expect(body).toBe(await (await request(path + "?" + query)).text());
+        expect(body).not.toContain("openai-codex");
+        expect(body).not.toContain("openai-chatgpt");
+      }
+    }
+  });
+
+  test("prebuilt v2 files retain direct static access", async () => {
+    const defaults = await request("/_experimental_v2.0_api.json");
+    expect(await defaults.json()).toEqual(v2Providers);
+    const included = await request("/_experimental_v2.0_api-optin-all.json");
+    expect(await included.json()).toEqual(expandedProviders);
   });
 });
 
@@ -216,14 +288,23 @@ async function request(
     ASSETS: {
       fetch(input: Request) {
         const pathname = new URL(input.url).pathname;
-        if (pathname === "/_experimental_v2.0_api.json") {
-          return Response.json(providers);
-        }
-        if (pathname === "/_experimental_v2.0_api-decision.json") {
-          return Response.json(
-            { example: { ...providers.example, models: { decision: decisionModel } } },
-            { headers: { etag: '"v2-decision"' } },
-          );
+        if (pathname.startsWith("/_experimental_v2.0_api")) {
+          const expanded = pathname.includes("-optin");
+          const type = pathname.replace("/_experimental_v2.0_api", "").replace("-optin", "").replace(".json", "");
+          const source = expanded ? expandedProviders : v2Providers;
+          const value = type === "-decision"
+            ? { example: { ...providers.example, models: { decision: decisionModel } } }
+            : type === "-chat"
+              ? Object.fromEntries(Object.entries(source).map(([id, provider]) => [
+                  id, { ...provider, models: { text: textModel } },
+                ]))
+              : source;
+          const etag = `"v2${expanded ? "-optin" : ""}${type}"`;
+          const headers = { etag, "Cache-Control": "public, max-age=3600" };
+          if (input.headers.get("if-none-match")?.includes(etag)) {
+            return new Response(null, { status: 304, headers });
+          }
+          return Response.json(value, { headers });
         }
         if (pathname === "/_api.json") {
           return Response.json({

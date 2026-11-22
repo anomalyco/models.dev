@@ -1,0 +1,26 @@
+# Source: https://infer.flow7.org/api/public/catalog (2026-10-29 UTC)
+# Exact selector: infer/gemini-3.1-pro-preview:low-cost
+# Low cost route: text and tool calls. Image and file input need the model's :official route.
+# Limits: Infer's published figures for the model; the route publishes none of its own.
+# Reasoning controls copied from the lab's own entry, as AGENTS.md asks of relays.
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+name = "Gemini 3.1 Pro Preview (Low cost)"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 199_999
+
+[cost.text.input]
+price = 1.18
+cache = { read = 0.12, write = 1.33 }
+
+[cost.text.output]
+price = 5.3

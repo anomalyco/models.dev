@@ -1,0 +1,39 @@
+# Model ID from BytePlus ModelArk model list: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-list
+# USD pricing from BytePlus ModelArk pricing page: https://ai.byteplus.com/ark/region:ap-southeast-1/docs/model-pricing
+# BytePlus ModelArk is the overseas brand of Volcengine Ark: same Ark API surface,
+# different base URL (ark.ap-southeast.bytepluses.com) and API key.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# none/minimal disable thinking, so no separate toggle: sending effort alone already
+# enables it, and thinking.type=disabled + a graded effort is rejected.
+# (same Ark API as the volcengine Ark entry for this model ID)
+# Output limit: BytePlus Ark accepts max_tokens up to 131_072 (same as volcengine Ark).
+# Pricing: the BytePlus pricing page publishes two prompt-length bands for this model,
+# [0, 128] and (128, 256]; there is no 32K threshold.
+schema = 2
+base_model = "bytedance-seed/seed-2.0-lite"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.05 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.5
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.0
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 4.0

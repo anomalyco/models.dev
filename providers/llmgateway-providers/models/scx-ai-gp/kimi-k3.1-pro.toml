@@ -2,13 +2,8 @@ schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro (scx-ai-gp)"
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = false
 
 [cost.text.input]

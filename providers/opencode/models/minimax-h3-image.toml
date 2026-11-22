@@ -1,0 +1,27 @@
+# Model and API: https://platform.minimax.io/docs/guides/image-generation
+# Pricing: https://platform.minimax.io/docs/pricing/overview#models/image
+#   USD per 1M tokens: text input $2.30, image input $1.50, image output $3.80.
+# OpenCode exposes MiniMax-native synchronous and streaming Images generation and editing.
+# Non-streaming generation and edits are covered by the openai-compatible/images SDK
+# (verified against the managed endpoint); native URL SSE needs the MiniMax client adapter.
+# text.output mirrors the image output rate: H3 output is image tokens only, and this keeps
+# output billed if upstream ever omits output_tokens_details.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3-Image"
+
+[api.images]
+base_url = "https://opencode.ai/inference/minimax/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.text.input]
+price = 2.3
+
+[cost.text.output]
+price = 3.8
+
+[cost.image.input]
+price = 1.5
+
+[cost.image.output]
+price = 3.8

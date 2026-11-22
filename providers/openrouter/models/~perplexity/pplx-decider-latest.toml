@@ -3,6 +3,7 @@ schema = 2
 type = "decision"
 name = "Decider Latest"
 description = "Decision model for typed evaluation of shared state"
+family = "pplx-decider"
 open_weights = false
 release_date = "2026-10-14"
 
@@ -25,7 +26,7 @@ sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/open
 compatibility = { media_input = "state" }
 
 [cost.text.input]
-price = 0.019
+price = 0.02
 
 [cost.text.output]
 price = 0

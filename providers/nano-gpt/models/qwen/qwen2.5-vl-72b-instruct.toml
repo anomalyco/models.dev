@@ -1,7 +1,7 @@
 schema = 2
 name = "Qwen25 VL 72b"
 description = "Qwen25 VL 72b model with 32k context window"
-family = "qwen"
+family = "qwen-vl"
 open_weights = true
 release_date = "2025-05-10"
 
@@ -21,6 +21,7 @@ output = 32_000
 
 [cost.text.input]
 price = 0.69989
+cache = { read = 0.349945 }
 
 [cost.text.output]
 price = 0.69989

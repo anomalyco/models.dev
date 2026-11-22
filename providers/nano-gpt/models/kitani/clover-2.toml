@@ -1,0 +1,25 @@
+schema = 2
+name = "Clover 2"
+description = "Clover 2 is Kitani's 27.8B dense model: a BF16 base with seven LoRA experts and trained per-token routing between them. Text chat with reasoning off by default (Clover 2 Thinking turns it on); tool calling is not available. Its 32,768-token context window is shared by input and output, with up to 8,192 output tokens. Free during its first week, until November 24, 2026 03:33 UTC."
+open_weights = false
+release_date = "2026-11-17"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
+
+[limit]
+context = 200_000
+input = 200_000
+output = 8_192
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

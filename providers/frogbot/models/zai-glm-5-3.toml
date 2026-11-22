@@ -1,0 +1,26 @@
+# Relayed to Fireworks (accounts/fireworks/models/glm-5p3).
+# FrogBot's LiteLLM proxy forwards reasoning_effort and thinking to Fireworks
+# unchanged (fireworks_ai chat config; litellm 1.94.0).
+# Thinking-only: cannot be disabled. Effort: reasoning_effort = low|high|max,
+# three distinct tiers per providers/fireworks-ai/.../glm-5p3.toml.
+# https://docs.fireworks.ai/api-reference/post-chatcompletions
+# https://docs.frogbot.ai/api-reference/chat-completions
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 1_040_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4

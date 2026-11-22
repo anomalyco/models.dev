@@ -20,12 +20,9 @@ reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
 cache = { implicit = true }
 
-[limit]
-output = 1_048_576
-
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-capabilities = { tools = { updates = true } }
+capabilities = { tools = { updates = ["add"] } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

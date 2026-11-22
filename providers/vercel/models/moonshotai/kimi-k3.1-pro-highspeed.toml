@@ -1,7 +1,7 @@
 schema = 2
 name = "Kimi K3.1 Pro Highspeed"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k3"
+family = "kimi-pro"
 open_weights = false
 release_date = "2026-10-23"
 
@@ -12,7 +12,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
-cache = { implicit = true }
+cache = { implicit = true, explicit = true }
 
 [limit]
 context = 1_048_576
@@ -30,7 +30,7 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel
 
 [cost.text.input]
 price = 4
-cache = { read = 0.2, write = 4 }
+cache = { read = 0.2, write = 5 }
 
 [cost.text.output]
 price = 20

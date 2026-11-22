@@ -1,0 +1,66 @@
+# superbot did not train this model. The house ids superbot and superbot-fast run one DeepSeek V4.1 Flash
+# derivative checkpoint, so they use base_model and state only what differs on this host.
+# Sources (accessed 2026-10-26):
+# - https://superbot.gg/docs#api-models ("House models", "Effort and Fast"): superbot-fast runs at low, or none,
+#   and at low when the request names no effort. A request naming a higher effort is served, not refused, and runs
+#   at low, so the effort list is the levels this id serves: none and low. none is the documented way to turn
+#   reasoning off and no thinking toggle is documented, so effort includes none and there is no toggle. The request
+#   field is reasoning_effort (reasoning.effort on /v1/responses). Fast mode: service_tier = "priority" (or "fast"),
+#   2x every rate.
+# - https://superbot.gg/api ("One rate card for every call": superbot and superbot-fast bill the same API and MCP
+#   rates, USD per 1M tokens: input 1.00, output 5.00, cache write 1.25, cache read 0.05; "Reasoning tokens bill as
+#   output"; "Fast mode bills 2x every rate"), repeated under "API pricing" on https://superbot.gg/pricing.
+#   Context window 500k: https://superbot.gg/api ("House models") and context_length in GET /v1/models.
+# - Tool calls: a request that declares its own tools is answered by the superbot model driving them, and the tool
+#   calls come back in the caller's dialect (https://superbot.gg/developers/gateway/createChatCompletion).
+# - Modalities are the lab's (text in; jpeg, png, gif and webp images in; text out) and match this host. Checked
+#   2026-10-26 with a keyless trial key (POST https://api.superbot.gg/v1/keys/trial, documented at
+#   https://superbot.gg/docs#api-auth): a chat completion with an image_url part (png, jpeg, webp, gif) is answered
+#   from the image on both ids. A PDF file part is not read (the reply says it was undelivered), and the lab lists no PDF input.
+# - Sampling: temperature and top_p are accepted without error and inherited. They did not visibly steer a turn in
+#   checks on 2026-10-26 on both ids with a keyless trial key (a random 8-digit number requested in a fresh session
+#   each time: temperature 0 gave 7 distinct answers in 8 calls on superbot and 8 in 8 on superbot-fast; top_p
+#   0.0001 gave 8 in 8 on each), so do not expect repeatable output. top_k is false: the Chat Completions body has none.
+# - Caching is automatic: a request that repeats an earlier prefix is billed at the cache read rate with no request
+#   field (usage.prompt_tokens_details.cached_tokens was 30464 of 31301 prompt tokens on a repeat, trial key,
+#   2026-10-26), and the rate card prices cache reads and writes, so cache = { implicit = true }.
+# - limit.output = 131072 is the per-request output ceiling superbot sets for these ids (the lab's own figure is
+#   384000; this host's ceiling is lower). No public page or API field prints it and a response cannot show it:
+#   GET /v1/models carries no output ceiling, and a request naming a larger max_tokens is accepted and answered. The
+#   figure comes from the operator's configuration, read for the derivative checkpoint both ids run (disclosure:
+#   the author works on superbot).
+# - Formerly superbot-flash; that id is still accepted (https://superbot.gg/docs#api-models, "Model ids").
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "superbot-fast"
+description = "Quick and cheap, for small jobs. Reasoning effort low or none, a 500k-token window."
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "low" }, effort = ["none", "low"] }
+top_k = false
+cache = { implicit = true }
+service_tier = ["priority", "fast"]
+
+[limit]
+context = 500_000
+output = 131_072
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[cost.text.output]
+price = 5
+reasoning = 5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = 2
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }
