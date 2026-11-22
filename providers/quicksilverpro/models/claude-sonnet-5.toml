@@ -5,16 +5,14 @@
 # Relay controls: https://quicksilverpro.io/docs/quickstart/
 # Toggle: reasoning.enabled = true|false
 # Effort: reasoning_effort = low|medium|high|xhigh|max
+# PDF probe 2026-11-21 (PST): chat file and /v1/messages document read CEDAR731; inherit lab inputs.
+# Probe endpoint: https://api.quicksilverpro.io/v1 (tiny inline media, max_tokens = 32).
 schema = 2
 base_model = "anthropic/claude-sonnet-5"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { explicit = { ttl = ["5m", "1h"] } }
-
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
-output = ["text"]
 
 [api.chat-completions]
 

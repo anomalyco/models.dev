@@ -6,6 +6,8 @@
 # Effort: reasoning_effort = none|low|medium|high|xhigh|max
 # Custom-tool formats checked against https://quicksilverpro.io/docs/tools/:
 # only function tools are documented; no freeform formats claimed or live-tested.
+# PDF probe 2026-11-21 (PST): chat file and /v1/responses input_file read CEDAR731; inherit lab inputs.
+# Probe endpoint: https://api.quicksilverpro.io/v1 (tiny inline media, max_tokens = 32).
 schema = 2
 base_model = "openai/gpt-6-luna"
 
@@ -13,10 +15,6 @@ base_model = "openai/gpt-6-luna"
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { implicit = true }
-
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
-output = ["text"]
 
 [limit]
 context = 1048576
