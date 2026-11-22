@@ -65,8 +65,8 @@ test("only prices and lower caps change; host controls and lab inheritance survi
   expect(buildQuickSilverProModel(model({ context_tokens: null, max_output_tokens: null }), authored, existing).limit)
     .toEqual(authored.limit);
   const noCache = buildQuickSilverProModel(model({ cached_input_per_1m: undefined, cache_write_per_1m: undefined }), authored, existing);
-  expect(noCache.cost?.cache_read).toBeUndefined();
-  expect(noCache.cost?.cache_write).toBeUndefined();
+  expect(noCache.cost?.cache_read).toBe(1);
+  expect(noCache.cost?.cache_write).toBe(3);
   expect(buildQuickSilverProModel(model({ lifecycle: "deprecated" }), authored, existing).status).toBe("deprecated");
   const kimi = { base_model: "moonshotai/kimi-k3.1-pro", limit: { output: 943_718 } };
   expect(buildQuickSilverProModel(model({ max_output_tokens: 943_718 }), kimi,
@@ -119,6 +119,49 @@ test("runner keeps MIME types, header, Kimi cap and absent routes, and converges
     const second = await syncProvider(provider, { openIssues: false });
     expect(second.updated).toBe(0);
     expect(second.deleted).toBe(0);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("runner preserves authored cache prices and updates published TTLs independently", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "modelsdev-quicksilver-cache-"));
+  const repo = path.resolve(import.meta.dirname, "../../..");
+  const modelsDir = path.join(root, "providers/quicksilverpro/models");
+  const id = "claude-opus-5-5";
+  try {
+    await mkdir(modelsDir, { recursive: true });
+    await mkdir(path.join(root, "models/anthropic"), { recursive: true });
+    await copyFile(path.join(repo, "providers/quicksilverpro/provider.toml"), path.join(root, "providers/quicksilverpro/provider.toml"));
+    await copyFile(path.join(repo, `models/anthropic/${id}.toml`), path.join(root, `models/anthropic/${id}.toml`));
+    await copyFile(path.join(repo, `providers/quicksilverpro/models/${id}.toml`), path.join(modelsDir, `${id}.toml`));
+    let row = model({ id, input_per_1m: 1, output_per_1m: 5, cached_input_per_1m: 0.05,
+      cache_write_per_1m: 1.25, cache_write_1h_per_1m: 2 });
+    const provider = { ...quicksilverpro, modelsDir, async fetchModels() { return response([row]); } };
+    const cache = async () => (Bun.TOML.parse(await readFile(path.join(modelsDir, `${id}.toml`), "utf8")) as any).cost.text.input.cache;
+    expect((await syncProvider(provider, { openIssues: false })).updated).toBe(0);
+    expect(await cache()).toEqual({ read: 0.05, write: { "5m": 1.25, "1h": 2 } });
+    // A 1h-only change is invisible in v1, but must still update the file.
+    row = { ...row, cache_write_1h_per_1m: 3 };
+    expect((await syncProvider(provider, { openIssues: false })).updated).toBe(1);
+    expect(await cache()).toEqual({ read: 0.05, write: { "5m": 1.25, "1h": 3 } });
+    row = { ...row, cached_input_per_1m: 0.08, cache_write_per_1m: 1.5, cache_write_1h_per_1m: 2.75 };
+    await syncProvider(provider, { openIssues: false });
+    expect(await cache()).toEqual({ read: 0.08, write: { "5m": 1.5, "1h": 2.75 } });
+    // A partial feed must not scale the unreported TTL with the 5m price.
+    row = { ...row, cache_write_per_1m: 1.75, cache_write_1h_per_1m: undefined };
+    await syncProvider(provider, { openIssues: false });
+    expect(await cache()).toEqual({ read: 0.08, write: { "5m": 1.75, "1h": 2.75 } });
+    // Exercise the canonical catalog's cache_read spelling as well.
+    row = { ...row, cached_input_per_1m: undefined, cache_read_per_1m: 0.09 };
+    await syncProvider(provider, { openIssues: false });
+    expect(await cache()).toEqual({ read: 0.09, write: { "5m": 1.75, "1h": 2.75 } });
+    // Change base prices too, forcing a patch when all cache fields are absent.
+    const { cached_input_per_1m, cache_read_per_1m, cache_write_per_1m, cache_write_1h_per_1m, ...withoutCache } = row;
+    row = { ...withoutCache, input_per_1m: 1.1, output_per_1m: 5.5 };
+    expect((await syncProvider(provider, { openIssues: false })).updated).toBe(1);
+    expect(await cache()).toEqual({ read: 0.09, write: { "5m": 1.75, "1h": 2.75 } });
+    expect((await syncProvider(provider, { openIssues: false })).updated).toBe(0);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

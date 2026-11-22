@@ -14,6 +14,8 @@ export const QuickSilverProModel = z.object({
   input_per_1m: z.number().finite().nonnegative().optional(),
   output_per_1m: z.number().finite().nonnegative().optional(),
   cached_input_per_1m: z.number().finite().nonnegative().optional(),
+  cache_read_per_1m: z.number().finite().nonnegative().optional(),
+  cache_write_1h_per_1m: z.number().finite().nonnegative().optional(),
   cache_write_per_1m: z.number().finite().nonnegative().optional(),
 }).passthrough().superRefine((model, ctx) => {
   if (isTextModel(model) && (model.input_per_1m === undefined || model.output_per_1m === undefined)) {
@@ -70,11 +72,29 @@ export const quicksilverpro = {
     const existing = context.existing(model.id);
     if (authored === undefined || existing === undefined) return undefined;
     // Preserve exact MIME lists: the runner's v1 view loses format information.
-    const modalities = context.v2?.(model.id)?.modalities;
+    const current = context.v2?.(model.id) as {
+      modalities?: unknown;
+      cost?: { text?: { input?: { cache?: { write?: number | Record<string, number> } } } };
+    } | undefined;
+    const modalities = current?.modalities;
+    const authoredWrite = current?.cost?.text?.input?.cache?.write;
+    // Patch each published TTL independently. Missing prices are not removals,
+    // and a changed 5m rate must never rescale an authored 1h rate.
+    const write = typeof authoredWrite === "object" || model.cache_write_1h_per_1m !== undefined
+      ? {
+          ...(typeof authoredWrite === "object" ? authoredWrite :
+            authoredWrite === undefined ? {} : { "5m": authoredWrite }),
+          ...(model.cache_write_per_1m === undefined ? {} : { "5m": model.cache_write_per_1m }),
+          ...(model.cache_write_1h_per_1m === undefined ? {} : { "1h": model.cache_write_1h_per_1m }),
+        }
+      : model.cache_write_per_1m ?? authoredWrite;
     return {
       id: model.id,
       model: buildQuickSilverProModel(model, authored, existing),
-      v2Set: modalities === undefined ? undefined : { modalities },
+      v2Set: {
+        ...(modalities === undefined ? {} : { modalities }),
+        ...(write === undefined ? {} : { "cost.text.input.cache.write": write }),
+      },
     };
   },
 } satisfies SyncProvider<QuickSilverProModel>;
@@ -113,8 +133,8 @@ export function buildQuickSilverProModel(
       ...authored.cost,
       input: model.input_per_1m!,
       output: model.output_per_1m!,
-      cache_read: model.cached_input_per_1m,
-      cache_write: model.cache_write_per_1m,
+      cache_read: model.cache_read_per_1m ?? model.cached_input_per_1m ?? authored.cost?.cache_read,
+      cache_write: model.cache_write_per_1m ?? authored.cost?.cache_write,
     },
     ...(Object.keys(limit).length === 0 ? {} : { limit }),
   } as SyncedModel;
