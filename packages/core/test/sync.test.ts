@@ -4294,6 +4294,15 @@ test("base_model files from W&B, Hyper and Chutes leave model facts to the lab",
   }
 });
 
+test("Chutes links Alibaba's hosted Max models to their lab files instead of writing open-weight copies", () => {
+  for (const [id, base] of [["Qwen/Qwen4-Max", "alibaba/qwen4-max"], ["Qwen/Qwen3.8-Max-0902", "alibaba/qwen3.8-max-0902"]] as const) {
+    const model = buildChutesModel({ id, created: 0, pricing: { prompt: 1.5, completion: 4.5 } }, undefined);
+    expect(model).toMatchObject({ base_model: base });
+    expect(model).not.toHaveProperty("open_weights");
+    expect(model).not.toHaveProperty("family");
+  }
+});
+
 test("Chutes rounds float noise out of prices without losing small prices", () => {
   const model = buildChutesModel({
     id: "Qwen/Qwen3.8-27B-TEE",

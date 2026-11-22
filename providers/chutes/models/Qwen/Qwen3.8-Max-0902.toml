@@ -1,10 +1,6 @@
 schema = 2
-name = "Qwen3.8 Max 0902"
+base_model = "alibaba/qwen3.8-max-0902"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"
-family = "qwen-max"
-open_weights = true
-release_date = "2026-10-20"
-last_updated = "2026-10-25"
 
 [modalities]
 input = ["text", "image", "video"]
@@ -13,12 +9,7 @@ output = ["text"]
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
-temperature = true
 structured_output = true
-
-[limit]
-context = 1_000_000
-output = 131_072
 
 [cost.text.input]
 price = 2
