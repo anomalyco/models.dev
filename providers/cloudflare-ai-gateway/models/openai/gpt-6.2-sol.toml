@@ -8,6 +8,9 @@ base_model = "openai/gpt-6.2-sol"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+structured_output = true
+system_updates = true
 
 [limit]
 context = 1_050_000
@@ -15,7 +18,7 @@ context = 1_050_000
 [api.responses]
 base_url = "https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${CLOUDFLARE_GATEWAY_ID}/openai"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
-capabilities = { tools = { strict = true, search = true } }
+capabilities = { effort_updates = true, tools = { strict = true, search = true, updates = ["add", "remove", "replace"] } }
 
 [api.chat-completions]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1"

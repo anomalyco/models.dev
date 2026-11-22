@@ -24,6 +24,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync mistral` syncs only Mistral.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
+- `bun models:sync groq` syncs Groq prices and limits for existing text models.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
@@ -519,3 +520,9 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - RouteLLM Chat Completions accepts only `type: "function"` tools and documents no custom/freeform or grammar field, so GPT-5+ files publish no `tools.freeform` and record that evidence in their headers (accessed 2026-11-12).
 - Input modalities are the lab's MIME list filtered to the kinds RouteLLM accepts, so a narrower RouteLLM surface does not widen the model or fall back to generic `image`. An empty feed fails the run rather than deleting the local catalog.
 - The feed is authoritative for availability: ids it no longer lists are deleted, including the 40 ids #10776 had marked `status = "deprecated"` for manual review. An empty feed fails the run, and `minSourceFraction: 0.5` refuses a feed with fewer than half the local catalog's models before writing anything, so a truncated but schema-valid response cannot become a mass deletion. The 108 -> 79 migration passes because the live feed has 87 rows.
+## Groq Notes
+
+- Source endpoint: `https://api.groq.com/openai/v1/models`, which needs `GROQ_API_KEY` (the workflow reads it from AWS Secrets Manager as `models.dev/release/GROQ_API_KEY`).
+- Update-only for priced text models that already have a file: prices, the `input_cache_read` rate, `context_window` and `max_completion_tokens` come from the list. Reasoning efforts, service tiers, the Responses API and web search fees stay hand-authored, and new remote IDs open missing-model issues.
+- The list gives every model a cache rate at half its input price, even models Groq's [prompt caching page](https://console.groq.com/docs/prompt-caching) doesn't support, so the sync only updates a cache price the file already has.
+- Speech, transcription and unpriced models are left alone, and nothing is deleted when a model drops out of the list; mark it `status = "deprecated"` by hand.

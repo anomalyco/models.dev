@@ -6,14 +6,14 @@ name = "GPT OSS 120B (Scaleway)"
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-structured_output = false
+structured_output = true
 
 [limit]
 context = 128_000
 output = 128_000
 
 [cost.text.input]
-price = 0.164835
+price = 0.16485
 
 [cost.text.output]
-price = 0.65934
+price = 0.6594

@@ -1,0 +1,17 @@
+schema = 2
+base_model = "google/gemini-4-neon"
+
+[modalities]
+input = ["text", "image", "audio", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 15

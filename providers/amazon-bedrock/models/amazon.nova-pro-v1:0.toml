@@ -20,7 +20,7 @@ cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targe
 
 [cost.text.input]
 price = 0.8
-cache = { read = 0.2, write = 0.8 }
+cache = { read = 0.2, write = 0 }
 
 [cost.text.output]
 price = 3.2

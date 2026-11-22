@@ -6,7 +6,7 @@ import {
   filterProvidersByModelType,
   generateV2,
   InvalidModelTypeError,
-  includedProviders,
+  includedOptIn,
   parseModelTypes,
   providerView,
 } from "@models.dev/core";
@@ -142,10 +142,7 @@ function catalogResponse(
 
   const value = endpoint === "experimental_v2.0_api"
     ? filterProvidersByModelType(
-        providerView(
-          ProvidersV2,
-          includedProviders(new URL(req.url).searchParams).has("openai-codex"),
-        ),
+        providerView(ProvidersV2, includedOptIn(new URL(req.url).searchParams)),
         filter === "default" ? "all" : filter,
       )
     : endpoint === "api"

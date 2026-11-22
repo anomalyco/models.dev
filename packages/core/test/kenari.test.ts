@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 
 import type { ExistingModel } from "../src/sync/index.js";
-import { kenari, unitCosts, type KenariCatalogModel, type KenariPricingLine } from "../src/sync/providers/kenari.js";
+import { isRetired, kenari, unitCosts, type KenariCatalogModel, type KenariPricingLine } from "../src/sync/providers/kenari.js";
 
 const RATE = 17_500;
 
@@ -76,4 +76,11 @@ test("still writes token prices for chat models as before", () => {
     [line({ billable: "input", endpoint: "chat", unit: "token_1m", micro_idr: 17_500_000_000 })],
   );
   expect(chat?.model).toMatchObject({ cost: { input: 1, output: 5 } });
+});
+
+test("reads sunset_at as an ISO date or Unix seconds", () => {
+  expect(isRetired(null)).toBe(false);
+  expect(isRetired("2020-01-01T00:00:00Z")).toBe(true);
+  expect(isRetired(1_577_836_800)).toBe(true);
+  expect(isRetired(4_102_444_800)).toBe(false);
 });
