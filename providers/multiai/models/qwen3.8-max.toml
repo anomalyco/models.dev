@@ -1,0 +1,14 @@
+# Source: https://multiai.store/v1/models (2026-11-22).
+# Catalog model ID: qwen3.8-max; supports_tools = true.
+# Effort levels: reasoning.levels in the MultiAI catalog, specific to this host.
+# Host limits: max_output_tokens in the MultiAI catalog.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+
+[api.chat-completions]
+
+[limit]
+output = 65_536

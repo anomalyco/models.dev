@@ -1,6 +1,10 @@
 # Source: https://multiai.store/ (catalog, coding-agent and API descriptions, accessed 2026-11-21).
 # Endpoint corroborated by the open-source cool-code MultiAI provider preset:
 # https://github.com/Lowyk/cool-code/blob/main/src/tui/state.rs
+# Public inventory: https://multiai.store/v1/models (checked 2026-11-22).
+# Keep this subset hand-authored: the inventory also includes non-chat and
+# unreviewed IDs, and some input/output limits and reasoning controls need
+# per-model interpretation. Token multipliers are not USD token rates.
 name = "MultiAI"
 env = ["MULTIAI_API_KEY"]
 npm = "@ai-sdk/openai-compatible"

@@ -1,0 +1,14 @@
+# Source: https://multiai.store/v1/models (2026-11-22).
+# Catalog model ID: deepseek-v4-pro; supports_tools = true.
+# Effort levels: reasoning.levels in the MultiAI catalog, specific to this host.
+# Host limits: max_context_tokens in the MultiAI catalog.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+
+[api.chat-completions]
+
+[limit]
+context = 1_048_576
