@@ -1,4 +1,8 @@
-# https://modal.com/library/qwen/qwen3-8-max-vl identifies this as the vision-language Qwen3.8-Max and lists its prices.
+# https://modal.com/library/qwen/qwen3-8-max-vl links this VL endpoint to QwenCloud's hosted qwen3.8-max:
+# https://docs.qwencloud.com/models/qwen3-8-max. Modal cites the August model's vision scores (MMMU-Pro 82.3,
+# AndroidWorld 85.3, BabyVision 82.0), also reported at https://www.qwencloud.com/news/qwen-3-8-max.
+# Modal specifies a one-million-token context window. The 131,072 output limit comes from the lab entry.
+# QwenCloud lists 131K max output at https://www.qwencloud.com/models/qwen3.8-max.
 # Modal accepts text and images, supports structured outputs, and takes reasoning_effort = none or high.
 # The image types come from the lab model. https://modal.com/docs/guide/endpoints documents the APIs and prefix caching.
 schema = 2
