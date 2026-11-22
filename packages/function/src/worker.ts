@@ -66,7 +66,14 @@ export default {
     }
 
     if (url.pathname === "/model-schema.json") {
-      const apiResponse = await catalogResponse(url, request, env, "api");
+      // The schema is built from the catalog body, so read it with GET even for
+      // HEAD; a HEAD asset response has no body to parse.
+      const apiResponse = await catalogResponse(
+        url,
+        new Request(request, { method: "GET" }),
+        env,
+        "api",
+      );
       if (!apiResponse.ok) return apiResponse;
       const providers = (await apiResponse.json()) as Record<
         string,
@@ -92,7 +99,7 @@ export default {
         },
       };
 
-      return new Response(JSON.stringify(schema, null, 2), {
+      return new Response(request.method === "HEAD" ? null : JSON.stringify(schema, null, 2), {
         headers: {
           "Content-Type": "application/json",
           "Cache-Control": "public, max-age=3600",
@@ -212,7 +219,14 @@ async function catalogResponse(
   // A filtered body depends only on the full file and the types, so its ETag is
   // the file's ETag plus the types, and revalidation is passed to the file.
   const tag = suffix === undefined ? `;type=${[...filter].sort().join(",")}` : "";
-  const assetRequest = new Request(assetUrl.toString(), request);
+  // A filtered body is built from the full file, so fetch that file with GET
+  // even for HEAD, and drop the body at the end.
+  const assetRequest = new Request(
+    assetUrl.toString(),
+    suffix === undefined && request.method === "HEAD"
+      ? new Request(request, { method: "GET" })
+      : request,
+  );
   const conditional = request.headers.get("If-None-Match");
   if (tag && conditional) {
     assetRequest.headers.set("If-None-Match", conditional.replaceAll(`${tag}"`, '"'));
@@ -251,7 +265,10 @@ async function catalogResponse(
   if (etag) headers.set("ETag", etag);
   headers.set("Content-Type", "application/json");
   headers.set("Cache-Control", "public, max-age=3600");
-  return new Response(JSON.stringify(filtered), { headers });
+  return new Response(
+    request.method === "HEAD" ? null : JSON.stringify(filtered),
+    { headers },
+  );
 }
 
 interface CatalogModel {
