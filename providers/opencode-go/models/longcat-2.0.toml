@@ -3,6 +3,7 @@
 # Mid-conversation flags left out: meituan has no provider file for meituan/longcat-2.0 to follow (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 schema = 2
 base_model = "meituan/longcat-2.0"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
