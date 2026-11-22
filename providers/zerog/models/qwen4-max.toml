@@ -6,7 +6,7 @@ base_model = "alibaba/qwen4-max"
 output = 131_072
 
 [capabilities]
-reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
 
 [cost.text.input]
 price = 2.25

@@ -1,3 +1,7 @@
+# Freeform: left out on chat completions. Every GPT-5+ relay in this repo that publishes custom
+# tools does so on the Responses API (OpenRouter: /api/v1/chat/completions rejects custom tools
+# with 400 "Missing required parameter: tools[0].name"). This router accepts reasoning_effort and
+# tools on chat completions and documents no custom-tool formats, so none are claimed here.
 schema = 2
 base_model = "openai/gpt-5.4-mini"
 

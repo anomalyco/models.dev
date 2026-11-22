@@ -1,3 +1,4 @@
+# Toggle: reasoning.enabled = true|false (peer shape; this router exposes no documented effort levels for this id)
 schema = 2
 base_model = "tencent/hy4-flash"
 
@@ -5,7 +6,7 @@ base_model = "tencent/hy4-flash"
 context = 1_000_000
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "high"] }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 0.0525
