@@ -36,23 +36,23 @@ available on `models.json`, `catalog.json`, and `model-schema.json`.
 ### Experimental v2
 
 The experimental v2 catalog includes every model type by default and supports
-the same `type` filters. `openai-codex` is hidden unless explicitly included:
+the same `type` filters. `openai-codex` (ChatGPT plans through Codex) and
+`openai-chatgpt` (ChatGPT plans through Sign in with ChatGPT) are hidden unless
+explicitly included:
 
 ```bash
 curl "https://models.dev/experimental/v2.0/api.json?include=openai-codex"
-curl "https://models.dev/experimental/v2.0/api.json?include=openai-codex&type=chat"
+curl "https://models.dev/experimental/v2.0/api.json?include=openai-codex,openai-chatgpt&type=chat"
 ```
 
 `include` adds named opt-in providers to the usual catalog; it does not filter
 out existing providers such as `openai` or `github-copilot`. Comma-separated IDs
 and repeated `include` parameters are combined, with whitespace and duplicates
-ignored. Unknown IDs are ignored: `include=openai-codex,openai-chatgpt` currently
-adds only `openai-codex`, not a new provider.
+ignored. Unknown IDs are ignored.
 
-This intentionally withdraws the recently added `openai-codex` entry from the
-default v2 catalog. Its backend needs client-managed ChatGPT OAuth. Clients must
-opt in only when they support that setup. The v1 endpoints
-never expose it, even with `include` or `type=all`; the default website is unchanged.
+Both need client-managed ChatGPT OAuth, so clients should opt in only when they
+support that setup. The v1 endpoints never expose them, even with `include` or
+`type=all`, and the website doesn't list them.
 
 Use the **Model ID** field to do a lookup on any model; it's the identifier used by [AI SDK](https://ai-sdk.dev/).
 
