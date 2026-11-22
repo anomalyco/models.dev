@@ -141,7 +141,8 @@ export function buildWandbModel(
   };
   const synced: SyncedFullModel = {
     name: normalizeName(model),
-    description: model.description ?? existing?.description,
+    // W&B describes every model today; a new standalone one without a description fails validation.
+    description: (model.description ?? existing?.description) as string,
     family: existing?.family ?? resolveFamily(model),
     attachment: model.attachment,
     reasoning: model.reasoning,

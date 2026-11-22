@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { findPredecessor, inheritCapabilities, withPredecessorCapabilities } from "../src/sync/inherit.js";
+import { findPredecessor, inheritCapabilities, keepInheritedNote, withPredecessorCapabilities } from "../src/sync/inherit.js";
 
 const labs = {
   "openai/gpt-6.1-sol": { family: "gpt", release_date: "2026-10-01" },
@@ -46,4 +46,23 @@ test("a new file gets a header line naming where its capabilities came from", ()
   const out = withPredecessorCapabilities(content, existing, labs);
   expect(out).toContain("come from openai/gpt-6.1-sol, this host's previous model in the family.");
   expect(out).toContain("system_updates = true");
+});
+
+test("a rewritten header keeps the note naming the predecessor", () => {
+  const note = "# Capabilities the catalog doesn't state (capabilities.system_updates) come from openai/gpt-4.1, this host's previous model in the family.";
+  const existing = `# Route: native\n${note}\n`;
+  expect(keepInheritedNote(existing, "# Route: native\n")).toBe(existing);
+  expect(keepInheritedNote(existing, existing)).toBe(existing);
+  expect(keepInheritedNote("# Route: native\n", "# Route: native\n")).toBe("# Route: native\n");
+  expect(keepInheritedNote(undefined, "")).toBe("");
+});
+
+test("copied tool details bring the predecessor's supported flag into a new tools table", () => {
+  const doc: Record<string, unknown> = { base_model: "openai/gpt-6.2-sol", capabilities: { structured_output: true } };
+  const added = inheritCapabilities(doc, {
+    base_model: "openai/gpt-6.1-sol",
+    capabilities: { tools: { supported: true, freeform: ["text", "lark", "regex"] } },
+  });
+  expect(added).toEqual(["capabilities.tools.freeform"]);
+  expect((doc.capabilities as { tools: unknown }).tools).toEqual({ freeform: ["text", "lark", "regex"], supported: true });
 });

@@ -135,6 +135,8 @@ function dateFromTimestamp(timestamp: number) {
   return new Date(timestamp * 1_000).toISOString().slice(0, 10);
 }
 
+function usd(value: number): number;
+function usd(value: number | undefined): number | undefined;
 function usd(value: number | undefined) {
   if (value === undefined) return undefined;
   return Math.round(value * EUR_TO_USD * 1_000) / 1_000;

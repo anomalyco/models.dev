@@ -3,6 +3,9 @@ import path from "node:path";
 import { z } from "zod";
 
 import { ReasoningOption as CatalogReasoningOption } from "../../schema.js";
+
+type CatalogReasoningOption = z.infer<typeof CatalogReasoningOption>;
+type EffortLevel = NonNullable<Extract<CatalogReasoningOption, { type: "effort" }>["values"][number]>;
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel, freeFamily } from "./openrouter.js";
@@ -56,7 +59,7 @@ const toModalities = (values: string[]): Modality[] =>
     (MODALITIES as readonly string[]).includes(value)))].sort();
 
 /** One unrecognised level fails `SyncedAuthoredModel` and aborts the whole run for every model. */
-function isReasoningEffort(value: string): boolean {
+function isReasoningEffort(value: string): value is EffortLevel {
   return CatalogReasoningOption.safeParse({ type: "effort", values: [value] }).success;
 }
 
@@ -349,7 +352,7 @@ export function resolveReasoningOptions(
     return sortControls(
       base.options.map((option) => {
         if (option.type !== "effort" || hostLevels.length === 0) return option;
-        const kept = option.values.filter((value) => hostLevels.includes(value));
+        const kept = option.values.filter((value) => value !== null && hostLevels.includes(value));
         // A disjoint list is not evidence that the model lost a level, so the lab's own set
         // stands rather than the entry claiming "no caller control".
         return kept.length === 0 ? option : { type: "effort", values: kept };
@@ -404,7 +407,7 @@ export function unitCosts(
   }
   for (const [billable, group] of byBillable) {
     if (group.length !== 1) continue;
-    const line = group[0];
+    const line = group[0]!;
     const micro = line.micro_idr as number;
     if (billable === "input_audio" && line.unit === "second") {
       out["cost.audio.input"] = { unit: "second", price: toUnitUsd(micro, rate) };
@@ -580,7 +583,7 @@ export const kenari = {
       advertised < labContext &&
       (labContext - advertised) / labContext > CONTEXT_TOLERANCE;
 
-    const host: Partial<SyncedFullModel> = {
+    const host: Parameters<typeof factorBaseModel>[1] = {
       ...(cost === undefined ? {} : { cost }),
       ...(reasoningOptions === undefined ? {} : { reasoning_options: reasoningOptions }),
       ...(narrows ? { limit: { context: advertised } } : {}),
@@ -623,7 +626,7 @@ export const kenari = {
         // table (v1 `provider`) and a limit it does not narrow stay.
         provider: deltas?.provider,
         ...(narrows || deltas?.limit === undefined ? {} : { limit: deltas.limit }),
-        ...(preservedTiers === undefined ? {} : { cost: { ...host.cost, tiers: preservedTiers } }),
+        ...(preservedTiers === undefined || cost === undefined ? {} : { cost: { ...cost, tiers: preservedTiers } }),
       },
       // The narrowed limit is what lets `factorBaseModel` record that `limit.input` must not be
       // inherited from the lab entry now that `limit.context` no longer matches it.
