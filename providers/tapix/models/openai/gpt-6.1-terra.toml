@@ -1,8 +1,8 @@
 schema = 2
 base_model = "openai/gpt-6.1-terra"
-reasoning_options = [{ type = "toggle" }]
 
 [capabilities]
+reasoning = { supported = true, toggle = true }
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [api.chat-completions]
