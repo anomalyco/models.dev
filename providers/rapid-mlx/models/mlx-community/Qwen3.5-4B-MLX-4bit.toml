@@ -9,7 +9,11 @@
 # Top-level enable_thinking=true, budget unset: 1928 (4624 characters) each run.
 # thinking_budget=64, top-level or chat_template_kwargs: unchanged in all three runs each.
 # Invalid thinking_budget="invalid" at either location: HTTP 200, unchanged; no budget control observed.
-# All probes hit the output limit. Top-level enable_thinking also toggles thinking (verified 2026-11-19).
+# All probes above stopped at the request max_tokens (2048), not a server cap.
+# Top-level enable_thinking also toggles thinking (verified 2026-11-19).
+# Limits: /v1/models reports context_window = max_model_len = 262144; the server only caps output
+#   at the request max_tokens (32768 when omitted). Live 2026-11-22: max_tokens 6000, thinking off
+#   -> 6000 completion tokens, finish_reason length. Base [limit] values are inherited.
 schema = 2
 base_model = "alibaba/qwen3.5-4b"
 name = "Qwen3.5 4B MLX 4-bit"
@@ -30,7 +34,3 @@ compatibility = { reasoning_field = "reasoning_content" }
 [modalities]
 input = ["text"]
 output = ["text"]
-
-[limit]
-context = 32768
-output = 1024
