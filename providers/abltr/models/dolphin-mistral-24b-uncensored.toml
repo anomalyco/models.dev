@@ -1,0 +1,16 @@
+# Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
+# Weights: https://huggingface.co/dphn/Dolphin-Mistral-24B-Venice-Edition (Apache-2.0)
+schema = 2
+v2_only = true
+base_model = "cognitivecomputations/dolphin-mistral-24b-venice-edition"
+name = "Dolphin Mistral 24B · Uncensored"
+description = "Dolphin Mistral 24B · Uncensored serves an uncensored or abliterated community build behind abltr's OpenAI-compatible endpoint. It accepts tools. Context is 128k. Rates are $0.24 per 1M input tokens and $1.08 per 1M output tokens."
+
+[capabilities]
+tools = { supported = true }
+
+[cost.text.input]
+price = 0.24
+
+[cost.text.output]
+price = 1.08
