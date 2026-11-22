@@ -1,0 +1,19 @@
+# Model: https://docs.x.ai/developers/models/grok-imagine-video-1.5-lite
+# API: native xAI Videos API through OpenCode's public inference endpoint
+#   (https://docs.x.ai/developers/rest-api-reference/inference/videos): POST /videos/generations
+#   on https://opencode.ai/inference/xai/v1.
+# Pricing: https://docs.x.ai/developers/pricing (accessed 2026-11-21): flat $0.02 per second of
+#   generated video. xAI's official pricing lists no resolution tiers and no image-input fee; the
+#   resolution matrices and per-image prices on other hosts are relay-derived, and OpenCode Zen
+#   publishes only the official flat per-second rate.
+schema = 2
+v2_only = true
+base_model = "xai/grok-imagine-video-1.5-lite"
+
+[api.videos]
+base_url = "https://opencode.ai/inference/xai/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/xai/videos" }
+
+[cost.video.output]
+unit = "second"
+price = 0.02
