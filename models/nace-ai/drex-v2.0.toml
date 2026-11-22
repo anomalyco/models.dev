@@ -2,8 +2,12 @@
 # - https://huggingface.co/nace-ai/drex-v2.0
 # - https://github.com/nace-ai/drex-decision-models/blob/main/docs/context-length.md
 # - https://console.nace.ai/docs/drex/reference/models
-# Context is the model's maximum state-plus-one-question length, not the
-# first-party API's smaller Drex 2.0 limit before fallback to Drex 1.5.
+# Context describes the released weights/self-hosted runners: the model card and
+# context-length guide document a maximum state-plus-question sequence of 131,072.
+# Hosted limits are deployment-specific: Nace and Vercel document 262,144 per row
+# with a separate 131,072 state cap (https://console.nace.ai/docs/drex/reference/limits).
+# Those hosts override context; do not infer an OpenRouter increase or change the
+# weights' documented maximum from the hosted API limit (checked 2026-11-21).
 # Output: decision probabilities, not generated text. Sampling: no tokens are sampled, so the
 #   generation_config.json temperature/top_p/top_k values have no effect (https://huggingface.co/nace-ai/drex-v2.0).
 schema = 2
