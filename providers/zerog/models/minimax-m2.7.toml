@@ -1,0 +1,18 @@
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 200_000
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.3375
+
+[cost.text.output]
+price = 1.35

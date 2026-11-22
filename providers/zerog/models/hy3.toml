@@ -1,0 +1,19 @@
+schema = 2
+base_model = "tencent/hy3"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 262_144
+output = 32_768
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+
+[cost.text.input]
+price = 0.198
+
+[cost.text.output]
+price = 0.792

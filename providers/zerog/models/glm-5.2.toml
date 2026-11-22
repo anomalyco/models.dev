@@ -1,0 +1,15 @@
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
+
+[cost.text.input]
+price = 1.26
+
+[cost.text.output]
+price = 3.96

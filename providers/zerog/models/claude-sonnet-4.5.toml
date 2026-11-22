@@ -1,0 +1,8 @@
+schema = 2
+base_model = "anthropic/claude-sonnet-4-5"
+
+[limit]
+context = 1_000_000
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 1_024 } }

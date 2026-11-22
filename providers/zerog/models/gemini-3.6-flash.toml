@@ -1,0 +1,11 @@
+schema = 2
+base_model = "google/gemini-3.6-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5

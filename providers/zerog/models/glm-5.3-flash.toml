@@ -1,0 +1,14 @@
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[limit]
+context = 1_179_648
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.5

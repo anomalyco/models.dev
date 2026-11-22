@@ -1,0 +1,18 @@
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 206_848
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+
+[cost.text.input]
+price = 2.1
+
+[cost.text.output]
+price = 6.6

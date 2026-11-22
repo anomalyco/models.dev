@@ -1,0 +1,14 @@
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[limit]
+context = 1_000_000
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[cost.text.input]
+price = 0.0525
+
+[cost.text.output]
+price = 0.21075

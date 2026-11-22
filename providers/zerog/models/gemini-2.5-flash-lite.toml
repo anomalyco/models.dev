@@ -1,0 +1,14 @@
+schema = 2
+base_model = "google/gemini-2.5-flash-lite"
+
+[limit]
+output = 65_535
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = { min = 512, max = 24_576 } }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.4

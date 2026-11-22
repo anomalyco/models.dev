@@ -1,0 +1,15 @@
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+
+[cost.text.input]
+price = 0.27
+
+[cost.text.output]
+price = 1.08

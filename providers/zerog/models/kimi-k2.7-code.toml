@@ -1,0 +1,15 @@
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[limit]
+context = 260_000
+output = 16_384
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.14
+
+[cost.text.output]
+price = 4.8

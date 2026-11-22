@@ -1,0 +1,15 @@
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[cost.text.input]
+price = 0.64575
+
+[cost.text.output]
+price = 3.38737

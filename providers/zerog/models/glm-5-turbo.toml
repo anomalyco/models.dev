@@ -1,0 +1,18 @@
+schema = 2
+base_model = "zhipuai/glm-5-turbo"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 195_000
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+
+[cost.text.input]
+price = 1.17
+
+[cost.text.output]
+price = 3.9

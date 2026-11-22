@@ -1,0 +1,15 @@
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[limit]
+context = 1_000_000
+output = 131_072
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 3.375
+
+[cost.text.output]
+price = 16.875

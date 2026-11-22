@@ -1,0 +1,18 @@
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 1_000_000
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 9

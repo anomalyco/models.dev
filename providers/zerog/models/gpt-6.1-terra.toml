@@ -1,0 +1,14 @@
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[limit]
+context = 922_000
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 5

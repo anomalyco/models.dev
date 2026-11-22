@@ -1,0 +1,15 @@
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+
+[cost.text.input]
+price = 1.00564
+
+[cost.text.output]
+price = 4.17724

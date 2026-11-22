@@ -1,0 +1,18 @@
+schema = 2
+base_model = "alibaba/qwen3.7-max"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+output = 65_536
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {} }
+
+[cost.text.input]
+price = 3.75
+
+[cost.text.output]
+price = 11.25

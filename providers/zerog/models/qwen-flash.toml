@@ -1,0 +1,15 @@
+schema = 2
+base_model = "alibaba/qwen-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = {} }
+
+[cost.text.input]
+price = 0.021875
+
+[cost.text.output]
+price = 0.21875

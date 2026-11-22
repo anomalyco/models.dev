@@ -1,0 +1,13 @@
+# 0G Compute model router: an OpenAI-compatible gateway over 0G's decentralized
+# compute network.
+# Catalog and per-token USD prices: https://router-api.0g.ai/v1/models (accessed 2026-11-22).
+# Every chat model entry copies the id the router serves, so the catalog listing and the
+# request body agree; where a lab id differs only by punctuation (claude-opus-4.5 vs
+# claude-opus-4-5) the file still uses the wire id and points base_model at the lab file.
+# Product page: https://pc.0g.ai
+name = "0G Compute"
+env = ["ZEROG_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://router-api.0g.ai/v1"
+doc = "https://pc.0g.ai"

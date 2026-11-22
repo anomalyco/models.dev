@@ -1,0 +1,11 @@
+schema = 2
+base_model = "openai/gpt-4.1-nano"
+
+[capabilities]
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.4
