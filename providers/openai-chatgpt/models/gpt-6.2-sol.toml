@@ -1,9 +1,8 @@
 # The OpenAI model (base_model) on a ChatGPT plan through Sign in with ChatGPT. Only what differs or is route-specific
 #   is set here.
-# Availability: in the list OpenCode offers for Sign in with ChatGPT
-#   (https://github.com/anomalyco/opencode/blob/dev/packages/core/src/plugin/provider/chatgpt.ts). Each account's own list
-#   comes from GET https://api.openai.com/v1/models with its token
-#   (https://developers.openai.com/siwc/token-sharing-open-source/models-and-inference).
+# Availability: listed (visibility "list") by GET https://api.openai.com/v1/models with a Sign in with ChatGPT token
+#   (https://developers.openai.com/siwc/token-sharing-open-source/models-and-inference), 2026-11-22, and a request
+#   completed live. gpt-5.5 is not listed and is rejected with "not supported when using Codex with a ChatGPT account".
 # Reasoning: same Responses API as `openai`, so the same effort values.
 # Tools and other capabilities: the same Responses API at the same base URL as `openai`, so they follow its files,
 #   minus what this route documents as unsupported: hosted tools (tool_search, image generation, file search,
