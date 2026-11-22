@@ -1,0 +1,29 @@
+# Catalog: GET https://api.naga.ac/v1/models (2026-11-22), id minimax/minimax-m3.1-flash: prices, context_window, input_modalities.
+# Reasoning controls: from providers/minimax; NagaAI sends the nearest level the model has (https://docs.naga.ac/guides/reasoning).
+# structured_output left unset, as in the lab-side entry (providers/minimax).
+# Cache: billed at cached_input_token when the serving provider caches the prefix by itself (https://docs.naga.ac/guides/prompt-caching).
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.0375
+cache = { read = 0.00375 }
+
+[cost.text.output]
+price = 0.15

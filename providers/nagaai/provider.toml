@@ -1,0 +1,18 @@
+# Sources (2026-11-22). Docs: https://docs.naga.ac
+# - Model IDs, prices (USD per token), context windows, endpoints, accepted parameters and input modalities:
+#   GET https://api.naga.ac/v1/models (no key needed). Format: https://docs.naga.ac/get-started/models
+# - Every chat model is served on Responses, Chat Completions and Messages at the same base URL. Responses is
+#   listed first in each model file, so the provider default is the Responses SDK (as in providers/perplexity-agent),
+#   and [api.chat-completions] names the OpenAI-compatible SDK.
+# - Reasoning: https://docs.naga.ac/guides/reasoning. Each model file copies the lab's own controls; NagaAI sends the
+#   nearest level the model has. Messages thinking.budget_tokens is mapped to an effort level, not kept as a budget,
+#   so no file sets `budget`.
+# - Prompt caching: https://docs.naga.ac/guides/prompt-caching
+# - structured_output: a JSON schema in response_format is accepted on every listed model; it is set where the lab's
+#   own API has it.
+name = "NagaAI"
+env = ["NAGA_API_KEY"]
+npm = "@ai-sdk/openai"
+opencodeai = "@opencode/ai/providers/openai-compatible/responses"
+api = "https://api.naga.ac/v1"
+doc = "https://docs.naga.ac"
