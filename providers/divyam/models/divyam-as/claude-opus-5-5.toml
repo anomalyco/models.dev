@@ -1,6 +1,7 @@
 # Host-unique: Divyam answers each request with a backing model it picks (Opus, Sonnet or Haiku), so this entry has no base_model.
 # Catalog: https://console.preview.divyam.ai/api/v1/catalog/models?available_only=true lists a 1,000,000 context window (checked 2026-11-22).
 # Pricing: "50% of that model's price" (https://docs.divyam.ai/self-serve/models/, checked 2026-11-22), applied to providers/anthropic/models/claude-opus-5-5.toml. Divyam bills one cache write rate.
+# Output: 128,000, the cap Claude Opus, Sonnet and Haiku 5.5 share. Divyam does not publish its own.
 # Release date: the model's first appearance in Divyam's public docs catalog.
 # Tools: "Streaming and tool calls follow the OpenAI format" (https://docs.divyam.ai/self-serve/api-reference/)
 # Reasoning: tokens are counted and billed as output (https://docs.divyam.ai/self-serve/logs-and-usage/), no documented caller control.
@@ -25,7 +26,7 @@ cache = { implicit = true }
 
 [limit]
 context = 1_000_000
-output = 64_000
+output = 128_000
 
 [cost.text.input]
 price = 2
