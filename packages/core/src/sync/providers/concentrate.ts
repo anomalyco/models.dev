@@ -111,6 +111,9 @@ export const concentrate = {
   name: "Concentrate",
   modelsDir: "providers/concentrate/models",
   authoritativeHeaders: true,
+  // Grammar formats and always-on reasoning are published only for models probed live (GRAMMAR_ENFORCED, ALWAYS_ON),
+  // so capabilities aren't copied from a previous model either.
+  inheritPredecessorCapabilities: false,
   sourceID: (model) => model.id,
   missingModelID: (model) => (NOT_MODELS.has(model.id) ? undefined : model.id),
   fetchModels: () => fetch(API_ENDPOINT).then((response) => response.json()),
@@ -226,14 +229,28 @@ function labCapabilities(base: string) {
     const files = (readdirSync(dir, { recursive: true }) as string[]).filter((file) => file.endsWith(".toml") && file.includes("/models/") && !file.startsWith("concentrate/"));
     // OpenRouter first, and a peer that reasons over one that marks the model as not reasoning (e.g. a local quantized build).
     const peers = files.map((file) => ({ file, toml: readToml(path.join(dir, file)) }))
-      .filter(({ toml }) => typeof toml?.base_model === "string" && toml.capabilities?.reasoning !== undefined)
-      .sort((a, b) => Number(b.toml!.capabilities.reasoning.supported === true) - Number(a.toml!.capabilities.reasoning.supported === true)
-        || Number(b.file.startsWith("openrouter/")) - Number(a.file.startsWith("openrouter/")));
+      .filter(({ toml }) => typeof toml?.base_model === "string" && toml.capabilities?.reasoning !== undefined);
+    // How many peers of the same lab model publish the same reasoning controls.
+    const votes = new Map<string, number>();
+    const key = (toml: Record<string, any>) => `${toml.base_model} ${JSON.stringify(toml.capabilities.reasoning)}`;
+    for (const { toml } of peers) votes.set(key(toml!), (votes.get(key(toml!)) ?? 0) + 1);
+    const agreed = (toml: Record<string, any>) => hasControls(toml) && votes.get(key(toml))! >= 2;
+    peers.sort((a, b) => Number(b.toml!.capabilities.reasoning.supported === true) - Number(a.toml!.capabilities.reasoning.supported === true)
+      || Number(b.file.startsWith("openrouter/")) - Number(a.file.startsWith("openrouter/"))
+      // Then caller controls that at least two peers state (a bare `supported = true` usually means unchecked, and one
+      // peer's controls can be wrong), the controls most peers agree on, and a fixed order so every checkout picks the same.
+      || Number(agreed(b.toml!)) - Number(agreed(a.toml!))
+      || votes.get(key(b.toml!))! - votes.get(key(a.toml!))!
+      || a.file.localeCompare(b.file));
     for (const { toml } of peers) if (!peerCapabilities.has(toml!.base_model)) peerCapabilities.set(toml!.base_model, capabilitiesOf(toml));
   }
   const [lab, ...rest] = base.split("/");
   return capabilitiesOf(readToml(path.join(ROOT, "providers", lab!, "models", `${rest.join("/")}.toml`))) ?? peerCapabilities.get(base);
 }
+const hasControls = (toml: Record<string, any>) => {
+  const reasoning = toml.capabilities?.reasoning ?? {};
+  return reasoning.toggle === true || reasoning.effort !== undefined || reasoning.budget !== undefined;
+};
 // Free-form formats sit on the top-level tools or on the Responses table (e.g. OpenAI's gpt-6-luna).
 const capabilitiesOf = (toml: Record<string, any> | undefined) => toml?.capabilities && {
   ...toml.capabilities,
@@ -311,7 +328,9 @@ function modalities(supports: Route["supports"][], labFile: Record<string, any> 
   const input = ["text", ...Object.entries(IMAGE_TYPES).filter(([format]) => supports.some((s) => accepts(s.input.image, format))).map(([, type]) => type)];
   if (files && supports.some((s) => accepts(s.input.file, "pdf"))) input.push("application/pdf");
   const labInput: string[] = labFile?.modalities?.input ?? [];
-  return input.length !== labInput.length || input.some((type) => !labInput.includes(type)) ? { input, output: ["text"] } : undefined;
+  // The output stays the lab's (a decision model generates no text).
+  const output: string[] = labFile?.modalities?.output ?? ["text"];
+  return input.length !== labInput.length || input.some((type) => !labInput.includes(type)) ? { input, output } : undefined;
 }
 
 function readToml(file: string | undefined): Record<string, any> | undefined {

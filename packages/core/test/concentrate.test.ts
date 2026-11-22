@@ -112,6 +112,16 @@ describe("Concentrate sync", () => {
     expect(v2(clef).limit).toEqual({ context: 24_576 });
   });
 
+  test("a decision model's narrower image input keeps the lab's decision output", () => {
+    const decision = model("gemini-decision-1", "google", { google: { ...route({ chat: false }), supports: { ...route({ chat: false }).supports, input: { image: { png: true }, file: {} } } } });
+    expect(v2(decision).modalities).toEqual({ input: ["text", "image/png"], output: ["decision"] });
+  });
+
+  test("takes controls that several peers agree on, not one peer's or the first file's", () => {
+    // DeepSeek V3.1: five hosts publish a thinking toggle, six leave controls unstated, so the toggle stands.
+    expect(v2(model("deepseek-v3-1", "deepseek", { deepinfra: route() })).capabilities.reasoning).toMatchObject({ toggle: true });
+  });
+
   test("skips services and unmapped models, and marks non-reasoners", () => {
     expect(buildConcentrateModel(model("redact-v1", "concentrate", { concentrate: route() }))).toBeUndefined();
     expect(buildConcentrateModel(model("not-a-real-model", "nobody", { nobody: route() }))).toBeUndefined();

@@ -6,7 +6,6 @@ base_model = "openai/gpt-6.2-astra"
 structured_output = true
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
-tools = { freeform = ["text", "lark", "regex"], supported = true }
 
 [cost.text.input]
 price = 8
