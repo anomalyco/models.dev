@@ -1,0 +1,31 @@
+# https://modal.com/library/qwen/qwen3-8-max-vl identifies this as the vision-language Qwen3.8-Max and lists its prices.
+# Modal accepts text and images, supports structured outputs, and takes reasoning_effort = none or high.
+# The image types come from the lab model. https://modal.com/docs/guide/endpoints documents the APIs and prefix caching.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen3.8-Max VL"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6
