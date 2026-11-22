@@ -1,6 +1,7 @@
 # Model card: https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct (Apache 2.0). The 1.5B and 7B Coder models
 # shipped with Qwen2.5 on 2024-09-19 (https://qwenlm.github.io/blog/qwen2.5-coder/); the other sizes followed 2024-11-12.
-# Context 32,768 natively (131,072 with YaRN); output 8,192 as on the Qwen2.5 model cards.
+# Context 131,072 (32,768 native, extended with YaRN per the model card), matching the sibling
+# qwen2.5-7b-instruct and qwen2.5-coder-32b-instruct files; output 8,192 as on the Qwen2.5 model cards.
 # Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
 schema = 2
 name = "Qwen2.5-Coder-7B-Instruct"
@@ -22,7 +23,7 @@ top_p = true
 top_k = true
 
 [limit]
-context = 32_768
+context = 131_072
 output = 8_192
 
 [[weights]]
