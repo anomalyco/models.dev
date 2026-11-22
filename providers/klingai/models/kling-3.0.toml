@@ -1,0 +1,61 @@
+# Sources (accessed 2026-11-12):
+# - ID kling-3.0 is the model segment of Kling's current endpoints below. Kling's capability map
+#   (https://kling.ai/document-api/guides/capability-map/video) lists the legacy name kling-v3, which Kling also uses for
+#   Image 3.0 (providers/klingai/models/kling-v3.toml), told apart by endpoint.
+# - API: POST https://api-singapore.klingai.com/text-to-video/kling-3.0, /image-to-video/kling-3.0 and /motion-control/kling-3.0
+#   (https://kling.ai/document-api/api/video/3-0-omni/text-to-video, https://kling.ai/document-api/api/video/3-0-omni/image-to-video
+#   and https://kling.ai/document-api/api/video/motion-control; Kling documents 3.0 and 3.0 Omni in one "3-0-omni" section,
+#   and these pages are the kling-3.0 endpoints);
+#   the legacy /v1/videos/* endpoints call this model model_name = "kling-v3", with mode std (720p) or pro (1080p).
+#   Resolution 720p (default), 1080p or 4k; audio off (default) or native.
+# - Pricing: https://kling.ai/document-api/pricing/base/video ("Balance" tab, USD per second of output). Prepaid
+#   resource packages (https://kling.ai/dev/pricing) bill in units at a lower effective rate and are not recorded.
+# Base model: Kling's API serves Standard (720p), Pro (1080p) and 4K as one model, so this points at the Pro lab file and
+# overrides the name. Motion control adds a reference motion video (.mp4/.mov) as input.
+# Cost conditions: resolution uses the API's own values ("720p", "1080p", "4k");
+#   generate_audio = audio "native"; mode = "motion-control" is the /motion-control/<model> endpoint.
+# Combinations: 4K is $0.42/s with or without native audio (the 4k override comes last among those). Motion control
+#   is 720p or 1080p only and its audio is "original" or "off" (no native audio), so it has no 4K or audio price.
+# No voice_control price: the pricing page lists voice reference prices only for Kling 2.6. Kling 3.0 and 3.0 Omni rows
+#   are split by resolution, native audio, reference video and motion control only.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v3.0-pro"
+name = "Kling VIDEO 3.0"
+description = "Kling 3.0 video model with first and last frame control, multi-shot storyboards, motion control and native audio"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime"]
+output = ["video/mp4"]
+
+[api.videos]
+base_url = "https://api-singapore.klingai.com"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.084
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080p" } }
+price = 0.112
+
+[[cost.video.output.overrides]]
+when = { generate_audio = { equals = true } }
+price = 0.126
+
+[[cost.video.output.overrides]]
+when = { generate_audio = { equals = true }, resolution = { equals = "1080p" } }
+price = 0.168
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" } }
+price = 0.42
+
+[[cost.video.output.overrides]]
+when = { mode = { equals = "motion-control" } }
+price = 0.126
+
+[[cost.video.output.overrides]]
+when = { mode = { equals = "motion-control" }, resolution = { equals = "1080p" } }
+price = 0.168

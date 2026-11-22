@@ -1,0 +1,17 @@
+name = "Powerspring"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# Every model is served on POST /v1/chat/completions, POST /v1/responses and
+# POST /v1/messages with the same capabilities; Chat Completions is the default.
+# Chat Completions: reasoning_effort = none|minimal|low|medium|high|xhigh (other
+# values return 400). "none" turns thinking off; the other values are passed to
+# the server that runs the request. Per-model controls are in each model's header.
+# Messages: thinking = {"type": "disabled"} turns thinking off; key in x-api-key
+# or Authorization: Bearer. Responses is stateless: previous_response_id and
+# store: true return 400, so it is not listed as a model API.
+# https://powerspring.eu/docs/chat-completions
+# https://powerspring.eu/docs/messages
+# https://powerspring.eu/docs/responses (accessed 2026-11-14)
+env = ["POWERSPRING_API_KEY"]
+api = "https://api.powerspring.eu/v1"
+doc = "https://powerspring.eu/models"

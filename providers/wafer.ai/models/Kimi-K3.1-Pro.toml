@@ -1,0 +1,37 @@
+# Sources (accessed 2026-11-06):
+# - Model list, limits, list prices, vision flag and reasoning efforts: GET https://pass.wafer.ai/v1/models
+#   (public, no key; the docs name it the source of truth: https://docs.wafer.ai/serverless/models)
+# - Reasoning fields: https://docs.wafer.ai/serverless/chat-completions#reasoning
+# - Prompt caching (automatic, cache_control not needed, no cache-write charge): https://docs.wafer.ai/serverless/usage#prompt-caching
+# - Images (the docs name PNG and JPEG): https://docs.wafer.ai/serverless/chat-completions#vision
+# - Sampling fields: https://docs.wafer.ai/serverless/chat-completions#request-fields (every model other than the GLM ones named there honors temperature and top_p; top_k reaches every model)
+# Effort: reasoning_effort = none|high|max (default none); also reasoning.effort.
+#   Off is effort=none (thinking.type = disabled is the same switch); graded levels, no toggle.
+#   Wafer self-hosts the model. Its docs say none turns reasoning off and single out GLM-5.3 and
+#   GLM-5.3-Flash as models where none doesn't fully stop reasoning.
+# Reasoning text is returned in reasoning_content.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+description = "Multimodal Kimi model with 1M context and per-request reasoning (off by default on Wafer) for coding, 3D creation, financial research, and agentic work"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+temperature = true
+top_p = true
+top_k = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

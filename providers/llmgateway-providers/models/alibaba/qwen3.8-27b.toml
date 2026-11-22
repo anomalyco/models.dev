@@ -1,0 +1,18 @@
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B (Alibaba Cloud)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+
+[limit]
+context = 983_616
+output = 131_072
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1, write = 0.625 }
+
+[cost.text.output]
+price = 3

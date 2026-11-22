@@ -1,0 +1,27 @@
+# Alias and limits: GET https://model.graphn.ai/v1/models (checked 2026-10-21). Served as
+# DeepSeek-V4.1-Flash-1017, with a 1M context. No separate output cap on the host (live
+# 2026-10-27: max_tokens accepted up to 400K), so output inherits the lab's 384_000.
+# Pricing: https://graphn.ai/pricing — $0.30 input, $0.03 cached input, $1.20 output per 1M
+# tokens (checked 2026-10-21).
+# Toggle: chat_template_kwargs.enable_thinking true|false
+# Effort: reasoning_effort = low|high|max (verified live: reasoning_content grows with the level)
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash"
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1.2

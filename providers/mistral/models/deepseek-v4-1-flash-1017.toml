@@ -1,7 +1,8 @@
 # Source: https://docs.mistral.ai/models/deepseek-v4-flash-1017 (accessed 2026-10-28; API ID deepseek-v4-1-flash-1017;
 # Public Preview, served without Mistral modifications; $0.3 input / $0.007 cached input / $1.2 output; 1M context / 128k max output).
 # GET https://api.mistral.ai/v1/models: max_context_length 1,048,576, vision false, function_calling and reasoning true.
-# Modalities: Mistral serves it text only (vision false), unlike DeepSeek's own API.
+# Modalities: re-checked 2026-11-12, GET /v1/models now reports vision true and the model page lists text and image
+#   inputs, so the lab modalities are inherited.
 # Effort (live 2026-10-28): reasoning_effort = none|low|high|xhigh|max; "medium" returns 400 listing those values.
 #   Omitting reasoning_effort returned 0 reasoning tokens, so the default is none. xhigh is accepted but left out: DeepSeek
 #   maps xhigh to high (providers/deepseek/models/deepseek-v4-flash.toml) and the served model is unmodified.
@@ -13,10 +14,6 @@
 # Mid-conversation flags weren't checked on this model and are left unset.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }

@@ -1,0 +1,29 @@
+# Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
+# (accessed 2026-11-10). Subscription tier: no per-token price.
+# Economy tier: the console and the Ark model list
+# (https://www.volcengine.com/docs/82379/1330310) state the economy variant
+# serves the exact same weights as deepseek-v4.1-flash, at lower cost and
+# slower generation; it is a distinct Model Name only on this host, so the
+# file points at the same lab model.
+# Toggle: thinking.type = enabled|disabled, POST /api/coding/v3/chat/completions.
+# Effort: reasoning_effort = low|high|max.
+# Same baseline as deepseek-v4.1-flash: first-party DeepSeek V4 lab entries
+# (toggle + low|high|max) and same-model V4.1 plan-relay peers; the weights
+# are identical, and the graded-effort collapse measured on this endpoint was
+# only ever shown for the older V4 generation.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

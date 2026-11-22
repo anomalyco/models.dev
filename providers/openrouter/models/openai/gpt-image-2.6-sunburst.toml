@@ -6,23 +6,7 @@
 # https://openrouter.ai/docs/guides/overview/multimodal/image-generation
 schema = 2
 v2_only = true
-type = "image"
-name = "GPT Image 2.6 Sunburst"
-description = "Image generation model"
-open_weights = false
-release_date = "2026-11-04"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["image/png", "image/jpeg", "image/webp"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-
-[limit]
-context = 400_000
-output = 0
+base_model = "openai/gpt-image-2.6-sunburst"
 
 [api.images]
 base_url = "https://openrouter.ai/api/v1"

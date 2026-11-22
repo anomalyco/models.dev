@@ -1,5 +1,6 @@
 # Serves DeepSeek-V4.1-Flash-1017, the October 17 build.
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Pricing: 60% off standard Zen rates (input, cache read, output).
 # thinking.type = disabled (or reasoning_effort = none) turns reasoning off (live: 53 -> 0 reasoning tokens).
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
@@ -21,8 +22,8 @@ base_url = "https://opencode.ai/inference/openai/v1"
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.3
-cache = { read = 0.006 }
+price = 0.12
+cache = { read = 0.0024 }
 
 [cost.text.output]
-price = 1.2
+price = 0.48

@@ -1,0 +1,28 @@
+# Exact documented IDs: glm-5.2 and glm-5-2.
+# Both share a Model ID cell in General Token Plan > Available models:
+# https://cloud.tencent.com/document/product/1823/130060 (checked 2026-11-02)
+# Tier-dependent pricing for the documented ID glm-5-2 (checked 2026-11-02).
+# https://cloud.tencent.com/document/product/1823/133811
+# Section III, General plan, uniform subscription-tier pricing table:
+# Lite / Standard / Pro / Max = 22.285 / 19.8 / 18.687 / 18.43 points/MTok,
+# with the same rate for input, output and cached input (20 points = CNY 1).
+# Cost omitted pending subscription-tier representation; unknown does not mean free.
+# Specifications: https://cloud.tencent.com/document/product/1823/130051
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# Cached-input deductions: pricing source above; no separate cache-write rate published.
+# API: https://cloud.tencent.com/document/product/1823/132061
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max (native lab baseline).
+# Tencent GLM guide documents both fields; low/medium map to high, xhigh to max.
+# none/minimal also disable thinking, but use the native toggle representation.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

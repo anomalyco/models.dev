@@ -1,0 +1,18 @@
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro (Fireworks AI)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+
+[limit]
+context = 1_040_384
+output = 1_040_384
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

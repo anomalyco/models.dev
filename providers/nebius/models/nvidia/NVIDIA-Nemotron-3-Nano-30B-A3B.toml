@@ -1,0 +1,24 @@
+# Sources (accessed 2026-11-20):
+# - https://tokenfactory.nebius.com/api/public/models_info (model_id nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B; max_model_len 262,144;
+#   $0.06 input, $0.012 cached input, $0.24 output per MTok; use_cases include reasoning, function_calling and responses_api)
+# Layout and reasoning follow this host's nemotron-3-super-120b-a12b entry (Chat Completions and Responses, no host
+#   reasoning control documented).
+schema = 2
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+name = "NVIDIA-Nemotron-3-Nano-30B-A3B"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.24

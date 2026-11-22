@@ -7,13 +7,9 @@ description = "MiniMax-M3.1-Flash is a multimodal model from MiniMax. Compared w
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[limit]
-context = 1_048_576
-output = 524_288
-
 [cost.text.input]
-price = 0.15
-cache = { read = 0.015 }
+price = 0.135
+cache = { read = 0.0135 }
 
 [cost.text.output]
-price = 0.6
+price = 0.54

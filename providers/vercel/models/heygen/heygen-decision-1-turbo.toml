@@ -1,0 +1,28 @@
+schema = 2
+type = "decision"
+name = "HeyGen Decision 1 Turbo"
+description = "HeyGen Decision 1 Turbo is a lower-cost, longer-context variant of HeyGen Decision 1 for high-volume classification, routing, and scoring. It evaluates text, structured JSON, up to four images, and one video against yes/no questions, custom choices, and ordered rubrics, returning typed answers with probabilities. It supports a 256K context window and is in preview."
+open_weights = false
+release_date = "2026-11-16"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 262_144
+output = 0
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.09
+
+[cost.text.output]
+price = 0

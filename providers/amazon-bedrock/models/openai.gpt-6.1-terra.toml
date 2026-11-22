@@ -9,6 +9,8 @@
 # Mid-conversation: same Mantle Responses behavior as the GPT-6.1 Sol and 5.6 Terra peers (live 2026-10-19/23): system/developer messages accepted; configuration_update rejected; additional_tools (add only) keeps the prompt cache.
 # APIs: Responses and Chat Completions on bedrock-mantle under /openai/v1 (model card "Endpoints and APIs supported").
 # Per-API flags: system_updates and tools.updates sit on [api.responses]. additional_tools is a Responses item, and Mantle Chat Completions wasn't checked for in-place developer messages.
+# Live 2026-11-17 (@opencode/ai request shapes, every tool in additional_tools, 3 runs each): tools.updates = ["add", "remove", "replace"] on Mantle [api.responses]: additions, redefinitions and removal announcements all work (3/3, gpt-6-astra and gpt-5.6-sol).
+# tools.updates (live 2026-11-17 on Mantle, the request shapes @opencode/ai sends: claude-opus-5-5 and opus-4-8 on /anthropic/v1/messages, gpt-6-astra and gpt-5.6-sol on /openai/v1/responses): add, a redefinition (the call uses the new schema) and a removal all work, 3/3 each.
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 
@@ -22,7 +24,7 @@ cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_bre
 [api.responses]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
 sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/responses" }
-capabilities = { system_updates = true, tools = { updates = true } }
+capabilities = { system_updates = true, tools = { updates = ["add", "remove", "replace"] } }
 
 [api.chat-completions]
 base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"

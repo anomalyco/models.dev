@@ -1,0 +1,25 @@
+# Sources (accessed 2026-10-22): GET https://router.sokkan.ch/v1/models (pricing in USD per 1M tokens,
+#   context_length, max_output_tokens, availability "on_demand"), https://router.sokkan.ch/docs
+# Effort: reasoning_effort = none|low|medium|xhigh, the upstream ladder (same as the lab entry and the OpenRouter peer);
+#   xhigh is the default when omitted, none disables thinking. Other values are rejected upstream with HTTP 400
+#   ("Supported types are xhigh (default), medium, and low").
+# Live 2026-10-22 (one arithmetic word problem, max_tokens 6000, two calls per value, completion_tokens_details.reasoning_tokens):
+#   none 0/0, low 488/581, medium 617/680, xhigh 742/4,839, omitted 2,132. The Qwen-native enable_thinking,
+#   chat_template_kwargs.enable_thinking and thinking_budget are rejected (HTTP 400), so no toggle or budget.
+# Zone: EU. Tools and structured outputs per the gateway's model catalogue.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 2.5

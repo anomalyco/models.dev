@@ -7,6 +7,8 @@
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6.1-terra
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
 # Cache writes: 30m (default) is 1.25x input; 12h (Responses API) is 2.5x. https://developers.openai.com/api/docs/guides/prompt-caching
+# Regional processing (data residency) endpoints: +10% on token prices for models released on or after 2026-03-05 (FedRAMP endpoints also +10%, not modeled). Token-only factor so cost.web_search is unscaled. Source: https://developers.openai.com/api/docs/pricing (accessed 2026-11-12)
+# tools.updates (live 2026-11-17, the request shapes @opencode/ai sends, every tool declared in additional_tools, gpt-6-astra and gpt-5.6-sol on OpenAI's /v1/responses): add, a redefinition (the call uses the new schema) and a removal all work, 3/3 each; the removal is announced in a developer message and followed. Re-adding a removed tool works (2026-11-16).
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 
@@ -21,7 +23,7 @@ prompt_cache_key = true
 service_tier = ["flex", "priority"]
 
 [api.responses]
-capabilities = { effort_updates = true, tools = { search = true, updates = true } }
+capabilities = { effort_updates = true, tools = { search = true, updates = ["add", "remove", "replace"] } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
@@ -53,9 +55,16 @@ factor = { text = 2 }
 when = { service_tier = { equals = "flex" } }
 factor = { text = 0.5 }
 
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = { text = 1.1 }
+
 [experimental.modes.fast]
 service_tier = "priority"
 body = { service_tier = "priority" }
+
+[experimental.modes.flex]
+body = { service_tier = "flex" }
 
 [experimental.modes.pro]
 body = { reasoning = { mode = "pro" } }
