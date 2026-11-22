@@ -1,7 +1,6 @@
+# Toggle: thinking.type = enabled|disabled
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
-
-[limit]
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }

@@ -1,3 +1,4 @@
+# Toggle: reasoning.enabled = true|false
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
 
@@ -6,7 +7,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "high"] }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 0.64575
