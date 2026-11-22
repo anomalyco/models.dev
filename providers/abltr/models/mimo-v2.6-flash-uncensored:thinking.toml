@@ -1,3 +1,4 @@
+# abltr serves this deployment with reasoning always on; no request-level reasoning control (toggle/effort/budget) is exposed.
 # Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
 schema = 2
 base_model = "xiaomi/mimo-v2.6-flash"
@@ -9,7 +10,6 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 

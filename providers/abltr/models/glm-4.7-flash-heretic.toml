@@ -4,16 +4,13 @@ base_model = "zhipuai/glm-4.7-flash"
 name = "GLM 4.7 Flash · Heretic"
 description = "GLM 4.7 Flash · Heretic serves an uncensored or abliterated community build behind abltr's OpenAI-compatible endpoint. It accepts tools, json. Context is 128k. Rates are $0.084 per 1M input tokens and $0.48 per 1M output tokens."
 
-[modalities]
-input = ["text"]
-output = ["text"]
-
 [capabilities]
-tools = { supported = true }
+reasoning = { supported = false }
 structured_output = true
 
 [limit]
 context = 128000
+output = 128000
 
 [cost.text.input]
 price = 0.084
