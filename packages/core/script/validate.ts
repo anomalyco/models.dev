@@ -5,6 +5,7 @@ import { generateV2 } from "../src/generate-v2";
 import { explicitFalseFlags, isSchemaV2, readLabMetadata } from "../src/translate";
 import { logoErrors } from "../src/logo";
 import { limitErrors, type LimitEntry } from "../src/limits";
+import { pathCollisions } from "../src/paths";
 import path from "path";
 import { ZodError } from "zod";
 
@@ -17,6 +18,17 @@ try {
     "providers",
   );
   const rootDir = path.dirname(providersDir);
+  const catalogFiles = await Array.fromAsync(
+    new Bun.Glob("{models,providers,labs}/**/*").scan({ cwd: rootDir, dot: true }),
+  );
+  const collisions = pathCollisions(catalogFiles.map((file) => file.split(path.sep).join("/")));
+  if (collisions.length > 0) {
+    console.error(
+      "Paths must stay unique when lowercased, or they merge on case-insensitive filesystems (macOS, Windows):\n" +
+        collisions.map((collision) => `  ${collision}`).join("\n"),
+    );
+    process.exit(1);
+  }
   const notV2: string[] = [];
   const falseFlags: string[] = [];
   for (const pattern of ["models/**/*.toml", "providers/*/models/**/*.toml", "labs/*/lab.toml"]) {
