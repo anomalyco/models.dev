@@ -1,5 +1,6 @@
 schema = 2
 base_model = "alibaba/qwen3.7-plus"
+reasoning_options = [{ type = "toggle" }]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
