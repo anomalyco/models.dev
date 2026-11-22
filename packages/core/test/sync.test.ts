@@ -3397,7 +3397,7 @@ test("inherits Hyper reasoning when API omits reasoning metadata", () => {
   const model = hyperModel({ id: "llama-3.3-70b-instruct", reasoning: undefined });
 
   expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).toMatchObject({
-    attachment: false,
+    base_model: "meta/llama-3.3-70b-instruct",
   });
   expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning");
   expect(buildHyperModel(model, undefined, "meta/llama-3.3-70b-instruct")).not.toHaveProperty("reasoning_options");
@@ -3519,8 +3519,9 @@ test("Eden AI keeps an authored output cap", () => {
 });
 
 test("takes Eden AI reasoning options from the model's own lab entry", () => {
+  // DeepSeek's own file: thinking toggles off (none) and effort is low, high or max.
   expect(reasoningOptionsFor("deepseek/deepseek-v4-pro")).toEqual([
-    { type: "effort", values: ["none", "high", "max"] },
+    { type: "effort", values: ["none", "low", "high", "max"] },
   ]);
   expect(reasoningOptionsFor("openai/o1")).toEqual([
     { type: "effort", values: ["low", "medium", "high"] },
@@ -3661,7 +3662,8 @@ test("Eden AI price updates keep v2-only data in migrated files", async () => {
       capabilities: {
         input_modalities: ["text", "image", "file"],
         output_modalities: ["text"],
-        supports_function_calling: true,
+        // The lab (and Eden's live catalog) list no tool calling for the search model.
+        supports_function_calling: false,
         supports_response_schema: true,
       },
       list_pricing: { input_cost_per_token: 0.0000015, output_cost_per_token: 0.00001, cache_read_input_token_cost: 0.000000125 },
@@ -3950,16 +3952,17 @@ test("resolves DeepInfra ByteDance IDs to canonical metadata", () => {
 });
 
 test("DeepInfra preserves live modalities for new base models", () => {
+  // The lab takes images and video; DeepInfra's route only lists images, so its narrower input is written.
   const model = buildDeepInfraModel(
-    deepInfraModel("Qwen/Qwen3.5-9B", ["multimodal", "input-video"]),
+    deepInfraModel("Qwen/Qwen3.5-9B", ["multimodal"]),
     undefined,
     "alibaba/qwen3.5-9b",
   );
+  expect(model).toMatchObject({ modalities: { input: ["text", "image"] } });
 
-  expect(model).toMatchObject({
-    attachment: true,
-    modalities: { input: ["text", "image", "video"] },
-  });
+  // A route matching the lab's kinds inherits them instead of repeating them.
+  const same = buildDeepInfraModel(deepInfraModel("Qwen/Qwen3.5-9B", ["multimodal", "input-video"]), undefined, "alibaba/qwen3.5-9b");
+  expect(same).not.toHaveProperty("modalities");
 });
 
 test("DeepInfra excludes incorrectly tagged Gemma 4 audio input", () => {
@@ -5426,7 +5429,10 @@ test("reads curation from v2 aggregated siblings", () => {
     family: "alibaba",
     providers: [{ providerId: "novita", vision: false, tools: true, reasoning: true }],
   }), undefined);
-  expect(model!.reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "xhigh"] }]);
+  const sibling = Bun.TOML.parse(readFileSync(path.join(import.meta.dirname, "..", "..", "..", "providers", "llmgateway", "models", "qwen3.8-27b.toml"), "utf8")) as {
+    capabilities: { reasoning: { effort: string[] } };
+  };
+  expect(model!.reasoning_options).toEqual([{ type: "effort", values: sibling.capabilities.reasoning.effort }]);
 });
 
 test("factors perplexity entries without widening the shared prefix map", () => {
@@ -8085,9 +8091,12 @@ async function openRouterDecisionFixture(input: string[]) {
     modalities: { input, output: ["text"] },
     capabilities: { reasoning: { supported: false }, structured_output: false },
     limit: { output: 0 },
+    // The decision API layout the sync writes, as in providers/openrouter/models/respan/span-02.toml.
     api: {
-      systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter" } },
-      decisions: { base_url: "https://openrouter.ai/api/alpha", sdk: { opencodeai: "none" } },
+      systemone: {
+        sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter/decisions" },
+        compatibility: { media_input: "state" },
+      },
     },
     cost: { text: { input: { price: 0.01 }, output: { price: 0 } } },
   };
@@ -8106,6 +8115,8 @@ async function openRouterDecisionFixture(input: string[]) {
     ...openrouter,
     modelsDir,
     async fetchModels() { return { data: [source] }; },
+    // The real catalog's source checks (e.g. TIME_BILLED_AUDIO entries still listed) don't apply to a one-model fixture.
+    sourceNotices: undefined,
   };
   const read = async () => Bun.TOML.parse(await readFile(file, "utf8")) as Record<string, any>;
   return { root, file, doc, source, provider, read };

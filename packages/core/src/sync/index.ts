@@ -17,7 +17,7 @@ import {
   withoutModeCosts,
 } from "../model-file-v2.js";
 import { isSchemaV2, labModelV2ToV1, modelV2ToV1, withoutV1ReasoningCost } from "../translate.js";
-import { withPredecessorCapabilities } from "./inherit.js";
+import { keepInheritedNote, withPredecessorCapabilities } from "./inherit.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
@@ -449,7 +449,7 @@ export async function syncProvider<SourceModel>(
       modelV2ToV1({ ...translated.v2, id: translated.id }, { provider: provider.id, path: relativePath }, npm);
       const translatedHeader = translated.header === undefined ? "" : leadingComments(translated.header);
       const header = provider.authoritativeHeaders
-        ? translatedHeader
+        ? keepInheritedNote(existing.get(relativePath)?.header, translatedHeader)
         : existing.get(relativePath)?.header || translatedHeader;
       desiredV2.set(relativePath, { content: header + formatModelV2(translated.v2) });
       continue;
@@ -499,7 +499,7 @@ export async function syncProvider<SourceModel>(
       ? undefined
       : leadingComments(translated.header);
     const header = provider.authoritativeHeaders
-      ? translatedHeader ?? ""
+      ? keepInheritedNote(existing.get(relativePath)?.header, translatedHeader ?? "")
       : (existing.get(relativePath)?.header || translatedHeader) ?? "";
     desired.set(relativePath, {
       model: parsed.data,
@@ -1029,6 +1029,7 @@ async function safeWritePath(root: string, relativePath: string, allowLeafSymlin
 async function readModelMetadata(modelsDir: string) {
   const metadataDir = modelMetadataDir(modelsDir);
   const result: Record<string, Record<string, unknown>> = {};
+  if (!existsSync(metadataDir)) return result;
 
   for await (const modelPath of new Bun.Glob("**/*.toml").scan({
     cwd: metadataDir,
@@ -1048,6 +1049,8 @@ async function readModelMetadata(modelsDir: string) {
 async function readNonTextOutputLabs(modelsDir: string) {
   const metadataDir = modelMetadataDir(modelsDir);
   const result = new Set<string>();
+  // A provider directory outside a catalog (as in tests) has no lab files to check.
+  if (!existsSync(metadataDir)) return result;
   for await (const modelPath of new Bun.Glob("**/*.toml").scan({ cwd: metadataDir, absolute: true, followSymlinks: true })) {
     const toml = Bun.TOML.parse(await Bun.file(modelPath).text()) as { modalities?: { output?: string[] } };
     const output = toml.modalities?.output;

@@ -9,6 +9,18 @@ type Lab = Record<string, unknown>;
 const CAPABILITY_KEYS = ["system_updates", "effort_updates", "structured_output", "cache", "prompt_cache_key", "store", "stream_usage"];
 const TOOL_KEYS = ["updates", "strict", "choice", "search", "freeform"];
 
+const INHERITED_NOTE = "# Capabilities the catalog doesn't state";
+
+/**
+ * A provider that rewrites headers on every run keeps the note naming the predecessor a file's capabilities came
+ * from, so the run after a model is created doesn't drop it.
+ */
+export function keepInheritedNote(existingHeader: string | undefined, header: string) {
+  const note = existingHeader?.split("\n").find((line) => line.startsWith(INHERITED_NOTE));
+  if (note === undefined || header.includes(note)) return header;
+  return `${header}${note}\n`;
+}
+
 const isRecord = (value: unknown): value is Doc => typeof value === "object" && value !== null && !Array.isArray(value);
 const apiKeys = (doc: Doc) => Object.keys(isRecord(doc.api) ? doc.api : {}).sort().join("+");
 
@@ -60,6 +72,8 @@ export function inheritCapabilities(doc: Doc, predecessor: Doc): string[] {
       }
     }
     if (Object.keys(tools).length === 0) delete to.tools;
+    // A provider file's tools table needs `supported`; one started here to hold copied details takes the predecessor's.
+    else if (tools.supported === undefined && from.tools.supported !== undefined) tools.supported = from.tools.supported;
   }
   const fromApis = isRecord(predecessor.api) ? predecessor.api : {};
   const toApis = isRecord(doc.api) ? doc.api : {};
@@ -101,6 +115,6 @@ export function withPredecessorCapabilities(
   const added = inheritCapabilities(doc, predecessor.doc);
   if (added.length === 0) return content;
   const source = predecessor.path.replace(/\.toml$/, "");
-  header.push(`# Capabilities the catalog doesn't state (${added.join(", ")}) come from ${source}, this host's previous model in the family.`);
+  header.push(`${INHERITED_NOTE} (${added.join(", ")}) come from ${source}, this host's previous model in the family.`);
   return `${header.join("\n")}\n${formatModelV2(doc)}`;
 }
