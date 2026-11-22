@@ -6,7 +6,7 @@
 # Always-on alias: reasoning is enabled for this id and cannot be turned off here;
 # `deepseek-v4.1-flash` is the id that takes the thinking control.
 # Effort: reasoning_effort = low|high|max (top-level, forwarded verbatim)
-# The reasoning controls mirror providers/302ai for the same model on this surface.
+# The reasoning controls follow the DeepSeek V4 line in providers/deepseek (thinking toggle, reasoning_effort low|high|max) on this surface.
 # Live gateway row (this id is not listed separately; priced from `deepseek-v4.1-flash`): model_ratio=0.125, completion_ratio=4.6, cache_ratio=0.022, enable_groups=['pro'].
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"

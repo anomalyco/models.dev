@@ -5,7 +5,7 @@
 # Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-11-21): "deepseek-v4.1-flash".
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max (top-level, forwarded verbatim)
-# The reasoning controls mirror providers/302ai for the same model on this surface.
+# The reasoning controls follow the DeepSeek V4 line in providers/deepseek (thinking toggle, reasoning_effort low|high|max) on this surface.
 # Live gateway row: model_ratio=0.125, completion_ratio=4.6, cache_ratio=0.022, enable_groups=['pro'].
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
