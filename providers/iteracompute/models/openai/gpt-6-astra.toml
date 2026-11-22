@@ -1,3 +1,4 @@
+# Retail rates: https://api.iteracompute.com/v1/models (2026-11-22).
 # Above-272K prompt rates rechecked in /v1/models pricing.parameters on 2026-10-28.
 # Sources (accessed 2026-10-22):
 # https://api.iteracompute.com/v1/models (served ID, retail USD/MTok prices, limits and reasoning)
@@ -23,17 +24,17 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 
 [cost.text.input]
-price = 8
-cache = { read = 0.8, write = 10.0 }
+price = 10
+cache = { read = 1, write = 12.5 }
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 272_000 } }
-price = 16
-cache = { read = 1.6, write = 20 }
+when = { context = { gt = 272000 } }
+price = 20
+cache = { read = 2, write = 25 }
 
 [cost.text.output]
-price = 40
+price = 50
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 272_000 } }
-price = 60
+when = { context = { gt = 272000 } }
+price = 75

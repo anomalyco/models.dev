@@ -1,0 +1,17 @@
+# https://iteracompute.com/models/qwen-audio-3-0-tts-flash/
+# https://api.iteracompute.com/v1/models (verified 2026-11-22).
+# USD 0.09 per 10,000 billable characters, converted to one character.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen-audio-3.0-tts-flash"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav", "audio/mpeg", "audio/pcm", "audio/opus"]
+
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
+
+[cost.text.input]
+price = 0.000009
+unit = "character"

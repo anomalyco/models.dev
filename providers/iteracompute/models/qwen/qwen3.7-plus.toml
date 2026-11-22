@@ -1,0 +1,40 @@
+# https://iteracompute.com/models/qwen3-7-plus/
+# https://api.iteracompute.com/v1/models (verified 2026-11-22).
+# Toggle: enable_thinking true/false on the Alibaba-compatible chat route.
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+output = 131072
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.384
+cache = { read = 0.0768, write = 0.48 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256000 } }
+price = 1.152
+cache = { read = 0.2304, write = 1.44 }
+
+[cost.text.output]
+price = 1.536
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256000 } }
+price = 4.608

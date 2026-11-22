@@ -433,6 +433,7 @@ export type ModelFamily =
   | "qwen"
   | "qwen-asr"
   | "qwen-asr-flash"
+  | "qwen-audio-realtime-plus"
   | "qwen-coder"
   | "qwen-coder-flash"
   | "qwen-coder-plus"

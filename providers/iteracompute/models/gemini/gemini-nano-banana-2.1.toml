@@ -1,0 +1,27 @@
+# https://iteracompute.com/models/gemini-nano-banana-2-1/
+# https://api.iteracompute.com/v1/models (verified 2026-11-22).
+schema = 2
+v2_only = true
+base_model = "google/gemini-nano-banana-2.1"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["image/png"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.text.input]
+price = 1.5
+
+[cost.image.input]
+price = 1.5
+
+[cost.text.output]
+price = 7.5
+
+[cost.image.output]
+price = 30

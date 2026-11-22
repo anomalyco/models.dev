@@ -1,0 +1,34 @@
+# https://iteracompute.com/models/auto/
+# https://api.iteracompute.com/v1/models (verified 2026-11-22).
+# Shared Free/Starter context is 128K. Eligible higher tiers can reach 256K.
+# Chat reasoning_effort accepts none, low, medium and xhigh.
+schema = 2
+name = "Auto"
+description = "IteraCompute router that uses available capacity, with plan-priority and shared free access"
+release_date = "2026-11-10"
+open_weights = false
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"], default = { type = "effort", value = "xhigh" } }
+temperature = true
+top_p = true
+top_k = false
+structured_output = true
+
+[limit]
+context = 131072
+output = 8192
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

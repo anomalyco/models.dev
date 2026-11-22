@@ -1,0 +1,40 @@
+# https://iteracompute.com/models/gpt-6-2-sol/
+# https://api.iteracompute.com/v1/models (verified 2026-11-22).
+# Reasoning levels follow the native model and same-host GPT Chat surface. The public host contract documents JSON tools only.
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 922000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "30m" = 2.5, "12h" = 5 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272000 } }
+price = 4
+cache = { read = 0.2, write = { "30m" = 5, "12h" = 10 } }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272000 } }
+price = 15

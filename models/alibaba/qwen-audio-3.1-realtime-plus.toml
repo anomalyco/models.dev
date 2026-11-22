@@ -1,0 +1,27 @@
+# https://www.alibabacloud.com/help/en/model-studio/qwen-audio-3-1-realtime-plus
+# https://help.aliyun.com/zh/model-studio/newly-released-models
+# https://www.alibabacloud.com/help/en/model-studio/fun-audiochat-client-events
+schema = 2
+v2_only = true
+type = "realtime"
+name = "Qwen-Audio 3.1 Realtime Plus"
+description = "Full-duplex speech model with text and audio responses and function calling"
+family = "qwen-audio-realtime-plus"
+open_weights = false
+release_date = "2026-09-20"
+
+[modalities]
+input = ["text", "audio/pcm"]
+output = ["text", "audio/pcm"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 262144
+input = 245760
+output = 16384

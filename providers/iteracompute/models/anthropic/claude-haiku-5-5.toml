@@ -1,3 +1,4 @@
+# Retail rates: https://api.iteracompute.com/v1/models (2026-11-22).
 # Cache TTL and prompt-length rates rechecked in /v1/models pricing.parameters on 2026-10-28.
 # Prompts above 100,000 tokens use the higher tier.
 # Sources (accessed 2026-10-22):
@@ -20,17 +21,17 @@ output = ["text"]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
-price = 0.05
-cache = { read = 0.005, write = { "5m" = 0.0625, "1h" = 0.1 } }
+price = 0.1
+cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 100_000 } }
-price = 0.25
-cache = { read = 0.025, write = { "5m" = 0.3125, "1h" = 0.5 } }
+when = { context = { gt = 100000 } }
+price = 0.5
+cache = { read = 0.05, write = { "5m" = 0.625, "1h" = 1 } }
 
 [cost.text.output]
-price = 0.25
+price = 0.5
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 100_000 } }
-price = 1.25
+when = { context = { gt = 100000 } }
+price = 2.5

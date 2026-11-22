@@ -1,0 +1,22 @@
+# https://iteracompute.com/models/gpt-image-2-6-flare/
+# https://api.iteracompute.com/v1/models (verified 2026-11-22).
+schema = 2
+v2_only = true
+base_model = "openai/gpt-image-2.6-flare"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["image/png", "image/jpeg", "image/webp"]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.text.input]
+price = 5
+cache = { read = 1.25 }
+
+[cost.image.input]
+price = 8
+
+[cost.image.output]
+price = 30
