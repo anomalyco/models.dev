@@ -18,11 +18,20 @@
 # conservative token estimate: 131,072 / ~4 bytes per token of typical English text = 32,768.
 # Output is capped at 24,576 tokens (default 8,192) and includes reasoning.
 # Effort: reasoning_effort = low|high|max. If the field is omitted, the gateway sends
-# reasoning_effort = low. "none" is not accepted and there is no thinking toggle.
+# reasoning_effort = low. none, minimal and medium also run as low and xhigh as high, so
+# reasoning cannot be turned off, and there is no thinking toggle.
 # Cache reads are implicit and billed only when reported by upstream usage.
-# No image or video input and no strict tool schemas. Only Chat Completions is listed here;
-# the gateway's stateless /v1/responses and Anthropic-format /v1/messages routes translate
-# into the same pipeline.
+# Tool choice: auto, none, required and a named function all work through the gateway.
+# Named choice was checked live on 2026-11-17 in Oathbreaker's qualification run: a streamed
+# 98-message request at the default low effort, with tool_choice naming one function,
+# returned exactly one call to that function. The gateway rejects a named choice that is
+# not in the request's tools, and for "none" it drops the tool fields for that turn.
+# No image or video input and no strict tool schemas.
+# Only Chat Completions is listed. The gateway's /v1/responses and /v1/messages routes are
+# compatibility shims over the same Chat Completions pipeline, not native APIs: Responses is
+# stateless (previous_response_id and stored items are rejected, so clients send store: false
+# and the whole conversation) and Messages translates Anthropic-format requests. They are
+# left out of the API list on purpose.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Oathbreaker Kimi K3.1 Pro Abliterated"

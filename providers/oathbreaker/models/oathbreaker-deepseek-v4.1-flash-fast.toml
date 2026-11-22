@@ -17,11 +17,16 @@
 # English text = 32,768. Code or non-English text can use more bytes per token.
 # Effort: reasoning_effort = low|high|max. If the field is omitted, the gateway sends no
 # effort parameter and the upstream model default applies; no default is documented.
-# "none" is not an accepted value, and no thinking toggle field is accepted.
+# The gateway also accepts none, minimal and medium (run as low) and xhigh (run as high), so
+# reasoning cannot be turned off; no thinking toggle field is accepted.
 # max_tokens and max_completion_tokens are supported (default 8,192); output includes reasoning.
 # Cache reads are implicit and billed only when reported by upstream usage.
-# No image input or strict tool schemas. Only Chat Completions is listed here; the gateway's
-# stateless /v1/responses and Anthropic-format /v1/messages routes translate into the same pipeline.
+# No image input or strict tool schemas.
+# Only Chat Completions is listed. The gateway's /v1/responses and /v1/messages routes are
+# compatibility shims over the same Chat Completions pipeline, not native APIs: Responses is
+# stateless (previous_response_id and stored items are rejected, so clients send store: false
+# and the whole conversation) and Messages translates Anthropic-format requests. They are
+# left out of the API list on purpose.
 # This alias serves the same model and limits as oathbreaker-deepseek-v4.1-flash on a
 # faster serving route that costs more to run, so it is priced higher ($0.50 / $1.50 vs
 # $0.40 / $1.20 per 1M input / output tokens; cached input $0.05 on both).
