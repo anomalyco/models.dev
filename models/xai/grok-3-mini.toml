@@ -1,0 +1,21 @@
+# Source: https://docs.x.ai/developers/release-notes#april-2025
+# Source: https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-3-mini.htm
+schema = 2
+name = "Grok 3 Mini"
+description = "Text reasoning model for logic, coding and tool-assisted tasks"
+open_weights = false
+release_date = "2025-04-03"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 131072
