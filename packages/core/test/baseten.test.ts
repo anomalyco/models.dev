@@ -174,7 +174,7 @@ test("Baseten decision models get the systemone table, new or stale", async () =
       name,
       context_length: await lab(name),
       max_completion_tokens: undefined,
-      pricing: { prompt: "0", completion: "0" },
+      pricing: { prompt: name === "elephant-1" ? "0.000000035" : "0.0000001", completion: "0" },
       supported_features: [],
     });
     const models = [await source(stale, "elephant-1"), await source(fresh, "mammoth-1")];
