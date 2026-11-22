@@ -1,0 +1,44 @@
+# Verified live 2026-10-31 against POST https://api.hop-base.com/v1/chat/completions with this exact
+# model ID: non-streaming, streaming (stream_options.include_usage returns usage), and a
+# tool call (tool_choice auto) that returned a well-formed function call.
+# Limits: 1M context, up to 393,216 output tokens (https://hop-base.com/llms.txt).
+# Toggle: thinking.type = enabled|disabled (disabled -> 0 reasoning tokens).
+# Effort: reasoning_effort = low|high|max, the native DeepSeek levels; medium is accepted and
+# mapped by DeepSeek, none also turns thinking off, an unknown value returns HTTP 400.
+# Relative effort was not benchmarked.
+# Reasoning text is returned in message.reasoning_content and delta.reasoning_content.
+# Images: a red PNG data URL returned "Red". Structured output: json_schema with strict = true
+# returned an enum-valid object. Cache: repeating a ~2.4K-token prefix returned cached_tokens = 2432.
+# tool_choice none|required|named all honoured.
+# Pricing: HopBase self-serve price, USD (https://hop-base.com/pricing, also in https://hop-base.com/llms.txt).
+# Peak: weekdays 09:00-12:00 and 14:00-18:00 Asia/Shanghai (UTC 01-04, 06-10); off-peak and weekends bill at half.
+# Cache reads: this ID's group bills cached input at the official cache price, so the off-peak
+# cache read is 0.00295 (half of 0.0059); the -sg ID's group discounts cache reads too (0.0018).
+# Peak also applies on Chinese public holidays that fall on weekdays: HopBase billing uses the
+# weekday windows only, with no holiday exception.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.08825
+cache = { read = 0.00295 }
+
+[cost.text.output]
+price = 0.35295
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

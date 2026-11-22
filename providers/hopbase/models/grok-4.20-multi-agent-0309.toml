@@ -1,0 +1,35 @@
+# Verified live 2026-10-31 against POST https://api.hop-base.com/v1/chat/completions with this exact
+# model ID: non-streaming and streaming (stream_options.include_usage returns usage). HopBase
+# accepts Chat Completions for this model.
+# Tools: a client-side function tool returns HTTP 400 "Client-side tools for multi-agent models
+# require beta access", so tools stay off (inherited from the lab file).
+# Effort: reasoning_effort = low|medium|high|xhigh changes how much the agents work (prompt tokens
+# 7143/5517/38326/27218 on the same short question, which include the agents' internal context);
+# none and unknown values are accepted and run at the default. No plaintext reasoning is returned.
+# Cache: cached_tokens = 2560 on repeated requests.
+# Pricing: HopBase price in the same public group as grok-4.7, USD (rate per https://hop-base.com/pricing).
+# Long-context tier: HopBase applies it when input (including cached) is strictly greater than
+# 200,000 tokens, so `gt` rather than xAI's `gte`.
+schema = 2
+base_model = "xai/grok-4.20-multi-agent-0309"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+stream_usage = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.12 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 1.5
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 1.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 3.0
