@@ -1,5 +1,6 @@
 schema = 2
 base_model = "openai/gpt-6.2-astra"
+reasoning_options = [{ type = "toggle" }]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
