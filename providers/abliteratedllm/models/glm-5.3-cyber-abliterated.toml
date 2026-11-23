@@ -3,8 +3,9 @@
 #   context_length 1048576, max_output_tokens 131072 (larger output budgets are lowered to it),
 #   input_modalities text, precision FP8, USD per 1M tokens input 0.90 / cached input 0.135 / output 1.80.
 #   No priority tier (pricing.priority is null). No charge for cache writes.
-# - https://abliteratedllm.dev/docs/chat-completions: unlisted fields are passed through unchanged; a reasoning_effort that
-#   isn't in the model's reasoning_efforts list fails with 400 invalid_request;
+# - https://abliteratedllm.dev/docs/chat-completions: unlisted fields are passed through unchanged; a reasoning_effort of
+#   none, minimal, low, medium, high, xhigh or max that isn't in the model's reasoning_efforts list runs at the nearest
+#   listed level (a tie goes to the higher one), and any other value fails with 400 invalid_request;
 #   reasoning arrives in reasoning_content; image or video parts for a model that doesn't list them, and audio and file/PDF
 #   parts, fail with 400 unsupported_content; response_format json_schema works; prompt caching is automatic; every stream
 #   ends with a usage chunk.
@@ -14,8 +15,8 @@
 #   Served in FP8 (e4m3), not compressed further to INT8, INT4 or FP4 (https://abliteratedllm.dev/docs/models, Precision),
 #   on dedicated GPUs operated by our infrastructure provider, Fireworks.
 # Input: text only, as in the lab file.
-# Reasoning: always on, no toggle. /v1/models lists reasoning_efforts ["low", "high"] for this ID (accessed 2026-11-23),
-#   and any other value, none included, fails with 400 invalid_request before billing
+# Reasoning: always on, no toggle. /v1/models lists reasoning_efforts ["low", "high"] for this ID (accessed 2026-11-23).
+#   Other levels run at the nearer of the two: none and minimal as low; medium, xhigh and max as high
 #   (https://abliteratedllm.dev/docs/chat-completions, Reasoning). The model's chat template honors only low and high
 #   (runtime notes on the model card above). The card's note that reasoning arrives in message.reasoning describes its
 #   own vLLM setup; on this host it arrives in reasoning_content.
