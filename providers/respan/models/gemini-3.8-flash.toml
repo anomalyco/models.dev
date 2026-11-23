@@ -4,6 +4,7 @@ base_model = "google/gemini-3.8-flash"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { implicit = { min_tokens = 4_096 } }
 
 [cost.text.input]
 price = 0.75

@@ -7,6 +7,7 @@ base_model = "openai/gpt-6.2-sol"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 tools = { supported = true, freeform = ["text", "lark", "regex"] }
 
 [cost.text.input]

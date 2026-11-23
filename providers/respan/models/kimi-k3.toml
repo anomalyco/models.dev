@@ -5,6 +5,7 @@ base_model = "moonshotai/kimi-k3"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { implicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
 price = 1.85

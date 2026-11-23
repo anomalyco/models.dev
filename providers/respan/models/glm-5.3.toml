@@ -1,11 +1,12 @@
-# Off is reasoning_effort=none; graded levels low|high|max. thinking.type is not
-# forwarded on this route (live 2026-11-23).
+# Always thinks. Effort: reasoning_effort = low|high|max (none is rejected upstream,
+# live 2026-11-23).
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.0699
