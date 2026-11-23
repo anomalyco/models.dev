@@ -2,6 +2,7 @@ schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
+reasoning = { supported = true, toggle = true }
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [api.chat-completions]
