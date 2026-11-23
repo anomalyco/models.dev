@@ -1,0 +1,37 @@
+# https://longcat.chat/platform/docs/api/model-params documents the total context and thinking.type toggle.
+# https://longcat.chat/platform/docs/image-video-understanding lists image formats and accepts video URLs.
+# https://longcat.ai/platform/docs/api/chat documents max_tokens and reasoning_content.
+# https://longcat.chat/platform/docs/api-docs lists the Chat Completions, Responses and Messages endpoints.
+# The Chat table keeps the provider's published base (https://api.longcat.chat/openai), as on this host's LongCat-2.0 and LongCat-2.5-Preview.
+# https://longcat.chat/platform/docs/pricing/longcat-2.5 lists limited-time pay-as-you-go USD per million tokens (2026-11-22).
+schema = 2
+base_model = "meituan/longcat-2.5"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+base_url = "https://api.longcat.chat/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.longcat.chat/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.30
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.20
