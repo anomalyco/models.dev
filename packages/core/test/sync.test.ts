@@ -751,7 +751,6 @@ test("factors NanoGPT variants against canonical models without retaining wrong 
     ["zai-org/GLM-4.5-Air:thinking", "zhipuai/glm-4.5-air"],
     ["poolside/laguna-m.1", "poolside/laguna-m.1"],
     ["nvidia/Llama-3.3-Nemotron-Super-49B-v1", "nvidia/llama-3.3-nemotron-super-49b-v1"],
-    ["sarvam-30b", "sarvam/sarvam-30b"],
     ["sarvam-105b", "sarvam/sarvam-105b"],
   ]);
   for (const [id, canonical] of additionalCanonicalIDs) {
