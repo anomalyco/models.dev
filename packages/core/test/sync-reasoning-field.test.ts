@@ -7,7 +7,7 @@ import { syncProvider, type SyncedModel, type SyncProvider } from "../src/sync/i
 
 const REPO = path.join(import.meta.dirname, "..", "..", "..");
 
-type Row = { id: string; model: SyncedModel };
+type Row = { id: string; model: SyncedModel } | { id: string; v2: Record<string, unknown> };
 
 // A catalog in a temp dir: the real Inkling lab files and one OpenAI-compatible provider whose feed is `rows`.
 async function sync(files: Record<string, string>, rows: Row[]) {
@@ -75,4 +75,25 @@ test("a new model takes the reasoning field from the host's previous model in th
   const text = await read("thinkingmachines/inkling-2-small.toml");
   expect(text).toContain("(api.chat-completions.compatibility.reasoning_field) come from thinkingmachines/inkling-small");
   expect(text).toContain('[api.chat-completions]\ncompatibility = { reasoning_field = "reasoning_content" }');
+});
+
+test("a new model that doesn't reason doesn't take the reasoning field", async () => {
+  const read = await sync({ "thinkingmachines/inkling-small.toml": INKLING_SMALL }, [row("inkling-small", 2), row("inkling-2-small", 2, false)]);
+  expect(await read("thinkingmachines/inkling-2-small.toml")).not.toContain("reasoning_field");
+});
+
+test("a new model written straight as a v2 file takes the reasoning field too", async () => {
+  const read = await sync({ "thinkingmachines/inkling-small.toml": INKLING_SMALL }, [
+    row("inkling-small", 2),
+    {
+      id: "thinkingmachines/inkling-2-small",
+      v2: {
+        schema: 2,
+        base_model: "thinkingmachines/inkling-2-small",
+        capabilities: { reasoning: { supported: true, effort: ["low", "high"] } },
+        cost: { text: { input: { price: 1 }, output: { price: 2 } } },
+      },
+    },
+  ]);
+  expect(await read("thinkingmachines/inkling-2-small.toml")).toContain('[api.chat-completions]\ncompatibility = { reasoning_field = "reasoning_content" }');
 });

@@ -619,7 +619,9 @@ export async function syncProvider<SourceModel>(
     let content = file.content;
     if (current === undefined && provider.inheritPredecessorCapabilities !== false) {
       modelMetadata ??= await readModelMetadata(provider.modelsDir);
-      content = withPredecessorCapabilities(content, [...existing].map(([path, entry]) => [path, entry.v2]), modelMetadata);
+      const { type } = Bun.TOML.parse(content) as { type?: string };
+      const protocol = await newModelProtocol(provider.modelsDir, { type } as z.infer<typeof SyncedAuthoredModel>);
+      content = withPredecessorCapabilities(content, [...existing].map(([path, entry]) => [path, entry.v2]), modelMetadata, protocol);
     }
     files.push({ status: current === undefined ? "created" : "updated", path: filePath });
     if (options.dryRun) {

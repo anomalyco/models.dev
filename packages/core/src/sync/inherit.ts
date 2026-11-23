@@ -56,7 +56,8 @@ export function findPredecessor(
 }
 
 /** Copies the predecessor's hand-set capabilities the new file doesn't state. Returns the keys it added. */
-export function inheritCapabilities(doc: Doc, predecessor: Doc, defaultProtocol?: string): string[] {
+/** `reasons`: the new model's resolved reasoning; only a reasoning model takes the predecessor's reasoning field. */
+export function inheritCapabilities(doc: Doc, predecessor: Doc, defaultProtocol?: string, reasons = false): string[] {
   const added: string[] = [];
   const from = isRecord(predecessor.capabilities) ? predecessor.capabilities : {};
   const to = (isRecord(doc.capabilities) ? doc.capabilities : (doc.capabilities = {})) as Doc;
@@ -84,7 +85,7 @@ export function inheritCapabilities(doc: Doc, predecessor: Doc, defaultProtocol?
     // The field a host reads earlier turns' reasoning back from is a property of the host's serving stack, which a
     // catalog doesn't state, and a model trained on its own past reasoning loses it when a client doesn't send it.
     const field = isRecord(table) && isRecord(table.compatibility) ? table.compatibility.reasoning_field : undefined;
-    if (field !== undefined && (name in toApis || (doc.api === undefined && name === defaultProtocol))) {
+    if (reasons && field !== undefined && (name in toApis || (doc.api === undefined && name === defaultProtocol))) {
       const target = (isRecord(toApis[name]) ? toApis[name] : {}) as Doc;
       const compatibility = (isRecord(target.compatibility) ? target.compatibility : (target.compatibility = {})) as Doc;
       if (compatibility.reasoning_field === undefined) {
@@ -130,7 +131,9 @@ export function withPredecessorCapabilities(
   const doc = Bun.TOML.parse(lines.slice(i).join("\n")) as Doc;
   const predecessor = findPredecessor(doc, existing, labs, defaultProtocol);
   if (predecessor === undefined) return content;
-  const added = inheritCapabilities(doc, predecessor.doc, defaultProtocol);
+  const reasoning = isRecord(doc.capabilities) && isRecord(doc.capabilities.reasoning) ? doc.capabilities.reasoning.supported : undefined;
+  const lab = typeof doc.base_model === "string" ? labs[doc.base_model] : undefined;
+  const added = inheritCapabilities(doc, predecessor.doc, defaultProtocol, (reasoning ?? lab?.reasoning) === true);
   if (added.length === 0) return content;
   const source = predecessor.path.replace(/\.toml$/, "");
   header.push(`${INHERITED_NOTE} (${added.join(", ")}) come from ${source}, this host's previous model in the family.`);

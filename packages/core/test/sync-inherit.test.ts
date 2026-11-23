@@ -67,7 +67,7 @@ test("copied tool details bring the predecessor's supported flag into a new tool
   expect((doc.capabilities as { tools: unknown }).tools).toEqual({ freeform: ["text", "lark", "regex"], supported: true });
 });
 
-test("a file without API tables matches a predecessor whose only table is the provider's default API, and takes its reasoning field", () => {
+test("a file without API tables matches a predecessor whose only table is the provider's default API, and a reasoning model takes its reasoning field", () => {
   const labs = {
     "thinkingmachines/inkling-small": { family: "inkling-small", release_date: "2026-07-30" },
     "thinkingmachines/inkling-2-small": { family: "inkling-small", release_date: "2026-11-05" },
@@ -81,7 +81,8 @@ test("a file without API tables matches a predecessor whose only table is the pr
   const existing: [string, Record<string, unknown>][] = [["thinkingmachines/inkling-small.toml", predecessor]];
   expect(findPredecessor(doc, existing, labs)).toBeUndefined();
   expect(findPredecessor(doc, existing, labs, "chat-completions")?.path).toBe("thinkingmachines/inkling-small.toml");
-  expect(inheritCapabilities(doc, predecessor, "chat-completions")).toEqual([
+  expect(inheritCapabilities(structuredClone(doc), predecessor, "chat-completions")).toEqual(["capabilities.system_updates"]);
+  expect(inheritCapabilities(doc, predecessor, "chat-completions", true)).toEqual([
     "capabilities.system_updates", "api.chat-completions.compatibility.reasoning_field",
   ]);
   expect(doc.api).toEqual({ "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } });
