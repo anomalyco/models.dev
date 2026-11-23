@@ -537,8 +537,6 @@ export type ModelFamily =
   | "step-flash-free"
   | "step-free"
   | "step-tts"
-  | "subq-savant"
-  | "subq-snap"
   | "tako"
   | "text-embedding"
   | "text2vec"

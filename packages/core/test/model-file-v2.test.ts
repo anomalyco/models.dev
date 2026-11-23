@@ -53,15 +53,6 @@ test("a model's own API round-trips through v2 as an [api.<protocol>] table", ()
   expect(back.interleaved).toEqual(v1.interleaved);
 });
 
-test("v2-only reasoning fields are omitted from v1", () => {
-  const v1 = modelV2ToV1({
-    schema: 2,
-    id: "m",
-    api: { "chat-completions": { compatibility: { reasoning_field: "reasoning" } } },
-  });
-  expect(v1).not.toHaveProperty("interleaved");
-});
-
 test("a v1 shape that repeats the SDK default round-trips as legacy_shape", () => {
   const v1 = {
     base_model: "openai/gpt-5.5",

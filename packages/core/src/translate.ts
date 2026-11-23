@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 
 import { MODEL_TYPES } from "./filter.js";
-import { ModelShape } from "./schema.js";
 import {
   AuthoredModelV2,
   LabMetadataV2,
@@ -246,10 +245,8 @@ function toV1Api(api: Record<string, AuthoredApiEntryV2> | undefined, providerNp
   const shape = legacy_shape ?? toV1Shape(protocol, sdk?.aisdk === undefined ? providerNpm : npm);
   const provider = withoutUndefined({ npm, api: base_url, shape });
   const field = compatibility?.reasoning_field;
-  // Keep v2-only field names out of the published v1 schema.
-  const interleaved = ModelShape.shape.interleaved.safeParse(field === undefined ? legacy_interleaved : { field });
   return withoutUndefined({
-    interleaved: interleaved.success ? interleaved.data : undefined,
+    interleaved: field !== undefined ? { field } : legacy_interleaved,
     provider: Object.keys(provider).length > 0 ? provider : undefined,
   });
 }

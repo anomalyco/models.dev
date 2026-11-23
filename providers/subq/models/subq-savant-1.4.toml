@@ -5,7 +5,6 @@
 # Chat Completions documents a shared 4M-token window with no separate output cap.
 schema = 2
 name = "SubQ Savant 1.4"
-family = "subq-savant"
 description = "Long-context reasoning model for text generation and tool calling"
 open_weights = false
 release_date = "2026-11-11"
@@ -36,7 +35,7 @@ cache = { read = 0.01 }
 price = 0.50
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning", max_tokens_field = "max_tokens" }
+compatibility = { max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
