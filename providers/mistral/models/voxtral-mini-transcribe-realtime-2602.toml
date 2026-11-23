@@ -1,3 +1,5 @@
+# Lifecycle: deprecated 2026-10-31, retires 2027-04-30; replacement Voxtral Mini Transcribe Realtime 3
+#   (https://docs.mistral.ai/models/voxtral-mini-transcribe-realtime-26-02 and https://docs.mistral.ai/getting-started/models/).
 # Sources:
 #   GET https://api.mistral.ai/v1/models (voxtral-mini-transcribe-realtime-2602, aliases voxtral-mini-realtime-2602 and
 #     voxtral-mini-realtime-latest; capability audio_transcription_realtime)
@@ -7,6 +9,7 @@
 schema = 2
 v2_only = true
 base_model = "mistral/voxtral-mini-transcribe-realtime-2602"
+status = "deprecated"
 
 [api.realtime]
 sdk = { aisdk = "none", opencodeai = "none" }
