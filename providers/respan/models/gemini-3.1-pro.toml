@@ -1,0 +1,13 @@
+# Respan serves Google's gemini-3.1-pro-preview under the ID gemini-3.1-pro.
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 12

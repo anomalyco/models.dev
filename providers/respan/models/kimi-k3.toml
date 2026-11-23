@@ -1,0 +1,14 @@
+# Always thinks. Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.85
+cache = { read = 0.185 }
+
+[cost.text.output]
+price = 9.5
