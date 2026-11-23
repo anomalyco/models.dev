@@ -12,7 +12,7 @@
 schema = 2
 name = "Kimi K3"
 description = "Multimodal Kimi model with 1M context and toggleable max-effort thinking for long-horizon agent work"
-family = "kimi-k3"
+family = "kimi"
 open_weights = true
 release_date = "2026-07-16"
 
@@ -164,3 +164,7 @@ metric = "pass@5"
 variant = "max effort, with tools"
 source = "https://www.kimi.com/blog/kimi-k3"
 date = "2026-07-16"
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/moonshotai/Kimi-K3"

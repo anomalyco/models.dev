@@ -1,0 +1,39 @@
+# Mid-conversation, tool and cache flags backfilled 2026-11-18 from gpt-6.1-sol.toml on this host (same API layout; the sync doesn't carry them).
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+name = "GPT-6.2 Sol (Fast)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+cache = { implicit = true, explicit = true }
+structured_output = true
+system_updates = true
+
+[api.chat-completions]
+capabilities = { effort_updates = true, tools = { freeform = ["text", "lark", "regex"], updates = ["add"] } }
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"], updates = ["add", "remove"] } }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_001 } }
+price = 8
+cache = { read = 0.4, write = 10 }
+
+[cost.text.output]
+price = 20
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_001 } }
+price = 30

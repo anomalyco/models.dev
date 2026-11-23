@@ -1,0 +1,27 @@
+schema = 2
+name = "GPT 6.2 Sol Pro"
+description = "GPT-6.2 Sol in Pro reasoning mode. Uses additional model work for difficult tasks, with higher latency and token usage at the same per-token rates. Reasoning effort remains independently configurable."
+family = "gpt-pro"
+open_weights = false
+release_date = "2026-11-18"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 922_000
+input = 922_000
+output = 128_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 10

@@ -23,10 +23,10 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync mistral` syncs only Mistral.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
+- `bun models:sync groq` syncs Groq prices and limits for existing text models.
 - `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
-- `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
@@ -167,6 +167,18 @@ Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 - When the effort mapper cannot resolve controls, preserve the existing route's authored reasoning controls (`capabilities.reasoning`) while syncing other authoritative fields. Do not replace authored toggle, effort, or budget controls with `[]`.
 - New reasoning models with neither a resolved mapping nor authored controls remain skipped for manual authoring. No empty placeholder is generated, so the normal auto-merge policy remains unchanged; legitimate always-on `[]` entries are not blanket-blocked.
 - Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
+
+## Concentrate Notes
+
+Concentrate is implemented in `packages/core/src/sync/providers/concentrate.ts`.
+
+- Source endpoint: `https://api.concentrate.ai/v1/models`; no auth required. One page lists every model with its routes, prices and per-route capabilities.
+- Every model maps to a `base_model`; IDs that need more than dots-for-dashes or an `-it` / `-instruct` suffix are listed in `BASE_MODEL_ALIASES`. Models without a lab entry are reported as missing models.
+- Concentrate routes each request to a route that serves the features it uses, so tools, attachments and effort levels count when any route serves them. PDF input follows each route's `supports.input.file.pdf`; Concentrate accepts PDFs for models without native document input too. Limits are capped at the lab's, and a file that lowers them names the source values in its header.
+- Concentrate picks a route per request, so each price is the most expensive route's at that prompt size (an upper bound for requests at the default service tier): the standard price, `input_gte` tiers from any route as context overrides, cache reads/writes and web search. Prices a caller opts into with `service_tier` (such as `priority`) are not published. A model whose route bills cache reads is marked as caching, `{ implicit = true }` unless the reference entry details it.
+- Reasoning copies the lab's first-party controls (else OpenRouter's, else another peer's) on the levels Concentrate accepts, with `none` as the off switch. An off switch with no graded levels (a lab toggle) is published as `toggle`, with `reasoning.effort = none` as its wire path; the full list the routes accept is never published. A reasoning model left with no controls where the reference has them is skipped unless a live probe showed it always on (`ALWAYS_ON`). Claude keeps Anthropic's toggle and budget and is served over Messages; other models use the provider's Responses default, which carries reasoning natively (no `interleaved` field). Where a route accepts custom tools (`supports.tools.custom_tools`) and a live probe showed a regex grammar enforced (`GRAMMAR_ENFORCED`), the lab's `freeform` formats are published. Decision models set `structured_output` and turn off sampling flags System One does not take.
+- Decision models are served over System One at `/v1/systemone`. `redact-v1` (PII redaction) is skipped.
+- `NOT_MODELS` also skips models whose Concentrate entry is being corrected, models that didn't complete a tool call end to end in OpenCode, Claude Opus 4.1, which Anthropic has retired, and models whose reasoning showed up inconsistently live, and older models with edge-case data. Removing an ID from the list brings the model back on the next sync.
 
 ## CrossModel Notes
 
@@ -342,18 +354,6 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
 
-## Modular Notes
-
-- Modular is implemented in `packages/core/src/sync/providers/modular.ts`.
-- Source endpoint: `https://console.modular.com/api/v1/docs/models`, the public catalog behind <https://docs.modular.com/models>.
-- No authentication is required; the catalog is public.
-- A catalog row is public only when `shared_endpoint` is true, `billing_type` is `token`, `gateway_model_id` is set, and both input and output prices are non-zero. Rows that are deployed but not yet sold on the shared endpoint carry `"0"` prices and are ignored.
-- Model IDs come from `gateway_model_id`, the ID the API serves, not the display `model_id`.
-- Existing Modular models are updated from catalog-authoritative input, output, and cached-input pricing. Context limits, reasoning controls, and modalities stay hand-authored: the catalog's context window is rounded display text (`"1M"`) and its modalities are incomplete.
-- New models are not created automatically (`skipCreates`) and do not open missing-model issues (`trackMissingModels: false`); Modular opens a PR with measured limits and reasoning controls instead.
-- Local models that leave the public set (unshared, unpriced, or gone from the catalog) are removed: the catalog is authoritative for what the shared endpoint sells. A catalog with no public models fails the sync instead of removing every file.
-- If the catalog is unreachable, returns an error status, or returns anything that is not the expected shape, the sync fails before writing, so existing files keep their last synced values until a later run succeeds. A well-formed response that is missing some rows is treated as those models being retired.
-
 ## Morph Notes
 
 - Morph is implemented in `packages/core/src/sync/providers/morph.ts`.
@@ -520,3 +520,9 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
 
+## Groq Notes
+
+- Source endpoint: `https://api.groq.com/openai/v1/models`, which needs `GROQ_API_KEY` (the workflow reads it from AWS Secrets Manager as `models.dev/release/GROQ_API_KEY`).
+- Update-only for priced text models that already have a file: prices, the `input_cache_read` rate, `context_window` and `max_completion_tokens` come from the list. Reasoning efforts, service tiers, the Responses API and web search fees stay hand-authored, and new remote IDs open missing-model issues.
+- The list gives every model a cache rate at half its input price, even models Groq's [prompt caching page](https://console.groq.com/docs/prompt-caching) doesn't support, so the sync only updates a cache price the file already has.
+- Speech, transcription and unpriced models are left alone, and nothing is deleted when a model drops out of the list; mark it `status = "deprecated"` by hand.

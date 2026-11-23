@@ -1,0 +1,21 @@
+# Endpoint (OpenAI Embeddings): POST https://opencode.ai/inference/openai/v1/embeddings, served through Zen's
+#   openrouter-embeddings endpoint by OpenRouter's cohere/embed-5-pro.
+# Pricing: what Zen bills for this model, the upstream's price (https://openrouter.ai/cohere/embed-5-pro).
+# Text only: Zen serves it on the OpenAI Embeddings API, which takes no images.
+schema = 2
+v2_only = true
+base_model = "cohere/embed-v5.0-pro"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[api.embeddings]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 0

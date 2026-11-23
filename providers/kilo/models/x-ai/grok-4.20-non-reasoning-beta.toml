@@ -1,5 +1,5 @@
 schema = 2
-name = "SpaceXAI: Grok 4.20 Beta Non-Reasoning"
+name = "SpaceXSI: Grok 4.20 Beta Non-Reasoning"
 description = "Grok 4.20 Beta is the newest flagship model from xAI with industry-leading speed and agentic tool calling capabilities. It combines the lowest hallucination rate on the market with strict prompt adherance, delivering consistently precise and truthful responses."
 family = "grok"
 open_weights = false
@@ -25,3 +25,7 @@ cache = { read = 0.2 }
 
 [cost.text.output]
 price = 2.5
+reasoning = 0
+
+[cost.web_search]
+price = 5

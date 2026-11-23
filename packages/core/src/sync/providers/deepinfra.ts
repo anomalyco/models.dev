@@ -192,6 +192,11 @@ export function deepInfraV2Set(
   const set = Object.fromEntries(
     Object.entries(values).filter(([path, value]) => value !== undefined || valueAt(current, path) !== undefined),
   );
+  // With only retention prices, v1's cache_write is the first of them; the patch would otherwise also write it as a
+  // separate plain write price.
+  if (cached && retentionPrices !== undefined && pricing?.rate_per_input_token_cache_write == null) {
+    set["cost.text.input.cache.write"] = undefined;
+  }
   return Object.keys(set).length > 0 ? set : undefined;
 }
 
@@ -252,6 +257,11 @@ function cacheCost(inputCost: number, rate: number | null | undefined) {
   return rate == null ? undefined : round(inputCost * rate);
 }
 
+function firstRetentionRate(model: DeepInfraModel) {
+  return Object.entries(model.pricing?.rate_per_explicit_cache_write_token ?? {})
+    .find(([ttl, rate]) => /^\d+(ms|s|m|h|d)$/.test(ttl) && Number.isFinite(rate) && rate >= 0)?.[1];
+}
+
 function buildCost(
   model: DeepInfraModel,
   existing: ExistingModel | undefined,
@@ -286,7 +296,8 @@ function buildCost(
     output: outputCost,
     reasoning: existing?.cost?.reasoning,
     cache_read: cacheCost(inputCost, model.pricing?.rate_per_input_token_cached),
-    cache_write: cacheCost(inputCost, cacheWriteRate),
+    // v1 reads the first retention's write price, so a model priced only by retention reports that one.
+    cache_write: cacheCost(inputCost, cacheWriteRate) ?? cacheCost(inputCost, firstRetentionRate(model)),
     // API pricing is flat (or its tier string was unparseable): clear any stale
     // curated tiers rather than leaving obsolete thresholds active.
     tiers: undefined,

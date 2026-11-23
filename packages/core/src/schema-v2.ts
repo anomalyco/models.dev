@@ -780,6 +780,10 @@ export const ModelV2 = z
     limit: LimitV2.optional(),
     cost: CostV2.optional(),
     api: ApiV2,
+    // The API we recommend for this model when the client supports it: the
+    // file's `recommended_api`, else the first API. It's an opinion, not the
+    // default; `api`'s order still says which API to fall back to.
+    recommended_api: ApiProtocolV2,
     experimental: ExperimentalV2.optional(),
     metadata: z.record(JsonValue).optional(),
   })
@@ -943,10 +947,26 @@ export const AuthoredModelV2 = z
     limit: LimitV2.optional(),
     cost: CostV2.optional(),
     api: AuthoredApisV2.optional(),
+    // v2 only: the API we recommend when the client supports it. Must name one
+    // of the file's own `[api.<protocol>]` tables; the v2 API publishes the
+    // first one when it's left out.
+    recommended_api: ApiProtocolV2.optional(),
     experimental: ExperimentalV2.optional(),
     metadata: z.record(JsonValue).optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((model, ctx) => {
+    if (model.recommended_api === undefined || model.api?.[model.recommended_api] !== undefined) return;
+    const tables = Object.keys(model.api ?? {});
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["recommended_api"],
+      message:
+        tables.length === 0
+          ? `recommended_api = "${model.recommended_api}" needs an [api.${model.recommended_api}] table, but the model has no [api.*] tables`
+          : `recommended_api = "${model.recommended_api}" must name one of the model's [api.*] tables: ${tables.join(", ")}`,
+    });
+  });
 
 export type AuthoredModelV2 = z.infer<typeof AuthoredModelV2>;
 

@@ -162,7 +162,7 @@ async function fetchAliases(key: string, models: AnthropicModel[]) {
     return { ...model, id, canonical_id: model.id };
   }));
 
-  return aliases.filter((model): model is AnthropicModel => model !== undefined);
+  return aliases.filter((model): model is NonNullable<typeof model> => model !== undefined);
 }
 
 async function fetchPricing() {
