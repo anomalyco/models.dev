@@ -104,6 +104,7 @@ const GRAMMAR_ENFORCED = new Set([
   "gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5.1", "gpt-5.4", "gpt-5.4-pro", "gpt-5.5", "gpt-5.6-luna", "gpt-5.6-sol",
   "gpt-5.6-terra", "gpt-6-astra", "gpt-6-luna", "gpt-6-sol", "gpt-6.1-sol", "gpt-6.1-terra",
 ]);
+const MIN_MODELS = 20;
 const ALWAYS_ON = new Set(["gpt-oss-safeguard-20b", "mistral-large-4"]);
 
 export const concentrate = {
@@ -117,7 +118,12 @@ export const concentrate = {
   sourceID: (model) => model.id,
   missingModelID: (model) => (NOT_MODELS.has(model.id) ? undefined : model.id),
   fetchModels: () => fetch(API_ENDPOINT).then((response) => response.json()),
-  parseModels: (raw) => z.object({ data: z.array(ConcentrateModel), has_more: z.literal(false) }).parse(raw).data,
+  parseModels: (raw) => {
+    const data = z.object({ data: z.array(ConcentrateModel), has_more: z.literal(false) }).parse(raw).data;
+    // A degraded catalog response would otherwise mark every Concentrate file for deletion.
+    if (data.length < MIN_MODELS) throw new Error(`Concentrate catalog listed ${data.length} models (fewer than ${MIN_MODELS}); refusing to treat it as complete`);
+    return data;
+  },
   translateModel: (model) => buildConcentrateModel(model),
 } satisfies SyncProvider<ConcentrateModel>;
 

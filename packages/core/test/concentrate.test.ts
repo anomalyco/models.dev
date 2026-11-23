@@ -122,6 +122,10 @@ describe("Concentrate sync", () => {
     expect(v2(model("deepseek-v3-1", "deepseek", { deepinfra: route() })).capabilities.reasoning).toMatchObject({ toggle: true });
   });
 
+  test("refuses an empty or truncated catalog instead of deleting every file", () => {
+    expect(() => concentrate.parseModels({ data: [], has_more: false })).toThrow("fewer than 20");
+  });
+
   test("skips services and unmapped models, and marks non-reasoners", () => {
     expect(buildConcentrateModel(model("redact-v1", "concentrate", { concentrate: route() }))).toBeUndefined();
     expect(buildConcentrateModel(model("not-a-real-model", "nobody", { nobody: route() }))).toBeUndefined();
