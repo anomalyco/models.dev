@@ -12,6 +12,8 @@
 # Pricing, limits, PDF and structured output: same model as providers/mistral/models/mistral-medium-latest.toml (Mistral Medium 3.5,
 #   https://docs.mistral.ai/models/mistral-medium-3-5-26-04: $1.5 input / $0.15 cached input / $7.5 output, 256k context).
 #   The old $2 / $5 and 16k output were Magistral Medium 1.2's.
+# Default: reasoning is off when reasoning_effort is omitted (live 2026-11-23: string content, 0 reasoning tokens), as on
+#   mistral-medium-latest.
 schema = 2
 name = "Magistral Medium (latest)"
 description = "Mistral reasoning model for transparent analysis, math, and complex decisions"
@@ -28,7 +30,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["none", "high"] }
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "high"] }
 structured_output = true
 temperature = true
 top_p = true
