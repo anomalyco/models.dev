@@ -1,3 +1,4 @@
+# Capabilities the catalog doesn't state (api.chat-completions.capabilities.system_updates) come from qwen/qwen3.8-max-prime, this host's previous model in the family.
 schema = 2
 base_model = "alibaba/qwen4-max"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -15,6 +16,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 output = 131_072
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
