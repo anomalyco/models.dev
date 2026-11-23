@@ -9,15 +9,14 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "applicat
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { implicit = true }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
-price = 1.375
-cache = { read = 0.156 }
+price = 1.427
+cache = { read = 0.145 }
 
 [cost.text.output]
-price = 10.96
+price = 11.372

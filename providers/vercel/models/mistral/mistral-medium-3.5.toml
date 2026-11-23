@@ -1,4 +1,4 @@
-# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message is hoisted (the next request misses the cache). Per-turn effort and tool changes exist only for Anthropic models on this API.
+# Mid-conversation (@ai-sdk/gateway, live 2026-10-19, default route): a mid-conversation system message is hoisted (the next request misses the cache). No per-turn effort or tool-change mechanism reaches this model on this API.
 schema = 2
 base_model = "mistral/mistral-medium-3-5"
 name = "Mistral Medium Latest"
@@ -8,10 +8,8 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "high"] }
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

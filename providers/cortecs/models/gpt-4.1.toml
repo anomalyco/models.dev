@@ -5,14 +5,13 @@ base_model = "openai/gpt-4.1"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = { implicit = true }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
-price = 2.192
-cache = { read = 0.546 }
+price = 2.275
+cache = { read = 0.569 }
 
 [cost.text.output]
-price = 8.769
+price = 9.097

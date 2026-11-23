@@ -6,15 +6,14 @@ description = "Compact Mistral model for edge, latency-sensitive, and cost-effic
 [capabilities]
 tools = { supported = false }
 structured_output = false
-effort_updates = false
 
 [limit]
 input = 262_144
 output = 32_768
 
 [cost.text.input]
-price = 0.1
-cache = { read = 0.05 }
+price = 0.2
+cache = { read = 0.02 }
 
 [cost.text.output]
-price = 0.4
+price = 0.2

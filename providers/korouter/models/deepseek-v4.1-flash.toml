@@ -1,0 +1,20 @@
+# Prices read from https://korouter.ai/models/deepseek-v4.1-flash on 2026-10-30 (the same catalog that bills requests).
+# Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
+# Toggle: reasoning.enabled = true|false (reasoning_effort = none also turns it off)
+# Effort: reasoning.effort = low|high|max (OpenAI-style reasoning_effort is accepted too)
+# Forwarded unchanged to the upstream OpenAI-compatible endpoint; DeepSeek-native thinking.type is not honoured on this surface.
+# Live-tested 2026-10-30 (usage.completion_tokens_details.reasoning_tokens): reasoning.enabled=false → 0; reasoning_effort=none → 0; reasoning.enabled=true → >0 with reasoning returned; reasoning.effort=bogus → upstream 400 listing the accepted values (forwarded as-is).
+# Cache: automatic upstream prefix caching — live 2026-10-30: repeating a 12–15K-token prefix read it back as cached_tokens on the second request (deepseek-v4.1-flash 12288, glm-5.3 15104, kimi-k3 12288).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.066
+cache = { read = 0.00132 }
+
+[cost.text.output]
+price = 0.264

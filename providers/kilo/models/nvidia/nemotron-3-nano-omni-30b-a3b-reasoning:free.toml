@@ -3,13 +3,13 @@
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+family = "nemotron-nano-free"
 name = "NVIDIA: Nemotron 3 Nano Omni (free)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
 price = 0

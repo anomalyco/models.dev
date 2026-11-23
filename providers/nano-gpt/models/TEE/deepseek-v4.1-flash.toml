@@ -7,16 +7,15 @@ name = "DeepSeek V4.1 Flash TEE"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 context = 1_048_576
 input = 1_048_576
 
 [cost.text.input]
-price = 0.65
-cache = { read = 0.13 }
+price = 0.6
+cache = { read = 0.01 }
 
 [cost.text.output]
 price = 1.45

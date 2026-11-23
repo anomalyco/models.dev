@@ -6,8 +6,7 @@ base_model = "nvidia/nemotron-3.5-lightning"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [limit]
 context = 1_000_000

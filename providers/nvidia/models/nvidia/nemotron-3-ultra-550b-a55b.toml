@@ -13,7 +13,7 @@ base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 reasoning = { supported = true, effort = ["none", "medium", "high"], budget = { min = -1, max = 32_768 } }
 structured_output = true
 system_updates = true
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [limit]
 output = 65_536

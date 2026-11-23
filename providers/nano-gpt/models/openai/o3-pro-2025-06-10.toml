@@ -13,16 +13,15 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 cache = { implicit = true }
 
 [limit]
 input = 200_000
 
 [cost.text.input]
-price = 22
-cache = { read = 11 }
+price = 20
+cache = { read = 10 }
 
 [cost.text.output]
-price = 88
+price = 80

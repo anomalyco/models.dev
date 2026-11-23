@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { describeModel } from "../../describe.js";
-import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { inferKimiFamily, type ModelFamily, ModelFamilyValues } from "../../family.js";
 import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
@@ -32,7 +32,7 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
   "anthropic/claude-opus-4.7-fast": "anthropic/claude-opus-4-7",
   "anthropic/claude-opus-4.8-fast": "anthropic/claude-opus-4-8",
-  "typesafe/jev-1.13": "typesafe/jev-latest",
+  "typesafe/jev-1.13": "typesafe/jev-1.13.0",
   "~typesafe/jev-latest": "typesafe/jev-latest",
 } as const;
 
@@ -40,6 +40,13 @@ const DECISION_DESCRIPTION = "Decision model for typed evaluation of shared stat
 
 const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "minimax/minimax-01": 40_000,
+};
+
+// OpenRouter's metadata still lists the preview's efforts for these models, but requests
+// are rejected upstream. Mistral Large 4: `none` returns 400 "supported values: high, low,
+// medium" and `reasoning.enabled = false` is rejected the same way (live 2026-10-31).
+const REASONING_OVERRIDES: Record<string, NonNullable<OpenRouterModel["reasoning"]>> = {
+  "mistralai/mistral-large-4-0": { mandatory: true, supported_efforts: ["high", "medium", "low"] },
 };
 
 const CANONICAL_PROVIDER_PREFIXES = {
@@ -168,6 +175,8 @@ export const OpenRouterModel = z.object({
   supported_parameters: z.array(z.string()),
   // Images API endpoint records, attached by fetchModels for image models.
   image_endpoints: z.array(OpenRouterImageEndpoint).optional(),
+  // Set by fetchModels when the model's endpoints page answers 404.
+  image_endpoints_missing: z.boolean().optional(),
   // Video SKU prices from the video models list, attached by fetchModels for video models.
   video_pricing_skus: z.record(z.string()).optional(),
   reasoning: z
@@ -216,9 +225,26 @@ export const openrouter = {
     for (const model of extra) {
       if (mediaType(model) === "video") model.video_pricing_skus = skus.get(model.id);
     }
-    await Promise.all(extra.filter((model) => mediaType(model) === "image").map(async (model) => {
-      model.image_endpoints = OpenRouterImageEndpoints.parse(await get(IMAGE_ENDPOINTS_URL(model.id))).endpoints;
+    // Chat models that also generate video (Gemini Omni) are priced per second in the video catalog.
+    for (const model of text.data) {
+      if (model.architecture.output_modalities.includes("video")) model.video_pricing_skus = skus.get(model.id);
+    }
+    const images = extra.filter((model) => mediaType(model) === "image");
+    await Promise.all(images.map(async (model) => {
+      // Some listed image models (openrouter/auto, a few :free variants) have no endpoints page and answer 404.
+      const response = await fetch(IMAGE_ENDPOINTS_URL(model.id), { headers });
+      if (response.status === 404) {
+        model.image_endpoints_missing = true;
+        return;
+      }
+      if (!response.ok) throw new Error(`OpenRouter request failed: ${response.status} ${response.statusText}`);
+      model.image_endpoints = OpenRouterImageEndpoints.parse(await response.json()).endpoints;
     }));
+    const missing = images.filter((model) => model.image_endpoints_missing).length;
+    // A few 404s are models without a page; most of them means the endpoints API moved.
+    if (missing >= 5 && missing * 2 >= images.length) {
+      throw new Error(`OpenRouter image endpoints answered 404 for ${missing} of ${images.length} image models`);
+    }
     return { data: [...text.data, ...extra] };
   },
   parseModels(raw) {
@@ -227,9 +253,14 @@ export const openrouter = {
   },
   sourceNotices(models) {
     const ids = new Set(models.map((model) => model.id));
-    return [...TIME_BILLED_AUDIO]
-      .filter((id) => !ids.has(id))
-      .map((id) => `${id}: listed in TIME_BILLED_AUDIO but no longer in the OpenRouter catalog`);
+    return [
+      ...[...TIME_BILLED_AUDIO]
+        .filter((id) => !ids.has(id))
+        .map((id) => `${id}: listed in TIME_BILLED_AUDIO but no longer in the OpenRouter catalog`),
+      ...models
+        .filter((model) => model.image_endpoints_missing)
+        .map((model) => `${model.id}: no Images API endpoints page (404), so no image price`),
+    ];
   },
   translateModel(model, context) {
     const type = mediaType(model);
@@ -254,6 +285,23 @@ export const openrouter = {
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
     const built = buildOpenRouterModel(model, context.existing(model.id));
+    // Factoring compares v1 modality kinds, which collapse all image formats.
+    // Keep a real v2 host-format override when the catalog still lists those kinds.
+    const formats = context.v2?.(model.id)?.modalities;
+    const authored = formats === undefined ? undefined : context.authored(model.id);
+    if (
+      "base_model" in built && typeof built.base_model === "string"
+      && built.modalities === undefined && authored?.modalities !== undefined
+      && sameInheritedValue(authored.modalities, {
+        input: modalities(model.architecture.input_modalities, ["text"]),
+        output: modalities(model.architecture.output_modalities, ["text"]),
+      })
+    ) {
+      const base = rawLabModel(built.base_model);
+      if (base !== undefined && !sameInheritedValue(formats, base.modalities)) {
+        built.modalities = authored.modalities;
+      }
+    }
     // The decision model's first API (systemone) names its own AI SDK package,
     // which v1 reads as the model's provider npm.
     const translated = isDecisionModel(model)
@@ -264,13 +312,18 @@ export const openrouter = {
       ? undefined
       : catalogV2Set(model, context.v2?.(model.id));
     const api = isDecisionModel(model)
-      ? structuredClone(DECISION_APIS)
+      ? withSystemOneMediaInput(structuredClone(DECISION_APIS), model.architecture.input_modalities.includes("image"))
       : "base_model" in built && typeof built.base_model === "string" && rawLabModel(built.base_model)?.type === "image"
         ? structuredClone(IMAGE_CHAT_APIS)
         : isTextOnly(model)
           ? withTextApis
           : undefined;
-    const v2Set = api === undefined ? catalog?.v2Set : { ...catalog?.v2Set, api };
+    const v2Set = {
+      ...catalog?.v2Set,
+      ...(api === undefined ? {} : { api }),
+      "capabilities.tools": (current: unknown) =>
+        toolChoice(model.supported_parameters.includes("tool_choice"), "base_model" in built ? labToolChoice(built.base_model) : undefined, current),
+    };
     return {
       id: model.id,
       model: translated,
@@ -282,6 +335,28 @@ export const openrouter = {
     };
   },
 } satisfies SyncProvider<OpenRouterModel>;
+
+// A model that lists `tool_choice` takes every documented value ("auto", "none",
+// "required" and a named function), narrowed to the base model's own `choice`
+// when its lab file sets one. A choice equal to the lab's is inherited, not restated.
+// https://openrouter.ai/docs/api-reference/parameters#tool-choice
+function toolChoice(listed: boolean, labChoice: unknown[] | undefined, current: unknown) {
+  const { choice: _choice, ...rest } = isPlainObject(current) ? current : {};
+  const choice = ["auto", "none", "required", "tool"].filter((value) => labChoice?.includes(value) ?? true);
+  if (!listed || rest.supported === false || sameChoice(choice, labChoice)) return Object.keys(rest).length > 0 ? rest : undefined;
+  return { ...rest, supported: true, choice };
+}
+
+function sameChoice(choice: string[], labChoice: unknown[] | undefined) {
+  return labChoice !== undefined && choice.length === labChoice.length && choice.every((value) => labChoice.includes(value));
+}
+
+// The `tools.choice` a lab file sets for the model on every host.
+function labToolChoice(modelID: string) {
+  const capabilities = rawLabModel(modelID)?.capabilities;
+  const tools = isPlainObject(capabilities) ? capabilities.tools : undefined;
+  return isPlainObject(tools) && Array.isArray(tools.choice) ? tools.choice : undefined;
+}
 
 function isUnavailable(model: OpenRouterModel) {
   return (
@@ -296,21 +371,39 @@ function isDecisionModel(model: OpenRouterModel) {
   return model.architecture.output_modalities.includes("decisions");
 }
 
-// Decision models answer POST /api/v1/systemone, which OpenCode's openrouter
-// entry (experimental.evaluation) and @ai-sdk/typesafe-ai's decisionModel (with
-// this baseURL) call, and POST /api/alpha/decisions, which
-// the OpenRouter AI SDK provider's evaluationModel calls.
+// Decision models answer POST /api/v1/systemone, which OpenCode's openrouter/decisions
+// entry and @ai-sdk/typesafe-ai's decisionModel (with
+// this baseURL) call. POST /api/alpha/decisions takes the same System One body,
+// so it isn't listed separately.
 // https://openrouter.ai/docs/api/api-reference/systemone/submit-a-system-one-request
 // https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-request
 const DECISION_APIS = {
-  systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter" } },
-  decisions: { base_url: "https://openrouter.ai/api/alpha", sdk: { opencodeai: "none" } },
+  systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/openrouter/decisions" } },
 };
+// OpenRouter and NanoGPT read System One images as chat-style `image_url` items in a
+// `state` list (OpenRouter ignores TypeSafe's `assets`). Sets `media_input = "state"` on every
+// `systemone` table of a model that takes images, and removes it otherwise.
+// https://openrouter.ai/docs/guides/community/multimodal-decisions
+// https://docs.nano-gpt.com/api-reference/endpoint/decisions
+export function withSystemOneMediaInput(api: unknown, images: boolean) {
+  if (!isPlainObject(api)) return api;
+  return Object.fromEntries(
+    Object.entries(api).map(([protocol, table]) => {
+      if (protocol !== "systemone" || !isPlainObject(table)) return [protocol, table];
+      const { compatibility: current, ...rest } = table;
+      const compatibility = { ...(isPlainObject(current) ? current : {}) };
+      if (images) compatibility.media_input = "state";
+      else delete compatibility.media_input;
+      return [protocol, Object.keys(compatibility).length > 0 ? { ...rest, compatibility } : rest];
+    }),
+  );
+}
+
 // Chat models whose lab is an image model are also served by the /images router
 // (https://openrouter.ai/api/v1/images/models), which answers OpenAI's format.
 const IMAGE_CHAT_APIS = {
   "chat-completions": {},
-  images: { sdk: { opencodeai: "@opencode/ai/protocols/openai-images" } },
+  images: { sdk: { opencodeai: "@opencode/ai/providers/openrouter/images" } },
 };
 // Text models are also served on POST /api/v1/responses (OpenAI Responses format, stateless) and
 // POST /api/v1/messages (Anthropic Messages format), which take any OpenRouter model ID. The catalog
@@ -331,10 +424,18 @@ function isTextOnly(model: OpenRouterModel) {
 
 // The file's API tables with Responses and Messages after them. The first table stays as it is
 // (v1 reads it), or is the provider's default Chat Completions API when the file has none.
+// Hand-authored per-API `capabilities` on Responses and Messages are kept.
 export function withTextApis(current: unknown) {
   const tables = isPlainObject(current) ? current : {};
   const first = Object.keys(tables)[0] ?? "chat-completions";
-  return { [first]: tables[first] ?? {}, ...tables, ...structuredClone(TEXT_APIS) };
+  const extra = Object.fromEntries(
+    Object.entries(structuredClone(TEXT_APIS)).map(([key, table]) => {
+      const own = tables[key];
+      const capabilities = isPlainObject(own) ? own.capabilities : undefined;
+      return [key, capabilities === undefined ? table : { ...table, capabilities }];
+    }),
+  );
+  return { [first]: tables[first] ?? {}, ...tables, ...extra };
 }
 
 // ---------------------------------------------------------------------------
@@ -359,7 +460,9 @@ const BASE_URL = "https://openrouter.ai/api/v1";
 // SDK provider implements embeddings. Rerank takes and returns Cohere's rerank
 // shape, so @ai-sdk/cohere works against it. Images also answer OpenAI's
 // /images/generations, so OpenCode uses its OpenAI media protocols for images,
-// speech and transcription; it has none for video, embeddings or rerank.
+// speech and transcription, and its OpenRouter provider for embeddings and video
+// (providers/openrouter/videos, added in anomalyco/opencode#63681); it has none
+// for rerank.
 // https://openrouter.ai/docs/api/api-reference/tts/create-speech (POST /audio/speech)
 // https://openrouter.ai/docs/api/api-reference/stt/create-transcription (POST /audio/transcriptions)
 // https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request (POST /embeddings)
@@ -375,10 +478,10 @@ const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk: string; opencodea
     aisdk: "@ai-sdk/openai",
     opencodeai: "@opencode/ai/protocols/openai-transcription",
   },
-  embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
+  embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/embeddings" },
   reranking: { protocol: "rerank", aisdk: "@ai-sdk/cohere", opencodeai: "none" },
-  image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/protocols/openai-images" },
-  video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
+  image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/images" },
+  video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/videos" },
 };
 
 const MEDIA_HEADERS: Record<MediaType, string> = {
@@ -450,6 +553,10 @@ const MEDIA_DESCRIPTIONS: Record<MediaType, string> = {
 const MEDIA_BASE_MODEL_OVERRIDES: Record<string, string> = {
   "cohere/rerank-4-fast": "cohere/rerank-v4.0-fast",
   "cohere/rerank-4-pro": "cohere/rerank-v4.0-pro",
+  "cohere/rerank-5-fast": "cohere/rerank-v5.0-fast",
+  "cohere/rerank-5-pro": "cohere/rerank-v5.0-pro",
+  "cohere/embed-5-fast": "cohere/embed-v5.0-fast",
+  "cohere/embed-5-pro": "cohere/embed-v5.0-pro",
   "fish-audio/s2.1-pro-free:free": "fish-audio/s2.1-pro",
   "mistralai/mistral-embed-2312": "mistral/mistral-embed",
   "mistralai/voxtral-small-24b-2507-stt": "mistral/voxtral-small-24b-2507",
@@ -482,6 +589,8 @@ const MEDIA_BASE_MODEL_OVERRIDES: Record<string, string> = {
 const MEDIA_LAB_PREFIXES: Record<string, string> = {
   bytedance: "bytedance-seed",
   kwaivgi: "kuaishou",
+  // OpenRouter lists Voyage AI models under MongoDB ("VoyageAI by MongoDB: voyage-4").
+  mongodb: "voyageai",
 };
 
 // Transcription models whose pricing.prompt is per audio hour, not per second.
@@ -591,7 +700,7 @@ export function imageCost(model: OpenRouterModel) {
 
 type VideoSku = { target: "output" | "image"; unit: "second" | "token" | "image"; price: number; when: Record<string, string | boolean> };
 
-const VIDEO_RESOLUTION = "(480p|720p|768p|1080p|2k|4k)";
+const VIDEO_RESOLUTION = "(360p|480p|720p|768p|1080p|2k|4k)";
 const VIDEO_MODES: Record<string, string> = {
   text_to_video_: "text-to-video",
   image_to_video_: "image-to-video",
@@ -729,6 +838,8 @@ export function buildOpenRouterMediaModel(
     // takes on what the endpoint accepts and returns.
     const route = lab.type === type ? undefined : routeOverrides(type, lab, modalities, context);
     if (route !== undefined) doc.type = type;
+    const free = freeFamily(base, current?.family);
+    if (free !== undefined) doc.family = free;
     const name = model.name.replace(/^[^:]+:\s+/, "");
     if (
       name !== lab.name &&
@@ -1257,6 +1368,7 @@ function catalogV2Set(model: OpenRouterModel, current: Record<string, unknown> |
       "cost.image": cost.image,
       "cost.audio": cost.audio,
       "cost.web_search": cost.webSearch,
+      ...(model.video_pricing_skus === undefined ? {} : { "cost.video": videoCost(model.video_pricing_skus)?.video }),
     },
   };
 }
@@ -1332,7 +1444,7 @@ function inferFamily(model: OpenRouterModel, name: string) {
       if (family === "o") {
         return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
       }
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(target);
     });
 }
 
@@ -1354,7 +1466,7 @@ export function buildOpenRouterModel(
   // and rotated models pick up new efforts/budget support. Fall back to authored
   // only when the API omits a reasoning object.
   const reasoning_options = reasoning
-    ? openRouterReasoningOptions(model.reasoning) ?? existing?.reasoning_options
+    ? openRouterReasoningOptions(REASONING_OVERRIDES[model.id] ?? model.reasoning) ?? existing?.reasoning_options
     : undefined;
   const context = model.context_length;
   const family = inferFamily(model, name);
@@ -1402,6 +1514,7 @@ export function buildOpenRouterModel(
         name: shouldPreserveFactoredName(model.id, canonical, baseModel, canonicalOverride)
           ? name
           : undefined,
+        family: freeFamily(canonical, existing?.family),
         // The lab describes a decision model; don't override it with a generic chat description.
         description: decision ? existing?.description : existing?.description ?? describeModel({
           id: model.id,
@@ -1605,6 +1718,13 @@ type BaseModelOverrides = Omit<Partial<SyncedFullModel>, "limit" | "modalities">
     output?: SyncedFullModel["modalities"]["output"];
   };
 };
+
+// A free route keeps its "<lab family>-free" family on a base_model file; any other family
+// there is a stale model fact and is left to the lab.
+export function freeFamily(baseModel: string, family: unknown) {
+  const lab = modelMetadata(baseModel).family;
+  return typeof lab === "string" && family === `${lab}-free` ? (family as ModelFamily) : undefined;
+}
 
 export function factorBaseModel(
   modelID: string,

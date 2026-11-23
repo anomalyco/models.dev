@@ -13,7 +13,7 @@ structured_output = false
 cache = false
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+sdk = { opencodeai = "@opencode/ai/providers/google/images" }
 
 [api.generate-content]
 
@@ -24,7 +24,7 @@ sdk = { opencodeai = "none" }
 price = 0.25
 
 [cost.text.output]
-price = 30
+price = 1.5
 
 [cost.image.output]
 price = 30

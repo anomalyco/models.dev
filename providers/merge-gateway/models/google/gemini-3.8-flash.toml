@@ -5,8 +5,7 @@ base_model = "google/gemini-3.8-flash"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = { implicit = true }
 
 [cost.text.input]

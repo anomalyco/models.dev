@@ -1,0 +1,15 @@
+# Catalog (accessed 2026-11-08): https://api.deepinfra.com/models/list (type "embeddings", not deprecated),
+#   model page https://deepinfra.com/intfloat/multilingual-e5-large; price 0.000001 cents per input token = $0.01/MTok, max_tokens 512.
+# API: OpenAI-compatible POST https://api.deepinfra.com/v1/openai/embeddings, "supports the OpenAI embeddings API for all embedding models" (https://docs.deepinfra.com/apis/embeddings.md).
+schema = 2
+v2_only = true
+base_model = "intfloat/multilingual-e5-large"
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/deepinfra/embeddings" }
+
+[cost.text.input]
+price = 0.01
+
+[cost.text.output]
+price = 0

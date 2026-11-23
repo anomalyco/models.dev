@@ -1,0 +1,23 @@
+# The OpenAI image model (base_model) on a ChatGPT plan through Codex: the model Codex's image generation tool uses
+#   (IMAGE_MODEL in https://github.com/openai/codex/blob/rust-v0.171.0/codex-rs/ext/image-generation/src/tool.rs).
+# API: Codex posts to {base_url}/images/generations and {base_url}/images/edits
+#   (https://github.com/openai/codex/blob/rust-v0.171.0/codex-rs/codex-api/src/endpoint/images.rs). A generation with
+#   gpt-image-2 on a ChatGPT plan returned an image live 2026-11-21.
+# Cost: 0: usage counts against the ChatGPT plan, with no per-token price.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-image-2"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai/images" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.image.input]
+price = 0
+cache = { read = 0 }
+
+[cost.image.output]
+price = 0

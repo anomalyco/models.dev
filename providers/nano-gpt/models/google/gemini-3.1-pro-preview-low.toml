@@ -10,15 +10,13 @@ name = "Gemini 3.1 Pro (Preview Low)"
 description = "Advanced Gemini model for complex reasoning, coding, and multimodal analysis"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
-system_updates = false
+tools = { supported = true }
 cache = { implicit = true }
 
 [limit]

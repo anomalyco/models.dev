@@ -1,0 +1,21 @@
+# Sources (accessed 2026-11-12):
+# https://developers.openai.com/api/docs/models/gpt-image-2.6-sunburst
+# https://developers.openai.com/api/docs/pricing (text input $5 / cached $1.25; image input $8 / cached $2; image output $30 per 1M tokens)
+# Listed by GET https://api.openai.com/v1/models. Image API only (v1/images/generations and v1/images/edits).
+schema = 2
+v2_only = true
+base_model = "openai/gpt-image-2.6-sunburst"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai/images" }
+
+[cost.text.input]
+price = 5
+cache = { read = 1.25 }
+
+[cost.image.input]
+price = 8
+cache = { read = 2 }
+
+[cost.image.output]
+price = 30

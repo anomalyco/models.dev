@@ -7,11 +7,10 @@ base_model = "meta/llama-3.3-70b-instruct"
 name = "Llama 3.3 70B Instruct fp8 Fast"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = false
 structured_output = false
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 24_000

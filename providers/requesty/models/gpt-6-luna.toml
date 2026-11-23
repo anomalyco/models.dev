@@ -4,11 +4,10 @@ schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.1

@@ -1,3 +1,4 @@
+# Status: deprecated, shutdown 2026-12-18 (replacement gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts): https://ai.google.dev/gemini-api/docs/deprecations
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-pro-preview-tts
 # - https://ai.google.dev/gemini-api/docs/speech-generation (audio/l16 default output)
@@ -6,10 +7,11 @@ schema = 2
 type = "speech"
 name = "Gemini 2.5 Pro Preview TTS"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "gemini-flash"
+family = "gemini-tts-pro"
 open_weights = false
 knowledge = "2025-01"
 release_date = "2025-05-01"
+status = "deprecated"
 
 [modalities]
 input = ["text"]

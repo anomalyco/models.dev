@@ -7,7 +7,7 @@ v2_only = true
 type = "image"
 name = "Qwen Image 2.0"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "qwen"
+family = "qwen-image"
 open_weights = false
 release_date = "2026-03-03"
 
@@ -28,7 +28,7 @@ output = 0
 
 [api.images]
 base_url = "https://dashscope.aliyuncs.com/api/v1"
-sdk = { aisdk = "none", opencodeai = "none" }
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/alibaba/images" }
 
 [cost.image.output]
 unit = "image"

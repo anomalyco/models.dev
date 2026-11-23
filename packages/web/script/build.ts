@@ -3,8 +3,12 @@
 import { RenderedPages, Providers, Models, SearchIndexJson, renderDocument } from "../src/render";
 import {
   filterCatalogByModelType,
+  filterProvidersByModelType,
   generateV2,
   MODEL_TYPES,
+  optInSets,
+  optInSuffix,
+  providerView,
   type ModelTypeFilter,
 } from "@models.dev/core";
 import fs from "fs/promises";
@@ -89,17 +93,25 @@ const variants: Array<[suffix: string, filter: ModelTypeFilter]> = [
   ...MODEL_TYPES.map((type) => [`-${type}`, [type]] as const),
 ];
 
+const providersV2 = await generateV2(providersDir);
+
 for (const [suffix, filter] of variants) {
   const filtered = filterCatalogByModelType(catalog, filter);
   await Bun.write(`./dist/_api${suffix}.json`, JSON.stringify(filtered.providers));
   await Bun.write(`./dist/_models${suffix}.json`, JSON.stringify(filtered.models));
   await Bun.write(`./dist/_catalog${suffix}.json`, JSON.stringify(filtered));
+  // v2 returns every model by default.
+  for (const included of optInSets()) {
+    await Bun.write(
+      `./dist/_experimental_v2.0_api${optInSuffix(included)}${suffix}.json`,
+      JSON.stringify(
+        filterProvidersByModelType(
+          providerView(providersV2, included),
+          filter === "default" ? "all" : filter,
+        ),
+      ),
+    );
+  }
 }
-
-const providersV2 = await generateV2(providersDir);
-await Bun.write(
-  "./dist/_experimental_v2.0_api.json",
-  JSON.stringify(providersV2),
-);
 
 await fs.rm("./dist/index.html", { force: true });

@@ -6,10 +6,9 @@ base_model = "google/gemini-3.6-flash"
 description = "Gemini 3.6 Flash is a high-efficiency model from Google for coding, agentic workflows, and web and app development. It is designed to produce polished outputs with fewer unnecessary edits and..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.375

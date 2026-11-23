@@ -21,7 +21,7 @@ reasoning = { supported = true, toggle = true, budget = {} }
 cache = { implicit = true }
 
 [api.chat-completions]
-compatibility = { replay_reasoning = true }
+legacy_interleaved = true
 
 [cost.text.input]
 price = 0.137

@@ -6,17 +6,16 @@ base_model = "alibaba/qwen3.8-27b"
 description = "Qwen3.8 27B is an open-weight dense vision-language model from Qwen. It is suited for coding, professional workflows, research, multimodal interaction, and long-running agent tasks, with flexible thinking that can be..."
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
-effort_updates = false
 
 [limit]
-output = 235_929
+output = 131_072
 
 [cost.text.input]
-price = 0.425
-cache = { read = 0.085, write = 0.53125 }
+price = 0.5
+cache = { read = 0.1, write = 0.625 }
 
 [cost.text.output]
-price = 2.55
+price = 3

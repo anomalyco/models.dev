@@ -9,11 +9,9 @@ base_model = "bytedance-seed/seed-2.1-turbo"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

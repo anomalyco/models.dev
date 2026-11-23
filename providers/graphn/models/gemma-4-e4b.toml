@@ -1,0 +1,25 @@
+# Toggle: chat_template_kwargs.enable_thinking true|false (verified live: reasoning_content
+# disappears). reasoning_effort is accepted but leaves the response unchanged.
+# Limits: 65_536 context per the public catalog (checked 2026-10-21); output inherits the
+# lab's 8_192 cap — the host accepts larger max_tokens (live 2026-10-27) but the model's own
+# ceiling is the lab value, so no output override is authored.
+# Pricing: https://graphn.ai/pricing (checked 2026-10-27) marks this row "Billed as input"
+# — no cache hits are reported, so no cache capability or cache.read price is authored.
+schema = 2
+base_model = "google/gemma-4-E4B-it"
+name = "Gemma 4 E4B"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 65_536
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

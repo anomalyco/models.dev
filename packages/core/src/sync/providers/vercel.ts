@@ -8,7 +8,7 @@ import { providerModelToV2 } from "../../model-file-v2.js";
 import { ReasoningOption } from "../../schema.js";
 import { roundPrice } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { factorBaseModel, freeFamily, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://ai-gateway.vercel.sh/v1/models";
 
@@ -23,6 +23,16 @@ const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "quiverai/arrow-2-telos": 65_536,
   "zai/glm-5-turbo": 131_072,
 };
+
+// The catalog has no `vision` tag for these, but Vercel's docs say they take images:
+// https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-decisions#input
+const VISION_MODELS = new Set(["openai/gpt-6-luna-decisions"]);
+
+// Still listed in /v1/models, but every call fails upstream; do not rediscover them.
+const RETIRED_MODELS = new Set([
+  // Prodia: "Job type is no longer available" (checked 2026-10-28).
+  "prodia/flux-fast-schnell",
+]);
 
 const KnownModelType = z.enum([
   "language",
@@ -67,6 +77,7 @@ export const VercelModel = z.object({
   // text/text handling in buildVercelModel instead of failing the whole sync.
   type: KnownModelType.or(z.string()),
   tags: z.array(z.string()).optional().default([]),
+  supported_parameters: z.array(z.string()).optional().default([]),
   // Keep the catalog parse forward-compatible with new control shapes or
   // effort values; unresolved options retain the authored menu below.
   reasoning_options: z.array(z.unknown()).optional(),
@@ -93,7 +104,7 @@ export const vercel = {
   },
   parseModels(raw) {
     // Temporarily skip batch routes (`*-batch`) — they are not catalog targets.
-    return VercelResponse.parse(raw).data.filter((model) => !model.id.endsWith("-batch"));
+    return VercelResponse.parse(raw).data.filter((model) => !model.id.endsWith("-batch") && !RETIRED_MODELS.has(model.id));
   },
   translateModel(model, context) {
     const mediaType = MEDIA_TYPES[model.type];
@@ -121,8 +132,15 @@ export const vercel = {
     const type = existing?.type ?? (baseModel === undefined ? undefined : labDoc(baseModel)?.type);
     const v2Set = {
       ...(model.type === "evaluation" ? { api: structuredClone(DECISION_APIS) } : {}),
-      ...(model.type === "language" && (type ?? "chat") === "chat" ? { api: chatApis } : {}),
+      ...(model.type === "language" && (type ?? "chat") === "chat"
+        ? {
+          api: chatApis,
+          "capabilities.tools": (current: unknown) =>
+            toolChoice(model, existing, baseModel === undefined ? undefined : labToolChoice(baseModel), current),
+        }
+        : {}),
       ...(cache === undefined ? {} : { "capabilities.cache": cache }),
+      ...languageImageCost(model, type),
     };
     return {
       id: model.id,
@@ -134,6 +152,47 @@ export const vercel = {
     };
   },
 } satisfies SyncProvider<VercelModel>;
+
+// Chat-style image models (Gemini image) list token prices plus per-image prices;
+// the per-image prices are the image output cost.
+function languageImageCost(model: VercelModel, type: string | undefined) {
+  if (model.type !== "language" || type !== "image") return {};
+  const pricing = (model.pricing ?? {}) as Record<string, unknown>;
+  if (pricing.image_dimension_quality_pricing === undefined && pricing.image === undefined) return {};
+  try {
+    const images = imagePrices(pricing);
+    if (images === undefined) return {};
+    return { "cost.image": { output: { unit: "image", ...conditionalPrice(images.entries, images.base) } } };
+  } catch (error) {
+    if (error instanceof Unrepresentable) return {};
+    throw error;
+  }
+}
+
+// A tool-calling model that lists `tool_choice` takes "auto", "none", "required"
+// and a named function, narrowed to the base model's own `choice` when its lab
+// file sets one. A choice equal to the lab's is inherited, not restated.
+// https://vercel.com/docs/ai-gateway/inputs-and-tools/tool-use
+// https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/tool-calling
+function toolChoice(model: VercelModel, existing: ExistingModel | undefined, labChoice: unknown[] | undefined, current: unknown) {
+  const { choice: _choice, ...rest } = (current ?? {}) as Doc;
+  const tools = existing?.tool_call ?? model.tags.includes("tool-use");
+  const choice = ["auto", "none", "required", "tool"].filter((value) => labChoice?.includes(value) ?? true);
+  if (!tools || !model.supported_parameters.includes("tool_choice") || sameChoice(choice, labChoice)) {
+    return Object.keys(rest).length > 0 ? rest : undefined;
+  }
+  return { ...rest, supported: true, choice };
+}
+
+function sameChoice(choice: string[], labChoice: unknown[] | undefined) {
+  return labChoice !== undefined && choice.length === labChoice.length && choice.every((value) => labChoice.includes(value));
+}
+
+// The `tools.choice` a lab file sets for the model on every host.
+function labToolChoice(modelID: string) {
+  const tools = labDoc(modelID)?.capabilities?.tools;
+  return Array.isArray(tools?.choice) ? tools.choice as unknown[] : undefined;
+}
 
 // The catalog tags each model `implicit-caching` and/or `explicit-caching`. An
 // untagged model with a cache read price caches implicitly, except Anthropic's,
@@ -158,7 +217,7 @@ export function buildVercelModel(
   existing: ExistingModel | undefined,
   base: ExistingModel | undefined = undefined,
 ): SyncedModel {
-  const tags = new Set(model.tags);
+  const tags = new Set(VISION_MODELS.has(model.id) ? [...model.tags, "vision"] : model.tags);
   const releaseDate = model.released
     ? dateFromTimestamp(model.released)
     : existing?.release_date ?? new Date().toISOString().slice(0, 10);
@@ -212,6 +271,8 @@ export function buildVercelModel(
           ? ["image"]
           : model.type === "video"
           ? ["video"]
+          : tags.has("video-generation")
+          ? ["video"]
           : tags.has("image-generation")
           ? ["text", "image"]
           : ["text"],
@@ -233,7 +294,7 @@ export function buildVercelModel(
     status: existing?.status,
     interleaved: existing?.interleaved,
     experimental: existing?.experimental,
-    provider: existing?.provider,
+    provider: model.type === "evaluation" ? DECISION_V1_PROVIDER : existing?.provider,
     cost,
     limit: { context, input, output },
     modalities: {
@@ -251,6 +312,8 @@ export function buildVercelModel(
         ? ["image"]
         : model.type === "video"
         ? ["video"]
+        : tags.has("video-generation")
+        ? ["video"]
         : tags.has("image-generation")
         ? ["text", "image"]
         : ["text"],
@@ -263,11 +326,8 @@ export function buildVercelModel(
   return factorBaseModel(baseModel, {
     type: synced.type,
     name: synced.name,
-    // The lab describes the decision task; a generic gateway chat description
-    // must not override it when the provider file has no curated description.
-    description: model.type === "evaluation" && existing?.description === undefined
-      ? undefined
-      : synced.description,
+    family: freeFamily(baseModel, existing?.family),
+    description: existing?.description,
     attachment: synced.attachment,
     reasoning: synced.reasoning,
     reasoning_options: synced.reasoning_options,
@@ -415,7 +475,7 @@ function inferFamily(modelID: string, name: string) {
       if (family === "o") {
         return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
       }
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(target);
     });
 }
 
@@ -458,19 +518,36 @@ const MEDIA_PROTOCOLS: Record<MediaType, string> = {
 // GPT-Live has its own Live endpoint (wss .../v4/ai/live-model), not the
 // realtime one, and @ai-sdk/gateway has no Live model:
 // https://vercel.com/docs/ai-gateway/modalities/realtime/gpt-live
-const LIVE_MODELS = new Set(["openai/gpt-live-1"]);
-// OpenCode's vercel-ai-gateway entry point only speaks the chat APIs, not
-// these endpoints.
+// Every GPT-Live version (gpt-live-1, gpt-live-1.1, ...); not gpt-live-transcribe.
+const LIVE_MODEL = /^openai\/gpt-live-\d+(?:\.\d+)?$/;
+// The gateway's other endpoints have no standard equivalent:
+// POST /v1/audio/speech, /v1/audio/transcriptions and /v1/videos return 404.
 const MEDIA_SDK = { opencodeai: "none" };
-// Decision models: POST /v1/evaluate, which OpenCode's vercel-ai-gateway entry
-// calls (experimental.evaluation). @ai-sdk/gateway's decisionModel uses its own
+// Image, embedding and rerank models are also served on the gateway's standard
+// endpoints, under the same model IDs: OpenAI's /v1/images/generations (and
+// /v1/images/edits), OpenAI's /v1/embeddings and Cohere's /v1/rerank.
+// https://vercel.com/docs/ai-gateway/sdks-and-apis
+const STANDARD_BASE_URL = "https://ai-gateway.vercel.sh/v1";
+const STANDARD_MEDIA_APIS: Partial<Record<MediaType, Doc>> = {
+  image: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/images" } },
+  embedding: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/embeddings" } },
+  reranking: { base_url: STANDARD_BASE_URL, sdk: { aisdk: "@ai-sdk/cohere", opencodeai: "none" } },
+};
+// Decision models: POST /v1/decisions, OpenAI's Decisions format, which
+// @ai-sdk/openai's decisionModel and OpenCode's vercel-ai-gateway/decisions entry
+// speak with this baseURL. @ai-sdk/gateway's decisionModel uses its own
 // /v4/ai/decision-model endpoint instead.
 // https://vercel.com/docs/ai-gateway/modalities/decision
 const DECISION_APIS = {
-  evaluate: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
-    sdk: { aisdk: "none", opencodeai: "@opencode/ai/providers/vercel-ai-gateway" },
+  decisions: {
+    base_url: STANDARD_BASE_URL,
+    sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/decisions" },
   },
+};
+// v1 reads the first API as `provider`.
+const DECISION_V1_PROVIDER = {
+  npm: DECISION_APIS.decisions.sdk.aisdk,
+  api: DECISION_APIS.decisions.base_url,
 };
 const LIVE_SDK = { aisdk: "none", opencodeai: "none" };
 // Every language model is also served on the OpenAI Responses and Anthropic
@@ -479,22 +556,30 @@ const LIVE_SDK = { aisdk: "none", opencodeai: "none" };
 // https://ai-sdk.dev/providers/ai-sdk-providers/open-responses
 const CHAT_EXTRA_APIS = {
   responses: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
+    base_url: STANDARD_BASE_URL,
     sdk: { aisdk: "@ai-sdk/open-responses", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/responses" },
   },
   messages: {
-    base_url: "https://ai-gateway.vercel.sh/v1",
+    base_url: STANDARD_BASE_URL,
     sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/vercel-ai-gateway/messages" },
   },
 };
 
 // A text model's APIs: its default one first (what v1 reads; an empty table
-// takes the provider's), then the extra endpoints.
+// takes the provider's), then the extra endpoints, keeping their hand-authored
+// per-API `capabilities`.
 export function chatApis(current: Doc | undefined): Doc {
-  const { responses: _responses, messages: _messages, ...own } = current ?? {};
+  const { responses, messages, ...own } = current ?? {};
+  const capabilities: Doc = { responses: responses?.capabilities, messages: messages?.capabilities };
+  const extra = Object.fromEntries(
+    Object.entries(structuredClone(CHAT_EXTRA_APIS)).map(([key, table]) => [
+      key,
+      capabilities[key] === undefined ? table : { ...table, capabilities: capabilities[key] },
+    ]),
+  );
   return {
     ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
-    ...structuredClone(CHAT_EXTRA_APIS),
+    ...extra,
   };
 }
 
@@ -623,9 +708,9 @@ export function buildVercelMediaModel(
     doc.limit = mediaLimit(model, type, undefined, existing?.limit?.context);
   }
 
-  doc.api = LIVE_MODELS.has(model.id)
+  doc.api = LIVE_MODEL.test(model.id)
     ? { live: { base_url: MEDIA_BASE_URL, sdk: { ...LIVE_SDK } } }
-    : { [MEDIA_PROTOCOLS[type]]: { base_url: MEDIA_BASE_URL, sdk: { ...MEDIA_SDK } } };
+    : { [MEDIA_PROTOCOLS[type]]: structuredClone(STANDARD_MEDIA_APIS[type] ?? { base_url: MEDIA_BASE_URL, sdk: MEDIA_SDK }) };
   const { cost, issue } = vercelMediaCost(model, type);
   if (issue !== undefined) console.warn(`Vercel ${model.id}: no cost written, ${issue}`);
   if (cost !== undefined) doc.cost = cost;
@@ -865,6 +950,7 @@ const PRICE_FIELDS = new Set([
   "audio_input_token_cost",
   "audio_output_token_cost",
   "speech_input_character_cost",
+  "speech_output_cost_per_second",
   "transcription_duration_cost_per_second",
   "realtime_session_duration_cost_per_second",
   "image",
@@ -884,9 +970,20 @@ const CONDITION_FIELDS: Record<string, string> = {
   audio: "generate_audio",
   voice_control: "voice_control",
   input_video: "input_video",
+  max_pixels: "megapixels",
+  min_pixels: "megapixels",
+  duration_over_seconds: "duration",
+};
+// Range fields: `max_pixels` is an upper bound (written in megapixels), `duration_over_seconds` a lower one.
+const RANGE_FIELDS: Record<string, (value: number) => Range> = {
+  max_pixels: (value) => ({ lte: value / 1_000_000 }),
+  min_pixels: (value) => ({ gte: value / 1_000_000 }),
+  duration_over_seconds: (value) => ({ gt: value }),
 };
 
-type Conditions = Record<string, string | number | boolean>;
+type Range = { lte: number } | { gte: number } | { gt: number };
+type Conditions = Record<string, string | number | boolean | Range>;
+const sameCondition = (a: Conditions[string] | undefined, b: Conditions[string]) => JSON.stringify(a) === JSON.stringify(b);
 type Priced = { when: Conditions; price: number };
 
 class Unrepresentable extends Error {}
@@ -952,14 +1049,24 @@ function mediaCost(pricing: Record<string, unknown>, type: MediaType): Doc | und
   } else if (cacheRead !== undefined || cacheWrite !== undefined) {
     throw new Unrepresentable("cache prices without an input price");
   }
-  if (output !== undefined) set("text", "output", { price: perMillion(output) });
-
   const images = imagePrices(pricing);
+  // With no separate per-image price, an image model's output tokens are image tokens,
+  // not a second text price. Keep only genuine text prices for v1; image prices stay in v2.
+  if (output !== undefined && (type !== "image" || images !== undefined)) {
+    set("text", "output", { price: perMillion(output) });
+  }
   if (images !== undefined) {
     set("image", "output", { unit: "image", ...conditionalPrice(images.entries, images.base) });
   } else if (type === "image" && output !== undefined) {
-    // Image models' output tokens are image tokens (`text.output` keeps the v1 pair).
     set("image", "output", { price: perMillion(output) });
+  }
+
+  const speechSeconds = value("speech_output_cost_per_second");
+  if (speechSeconds !== undefined) {
+    if (type === "speech" && (cost.text?.output !== undefined || cost.audio?.output !== undefined)) {
+      throw new Unrepresentable("speech_output_cost_per_second next to an output token price");
+    }
+    set("audio", "output", { unit: "second", price: roundPrice(speechSeconds) });
   }
 
   const audioInput = value("audio_input_token_cost");
@@ -1011,6 +1118,14 @@ function conditions(entry: Record<string, unknown>, priceKeys: string[], skip: s
     }
     // An image size of "default" is the price when no size is requested.
     if (key === "size" && value === "default") continue;
+    // A band with both bounds is written by its upper bound; overrides are ordered so a narrower band applies last.
+    if (key === "min_pixels" && entry.max_pixels !== undefined) continue;
+    const range = RANGE_FIELDS[key];
+    if (range !== undefined) {
+      if (typeof value !== "number") throw new Unrepresentable(`${key} is not a number`);
+      when[field] = range(value);
+      continue;
+    }
     when[field] = value as string | number | boolean;
   }
   return Object.fromEntries(
@@ -1068,6 +1183,10 @@ function videoTokenPrices(value: unknown) {
   return entries;
 }
 
+// The tightest upper bound in an entry's conditions, so wider bands sort before narrower ones.
+const upperBound = (when: Conditions) =>
+  Math.min(...Object.values(when).map((item) => (typeof item === "object" && "lte" in item ? item.lte : Number.POSITIVE_INFINITY)));
+
 // One base price plus overrides. The base is the explicit price, else the entry
 // without conditions, else the first entry. Overrides are ordered by how many
 // conditions they have, so the most specific match is applied last, and entries
@@ -1081,12 +1200,14 @@ function conditionalPrice(entries: Priced[], base?: number) {
   const rest = entries
     .filter((entry) => entry !== fallback)
     .map((entry, index) => ({ entry, index }))
-    .sort((a, b) => Object.keys(a.entry.when).length - Object.keys(b.entry.when).length || a.index - b.index)
+    .sort((a, b) => Object.keys(a.entry.when).length - Object.keys(b.entry.when).length
+      || upperBound(b.entry.when) - upperBound(a.entry.when)
+      || a.index - b.index)
     .map(({ entry }) => entry);
   for (const entry of rest) {
     const current = overrides.reduce(
       (value, override) =>
-        Object.entries(override.when).every(([key, item]) => entry.when[key] === item) ? override.price : value,
+        Object.entries(override.when).every(([key, item]) => sameCondition(entry.when[key], item)) ? override.price : value,
       price,
     );
     if (current === entry.price) continue;
@@ -1097,7 +1218,7 @@ function conditionalPrice(entries: Priced[], base?: number) {
     ...(overrides.length > 0
       ? {
           overrides: overrides.map((override) => ({
-            when: Object.fromEntries(Object.entries(override.when).map(([key, item]) => [key, { equals: item }])),
+            when: Object.fromEntries(Object.entries(override.when).map(([key, item]) => [key, typeof item === "object" ? item : { equals: item }])),
             price: override.price,
           })),
         }

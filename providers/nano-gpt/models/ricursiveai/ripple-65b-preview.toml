@@ -1,0 +1,26 @@
+schema = 2
+name = "Ripple 65B Preview"
+description = "Ripple 65B Preview is Ricursive Intelligence's Apache 2.0-licensed, 65-billion-parameter reasoning model for coding and agentic tasks. It accepts and returns text, supports automatic tool calling and JSON output, and has a 16,384-token context window shared by input and output. It reasons before answering by default, and this preview's thinking cannot be reliably turned off."
+open_weights = true
+release_date = "2026-11-05"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 16_384
+input = 16_384
+output = 16_384
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.6

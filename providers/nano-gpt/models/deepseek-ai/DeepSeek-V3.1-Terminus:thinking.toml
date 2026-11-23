@@ -3,7 +3,7 @@
 schema = 2
 name = "DeepSeek V3.1 Terminus (Thinking)"
 description = "DeepSeek chat model for instruction following, coding, and analysis"
-family = "deepseek-thinking"
+family = "deepseek"
 open_weights = true
 release_date = "2024-01-01"
 last_updated = "2025-09-22"
@@ -13,10 +13,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 128_000
@@ -24,8 +23,8 @@ input = 128_000
 output = 65_536
 
 [cost.text.input]
-price = 0.25
-cache = { read = 0.125 }
+price = 0.34
+cache = { read = 0.32 }
 
 [cost.text.output]
-price = 0.7
+price = 1.24

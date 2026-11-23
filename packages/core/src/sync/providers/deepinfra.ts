@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel } from "./openrouter.js";
 
 // Public DeepInfra deploy catalog. Richer than the OpenAI-compatible
 // `/v1/openai/models` endpoint: it exposes capability tags (tools,
@@ -81,13 +82,19 @@ export const deepinfra = {
   },
   parseModels(raw) {
     return DeepInfraResponse.parse(raw).filter((model) =>
-      model.type === "text-generation"
+      (model.type === "text-generation" || model.type === "embeddings")
       && !model.private
       && !isExcluded(model.model_name),
     );
   },
   translateModel(model, context) {
     const id = model.model_name;
+    // Embedding models are hand-authored v2 files: keep them as written, and
+    // report models without a file as skipped instead of retained-but-missing.
+    if (model.type === "embeddings") {
+      const v2 = context.v2?.(id);
+      return v2 === undefined ? undefined : { id, v2 };
+    }
     const existing = context.existing(id);
     const baseModel = existing === undefined
       ? resolveDeepInfraBaseModel(id)
@@ -105,6 +112,12 @@ export const deepinfra = {
     // Don't introduce brand-new entries for models that are already deprecated;
     // existing entries are kept and marked instead.
     if (existing === undefined && isDeprecated(model)) return undefined;
+
+    // The catalog has no reasoning_effort levels, so a new reasoning model needs
+    // them researched before it's created.
+    if (existing === undefined && deepInfraReasons(model, baseModel)) {
+      throw new MissingReasoningOptionsError(id, "Deep Infra lists no reasoning controls; author them before creating this model");
+    }
 
     const built = buildDeepInfraModel(model, existing, baseModel, context.authored(id));
     return {
@@ -179,6 +192,11 @@ export function deepInfraV2Set(
   const set = Object.fromEntries(
     Object.entries(values).filter(([path, value]) => value !== undefined || valueAt(current, path) !== undefined),
   );
+  // With only retention prices, v1's cache_write is the first of them; the patch would otherwise also write it as a
+  // separate plain write price.
+  if (cached && retentionPrices !== undefined && pricing?.rate_per_input_token_cache_write == null) {
+    set["cost.text.input.cache.write"] = undefined;
+  }
   return Object.keys(set).length > 0 ? set : undefined;
 }
 
@@ -200,6 +218,13 @@ export async function fetchDeepInfraModels(
     throw new Error(`Deep Infra models request failed: ${response.status} ${response.statusText}`);
   }
   return DeepInfraResponse.parse(await response.json());
+}
+
+function deepInfraReasons(model: DeepInfraModel, baseModel: string | undefined) {
+  const tags = new Set(model.tags ?? []);
+  if (tags.has("non-reasoning")) return false;
+  if (tags.has("reasoning") || tags.has("can-disable-reasoning")) return true;
+  return baseModel !== undefined && modelMetadata(baseModel).reasoning === true;
 }
 
 function isDeprecated(model: DeepInfraModel) {
@@ -230,6 +255,11 @@ function round(value: number) {
 // cache pricing, so the (possibly stale) curated value is cleared.
 function cacheCost(inputCost: number, rate: number | null | undefined) {
   return rate == null ? undefined : round(inputCost * rate);
+}
+
+function firstRetentionRate(model: DeepInfraModel) {
+  return Object.entries(model.pricing?.rate_per_explicit_cache_write_token ?? {})
+    .find(([ttl, rate]) => /^\d+(ms|s|m|h|d)$/.test(ttl) && Number.isFinite(rate) && rate >= 0)?.[1];
 }
 
 function buildCost(
@@ -266,7 +296,8 @@ function buildCost(
     output: outputCost,
     reasoning: existing?.cost?.reasoning,
     cache_read: cacheCost(inputCost, model.pricing?.rate_per_input_token_cached),
-    cache_write: cacheCost(inputCost, cacheWriteRate),
+    // v1 reads the first retention's write price, so a model priced only by retention reports that one.
+    cache_write: cacheCost(inputCost, cacheWriteRate) ?? cacheCost(inputCost, firstRetentionRate(model)),
     // API pricing is flat (or its tier string was unparseable): clear any stale
     // curated tiers rather than leaving obsolete thresholds active.
     tiers: undefined,

@@ -11,10 +11,9 @@ schema = 2
 base_model = "xai/grok-4.7"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

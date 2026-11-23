@@ -1,0 +1,22 @@
+# Limit: max_input_tokens 1048573, max_tokens 131072 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "paperinstruments/ultramarine-1-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_573
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

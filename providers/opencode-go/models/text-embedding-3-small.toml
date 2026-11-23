@@ -1,0 +1,16 @@
+# Same model, route and price as providers/opencode/models/text-embedding-3-small.toml, served on OpenCode Go at
+#   POST https://opencode.ai/inference/go/openai/v1/embeddings and billed against the Go subscription. Embeddings
+#   requests need no x-opencode-session header. https://opencode.ai/v2/docs/console/go/ (accessed 2026-11-23).
+schema = 2
+v2_only = true
+base_model = "openai/text-embedding-3-small"
+
+[api.embeddings]
+base_url = "https://opencode.ai/inference/go/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/embeddings" }
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0

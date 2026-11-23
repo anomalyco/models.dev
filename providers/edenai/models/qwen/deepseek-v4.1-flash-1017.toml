@@ -3,14 +3,13 @@ base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash 1017 (Alibaba)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.15
-cache = { read = 0.015 }
+cache = { read = 0.003 }
 
 [cost.text.output]
 price = 0.6

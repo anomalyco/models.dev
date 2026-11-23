@@ -6,11 +6,12 @@ base_model = "deepseek/deepseek-r1-0528"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
+
+[limit]
+output = 32_000
 
 [api.chat-completions]
 
@@ -21,8 +22,7 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.5
-cache = { read = 0.35 }
+price = 0.571
 
 [cost.text.output]
-price = 2.15
+price = 2.286

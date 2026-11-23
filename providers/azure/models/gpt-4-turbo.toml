@@ -1,17 +1,13 @@
-# Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
-# system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
-# `configuration_update` returns 400 "not supported with this model" except on GPT-6 (accepted on gpt-6-luna; https://developers.openai.com/api/docs/guides/reasoning).
 # API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
 schema = 2
 base_model = "openai/gpt-4-turbo"
 base_model_omit = ["structured_output"]
 status = "deprecated"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = false
-system_updates = true
-effort_updates = false
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }

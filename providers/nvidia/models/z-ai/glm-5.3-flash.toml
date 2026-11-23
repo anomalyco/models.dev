@@ -18,8 +18,7 @@ output = ["text"]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

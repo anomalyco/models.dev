@@ -5,6 +5,7 @@ schema = 2
 type = "decision"
 name = "Clef Flash"
 description = "Fast multimodal decision model for typed questions over text, structured state, and images"
+family = "clef-flash"
 open_weights = true
 release_date = "2026-09-29"
 
@@ -20,11 +21,11 @@ temperature = true
 
 [limit]
 context = 24_576
-output = 65_536
+output = 24_576
 
 [api.workers-ai-run]
 base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run"
-sdk = { aisdk = "none", opencodeai = "none" }
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/cloudflare-workers-ai/decisions" }
 
 [cost.text.input]
 price = 0.038

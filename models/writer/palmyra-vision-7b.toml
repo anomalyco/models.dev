@@ -1,0 +1,26 @@
+# Source: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-writer-palmyra-vision-7b.html (accessed 2026-11-22):
+#   launched 2026-03-26; text and image input, text output; 4K-token context and 4K max output; structured outputs supported,
+#   no tool use listed. Writer publishes no weights for it.
+# Image formats: Bedrock Converse image blocks take png, jpeg, gif and webp
+#   (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html).
+schema = 2
+name = "Palmyra Vision 7B"
+description = "Writer's multimodal model for reading handwriting, charts and documents in images"
+family = "palmyra-vision"
+open_weights = false
+release_date = "2026-03-26"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 4_096
+output = 4_096

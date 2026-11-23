@@ -5,7 +5,7 @@
 schema = 2
 name = "Nemotron 3 Super 120B A12B"
 description = "Nemotron middle tier for collaborative agents and high-volume reasoning workloads"
-family = "nemotron"
+family = "nemotron-super"
 open_weights = true
 knowledge = "2025-06"
 release_date = "2026-03-11"
@@ -24,3 +24,7 @@ top_k = true
 [limit]
 context = 262_144
 output = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16"

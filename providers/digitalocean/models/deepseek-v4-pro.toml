@@ -10,12 +10,11 @@ name = "Deepseek V4 Pro"
 description = "Flagship DeepSeek model for coding, reasoning, and agentic work"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 prompt_cache_key = true
 
 [limit]

@@ -13,11 +13,10 @@ base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash Spot"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]
@@ -30,8 +29,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.21
-cache = { read = 0.0042 }
+price = 0.15
+cache = { read = 0.003 }
 
 [cost.text.output]
-price = 0.84
+price = 0.6

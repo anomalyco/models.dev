@@ -9,10 +9,8 @@ base_model = "alibaba/qwen3.8-max-preview"
 name = "Qwen 3.8 Max"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

@@ -6,11 +6,10 @@ schema = 2
 base_model = "anthropic/claude-opus-5-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 cache = { implicit = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
 
 [cost.text.input]

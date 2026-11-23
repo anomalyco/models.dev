@@ -3,9 +3,7 @@ base_model = "gryphe/mythomax-l2-13b"
 name = "MythoMax L2 13B (Deep Infra)"
 
 [capabilities]
-structured_output = true
-effort_updates = false
-tools = { supported = true }
+structured_output = false
 
 [cost.text.input]
 price = 0.4

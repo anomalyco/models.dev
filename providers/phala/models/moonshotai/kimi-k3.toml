@@ -1,0 +1,22 @@
+# Source (accessed 2026-10-25): https://inference.phala.com/v1/models
+# Toggle: reasoning.enabled = true|false; off returned 0 reasoning tokens (2026-10-25).
+# Effort: reasoning_effort = low|high|max (accepted 2026-10-25)
+# Effort baseline: providers/nearai/models/moonshotai/kimi-k3.toml; effect non-monotonic.
+# Cache: catalog pricing.input_cache_read
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

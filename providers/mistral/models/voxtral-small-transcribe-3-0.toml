@@ -1,0 +1,17 @@
+# Sources:
+#   GET https://api.mistral.ai/v1/models (2026-11-23: voxtral-small-transcribe-3-0, alias voxtral-small-transcribe-3, capability audio_transcription)
+#   https://docs.mistral.ai/models/voxtral-small-transcribe-3-0 (Public Preview) and https://docs.mistral.ai/inference/pricing
+#     ($0.004 per minute of audio, $0.0004 cached)
+# API: POST https://api.mistral.ai/v1/audio/transcriptions (https://docs.mistral.ai/studio/audio/speech_to_text/offline_transcription).
+schema = 2
+v2_only = true
+base_model = "mistral/voxtral-small-transcribe-3-0"
+status = "beta"
+
+[api.transcriptions]
+sdk = { opencodeai = "none" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.004
+cache = { read = 0.0004 }

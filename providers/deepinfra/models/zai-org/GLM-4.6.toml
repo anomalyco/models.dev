@@ -8,13 +8,12 @@ base_model = "zhipuai/glm-4.6"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
 service_tier = ["flex"]
-system_updates = false
 
 [limit]
 context = 202_752

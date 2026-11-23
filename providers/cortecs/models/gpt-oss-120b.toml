@@ -1,13 +1,13 @@
+# Output limit: the catalog's max_output_tokens equals its context_size (131,000), which is not a per-request cap. OpenAI documents 131,072 max output tokens (https://developers.openai.com/api/docs/models/gpt-oss-120b), which would exceed the context served here, so output is capped at the context. The lab file carries 131,072 (https://github.com/anomalyco/models.dev/pull/13588).
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
 schema = 2
 base_model = "openai/gpt-oss-120b"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [limit]
 context = 131_000

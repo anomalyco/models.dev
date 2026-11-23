@@ -13,14 +13,13 @@ input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-effort_updates = false
 
 [limit]
-context = 262_144
-input = 262_144
+context = 65_536
+input = 65_536
 output = 32_768
 
 [cost.text.input]

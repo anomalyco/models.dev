@@ -8,12 +8,11 @@ name = "Llama 4 Maverick"
 description = "Open multimodal Llama model for strong reasoning and fast responses"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 cache = { implicit = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 prompt_cache_key = true
 
 [limit]

@@ -11,12 +11,10 @@ v2_only = true
 base_model = "google/gemini-robotics-er-2-streaming-preview"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
 cache = false
-system_updates = false
-effort_updates = false
 
 [api.bidi-generate-content]
 sdk = { opencodeai = "none" }

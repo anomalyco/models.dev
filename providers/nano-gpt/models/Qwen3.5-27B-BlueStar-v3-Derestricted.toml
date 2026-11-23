@@ -5,7 +5,7 @@
 schema = 2
 name = "Qwen3.5 27B BlueStar v3 Derestricted"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "qwen3.5"
+family = "qwen"
 open_weights = true
 release_date = "2026-04-30"
 
@@ -14,10 +14,9 @@ input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 262_144

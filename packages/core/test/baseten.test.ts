@@ -169,17 +169,22 @@ test("Baseten decision models get the systemone table, new or stale", async () =
 
     const lab = (name: string) => readFile(path.join(repo, "models", "baseten", `${name}.toml`), "utf8")
       .then((text) => (Bun.TOML.parse(text) as { limit: { context: number } }).limit.context);
+    // Each model's prices as shipped, so only the API table differs from the files.
+    const prices = async (id: string) => {
+      const cost = (Bun.TOML.parse(await shipped(id)) as { cost: { text: { input: { price: number }; output: { price: number } } } }).cost.text;
+      return { prompt: String(cost.input.price / 1e6), completion: String(cost.output.price / 1e6) };
+    };
     const source = async (id: string, name: string) => basetenModel({
       id,
       name,
       context_length: await lab(name),
       max_completion_tokens: undefined,
-      pricing: { prompt: "0", completion: "0" },
+      pricing: await prices(id),
       supported_features: [],
     });
     const models = [await source(stale, "elephant-1"), await source(fresh, "mammoth-1")];
     expect(buildBasetenDecisionModel(models[1]!, undefined)?.api).toEqual({
-      systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/typesafe-ai" } },
+      systemone: { sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/baseten/decisions" } },
     });
 
     const provider = { ...baseten, modelsDir, fetchModels: async () => ({ data: models }) };

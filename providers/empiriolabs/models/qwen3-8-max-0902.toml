@@ -18,6 +18,9 @@ output = ["text"]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = { min = 1, max = 262_144 } }
 structured_output = true
 
+[limit]
+context = 983_616
+
 [cost.text.input]
 price = 2
 cache = { read = 2 }

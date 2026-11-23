@@ -100,8 +100,10 @@ test("a base with no lab entry falls back to the OpenRouter peer's ladder, inter
   expect(resolveLadder("tencent/hy3", "tencent/hy3", ["low", "medium", "high"])).toEqual(["low", "high"]);
   // A peer-listed `none` is not taken on trust the way a lab-listed one is.
   expect(resolveLadder("tencent/hy3", "tencent/hy3", ["none", "low", "medium", "high"])).toEqual(["low", "high"]);
-  // OpenRouter files Alibaba under `qwen/`.
-  expect(labLadder("alibaba/qwen3.8-27b")).toEqual({ kind: "effort", values: ["low", "medium", "xhigh"], source: "peer" });
+  // OpenRouter files Alibaba under `qwen/` (no providers/alibaba/models/qwen3.8-max-prime.toml).
+  expect(labLadder("alibaba/qwen3.8-max-prime")).toEqual({ kind: "effort", values: ["minimal", "low", "medium", "high", "xhigh"], source: "peer" });
+  // Once Alibaba's own file exists, it wins over the peer.
+  expect(labLadder("alibaba/qwen3.8-27b")).toEqual({ kind: "effort", values: ["low", "medium", "xhigh"], source: "lab" });
 });
 
 test("a peer that is toggle-only counts as no effort ladder, not as a licence for the host enum", () => {
@@ -253,7 +255,7 @@ test("a lab-backed model with no card and no statable control is reported, not i
   expect(aimlapi.missingModelID(model!)).toBeUndefined();
 });
 
-test("v2 files keep their mid-conversation flags, and the header cites them", () => {
+test("the header cites only what a v2 file carries", () => {
   const [model] = aimlapi.parseModels({
     data: [{
       id: "openai/gpt-4o",
@@ -272,9 +274,6 @@ test("v2 files keep their mid-conversation flags, and the header cites them", ()
     base_model: "openai/gpt-4o",
     capabilities: {
       structured_output: true,
-      system_updates: false,
-      effort_updates: false,
-      tools: { supported: true, updates: false },
     },
     cost: { text: { input: { price: 3.25, cache: { read: 1.625 } }, output: { price: 13 } } },
   };
@@ -286,10 +285,8 @@ test("v2 files keep their mid-conversation flags, and the header cites them", ()
   };
 
   const translated = aimlapi.translateModel(model!, context) as { header?: string; model: Record<string, any> };
-  expect(translated.header).toContain("effort_updates = false, tools.updates = false");
-  expect(translated.header).toContain("docs-json?model=openai%2Fgpt-4o&endpoint=openai%2Fchat-completions");
-  expect(translated.header).toContain("# system_updates = false:");
-  expect(translated.header).not.toContain("# Cache:");
+  // Left-out mid-conversation flags are false by default, so they need no source line.
+  expect(translated.header).toBeUndefined();
   const cached = aimlapi.translateModel(model!, {
     ...context,
     v2: () => ({ ...doc, capabilities: { ...doc.capabilities, cache: { explicit: { ttl: ["5m", "1h"] } } } }),

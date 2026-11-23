@@ -1,0 +1,16 @@
+# Sources (accessed 2026-10-28):
+# - Model ID and endpoints: https://dev.meta.ai/docs/models (Muse Image: Responses and Image generation)
+# - API: POST https://api.meta.ai/v1/images/generations and /v1/images/edits, OpenAI Images compatible;
+#   edits also take a JSON body with images[].image_url (1 to 10 items): https://dev.meta.ai/docs/image-generation
+# - Pricing: https://dev.meta.ai/docs/pricing-rate-limits ($0.01 per generated image, built-in search included)
+# Edits via /v1/images/edits with a data URL input confirmed live as a true edit.
+schema = 2
+v2_only = true
+base_model = "meta/muse-image-1.0"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/meta/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.01

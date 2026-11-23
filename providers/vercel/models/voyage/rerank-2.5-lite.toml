@@ -5,8 +5,8 @@ base_model = "voyageai/rerank-2.5-lite"
 name = "Voyage Rerank 2.5 Lite"
 
 [api.rerank]
-base_url = "https://ai-gateway.vercel.sh/v4/ai"
-sdk = { opencodeai = "none" }
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/cohere", opencodeai = "none" }
 
 [cost.text.input]
 price = 0.02

@@ -11,10 +11,8 @@ base_model = "minimax/MiniMax-M2.5"
 name = "MiniMax M2.5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

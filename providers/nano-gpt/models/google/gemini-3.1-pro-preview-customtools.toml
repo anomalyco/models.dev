@@ -15,9 +15,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
-system_updates = false
+tools = { supported = true }
 cache = { implicit = true }
 
 [limit]

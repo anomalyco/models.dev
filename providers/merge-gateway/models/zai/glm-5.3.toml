@@ -5,8 +5,7 @@ base_model = "zhipuai/glm-5.3"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = { implicit = true, explicit = true }
 
 [cost.text.input]

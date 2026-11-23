@@ -9,10 +9,9 @@ schema = 2
 base_model = "google/gemini-3-flash-preview"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 cache = { implicit = true }
 
 [cost.text.input]

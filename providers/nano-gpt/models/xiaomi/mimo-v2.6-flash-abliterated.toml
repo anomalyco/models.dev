@@ -4,7 +4,7 @@
 schema = 2
 name = "MiMo V2.6 Flash Abliterated"
 description = "A MiMo V2.6 Flash finetune with refusal-direction ablation, image input, a 1M-token context window, separate reasoning output, and tool calling."
-family = "mimo"
+family = "mimo-flash"
 open_weights = true
 release_date = "2026-09-25"
 
@@ -13,10 +13,9 @@ input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["none", "high"] }
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 1_048_576

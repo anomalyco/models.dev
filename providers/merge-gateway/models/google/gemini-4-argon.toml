@@ -4,8 +4,7 @@ base_model = "google/gemini-4-argon"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [cost.text.input]
 price = 2

@@ -90,7 +90,7 @@ describe("v2 catalog generation", () => {
       output: ["text"],
     });
     expect(translated.capabilities).toEqual({
-      tools: { supported: true, updates: false },
+      tools: { supported: true },
       reasoning: {
         supported: true,
         toggle: true,
@@ -102,6 +102,14 @@ describe("v2 catalog generation", () => {
       system_updates: false,
       effort_updates: false,
     });
+    expect(translated.api).toEqual({
+      responses: {
+        base_url: "https://api.openai.com/v1",
+        sdk: { aisdk: "@ai-sdk/openai" },
+        capabilities: { tools: { updates: [] } },
+      },
+    });
+    expect(translated.recommended_api).toBe("responses");
     expect(translated.cost).toEqual({
       text: {
         input: {
@@ -138,7 +146,7 @@ describe("v2 catalog generation", () => {
         base_url: "https://opencode.ai/inference/systemone/v1",
         sdk: {
           aisdk: "@ai-sdk/typesafe-ai",
-          opencodeai: "@opencode/ai/providers/opencode",
+          opencodeai: "@opencode/ai/providers/opencode/decisions",
         },
       },
     });
@@ -147,10 +155,17 @@ describe("v2 catalog generation", () => {
       api: {
         systemone: {
           base_url: "https://openrouter.ai/api/v1",
-          sdk: { opencodeai: "@opencode/ai/providers/openrouter" },
+          sdk: { opencodeai: "@opencode/ai/providers/openrouter/decisions" },
         },
       },
     });
+    expect(providersV2["cloudflare-workers-ai"]?.models["@cf/cloudflare/clairic"]?.type).toBe("extraction");
+    // Without its own recommended_api, a model recommends its first API.
+    expect(providersV2.openai?.models["gpt-5.5"]?.recommended_api).toBe("responses");
+    // An explicit one wins, and the table order (the default) is unchanged.
+    const gemini = providersV2.google?.models["gemini-3.8-flash"];
+    expect(gemini?.recommended_api).toBe("interactions");
+    expect(Object.keys(gemini?.api ?? {})).toEqual(["generate-content", "chat-completions", "interactions"]);
     expect(
       providersV2["google-vertex"]?.models["gemini-2.5-pro"]?.api[
         "generate-content"

@@ -1,0 +1,21 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-10-29)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Toggle: omit reasoning_effort for off; set reasoning_effort = low for on.
+# Live /chat/completions checks (2026-10-29), same prompt: omitted reasoning tokens 0,
+#   low 352. reasoning_effort = off is rejected, as on this host's Nemotron 3 Ultra entry.
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.5

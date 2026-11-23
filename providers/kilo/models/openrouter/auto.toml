@@ -12,10 +12,9 @@ input = ["audio", "image", "application/pdf", "text", "video"]
 output = ["image", "text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
-effort_updates = false
 
 [limit]
 context = 2_000_000

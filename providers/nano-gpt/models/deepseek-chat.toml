@@ -4,14 +4,9 @@ schema = 2
 base_model = "deepseek/deepseek-chat"
 name = "DeepSeek V3/Deepseek Chat"
 
-[modalities]
-input = ["text", "application/pdf"]
-output = ["text"]
-
 [capabilities]
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 context = 128_000
@@ -19,8 +14,8 @@ input = 128_000
 output = 8_192
 
 [cost.text.input]
-price = 0.1
-cache = { read = 0.05 }
+price = 0.29
+cache = { read = 0.29 }
 
 [cost.text.output]
-price = 0.425
+price = 1.16

@@ -1,0 +1,17 @@
+# Legacy BERT embedding model on Fireworks Serverless, called by its Hugging Face ID (thenlper/gte-large, 335M parameters).
+# Not in the Model Library or the serverless feed; listed as serverless-only in "BERT-based models (legacy)":
+#   https://docs.fireworks.ai/guides/querying-embeddings-models (accessed 2026-11-08)
+# Pricing: 335M is in the "150M – 350M" bucket, $0.016/MTok input: https://docs.fireworks.ai/serverless/pricing#embeddings
+# Live POST https://api.fireworks.ai/inference/v1/embeddings returned vectors (2026-11-08).
+schema = 2
+v2_only = true
+base_model = "thenlper/gte-large"
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/fireworks/embeddings" }
+
+[cost.text.input]
+price = 0.016
+
+[cost.text.output]
+price = 0

@@ -5,8 +5,15 @@
 # 2026-07-31). /v1/models now lists magistral-medium-latest as an alias of mistral-medium-latest (Medium 3.5).
 # Mid-conversation (live 2026-10-19 on this alias): a late system message is accepted in place, keeps the cached prefix
 # and is obeyed; changing tools between requests drops the cache after the system prompt (live 2026-10-22); switching
-# reasoning_effort keeps it too (as on mistral-medium-latest). Caching:
+# reasoning_effort drops the whole cached prefix (live 2026-10-23: 0 cached tokens none<->high). Caching:
 # https://docs.mistral.ai/studio/conversations/advanced/prompt-caching (automatic, 64-token blocks, prompt_cache_key).
+# Tools: https://docs.mistral.ai/api/endpoint/chat (tool_choice auto|none|any|required or a named function; function.strict).
+#   strict + a named tool_choice were accepted live for this ID on 2026-10-24 (retired IDs are served by their successor).
+# Pricing, limits, PDF and structured output: same model as providers/mistral/models/mistral-medium-latest.toml (Mistral Medium 3.5,
+#   https://docs.mistral.ai/models/mistral-medium-3-5-26-04: $1.5 input / $0.15 cached input / $7.5 output, 256k context).
+#   The old $2 / $5 and 16k output were Magistral Medium 1.2's.
+# Default: reasoning is off when reasoning_effort is omitted (live 2026-11-23: string content, 0 reasoning tokens), as on
+#   mistral-medium-latest.
 schema = 2
 name = "Magistral Medium (latest)"
 description = "Mistral reasoning model for transparent analysis, math, and complex decisions"
@@ -18,27 +25,28 @@ last_updated = "2025-03-20"
 status = "deprecated"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
-reasoning = { supported = true, effort = ["none", "high"] }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "high"] }
+structured_output = true
 temperature = true
 top_p = true
 top_k = false
 system_updates = true
-effort_updates = true
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = { min_tokens = 64 } }
 
 [limit]
 context = 262_144
-output = 16_384
+output = 262_144
 
 [cost.text.input]
-price = 2
+price = 1.5
+cache = { read = 0.15 }
 
 [cost.text.output]
-price = 5
+price = 7.5

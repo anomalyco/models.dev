@@ -1,0 +1,53 @@
+# Sources (accessed 2026-11-05):
+# - Model id, name, 262,144 context, 32,768 max output, text-only input and USD prices per
+#   1M tokens (input 0.50, cached input 0.05, output 1.00): https://api.unrestricted.sh/v1/models
+# - Prices, context, text input, reasoning in reasoning_content, tool calls:
+#   https://unrestricted.sh/models/qwen3.8-27b-uncensored and https://unrestricted.sh/pricing
+# - Base URL, endpoints, reasoning levels, reasoning in reasoning_content: https://unrestricted.sh/reference
+# - Output limit (32,768 in the provider config): https://unrestricted.sh/guides/opencode
+# - Cache: cached-input prices apply when a tool resends the start of a conversation
+#   (https://unrestricted.sh/pricing); no cache markers are documented, so caching is implicit.
+# - release_date: the day the current model went live on this API;
+#   last_updated: the day the prices above were updated in this entry.
+# Standalone entry, not base_model: the model is uncensored and served text-only,
+# like the other uncensored entries here.
+# Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off, so no separate
+# toggle). /reference caps reasoning at 1,024 tokens for low (minimal is an alias), 4,096
+# for medium and 16,384 for high, which also accepts xhigh and max. xhigh is the label the
+# Qwen3.8 27B peers use (e.g. providers/nebius/models/Qwen/Qwen3.8-27B.toml).
+# Live-tested on /v1/chat/completions (2026-10-05): tool calls round-trip,
+# temperature is applied, json_schema response_format is enforced,
+# reasoning_content replayed on an assistant tool-call turn is read back,
+# and effort none returns no reasoning.
+schema = 2
+name = "Qwen3.8 27B Uncensored"
+description = "Uncensored model for coding and security research"
+family = "qwen"
+open_weights = true
+release_date = "2026-09-15"
+last_updated = "2026-11-05"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+temperature = true
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1

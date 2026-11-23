@@ -11,8 +11,10 @@ import {
   cloudflareAiGateway,
   deriveReasoningOptions,
   gatewayApis,
+  gatewayTools,
   mediaCost,
   routeModalities,
+  splitLabTools,
 } from "../src/sync/providers/cloudflare-ai-gateway.js";
 
 test("missing reasoning controls open issues without deleting existing models or blocking valid ones", async () => {
@@ -423,6 +425,70 @@ test("rejects a catalog with no eligible proxied models", async () => {
   }
 });
 
+test("takes tool_choice values from the catalog schema when it names them", () => {
+  const toolsSet = (model_id: string, schemaInput: unknown) => (cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id,
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }),
+    },
+    schemaInput,
+  }, { authored: () => undefined, existing: () => undefined }) as unknown as {
+    v2Set: Record<string, (current: unknown) => unknown>;
+  }).v2Set["capabilities.tools"]!;
+
+  const effort = { reasoning: { properties: { effort: { enum: ["low", "high"] } } } };
+  const minimax = { oneOf: [{ properties: { ...effort, tool_choice: { type: "string", enum: ["none", "auto"] } } }] };
+  expect(toolsSet("minimax/m3.1-flash", minimax)(undefined)).toEqual({ supported: true, choice: ["auto", "none"] });
+  // A schema that leaves tool_choice open keeps the file's tools table.
+  const current = { supported: true, choice: ["auto"] };
+  expect(toolsSet("xai/grok-4.7", { properties: { ...effort, tool_choice: { type: "string" } } })(current)).toBe(current);
+});
+
+test("native routes take the lab's own tool fields, with the schema's choice when the lab has none", () => {
+  const schema = { properties: { tool_choice: { type: "string", enum: ["auto", "none"] } } };
+  const current = { supported: true, updates: ["add", "remove", "replace"], strict: true, search: true, choice: ["auto"] };
+  // The lab's fields replace the file's, keeping fields the lab doesn't own (updates).
+  expect(gatewayTools(current, { strict: true, choice: ["auto", "none", "required", "tool"] }, undefined))
+    .toEqual({ supported: true, updates: ["add", "remove", "replace"], strict: true, choice: ["auto", "none", "required", "tool"] });
+  expect(gatewayTools(current, { strict: true }, schema)).toEqual({ supported: true, updates: ["add", "remove", "replace"], choice: ["auto", "none"], strict: true });
+  expect(gatewayTools(current, { choice: ["auto"] }, schema)).toEqual({ supported: true, updates: ["add", "remove", "replace"], choice: ["auto"] });
+  expect(gatewayTools({ supported: false }, { strict: true }, schema)).toEqual({ supported: false });
+});
+
+test("each gateway API takes the lab's tool fields for its protocol", () => {
+  const choice = ["auto", "none", "required", "tool"];
+  const lab = {
+    top: {},
+    apis: { responses: { strict: true, choice, search: true, freeform: ["text", "lark"] }, "chat-completions": { strict: true, choice, freeform: ["text", "lark"] } },
+  };
+  // Values every gateway API holds go top-level, the rest on their API; a protocol the gateway doesn't list is ignored.
+  expect(splitLabTools({ ...lab, apis: { ...lab.apis, decisions: {} } }, ["responses", "chat-completions"])).toEqual({
+    top: { strict: true, choice, freeform: ["text", "lark"] },
+    apis: { responses: { search: true }, "chat-completions": {} },
+  });
+  // A value one API leaves out stays off the top level.
+  expect(splitLabTools({ top: { choice }, apis: { responses: { strict: true } } }, ["responses", "messages"])).toEqual({
+    top: { choice },
+    apis: { responses: { strict: true }, messages: {} },
+  });
+  expect(splitLabTools(lab, ["responses"])).toEqual({ top: { strict: true, choice, search: true, freeform: ["text", "lark"] }, apis: { responses: {} } });
+
+  const main = "@opencode/ai/providers/cloudflare-ai-gateway";
+  const current = {
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { search: true, updates: ["add", "remove", "replace"] } } },
+    "chat-completions": { base_url: "stale", capabilities: { tools: { search: true } } },
+  };
+  // Tool fields are replaced per table; other capabilities and `updates` are kept, and an empty table loses capabilities.
+  expect(gatewayApis(current, "responses", ["responses", "chat-completions"], { responses: { strict: true }, "chat-completions": {} })).toEqual({
+    responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: main }, capabilities: { effort_updates: true, tools: { strict: true, updates: ["add", "remove", "replace"] } } },
+    "chat-completions": {
+      base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1",
+      sdk: { aisdk: "@ai-sdk/openai-compatible", opencodeai: main },
+    },
+  });
+});
+
 test("syncs Jev through shared TypeSafe metadata without inventing tool support", async () => {
   const originalFetch = globalThis.fetch;
   const originalToken = process.env.CLOUDFLARE_API_TOKEN;
@@ -454,9 +520,11 @@ test("syncs Jev through shared TypeSafe metadata without inventing tool support"
       existing: () => undefined,
       authored: () => undefined,
     }).model).toEqual({
-      base_model: "typesafe/jev-latest",
+      base_model: "typesafe/jev-1.13.0",
       cost: { input: 0.042, output: 0 },
       limit: { context: 32_000 },
+      provider: { api: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai" },
+      modalities: { input: ["text"], output: ["text"] },
     });
   } finally {
     globalThis.fetch = originalFetch;
@@ -1002,6 +1070,33 @@ test("reads image and video route modalities from the request schema", () => {
   expect(routeModalities("video", { properties: { content: {}, duration: {} } }, lab)).toBeUndefined();
 });
 
+test("reads image output formats including gif", () => {
+  const lab = { modalities: { input: ["text"], output: ["image/png", "image/gif"] } };
+  expect(routeModalities("image", {
+    properties: { prompt: {}, output_format: { enum: ["png", "webp", "jpeg", "gif"] } },
+  }, lab)).toEqual({ input: ["text"], output: ["image/png", "image/webp", "image/jpeg", "image/gif"] });
+});
+
+test("prices a model with several upstreams from the first one", () => {
+  const upstreams = [
+    { id: "first", pricing: { input_tokens: 2, output_tokens: 10, input_cached_tokens: 0.2 } },
+    { id: "second", pricing: { input_tokens: 1.8, output_tokens: 9, input_cached_tokens: 0.18 } },
+  ];
+  const catalog = { model_id: "openai/gpt-4.1", task: "Text Generation", context_length: 1_000_000, provider_details: upstreams };
+  expect(buildCloudflareAiGatewayModel(catalog).cost).toEqual({ input: 2, output: 10, cache_read: 0.2 });
+
+  const { doc } = buildCloudflareAiGatewayMediaModel(
+    { model_id: "minimax/h3", task: "Text-to-Video", provider_details: [
+      { id: "first", pricing: { default: 0.5 } },
+      { id: "second", pricing: { default: 0.4 } },
+    ] },
+    undefined,
+    { base_model: "minimax/MiniMax-H3" },
+  );
+  expect(JSON.stringify(doc.cost)).toContain("0.5");
+  expect(JSON.stringify(doc.cost)).not.toContain("0.4");
+});
+
 function testSyncProvider(modelsDir: string, id: string) {
   return {
     id: "symlink-test",
@@ -1067,8 +1162,28 @@ test("lists a REST table for every other request format the catalog gives a gate
     "chat-completions": {},
     messages: { base_url, sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: main } },
   });
-  // One format and no table: nothing to write. Decision tables are kept.
+  // One format and no table: nothing to write. An existing first table is kept.
   expect(gatewayApis(undefined, undefined, ["chat-completions"])).toBeUndefined();
   const systemone = { systemone: { sdk: { aisdk: "none" } } };
   expect(gatewayApis(systemone, undefined, null)).toEqual(systemone);
+});
+
+test("lists decision models on the /ai/run API", () => {
+  const translated = cloudflareAiGateway.translateModel({
+    catalog: {
+      model_id: "typesafe/jev-1.14.0",
+      task: "Text Generation" as const,
+      provider_details: providerDetails({ input_tokens: 0.042, output_tokens: 0 }),
+      request_formats: ["chat-completions"],
+    },
+  }, { authored: () => undefined, existing: () => undefined }) as { v2Set: { api: (current: unknown) => unknown } };
+  const run = {
+    "workers-ai-run": {
+      base_url: "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai",
+      path: "/run",
+      sdk: { opencodeai: "@opencode/ai/providers/cloudflare-ai-gateway/decisions" },
+    },
+  };
+  expect(translated.v2Set.api(undefined)).toEqual(run);
+  expect(translated.v2Set.api({ systemone: { sdk: { aisdk: "none" } } })).toEqual(run);
 });

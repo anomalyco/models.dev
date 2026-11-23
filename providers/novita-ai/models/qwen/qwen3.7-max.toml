@@ -7,12 +7,11 @@ schema = 2
 base_model = "alibaba/qwen3.7-max"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, budget = {} }
 cache = { implicit = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 output = 65_536

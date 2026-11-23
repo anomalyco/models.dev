@@ -2,7 +2,7 @@
 schema = 2
 name = "MiniMax M2.1 Lightning"
 description = "High-speed MiniMax model for low-latency coding and agent workflows"
-family = "minimax"
+family = "minimax-m"
 open_weights = true
 release_date = "2025-12-23"
 
@@ -15,7 +15,6 @@ tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = false
 temperature = true
-effort_updates = false
 
 [limit]
 context = 196_608

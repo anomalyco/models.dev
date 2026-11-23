@@ -9,9 +9,8 @@ schema = 2
 base_model = "zhipuai/glm-5v-turbo"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
-effort_updates = false
 cache = { implicit = true }
 
 [cost.text.input]

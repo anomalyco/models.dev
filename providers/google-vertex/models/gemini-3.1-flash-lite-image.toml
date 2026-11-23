@@ -6,7 +6,6 @@
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/context-cache/context-cache-overview
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/priority-paygo
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/flex-paygo (global endpoint only)
-# text.output keeps the image output price that v1 `output` carries; cost.image.output is the real image price.
 # Mid-conversation updates: false. Vertex takes system instructions, thinking config and tools only as request-level
 # fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image
@@ -20,16 +19,14 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/h
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "high"] }
 structured_output = false
-system_updates = false
-effort_updates = false
 cache = { implicit = { min_tokens = 4_096 } }
 service_tier = ["flex", "priority"]
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+sdk = { opencodeai = "@opencode/ai/providers/google-vertex/images" }
 
 [api.generate-content]
 
@@ -38,7 +35,7 @@ price = 0.25
 cache = { read = 0.025 }
 
 [cost.text.output]
-price = 30
+price = 1.5
 
 [cost.image.output]
 price = 30

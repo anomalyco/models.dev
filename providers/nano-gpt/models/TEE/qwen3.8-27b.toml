@@ -7,16 +7,15 @@ name = "Qwen3.8 27B TEE"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 262_144
 output = 262_144
 
 [cost.text.input]
-price = 0.4
-cache = { read = 0.15 }
+price = 0.2
+cache = { read = 0.05 }
 
 [cost.text.output]
-price = 3
+price = 2.5

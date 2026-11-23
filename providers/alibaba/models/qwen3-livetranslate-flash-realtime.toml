@@ -7,7 +7,7 @@ schema = 2
 type = "realtime"
 name = "Qwen3-LiveTranslate Flash Realtime"
 description = "Speech generation model for controllable voice, narration, and audio delivery"
-family = "qwen"
+family = "qwen-livetranslate"
 open_weights = false
 knowledge = "2024-04"
 release_date = "2025-09-22"
@@ -21,7 +21,6 @@ output = ["text", "audio/L16"]
 tools = { supported = false }
 reasoning = { supported = false }
 temperature = true
-effort_updates = false
 
 [limit]
 context = 53_248

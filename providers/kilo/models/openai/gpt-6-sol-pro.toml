@@ -5,7 +5,7 @@
 schema = 2
 name = "OpenAI: GPT-6 Sol Pro"
 description = "GPT-6 Sol Pro is the same underlying model as [GPT-6 Sol](https://openrouter.ai/openai/gpt-6-sol), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks. Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-mode"
-family = "gpt"
+family = "gpt-pro"
 open_weights = false
 release_date = "2026-09-22"
 
@@ -14,11 +14,10 @@ input = ["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = false
-effort_updates = false
 
 [limit]
 context = 1_050_000

@@ -1,0 +1,30 @@
+# Router for Rune 26B-A4B (accounts/fireworks/models/rune).
+# LiteLLM's Fireworks guide calls this router Fireworks' decision model on POST /inference/v1/systemone:
+#   https://docs.litellm.ai/docs/providers/fireworks_ai#decisions-system-one
+# Live 2026-10-28: the same System One request as accounts/fireworks/models/rune answered noul and score questions,
+#   echoed model accounts/fireworks/routers/rune and reported usage.output_tokens = 0.
+# Pricing: Fireworks publishes no rate for the router, so no cost is recorded (Rune itself is $0.042 / $0.0084 / $0,
+#   https://docs.fireworks.ai/serverless/pricing).
+schema = 2
+v2_only = true
+base_model = "surogate/rune-26b-a4b"
+
+[capabilities]
+cache = { implicit = true }
+
+[api.systemone]
+base_url = "https://api.fireworks.ai/inference/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.042
+cache = { read = 0.0084 }
+
+[cost.text.output]
+price = 0

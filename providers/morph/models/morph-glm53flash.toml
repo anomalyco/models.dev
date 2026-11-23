@@ -1,0 +1,41 @@
+# Source: https://docs.morphllm.com/llms.txt and https://www.morphllm.com/api/models/json?prices=list (direct API list rates; accessed 2026-10-25).
+# Live probes (api.morphllm.com, 2026-10-25): chat, tool_choice required, json_schema and /v1/messages return 200; reasoning arrives in
+# reasoning_content (Chat Completions) and thinking blocks (Messages).
+# Output limit: max_tokens shares the 1,048,576-token window; 1,048,577 returns 400 "Max tokens must not exceed 1048576".
+# Off: reasoning_effort = none returned 0 reasoning tokens on every probe; thinking.type = disabled is ignored, so there is no toggle.
+# Effort: reasoning_effort = none|low|high|max, the GLM-5.3 levels plus none (off).
+# Input: the lab's formats except application/pdf, which returns 400 "PDF rendering is not available in this build"; MP4, MKV and MOV video were read live.
+# Standby: service_tier = "standby" bills input, cached input and output at 50% (https://docs.morphllm.com/llms.txt#fast-models); a busy fleet returns 429 resource_unavailable.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+service_tier = ["standby"]
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.7
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "standby" } }
+factor = { text = 0.5 }

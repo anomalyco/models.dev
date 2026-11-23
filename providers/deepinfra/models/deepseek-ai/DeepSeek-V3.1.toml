@@ -6,13 +6,12 @@ schema = 2
 base_model = "deepseek/deepseek-v3.1"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
 service_tier = ["flex"]
-system_updates = false
 
 [limit]
 context = 163_840

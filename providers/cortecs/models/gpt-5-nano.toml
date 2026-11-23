@@ -4,15 +4,14 @@ schema = 2
 base_model = "openai/gpt-5-nano"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { implicit = true }
 structured_output = false
-effort_updates = false
 
 [cost.text.input]
-price = 0.06
-cache = { read = 0.019 }
+price = 0.062
+cache = { read = 0.01 }
 
 [cost.text.output]
-price = 0.439
+price = 0.455

@@ -69,6 +69,10 @@ v2-only files (`schema = 2`, `v2_only = true`), so they stay out of the v1 API:
   its header lists the keys.
 - `name` is written only for aliases whose catalog name is more than the lab name with a vendor prefix.
 
+Decision models (a `Text Generation` row whose lab file has `type = "decision"`, such as TypeSafe
+Jev) get the same `[api.workers-ai-run]` table: they answer only on `POST /ai/run`, with a System
+One body as `input`.
+
 Music, document and realtime (`websocket`) tasks aren't synced, and image/video ids without
 a lab file are in `skip` until one is added.
 

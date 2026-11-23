@@ -5,6 +5,9 @@ schema = 2
 base_model = "meta/llama-3.3-70b-instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
 
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
 [limit]
 output = 8_192
 

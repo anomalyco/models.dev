@@ -1,3 +1,4 @@
+# Status: deprecated, no shutdown date announced (migrate to gemini-nano-banana-2.1): https://ai.google.dev/gemini-api/docs/changelog (2026-10-06)
 # Sources:
 # - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-image
 # - https://ai.google.dev/gemini-api/docs/pricing
@@ -6,13 +7,14 @@
 # Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 base_model = "google/gemini-3.1-flash-image"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "high"] }
 cache = false
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+sdk = { opencodeai = "@opencode/ai/providers/google/images" }
 
 [api.generate-content]
 
@@ -23,7 +25,7 @@ sdk = { opencodeai = "none" }
 price = 0.5
 
 [cost.text.output]
-price = 60
+price = 3
 
 [cost.image.output]
 price = 60

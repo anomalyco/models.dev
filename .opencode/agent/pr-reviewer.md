@@ -7,7 +7,8 @@ permission:
   "*": deny
   read:
     "*": allow
-    "**/.git/**": deny
+    ".git": deny
+    ".git/**": deny
     "*.env": deny
     "*.env.*": deny
   glob: allow
@@ -49,6 +50,7 @@ For model catalog changes, enforce these review rules:
   - Do not treat Anthropic Messages and OpenAI chat-completions (or lab vs relay) as interchangeable control surfaces.
 - Do not treat absence of a sync module as a blocker. Recommend one only when a context-rich provider API can authoritatively populate model data or delete models no longer served.
 - Data-changing PRs should cite direct provider pricing, model documentation, or API references in the PR body. Missing citations are not by themselves a merge blocker, but should be reported as a low-severity request for evidence when material factual changes otherwise cannot be reviewed. Prefer first-party sources and require each citation to state what it supports.
+- Don't ask for live probes, tests or authenticated API calls. A value backed by a credible source (see **Evidence** in `AGENTS.md`: host or lab docs, host client code, the same host's previous model on the same API, peer relays) is enough. Flag a value only when nothing supports it or a source contradicts it.
 - You cannot fetch citation URLs. Assess whether citations are present, direct, and mapped to claims, but never claim you opened a URL or verified its contents. A URL or PR assertion alone does not prove a disputed value.
 - Source citations or rationale added to TOML files must be in a leading comment block above the first key because sync serialization removes comments elsewhere. A short adjacent comment that documents the exact provider request syntax for reasoning controls is allowed by `AGENTS.md`; do not confuse it with a source citation.
 - Model IDs come from filenames and must not be authored as `id` fields. The schema is strict, and required model capabilities, costs, limits, and modalities must be present either locally or through a valid `base_model`.

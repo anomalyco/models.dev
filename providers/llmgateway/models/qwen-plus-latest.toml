@@ -3,7 +3,7 @@
 schema = 2
 name = "Qwen Plus Latest"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen"
+family = "qwen-plus"
 open_weights = false
 release_date = "2025-01-25"
 
@@ -12,11 +12,10 @@ input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/we
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 1_000_000

@@ -6,7 +6,9 @@ import {
   filterProvidersByModelType,
   generateV2,
   InvalidModelTypeError,
+  includedOptIn,
   parseModelTypes,
+  providerView,
 } from "@models.dev/core";
 import path from "path";
 
@@ -111,12 +113,8 @@ Bun.serve({
         },
       });
     },
-    "/experimental/v2.0/api.json": () =>
-      Response.json(ProvidersV2, {
-        headers: {
-          "Cache-Control": "public, max-age=3600",
-        },
-      }),
+    "/experimental/v2.0/api.json": (req) =>
+      catalogResponse(req, "experimental_v2.0_api"),
     "/search-index.json": () =>
       new Response(SearchIndexJson, {
         headers: {
@@ -130,23 +128,31 @@ Bun.serve({
   },
 });
 
-function catalogResponse(req: Request, endpoint: "api" | "models" | "catalog") {
+function catalogResponse(
+  req: Request,
+  endpoint: "api" | "models" | "catalog" | "experimental_v2.0_api",
+) {
   let filter;
   try {
-    filter = parseModelTypes(new URL(req.url).searchParams.get("type"));
+    filter = parseModelTypes(new URL(req.url).searchParams.getAll("type").join(","));
   } catch (error) {
     if (!(error instanceof InvalidModelTypeError)) throw error;
     return Response.json({ error: error.message }, { status: 400 });
   }
 
-  const value = endpoint === "api"
-    ? filterProvidersByModelType(Providers, filter)
-    : endpoint === "models"
-      ? filterModelsByModelType(Models, filter)
-      : filterCatalogByModelType(
-          { models: Models, providers: Providers },
-          filter,
-        );
+  const value = endpoint === "experimental_v2.0_api"
+    ? filterProvidersByModelType(
+        providerView(ProvidersV2, includedOptIn(new URL(req.url).searchParams)),
+        filter === "default" ? "all" : filter,
+      )
+    : endpoint === "api"
+      ? filterProvidersByModelType(Providers, filter)
+      : endpoint === "models"
+        ? filterModelsByModelType(Models, filter)
+        : filterCatalogByModelType(
+            { models: Models, providers: Providers },
+            filter,
+          );
 
   return Response.json(value, {
     headers: {

@@ -1,0 +1,49 @@
+# Host-specific refusal-removed derivative, not the unmodified DeepSeek checkpoint.
+# https://near.ai/models/deepseek-ai/DeepSeek-V4.1-Flash-1017-abliterated
+# https://near.ai/cybersecurity (generally available, no allowlist).
+# Release date, text-only serving, context and USD/MTok: https://cloud-api.near.ai/v1/models (2026-10-29).
+# Weights for this derivative are not published; do not inherit the original's weights or benchmarks.
+# Output cap conservatively follows models/deepseek/deepseek-v4.1-flash-1017.toml;
+# NEAR's catalog does not report an output cap for this route.
+# TEE passthrough: https://docs.near.ai/cloud/reasoning-models
+# Native controls: https://recipes.vllm.ai/deepseek-ai/DeepSeek-V4.1-Flash
+# Toggle: chat_template_kwargs.thinking = true|false, matching NEAR's DeepSeek V3.2 peer.
+# The native V4.1 serving recipe accepts thinking and enable_thinking as aliases;
+# thinking.type belongs to DeepSeek's first-party API, not this TEE request surface.
+# Effort: reasoning_effort = low|high|max (shared native/relay levels).
+# Controls follow the documented TEE passthrough and native model; not live-probed on NEAR.
+# Structured output is unasserted: this TEE route advertises only tools/reasoning,
+# not Qwen's structured_outputs flag. Relay support does not prove TEE json_schema support.
+# Cache: https://docs.near.ai/cloud/guides/prompt-caching
+schema = 2
+name = "DeepSeek V4.1 Flash 1017 Abliterated"
+description = "NEAR AI's refusal-removed DeepSeek V4.1 Flash 1017 for security research, with text-only reasoning and tool use inside a private TEE"
+family = "deepseek-flash"
+open_weights = false
+release_date = "2026-10-29"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+temperature = true
+top_p = true
+top_k = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 384_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

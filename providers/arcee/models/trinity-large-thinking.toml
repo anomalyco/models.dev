@@ -10,6 +10,7 @@
 # Max output 80,000: Arcee's endpoint on OpenRouter (https://openrouter.ai/api/v1/models/arcee-ai/trinity-large-thinking/endpoints,
 #   accessed 2026-10-21; Arcee publishes its catalog "according to OpenRouter provider spec",
 #   https://docs.arcee.ai/api-reference/models.md) reports context_length 262144 and max_completion_tokens 80000.
+# max_tokens_field: Arcee's Chat Completions API reference lists max_tokens and not max_completion_tokens (https://docs.arcee.ai/api-reference/chat-completion, accessed 2026-10-24)
 schema = 2
 base_model = "arcee-ai/trinity-large-thinking"
 status = "beta"
@@ -22,7 +23,7 @@ context = 262_144
 output = 80_000
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.25

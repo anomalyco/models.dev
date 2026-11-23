@@ -1,11 +1,14 @@
 # Retired: requests using this name are served by MiniMax-M3.1-Flash
 # (https://platform.minimaxi.com/docs/m-plan/intro, checked 2026-10-19).
 # Effort: output_config.effort = low|medium|high|xhigh|max, default max.
+# Tools: tool_choice supports only auto (ToolChoice schema); no strict tool mode documented
+#   (https://platform.minimaxi.com/docs/api-reference/text-chat-anthropic).
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash-Preview"
 status = "deprecated"
 
 [capabilities]
+tools = { supported = true, choice = ["auto"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [api.messages]

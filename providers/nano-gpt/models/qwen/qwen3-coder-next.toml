@@ -6,15 +6,14 @@ base_model = "alibaba/qwen3-coder-next"
 
 [capabilities]
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 262_144
 
 [cost.text.input]
-price = 0.250251
-cache = { read = 0.079764 }
+price = 0.12
+cache = { read = 0.07 }
 
 [cost.text.output]
-price = 0.80293
+price = 0.8

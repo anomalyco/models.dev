@@ -1,0 +1,17 @@
+schema = 2
+base_model = "alibaba/qwen3.8-max-0902"
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

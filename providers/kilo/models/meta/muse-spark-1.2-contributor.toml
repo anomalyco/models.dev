@@ -5,7 +5,7 @@
 schema = 2
 name = "Meta: Muse Spark 1.2 Contributor"
 description = "Muse Spark 1.2 contributor tier is a reasoning model from Meta designed for developers who want to start building at an even lower cost. It’s meaningfully cheaper than Muse Spark..."
-family = "muse"
+family = "muse-spark"
 open_weights = false
 release_date = "2026-08-21"
 
@@ -14,11 +14,10 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 1_048_576

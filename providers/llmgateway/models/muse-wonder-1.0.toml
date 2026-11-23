@@ -3,10 +3,9 @@ schema = 2
 base_model = "meta/muse-wonder-1.0"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 4

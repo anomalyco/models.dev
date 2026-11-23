@@ -7,8 +7,7 @@ name = "DeepSeek V4 Flash 0731 (Thinking)"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 context = 1_048_576
@@ -16,8 +15,8 @@ input = 1_048_576
 output = 131_072
 
 [cost.text.input]
-price = 0.05
-cache = { read = 0.013 }
+price = 0.044
+cache = { read = 0.0014 }
 
 [cost.text.output]
-price = 0.16
+price = 0.132

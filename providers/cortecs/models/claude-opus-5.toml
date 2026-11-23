@@ -7,15 +7,14 @@ schema = 2
 base_model = "anthropic/claude-opus-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { explicit = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
-price = 5.5
-cache = { read = 0.55, write = 6.874 }
+price = 5.687
+cache = { read = 0.569, write = 7.108 }
 
 [cost.text.output]
-price = 27.498
+price = 28.436

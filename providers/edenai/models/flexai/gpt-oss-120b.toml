@@ -3,14 +3,13 @@ base_model = "openai/gpt-oss-120b"
 name = "GPT OSS 120B (FlexAI)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
-price = 0.05
-cache = { read = 0.0075 }
+price = 0.03
+cache = { read = 0.0045 }
 
 [cost.text.output]
-price = 0.25
+price = 0.15

@@ -3,13 +3,12 @@ base_model = "amazon/nova-lite"
 name = "Nova Lite (US)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.06
-cache = { read = 0.015 }
+cache = { read = 0.01625 }
 
 [cost.text.output]
 price = 0.24

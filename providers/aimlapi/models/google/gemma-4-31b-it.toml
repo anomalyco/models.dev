@@ -1,6 +1,5 @@
 # No caller control: reasoning_effort is validated (invalid value -> 400) but low/high
 # do not order reasoning tokens; toggle/budget fields are dropped by the gateway.
-# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=google%2Fgemma-4-31b-it&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "google/gemma-4-31b-it"
 name = "Gemma 4 31B Instruct"
@@ -8,8 +7,7 @@ name = "Gemma 4 31B Instruct"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [limit]
 context = 256_000

@@ -6,11 +6,10 @@ base_model = "openai/gpt-5.6-luna"
 name = "GPT Mini Latest (GPT-5.6 Luna)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
 structured_output = true
-effort_updates = false
 prompt_cache_key = true
 
 [cost.text.input]

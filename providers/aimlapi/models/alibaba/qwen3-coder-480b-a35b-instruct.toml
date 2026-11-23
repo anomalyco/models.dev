@@ -1,11 +1,9 @@
-# Mid-conversation: served on POST /v1/chat/completions, where reasoning_effort and tools are per-request fields; the request schema has no per-turn effort or tool-change message (effort_updates = false, tools.updates = false). https://api.aimlapi.com/docs-json?model=alibaba%2Fqwen3-coder-480b-a35b-instruct&endpoint=openai%2Fchat-completions
 schema = 2
 base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
 name = "Qwen3 Coder"
 
 [capabilities]
-effort_updates = false
-tools = { supported = true, updates = false }
+tools = { supported = true }
 
 [limit]
 context = 262_000

@@ -7,11 +7,10 @@ base_model = "meta/llama-4-scout-17b-instruct"
 name = "Llama 4 Scout 17B 16E Instruct"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = false
 structured_output = false
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 131_000

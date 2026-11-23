@@ -1,0 +1,18 @@
+# Capabilities the catalog doesn't state (capabilities.structured_output) come from kimi-k3, this host's previous model in the family.
+schema = 2
+base_model = "moonshotai/kimi-k2.8-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[cost.text.input]
+price = 1
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 4

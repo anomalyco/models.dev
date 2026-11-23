@@ -8,8 +8,7 @@ description = "DeepSeek chat model for instruction following, coding, and analys
 [capabilities]
 reasoning = { supported = false }
 structured_output = false
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 context = 128_000
@@ -18,7 +17,7 @@ output = 65_536
 
 [cost.text.input]
 price = 0.2
-cache = { read = 0.1 }
+cache = { read = 0.13 }
 
 [cost.text.output]
 price = 0.7

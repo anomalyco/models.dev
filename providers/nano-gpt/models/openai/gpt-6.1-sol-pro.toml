@@ -5,7 +5,7 @@
 schema = 2
 name = "GPT 6.1 Sol Pro"
 description = "GPT-6.1 Sol Pro uses the same underlying model as GPT-6.1 Sol with Pro reasoning mode enabled for higher-quality responses on complex tasks."
-family = "gpt"
+family = "gpt-pro"
 open_weights = false
 release_date = "2026-09-29"
 
@@ -14,10 +14,9 @@ input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-effort_updates = false
 cache = { implicit = true }
 
 [limit]

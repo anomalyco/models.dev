@@ -1,0 +1,10 @@
+# Rayline ARC: hosted router; Anthropic Messages-compatible endpoint.
+# Operated by Atlas Futures, Inc. under the Rayline trading name.
+# Auth: Rayline API key sent as x-api-key (also accepted: Authorization: Bearer). https://docs.rayline.ai/arc/quickstart
+# Base URL includes /v1, as in Rayline's OpenCode guide. https://docs.rayline.ai/tools/opencode
+name = "Rayline"
+npm = "@ai-sdk/anthropic"
+opencodeai = "@opencode/ai/providers/anthropic-compatible"
+env = ["RAYLINE_API_KEY"]
+api = "https://api.rayline.ai/v1"
+doc = "https://docs.rayline.ai/tools/opencode"

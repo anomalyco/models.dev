@@ -4,11 +4,10 @@ schema = 2
 base_model = "xai/grok-4.20-0309-non-reasoning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 cache = { implicit = true }
 structured_output = true
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 2_000_000

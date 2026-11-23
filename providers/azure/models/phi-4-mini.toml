@@ -4,7 +4,7 @@
 schema = 2
 name = "Phi-4-mini"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "phi"
+family = "phi-mini"
 open_weights = true
 knowledge = "2023-10"
 release_date = "2024-12-11"
@@ -14,11 +14,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 temperature = true
-system_updates = false
-effort_updates = false
 
 [limit]
 context = 128_000

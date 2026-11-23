@@ -6,13 +6,11 @@ base_model = "google/gemini-3-pro-image-preview"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-system_updates = false
-effort_updates = false
 
 [api.chat-completions]
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/openai-images" }
+sdk = { opencodeai = "@opencode/ai/providers/openrouter/images" }
 
 [cost.text.input]
 price = 2

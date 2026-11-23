@@ -4,6 +4,7 @@
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
 base_model = "google/gemma-4-31b-it"
+family = "gemma-free"
 name = "Gemma 4 31B (free)"
 
 [modalities]
@@ -11,10 +12,9 @@ input = ["image/png", "image/jpeg", "image/webp", "text", "video/mp4", "video/mp
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = false
-effort_updates = false
 
 [api.chat-completions]
 

@@ -1,0 +1,21 @@
+# Relayed to OpenAI; reasoning_effort passes through (https://docs.near.ai/cloud/reasoning-models).
+# Levels as OpenAI's own entry, providers/openai/models/gpt-6.2-astra.toml, the same way this host's gpt-6.1-sol is authored.
+# Price: https://cloud-api.near.ai/v1/models (2026-11-20): $8 input / $0.4 cached input / $40 output per MTok, flat.
+# Text and image only, as on this host's other GPT routes (a type: "file" content part fails on every route).
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4 }
+
+[cost.text.output]
+price = 40

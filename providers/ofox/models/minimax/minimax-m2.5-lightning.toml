@@ -8,10 +8,9 @@ base_model = "minimax/MiniMax-M2.5-highspeed"
 name = "MiniMax-M2.5 Lightning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
-effort_updates = false
 cache = { implicit = true }
 
 [cost.text.input]

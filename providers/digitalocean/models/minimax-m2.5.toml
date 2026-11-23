@@ -5,7 +5,7 @@
 schema = 2
 name = "MiniMax M2.5 (Public Preview)"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
-family = "minimax-m2.5"
+family = "minimax-m"
 open_weights = true
 knowledge = "2025-08"
 release_date = "2026-02-12"
@@ -16,12 +16,10 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { implicit = true }
 temperature = true
-system_updates = false
-effort_updates = false
 prompt_cache_key = true
 
 [limit]

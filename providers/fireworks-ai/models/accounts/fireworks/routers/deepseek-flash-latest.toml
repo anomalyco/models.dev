@@ -30,11 +30,10 @@ base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek Flash Latest"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 cache = { implicit = true }
 
 [api.chat-completions]

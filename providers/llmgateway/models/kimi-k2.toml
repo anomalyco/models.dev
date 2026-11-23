@@ -2,7 +2,7 @@
 schema = 2
 name = "Kimi K2"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
-family = "kimi-k2"
+family = "kimi"
 open_weights = true
 release_date = "2025-07-11"
 
@@ -11,11 +11,10 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 context = 256_000

@@ -2,7 +2,7 @@
 # - https://ai.google.dev/gemini-api/docs/models/gemini-nano-banana-2.1
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://ai.google.dev/gemini-api/docs/image-generation (thinking minimal|medium|high, default medium)
-# - Output: $7.50 text and thinking, $30.00 images. v1 output carries the image rate, like other image models.
+# - Output: $7.50 text and thinking, $30.00 images.
 # Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-nano-banana-2.1; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-nano-banana-2.1
 # Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
@@ -18,7 +18,7 @@ top_k = true
 cache = false
 
 [api.images]
-sdk = { opencodeai = "@opencode/ai/protocols/google-images" }
+sdk = { opencodeai = "@opencode/ai/providers/google/images" }
 
 [api.generate-content]
 
@@ -29,7 +29,7 @@ sdk = { opencodeai = "none" }
 price = 1.5
 
 [cost.text.output]
-price = 30
+price = 7.5
 
 [cost.image.output]
 price = 30

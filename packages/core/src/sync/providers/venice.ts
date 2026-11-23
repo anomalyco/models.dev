@@ -143,13 +143,19 @@ export function veniceV2Set(model: VeniceModel): Record<string, unknown> {
 }
 
 // The file's API tables with Responses after them. The first table stays as it is (v1 reads it),
-// or is the provider's default Chat Completions API when the file has none.
+// or is the provider's default Chat Completions API when the file has none. Hand-authored
+// per-API capabilities on Responses are kept.
 export function withResponsesApi(current: unknown) {
   const tables = current !== null && typeof current === "object" && !Array.isArray(current)
     ? current as Record<string, unknown>
     : {};
   const first = Object.keys(tables)[0] ?? "chat-completions";
-  return { [first]: tables[first] ?? {}, ...tables, responses: structuredClone(RESPONSES_API) };
+  const own = tables.responses;
+  const capabilities = own !== null && typeof own === "object" && !Array.isArray(own)
+    ? (own as Record<string, unknown>).capabilities
+    : undefined;
+  const responses = structuredClone(RESPONSES_API);
+  return { [first]: tables[first] ?? {}, ...tables, responses: capabilities === undefined ? responses : { ...responses, capabilities } };
 }
 
 export function buildVeniceModel(
@@ -225,7 +231,7 @@ export function buildVeniceModel(
   }
 
   const releaseDate = new Date(model.created * 1000).toISOString().slice(0, 10);
-  const family = inferFamily(model.id, spec.name) ?? existing?.family;
+  const family = existing?.family ?? inferFamily(model.id, spec.name);
   const openWeights = spec.modelSource?.toLowerCase().includes("huggingface")
     ?? existing?.open_weights
     ?? false;
@@ -252,10 +258,16 @@ export function buildVeniceModel(
   };
 }
 
+// Venice's own fine-tunes can keep the lab model's id: "qwen-3-6-plus" is "Qwen 3.6 Plus Uncensored",
+// "an uncensored variant of Alibaba's Qwen 3.6 Plus". Such a model only matches a lab file that names
+// the same fine-tune.
+const FINE_TUNE_MARKER = /uncensored|abliterated|heretic/i;
+
 export function resolveVeniceBaseModel(id: string, name: string) {
   const alias = BASE_MODEL_ALIASES[id];
   if (alias !== undefined) return alias;
-  const entries = getMetadataEntries();
+  const marker = `${id} ${name}`.match(FINE_TUNE_MARKER)?.[0].toLowerCase();
+  const entries = getMetadataEntries().filter((entry) => marker === undefined || entry.normalizedFull.includes(marker));
   for (const candidate of veniceBaseModelCandidates(id, name)) {
     const normalized = normalize(candidate);
     const ranked = [
@@ -315,6 +327,6 @@ function inferFamily(id: string, name: string) {
     .find((family) => {
       const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(target);
     });
 }

@@ -6,11 +6,22 @@ model: opencode/glm-5.2
 color: "#44BA81"
 permission:
   bash: deny
+  task: deny
+  read:
+    "*": allow
+    ".git": deny
+    ".git/**": deny
+    "*.env": deny
+    "*.env.*": deny
   external_directory: deny
   edit:
     "*": deny
     "models/**/*.toml": allow
     "providers/**/*.toml": allow
+    ".git": deny
+    ".git/**": deny
+    "**/.git": deny
+    "**/.git/**": deny
 ---
 
 You are the automated issue fixer for models.dev.

@@ -8,15 +8,15 @@ name = "MiMo V2.5 Pro"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
-input = 1_048_576
+context = 262_144
+input = 262_144
 
 [cost.text.input]
-price = 0.435
-cache = { read = 0.0036, write = 0 }
+price = 0.48
+cache = { read = 0.096, write = 0 }
 
 [cost.text.output]
-price = 0.87
+price = 1.8

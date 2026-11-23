@@ -11,11 +11,9 @@ base_model = "alibaba/qwen3.5-35b-a3b"
 name = "Qwen 3.5 35B A3B"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
-system_updates = false
-effort_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

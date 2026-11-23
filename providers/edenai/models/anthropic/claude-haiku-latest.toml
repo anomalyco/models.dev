@@ -6,11 +6,10 @@ base_model = "anthropic/claude-haiku-5-5"
 name = "Claude Haiku Latest (Claude Haiku 5.5)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 cache = { implicit = { ttl = ["5m"] }, explicit = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
 price = 0.1

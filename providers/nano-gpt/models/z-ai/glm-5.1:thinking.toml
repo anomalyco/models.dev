@@ -7,15 +7,15 @@ name = "GLM 5.1 Thinking"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
-input = 200_000
+context = 204_800
+input = 204_800
 
 [cost.text.input]
-price = 0.7
-cache = { read = 0.18 }
+price = 1.4
+cache = { read = 0.26 }
 
 [cost.text.output]
-price = 2.5
+price = 4.4

@@ -7,12 +7,11 @@ name = "Inkling Thinking"
 [capabilities]
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
-context = 1_048_000
-input = 1_048_000
+context = 1_040_000
+input = 1_040_000
 output = 32_768
 
 [cost.text.input]

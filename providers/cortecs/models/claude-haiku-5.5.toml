@@ -7,15 +7,14 @@ schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 cache = { explicit = true }
 structured_output = true
-effort_updates = false
 
 [cost.text.input]
-price = 0.113
-cache = { read = 0.011, write = 0.14 }
+price = 0.114
+cache = { read = 0.011, write = 0.143 }
 
 [cost.text.output]
-price = 0.563
+price = 0.569

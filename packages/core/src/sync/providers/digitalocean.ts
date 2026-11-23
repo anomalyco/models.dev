@@ -50,6 +50,9 @@ const DigitalOceanCatalogPricing = z.object({
   cache_read_input_price_per_million: z.number().optional(),
   cache_write_5m_input_price_per_million: z.number().optional(),
   cache_write_1h_input_price_per_million: z.number().optional(),
+  text_input_price_per_million: z.number().optional(),
+  text_output_price_per_million: z.number().optional(),
+  text_cache_read_input_price_per_million: z.number().optional(),
   image_input_price_per_million: z.number().optional(),
   image_output_price_per_million: z.number().optional(),
   image_cache_read_input_price_per_million: z.number().optional(),
@@ -276,12 +279,17 @@ export function digitalOceanV2Set(model: DigitalOceanSourceModel): Record<string
       ...(responses ? { responses: RESPONSES_API } : {}),
       ...(responses || hosted ? { messages: MESSAGES_API } : {}),
     };
-    // The first table stays as it is (v1 reads it).
+    // The first table stays as it is (v1 reads it). Hand-authored per-API capabilities are kept.
     set.api = (current: unknown) => {
       const tables = isRecord(current) ? current : {};
       if (current === undefined && Object.keys(extra).length === 0) return undefined;
       const first = Object.keys(tables)[0] ?? "chat-completions";
-      return { [first]: tables[first] ?? {}, ...structuredClone(extra) };
+      const apis = Object.fromEntries(Object.entries(structuredClone(extra)).map(([key, table]) => {
+        const own = tables[key];
+        const capabilities = isRecord(own) ? own.capabilities : undefined;
+        return [key, capabilities === undefined ? table : { ...table, capabilities }];
+      }));
+      return { [first]: tables[first] ?? {}, ...apis };
     };
     set["cost.web_search"] = { price: model.creator === "Anthropic" ? 0 : WEB_SEARCH_PRICE };
   }
@@ -398,7 +406,7 @@ async function fetchAllDigitalOceanCatalog(fetcher: typeof fetch) {
     if (next) {
       url = new URL(next, url).toString();
     } else if (page.meta !== undefined && page.meta.page < page.meta.pages) {
-      const nextPage = new URL(url);
+      const nextPage: URL = new URL(url);
       nextPage.searchParams.set("page", String(page.meta.page + 1));
       url = nextPage.toString();
     } else {
@@ -482,10 +490,13 @@ function catalogPricing(model: DigitalOceanCatalogModel | undefined): ModelPrici
     output: perMillion(model.pricing.image_output_price_per_million),
     cacheRead: perMillion(model.pricing.image_cache_read_input_price_per_million),
   };
+  const imageOutput = image.output !== undefined;
   return {
-    input: perMillion(model.pricing.input_price_per_million),
-    output: perMillion(model.pricing.output_price_per_million),
-    cacheRead: perMillion(model.pricing.cache_read_input_price_per_million),
+    // When image output has its own price, the generic pair is that image price,
+    // not text. Use the catalog's explicit text fields instead.
+    input: perMillion(imageOutput ? model.pricing.text_input_price_per_million : model.pricing.input_price_per_million),
+    output: perMillion(imageOutput ? model.pricing.text_output_price_per_million : model.pricing.output_price_per_million),
+    cacheRead: perMillion(imageOutput ? model.pricing.text_cache_read_input_price_per_million : model.pricing.cache_read_input_price_per_million),
     cacheWrite: perMillion(standard?.cache_write_5m_input_price_per_million),
     cacheWrite1h: perMillion(standard?.cache_write_1h_input_price_per_million),
     extended: extendedContext === undefined || extended?.prices == null
@@ -806,7 +817,7 @@ export function resolveDigitalOceanBaseModel(id: string) {
   // also normalize dotted versions: anthropic-claude-opus-4.6 → anthropic/claude-opus-4-6
   const anthropicFamily = id.match(/^anthropic-claude-([a-z]+)-(\d+(?:\.\d+)?)$/);
   if (anthropicFamily !== null) {
-    const version = anthropicFamily[2].replaceAll(".", "-");
+    const version = anthropicFamily[2]!.replaceAll(".", "-");
     candidates.push(`anthropic/claude-${anthropicFamily[1]}-${anthropicFamily[2]}`);
     candidates.push(`anthropic/claude-${anthropicFamily[1]}-${version}`);
   }

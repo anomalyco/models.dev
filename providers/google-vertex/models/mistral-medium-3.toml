@@ -11,9 +11,7 @@ schema = 2
 base_model = "mistral/mistral-medium-2505"
 
 [capabilities]
-tools = { supported = true, updates = false }
-system_updates = false
-effort_updates = false
+tools = { supported = true }
 
 [api.chat-completions]
 base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/publishers/mistralai/models"

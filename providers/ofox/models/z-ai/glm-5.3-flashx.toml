@@ -13,10 +13,9 @@ name = "GLM-5.3-FlashX"
 description = "High-speed GLM-5.3-Flash serving option for coding and agent workflows"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
-effort_updates = false
 cache = { implicit = true }
 
 [cost.text.input]

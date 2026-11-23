@@ -8,11 +8,10 @@ base_model = "moonshotai/kimi-k3"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 temperature = true
-effort_updates = false
 
 [limit]
 output = 943_718
@@ -26,8 +25,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.239
-cache = { read = 0.21 }
+price = 0.192
+cache = { read = 0.182 }
 
 [cost.text.output]
-price = 11.936
+price = 16

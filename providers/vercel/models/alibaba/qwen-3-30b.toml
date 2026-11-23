@@ -1,13 +1,12 @@
-# Mid-conversation (@ai-sdk/gateway): per-turn effort and tool changes exist only for Anthropic models on this API. system_updates left unset: live cache results on the default route were inconclusive.
+# Mid-conversation (@ai-sdk/gateway): no per-turn effort or tool-change mechanism reaches this model on this API. system_updates left unset: live cache results on the default route were inconclusive.
 schema = 2
 base_model = "alibaba/qwen3-30b-a3b"
 name = "Qwen3-30B-A3B"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
-effort_updates = false
 
 [limit]
 context = 40_960

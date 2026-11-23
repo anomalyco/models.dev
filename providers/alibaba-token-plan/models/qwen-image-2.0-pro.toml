@@ -5,7 +5,7 @@ schema = 2
 type = "image"
 name = "Qwen Image 2.0 Pro"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "qwen"
+family = "qwen-image-pro"
 open_weights = false
 release_date = "2026-03-03"
 
@@ -24,7 +24,7 @@ output = 0
 
 [api.images]
 base_url = "https://token-plan.ap-southeast-1.maas.aliyuncs.com/api/v1"
-sdk = { aisdk = "none", opencodeai = "none" }
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/alibaba/images" }
 
 [cost.text.input]
 price = 0

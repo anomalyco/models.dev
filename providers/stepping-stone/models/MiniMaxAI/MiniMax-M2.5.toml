@@ -1,0 +1,20 @@
+# Price: https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-minimaxai
+# 1.9400 / 0.2910 / 9.7000 CHF/MTok (input / cache / output), converted at 1.19 USD per 1.00 CHF (market exchange rate, 2026-10-14).
+# Context: 196,608 tokens — the product page price table lists a 196k window
+# (https://www.stepping-stone.ch/en/products/artificial-intelligence/ai-on-demand-powered-by-minimaxai); lab native 204,800.
+# Docs: https://wiki.stoney-cloud.com/wiki/AI_on_demand:_MiniMaxAI/MiniMax-M2.5 (gateway max_model_len 196608)
+schema = 2
+base_model = "minimax/MiniMax-M2.5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 196_608
+
+[cost.text.input]
+price = 2.3086
+cache = { read = 0.3463 }
+
+[cost.text.output]
+price = 11.543

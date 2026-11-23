@@ -8,9 +8,8 @@ base_model = "openai/gpt-4o-2024-11-20"
 name = "GPT-4o"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 structured_output = true
-system_updates = false
 cache = { implicit = true }
 prompt_cache_key = true
 

@@ -7,11 +7,10 @@ schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { implicit = true }
 structured_output = true
-effort_updates = false
 
 [limit]
 output = 524_288

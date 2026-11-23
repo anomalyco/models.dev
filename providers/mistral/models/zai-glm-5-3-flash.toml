@@ -10,15 +10,21 @@
 #   function; function.strict).
 # - Structured output: https://docs.mistral.ai/studio/conversations/structured-output (json_schema
 #   response_format; model page lists Structured Outputs, Function Calling, Document QnA, Prefix).
+# Modalities: Mistral's page lists text and image input plus Document QnA (PDF), and /v1/models reports vision true; the
+#   lab's video input isn't offered here (https://docs.mistral.ai/models/zai-glm-5-3-flash,
+#   https://docs.mistral.ai/studio/conversations/vision for PNG, JPEG, WEBP, non-animated GIF).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], updates = false }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 system_updates = true
-effort_updates = false
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = { min_tokens = 64 } }

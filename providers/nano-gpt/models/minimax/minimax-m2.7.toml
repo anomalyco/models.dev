@@ -7,15 +7,14 @@ name = "MiniMax M2.7"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 204_800
 
 [cost.text.input]
-price = 0.21
-cache = { read = 0.042 }
+price = 0.6543
+cache = { read = 0.32715 }
 
 [cost.text.output]
-price = 0.84
+price = 2.7625

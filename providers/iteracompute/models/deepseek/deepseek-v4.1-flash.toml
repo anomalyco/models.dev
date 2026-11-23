@@ -1,5 +1,6 @@
-# Sources (accessed 2026-10-10; prices rechecked 2026-10-21 on the model page and the
-# /v1/models pricing object: $0.17 input, $0.005 cache read, $0.7 output per 1M tokens):
+# Prices rechecked 2026-10-28 against the exact /v1/models pricing object:
+# $0.14 input, $0.006 cache read, $0.55 output per 1M tokens.
+# Sources (accessed 2026-10-10):
 # https://api.iteracompute.com/v1/models (available ID and reasoning capabilities)
 # https://api.iteracompute.com/openrouter/v1/models (output limit and supported parameters)
 # https://iteracompute.com/models/deepseek-v4-1-flash/ (retail USD/MTok prices, context, and vision)
@@ -25,8 +26,8 @@ context = 1_048_576
 output = 393_216
 
 [cost.text.input]
-price = 0.17
-cache = { read = 0.005 }
+price = 0.14
+cache = { read = 0.006 }
 
 [cost.text.output]
-price = 0.7
+price = 0.55

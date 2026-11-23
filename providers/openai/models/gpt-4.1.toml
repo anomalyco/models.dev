@@ -1,6 +1,10 @@
+# Deprecated: OpenAI shuts this model down on 2027-01-14 (https://developers.openai.com/api/docs/deprecations, accessed 2026-11-23).
+# tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (free-form text, or lark/regex grammars; GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing).
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4.1
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# tools.updates is left out: on GPT-5.5 and earlier, calls to tools added through additional_tools come back namespaced and replaying them without the namespace fails ("Missing namespace for function_call", live 2026-11-16), so callers fold tool changes into the top-level tools list.
 schema = 2
 name = "GPT-4.1"
 description = "Long-lived GPT workhorse for coding, instruction following, and production apps"
@@ -8,18 +12,18 @@ family = "gpt"
 open_weights = false
 knowledge = "2024-04"
 release_date = "2025-04-14"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 structured_output = true
 temperature = true
 system_updates = true
-effort_updates = false
 store = true
 cache = { implicit = { ttl = ["24h"], min_tokens = 1_024 } }
 prompt_cache_key = true

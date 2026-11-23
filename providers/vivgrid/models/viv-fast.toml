@@ -1,12 +1,18 @@
 # Pricing, context window and max output:
 # https://docs.vivgrid.com/models/viv-fast (accessed 2026-09-21)
 # Effort: reasoning_effort = low|high|max
+# APIs: Responses and Chat Completions. https://docs.vivgrid.com/models/viv-fast (accessed 2026-10-23)
 schema = 2
 base_model = "vivgrid/viv-fast"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
 
 [cost.text.input]
 price = 0.13

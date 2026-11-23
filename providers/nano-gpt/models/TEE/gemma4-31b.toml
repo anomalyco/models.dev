@@ -9,16 +9,15 @@ description = "Open Gemma instruction model for efficient chat and self-hosted d
 [capabilities]
 reasoning = { supported = false }
 structured_output = true
-tools = { supported = true, updates = false }
-effort_updates = false
+tools = { supported = true }
 
 [limit]
 input = 262_144
 output = 131_072
 
 [cost.text.input]
-price = 0.4
-cache = { read = 0.4 }
+price = 0.12
+cache = { read = 0.012 }
 
 [cost.text.output]
-price = 1
+price = 0.37

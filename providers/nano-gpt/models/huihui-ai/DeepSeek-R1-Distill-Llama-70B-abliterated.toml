@@ -2,7 +2,7 @@
 schema = 2
 name = "DeepSeek R1 Llama 70B Abliterated"
 description = "DeepSeek reasoning model for multi-step analysis, math, coding, and tools"
-family = "deepseek"
+family = "deepseek-r"
 open_weights = true
 release_date = "2024-01-01"
 last_updated = "2025-01-20"
@@ -15,7 +15,6 @@ output = ["text"]
 tools = { supported = false }
 reasoning = { supported = true }
 structured_output = false
-effort_updates = false
 
 [limit]
 context = 16_384

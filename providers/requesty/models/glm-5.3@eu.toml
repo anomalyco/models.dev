@@ -10,11 +10,10 @@ base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 (EU)"
 
 [capabilities]
-tools = { supported = true, updates = false }
+tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = false
 system_updates = true
-effort_updates = false
 
 [limit]
 context = 1_048_576
