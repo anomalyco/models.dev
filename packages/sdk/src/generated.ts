@@ -553,6 +553,7 @@ export type ModelFamily =
   | "turion-extract"
   | "turion-jev"
   | "uae"
+  | "ultramarine"
   | "una-cybertron"
   | "unslopnemo"
   | "unsloth"

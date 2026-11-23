@@ -531,6 +531,7 @@ export const ModelFamilyValues = [
   // Writer
   "palmyra",
   "palmyra-vision",
+  "ultramarine",
 
   // ALLaM
   "allam",
