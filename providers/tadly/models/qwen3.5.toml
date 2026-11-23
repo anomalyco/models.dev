@@ -1,0 +1,38 @@
+# Sources (accessed 2026-11-25):
+# - https://tadly.dev/models/qwen3-5: id qwen3.5, "Chat + vision", 131K-token context, tool calling, image+text input,
+#   $0.15 per 1M tokens for input and output. Served by Qwen3.5-9B; may fall back to Qwen3.5-0.8B while the 9B starts or is busy.
+# - https://tadly.dev/docs#chat-completions: max_tokens accepts 1-32,768; image parts are OpenAI image_url (JPEG example).
+#   On a text-only fallback an image part is flattened to text and the call still returns 200.
+#   Reasoning is returned in reasoning_content. enable_thinking turns Qwen 3.5's reasoning on or off; chat_template_kwargs is
+#   forwarded as sent. reasoning_effort is accepted and never reaches the model, and there is no reasoning budget field.
+# - https://tadly.dev/docs#anthropic-messages: POST /v1/messages on the same base URL, for Claude Code and Anthropic SDKs;
+#   tools are passed through, thinking blocks are not returned.
+# Image types: JPEG as documented, plus PNG and WebP, decoded by the same vLLM image loader. No video.
+# Toggle: chat_template_kwargs.enable_thinking true|false (on by default)
+schema = 2
+base_model = "alibaba/qwen3.5-9b"
+name = "Qwen-3.5"
+description = "Qwen3.5-9B for chat, tool use and coding agents; may fall back to Qwen3.5-0.8B while busy"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[limit]
+context = 131_072
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.15
