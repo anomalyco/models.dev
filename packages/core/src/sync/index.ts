@@ -523,6 +523,7 @@ export async function syncProvider<SourceModel>(
     if (current === undefined) {
       modelMetadata ??= await readModelMetadata(provider.modelsDir);
       const model = withBaseModalities(file.model, modelMetadata);
+      const protocol = await newModelProtocol(provider.modelsDir, file.model);
       const content = v2Content(
         relativePath,
         file.header,
@@ -530,7 +531,7 @@ export async function syncProvider<SourceModel>(
         undefined,
         model,
         v2Notices,
-        await newModelProtocol(provider.modelsDir, file.model),
+        protocol,
         undefined,
         resolvedFlags(model, baseMetadata(model, modelMetadata)).reasoning,
         file.v2Set,
@@ -539,7 +540,7 @@ export async function syncProvider<SourceModel>(
       if (content === undefined) continue;
       const inherited = provider.inheritPredecessorCapabilities === false
         ? content
-        : withPredecessorCapabilities(content, [...existing].map(([file, entry]) => [file, entry.v2]), modelMetadata);
+        : withPredecessorCapabilities(content, [...existing].map(([file, entry]) => [file, entry.v2]), modelMetadata, protocol);
       files.push({ status: "created", path: filePath });
       if (options.dryRun) {
         console.log(`Would create ${relativePath}`);
@@ -557,14 +558,19 @@ export async function syncProvider<SourceModel>(
     }
 
     modelMetadata ??= await readModelMetadata(provider.modelsDir);
-    const model = withBaseModalities(file.model, modelMetadata);
+    const synced = withBaseModalities(file.model, modelMetadata);
     const headerChanged = provider.authoritativeHeaders && current.header !== file.header;
     // `reasoning` and `tool_call` compare resolved against the lab, so a switch
     // between inheriting the lab's value and overriding it is still a change.
     const resolved = {
       before: resolvedFlags(current.authored, baseMetadata(current.authored, modelMetadata)),
-      after: resolvedFlags(model, baseMetadata(model, modelMetadata)),
+      after: resolvedFlags(synced, baseMetadata(synced, modelMetadata)),
     };
+    // Few catalogs say which field a host reads reasoning back from, so a module that leaves `interleaved` out keeps
+    // the file's while the model still reasons, instead of every module carrying it.
+    const model = synced.interleaved === undefined && current.authored.interleaved !== undefined && resolved.after.reasoning
+      ? { ...synced, interleaved: current.authored.interleaved }
+      : synced;
     const sameFlags = resolved.before.reasoning === resolved.after.reasoning
       && resolved.before.tool_call === resolved.after.tool_call;
     if (!headerChanged && sameFlags && sameV1Model(current.authored, model) && hasV2Values(current.v2, file.v2Set)) {
