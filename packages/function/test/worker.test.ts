@@ -129,6 +129,51 @@ describe("catalog API model type filtering", () => {
   });
 });
 
+describe("HEAD requests", () => {
+  const head = (path: string) =>
+    request(path, { "user-agent": "test" }, () => {}, "HEAD");
+
+  for (const path of [
+    "/api.json?type=chat,decision",
+    "/models.json?type=chat,decision",
+    "/catalog.json?type=chat,decision",
+    "/experimental/v2.0/api.json?type=chat,decision",
+    "/model-schema.json",
+    "/model-schema.json?type=all",
+  ]) {
+    test(`answers HEAD ${path} like GET, without a body`, async () => {
+      const get = await request(path);
+      const response = await head(path);
+
+      expect(response.status).toBe(200);
+      expect(response.status).toBe(get.status);
+      expect(response.headers.get("content-type")).toBe(get.headers.get("content-type"));
+      expect(response.headers.get("etag")).toBe(get.headers.get("etag"));
+      expect(await response.text()).toBe("");
+    });
+  }
+
+  test("keeps HEAD revalidation for filtered responses", async () => {
+    const etag = (await request("/models.json?type=decision,chat")).headers.get("etag");
+    const response = await request(
+      "/models.json?type=chat,decision",
+      { "user-agent": "test", "if-none-match": etag ?? "" },
+      () => {},
+      "HEAD",
+    );
+
+    expect(response.status).toBe(304);
+    expect(response.headers.get("etag")).toBe(etag);
+  });
+
+  test("passes HEAD for a prebuilt file straight to the asset", async () => {
+    const response = await head("/api.json");
+
+    expect(response.status).toBe(200);
+    expect(await response.text()).toBe("");
+  });
+});
+
 describe("experimental provider opt-in", () => {
   const endpoint = "/experimental/v2.0/api.json";
 
@@ -295,6 +340,7 @@ async function request(
   path: string,
   headers: Record<string, string> = { "user-agent": "test" },
   waitUntil: (promise: Promise<unknown>) => void = () => {},
+  method = "GET",
 ) {
   const env = {
     PosthogToken: secret("posthog-token"),
@@ -376,9 +422,17 @@ async function request(
       },
     },
   } as unknown as Env;
+  // Like the real asset binding, answer HEAD with headers and no body.
+  const assets = env.ASSETS.fetch.bind(env.ASSETS);
+  env.ASSETS.fetch = (async (input: Request) => {
+    const response = await assets(input);
+    return input.method === "HEAD"
+      ? new Response(null, { status: response.status, headers: response.headers })
+      : response;
+  }) as typeof env.ASSETS.fetch;
 
   return worker.fetch(
-    new Request(`https://models.dev${path}`, { headers }),
+    new Request(`https://models.dev${path}`, { headers, method }),
     env,
     { waitUntil } as unknown as ExecutionContext,
   );
