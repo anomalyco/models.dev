@@ -2,7 +2,9 @@
 # tools.search: tool_search on the Responses API only (gpt-5.4 and later, per the model page's Supported tools): https://developers.openai.com/api/docs/guides/tools-tool-search
 # Sources:
 # https://developers.openai.com/api/docs/models/gpt-6-cyber
-# https://developers.openai.com/api/docs/pricing (Cyber models table; no long-context prices are listed)
+# https://developers.openai.com/api/docs/pricing (Cyber models table)
+# Long context (>272K input tokens, accessed 2026-11-23): $40 input, $4 cached input, $150 output per 1M (model page).
+# No long-context cache-write price is published, so the override leaves cache writes at the short-context rates.
 # https://openai.com/index/introducing-gpt-6-cyber/ (released 2026-11-05)
 # Access requires Daybreak Red plus approval for this model (https://openai.com/daybreak/), and Daybreak Red
 # API access requires an IP allowlist by default.
@@ -38,8 +40,17 @@ prompt_cache_key = true
 price = 20
 cache = { read = 2, write = { "30m" = 25, "12h" = 50 } }
 
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 40
+cache = { read = 4 }
+
 [cost.text.output]
 price = 100
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 150
 
 [cost.web_search]
 price = 10
