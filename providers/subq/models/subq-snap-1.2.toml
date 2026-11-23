@@ -2,6 +2,8 @@
 # https://docs.subq.ai/using-the-api/release-notes/
 # https://docs.subq.ai/endpoints/decisions-api/
 # System One returns typed answers and always reports zero output tokens.
+# @ai-sdk/typesafe-ai 3.0.42 sends images as multipart assets. Snap requires
+# a top-level images array in JSON, so the AI SDK entry is unset.
 schema = 2
 type = "decision"
 name = "SubQ Snap 1.2"
