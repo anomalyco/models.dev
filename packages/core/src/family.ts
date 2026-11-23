@@ -367,6 +367,7 @@ export const ModelFamilyValues = [
 
   // Sarvam
   "sarvam",
+  "sarvam-prism",
 
   // Falcon
   "falcon",
