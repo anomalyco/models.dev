@@ -335,6 +335,7 @@ export function resolveReasoningOptions(
   baseModel: string,
   levels: string[] | null | undefined,
   reasoning: boolean | null | undefined,
+  toggle?: boolean,
 ): CatalogReasoningOption[] | undefined {
   const source = REASONING_SOURCE[id] ?? baseModel;
   const base = controlFor(source);
@@ -362,6 +363,8 @@ export function resolveReasoningOptions(
 
   // No lab entry to start from: kenari's list is then the only evidence there is.
   if (hostLevels.length > 0) return sortControls([{ type: "effort", values: hostLevels }]);
+  // No levels, but the feed says reasoning can be switched off (`reasoning = { enabled = false }`).
+  if (reasons === true && toggle === true) return [{ type: "toggle" }];
 
   if (reasons === true) {
     throw new MissingReasoningOptionsError(
@@ -570,6 +573,7 @@ export const kenari = {
       baseModel,
       model.reasoning_options,
       model.reasoning,
+      model.reasoning_toggle,
     );
 
     // A gateway cannot grant more context than the model itself has, so kenari's number is only
