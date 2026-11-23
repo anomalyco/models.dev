@@ -1,0 +1,18 @@
+# Price and context: GET https://api.together.xyz/v1/models (accessed 2026-11-23): $1.05 input, $0.0525 cached input, $3.15 output per 1M; context 1,000,000.
+# Controls and flags follow this host's Qwen3.7-Max (same qwen-max line): Together forwards the route to Alibaba and documents
+#   no reasoning control for it (https://docs.together.ai/docs/inference/chat/reasoning).
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+structured_output = true
+prompt_cache_key = true
+
+[cost.text.input]
+price = 1.05
+cache = { read = 0.0525 }
+
+[cost.text.output]
+price = 3.15
