@@ -1,5 +1,7 @@
-# Alias for the current Gemini Flash release (gemini-3.7-flash).
-# Keep reasoning_options and cost in sync with gemini-3.7-flash.
+# Alias for the current Gemini Flash release (gemini-3.8-flash): live generateContent on gemini-flash-latest returned
+# modelVersion "gemini-3.8-flash" on 2026-11-23.
+# Keep reasoning_options and cost in sync with gemini-3.8-flash (https://ai.google.dev/gemini-api/docs/pricing#gemini-3.8-flash).
+# Flex and Priority do not scale cache storage. Rates double from 2027-01-01.
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
@@ -15,7 +17,7 @@ description = "High-efficiency Gemini model for agentic workflows, coding, and m
 family = "gemini-flash"
 open_weights = false
 knowledge = "2026-03"
-release_date = "2026-08-13"
+release_date = "2026-09-02"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
@@ -29,6 +31,7 @@ temperature = true
 top_p = true
 top_k = true
 cache = { implicit = true, explicit = true }
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_048_576
@@ -45,10 +48,23 @@ sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
 
 [cost.text.input]
 price = 0.75
-cache = { read = 0.075 }
+cache = { read = 0.075, storage = 0.5 }
 
 [cost.text.output]
 price = 3.75
 
 [cost.audio.input]
 price = 0.75
+cache = { read = 0.075, storage = 0.5 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 1.8, cache = { read = 1.8 } }, output = 1.8 }, audio = { input = { price = 1.8, cache = { read = 1.8 } } } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.5 } }, output = 0.5 }, audio = { input = { price = 0.5, cache = { read = 0.5 } } } }
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = { text = 2, audio = 2 }

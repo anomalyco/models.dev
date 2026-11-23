@@ -45,7 +45,7 @@ sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
 
 [cost.text.input]
 price = 0.3
-cache = { read = 0.03 }
+cache = { read = 0.03, storage = 1 }
 
 [cost.text.output]
 price = 2.5
