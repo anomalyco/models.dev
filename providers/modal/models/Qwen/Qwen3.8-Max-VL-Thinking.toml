@@ -1,0 +1,35 @@
+# https://modal.com/library/qwen/qwen3-8-max-vl links this VL endpoint to QwenCloud's hosted qwen3.8-max:
+# https://docs.qwencloud.com/models/qwen3-8-max. Modal cites the August model's vision scores (MMMU-Pro 82.3,
+# AndroidWorld 85.3, BabyVision 82.0), also reported at https://www.qwencloud.com/news/qwen-3-8-max.
+# Modal specifies a one-million-token context window. The 131,072 output limit comes from the lab entry.
+# QwenCloud lists 131K max output at https://www.qwencloud.com/models/qwen3.8-max.
+# Modal accepts text and images, supports structured outputs, and takes reasoning_effort = none or high.
+# The image types come from the lab model. https://modal.com/docs/guide/endpoints documents the APIs and prefix caching.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+name = "Qwen3.8-Max VL"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6
