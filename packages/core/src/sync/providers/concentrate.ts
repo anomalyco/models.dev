@@ -104,6 +104,9 @@ const GRAMMAR_ENFORCED = new Set([
   "gpt-5", "gpt-5-mini", "gpt-5-nano", "gpt-5.1", "gpt-5.4", "gpt-5.4-pro", "gpt-5.5", "gpt-5.6-luna", "gpt-5.6-sol",
   "gpt-5.6-terra", "gpt-6-astra", "gpt-6-luna", "gpt-6-sol", "gpt-6.1-sol", "gpt-6.1-terra",
 ]);
+// Newer GPT models on the same Responses surface as a probed predecessor take its formats (AGENTS.md Evidence: a new model
+// keeps its predecessor's tool details there unless something says otherwise).
+const GRAMMAR_FROM_PREDECESSOR: Record<string, string> = { "gpt-6.2-astra": "gpt-6-astra", "gpt-6.2-sol": "gpt-6.1-sol" };
 const MIN_MODELS = 20;
 const ALWAYS_ON = new Set(["gpt-oss-safeguard-20b", "mistral-large-4"]);
 
@@ -112,8 +115,8 @@ export const concentrate = {
   name: "Concentrate",
   modelsDir: "providers/concentrate/models",
   authoritativeHeaders: true,
-  // Grammar formats and always-on reasoning are published only for models probed live (GRAMMAR_ENFORCED, ALWAYS_ON),
-  // so capabilities aren't copied from a previous model either.
+  // Grammar formats and always-on reasoning come from the probe lists above (GRAMMAR_ENFORCED, GRAMMAR_FROM_PREDECESSOR,
+  // ALWAYS_ON), which this module owns, so the runner doesn't copy capabilities from a previous model.
   inheritPredecessorCapabilities: false,
   sourceID: (model) => model.id,
   missingModelID: (model) => (NOT_MODELS.has(model.id) ? undefined : model.id),
@@ -193,7 +196,8 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   const ownReasoning = doc.capabilities.reasoning;
   if (ownReasoning?.supported && !controls(ownReasoning) && controls(firstParty?.reasoning) && !ALWAYS_ON.has(model.id)) return undefined;
   // Custom tools (free-form and grammar formats) take the lab's formats where a route accepts them.
-  const freeform = GRAMMAR_ENFORCED.has(model.id) && supports.some((s) => s.tools.custom_tools === true) ? firstParty?.freeform : undefined;
+  const grammar = GRAMMAR_ENFORCED.has(model.id) || GRAMMAR_FROM_PREDECESSOR[model.id] !== undefined;
+  const freeform = grammar && supports.some((s) => s.tools.custom_tools === true) ? firstParty?.freeform : undefined;
   if (freeform !== undefined) doc.capabilities.tools = { ...doc.capabilities.tools, supported: true, freeform };
   if (claude) doc.api = { messages: { sdk: { aisdk: "@ai-sdk/anthropic", opencodeai: "@opencode/ai/providers/anthropic-compatible" } } };
   if (price === undefined) delete doc.cost;
@@ -205,7 +209,10 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
     ALWAYS_ON.has(model.id) && doc.capabilities.reasoning?.supported && !doc.capabilities.reasoning.toggle && !doc.capabilities.reasoning.effort
       ? `# Always on: reasons even at reasoning.effort none, and the routes take no other level (live probe ${PROBED})` : undefined,
     doc.limit ? `# Limit: max_input_tokens ${model.max_input_tokens}, max_tokens ${model.max_tokens} at ${API_ENDPOINT}, capped at the lab's` : undefined,
-    freeform !== undefined ? `# Custom tools: regex grammar ZZ[0-9]{3} enforced on Responses (live probe ${PROBED})` : undefined,
+    freeform === undefined ? undefined
+      : GRAMMAR_FROM_PREDECESSOR[model.id] !== undefined
+        ? `# Custom tools: formats from ${GRAMMAR_FROM_PREDECESSOR[model.id]}, this host's previous model in the line (regex grammar enforced there, live probe ${PROBED})`
+        : `# Custom tools: regex grammar ZZ[0-9]{3} enforced on Responses (live probe ${PROBED})`,
   ].filter(Boolean).join("\n");
   return { id: model.id, v2: doc, ...(header ? { header } : {}) };
 }
