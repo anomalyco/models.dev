@@ -1,17 +1,18 @@
+# Endpoint: https://gateway.respan.ai/v1 (OpenAI-compatible; GET /v1/models lists
+# the model IDs, API key required).
+# Pricing: USD per million tokens, the list price Respan bills for each model,
+# published without auth at https://api.respan.ai/api/v1/models
+# (`pricing.input_cost` / `output_cost`) and on
+# https://platform.respan.ai/platform/models.
+# Reasoning HTTP format (live on the gateway 2026-11-23): POST /chat/completions
+# accepts top-level `reasoning_effort` (the values listed per model) and, where a
+# model file says so, Anthropic's `thinking` object.
+# Sources:
+# https://respan.ai/docs/gateway/overview
+# https://respan.ai/docs/documentation/features/gateway/respan-params
 name = "Respan"
 env = ["RESPAN_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"
-# Reasoning HTTP format (accessed 2026-11-22):
-# POST /chat/completions accepts top-level `reasoning_effort` (the values listed
-# per model) and Anthropic's `thinking` object (`type`, `budget_tokens`). The
-# gateway translates either into the provider's native field; OpenAI and
-# Gemini routes take `reasoning_effort` as-is.
-# Model IDs: GET https://gateway.respan.ai/v1/models (API key required).
-# Pricing: USD per million tokens, the list price Respan bills for each model,
-# as shown on https://platform.respan.ai/platform/models.
-# Sources:
-# https://respan.ai/docs/gateway/overview
-# https://respan.ai/docs/documentation/features/gateway/respan-params
 api = "https://gateway.respan.ai/v1"
 doc = "https://respan.ai/docs/gateway"

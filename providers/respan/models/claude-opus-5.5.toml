@@ -6,8 +6,8 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max
 structured_output = true
 
 [cost.text.input]
-price = 3.2
-cache = { read = 0.2, write = 5 }
+price = 4
+cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
 
 [cost.text.output]
-price = 16
+price = 20

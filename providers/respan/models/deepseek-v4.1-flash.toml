@@ -1,14 +1,14 @@
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = low|high|max
+# Off is reasoning_effort=none; graded levels low|high|max. thinking.type is not
+# forwarded on this route (live 2026-11-23).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 
 [cost.text.input]
-price = 0.0507
-cache = { read = 0.001014 }
+price = 0.0498
+cache = { read = 0.000996 }
 
 [cost.text.output]
-price = 0.2028
+price = 0.1992

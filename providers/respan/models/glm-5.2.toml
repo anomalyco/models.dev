@@ -1,13 +1,14 @@
-# Effort: reasoning_effort = high|max (low/medium map to high, xhigh to max)
+# Off is reasoning_effort=none; graded levels high|max (low/medium map to high,
+# xhigh to max). thinking.type is not forwarded on this route (live 2026-11-23).
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-reasoning = { supported = true, effort = ["high", "max"] }
+reasoning = { supported = true, effort = ["none", "high", "max"] }
 
 [cost.text.input]
-price = 0.5625
-cache = { read = 0.105 }
+price = 0.62
+cache = { read = 0.14 }
 
 [cost.text.output]
-price = 1.8
+price = 2.42
