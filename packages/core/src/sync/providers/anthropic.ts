@@ -18,6 +18,9 @@ const AnthropicModel = z.object({
   created_at: z.string(),
   max_input_tokens: z.number().int().nonnegative(),
   max_tokens: z.number().int().nonnegative(),
+  lifecycle: z.string().nullable().optional(),
+  deprecated_at: z.string().nullable().optional(),
+  retires_at: z.string().nullable().optional(),
   capabilities: z.object({
     effort: z.object({
       supported: z.boolean(),
@@ -35,6 +38,7 @@ const AnthropicModel = z.object({
       types: z.object({
         adaptive: CapabilitySupport.optional(),
         enabled: CapabilitySupport.optional(),
+        disabled: CapabilitySupport.optional(),
       }).passthrough().optional(),
     }).passthrough().optional(),
   }).passthrough(),
@@ -53,12 +57,17 @@ const AnthropicResponse = z.object({
 
 export type AnthropicModel = z.infer<typeof AnthropicModel>;
 
-export interface AnthropicPricing {
+interface AnthropicPrices {
   input: number;
   output: number;
   cacheRead: number;
   cacheWrite: number;
+}
+
+export interface AnthropicPricing extends AnthropicPrices {
   deprecated: boolean;
+  // Prices for prompts over `size` tokens, from "(for prompts over N tokens)" rows.
+  tiers?: (AnthropicPrices & { size: number })[];
 }
 
 interface AnthropicSourceModel extends AnthropicModel {
@@ -194,6 +203,7 @@ function effectiveOn(label: string, now: Date) {
 export function normalizeModelName(value: string) {
   return markdownText(value)
     .replace(/\s*\([^)]*(?:deprecated|retired|limited availability)[^)]*\)/gi, "")
+    .replace(/\s*\(for prompts (?:up to|over) [\d,]+ tokens\)/gi, "")
     .replace(/\s+(?:through|starting) [A-Z][a-z]+ \d{1,2}, \d{4}.*$/i, "")
     .trim()
     .toLowerCase();
@@ -225,6 +235,7 @@ export function parseAnthropicPricing(markdown: string, now = new Date()) {
   }
 
   const result = new Map<string, AnthropicPricing>();
+  const tiers: [string, AnthropicPrices & { size: number }][] = [];
   for (const row of rows.slice(2)) {
     const label = markdownText(row[indexes.model] ?? "");
     if (label === "" || !effectiveOn(label, now)) continue;
@@ -235,6 +246,11 @@ export function parseAnthropicPricing(markdown: string, now = new Date()) {
     if (input === undefined || output === undefined || cacheRead === undefined || cacheWrite === undefined) {
       throw new Error(`Anthropic pricing row has invalid prices: ${label}`);
     }
+    const over = label.match(/\(for prompts over ([\d,]+) tokens\)/i)?.[1];
+    if (over !== undefined) {
+      tiers.push([normalizeModelName(label), { size: Number(over.replaceAll(",", "")), input, output, cacheRead, cacheWrite }]);
+      continue;
+    }
     result.set(normalizeModelName(label), {
       input,
       output,
@@ -244,8 +260,19 @@ export function parseAnthropicPricing(markdown: string, now = new Date()) {
     });
   }
 
+  for (const [name, tier] of tiers) {
+    const base = result.get(name);
+    if (base === undefined) throw new Error(`Anthropic pricing row has a prompt-length band but no base row: ${name}`);
+    (base.tiers ??= []).push(tier);
+  }
+
   if (result.size < 5) throw new Error(`Anthropic pricing table returned only ${result.size} active models`);
   return result;
+}
+
+// The models API marks a deprecated model with lifecycle "deprecated" and a retirement date.
+function isDeprecated(model: AnthropicModel) {
+  return model.lifecycle === "deprecated" || (model.retires_at ?? null) !== null;
 }
 
 function releaseDate(value: string, fallback: string | undefined) {
@@ -257,11 +284,16 @@ function releaseDate(value: string, fallback: string | undefined) {
 function reasoningOptions(model: AnthropicModel, existing: ExistingModel | undefined) {
   if (model.capabilities.thinking?.supported !== true) return undefined;
   const enabled = model.capabilities.thinking.types?.enabled?.supported === true;
+  const disabled = model.capabilities.thinking.types?.disabled?.supported;
   const options = (existing?.reasoning_options ?? []).filter((option) => {
     if (option.type === "effort") return false;
     if (option.type === "budget_tokens") return enabled;
+    if (option.type === "toggle") return disabled !== false;
     return true;
   });
+  if (disabled === true && !options.some((option) => option.type === "toggle")) {
+    options.unshift({ type: "toggle" });
+  }
   if (enabled && !options.some((option) => option.type === "budget_tokens")) {
     options.push({ type: "budget_tokens" });
   }
@@ -287,7 +319,13 @@ function syncedCost(model: AnthropicSourceModel, existing: ExistingModel | undef
     reasoning: existing?.cost?.reasoning,
     input_audio: existing?.cost?.input_audio,
     output_audio: existing?.cost?.output_audio,
-    tiers: existing?.cost?.tiers,
+    tiers: model.pricing.tiers?.map(({ size, input, output, cacheRead, cacheWrite }) => ({
+      input,
+      output,
+      cache_read: cacheRead,
+      cache_write: cacheWrite,
+      tier: { type: "context" as const, size },
+    })) ?? existing?.cost?.tiers,
   };
 }
 
@@ -314,7 +352,7 @@ export function buildAnthropicModel(
   // Models API has no fast-mode surface; preserve authored experimental/provider config.
   const experimental = existing?.experimental;
   const provider = existing?.provider;
-  const status = model.pricing?.deprecated ? "deprecated" as const : existing?.status;
+  const status = model.pricing?.deprecated || isDeprecated(model) ? "deprecated" as const : existing?.status;
   const structured_output = model.capabilities.structured_outputs?.supported
     ?? existing?.structured_output;
   const limit = context !== undefined || output !== undefined || existing?.limit !== undefined
