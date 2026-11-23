@@ -15,9 +15,9 @@
 # group_ratio, the other factor in the gateway's quota math, is 1 for every group these ids
 # bill under (`pro`, plus `free`/`starter` on the zero-rated shelf), read from /api/pricing
 # on 2026-11-21 - so the conversion below needs no extra multiplier.
-# Ids ending in `:free` are the zero-rated shelf: no card and no trial timer. As of 2026-11-21 the only
-# served `:free` ids that bill real credit are `deepseek-v4-flash-0731:free` and its `-thinking`
-# alias, both at model_ratio 0.07 (and `glm-5.3-flash:free` has since moved to model_ratio 0.075); every other served `:free` id is priced at zero. The gateway
+# Ids ending in `:free` are the free shelf: no card and no trial timer. It is mostly, but not
+# entirely, zero-rated - on 2026-11-23, 31 of the 40 served `:free` ids priced at zero, while the
+# rest (e.g. `qwen4-max:free`, `glm-5.3-flash:free`) bill a small per-token rate. The gateway
 # rotates this shelf, so re-read https://crowllm.com/api/pricing before relying on it.
 # This catalog is hand-authored for now: the sync module that would patch prices from /api/pricing
 # is prepared and will land in a follow-up PR; until then /api/pricing is authoritative and the shelf rotates.
