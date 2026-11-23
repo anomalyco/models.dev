@@ -17,7 +17,9 @@
 # on 2026-11-21 - so the conversion below needs no extra multiplier.
 # Ids ending in `:free` are the free shelf: no card and no trial timer. It is mostly, but not
 # entirely, zero-rated - on 2026-11-23, 31 of the 39 served `:free` ids priced at zero, while the
-# rest (e.g. `qwen4-max:free`, `glm-5.3-flash:free`) bill a small per-token rate. The gateway
+# rest bill a small per-token rate. This catalog ships five of those billed ids:
+# `deepseek-v4-flash:free`, `deepseek-v4-flash-0731:free`,
+# `deepseek-v4-flash-0731-thinking:free`, `glm-5.3-flash:free` and `hy4-flash:free`. The gateway
 # rotates this shelf, so re-read https://crowllm.com/api/pricing before relying on it.
 # This catalog is hand-authored: /api/pricing is authoritative and the shelf rotates.
 # Catalog: https://crowllm.com/v1/models (public, no key) | Rates: https://crowllm.com/api/pricing
