@@ -1,0 +1,36 @@
+# Sources (accessed 2026-11-23):
+# - GET https://api.openscale.so/v1/models (public; prices in USD per token, max_context_length, max_length,
+#   supported_parameters incl. reasoning_effort values, hugging_face_id = deepseek-ai/DeepSeek-V4.1-Flash-1017)
+# - https://openscale.so/models/deepseek-v4.1-flash and https://openscale.so/docs/models (limits, image input)
+# The id always serves the latest tested version, now 1017, so the base is the 1017 lab entry.
+# Effort: reasoning_effort = none|low|high|max (none = thinking off, so no toggle), the lab's own levels.
+# Limit: context 1_048_568 (prompt + max_tokens); output 384_000 is inherited.
+# Modalities: JPEG, PNG, GIF and WebP image input, as in the lab entry, so they are inherited.
+# Cache: automatic prefix cache; the cached-input rate is the published price per 1M tokens.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_568
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.openscale.so/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.24
