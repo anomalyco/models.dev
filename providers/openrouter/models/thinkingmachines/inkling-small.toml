@@ -2,6 +2,7 @@
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
+# Reasoning field: returned in message.reasoning and reasoning_details; reasoning sent back in reasoning_content, reasoning or reasoning_details on an earlier assistant turn is read by the model (live 2026-11-23, routed to DeepInfra). reasoning_content is the field Inkling's chat template reads (https://huggingface.co/thinkingmachines/Inkling-Small).
 schema = 2
 base_model = "thinkingmachines/inkling-small"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -17,6 +18,7 @@ output = 262_144
 
 [api.chat-completions]
 capabilities = { system_updates = true }
+compatibility = { reasoning_field = "reasoning_content" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

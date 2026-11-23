@@ -1,3 +1,4 @@
+# Reasoning field: returned in message.reasoning and reasoning_details; reasoning sent back in reasoning_content or reasoning on an earlier assistant turn is read by the model (live 2026-11-23, routed to Prime Intellect). reasoning_content is the field Inkling's chat template reads (https://huggingface.co/thinkingmachines/Inkling-2-Mini).
 schema = 2
 base_model = "thinkingmachines/inkling-2-mini"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -8,6 +9,7 @@ reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "h
 structured_output = true
 
 [api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

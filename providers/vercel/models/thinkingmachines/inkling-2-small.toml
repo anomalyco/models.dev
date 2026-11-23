@@ -1,4 +1,5 @@
 # Capabilities the catalog doesn't state (api.chat-completions.capabilities.system_updates) come from thinkingmachines/inkling-small, this host's previous model in the family.
+# Reasoning field: returned in message.reasoning and reasoning_details; reasoning sent back in reasoning_content, reasoning or reasoning_details on an earlier assistant turn is read by the model (live 2026-11-23). reasoning_content is the field Inkling's chat template reads (https://huggingface.co/thinkingmachines/Inkling-2-Small).
 schema = 2
 base_model = "thinkingmachines/inkling-2-small"
 
@@ -12,6 +13,7 @@ output = 262_144
 
 [api.chat-completions]
 capabilities = { system_updates = true }
+compatibility = { reasoning_field = "reasoning_content" }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"
