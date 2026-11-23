@@ -1,3 +1,4 @@
+# Status: deprecated, shutdown 2026-12-01 (API requests route to gemini-3.8-flash at its rates from then): https://ai.google.dev/gemini-api/docs/deprecations
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-pro
 # - https://ai.google.dev/gemini-api/docs/pricing
@@ -14,6 +15,7 @@
 # recommended_api: not set. Interactions has no thinking budget and accepts few thinking levels for Gemini 2.5 (live probe 2026-11-20: Pro and Flash accept low/high, Flash-Lite only high, and `minimal` is rejected, so thinking can't be turned off), so generate-content keeps the full budget and toggle controls.
 schema = 2
 base_model = "google/gemini-2.5-pro"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }

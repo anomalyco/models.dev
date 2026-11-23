@@ -1,9 +1,11 @@
+# Status: deprecated, shutdown 2026-12-18 (replacement gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts): https://ai.google.dev/gemini-api/docs/deprecations
 # Sources:
 # https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-tts-preview
 # https://ai.google.dev/gemini-api/docs/pricing
 # Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 base_model = "google/gemini-3.1-flash-tts-preview"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }

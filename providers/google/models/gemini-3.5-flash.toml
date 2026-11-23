@@ -1,3 +1,6 @@
+# Status: deprecated. Off https://ai.google.dev/gemini-api/docs/pricing since 2026-10-08; the endpoint is not shutting down and routes
+#   API requests to gemini-3.6-flash (https://ai.google.dev/gemini-api/docs/changelog, 2026-10-08; live generateContent returned
+#   modelVersion "gemini-3.6-flash" on 2026-11-23).
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash
 # - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
@@ -16,6 +19,7 @@ family = "gemini-flash"
 open_weights = false
 knowledge = "2025-01"
 release_date = "2026-05-19"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
