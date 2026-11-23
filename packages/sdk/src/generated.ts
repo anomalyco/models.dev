@@ -491,6 +491,7 @@ export type ModelFamily =
   | "runway-gen"
   | "sakana-namazu"
   | "sarvam"
+  | "sarvam-prism"
   | "schematron-small"
   | "schematron-turbo"
   | "scribe"

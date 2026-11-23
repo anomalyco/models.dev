@@ -9,7 +9,7 @@ v2_only = true
 type = "decision"
 name = "Sarvam Prism"
 description = "System-1 decision model built on Sarvam 105B that returns calibrated probabilities for yes/no, choice, and score questions"
-family = "sarvam"
+family = "sarvam-prism"
 open_weights = true
 release_date = "2026-11-03"
 
@@ -27,3 +27,7 @@ top_k = false
 [limit]
 context = 131_072
 output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/sarvamai/prism"
