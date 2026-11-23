@@ -1,3 +1,4 @@
+# Toggle: thinking.type = adaptive|disabled. Models API (GET https://api.anthropic.com/v1/models/claude-opus-4-8, 2026-11-23): capabilities.thinking.types.disabled.supported = true; thinking is "Adaptive", not always on: https://platform.claude.com/docs/en/models/opus-4-8/overview
 # tools.strict/search: strict tool use (models: https://platform.claude.com/docs/en/build-with-claude/structured-outputs) and the tool search tool on the Messages API: https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility
 # tools.choice: auto/any/tool/none; Opus 5.5, Sonnet 5.5 and Fable 5.1 reject forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
 # tools.updates: tool_addition/tool_removal blocks (inline-tools-2026-09-15) keep the cache.
@@ -21,7 +22,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 temperature = false
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
