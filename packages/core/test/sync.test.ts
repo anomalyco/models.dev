@@ -2682,6 +2682,64 @@ test("xAI sync clears cost tiers when API reports no long-context band", () => {
   expect(model.cost?.tiers).toBeUndefined();
 });
 
+test("OpenRouter rewrites rolling aliases when their target changes or disappears", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "openrouter-alias-"));
+  const modelsDir = path.join(root, "providers/openrouter/models");
+  const id = "~openai/gpt-astra-latest";
+  const file = path.join(modelsDir, id + ".toml");
+  const targets = ["openai/gpt-6.2-astra", "openai/gpt-6.2-sol"];
+  let slug: string | undefined;
+  const provider = {
+    ...openrouter,
+    modelsDir,
+    fetchModels: async () => ({ data: [openRouterModel({
+      id, name: "OpenAI: GPT Astra Latest", description: "A rolling route",
+      alias_target: slug === undefined ? undefined : { slug },
+      supported_parameters: ["tools"],
+      top_provider: { context_length: 1_000_000, max_completion_tokens: null },
+    })] }),
+  };
+  const read = async () => Bun.TOML.parse(await readFile(file, "utf8"));
+  try {
+    await mkdir(path.dirname(file), { recursive: true });
+    await mkdir(path.join(root, "models/openai"), { recursive: true });
+    for (const target of targets) {
+      await copyFile(`models/${target}.toml`, path.join(root, `models/${target}.toml`));
+    }
+    // Start with the unlinked file that earlier syncs wrote.
+    expect(await syncProvider(provider)).toMatchObject({ created: 1 });
+    for (slug of targets) {
+      expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+      expect(await read()).toMatchObject({ base_model: slug, name: "GPT Astra Latest", description: "A rolling route" });
+      const linked = await read();
+      expect(linked).not.toHaveProperty("release_date");
+      expect(linked).not.toHaveProperty("limit.output");
+      expect(await syncProvider(provider)).toMatchObject({ unchanged: 1 });
+    }
+    for (const unresolved of ["openai/missing-target", undefined]) {
+      slug = unresolved;
+      await syncProvider(provider);
+      const standalone = await read();
+      expect(standalone).not.toHaveProperty("base_model");
+      expect(standalone).toHaveProperty("release_date");
+      slug = targets[0];
+      expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
+    }
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("OpenRouter media aliases resolve the advertised target ahead of the previous lab", () => {
+  const source = openRouterMediaModel({
+    id: "~openai/speech-latest", name: "OpenAI: Speech Latest", description: "Rolling speech route",
+    alias_target: { slug: "openai/tts-1-hd" },
+  });
+  const linked = buildOpenRouterMediaModel(source, "speech", { base_model: "openai/tts-1" });
+  expect(linked).toMatchObject({ base_model: "openai/tts-1-hd", name: "Speech Latest", description: source.description });
+  expect(buildOpenRouterMediaModel({ ...source, alias_target: null }, "speech", linked).base_model).toBeUndefined();
+});
+
 test("OpenRouter sync maps pricing.overrides into cost tiers", () => {
   const model = buildOpenRouterModel(openRouterModel({
     id: "x-ai/grok-4.5",

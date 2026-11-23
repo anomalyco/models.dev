@@ -4,11 +4,9 @@
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
+base_model = "unbiased/pareto-26.10"
 name = "Pareto Latest"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
-family = "pareto"
-open_weights = false
-release_date = "2026-10-13"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
@@ -18,11 +16,6 @@ output = ["text"]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 structured_output = false
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 131_072
 
 [api.chat-completions]
 capabilities = { system_updates = true }

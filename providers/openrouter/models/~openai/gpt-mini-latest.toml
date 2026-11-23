@@ -6,12 +6,9 @@
 # tools.updates is left out: on GPT-5.5 and earlier, calls to tools added through additional_tools come back namespaced and replaying them without the namespace fails ("Missing namespace for function_call", live 2026-11-16), so callers fold tool changes into the top-level tools list.
 # Live 2026-11-17 (@opencode/ai request shapes, 2 runs): no tools.updates: an addition through additional_tools is called, but a removal announcement was ignored 2/2 and a redefinition keeps the old schema; the alias has no base_model, so replaying added-tool calls (the GPT-5.5 namespace failure) is unknown.
 schema = 2
+base_model = "openai/gpt-5.4-mini"
 name = "GPT Mini Latest"
 description = "Compact GPT model for low-latency assistance and high-volume workloads"
-family = "gpt-mini"
-open_weights = false
-knowledge = "2025-08-31"
-release_date = "2026-04-27"
 
 [modalities]
 input = ["application/pdf", "image/png", "image/jpeg", "image/webp", "image/gif", "text"]
@@ -24,10 +21,6 @@ structured_output = true
 temperature = false
 system_updates = true
 cache = { implicit = { min_tokens = 1_024 } }
-
-[limit]
-context = 400_000
-output = 128_000
 
 [api.chat-completions]
 

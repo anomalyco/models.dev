@@ -5,28 +5,17 @@
 # Cache: automatic from 1,024 tokens; GPT-5.6+ explicit prompt_cache_breakpoint, 30m TTL (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
 # Live 2026-11-17 (@opencode/ai request shapes, every tool in additional_tools, 2 runs each on this model): tools.updates = ["add", "remove"] on [api.responses]: additions and removal announcements work; a redefinition keeps the old schema. Chat Completions has no mechanism.
 schema = 2
+base_model = "openai/gpt-6.2-astra"
 name = "GPT Astra Latest"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt-astra"
-open_weights = false
-release_date = "2026-09-11"
-
-[modalities]
-input = ["application/pdf", "image/png", "image/jpeg", "image/webp", "image/gif", "text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-temperature = false
 system_updates = true
 effort_updates = true
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tokens = 1_024 } }
-
-[limit]
-context = 1_050_000
-output = 128_000
 
 [api.chat-completions]
 

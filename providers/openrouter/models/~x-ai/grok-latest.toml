@@ -5,11 +5,9 @@
 # Cache: automatic (https://openrouter.ai/docs/guides/best-practices/prompt-caching#grok)
 # Per API: system_updates on [api.chat-completions] only, where it was tested. Responses and Messages are untested for this model.
 schema = 2
+base_model = "xai/grok-4.7"
 name = "Grok Latest"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
-family = "grok"
-open_weights = false
-release_date = "2026-07-08"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
@@ -19,11 +17,9 @@ output = ["text"]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-temperature = true
 cache = { implicit = true }
 
 [limit]
-context = 500_000
 output = 450_000
 
 [api.chat-completions]
