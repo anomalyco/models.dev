@@ -1,0 +1,20 @@
+# Limit: max_input_tokens 128000, max_tokens 32000 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "mistral/mistral-small-3.1-24b-instruct"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[limit]
+output = 32_000
+
+[cost.text.input]
+price = 0.351
+
+[cost.text.output]
+price = 0.555

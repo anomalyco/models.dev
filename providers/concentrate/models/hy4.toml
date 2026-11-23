@@ -1,0 +1,19 @@
+# Limit: max_input_tokens 1000000, max_tokens 64000 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[cost.text.input]
+price = 0.417
+cache = { read = 0.021 }
+
+[cost.text.output]
+price = 1.2505
