@@ -226,6 +226,7 @@ export type ModelFamily =
   | "imagen"
   | "indictrans"
   | "inkling"
+  | "inkling-mini"
   | "inkling-small"
   | "inkling-small-free"
   | "intellect"
