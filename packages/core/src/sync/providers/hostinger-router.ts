@@ -73,9 +73,6 @@ export const hostingerRouter = {
   id: "hostinger-router",
   name: "Hostinger Router",
   modelsDir: "providers/hostinger-router/models",
-  // New models are curated by hand: reasoning controls need host-specific
-  // verification, so mass creation from the flat catalog would invent data
-  skipCreates: true,
   trackMissingModels: false,
   deleteMissing: true,
   async fetchModels() {
