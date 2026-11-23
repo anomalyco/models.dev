@@ -348,9 +348,17 @@ export function resolveReasoningOptions(
   // kenari's own list, restricted to the vocabulary the schema knows.
   const hostLevels = (levels ?? []).filter(isReasoningEffort);
 
+  // kenari's `reasoning_toggle` is its registered off switch (`reasoning = { enabled = false }`). It joins effort
+  // levels as a toggle unless they already include `none`, which is how an effort set says "off".
+  const withToggle = (options: CatalogReasoningOption[]) =>
+    toggle === true && options.length > 0 && !options.some((option) => option.type === "toggle"
+      || (option.type === "effort" && option.values.includes("none")))
+      ? [{ type: "toggle" } as CatalogReasoningOption, ...options]
+      : options;
+
   if (base?.options != null) {
     if (base.options.length === 0) return [];
-    return sortControls(
+    return sortControls(withToggle(
       base.options.map((option) => {
         if (option.type !== "effort" || hostLevels.length === 0) return option;
         const kept = option.values.filter((value) => value !== null && hostLevels.includes(value));
@@ -358,11 +366,11 @@ export function resolveReasoningOptions(
         // stands rather than the entry claiming "no caller control".
         return kept.length === 0 ? option : { type: "effort", values: kept };
       }),
-    );
+    ));
   }
 
   // No lab entry to start from: kenari's list is then the only evidence there is.
-  if (hostLevels.length > 0) return sortControls([{ type: "effort", values: hostLevels }]);
+  if (hostLevels.length > 0) return sortControls(withToggle([{ type: "effort", values: hostLevels }]));
   // No levels, but the feed says reasoning can be switched off (`reasoning = { enabled = false }`).
   if (reasons === true && toggle === true) return [{ type: "toggle" }];
 

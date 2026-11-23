@@ -90,3 +90,9 @@ test("a reasoner with no effort levels but reasoning_toggle on gets a toggle", (
   expect(resolveReasoningOptions("inkling-2-mini-uncensored", "thinkingmachines/inkling-2-mini", null, true, true)).toEqual([{ type: "toggle" }]);
   expect(() => resolveReasoningOptions("inkling-2-mini-uncensored", "thinkingmachines/inkling-2-mini", null, true, false)).toThrow();
 });
+
+test("reasoning_toggle joins effort levels unless they already include none", () => {
+  const levels = (values: string[]) => resolveReasoningOptions("example-model", "example/none", values, true, true);
+  expect(levels(["low", "medium", "high"])).toEqual([{ type: "toggle" }, { type: "effort", values: ["low", "medium", "high"] }]);
+  expect(levels(["none", "low", "high"])).toEqual([{ type: "effort", values: ["none", "low", "high"] }]);
+});
