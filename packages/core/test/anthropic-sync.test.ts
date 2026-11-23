@@ -1,6 +1,11 @@
 import { expect, test } from "bun:test";
+import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
-import { buildAnthropicModel, parseAnthropicPricing, type AnthropicModel } from "../src/sync/providers/anthropic.js";
+import { syncProvider } from "../src/sync/index.js";
+
+import { anthropic, buildAnthropicModel, parseAnthropicPricing, type AnthropicModel } from "../src/sync/providers/anthropic.js";
 
 function anthropicModel(overrides: Partial<AnthropicModel> = {}): AnthropicModel {
   return {
@@ -129,4 +134,44 @@ test("marks models the API lists as deprecated", () => {
   const active = anthropicModel({ lifecycle: "active", deprecated_at: null, retires_at: null });
   expect(buildAnthropicModel(active, undefined, "anthropic/claude-opus-5").status).toBeUndefined();
   expect(buildAnthropicModel(active, { status: "beta" }, "anthropic/claude-opus-5").status).toBe("beta");
+});
+
+test("writes the toggle's wire path as the file header", () => {
+  const existing = { base_model: "anthropic/claude-opus-5", reasoning: true, reasoning_options: [] };
+  const context = { existing: () => existing, authored: () => existing };
+  expect(anthropic.translateModel(anthropicModel(), context)).toMatchObject({
+    header: "# Toggle: thinking.type = adaptive|disabled. Models API (GET https://api.anthropic.com/v1/models/claude-opus-5): capabilities.thinking.types.disabled.supported = true\n",
+  });
+  expect(anthropic.translateModel(anthropicModel({ capabilities: thinking(true, true) }), context)?.header)
+    .toStartWith("# Toggle: thinking.type = adaptive|enabled|disabled.");
+  // No toggle, no header.
+  expect(anthropic.translateModel(anthropicModel({ capabilities: thinking(false) }), context)?.header).toBeUndefined();
+});
+
+test("a toggle file the sync creates starts with the toggle's wire path", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-anthropic-toggle-"));
+  const modelsDir = path.join(root, "providers", "anthropic", "models");
+  const repo = path.join(import.meta.dirname, "..", "..", "..");
+  try {
+    await mkdir(modelsDir, { recursive: true });
+    await mkdir(path.join(root, "models", "anthropic"), { recursive: true });
+    await copyFile(
+      path.join(repo, "models", "anthropic", "claude-opus-5.toml"),
+      path.join(root, "models", "anthropic", "claude-opus-5.toml"),
+    );
+    const result = await syncProvider({
+      ...anthropic,
+      modelsDir,
+      fetchModels: async () => ({ models: [anthropicModel()], pricing: pricingMarkdown }),
+    });
+
+    expect(result).toMatchObject({ created: 1 });
+    const content = await readFile(path.join(modelsDir, "claude-opus-5.toml"), "utf8");
+    expect(content.split("\n")[0]).toBe(
+      "# Toggle: thinking.type = adaptive|disabled. Models API (GET https://api.anthropic.com/v1/models/claude-opus-5): capabilities.thinking.types.disabled.supported = true",
+    );
+    expect(content).toContain('reasoning = { supported = true, toggle = true, effort = ["low", "high"] }');
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });

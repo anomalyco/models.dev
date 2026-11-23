@@ -110,15 +110,32 @@ export const anthropic = {
     const existing = context.existing(model.id);
     if (existing !== undefined) {
       const baseModel = context.authored(model.id)?.base_model;
-      return { id: model.id, model: buildAnthropicModel(model, existing, baseModel) };
+      return withToggleHeader(model, { id: model.id, model: buildAnthropicModel(model, existing, baseModel) });
     }
 
     const baseModel = `anthropic/${model.id}`;
     if (!existsSync(path.join(METADATA_DIR, `${model.id}.toml`))) return undefined;
     const canonical = model.canonical_id === undefined ? undefined : context.existing(model.canonical_id);
-    return { id: model.id, model: buildAnthropicModel(model, canonical, baseModel) };
+    return withToggleHeader(model, { id: model.id, model: buildAnthropicModel(model, canonical, baseModel) });
   },
 } satisfies SyncProvider<AnthropicSourceModel>;
+
+// Every toggle needs its wire path in the file's leading comments. Existing
+// headers win over this one, so it lands on files the sync creates.
+export function toggleHeader(model: AnthropicModel) {
+  const types = model.capabilities.thinking?.types ?? {};
+  const values = (["adaptive", "enabled", "disabled"] as const)
+    .filter((type) => types[type]?.supported === true);
+  return `# Toggle: thinking.type = ${values.join("|")}. Models API (GET ${API_ENDPOINT}/${model.id}): capabilities.thinking.types.disabled.supported = true\n`;
+}
+
+function withToggleHeader(
+  model: AnthropicModel,
+  translated: { id: string; model: SyncedModel },
+): { id: string; model: SyncedModel; header?: string } {
+  const toggle = translated.model.reasoning_options?.some((option) => option.type === "toggle");
+  return toggle ? { ...translated, header: toggleHeader(model) } : translated;
+}
 
 async function fetchAllModels(key: string) {
   const models: AnthropicModel[] = [];
