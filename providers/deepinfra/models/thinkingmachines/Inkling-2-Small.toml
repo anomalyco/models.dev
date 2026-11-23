@@ -2,6 +2,7 @@
 # Mid-conversation flags: not tested, so left unset.
 # Limit: context is the 262,144 that both https://api.deepinfra.com/v1/openai/models (context_length and max_tokens) and the deploy catalog report; the lab's 1,048,576 is not served here. Output is inherited.
 # Prices, cache and structured output: the deploy catalog https://api.deepinfra.com/models/list?type=text-generation (accessed 2026-11-13): $0.3 input and $1 output per 1M tokens, cached input at 0.1x the input price ($0.03), tag structured-output; https://api.deepinfra.com/v1/openai/models lists the same prices and a prompt_cache tag (implicit cache, prompt_cache_key).
+# Capabilities the catalog doesn't state (capabilities.system_updates) come from thinkingmachines/Inkling-Small, this host's previous model in the family.
 schema = 2
 base_model = "thinkingmachines/inkling-2-small"
 
@@ -10,6 +11,7 @@ reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "h
 structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
+system_updates = true
 
 [cost.text.input]
 price = 0.3

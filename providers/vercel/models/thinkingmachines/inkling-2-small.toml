@@ -1,3 +1,4 @@
+# Capabilities the catalog doesn't state (api.chat-completions.capabilities.system_updates) come from thinkingmachines/inkling-small, this host's previous model in the family.
 schema = 2
 base_model = "thinkingmachines/inkling-2-small"
 
@@ -10,6 +11,7 @@ cache = { implicit = true }
 output = 262_144
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

@@ -1,5 +1,6 @@
 # Toggle: reasoning.enabled = true|false
 # https://vercel.com/docs/ai-gateway/sdks-and-apis/openai-chat-completions/reasoning
+# Capabilities the catalog doesn't state (capabilities.structured_output, api.chat-completions.capabilities.system_updates) come from alibaba/qwen3.8-max-prime, this host's previous model in the family.
 schema = 2
 base_model = "alibaba/qwen4-max"
 name = "Qwen 4 Max"
@@ -12,11 +13,13 @@ output = ["text"]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "xhigh"], budget = { min = 0, max = 262_144 } }
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 cache = { implicit = true }
+structured_output = true
 
 [limit]
 output = 384_000
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"
