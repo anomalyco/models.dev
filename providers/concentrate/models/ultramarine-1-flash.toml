@@ -8,7 +8,7 @@ output = ["text"]
 
 [capabilities]
 structured_output = true
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["high", "max"] }
 cache = { implicit = true }
 
 [limit]
