@@ -795,6 +795,8 @@ export const ModelFamilyValues = [
   "skyfall",
   "sonar-reasoning-pro",
   "span",
+  "subq-savant",
+  "subq-snap",
   "text2vec",
   "toast",
   "trinity-large",

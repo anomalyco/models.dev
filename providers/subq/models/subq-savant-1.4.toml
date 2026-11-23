@@ -1,0 +1,42 @@
+# Sources: https://docs.subq.ai/using-the-api/models/#subq-savant-14
+# https://docs.subq.ai/using-the-api/release-notes/
+# https://docs.subq.ai/endpoints/chat-completions-api/
+# https://docs.subq.ai/endpoints/responses-api/
+# Chat Completions documents a shared 4M-token window with no separate output cap.
+schema = 2
+name = "SubQ Savant 1.4"
+family = "subq-savant"
+description = "Long-context reasoning model for text generation and tool calling"
+open_weights = false
+release_date = "2026-11-11"
+status = "beta"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "high" } }
+structured_output = true
+temperature = false
+top_p = true
+top_k = false
+cache = { implicit = true }
+
+[limit]
+context = 4_000_000
+output = 4_000_000
+
+[cost.text.input]
+price = 0.10
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.50
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
