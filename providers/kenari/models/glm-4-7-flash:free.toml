@@ -1,11 +1,13 @@
-# Source: https://kenari.id/v1/models and https://kenari.id/api/public/pricing (accessed 2026-10-21).
-# Price: :free models cost Rp 0 within daily and per-minute limits (https://kenari.id/en/docs/free-models).
-# Reasoning: catalog reasoning_options [], reasoning_toggle true (https://kenari.id/en/docs/reasoning).
-# Toggle: reasoning = { enabled = false } on Chat completions (needs reasoning_toggle = true).
+# Synced from kenari's public API by the kenari sync module.
+# Catalog: GET https://kenari.id/docs/models
+# Pricing: GET https://kenari.id/api/public/pricing (usd_idr_rate = 17500, re-read on every sync)
+# IDR prices were converted to USD by dividing by that rate: per 1M tokens, or per unit for pricing_lines.
+# Docs: https://kenari.id/docs/reasoning
+# Toggle: reasoning.enabled = true|false  (/v1/chat/completions; /v1/messages takes the Anthropic thinking block instead)
 schema = 2
 base_model = "zhipuai/glm-4.7-flash"
-family = "glm-flash-free"
 name = "GLM-4.7-Flash (Free)"
+family = "glm-flash-free"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }

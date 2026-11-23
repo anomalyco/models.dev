@@ -11,16 +11,19 @@ const EFFORT_VALUES = ["none", "minimal", "low", "medium", "high", "xhigh", "max
 // least likely value to be supported, so it gives the most useful rejection.
 const PROBE_EFFORT = "minimal";
 // /v1/models still serves these rows with `deprecation: null`, but Mistral's
-// model docs list them as deprecated or retired:
-// https://github.com/mistralai/platform-docs-public/tree/main/src/schema/models/models
+// model docs list them as deprecated:
+// https://docs.mistral.ai/getting-started/models/ (deprecation table)
 const DEPRECATED_IDS = new Set([
-  // Leanstral 1.5 (leanstral-1-5.ts): deprecated 2026-09-29, retired 2026-09-30.
-  "labs-leanstral-1-5-1",
-  // Z.ai GLM 5.2 (zai-glm-5-2.ts): deprecated 2026-09-29, retires 2026-10-31.
+  // Z.ai GLM 5.2 (https://docs.mistral.ai/models/zai-glm-5-2): deprecated 2026-09-29, retires 2026-10-31.
   "glm-5-2",
   "zai-glm-5-2",
-  // Magistral Medium 1.2 (magistral-medium-1-2-25-09.ts): deprecated 2026-05-22, retired 2026-07-31.
+  // Mistral Medium 3.5 (https://docs.mistral.ai/models/mistral-medium-3-5-26-04): deprecated 2026-10-31, retires 2027-04-30.
+  // magistral-medium-latest is an alias of it in /v1/models, so the sync patches that file too.
+  "mistral-medium-latest",
+  "mistral-medium-2604",
   "magistral-medium-latest",
+  // Mistral Large 3 (https://docs.mistral.ai/models/mistral-large-3-25-12): deprecated 2026-10-31, retires 2027-04-30.
+  "mistral-large-2512",
 ]);
 
 const MistralCapabilities = z.object({

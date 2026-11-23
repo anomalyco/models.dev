@@ -1,3 +1,5 @@
+# Lifecycle: deprecated 2026-10-31, retires 2027-04-30; replacement Mistral Large 4
+#   (https://docs.mistral.ai/models/mistral-large-3-25-12 and https://docs.mistral.ai/getting-started/models/).
 # Model: https://docs.mistral.ai/models/mistral-large-3-25-12 (API IDs mistral-large-2512, mistral-large-latest; $0.5 / $1.5).
 # Mistral API (api.mistral.ai), docs and live checks 2026-10-19:
 # - Pricing: https://docs.mistral.ai/inference/pricing (cached input is billed at 10% of input).
@@ -17,6 +19,7 @@
 # Lab facts (name, dates, knowledge, limits) come from models/mistral/mistral-large-2512.toml.
 schema = 2
 base_model = "mistral/mistral-large-2512"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]

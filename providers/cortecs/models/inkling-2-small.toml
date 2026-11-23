@@ -4,6 +4,7 @@
 # Modalities: the catalog lists text and image input, the same as the lab, so they are inherited.
 # Limit: context is the catalog's 1,048,000. Its max_output_tokens (1,048,000) equals its context_size, which is not a per-request output cap, so the lab's 131,072 output limit is inherited.
 # Prices: catalog EUR converted at 1.114 USD per EUR, the sync's rate as of 2026-07-30.
+# Reasoning field: reasoning_content, the field Inkling's chat template reads back (https://huggingface.co/thinkingmachines/Inkling-2-Small). Cortecs routes this model only to Nebius, which returns and reads back reasoning_content (providers/nebius/models/thinkingmachines/Inkling-2-Small.toml, live 2026-11-13).
 schema = 2
 base_model = "thinkingmachines/inkling-2-small"
 
@@ -14,6 +15,9 @@ structured_output = true
 
 [limit]
 context = 1_048_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.306

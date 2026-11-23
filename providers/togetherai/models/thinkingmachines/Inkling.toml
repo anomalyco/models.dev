@@ -3,7 +3,8 @@
 # Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max (live 2026-10-21, rendered
 # prompt "Thinking effort level": 0, 0.1, 0.2, 0.7, 0.9, 0.99, 0.99; the default is 0.9). `none`
 # returns no reasoning; reasoning.enabled, thinking.type and chat_template_kwargs have no effect.
-# Reasoning is returned in `reasoning` (live 2026-10-21).
+# Reasoning is returned in message.reasoning_content (live 2026-11-23; it was `reasoning` on 2026-10-21). Reasoning sent back in
+# reasoning_content on an earlier assistant turn is read by the model; sent back in `reasoning` it is ignored (live 2026-11-23).
 # Inputs (live 2026-10-21): PNG, JPEG, GIF and WebP images and WAV audio are read; video is rejected.
 # Mid-conversation (live 2026-10-21, rendered prompt): a late system message stays in place after
 # the earlier turns (and was followed, keeping the cache); the effort line and the tool list are
@@ -26,6 +27,9 @@ prompt_cache_key = true
 [limit]
 context = 524_288
 output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 1

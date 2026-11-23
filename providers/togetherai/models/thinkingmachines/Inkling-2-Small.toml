@@ -1,6 +1,7 @@
 # Price and context: GET https://api.together.xyz/v1/models (accessed 2026-11-23): $0.30 input, $0.03 cached input, $1.00 output per 1M; context 1,048,576.
 # Effort: reasoning_effort = minimal|low|medium|high|max, as Eden AI lists for this same Together route
 #   (providers/edenai/models/together_ai/thinkingmachines/Inkling-2-Small.toml), and OpenRouter and Kilo. Not probed live here. This host has no earlier inkling-small model; flags follow its Inkling entry (structured output, implicit cache).
+# Reasoning field: returned in message.reasoning_content, and reasoning sent back in reasoning_content on an earlier assistant turn is read by the model (live 2026-11-23).
 schema = 2
 base_model = "thinkingmachines/inkling-2-small"
 
@@ -9,6 +10,9 @@ reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "m
 cache = { implicit = true }
 structured_output = true
 prompt_cache_key = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.3
