@@ -3,6 +3,7 @@ base_model = "anthropic/claude-sonnet-5-5"
 reasoning_options = [{ type = "toggle" }]
 
 [capabilities]
+reasoning = { supported = true, toggle = true }
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [api.chat-completions]
