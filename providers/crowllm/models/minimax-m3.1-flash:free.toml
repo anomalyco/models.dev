@@ -3,6 +3,8 @@
 # cached input = input x cache_ratio (service/text_quota.go bills a cached prompt token at cache_ratio of a fresh one).
 # Source: https://crowllm.com/api/pricing (accessed 2026-11-23).
 # Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-11-23): "minimax-m3.1-flash:free".
+# Effort: reasoning_effort top-level, forwarded verbatim; the ladder mirrors the same lab model on
+# another OpenAI-compatible gateway in this repo (providers/kilo).
 # Live gateway row: model_ratio=0, completion_ratio=1, cache_ratio=n/a, enable_groups=['free','pro'].
 # Re-checked on 2026-11-23 against /v1/models and /api/pricing: still served, still zero-rated.
 schema = 2
@@ -11,6 +13,7 @@ name = "MiniMax M3.1 Flash (free)"
 
 [capabilities]
 cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
 price = 0.0
