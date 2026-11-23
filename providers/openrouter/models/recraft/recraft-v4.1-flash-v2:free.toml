@@ -27,3 +27,7 @@ output = 0
 [api.images]
 base_url = "https://openrouter.ai/api/v1"
 sdk = { aisdk = "@openrouter/ai-sdk-provider", opencodeai = "@opencode/ai/providers/openrouter/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0
