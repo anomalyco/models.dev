@@ -5,7 +5,6 @@ schema = 2
 base_model = "meta/muse-glimmer-30b"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 cache = { implicit = true }
 structured_output = true
