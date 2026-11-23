@@ -7,11 +7,12 @@
 # input PNG/JPEG/WebP only ("PNG, JPEG, or WebP; at most eight images per request."), no GIF,
 # no video or audio ("Video and audio inputs are unsupported.").
 # reasoning_effort = none|high. The OpenAPI field's "default": "high" describes the playground
-# form; its description says "a request that omits this field is served as none", so "none" is
-# published as the served default. "chat_template_kwargs.enable_thinking is not honored by this recipe."
+# form, while its description says "a request that omits this field is served as none". The two
+# sources conflict, so no default is published here (AGENTS.md: leave out contradicted values).
+# "chat_template_kwargs.enable_thinking is not honored by this recipe."
 # Responses carry reasoning_content separately from the final content. The model page lists
-# Structured Output as Supported, but the hosted request schema has no response_format field;
-# see PR review notes.
+# Structured Output as Supported; the hosted request schema does not enumerate response_format or
+# nvext, so no concrete wire mechanism is claimed here. See PR review notes.
 # Pricing: 0 per NVIDIA free-trial convention (providers/nvidia/provider.toml; build.nvidia.com/llms.txt).
 schema = 2
 base_model = "mistral/mistral-large-4"
@@ -26,7 +27,7 @@ image = { max_per_request = 8 }
 
 [capabilities]
 structured_output = true
-reasoning = { supported = true, effort = ["none", "high"], default = { type = "effort", value = "none" } }
+reasoning = { supported = true, effort = ["none", "high"] }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
