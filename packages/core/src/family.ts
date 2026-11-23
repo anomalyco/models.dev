@@ -530,6 +530,7 @@ export const ModelFamilyValues = [
 
   // Writer
   "palmyra",
+  "palmyra-vision",
 
   // ALLaM
   "allam",

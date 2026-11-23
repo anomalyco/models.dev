@@ -410,6 +410,7 @@ export type ModelFamily =
   | "oswe"
   | "paddleocr"
   | "palmyra"
+  | "palmyra-vision"
   | "pangu-flash"
   | "pangu-pro"
   | "parakeet"
