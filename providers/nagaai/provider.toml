@@ -7,6 +7,10 @@
 # - Reasoning: https://docs.naga.ac/guides/reasoning. Each model file copies the lab's own controls; NagaAI sends the
 #   nearest level the model has. Messages thinking.budget_tokens is mapped to an effort level, not kept as a budget,
 #   so no file sets `budget`.
+# - reasoning_field: on Chat Completions NagaAI adds `reasoning_content` and `reasoning_details` to the assistant
+#   message and to stream deltas for every model, and replays reasoning from `reasoning_details` sent back
+#   (https://docs.naga.ac/guides/reasoning, "Read the reasoning in the response" and "Keep the reasoning across
+#   turns"), so every [api.chat-completions] table sets `reasoning_field = "reasoning_details"`.
 # - Prompt caching: https://docs.naga.ac/guides/prompt-caching
 # - structured_output: a JSON schema in response_format is accepted on every listed model; it is set where the lab's
 #   own API has it.
