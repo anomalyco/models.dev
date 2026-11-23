@@ -1,23 +1,11 @@
 schema = 2
-name = "Inkling 2 Mini"
+base_model = "thinkingmachines/inkling-2-mini"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "inkling"
-open_weights = true
-release_date = "2026-11-21"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
 structured_output = true
-temperature = true
-
-[limit]
-context = 1_048_576
-output = 65_536
 
 [api.chat-completions]
 
