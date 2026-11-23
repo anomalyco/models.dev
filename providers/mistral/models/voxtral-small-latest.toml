@@ -1,5 +1,5 @@
 # Model: https://docs.mistral.ai/models/voxtral-small-25-07 (/v1/models: voxtral-small-latest -> voxtral-small-2507; $0.1 input, $0.4 output per MTok,
-# plus $0.004 per minute of input audio, which the cost schema below does not model).
+# plus $0.004 per minute of input audio, $0.0004 cached; the audio price is per https://docs.mistral.ai/inference/pricing, 2026-11-23).
 # https://mistral.ai/news/voxtral (2025-07-15, 24B, Apache 2.0).
 # Caching works live (cached_tokens reported) but the pricing page lists no cached-input price for this model.
 # Mistral API (api.mistral.ai), docs and live checks 2026-10-19:
@@ -53,3 +53,8 @@ price = 0.1
 
 [cost.text.output]
 price = 0.4
+
+[cost.audio.input]
+unit = "minute"
+price = 0.004
+cache = { read = 0.0004 }
