@@ -1,10 +1,14 @@
-# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
-# No pool-wide effort control: at least one member does not forward reasoning_effort.
+# Pool metadata: https://api.opper.ai/v3/models (2026-11-23).
+# Effort: top-level reasoning_effort; levels shared by the pool members. All seven pooled
+# members list params.reasoning.supported, and none|low|medium|high is what they share
+# (morph/morph-dsv4flash has no minimal, xhigh or max). No default is set here: five of the
+# seven members run with thinking off unless reasoning_effort is sent
+# (params.reasoning.default = "none"), and the other two state no default.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
 [api.chat-completions]
