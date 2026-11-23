@@ -2,7 +2,7 @@ schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [api.chat-completions]
