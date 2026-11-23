@@ -1,0 +1,15 @@
+# Off is reasoning_effort=none; graded levels low|high|max. thinking.type is not
+# forwarded on this route (live 2026-11-23).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.0699
+cache = { read = 0.0689 }
+
+[cost.text.output]
+price = 1.4
