@@ -1,4 +1,4 @@
-# Catalog: GET https://api.naga.ac/v1/models (2026-11-22), id anthropic/claude-opus-5.5: prices, context_window, input_modalities.
+# Catalog: GET https://api.naga.ac/v1/models (2026-11-23), id anthropic/claude-opus-5.5: prices, context_window, input_modalities.
 # Reasoning controls: from providers/anthropic; NagaAI sends the nearest level the model has (https://docs.naga.ac/guides/reasoning).
 # Cache: cache_control, 5m or 1h ttl, at most four breakpoints (https://docs.naga.ac/guides/prompt-caching).
 schema = 2
@@ -13,6 +13,7 @@ cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
 
 [api.chat-completions]
 sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_details" }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
