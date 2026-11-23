@@ -110,7 +110,12 @@ export const hostingerRouter = {
   },
 } satisfies SyncProvider<HostingerModel>;
 
+// Aliases whatever model Hostinger currently designates as the default; a
+// static file would duplicate its moving target, so skip rather than report
+const ALIAS_MODELS = new Set(["default-hostinger"]);
+
 function skippable(model: HostingerModel): boolean {
+  if (ALIAS_MODELS.has(model.id)) return true;
   // Region-pinned variants duplicate the base model at a markup
   if (REGION_PIN.test(model.id)) return true;
   const endpoints = model.supported_endpoints ?? [];
