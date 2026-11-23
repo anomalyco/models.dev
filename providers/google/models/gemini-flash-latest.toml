@@ -2,6 +2,8 @@
 # modelVersion "gemini-3.8-flash" on 2026-11-23.
 # Keep reasoning_options and cost in sync with gemini-3.8-flash (https://ai.google.dev/gemini-api/docs/pricing#gemini-3.8-flash).
 # Flex and Priority do not scale cache storage. Rates double from 2027-01-01.
+# description and knowledge (none stated) follow models/google/gemini-3.8-flash.toml.
+# Grounding with Google Search: $14 per 1,000 search queries, as for gemini-3.8-flash. Token-only multipliers (object factor), so cost.web_search is unscaled.
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
@@ -13,10 +15,9 @@
 schema = 2
 recommended_api = "interactions"
 name = "Gemini Flash Latest"
-description = "High-efficiency Gemini model for agentic workflows, coding, and multimodal reasoning"
+description = "Google's most intelligent Flash model, engineered for long-horizon software engineering, autonomous agents, and complex enterprise workflows"
 family = "gemini-flash"
 open_weights = false
-knowledge = "2026-03"
 release_date = "2026-09-02"
 
 [modalities]
@@ -25,12 +26,12 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
-cache = { implicit = true, explicit = true }
+cache = { implicit = { min_tokens = 4_096 }, explicit = true }
 service_tier = ["flex", "priority"]
 
 [limit]
@@ -56,6 +57,9 @@ price = 3.75
 [cost.audio.input]
 price = 0.75
 cache = { read = 0.075, storage = 0.5 }
+
+[cost.web_search]
+price = 14
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }
