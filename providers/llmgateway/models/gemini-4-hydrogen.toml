@@ -1,7 +1,10 @@
+# Capabilities the catalog doesn't state (capabilities.system_updates, capabilities.structured_output) come from gemini-4-carbon, this host's previous model in the family.
 schema = 2
 base_model = "google/gemini-4-hydrogen"
 
 [capabilities]
+system_updates = true
+structured_output = true
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 
 [cost.text.input]

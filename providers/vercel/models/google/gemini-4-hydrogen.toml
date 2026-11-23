@@ -1,3 +1,4 @@
+# Capabilities the catalog doesn't state (capabilities.structured_output) come from google/gemini-4-carbon, this host's previous model in the family.
 schema = 2
 base_model = "google/gemini-4-hydrogen"
 description = "Gemini multimodal model for text, image, audio, video, and document tasks"
@@ -7,6 +8,7 @@ input = ["text", "image", "application/pdf"]
 output = ["text"]
 
 [capabilities]
+structured_output = true
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 cache = { implicit = true }

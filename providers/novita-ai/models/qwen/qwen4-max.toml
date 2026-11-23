@@ -10,7 +10,6 @@
 # Modalities: Novita lists ["text","image","video"]; exact types are the lab's (alibaba/qwen4-max), without PDF.
 # Cache: implicit prefix cache (cached_tokens 14080 of 14306 on a repeated prompt, live 2026-11-16).
 # system_updates = true (Chat Completions only, the API tested): cache hit right after a mid-conversation system message (live 2026-11-16, 14080 of 14333 prompt tokens cached).
-# Capabilities the catalog doesn't state (capabilities.system_updates) come from qwen/qwen3.8-max, this host's previous model in the family.
 schema = 2
 base_model = "alibaba/qwen4-max"
 
@@ -22,7 +21,6 @@ output = ["text"]
 reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
 cache = { implicit = true }
 structured_output = true
-system_updates = true
 
 [limit]
 output = 262_000
