@@ -5,8 +5,9 @@
 # Served id, verbatim from GET https://crowllm.com/v1/models (accessed 2026-11-23): "deepseek-v4-flash:free".
 # This id carries the `:free` suffix but is NOT zero-rated: the suffix names the free-account shelf, and this
 # entry bills a small per-token rate. The zero-rated ids are listed separately at price 0.
-# Effort: reasoning_effort top-level, forwarded verbatim; the ladder mirrors the same lab model on another
-# OpenAI-compatible gateway in this repo.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max (top-level, forwarded verbatim)
+# The reasoning controls mirror providers/deepseek for the same model on this surface.
 # Live gateway row: model_ratio=0.075, completion_ratio=4, cache_ratio=0.033333333333, enable_groups=['free','pro'].
 # Re-checked on 2026-11-23 against /v1/models and /api/pricing.
 schema = 2
