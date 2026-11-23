@@ -2,16 +2,17 @@
 # Effort: top-level reasoning_effort on POST /v3/compat/chat/completions. The list is what Opper
 # accepts for every pooled member (params.reasoning.supported on the seven pooled rows), not each
 # host's native levels: Opper translates the level into the member's own control.
-# - max is left out. The morph/morph-dsv4flash row lists none|low|medium|high, and Opper does not
-#   forward a level that is outside a member's row: the request then runs at that member's default
-#   (thinking off). So max through the pool is not honoured on every member, although Morph's own
-#   API takes it (providers/morph/models/morph-dsv4flash.toml).
+# Probed live through Opper on 2026-11-23, each pooled member pinned by its id, one short prompt:
+# - low, medium, high: reasoning_content came back on all seven members.
+# - none: no reasoning on six members; morph/morph-dsv4flash still returned reasoning.
+# - max is left out. The morph/morph-dsv4flash row lists none|low|medium|high and Opper does not
+#   forward a level outside a member's row, so max is not passed to that member. The other six
+#   returned reasoning with max.
 # - medium is accepted on every member. DeepSeek V4 backends run it as high (lab mapping in
 #   providers/deepseek/models/deepseek-v4-flash.toml), and TensorX also runs low as high
 #   (providers/tensorx/models/deepseek/deepseek-v4-flash-0731.toml).
-# The levels come from the catalog rows and Opper's handling of them; not probed live through the pool.
-# No default is set here: five of the seven members run with thinking off unless reasoning_effort
-# is sent (params.reasoning.default = "none"), and the other two state no default.
+# No default is set here: with no reasoning_effort, four members answered without reasoning and
+# three (munito, munito:global, morph) answered with it.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
