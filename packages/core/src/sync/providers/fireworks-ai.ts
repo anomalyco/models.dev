@@ -92,7 +92,16 @@ export type FireworksLegacyEmbeddingModel = {
   legacyEmbedding: true;
 };
 
-type FireworksSourceModel = FireworksCatalogModel | FireworksInventoryCatalogModel | FireworksLegacyEmbeddingModel;
+export type FireworksDocumentedModel = {
+  catalogId: string;
+  documented: true;
+};
+
+type FireworksSourceModel =
+  | FireworksCatalogModel
+  | FireworksInventoryCatalogModel
+  | FireworksLegacyEmbeddingModel
+  | FireworksDocumentedModel;
 
 // Legacy BERT embedding models still serve on serverless under their Hugging
 // Face IDs but are in neither source, so they're listed here to keep their files.
@@ -106,6 +115,24 @@ const LEGACY_EMBEDDING_MODELS = [
   "thenlper/gte-large",
   "WhereIsAI/UAE-Large-V1",
   "mixedbread-ai/mxbai-embed-large-v1",
+];
+
+// Routes and variants Fireworks documents and serves that neither source lists:
+// GET /v1/serverless/models leaves them out, and List Models either leaves them
+// out or doesn't flag them as serverless. Their files are kept as authored and
+// never deleted; if a source starts listing one, the normal sync takes over.
+const DOCUMENTED_MODELS = [
+  // Flex mode: https://docs.fireworks.ai/serverless/serverless-modes#flex
+  "accounts/fireworks/routers/deepseek-v4p1-flash-1017-flex",
+  // US-only Serverless: https://docs.fireworks.ai/serverless/us-only-serverless
+  "accounts/fireworks/routers/kimi-k3p1-pro-us",
+  "accounts/fireworks/routers/kimi-k3-us",
+  "accounts/fireworks/routers/deepseek-v4p1-flash-us",
+  "accounts/fireworks/routers/deepseek-v4p1-flash-1017-us",
+  "accounts/fireworks/routers/glm-5p3-us",
+  // Ultramarine 1 Flash (US), a fine-tune List Models flags supportsServerless=false:
+  // https://docs.fireworks.ai/serverless/pricing
+  "accounts/fireworks/models/ultramarine-1-flash-us",
 ];
 
 export const fireworksAi = {
@@ -142,9 +169,14 @@ export const fireworksAi = {
   },
   parseModels(raw) {
     const parsed = FireworksSyncResponse.parse(raw);
+    const merged = mergeFireworksModels(parsed.serverless.data, parsed.inventory);
+    const listed = new Set(merged.map((model) => model.catalogId));
     return [
-      ...mergeFireworksModels(parsed.serverless.data, parsed.inventory),
+      ...merged,
       ...LEGACY_EMBEDDING_MODELS.map((catalogId): FireworksLegacyEmbeddingModel => ({ catalogId, legacyEmbedding: true })),
+      ...DOCUMENTED_MODELS
+        .filter((catalogId) => !listed.has(catalogId))
+        .map((catalogId): FireworksDocumentedModel => ({ catalogId, documented: true })),
     ];
   },
   translateModel(model, context) {
@@ -157,6 +189,10 @@ export const fireworksAi = {
     const existing = context.existing(model.catalogId);
     if (existing === undefined) return undefined;
     const authored = context.authored(model.catalogId);
+    if ("documented" in model) {
+      // No source has data for it, so the file stays as written.
+      return { id: model.catalogId, model: authored as SyncedModel, v2Set: { api: chatApis } };
+    }
     if ("inventoryOnly" in model && authored === undefined) {
       throw new Error(`Fireworks AI model ${model.catalogId} has no local TOML to preserve`);
     }
@@ -224,15 +260,21 @@ const EXTRA_APIS = {
 // models such as Rune only serve System One; Responses and Messages return
 // 400 "This model only serves /v1/systemone" for them.
 export function chatApis(current: unknown): Record<string, unknown> {
-  const { responses: _responses, messages: _messages, ...own } =
+  const { responses, messages, ...own } =
     current !== null && typeof current === "object" && !Array.isArray(current)
       ? current as Record<string, unknown>
       : {};
   if ("systemone" in own) return own;
+  // Other fields on an existing table, such as the US routes' base_url, stay.
   return {
     ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
-    ...structuredClone(EXTRA_APIS),
+    responses: { ...asTable(responses), ...structuredClone(EXTRA_APIS.responses) },
+    messages: { ...asTable(messages), ...structuredClone(EXTRA_APIS.messages) },
   };
+}
+
+function asTable(value: unknown): Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
 export async function fetchFireworksModels(
@@ -348,6 +390,7 @@ function lifecycleStatus(model: FireworksCatalogModel | FireworksInventoryCatalo
 
 function supportsCatalogModel(model: FireworksSourceModel) {
   if ("legacyEmbedding" in model) return false;
+  if ("documented" in model) return true;
   return "inventoryOnly" in model || model.output_modalities.includes("text");
 }
 
