@@ -16,6 +16,9 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true }
 
+[limit]
+output = 64_000
+
 [cost.text.input]
 price = 3
 
