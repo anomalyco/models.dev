@@ -4,7 +4,7 @@
 # Effort: Chat `reasoning_effort` = low|medium|high|xhigh. query-reason-models lists only Grok 4.6, so xAI's own levels for this model are used (providers/xai, the same as Databricks documents for Grok 4.6); untested.
 # Pricing (accessed 2026-11-24): DBU rates from https://www.databricks.com/product/pricing/proprietary-foundation-model-serving x USD 0.070/DBU (`prop_model_serving` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json: Anthropic, Google, OpenAI and SpaceXAI on AWS Premium/Enterprise, every region).
 # Standard DBU per 1M input/output/cache-read tokens: 35.714/107.143/8.929 short context (list USD 2.5/7.5/0.625).
-# Long context: the pricing page lists a long-context row at 2x (71.429/214.286/17.857 DBU) but doesn't state where it starts, so it isn't modeled; requests in that band cost twice the prices here.
+# Long context: the pricing page lists a long-context row at 2x (71.429/214.286/17.857 DBU, USD 5/15/1.25 list, 4/12/1 after the promotion) but doesn't state where it starts. xAI's own long-context rate starts at prompts of 200K tokens or more (https://docs.x.ai/developers/pricing, providers/xai/models/grok-4.7.toml), also at 2x, so that boundary is used.
 # Grok promotion: listed DBU rates exclude a 20% discount that runs through 2027-01-31, so base prices are 80% of list and a 1.25x multiplier applies from 2027-02-01.
 # The pricing page marks this model with a 10% DBU uplift when regional processing (data residency) is enabled: the 1.1x multiplier when region is not global.
 # Priority: neither the pricing page nor the priority-mode page lists this endpoint.
@@ -32,8 +32,17 @@ compatibility = { max_tokens_field = "max_tokens" }
 price = 2
 cache = { read = 0.5 }
 
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 4
+cache = { read = 1 }
+
 [cost.text.output]
 price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_000 } }
+price = 12
 
 [[cost.multipliers]]
 when = { date = { gte = "2027-02-01" } }
