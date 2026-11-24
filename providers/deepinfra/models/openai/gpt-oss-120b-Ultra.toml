@@ -1,5 +1,7 @@
 # Reasoning controls copied from openai/gpt-oss-120b, the same model on Deep Infra.
 # Effort: reasoning_effort = low|medium|high; https://docs.deepinfra.com/chat/reasoning
+# Output cap: max_output_tokens = 131072 on https://api.deepinfra.com/models/openai/gpt-oss-120b-Ultra (checked 2026-11-24),
+#   the lab's 131,072, so it's inherited. Deep Infra states the same cap for openai/gpt-oss-120b, whose file's 16_384 came from an older Kilo sync.
 schema = 2
 base_model = "openai/gpt-oss-120b"
 

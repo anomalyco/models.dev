@@ -1,6 +1,7 @@
 # Reasoning controls copied from google/gemma-4-31B-it, the same model on Deep Infra.
 # Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
 # Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
+# Output cap: max_output_tokens = 16384 on https://api.deepinfra.com/models/google/gemma-4-31B-it-turbo (checked 2026-11-24).
 schema = 2
 base_model = "google/gemma-4-31b-it"
 
@@ -14,6 +15,9 @@ structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
 service_tier = ["flex", "priority"]
+
+[limit]
+output = 16_384
 
 [cost.text.input]
 price = 0.09
