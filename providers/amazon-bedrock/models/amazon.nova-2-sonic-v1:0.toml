@@ -1,0 +1,23 @@
+# Model card (in-region only: us-east-1, us-west-2, eu-north-1, ap-northeast-1): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-2-sonic.html
+# API: InvokeModelWithBidirectionalStream (HTTP/2 event stream): https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModelWithBidirectionalStream.html
+#   Neither @ai-sdk/amazon-bedrock nor @opencode/ai's Bedrock provider supports it.
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json (Nova Sonic 2.0, us-east-1): speech input $0.003 and output $0.012 per 1K tokens,
+#   text input $0.00033 and output $0.00275 per 1K tokens.
+schema = 2
+v2_only = true
+base_model = "amazon/nova-2-sonic"
+
+[api.invoke-model-with-bidirectional-stream]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.33
+
+[cost.text.output]
+price = 2.75
+
+[cost.audio.input]
+price = 3
+
+[cost.audio.output]
+price = 12

@@ -1,0 +1,27 @@
+# Sources:
+# - Release Jan 15, 2025: https://lumalabs.ai/changelog/introducing-ray2
+# - API model ID ray-2; text-to-video and image-to-video (keyframes): https://docs.lumalabs.ai/docs/video-generation
+# - Image keyframes JPEG or PNG, MP4 output, no sampling parameters: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-luma.html
+schema = 2
+v2_only = true
+type = "video"
+name = "Ray2"
+description = "Luma AI video generation model for realistic clips with natural, coherent motion from text or image keyframes"
+family = "ray"
+open_weights = false
+release_date = "2025-01-15"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["video/mp4"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

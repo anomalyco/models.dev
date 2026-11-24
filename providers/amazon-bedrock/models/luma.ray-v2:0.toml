@@ -1,0 +1,19 @@
+# Model card (in-region only, us-west-2): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-luma-ai-ray2.html
+# API: StartAsyncInvoke (POST /async-invoke, MP4 written to S3); 5s or 9s, 540p or 720p: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-luma.html
+#   Neither @ai-sdk/amazon-bedrock nor @opencode/ai's Bedrock provider supports it.
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-west-2/index.json (Ray v2): 720p $1.50 and 540p $0.75 per second of video
+#   (resolutions from https://aws.amazon.com/bedrock/pricing/).
+schema = 2
+v2_only = true
+base_model = "luma/ray-2"
+
+[api.start-async-invoke]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 1.5
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "540p" } }
+price = 0.75
