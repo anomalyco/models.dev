@@ -1,0 +1,23 @@
+schema = 2
+base_model = "mistral/mistral-small-3.2-24b-instruct"
+
+[capabilities]
+structured_output = true
+service_tier = ["flex", "priority"]
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.075
+
+[cost.text.output]
+price = 0.2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

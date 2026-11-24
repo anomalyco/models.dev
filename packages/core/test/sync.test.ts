@@ -3950,6 +3950,117 @@ test("resolves DeepInfra ByteDance IDs to canonical metadata", () => {
     .toBe("bytedance-seed/seed-2.0-code");
 });
 
+test("DeepInfra matches its own spellings to lab files only when one matches exactly", () => {
+  for (const [id, base] of [
+    // Prefixes
+    ["inclusionAI/Ling-3.0-flash", "inclusionai/ling-3.0-flash"],
+    ["ibm-granite/granite-4.2-8b", "ibm/granite-4.2-8b"],
+    ["meta-models/Muse-Glimmer-30B", "meta/muse-glimmer-30b"],
+    // NVIDIA- prefix
+    ["nvidia/NVIDIA-Nemotron-3-Super-120B-A12B", "nvidia/nemotron-3-super-120b-a12b"],
+    // -Turbo / -Ultra / -turbo deployments
+    ["google/gemma-4-31B-it-turbo", "google/gemma-4-31b-it"],
+    ["google/gemma-4-31B-it-Ultra", "google/gemma-4-31b-it"],
+    ["openai/gpt-oss-120b-Ultra", "openai/gpt-oss-120b"],
+    // Meta-Llama naming, together with -Turbo
+    ["meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo", "meta/llama-3.1-8b-instruct"],
+    // YYMM release suffixes
+    ["mistralai/Mistral-Small-3.2-24B-Instruct-2506", "mistral/mistral-small-3.2-24b-instruct"],
+    ["mistralai/Mistral-Nemo-Instruct-2407", "mistral/mistral-nemo"],
+    // Seed 1.8 is seed-1-8
+    ["ByteDance/Seed-1.8", "bytedance-seed/seed-1-8"],
+  ] as const) {
+    expect(resolveDeepInfraBaseModel(id)).toBe(base);
+  }
+  // No lab file matches exactly, so nothing is guessed.
+  expect(resolveDeepInfraBaseModel("nvidia/NVIDIA-Nemotron-3.5-Super-VL")).toBeUndefined();
+  expect(resolveDeepInfraBaseModel("Sao10K/L3.1-70B-Euryale-v2.2")).toBeUndefined();
+  expect(resolveDeepInfraBaseModel("Qwen/Qwen3-14B")).toBeUndefined();
+});
+
+test("DeepInfra marks models with a scheduled deprecation and doesn't create them", () => {
+  const scheduled: DeepInfraModel = {
+    ...deepInfraModel("tencent/Hy4-preview", []),
+    deprecated: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60,
+  };
+  expect(buildDeepInfraModel(scheduled, { base_model: "tencent/hy4-preview" })).toMatchObject({ status: "deprecated" });
+  const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  expect(deepinfra.translateModel(scheduled, context)).toBeUndefined();
+  // Deprecated models are skipped on purpose, so they aren't reported.
+  expect(deepinfra.sourceID?.(scheduled)).toBeUndefined();
+  expect(deepinfra.sourceID?.(deepInfraModel("tencent/Hy4", []))).toBe("tencent/Hy4");
+});
+
+test("DeepInfra marks deprecated embedding models and clears the mark when they're active again", () => {
+  const embedding = (deprecated: number | null): DeepInfraModel => ({
+    model_name: "google/embeddinggemma-300m",
+    type: "embeddings",
+    tags: ["openai"],
+    pricing: { type: "input_tokens", cents_per_input_token: 2e-7 },
+    max_tokens: 2048,
+    deprecated,
+    private: 0,
+  });
+  const file = { schema: 2, v2_only: true, base_model: "google/embeddinggemma-300m" };
+  const context = (v2: Record<string, unknown>) => ({ existing: () => undefined, authored: () => undefined, v2: () => v2 });
+  expect(deepinfra.translateModel(embedding(1_795_454_295), context(file)))
+    .toEqual({ id: "google/embeddinggemma-300m", v2: { ...file, status: "deprecated" } });
+  expect(deepinfra.translateModel(embedding(null), context({ ...file, status: "deprecated" })))
+    .toEqual({ id: "google/embeddinggemma-300m", v2: file });
+});
+
+test("DeepInfra copies reasoning controls from the same model's plain ID, and only from there", () => {
+  const peer: ExistingModel = { base_model: "google/gemma-4-31b-it", reasoning_options: [{ type: "toggle" }] };
+  const source = deepInfraModel("google/gemma-4-31B-it-turbo", ["reasoning", "can-disable-reasoning"]);
+  const translated = deepinfra.translateModel(source, {
+    existing: (id) => (id === "google/gemma-4-31B-it" ? peer : undefined),
+    authored: () => undefined,
+    v2: () => undefined,
+  });
+  expect(translated).toMatchObject({
+    id: "google/gemma-4-31B-it-turbo",
+    model: { base_model: "google/gemma-4-31b-it", reasoning_options: [{ type: "toggle" }] },
+  });
+  expect(translated && "header" in translated ? translated.header : undefined).toContain("reasoning.enabled = true|false");
+
+  // A peer serving a different lab model doesn't count.
+  expect(() => deepinfra.translateModel(source, {
+    existing: (id) => (id === "google/gemma-4-31B-it" ? { ...peer, base_model: "google/gemma-4-26b-a4b-it" } : undefined),
+    authored: () => undefined,
+    v2: () => undefined,
+  })).toThrow(MissingReasoningOptionsError);
+});
+
+test("DeepInfra reports models it skips with the reason", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-deepinfra-skipped-"));
+  const modelsDir = path.join(root, "providers", "deepinfra", "models");
+  try {
+    await mkdir(modelsDir, { recursive: true });
+    const result = await syncProvider({
+      ...deepinfra,
+      modelsDir,
+      fetchModels: async () => [
+        deepInfraModel("acme/Unknown-Model", []),
+        { ...deepInfraModel("acme/Retired-Model", []), deprecated: 1_700_000_000 },
+        {
+          model_name: "acme/Retired-Embedding",
+          type: "embeddings",
+          pricing: { cents_per_input_token: 1e-6 },
+          max_tokens: 512,
+          deprecated: 1_700_000_000,
+        },
+      ],
+    });
+    expect(result.created).toBe(0);
+    const notices = result.notices.join("\n");
+    expect(notices).toContain("`acme/Unknown-Model`: no `models/` lab file matches this ID");
+    expect(notices).not.toContain("acme/Retired-Model");
+    expect(notices).not.toContain("acme/Retired-Embedding");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("DeepInfra preserves live modalities for new base models", () => {
   // The lab takes images and video; DeepInfra's route only lists images, so its narrower input is written.
   const model = buildDeepInfraModel(

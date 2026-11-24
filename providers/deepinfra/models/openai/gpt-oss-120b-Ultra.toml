@@ -1,0 +1,13 @@
+# Reasoning controls copied from openai/gpt-oss-120b, the same model on Deep Infra.
+# Effort: reasoning_effort = low|medium|high; https://docs.deepinfra.com/chat/reasoning
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.95

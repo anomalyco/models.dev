@@ -1,0 +1,22 @@
+# Reasoning controls copied from google/gemma-4-31B-it, the same model on Deep Infra.
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+# Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
+# No structured_output: the catalog tags this deployment json but not structured-output (https://api.deepinfra.com/models/list).
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.27
+
+[cost.text.output]
+price = 0.76
