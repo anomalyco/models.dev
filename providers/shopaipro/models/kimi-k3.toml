@@ -1,0 +1,28 @@
+# Pricing and public availability: https://shopaipro.tech/en/models/kimi-k3
+# The Hermes Kimi K3 profile checks Chat Completions. The Kimi K3 OpenClaw
+# profile uses Responses with a 1,000,000-token client context setting.
+# Both profiles are distributed in https://shopaipro.tech/verified-installers/release.json.
+# K3 reasoning controls: https://platform.kimi.ai/docs/api/models-overview
+schema = 2
+base_model = "moonshotai/kimi-k3"
+v2_only = true
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15
