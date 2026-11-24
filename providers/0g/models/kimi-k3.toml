@@ -2,6 +2,8 @@
 # Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-18).
 # Reasoning probed 2026-11-18, three runs per level: reasoning_effort none (or thinking.type=disabled) gives 0 reasoning tokens;
 # low ~84, high ~136, max hits the 600-token cap. chat_template_kwargs.enable_thinking=false does not turn it off.
+# Reasoning block reviewed: 2026-11-24 (staging block: toggle only, kimi-k3 has no vendor level list in the router's
+# official-efforts table; the mainnet probe above found the levels, so they are kept).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
