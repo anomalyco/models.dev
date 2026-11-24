@@ -273,7 +273,7 @@ async function scratchProvider(files: Record<string, string>, labs: string[]) {
 test("runner patches prices in v2 files in place and keeps MIME, flags, status and API tables", async () => {
   const haiku = await Bun.file("providers/github-copilot/models/claude-haiku-4.5.toml").text();
   const sol = await Bun.file("providers/github-copilot/models/gpt-5.6-sol.toml").text();
-  const retired = await Bun.file("providers/github-copilot/models/gpt-5.5.toml").text();
+  const retired = 'schema = 2\nbase_model = "openai/gpt-5.5"\nstatus = "deprecated"\n\n[capabilities]\nreasoning = { supported = true, effort = ["low", "medium", "high"] }\n\n[cost.text.input]\nprice = 5\n\n[cost.text.output]\nprice = 30\n';
   const modelsDir = await scratchProvider({
     "claude-haiku-4.5.toml": haiku.replace("[cost.text.output]\nprice = 5", "[cost.text.output]\nprice = 6"),
     "gpt-5.6-sol.toml": sol.replace("when = { context = { gt = 272_000 } }\nprice = 30", "when = { context = { gt = 272_000 } }\nprice = 31"),
