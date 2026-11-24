@@ -1,0 +1,32 @@
+# Catalog: the SAP-hosted `sap-abap-2`, shown as "SAP ABAP 2" at version 1, is listed by SAP's public AI Core calculator
+#   (https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/, accessed 2026-11-24) with a 65_536-token context, text
+#   input and text output, streaming, and `text-generation` as its only capability, so it has no reasoning support. Its
+#   only allowed scenario is `orchestration`: the model is reached through the orchestration v2 workflow rather than the
+#   direct foundation-models endpoint, and SAP's SDK exposes it the same way (OrchestrationAiModel.SAP_ABAP_2,
+#   https://github.com/SAP/ai-sdk-java/pull/1163, merged 2026-11-03). SAP publishes no general-availability date for
+#   the model, so `release_date` is that merge, the earliest published appearance of the model.
+# open_weights, tools and temperature: taken from sap-abap-1 on this host; SAP documents none of the three for
+#   sap-abap-2 itself.
+# Output limit: the calculator states a context window and no output cap, so the 4_096 of sap-abap-1 on this host is
+#   carried over; a model defined without a base_model needs an output limit.
+# Cost: none. The model has no vendor list price.
+#   SAP AI Core bills capacity units (CU): per-model GenAI-token rates (SAP Note 3437766; public calculator
+#   https://ai-core-calculator.cfapps.eu10.hana.ondemand.com/) x 1.90385 CU per GenAI token, at a CU price set by the SAP contract. There is no public USD rate.
+schema = 2
+name = "SAP ABAP 2"
+description = "SAP-hosted ABAP code generation model, served through the orchestration scenario"
+open_weights = false
+release_date = "2026-11-03"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+
+[limit]
+context = 65_536
+output = 4_096
