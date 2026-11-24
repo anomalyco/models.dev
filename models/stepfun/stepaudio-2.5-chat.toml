@@ -3,7 +3,8 @@
 #   (modalities with "audio" is rejected with 400).
 # Context and output limits aren't documented anywhere, so they use the unknown-limit encoding (0) until StepFun
 #   publishes one.
-# Tools: not documented for this model, so left off.
+# Tools: not in the Tool Call API's list of supported models (https://platform.stepfun.com/docs/zh/api-reference/tool-call),
+#   so left off.
 # Sampling: Chat Completions documents temperature and top_p, not top_k.
 # release_date: closest documented date. StepAudio 2.5 Realtime, which shares this model, launched on 2026-05-09
 #   (https://agent.csdn.net/6a2b693c662f9a54cb7d6a25.html); no separate Chat launch date is published.

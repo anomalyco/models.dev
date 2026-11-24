@@ -2,6 +2,8 @@
 # Context 32K; text, image and video in, text out. Up to 60 images (20 MB total) or an MP4 under 128 MB per request.
 # Images JPG/JPEG, PNG, static GIF, WebP; video MP4 (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create).
 # Output limit isn't documented; Chat Completions max_tokens is bounded only by the context, so output = context.
+# Tools: the Tool Call API lists step-1o-turbo-vision under "其他兼容" (other compatible models):
+#   https://platform.stepfun.com/docs/zh/api-reference/tool-call (accessed 2026-11-24)
 # Sampling: Chat Completions documents temperature and top_p, not top_k.
 # release_date: closest documented date. No launch date is published for the Turbo variant; Step-1o Vision, the model it
 #   speeds up, launched on 2025-01-21 (https://baike.baidu.com/item/Step-1o%20Vision/69298584).
