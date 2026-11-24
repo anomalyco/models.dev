@@ -133,11 +133,10 @@ export function flatPrice(model: AlibabaModel): AlibabaPrice | undefined {
   return "skip" in price ? undefined : price;
 }
 
-// The API rounds to three decimals (0.0625 -> 0.063), so a file price that rounds to the listed one is kept.
-const keepPrecise = (listed: number, file: number | undefined) => {
-  const places = String(listed).split(".")[1]?.length ?? 0;
-  return file !== undefined && Math.abs(file - listed) <= 0.5 * 10 ** -places + 1e-12 ? file : listed;
-};
+// The API rounds to three decimals (0.0625 -> 0.063), so a file price within that rounding of the listed one is kept.
+// The tolerance is fixed: the listed string drops trailing zeros ("3" is 3.000), so its digits don't show the rounding.
+const keepPrecise = (listed: number, file: number | undefined) =>
+  file !== undefined && Math.abs(file - listed) <= 0.0005 + 1e-12 ? file : listed;
 
 const withCacheRead = <T extends { cache_read?: number }>(target: T, listed: number | undefined) =>
   listed === undefined ? target : { ...target, cache_read: keepPrecise(listed, target.cache_read) };
@@ -184,17 +183,66 @@ function patchExplicit(current: Doc | undefined, band: AlibabaBandPrice): Doc | 
   return next;
 }
 
-/** v2 values for explicit cache prices, at the base price and in each context override the file already has. */
-export function explicitCacheV2Set(price: AlibabaPrice): Record<string, unknown> {
+/**
+ * v2 values for explicit cache prices, at the base price and in each context override the file already has. Given the
+ * file's input cost, they start from it: the runner's v1 patch puts v1's single cache write at the top level of each
+ * cache, so the file's own top-level write (usually none) is put back.
+ */
+export function explicitCacheV2Set(price: AlibabaPrice, original?: Doc): Record<string, unknown> {
   const contextSize = (when: Doc | undefined) => when?.context?.gt ?? when?.context?.gte;
+  const from = <T>(current: T, path: (input: Doc) => T) => (original === undefined ? current : path(original));
+  const restoreWrite = (cache: Doc | undefined, before: Doc | undefined) => {
+    if (cache === undefined || original === undefined) return cache;
+    const { write: _write, ...rest } = cache;
+    return before?.write === undefined ? rest : { ...rest, write: before.write };
+  };
   return {
-    "cost.text.input.cache.explicit": (current: Doc | undefined) => patchExplicit(current, price),
+    ...(original === undefined ? {} : { "cost.text.input.cache.write": original.cache?.write }),
+    "cost.text.input.cache.explicit": (current: Doc | undefined) => patchExplicit(from(current, (input) => input.cache?.explicit), price),
     "cost.text.input.overrides": (current: Doc[] | undefined) => current?.map((override) => {
+      const before = (original?.overrides as Doc[] | undefined)?.find((item) => contextSize(item.when) === contextSize(override.when));
+      override = { ...override, ...(override.cache === undefined ? {} : { cache: restoreWrite(override.cache, before?.cache) }) };
+      if (before?.cache?.explicit !== undefined) override = { ...override, cache: { ...override.cache, explicit: before.cache.explicit } };
       const band = price.bands.find((item) => item.above === contextSize(override.when));
       if (band === undefined || override.cache?.explicit === undefined) return override;
       return { ...override, cache: { ...override.cache, explicit: patchExplicit(override.cache.explicit, band) } };
     }),
   };
+}
+
+// v1 has one cache write price: the top-level write, else the explicit write, first TTL listed (translate.ts cacheWrite).
+function v1CacheWrite(cache: Doc | undefined): number | undefined {
+  const first = (write: unknown) => (typeof write === "number" ? write : write !== null && typeof write === "object" ? Object.values(write as Record<string, number>)[0] : undefined);
+  return first(cache?.write) ?? first(cache?.explicit?.write);
+}
+
+/**
+ * The v1 cache write prices that match the explicit prices the v2Set writes, so the written file reproduces the synced
+ * model: the base price and each tier, from the file's cache after patching.
+ */
+export function withExplicitCacheWrite(model: SyncedModel, price: AlibabaPrice, v2: Doc | undefined): SyncedModel {
+  const input = v2?.cost?.text?.input;
+  if (input === undefined) return model;
+  const set = explicitCacheV2Set(price);
+  const patch = (cache: Doc | undefined, band: AlibabaBandPrice) =>
+    cache === undefined ? undefined : { ...cache, explicit: patchExplicit(cache.explicit, band) };
+  const cost = (model as ExistingModel).cost;
+  if (cost === undefined) return model;
+  const contextSize = (when: Doc | undefined) => when?.context?.gt ?? when?.context?.gte;
+  const overrides = ((set["cost.text.input.overrides"] as (value: unknown) => Doc[] | undefined)(input.overrides) ?? []);
+  const write = v1CacheWrite(patch(input.cache, price));
+  const next = {
+    ...cost,
+    ...(write === undefined ? {} : { cache_write: write }),
+    ...(cost.tiers === undefined ? {} : {
+      tiers: cost.tiers.map((tier) => {
+        const override = overrides.find((item) => contextSize(item.when) === tier.tier.size);
+        const tierWrite = v1CacheWrite(override?.cache);
+        return tierWrite === undefined ? tier : { ...tier, cache_write: tierWrite };
+      }),
+    }),
+  };
+  return { ...model, cost: next } as SyncedModel;
 }
 
 /** The file's off-peak discount: the factor of a utc_hours multiplier, plain or on text prices. */
@@ -253,7 +301,8 @@ export function translateAlibabaModel(
     price = withoutImplicitRead(read);
     notices.push(`Alibaba ${model.model}: catalog lists an implicit cache price but the file doesn't declare implicit caching; left unchanged`);
   }
-  const priced = "skip" in price ? undefined : buildAlibabaModel(price, authored);
+  const built0 = "skip" in price ? undefined : buildAlibabaModel(price, authored);
+  const priced = built0 === undefined || "skip" in price ? built0 : withExplicitCacheWrite(built0, price, v2);
   const offline = model.inference_offline_info?.offline_time ?? undefined;
   const deprecate = offline !== undefined && authored.status !== "deprecated";
   if (deprecate) notices.push(`Alibaba ${model.model}: catalog offline_time ${offline}; marked deprecated`);
@@ -262,7 +311,7 @@ export function translateAlibabaModel(
   return {
     id: model.model,
     model: built,
-    ...(priced === undefined || "skip" in price ? {} : { v2Set: explicitCacheV2Set(price) }),
+    ...(priced === undefined || "skip" in price ? {} : { v2Set: explicitCacheV2Set(price, v2?.cost?.text?.input) }),
     ...(notices.length === 0 ? {} : { notices }),
   };
 }

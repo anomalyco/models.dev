@@ -1,7 +1,11 @@
 import { expect, test } from "bun:test";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
-import type { ExistingModel } from "../src/sync/index.js";
+import { syncProvider, type ExistingModel } from "../src/sync/index.js";
 import {
+  alibaba,
   buildAlibabaModel,
   explicitCacheV2Set,
   flatPrice,
@@ -27,6 +31,8 @@ test("Alibaba keeps a file price that rounds to the listed one", () => {
   const authored = { base_model: "alibaba/x", cost: { input: 0.0625, output: 1, cache_read: 0.01 } } as unknown as ExistingModel;
   const built = buildAlibabaModel({ input: 0.063, output: 2, bands: [] }, authored) as unknown as ExistingModel;
   expect(built.cost).toEqual({ input: 0.0625, output: 2, cache_read: 0.01 });
+  // A whole-number listed price is exact to three decimals too, so 2.5 doesn't pass for 3.
+  expect((buildAlibabaModel({ input: 3, output: 2, bands: [] }, authored) as unknown as ExistingModel).cost?.input).toBe(3);
 });
 
 test("Alibaba updates context bands only where the file has one at the same threshold", () => {
@@ -131,4 +137,64 @@ test("Alibaba writes the implicit cache read only when the file declares implici
   const written = translateAlibabaModel(model, { authored: () => authored, existing: () => authored, v2: () => implicit })!;
   expect((written.model as unknown as ExistingModel).cost?.cache_read).toBe(0.12);
   expect(written.notices).toBeUndefined();
+});
+
+const explicitFile = `schema = 2
+name = "Qwen Test"
+description = "Test model"
+open_weights = false
+release_date = "2026-01-01"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[cost.text.input]
+price = 1
+cache = { read = 0.2, explicit = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 2
+cache = { read = 0.4, explicit = { write = 2.5 } }
+
+[cost.text.output]
+price = 4
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 8
+`;
+
+test("Alibaba writes drifted explicit cache prices through the sync runner", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-alibaba-explicit-"));
+  try {
+    await Bun.write(path.join(dir, "qwen-test.toml"), explicitFile);
+    const catalog = [{ model: "qwen-test", prices: [
+      { range_name: "Input<=256k", prices: [row("input_token", "1"), row("output_token", "4"), row("input_token_cache", "0.2"), row("input_token_cache_read", "0.12"), row("input_token_cache_creation_5m", "1.5"), row("input_token_cache_creation_1h", "2.4")] },
+      { range_name: "256k<Input<=1m", prices: [row("input_token", "2"), row("output_token", "8"), row("input_token_cache", "0.4"), row("input_token_cache_creation_5m", "3")] },
+    ] }];
+    const result = await syncProvider({ ...alibaba, modelsDir: dir, async fetchModels() { return catalog; } });
+    expect(result.notices.filter((notice) => notice.includes("Could not write"))).toEqual([]);
+    expect(result.updated).toBe(1);
+    const written = Bun.TOML.parse(await Bun.file(path.join(dir, "qwen-test.toml")).text()) as any;
+    expect(written.cost.text.input.cache).toEqual({ read: 0.2, explicit: { read: 0.12, write: { "5m": 1.5, "1h": 2.4 } } });
+    expect(written.cost.text.input.overrides[0].cache).toEqual({ read: 0.4, explicit: { write: 3 } });
+    const again = await syncProvider({ ...alibaba, modelsDir: dir, async fetchModels() { return catalog; } }, { dryRun: true });
+    expect(again.updated).toBe(0);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });
