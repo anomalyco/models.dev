@@ -8,8 +8,11 @@
 # release_date: Hub createdAt 2026-11-16, adapter weights in the same upload; the first public discussion on the repo is
 #   from 2026-11-17.
 # Modalities, tools, reasoning, sampling and limits are the base model's (models/alibaba/qwen3.8-27b.toml): the adapter
-#   only changes the language model's projections and is loaded on, or merged into, Qwen3.8-27B. harness-hub trained and
-#   evaluated it on text only (its card: "the vision tower is not served").
+#   only changes the language model's projections and is loaded on, or merged into, Qwen3.8-27B. The merged model keeps
+#   the base's vision tower (the card's merge example loads AutoModelForImageTextToText; pipeline_tag image-text-to-text),
+#   so image and video input stay as in the base file. The card's "the vision tower is not served" describes harness-hub's
+#   own evaluation setup (vLLM --language-model-only, text-only coding tasks), not the model; hosts that serve it text-only
+#   override input (as providers/tokenwatt does).
 # Benchmarks: the card's paired results under pi (one attempt per task, 100-step budget, thinking off, temperature 0.8);
 #   SWE-bench Pro is its 51 hardest tasks, Terminal-Bench 2.1 the 86 tasks both runs graded.
 schema = 2

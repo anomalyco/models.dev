@@ -9,8 +9,8 @@
 # json_schema (strict) and tool_choice "required" worked.
 # Cache: automatic vLLM prefix caching, no cache_control. Checked live 2026-11-18: the same 8,206-token prompt sent
 # twice, the second reported usage.prompt_tokens_details.cached_tokens = 7,616, billed at the cache read rate.
-# Prices from https://api.tokenwatt.io/v1/models and https://www.tokenwatt.io/api.html (accessed 2026-11-18, unchanged
-# 2026-11-21).
+# Prices from https://api.tokenwatt.io/v1/models and https://www.tokenwatt.io/api.html (accessed 2026-11-18; rechecked
+# 2026-11-24: cache read lowered from $0.08 to $0.03 per 1M that day, input $0.10 and output $0.90 unchanged).
 schema = 2
 base_model = "alibaba/qwen3.6-35b-a3b"
 
