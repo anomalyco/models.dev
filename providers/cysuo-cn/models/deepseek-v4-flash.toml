@@ -4,6 +4,7 @@
 # CNY→USD rate: 6.681345, 2026-11-23, source: https://open.er-api.com/v6/latest/USD
 # Limit: max output 393,216 tokens on the model page (the lab lists 384,000).
 # Reasoning: reasoning_effort, the host's documented levels (low|medium|high) that the lab's own API also takes; see provider.toml.
+# Structured output: the model page's structured-output capability tag, and response_format in https://cysuo.com/docs/api-reference/chat/openai/chatcompletions
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 

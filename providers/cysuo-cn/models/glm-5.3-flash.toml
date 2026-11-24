@@ -3,6 +3,7 @@
 # CNY per 1M tokens: input 0.384, output 1.344, cache read 0.1104.
 # CNY→USD rate: 6.681345, 2026-11-23, source: https://open.er-api.com/v6/latest/USD
 # Reasoning: reasoning_effort, the host's documented levels (low|medium|high) that the lab's own API also takes; see provider.toml.
+# Structured output: the model page's structured-output capability tag, and response_format in https://cysuo.com/docs/api-reference/chat/openai/chatcompletions
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
