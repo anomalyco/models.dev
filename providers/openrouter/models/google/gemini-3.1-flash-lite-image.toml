@@ -4,6 +4,10 @@ schema = 2
 base_model = "google/gemini-3.1-flash-lite-image"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
 
+[modalities]
+input = ["image", "text"]
+output = ["text", "image"]
+
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "minimal", "high"] }
