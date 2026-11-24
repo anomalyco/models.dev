@@ -1,6 +1,8 @@
 # Price: USD per 1M tokens, https://cysuo.ai/model-market/gpt-6-astra?region=singapore (accessed 2026-11-23).
 # Reasoning: reasoning_effort, the host's documented levels (low|medium|high) that the lab's own API also takes; see provider.toml.
 # Structured output: the model page's structured-output capability tag, and response_format in https://cysuo.ai/en/docs/api-reference/chat/openai/chatcompletions
+# Freeform: Cysuo's Chat Completions reference lists `tools` with no custom tool type or grammar format
+#   (https://cysuo.ai/en/docs/api-reference/chat/openai/chatcompletions, 2026-11-23); not probed live (no key), so `freeform` is left out.
 schema = 2
 base_model = "openai/gpt-6-astra"
 
