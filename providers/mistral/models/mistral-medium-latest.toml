@@ -31,7 +31,6 @@ status = "deprecated"
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "high"] }
 structured_output = true
-top_k = false
 system_updates = true
 stream_usage = true
 prompt_cache_key = true
