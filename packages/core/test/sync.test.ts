@@ -882,7 +882,7 @@ test("preserves API-silent NanoGPT overrides when first factoring existing model
   }), {
     reasoning: false,
     structured_output: true,
-    limit: { context: 1_000_000, input: 1_000_000, output: 128_000 },
+    limit: { context: 1_000_000, input: 1_000_000, output: 96_000 },
     modalities: { input: ["text", "image", "pdf"], output: ["text"] },
   });
 
@@ -890,7 +890,7 @@ test("preserves API-silent NanoGPT overrides when first factoring existing model
     base_model: "anthropic/claude-sonnet-4-6",
     reasoning: false,
     structured_output: true,
-    limit: { output: 128_000 },
+    limit: { output: 96_000 },
   });
 });
 
@@ -1003,7 +1003,7 @@ test("NanoGPT sync drops stale descriptions while first factoring existing model
     "[limit]",
     "context = 1_000_000",
     "input = 1_000_000",
-    "output = 128_000",
+    "output = 96_000",
     "",
   ].join("\n"));
   await Bun.write(metadataPath, [
@@ -1052,7 +1052,7 @@ test("NanoGPT sync drops stale descriptions while first factoring existing model
     expect(content).not.toContain("Stale provider description");
     expect(content).toContain("reasoning = { supported = false }");
     expect(content).toContain("structured_output = true");
-    expect(content).toContain("output = 128_000");
+    expect(content).toContain("output = 96_000");
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
