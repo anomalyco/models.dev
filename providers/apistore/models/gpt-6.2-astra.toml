@@ -1,0 +1,26 @@
+# Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
+# Effort: reasoning_effort, passed through to the OpenAI Chat Completions API (levels as on OpenAI's API).
+# Long prompts: above 272,000 input tokens the whole request is billed at the catalog's `long_prompt` prices.
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 5.6
+cache = { read = 0.28 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 11.2
+cache = { read = 0.56 }
+
+[cost.text.output]
+price = 28
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 42

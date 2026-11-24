@@ -1,0 +1,23 @@
+# Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
+# Served over Chat Completions and translated to Anthropic Messages by API Store's gateway.
+# Effort: reasoning_effort maps to Claude's output_config.effort (adaptive thinking), or to a
+# thinking budget on 4.5 models; `thinking` and `output_config` are also passed through as Anthropic fields.
+# Cache: cache_control on message parts and at the top level is passed to Anthropic; API Store
+# bills cache writes at the normal input price.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.07, write = 1.4 }
+
+[cost.text.output]
+price = 7

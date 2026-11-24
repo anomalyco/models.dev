@@ -1,0 +1,26 @@
+# Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
+# Effort: reasoning_effort, passed through to the OpenAI Chat Completions API (levels as on OpenAI's API).
+# Long prompts: above 272,000 input tokens the whole request is billed at the catalog's `long_prompt` prices.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.007 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.14
+cache = { read = 0.014 }
+
+[cost.text.output]
+price = 0.35
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.525
