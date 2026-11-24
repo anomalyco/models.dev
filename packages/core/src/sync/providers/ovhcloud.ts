@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { describeModel } from "../../describe.js";
-import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { exactModalities, inheritedOutput, type CortecsModel } from "./cortecs.js";
 import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
@@ -144,9 +144,14 @@ export function buildOvhcloudModel(
   const cacheRead = price(model.pricing?.input_cache_reads);
   const cacheWrite = price(model.pricing?.input_cache_writes);
   // A catalog row without prices keeps the authored ones instead of writing 0.
+  const costInput = inputCost ?? existing?.cost?.input;
+  const costOutput = outputCost ?? existing?.cost?.output;
+  if ((inputCost !== undefined || outputCost !== undefined) && (costInput === undefined || costOutput === undefined)) {
+    throw new Error(`OVHcloud ${model.id} lists only one of its input and output prices, and the file has no price for the other`);
+  }
   const cost = inputCost === undefined && outputCost === undefined ? existing?.cost : {
-    input: inputCost ?? existing?.cost?.input,
-    output: outputCost ?? existing?.cost?.output,
+    input: costInput!,
+    output: costOutput!,
     cache_read: cacheRead !== undefined && cacheRead > 0 ? cacheRead : undefined,
     cache_write: cacheWrite !== undefined && cacheWrite > 0 ? cacheWrite : undefined,
   };
@@ -217,7 +222,8 @@ export function buildOvhcloudModel(
     status: existing?.status,
     interleaved: existing?.interleaved,
     cost,
-    limit,
+    // Without a base_model the output limit always resolves (falling back to the context window).
+    limit: { ...limit, output: limit.output ?? model.context_length },
     modalities: modalitiesValue,
-  } satisfies SyncedModel;
+  } satisfies SyncedFullModel;
 }

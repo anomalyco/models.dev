@@ -1,3 +1,5 @@
+# Capabilities the catalog doesn't state (api.chat-completions.capabilities.system_updates) come from thinkingmachines/inkling-small, this host's previous model in the family.
+# Reasoning field: returned in message.reasoning and reasoning_details; reasoning sent back in reasoning_content, reasoning or reasoning_details on an earlier assistant turn is read by the model (live 2026-11-23, routed to Prime Intellect). reasoning_content is the field Inkling's chat template reads (https://huggingface.co/thinkingmachines/Inkling-2-Small).
 schema = 2
 base_model = "thinkingmachines/inkling-2-small"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
@@ -11,6 +13,8 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 output = 943_718
 
 [api.chat-completions]
+capabilities = { system_updates = true }
+compatibility = { reasoning_field = "reasoning_content" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

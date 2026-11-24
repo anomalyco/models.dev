@@ -1,0 +1,30 @@
+# Sources (accessed 2026-11-20):
+# - https://ai.google.dev/gemini-api/docs/models/genie-4 (inputs: text world_setup and steering, one 16:9 reference image,
+#   keyboard/camera controls; output: streaming 720p 16:9 24 fps video with 48 kHz stereo audio, 16-bit PCM over
+#   WebSocket or Opus over WebRTC; sessions up to 120 seconds; no function calling, caching or code execution)
+# - https://ai.google.dev/gemini-api/docs/changelog ("Genie 4 generally available", 2026-11-19)
+# Limits: sessions are capped by time (120 s), not by a token window, so context and output are 0, as for gpt-live-1.
+# Video output encoding isn't documented beyond the stream, so it stays the generic kind.
+schema = 2
+type = "realtime"
+v2_only = true
+name = "Genie 4"
+family = "genie"
+description = "Real-time interactive world generation model that streams steerable 720p video with stereo audio from a text or image seed"
+open_weights = false
+release_date = "2026-11-19"
+
+[modalities]
+input = ["text", "image/jpeg"]
+output = ["video", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

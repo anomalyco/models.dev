@@ -1,0 +1,29 @@
+# Paper Instruments' announcement: https://www.paperinstruments.com/ultramarine and the technical post
+#   https://www.paperinstruments.com/blog/ultramarine ("Ultramarine 1 Flash: Scaling Non-Verifiable RL", 2026-10-14): an agentic model for
+#   professional knowledge work, RL-trained on GLM-5.3 Flash. General availability on hosts from 2026-11-12 (Vercel, Kilo).
+# Weights: https://huggingface.co/paperinstruments/Ultramarine-1-Flash is gated ("access is restricted"; the company says weights are
+#   "coming soon"), so open_weights stays false until they're public.
+# Modalities: hosts accept images (Fireworks via https://api.concentrate.ai/v1/models: png, jpg, webp, gif; Vercel), inherited from the
+#   GLM-5.3 Flash base; Paper Instruments notes it "did not train with vision".
+# Limits: 1,048,573 input and 131,072 output tokens on Fireworks (https://api.concentrate.ai/v1/models, read 2026-11-23).
+schema = 2
+name = "Ultramarine 1 Flash"
+description = "Paper Instruments' agentic model for professional knowledge work, RL-trained on GLM-5.3 Flash"
+family = "ultramarine"
+open_weights = false
+release_date = "2026-11-12"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 131_072

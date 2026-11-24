@@ -1,0 +1,22 @@
+# Price and context: GET https://api.together.xyz/v1/models (accessed 2026-11-23): $0.834 input, $0.042 cached input, $2.501 output per 1M; context 1,048,576.
+# Effort: reasoning_effort = none|high, Tencent's own set (providers/tencent-tokenhub/models/hy4.toml); none turns reasoning off.
+#   Together takes reasoning_effort on chat completions (https://docs.together.ai/docs/inference/chat/reasoning). No previous Hy
+#   model on this host, so the flags follow this host's other serverless reasoners (structured output, implicit cache, prompt_cache_key).
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+structured_output = true
+prompt_cache_key = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501

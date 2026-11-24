@@ -1,0 +1,33 @@
+# Sources:
+# - https://www.sarvam.ai/blogs/sarvam-prism (published 2026-11-03; Apache-2.0 weights, 131,072-token context)
+# - https://docs.sarvam.ai/api/token-factory/models/sarvam-prism (accessed 2026-11-17)
+# - https://docs.sarvam.ai/api/token-factory/decisions-api
+# Sarvam Prism is a System-1 decision model built on Sarvam 105B. It returns a
+# calibrated probability for every option and generates no text, so output is 0.
+schema = 2
+v2_only = true
+type = "decision"
+name = "Sarvam Prism"
+description = "System-1 decision model built on Sarvam 105B that returns calibrated probabilities for yes/no, choice, and score questions"
+family = "sarvam-prism"
+open_weights = true
+release_date = "2026-11-03"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 131_072
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/sarvamai/prism"

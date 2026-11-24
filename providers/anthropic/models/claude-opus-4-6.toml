@@ -1,3 +1,4 @@
+# Toggle: thinking.type = adaptive|enabled|disabled. Models API (GET https://api.anthropic.com/v1/models/claude-opus-4-6, 2026-11-23): capabilities.thinking.types.disabled.supported = true, adaptive.supported = true, enabled.supported = true
 # tools.strict/search: strict tool use (models: https://platform.claude.com/docs/en/build-with-claude/structured-outputs) and the tool search tool on the Messages API: https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility
 # tools.choice: auto/any/tool/none; Opus 5.5, Sonnet 5.5 and Fable 5.1 reject forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
 # Web search: $10 per 1,000 searches; each search counts once, however many results it returns: https://platform.claude.com/docs/en/about-claude/pricing#web-search-tool
@@ -19,7 +20,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
 temperature = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }

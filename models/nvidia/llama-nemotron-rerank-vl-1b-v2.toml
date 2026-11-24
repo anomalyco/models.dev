@@ -7,7 +7,7 @@ schema = 2
 type = "reranking"
 name = "Llama Nemotron Rerank VL 1B v2"
 description = "Reranking model for improving retrieval quality in search and recommendation systems"
-family = "nemotron"
+family = "nemotron-rerank"
 open_weights = true
 release_date = "2025-12-18"
 
@@ -25,3 +25,7 @@ top_k = false
 [limit]
 context = 10_240
 output = 4_096
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/llama-nemotron-rerank-vl-1b-v2"

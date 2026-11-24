@@ -1,0 +1,12 @@
+schema = 2
+base_model = "mistral/pixtral-large-2502"
+name = "Pixtral Large 25.02"
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 6

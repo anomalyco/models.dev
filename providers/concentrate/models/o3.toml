@@ -1,0 +1,17 @@
+schema = 2
+base_model = "openai/o3"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = { min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 8
+
+[cost.web_search]
+price = 10

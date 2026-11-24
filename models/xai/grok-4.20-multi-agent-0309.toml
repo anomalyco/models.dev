@@ -1,0 +1,27 @@
+# Lab facts as in xAI's own entry, providers/xai/models/grok-4.20-multi-agent-0309.toml:
+# Sources (docs.x.ai):
+# - Model page: https://docs.x.ai/developers/models/grok-4.20-multi-agent-0309
+# - Models/pricing: https://docs.x.ai/developers/models, https://docs.x.ai/developers/pricing (long context: prompts ≥ 200k tokens)
+# Client-side function tools need beta access ("Client-side tools for multi-agent models require
+# beta access", live API 2026-10-19), so tools stay off for general access.
+schema = 2
+name = "Grok 4.20 Multi-Agent"
+description = "Grok model that runs several agents in parallel for research, reasoning and long tasks"
+family = "grok"
+open_weights = false
+release_date = "2026-03-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 30_000

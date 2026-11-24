@@ -1,0 +1,27 @@
+# Source: https://tokenfactory.nebius.com/api/public/models_info (deepseek-ai/DeepSeek-V4.1-Flash-1017-fast, read 2026-11-24):
+#   "DeepSeek V4.1 Flash 1017 fast", image2text, max_model_len 1,048,576, $0.6 input / $2.4 output per MTok, no cached-input
+#   price listed, fp8, eu-south1. A faster-serving SKU of the same model; controls, API layout and limits follow this host's
+#   DeepSeek-V4.1-Flash-1017 entry (effort none|low|high|max, Responses listed in use_cases).
+# Cache is left out: models_info lists no cached price for this SKU.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 (fast)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.4

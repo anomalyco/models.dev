@@ -1,0 +1,25 @@
+# Limit: max_input_tokens 24576 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "cloudflare/clef-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 24_576
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.038
+
+[cost.text.output]
+price = 0

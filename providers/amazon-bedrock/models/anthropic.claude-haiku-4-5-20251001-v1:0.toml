@@ -19,8 +19,8 @@ structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4_096 } }
 
 [cost.text.input]
-price = 1
-cache = { read = 0.1, write = { "5m" = 1.25, "1h" = 2 } }
+price = 1.1
+cache = { read = 0.11, write = { "5m" = 1.375, "1h" = 2.2 } }
 
 [cost.text.output]
-price = 5
+price = 5.5

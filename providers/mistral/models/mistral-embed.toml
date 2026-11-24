@@ -1,5 +1,6 @@
 # Model: https://docs.mistral.ai/models/mistral-embed-23-12 (embedding model on POST /v1/embeddings; API IDs
 # mistral-embed-2312, mistral-embed; $0.1 per MTok input).
+# Cached input $0.01 per MTok: https://docs.mistral.ai/inference/pricing (accessed 2026-11-23).
 # API: POST https://api.mistral.ai/v1/embeddings (https://docs.mistral.ai/api/endpoint/embeddings).
 schema = 2
 type = "embedding"
@@ -29,6 +30,7 @@ sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.1
+cache = { read = 0.01 }
 
 [cost.text.output]
 price = 0

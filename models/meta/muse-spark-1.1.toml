@@ -1,16 +1,17 @@
 # Sampling (temperature, top_p; no top_k): https://dev.meta.ai/docs/protocols/chat-completions, https://dev.meta.ai/docs/protocols/messages
 # Image MIME types: https://dev.meta.ai/docs/image-understanding
 # Video and audio MIME types: https://dev.meta.ai/docs/video-understanding#supported-formats (video/mp4, audio/mpeg, audio/wav)
+# Audio input: all Muse Spark versions take text, image, video, audio and PDF (https://dev.meta.ai/docs/muse-spark#versions).
 schema = 2
 name = "Muse Spark 1.1"
 description = "Muse Spark is a natively multimodal reasoning model with support for tool-use, visual chain of thought, and multi-agent orchestration."
-family = "muse"
+family = "muse-spark"
 open_weights = false
 release_date = "2026-04-08"
 last_updated = "2026-07-09"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf", "video/mp4"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf", "video/mp4", "audio/mpeg", "audio/wav"]
 output = ["text"]
 
 [capabilities]

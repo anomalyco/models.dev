@@ -1,11 +1,13 @@
 # https://mistral.ai/news/mistral-3
 # Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
+# Knowledge: Mistral's published system prompt says "Your knowledge base was last updated on 2023-10-01"
+#   (https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512/blob/main/SYSTEM_PROMPT.txt).
 schema = 2
 name = "Mistral Large 3"
 description = "Mistral's largest general model for enterprise agents, coding, and multilingual reasoning"
 family = "mistral-large"
 open_weights = true
-knowledge = "2024-11"
+knowledge = "2023-10"
 release_date = "2025-12-02"
 
 [modalities]

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel, webSearchPrice } from "./openrouter.js";
+import { factorBaseModel, resolveCanonicalBaseModel, webSearchPrice, freeFamily } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.kilo.ai/api/gateway/models";
 
@@ -127,6 +127,7 @@ function price(value: string | undefined) {
 }
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
+type EffortLevel = Extract<NonNullable<SyncedFullModel["reasoning_options"]>[number], { type: "effort" }>["values"][number];
 
 function modalities(values: string[], fallback: Modality[]): Modality[] {
   const allowed = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);
@@ -149,7 +150,7 @@ function inferFamily(model: KiloModel, name: string) {
       if (family === "o") {
         return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
       }
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(target);
     });
 }
 
@@ -210,6 +211,7 @@ export function buildKiloModel(
           || authored.name !== undefined
           ? name
           : undefined,
+        family: freeFamily(canonical, existing?.family),
         description: existing?.description ?? apiDescription ?? describeModel({
           id: model.id,
           name,
@@ -303,7 +305,8 @@ function KiloReasoningOptions(opencode: KiloModel["opencode"]): SyncedFullModel[
     });
     options.push({
       type: "effort",
-      values: orderedEfforts as Array<string | null>,
+      // Unknown levels stay and fail validation rather than being dropped silently.
+      values: orderedEfforts as EffortLevel[],
     });
   }
 

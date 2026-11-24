@@ -450,7 +450,7 @@ function inferFamily(modelID: string, name: string): SyncedFullModel["family"] {
       if (family === "o") {
         return new RegExp(`(^|[^a-z0-9])${escaped}(?=\\d|$|[^a-z0-9])`).test(target);
       }
-      return new RegExp(`(^|[^a-z0-9])${escaped}(?=$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${escaped}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(target);
     });
 }
 

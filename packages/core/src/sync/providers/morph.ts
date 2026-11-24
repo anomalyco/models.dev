@@ -12,8 +12,9 @@ const API_ENDPOINT = "https://www.morphllm.com/api/models/json?prices=list";
 const ALIASES = new Set(["morph-dsv4flash-0731"]);
 
 // Approval-only models: accounts without privileged access get a 403
-// (https://docs.morphllm.com/sdk/components/fast-models#deepseek-uncensored).
-const RESTRICTED = new Set(["morph-dsv41flash-abliterated"]);
+// (https://docs.morphllm.com/sdk/components/fast-models#deepseek-uncensored,
+// https://docs.morphllm.com/sdk/components/fast-models#kimi-abliterated).
+const RESTRICTED = new Set(["morph-dsv41flash-abliterated", "morph-kimik3-abliterated"]);
 
 const Price = z.object({
   type: z.string(),

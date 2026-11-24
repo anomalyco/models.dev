@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { describeModel } from "../../describe.js";
-import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { inferKimiFamily, type ModelFamily, ModelFamilyValues } from "../../family.js";
 import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
@@ -838,6 +838,8 @@ export function buildOpenRouterMediaModel(
     // takes on what the endpoint accepts and returns.
     const route = lab.type === type ? undefined : routeOverrides(type, lab, modalities, context);
     if (route !== undefined) doc.type = type;
+    const free = freeFamily(base, current?.family);
+    if (free !== undefined) doc.family = free;
     const name = model.name.replace(/^[^:]+:\s+/, "");
     if (
       name !== lab.name &&
@@ -1442,7 +1444,7 @@ function inferFamily(model: OpenRouterModel, name: string) {
       if (family === "o") {
         return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
       }
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(target);
     });
 }
 
@@ -1512,6 +1514,7 @@ export function buildOpenRouterModel(
         name: shouldPreserveFactoredName(model.id, canonical, baseModel, canonicalOverride)
           ? name
           : undefined,
+        family: freeFamily(canonical, existing?.family),
         // The lab describes a decision model; don't override it with a generic chat description.
         description: decision ? existing?.description : existing?.description ?? describeModel({
           id: model.id,
@@ -1715,6 +1718,13 @@ type BaseModelOverrides = Omit<Partial<SyncedFullModel>, "limit" | "modalities">
     output?: SyncedFullModel["modalities"]["output"];
   };
 };
+
+// A free route keeps its "<lab family>-free" family on a base_model file; any other family
+// there is a stale model fact and is left to the lab.
+export function freeFamily(baseModel: string, family: unknown) {
+  const lab = modelMetadata(baseModel).family;
+  return typeof lab === "string" && family === `${lab}-free` ? (family as ModelFamily) : undefined;
+}
 
 export function factorBaseModel(
   modelID: string,

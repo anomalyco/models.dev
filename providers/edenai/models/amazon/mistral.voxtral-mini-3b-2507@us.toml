@@ -3,8 +3,7 @@ base_model = "mistral/voxtral-mini-3b-2507"
 name = "Voxtral Mini 3B 2507 (Amazon Bedrock, US)"
 
 [capabilities]
-tools = { supported = false }
-structured_output = false
+structured_output = true
 
 [cost.text.input]
 price = 0.04

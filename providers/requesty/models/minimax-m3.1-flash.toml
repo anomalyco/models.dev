@@ -10,11 +10,12 @@ structured_output = true
 system_updates = true
 
 [limit]
-output = 128_000
+context = 1_048_576
+output = 1_048_576
 
 [cost.text.input]
-price = 0.15
-cache = { read = 0.015 }
+price = 0.3
+cache = { read = 0.07 }
 
 [cost.text.output]
-price = 0.6
+price = 1.2

@@ -1,0 +1,25 @@
+# Pricing: metered as sarvam-105b, so the same introductory rate applies:
+# https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17): INR 10.00 input / 0.25 cached input / 25.00 output per 1M tokens.
+# INR->USD at 94 INR per USD, the rate Sarvam publishes for its USD view on https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17), rounded to 8 decimals.
+# The voice-turn checkpoint of sarvam-105b: thinking off, and any reasoning_effort is ignored.
+# https://docs.sarvam.ai/api-reference-docs/chat/chat-completions (accessed 2026-11-17)
+# Context: GET https://api.sarvam.ai/v2/models publishes context_length 32000 for this host.
+# max_completion_tokens: the host accepts it up to the 32,000 window, so no max_tokens override is needed.
+schema = 2
+base_model = "sarvam/sarvam-105b"
+name = "Sarvam-105B Conversations"
+
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[limit]
+context = 32_000
+output = 32_000
+
+[cost.text.input]
+price = 0.10638298
+cache = { read = 0.00265957 }
+
+[cost.text.output]
+price = 0.26595745
