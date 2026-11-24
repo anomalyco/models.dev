@@ -9,8 +9,10 @@
 #   (max 262,144), but the Chat Completions reference does not document it, so no budget control is listed.
 # - Reasoning is returned in reasoning_content (https://longcat.chat/platform/docs/api/chat).
 # APIs on this host (https://longcat.chat/platform/docs/api/chat, /api/responses, /api/messages, accessed 2026-10-23):
-#   POST /openai/v1/chat/completions, /openai/v1/responses and /anthropic/v1/messages; both models on all three.
+#   POST /openai/v1/chat/completions, /openai/v1/responses and /anthropic/v1/messages; LongCat-2.0 on all three.
 #   The Chat table keeps the provider's published base (https://api.longcat.chat/openai, v1 unchanged).
+# Cache: LongCat bills cached input separately ($0.006/MTok, https://longcat.chat/platform/docs/pricing/longcat-2.0) with no
+#   cache markers documented, so caching is implicit, as on LongCat-2.5.
 # Mid-conversation behavior is undocumented and could not be probed (no key), so those flags stay unset.
 # max_tokens_field: LongCat's Chat Completions API documents max_tokens and not max_completion_tokens (https://longcat.chat/platform/docs/api/chat, accessed 2026-10-24)
 schema = 2
@@ -19,6 +21,7 @@ base_model = "meituan/longcat-2.0"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 temperature = false
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
