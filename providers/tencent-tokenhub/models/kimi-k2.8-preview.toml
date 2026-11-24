@@ -1,7 +1,9 @@
 # Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
 #   https://intl.cloud.tencent.com/document/product/1300/78937 (input 1, output 4, cache hit 0.25).
 #   China list: https://cloud.tencent.com/document/product/1823/130055
-# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17)
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17, checked
+#   2026-11-24): kimi-k2.8-preview context 1M, max input 1M, max output 1M (also 1M / 1M / 1M on the intl list,
+#   https://intl.cloud.tencent.com/document/product/1300/78934). The lab file sets no output limit.
 # Implicit cache: https://cloud.tencent.com/document/product/1823/131410
 # API: https://cloud.tencent.com/document/product/1823/132232
 # Effort: reasoning_effort = none|low|high|max (default max); none turns thinking off, so no separate
