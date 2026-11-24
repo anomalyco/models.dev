@@ -1,0 +1,33 @@
+# Prices (China (Beijing), CNY): ¥16 input, ¥56 output per 1M (https://help.aliyun.com/zh/model-studio/model-pricing, accessed 2026-11-24). No CNY cache-hit price is listed, so none is set.
+# CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
+# Prime lane: GLM-5.3 with 1.5-2x output speed from inference acceleration, same capabilities (the catalog API GET https://dashscope-intl.aliyuncs.com/api/v1/models: "GLM-5.3-Prime is the high-speed variant of GLM-5.3, inheriting its full capabilities"). Controls follow glm-5.3 on this host.
+# Thinking only: enable_thinking accepts only true; Effort: reasoning_effort = low|high|max (default max) for the glm-5.3 series (Chat API reference https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-11-24).
+# Not probed live, so system_updates is left unset.
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.3"
+name = "GLM-5.3 Prime"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
+[cost.text.input]
+price = 2.395461
+
+[cost.text.output]
+price = 8.384113

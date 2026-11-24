@@ -1,0 +1,45 @@
+# Sources (accessed 2026-11-24):
+# https://www.alibabacloud.com/help/en/model-studio/kimi-k3-1-pro (Singapore: $2 input, $10 output, $0.2 cache hit per 1M)
+# Toggle: enable_thinking true|false (default true; Alibaba recommends keeping it on). Effort: reasoning_effort = low|medium|high|max (default max) for kimi-k3.1-pro deployed on Model Studio (Chat API reference https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-11-24).
+# APIs: Chat Completions, Responses, Anthropic Messages and DashScope (https://www.alibabacloud.com/help/en/model-studio/kimi-api).
+# Input: text and image, no video (https://www.alibabacloud.com/help/en/model-studio/kimi-k3-1-pro). Limits: 1,048,576 context, input and output, matching the lab file.
+# Cache: implicit only. top_k: the Kimi series does not support it.
+# Not probed live, so system_updates, effort_updates and tools.updates are left unset.
+# Tools: tool_choice auto|none|required|named on every API except Responses (no required with more than one tool); no strict tool mode (sources in provider.toml), as on kimi-k3.
+# Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+schema = 2
+v2_only = true
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "medium", "high", "max"] }
+structured_output = true
+top_k = false
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+capabilities = { tools = { choice = ["auto", "none", "tool"] } }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10
+
+[cost.web_search]
+price = 10

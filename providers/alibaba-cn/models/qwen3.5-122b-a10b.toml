@@ -1,0 +1,47 @@
+# Sources (accessed 2026-11-24):
+# https://help.aliyun.com/zh/model-studio/qwen3-5-122b-a10b (China (Beijing) capabilities, limits and CNY prices)
+# Prices (CNY per 1M): input <=128K ¥0.8, output ¥6.4; 128K-256K ¥2 / ¥16; thinking and non-thinking output cost the same.
+# CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
+# Toggle: enable_thinking true|false (default on); Budget: thinking_budget (max chain of thought 81,920 tokens per the model page). Controls follow providers/alibaba/models/qwen3.5-122b-a10b.toml.
+# Limits: 262,144 context, 65,536 output (model page), matching the lab file. No context cache on this model.
+# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset.
+# Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video).
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.5-122b-a10b"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = { max = 81_920 } }
+structured_output = true
+stream_usage = true
+cache = false
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 0.119773
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.299433
+
+[cost.text.output]
+price = 0.958184
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 2.395461
+
+[cost.web_search]
+price = 0.573411
