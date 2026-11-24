@@ -560,6 +560,11 @@ export const ModelFamilyValues = [
   // Elephant
   "elephant",
 
+  // Base Labs decision models
+  "joey",
+  "bison",
+  "groundhog",
+
   // Free variants: the base family plus "-free"
   "beam-free",
   "deepseek-flash-free",
