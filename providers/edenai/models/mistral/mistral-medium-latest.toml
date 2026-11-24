@@ -1,6 +1,10 @@
 schema = 2
 base_model = "mistral/mistral-medium-latest"
 
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }

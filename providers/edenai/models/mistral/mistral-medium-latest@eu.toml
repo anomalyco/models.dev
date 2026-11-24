@@ -2,6 +2,10 @@ schema = 2
 base_model = "mistral/mistral-medium-latest"
 name = "Mistral Medium (latest) (EU)"
 
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
