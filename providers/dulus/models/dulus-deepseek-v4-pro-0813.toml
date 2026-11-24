@@ -1,8 +1,13 @@
+# Reasoning controls on Dulus's Chat Completions API. Field names per the public
+# OpenAPI schema (https://control.dulus.ai/openapi.json, ProviderChatRequest,
+# accessed 2026-11-24); accepted effort levels per the provider.
+# Toggle: top-level `enable_thinking` (boolean), i.e. enable_thinking = true|false.
+# Effort: top-level `reasoning_effort` = low|high|max.
 schema = 2
 v2_only = true
 base_model = "deepseek/deepseek-v4-pro-0813"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
