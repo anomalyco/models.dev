@@ -118,11 +118,56 @@ test("a context below the lab's drops the lab's input limit so it can't exceed t
   expect(shrunk.limit).not.toHaveProperty("input");
   // Back at the lab's context: inherited again, nothing omitted.
   const same = refreshHuggingFaceModel("tencent/Hy4", hy4, { base_model: "tencent/hy4" } as ExistingModel, aggregate(1_048_576));
-  expect(same.base_model_omit).toBeUndefined();
+  expect(same.base_model_omit).toEqual([]);
   expect(same.limit).toBeUndefined();
+  // Also after an earlier run omitted it; other omitted keys stay.
+  const omitted = { ...hy4, base_model_omit: ["limit.input", "cost.reasoning"], limit: { context: 262_144, output: 65_536 } } as ExistingModel;
+  expect(refreshHuggingFaceModel("tencent/Hy4", omitted, omitted, aggregate(1_048_576)).base_model_omit)
+    .toEqual(["cost.reasoning"]);
   // A file's own input stays, capped at the context.
   const own = { base_model: "tencent/hy4", limit: { input: 500_000 } } as ExistingModel;
   expect(refreshHuggingFaceModel("tencent/Hy4", hy4, own, aggregate(262_144)).limit).toMatchObject({ context: 262_144, input: 262_144 });
+});
+
+test("a sync run removes an input omit once the context matches the lab's again", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "models-dev-huggingface-omit-"));
+  try {
+    const modelsDir = path.join(root, "providers", "huggingface", "models");
+    const file = path.join(modelsDir, "tencent", "Hy4.toml");
+    await mkdir(path.dirname(file), { recursive: true });
+    await mkdir(path.join(root, "models", "tencent"), { recursive: true });
+    await copyFile(path.join(import.meta.dirname, "..", "..", "..", "providers", "huggingface", "provider.toml"), path.join(root, "providers", "huggingface", "provider.toml"));
+    await copyFile(path.join(import.meta.dirname, "..", "..", "..", "models", "tencent", "hy4.toml"), path.join(root, "models", "tencent", "hy4.toml"));
+    await Bun.write(file, `${SYNCED}
+schema = 2
+base_model = "tencent/hy4"
+base_model_omit = ["limit.input"]
+
+[limit]
+context = 262_144
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 1
+`);
+    const source = { data: [routerModel([provider({ pricing: { input: 1, output: 1 }, context_length: 1_048_576 })], "tencent/Hy4")] };
+    const host = { ...huggingface, modelsDir, fetchModels: async () => source };
+    await syncProvider(host, { openIssues: false });
+    const written = await readFile(file, "utf8");
+    expect(written).not.toContain("base_model_omit");
+    expect(written).not.toContain("[limit]");
+    expect((await syncProvider(host, { openIssues: false, dryRun: true })).updated).toBe(0);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 const LAB = "alibaba/qwen3.5-122b-a10b";

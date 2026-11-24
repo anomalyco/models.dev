@@ -872,6 +872,8 @@ export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | 
   const translatedBase = "base_model" in model ? model.base_model : undefined;
   if (translatedBase !== undefined) {
     const translatedOmit = "base_model_omit" in model ? model.base_model_omit : undefined;
+    // An empty list says the module omits nothing: the file's own list goes and none is written.
+    if (translatedOmit?.length === 0) return { ...model, base_model_omit: undefined };
     if (translatedBase !== existing.base_model || translatedOmit !== undefined) return model;
     return { ...model, base_model_omit: existing.base_model_omit };
   }

@@ -283,13 +283,15 @@ export function refreshHuggingFaceModel(
     ...(input === undefined ? {} : { input }),
     ...(output === undefined ? {} : { output }),
   } as SyncedFullModel["limit"];
+  // `limit.input` in the omit list is worked out again each run, so it goes once the
+  // context matches the lab's again. An empty list still replaces the file's own.
   const dropInput = lab?.input !== undefined && input === undefined && lab.context !== context;
-  const omit = [...new Set([...(baseModelOmit ?? []), ...(dropInput ? ["limit.input"] : [])])];
+  const omit = [...(baseModelOmit ?? []).filter((key) => key !== "limit.input"), ...(dropInput ? ["limit.input"] : [])];
   const cost = aggregate.cost === undefined ? existing.cost : { ...existing.cost, ...aggregate.cost };
   const values = { ...current, cost, limit } as SyncedFullModel;
   return (baseModel === undefined
     ? values
-    : factorBaseModel(baseModel, values, limit, omit.length > 0 ? omit : undefined)) as SyncedFullModel;
+    : factorBaseModel(baseModel, values, limit, omit)) as SyncedFullModel;
 }
 
 const KINDS = ["text", "image", "audio", "video", "pdf"];
