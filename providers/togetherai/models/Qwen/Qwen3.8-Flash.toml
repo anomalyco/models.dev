@@ -1,0 +1,21 @@
+# Serverless: $0.15 input, $0.47 output per 1M, no cached-input price; context 1,000,000; structured outputs: yes
+#   (https://docs.together.ai/docs/serverless-models and https://www.together.ai/pricing, accessed 2026-11-24).
+# Model page (https://www.together.ai/models/qwen3-8-flash): "Fast hybrid thinking model", "reasoning effort adjustable per
+#   request", tagged Vision. The serverless vision list doesn't include it, so input follows the model page and the lab.
+# Toggle: reasoning.enabled true|false (Together's switch for hybrid models, https://docs.together.ai/docs/inference/chat/reasoning).
+# Effort: reasoning_effort = low|medium|xhigh, the levels Alibaba's own Qwen3.8 Flash takes (providers/alibaba); Together
+#   names no levels for this model. No budget: Alibaba's thinking_budget isn't documented on Together.
+# Not probed: the route forwards prompts to a third-party provider and returns 403 unless the
+# organization enables third-party data sharing.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.47

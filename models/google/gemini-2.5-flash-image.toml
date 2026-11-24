@@ -1,4 +1,5 @@
 # Thinking: not supported (https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-image; GET v1beta/models/gemini-2.5-flash-image reports no thinking, 2026-10-22).
+# Limits: input 65,536, output 32,768 (https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-image). /v1beta/models reports inputTokenLimit 32,768.
 # Image output formats: https://ai.google.dev/gemini-api/docs/image-generation (response_format mime_type image/png or image/jpeg).
 schema = 2
 type = "image"
@@ -21,5 +22,5 @@ top_p = true
 top_k = true
 
 [limit]
-context = 32_768
+context = 65_536
 output = 32_768

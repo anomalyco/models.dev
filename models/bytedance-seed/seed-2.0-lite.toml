@@ -6,6 +6,10 @@
 #   https://www.volcengine.com/docs/82379/1362931
 # Video formats: Volcengine Ark video understanding, 视频格式说明 table (MP4 video/mp4, AVI video/x-msvideo,
 #   MOV video/quicktime): https://www.volcengine.com/docs/82379/1895586
+# Audio formats: Volcengine Ark audio understanding, 音频格式说明, 纯音频格式
+#   (mp3 audio/mpeg, wav audio/wav, aac audio/aac, m4a audio/x-m4a):
+#   https://www.volcengine.com/docs/82379/1362907; doubao-seed-2-0-lite-260428 is listed under
+#   音频理解能力 in https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24).
 # Sampling: the Ark Chat API takes temperature and top_p and has no top_k: https://www.volcengine.com/docs/82379/1494384
 #   doubao-seed-2-0-lite-260215 pins temperature 1 and top_p 0.95; the current 260428 snapshot takes both.
 schema = 2
@@ -29,6 +33,10 @@ input = [
   "image/sgi",
   "image/jp2",
   "image/heic",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/aac",
+  "audio/x-m4a",
   "video/mp4",
   "video/x-msvideo",
   "video/quicktime",

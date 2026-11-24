@@ -1,3 +1,4 @@
+# Status: deprecated, shutdown 2028-05-14 (replacement gemini-embedding-2): https://ai.google.dev/gemini-api/docs/deprecations
 # v2 capabilities and prices:
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
 # APIs: embedContent, and /embeddings on the OpenAI-compatible endpoint (https://ai.google.dev/gemini-api/docs/openai#embeddings, confirmed live 2026-10-22).
@@ -9,6 +10,7 @@ family = "gemini-embedding"
 open_weights = false
 knowledge = "2025-05"
 release_date = "2025-05-20"
+status = "deprecated"
 
 [modalities]
 input = ["text"]

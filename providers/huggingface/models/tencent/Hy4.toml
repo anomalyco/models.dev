@@ -1,8 +1,7 @@
-# HF router (GET https://router.huggingface.co/v1/models, 2026-11-20): tencent/Hy4, live on Tencent ($0.417 input /
-#   $1.2505 output per MTok) and Together; context 1,048,576 (the lab's); tools and structured outputs.
 # Effort: reasoning_effort = none|high, as on Tencent TokenHub (providers/tencent-tokenhub/models/hy4.toml) and this host's
 #   Hy4-flash entry. none turns reasoning off, so no toggle.
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (together): $0.834 input / $2.501 output per MTok.
 schema = 2
 base_model = "tencent/hy4"
 
@@ -18,7 +17,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.417
+price = 0.834
 
 [cost.text.output]
-price = 1.2505
+price = 2.501

@@ -1,0 +1,32 @@
+# Sources (accessed 2026-11-24):
+# - https://router.huggingface.co/v1/models (thinkingmachines/Inkling-2-Mini: io-net live, context_length 262,144, $0.12 input / $0.5 output;
+#   primeintellect live, 1,048,576, $0.075 / $0.3; tools and structured output on both, input text + image)
+# - https://huggingface.co/docs/inference-providers/tasks/chat-completion
+# Reasoning: reasoning_effort = none|minimal|low|medium|high|max, copied from this host's Inkling 2 Small entry and the Prime and OpenRouter
+#   Inkling 2 Mini peers. None turns reasoning off, so no toggle.
+# Context: 262,144, io-net's served window, so the limit matches the route the price comes from.
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (thinkingmachines/inkling-2-mini).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Reasoning field: reasoning_content, the field Inkling's chat template reads back, as on this host's Inkling 2 Small entry.
+schema = 2
+base_model = "thinkingmachines/inkling-2-mini"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 0.5

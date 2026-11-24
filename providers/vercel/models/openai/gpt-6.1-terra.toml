@@ -1,5 +1,6 @@
 # tools.freeform on [api.chat-completions] and [api.responses]: /v1/chat/completions and /v1/responses accepted text, lark and regex custom tools and enforced the grammars (regex ZZ[0-9]{3} and the equivalent lark grammar both returned ZZ plus three digits, live 2026-10-28 on this model). /v1/messages has no custom tools.
 # Live 2026-11-17 (@opencode/ai request shapes, every tool in additional_tools, 3 runs each): tools.updates = ["add", "remove"] on [api.responses]: additions and removal announcements work; a redefinition keeps the old schema (0/3, gpt-6-astra and gpt-5.6-sol). [api.chat-completions] stays ["add"] (providerOptions.openai.additionalTools).
+# Capabilities the catalog doesn't state (capabilities.system_updates, capabilities.structured_output, api.chat-completions.capabilities.tools.updates) come from openai/gpt-5.6-terra, this host's previous model in the family.
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
@@ -8,9 +9,12 @@ description = "GPT model for general reasoning, writing, coding, and tool-assist
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 cache = { implicit = true, explicit = true }
+system_updates = true
+structured_output = true
+service_tier = ["flex", "priority"]
 
 [api.chat-completions]
-capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+capabilities = { tools = { freeform = ["text", "lark", "regex"], updates = ["add"] } }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"
@@ -36,3 +40,14 @@ price = 5
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_001 } }
 price = 7.5
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 2, cache = { read = 2 } }, output = { price = 2 } } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.5 } }, output = { price = 0.5 } } }

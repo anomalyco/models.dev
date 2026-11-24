@@ -77,6 +77,7 @@ export const ModelFamilyValues = [
   "glmv",
   "glm-air",
   "glm-flash",
+  "glm-flash-legal",
   "cogvideox",
   "glmv-flash",
   "autoglm",
@@ -259,6 +260,8 @@ export const ModelFamilyValues = [
   // Step (StepFun)
   "step",
   "step-flash",
+  "step-vision",
+  "step-audio",
   "step-tts",
   "step-asr",
 
@@ -367,6 +370,7 @@ export const ModelFamilyValues = [
 
   // Sarvam
   "sarvam",
+  "sarvam-prism",
 
   // Falcon
   "falcon",
@@ -421,12 +425,16 @@ export const ModelFamilyValues = [
   // RNJ
   "rnj",
 
+  // Elorian
+  "glimpse",
+
   // Tecent Hy
 
   // Ling & Ring (InclusionAI)
   "ling-flash",
   "inkling",
   "inkling-small",
+  "inkling-mini",
   "ling-tiny",
   "ming-image",
   "ring",
@@ -530,6 +538,10 @@ export const ModelFamilyValues = [
 
   // Writer
   "palmyra",
+  "palmyra-vision",
+
+  // Paper Instruments
+  "ultramarine",
 
   // ALLaM
   "allam",
@@ -549,6 +561,11 @@ export const ModelFamilyValues = [
 
   // Elephant
   "elephant",
+
+  // Base Labs decision models
+  "joey",
+  "bison",
+  "groundhog",
 
   // Free variants: the base family plus "-free"
   "beam-free",

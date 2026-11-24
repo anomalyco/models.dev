@@ -1,0 +1,15 @@
+# https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-writer-palmyra-vision-7b.html: model ID writer.palmyra-vision-7b,
+#   in-Region only (no geo or global profile); structured outputs supported.
+# Price: AWS price list (AmazonBedrockFoundationModels, us-east-1, read 2026-11-22): USE1-writer.palmyra-vision-7b-input-tokens
+#   $0.00015 and -output-tokens $0.0006 per 1K tokens, i.e. $0.15 / $0.60 per 1M.
+schema = 2
+base_model = "writer/palmyra-vision-7b"
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

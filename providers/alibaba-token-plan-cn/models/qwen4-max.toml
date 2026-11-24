@@ -1,0 +1,37 @@
+# Sources (accessed 2026-11-24):
+# https://help.aliyun.com/zh/model-studio/token-plan-personal-overview
+# https://help.aliyun.com/zh/model-studio/token-plan-team-overview
+# https://www.alibabacloud.com/help/en/model-studio/qwen4-max
+# Listed on the Personal and Team editions. Controls follow the pay-as-you-go model (qwen4-max on providers/alibaba); not probed on the plan endpoint.
+# Reasoning (Chat API reference https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions and https://www.alibabacloud.com/help/en/model-studio/qwen4-max, accessed 2026-11-24):
+# Effort: reasoning_effort = none|low|high|xhigh (default high); minimal maps to low, medium to high, max to xhigh, none disables thinking. Responses uses reasoning.effort, Anthropic Messages output_config.effort, with the same levels.
+# Budget: thinking_budget 1..262144 (positive integer, not 0) cannot be combined with reasoning_effort. Off is effort none, so no separate toggle.
+# Limits: 1,000,000 context; 991,808 max input; 131,072 max output (262,144 with thinking), from the lab file.
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
+# Not probed live, so system_updates and effort_updates are left unset.
+# Cost: Token Plan Credits subscription; no public USD per-token rate.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "xhigh"], budget = { min = 1, max = 262_144 } }
+structured_output = true
+stream_usage = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

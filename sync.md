@@ -25,7 +25,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync groq` syncs Groq prices and limits for existing text models.
-- `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
+- `bun models:sync github-copilot` syncs GitHub Copilot pricing and removes models GitHub has retired.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
@@ -169,6 +169,18 @@ Actions are pinned by commit SHA. Keep new workflow actions pinned the same way.
 - New reasoning models with neither a resolved mapping nor authored controls remain skipped for manual authoring. No empty placeholder is generated, so the normal auto-merge policy remains unchanged; legitimate always-on `[]` entries are not blanket-blocked.
 - Intentional route deduplication and removal of IDs absent from the upstream catalog are unchanged.
 
+## Concentrate Notes
+
+Concentrate is implemented in `packages/core/src/sync/providers/concentrate.ts`.
+
+- Source endpoint: `https://api.concentrate.ai/v1/models`; no auth required. One page lists every model with its routes, prices and per-route capabilities.
+- Every model maps to a `base_model`; IDs that need more than dots-for-dashes or an `-it` / `-instruct` suffix are listed in `BASE_MODEL_ALIASES`. Models without a lab entry are reported as missing models.
+- Concentrate routes each request to a route that serves the features it uses, so tools, attachments and effort levels count when any route serves them. PDF input follows each route's `supports.input.file.pdf`; Concentrate accepts PDFs for models without native document input too. Limits are capped at the lab's, and a file that lowers them names the source values in its header.
+- Concentrate picks a route per request, so each price is the most expensive route's at that prompt size (an upper bound for requests at the default service tier): the standard price, `input_gte` tiers from any route as context overrides, cache reads/writes and web search. Prices a caller opts into with `service_tier` (such as `priority`) are not published. A model whose route bills cache reads is marked as caching, `{ implicit = true }` unless the reference entry details it.
+- Reasoning copies the lab's first-party controls (else OpenRouter's, else another peer's) on the levels Concentrate accepts, with `none` as the off switch. An off switch with no graded levels (a lab toggle) is published as `toggle`, with `reasoning.effort = none` as its wire path; the full list the routes accept is never published. A reasoning model left with no controls where the reference has them is skipped unless a live probe showed it always on (`ALWAYS_ON`). Claude keeps Anthropic's toggle and budget and is served over Messages; other models use the provider's Responses default, which carries reasoning natively (no `interleaved` field). Where a route accepts custom tools (`supports.tools.custom_tools`) and a live probe showed a regex grammar enforced (`GRAMMAR_ENFORCED`), the lab's `freeform` formats are published. Decision models set `structured_output` and turn off sampling flags System One does not take.
+- Decision models are served over System One at `/v1/systemone`. `redact-v1` (PII redaction) is skipped.
+- `NOT_MODELS` also skips models whose Concentrate entry is being corrected, models that didn't complete a tool call end to end in OpenCode, Claude Opus 4.1, which Anthropic has retired, and models whose reasoning showed up inconsistently live, and older models with edge-case data. Removing an ID from the list brings the model back on the next sync.
+
 ## CrossModel Notes
 
 CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
@@ -288,11 +300,11 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 
 GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilot.ts`.
 
-- Source: `https://raw.githubusercontent.com/github/docs/main/data/tables/copilot/models-and-pricing.yml`
+- Sources: `https://raw.githubusercontent.com/github/docs/main/data/tables/copilot/models-and-pricing.yml` and `https://raw.githubusercontent.com/github/docs/main/data/tables/copilot/model-deprecation-history.yml` (the retirement table)
 - The YML contains only token rates, so the sync only updates `[cost]`: `input`, `cached_input` (as `cache_read`), `cache_write`, `output`, and long-context rows as `cost.tiers`.
 - Display names are converted to file IDs, with minimal special case logic to match existing model entries.
-- Unmatched rows open missing-model issues, and local entries missing from the source are kept.
-- When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model issues. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
+- Unmatched rows open missing-model issues, and local entries missing from the pricing table are kept.
+- Models in the retirement table are removed once their retirement date passes, even if a pricing row remains, and are marked `deprecated` before that. A model scheduled for retirement that GitHub still prices, with no local file, is still reported as missing. Models GitHub keeps for annual-plan subscribers (Sonnet 4.6, Opus 4.8) are listed in `ANNUAL_PLAN_MODELS` and stay. `IGNORED_ROWS` is only for pricing rows that aren't models of their own, such as the Opus 4.8 fast-mode row.
 
 ## Novita AI Notes
 

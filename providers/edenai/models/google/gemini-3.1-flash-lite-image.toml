@@ -2,6 +2,10 @@
 schema = 2
 base_model = "google/gemini-3.1-flash-lite-image"
 
+[modalities]
+input = ["image", "text"]
+output = ["text", "image"]
+
 [capabilities]
 tools = { supported = false }
 reasoning = { supported = true, effort = ["minimal", "high"] }

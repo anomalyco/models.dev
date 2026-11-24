@@ -3,15 +3,8 @@
 # Cache: implicit (automatic) for OpenAI models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
 # Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
 schema = 2
+base_model = "openai/gpt-6-astra"
 name = "GPT 6 Astra Pro"
-description = "GPT 6 Astra in Pro reasoning mode. Uses additional model work for difficult tasks, with higher latency and token usage at the same per-token rates. Reasoning effort remains independently configurable."
-family = "gpt-pro"
-open_weights = false
-release_date = "2026-09-04"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
@@ -20,9 +13,7 @@ structured_output = true
 cache = { implicit = true }
 
 [limit]
-context = 1_050_000
 input = 1_050_000
-output = 128_000
 
 [cost.text.input]
 price = 10

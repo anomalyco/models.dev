@@ -1,0 +1,39 @@
+# Sources (accessed 2026-11-24):
+# - Model list (19 official voices, voice cloning, 1,000-character input): https://platform.stepfun.com/docs/zh/guides/models/list
+# - Text-to-speech API (POST /v1/audio/speech; input up to 1,000 characters; response_format wav, mp3, flac, opus, pcm,
+#   default mp3): https://platform.stepfun.com/docs/zh/api-reference/audio/create-audio
+# - Pricing: CNY 90 per 1M characters: https://platform.stepfun.com/docs/zh/guides/pricing/details
+#   One Chinese character counts as 1 character; 2 English letters or 2 punctuation marks count as 1.
+#   Voice cloning (CNY 10 per voice) has no v2 field.
+# The global site lists the model but doesn't price it or accept it in its TTS API, so it is CN only.
+# CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
+# release_date: closest documented date; step-tts-mini was already live when StepFun's Series B was reported on 2024-12-23
+#   (https://www.ebrun.com/20241223/568552.shtml). No launch date is published.
+schema = 2
+v2_only = true
+type = "speech"
+name = "Step TTS Mini"
+description = "Expressive speech generation in Mandarin, English, Japanese, Cantonese and Sichuanese, with voice cloning"
+family = "step-tts"
+open_weights = false
+release_date = "2024-12-23"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav", "audio/mpeg", "audio/flac", "audio/opus", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 0
+output = 0
+
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
+
+[cost.text.input]
+unit = "character"
+price = 13.474

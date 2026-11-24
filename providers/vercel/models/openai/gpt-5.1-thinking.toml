@@ -23,6 +23,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 temperature = true
 system_updates = true
 cache = { implicit = true }
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 400_000
@@ -47,3 +48,14 @@ cache = { read = 0.125 }
 
 [cost.text.output]
 price = 10
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }

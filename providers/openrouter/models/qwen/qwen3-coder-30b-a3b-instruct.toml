@@ -9,9 +9,6 @@ base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 
-[limit]
-output = 235_929
-
 [api.chat-completions]
 capabilities = { system_updates = true }
 

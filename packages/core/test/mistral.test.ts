@@ -236,12 +236,21 @@ test("maps Mistral deprecation to catalog status", () => {
 });
 
 test("keeps docs-deprecated models deprecated when /v1/models omits deprecation", () => {
-  const leanstral = model({ id: "labs-leanstral-1-5-1", name: "labs-leanstral-1-5-1", aliases: [] });
-  expect(buildMistralModel(leanstral, { ...existingSmall, status: "deprecated" }))
-    .toMatchObject({ status: "deprecated" });
   const glm = model({ id: "zai-glm-5-2", name: "glm-5-2", aliases: ["zai-glm-5-2"] });
   expect(buildMistralModel(glm, { ...existingSmall, status: "beta" }))
     .toMatchObject({ status: "deprecated" });
+  for (const id of ["mistral-medium-latest", "magistral-medium-latest", "mistral-large-2512"]) {
+    expect(buildMistralModel(model({ id, name: id, aliases: [] }), { ...existingSmall, status: "deprecated" }))
+      .toMatchObject({ status: "deprecated" });
+    expect(buildMistralModel(model({ id, name: id, aliases: [] }), existingSmall))
+      .toMatchObject({ status: "deprecated" });
+  }
+});
+
+test("clears deprecated status on rows Mistral no longer deprecates", () => {
+  const leanstral = model({ id: "labs-leanstral-1-5-1", name: "labs-leanstral-1-5-1", aliases: [] });
+  expect(buildMistralModel(leanstral, { ...existingSmall, status: "deprecated" }))
+    .toMatchObject({ status: undefined });
 });
 
 test("writes only provider overrides for base_model entries", () => {
