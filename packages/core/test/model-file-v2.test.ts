@@ -4,12 +4,26 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { formatModelV2, formatTomlValue, patchModelV2, providerModelToV2 } from "../src/model-file-v2.js";
+import { PrivacyV2 } from "../src/schema-v2.js";
 import { explicitFalseFlags, modelV2ToV1, readLabMetadata } from "../src/translate.js";
 
+const MODEL_SCHEMA_VERSION = 2;
+const BASE_MODEL_ID = "lab/model";
+const PRIVACY_RETENTION_DAYS = 30;
+const ZERO_RETENTION_DAYS = 0;
+const NEGATIVE_RETENTION_DAYS = -1;
+const FRACTIONAL_RETENTION_DAYS = 0.5;
+
+test("PrivacyV2 accepts zero and rejects invalid retention boundaries", () => {
+  expect(PrivacyV2.safeParse({ data_retention_days: ZERO_RETENTION_DAYS }).success).toBe(true);
+  expect(PrivacyV2.safeParse({ data_retention_days: NEGATIVE_RETENTION_DAYS }).success).toBe(false);
+  expect(PrivacyV2.safeParse({ data_retention_days: FRACTIONAL_RETENTION_DAYS }).success).toBe(false);
+});
+
 test("patchModelV2 preserves and formats model privacy metadata", () => {
-  const privacy = { data_retention_days: 30, trains_on_data: false };
-  const doc = { schema: 2, base_model: "lab/model", privacy };
-  const synced = { base_model: "lab/model" };
+  const privacy = { data_retention_days: PRIVACY_RETENTION_DAYS, trains_on_data: false };
+  const doc = { schema: MODEL_SCHEMA_VERSION, base_model: BASE_MODEL_ID, privacy };
+  const synced = { base_model: BASE_MODEL_ID };
 
   console.log("[privacy metadata sync] patching and formatting a provider model");
   const patched = patchModelV2(doc, synced, synced);
