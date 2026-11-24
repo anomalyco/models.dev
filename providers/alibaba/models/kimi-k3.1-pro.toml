@@ -4,7 +4,7 @@
 # APIs: Chat Completions, Responses, Anthropic Messages and DashScope (https://www.alibabacloud.com/help/en/model-studio/kimi-api).
 # Input: text and image, no video (https://www.alibabacloud.com/help/en/model-studio/kimi-k3-1-pro). Limits: 1,048,576 context, input and output, matching the lab file.
 # Cache: implicit only. top_k: the Kimi series does not support it.
-# Not probed live, so system_updates, effort_updates and tools.updates are left unset.
+# system_updates and tools.updates = ["add"] on Chat Completions follow kimi-k3 on this host (same API, live-checked there 2026-10-19 and 2026-10-27); effort_updates is left unset as on kimi-k3.
 # Tools: tool_choice auto|none|required|named on every API except Responses (no required with more than one tool); no strict tool mode (sources in provider.toml), as on kimi-k3.
 # Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
@@ -18,12 +18,12 @@ output = ["text"]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "medium", "high", "max"] }
 structured_output = true
-top_k = false
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true, tools = { updates = ["add"] } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }

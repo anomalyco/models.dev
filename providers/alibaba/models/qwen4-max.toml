@@ -7,7 +7,7 @@
 # Limits: 1,000,000 context; 991,808 max input; 131,072 max output (262,144 with thinking), from the lab file.
 # Cache: implicit and explicit (https://www.alibabacloud.com/help/en/model-studio/explicit-cache-qwen4): cache_control ephemeral or prompt_cache_options, TTL 5m or 1h, up to 4 breakpoints, 1,024-token minimum. Writes bill at about 125% (5m) and 200% (1h) of input.
 # Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
-# Not probed live, so system_updates and effort_updates are left unset.
+# system_updates on Chat Completions follows qwen3.8-max on this host (same API, live-checked there 2026-10-19); effort_updates is left unset as on qwen3.8-max.
 # Web search: $10 per 1,000 calls in Singapore (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 schema = 2
 base_model = "alibaba/qwen4-max"
@@ -21,6 +21,7 @@ cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m", "1h"], ma
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }

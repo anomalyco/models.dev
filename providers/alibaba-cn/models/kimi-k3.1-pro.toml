@@ -19,7 +19,6 @@ output = ["text"]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["low", "medium", "high", "max"] }
 structured_output = true
-top_k = false
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
 

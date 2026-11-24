@@ -7,7 +7,6 @@
 # Effort: reasoning_effort = none|low|high|xhigh (default high); minimal maps to low, medium to high, max to xhigh, none disables thinking. Responses uses reasoning.effort, Anthropic Messages output_config.effort, with the same levels.
 # Budget: thinking_budget 1..262144 (positive integer, not 0) cannot be combined with reasoning_effort. Off is effort none, so no separate toggle.
 # Limits: 1,000,000 context; 991,808 max input; 131,072 max output (262,144 with thinking), from the lab file.
-# Cache: implicit and explicit (https://www.alibabacloud.com/help/en/model-studio/explicit-cache-qwen4): cache_control ephemeral or prompt_cache_options, TTL 5m or 1h, up to 4 breakpoints, 1,024-token minimum. Writes bill at about 125% (5m) and 200% (1h) of input.
 # Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
 # Not probed live, so system_updates and effort_updates are left unset.
 # Cost: Token Plan Credits subscription; no public USD per-token rate.
@@ -33,7 +32,6 @@ capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
 
 [cost.text.input]
 price = 0
-cache = { read = 0, write = 0 }
 
 [cost.text.output]
 price = 0
