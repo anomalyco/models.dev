@@ -1,13 +1,8 @@
 # Modalities: Eden AI's catalog (https://api.edenai.run/v3/models, read 2026-11-24) lists mistral/mistral-medium-2604 with
-#   input_modalities ["text", "image"], no "file", so PDF input isn't offered on this ID here. The same model under
-#   mistral/mistral-medium-3-5 and mistral/mistral-medium-3.5 lists ["text", "image", "file"] and keeps the lab's PDF input.
-#   Image types are the lab's (https://docs.mistral.ai/studio/conversations/vision); the Eden AI sync keeps them.
+#   input_modalities ["text", "image"], no "file", which matches the lab file (no PDF), so nothing is overridden.
+#   The same model under mistral/mistral-medium-3-5 and mistral/mistral-medium-3.5 lists ["text", "image", "file"].
 schema = 2
 base_model = "mistral/mistral-medium-2604"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
