@@ -109,6 +109,22 @@ test("an output cap set at the old context follows the new context; a hand-set c
   expect(refreshHuggingFaceModel("m", own, own, aggregate(8_192)).limit).toMatchObject({ context: 8_192, output: 8_192 });
 });
 
+test("a context below the lab's drops the lab's input limit so it can't exceed the context", () => {
+  const aggregate = (context: number) => ({ cost: { input: 1, output: 1 }, context, tools: false, structuredOutput: false });
+  // tencent/hy4: context 1,048,576, input 983,040, output 65,536. The resolved file carries the lab's input.
+  const hy4 = { base_model: "tencent/hy4", limit: { context: 1_048_576, input: 983_040, output: 65_536 } } as ExistingModel;
+  const shrunk = refreshHuggingFaceModel("tencent/Hy4", hy4, { base_model: "tencent/hy4" } as ExistingModel, aggregate(262_144));
+  expect(shrunk).toMatchObject({ base_model_omit: ["limit.input"], limit: { context: 262_144 } });
+  expect(shrunk.limit).not.toHaveProperty("input");
+  // Back at the lab's context: inherited again, nothing omitted.
+  const same = refreshHuggingFaceModel("tencent/Hy4", hy4, { base_model: "tencent/hy4" } as ExistingModel, aggregate(1_048_576));
+  expect(same.base_model_omit).toBeUndefined();
+  expect(same.limit).toBeUndefined();
+  // A file's own input stays, capped at the context.
+  const own = { base_model: "tencent/hy4", limit: { input: 500_000 } } as ExistingModel;
+  expect(refreshHuggingFaceModel("tencent/Hy4", hy4, own, aggregate(262_144)).limit).toMatchObject({ context: 262_144, input: 262_144 });
+});
+
 const LAB = "alibaba/qwen3.5-122b-a10b";
 const EXISTING = `# Effort: reasoning_effort = low|high, as on the lab's API.
 # Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (fast).

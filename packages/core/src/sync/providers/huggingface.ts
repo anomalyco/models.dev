@@ -272,12 +272,24 @@ export function refreshHuggingFaceModel(
     : (labModel(baseModel)?.limit as { output?: number } | undefined)?.output;
   const kept = own !== undefined && own !== existing.limit?.context ? own : (labOutput ?? existing.limit?.output);
   const output = kept === undefined ? undefined : Math.min(kept, context);
-  const limit = { ...existing.limit, context, ...(output === undefined ? {} : { output }) } as SyncedFullModel["limit"];
+  // The resolved limit carries the lab's input; only the file's own input is kept. When the
+  // context no longer matches the lab's, the lab's input is dropped, as on new files, so it
+  // can't end up above the context.
+  const lab = baseModel === undefined ? undefined : labModel(baseModel)?.limit as { context?: number; input?: number } | undefined;
+  const ownInput = baseModel === undefined ? existing.limit?.input : authored?.limit?.input;
+  const input = ownInput === undefined ? undefined : Math.min(ownInput, context);
+  const limit = {
+    context,
+    ...(input === undefined ? {} : { input }),
+    ...(output === undefined ? {} : { output }),
+  } as SyncedFullModel["limit"];
+  const dropInput = lab?.input !== undefined && input === undefined && lab.context !== context;
+  const omit = [...new Set([...(baseModelOmit ?? []), ...(dropInput ? ["limit.input"] : [])])];
   const cost = aggregate.cost === undefined ? existing.cost : { ...existing.cost, ...aggregate.cost };
   const values = { ...current, cost, limit } as SyncedFullModel;
   return (baseModel === undefined
     ? values
-    : factorBaseModel(baseModel, values, limit, baseModelOmit)) as SyncedFullModel;
+    : factorBaseModel(baseModel, values, limit, omit.length > 0 ? omit : undefined)) as SyncedFullModel;
 }
 
 const KINDS = ["text", "image", "audio", "video", "pdf"];
