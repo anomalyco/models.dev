@@ -1449,6 +1449,56 @@ test.each([
   expect(built).not.toHaveProperty("limit");
 });
 
+test.each([
+  ["gemini-2.5-flash-image", 32_768, 32_768, 65_536, 32_768],
+  ["lyria-3-clip-preview", 1_048_576, 65_536, 131_072, 65_536],
+  ["lyria-3.5", 1_048_576, 65_536, 131_072, 65_536],
+])("keeps the documented %s context over the Models API value", (id, apiContext, apiOutput, context, output) => {
+  const existing: ExistingModel = {
+    base_model: `google/${id}`,
+    name: id,
+    release_date: "2026-01-01",
+    last_updated: "2026-01-01",
+    attachment: true,
+    reasoning: false,
+    tool_call: false,
+    open_weights: false,
+    limit: { context, output },
+    modalities: { input: ["text", "image"], output: ["text", "audio"] },
+  };
+  const built = buildGoogleModel({
+    name: `models/${id}`,
+    inputTokenLimit: apiContext,
+    outputTokenLimit: apiOutput,
+  }, existing);
+
+  expect(built).toMatchObject({ base_model: `google/${id}` });
+  expect(built).not.toHaveProperty("limit");
+});
+
+test("keeps the Models API output but the documented context for lyria-3-pro-preview", () => {
+  const existing: ExistingModel = {
+    base_model: "google/lyria-3-pro-preview",
+    name: "Lyria 3 Pro Preview",
+    release_date: "2026-03-25",
+    last_updated: "2026-03-25",
+    attachment: true,
+    reasoning: false,
+    tool_call: false,
+    open_weights: false,
+    limit: { context: 131_072, output: 65_536 },
+    modalities: { input: ["text", "image"], output: ["text", "audio"] },
+  };
+  const built = buildGoogleModel({
+    name: "models/lyria-3-pro-preview",
+    inputTokenLimit: 1_048_576,
+    outputTokenLimit: 65_536,
+  }, existing);
+
+  expect(built).toMatchObject({ base_model: "google/lyria-3-pro-preview", limit: { output: 65_536 } });
+  expect(built).not.toHaveProperty("limit.context");
+});
+
 function tinfoilModel(overrides: Partial<TinfoilModel> = {}): TinfoilModel {
   return {
     id: "glm-5-2",
