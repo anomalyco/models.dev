@@ -1,7 +1,8 @@
 # https://platform.stepfun.ai/docs/en/guides/models/stepaudio-2.5-chat, https://platform.stepfun.com/docs/zh/guides/models/stepaudio-2.5-chat
 #   (accessed 2026-11-24): end-to-end speech understanding over Chat Completions; audio (mp3, wav) or text in, text only out
 #   (modalities with "audio" is rejected with 400).
-# Context and output limits aren't documented anywhere; 32K is a placeholder until StepFun publishes one.
+# Context and output limits aren't documented anywhere, so they use the unknown-limit encoding (0) until StepFun
+#   publishes one.
 # Tools: not documented for this model, so left off.
 # Sampling: Chat Completions documents temperature and top_p, not top_k.
 # release_date: closest documented date. StepAudio 2.5 Realtime, which shares this model, launched on 2026-05-09
@@ -24,5 +25,5 @@ top_p = true
 top_k = false
 
 [limit]
-context = 32_768
-output = 32_768
+context = 0
+output = 0
