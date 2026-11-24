@@ -5,7 +5,7 @@
 # https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
 #
 # Paid tier is billed per generation ($0.04 per 30s song), not per token.
-# cost.input/output stay 0 because the catalog schema is USD per 1M tokens.
+# No cost: per-song billing has no unit in v1 or v2 yet, and $0 token prices would read as free.
 # Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 base_model = "google/lyria-3-clip-preview"
@@ -18,9 +18,3 @@ cache = false
 
 [api.interactions]
 sdk = { opencodeai = "none" }
-
-[cost.text.input]
-price = 0
-
-[cost.text.output]
-price = 0
