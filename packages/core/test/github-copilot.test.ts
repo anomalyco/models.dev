@@ -8,6 +8,7 @@ import {
   githubCopilotModelSlug,
   githubCopilot,
   parseGitHubCopilotPricing,
+  parseGitHubCopilotSource,
   type GitHubCopilotPricingRow,
 } from "../src/sync/providers/github-copilot.js";
 import { syncProvider, type ExistingModel } from "../src/sync/index.js";
@@ -178,35 +179,66 @@ test("skips ignored rows silently and unmatched rows with an ID", () => {
   expect(githubCopilot.sourceID(unmatched!)).toBe("brand-new-model");
 });
 
-test.each([
-  "Claude Sonnet 4",
-  "Claude Sonnet 4.5",
-  "Claude Opus 4.5",
-  "Claude Opus 4.6",
-  "Gemini 3.1 Pro",
-  "GPT-4.1",
-  "GPT-5.2",
-  "GPT-5.2-Codex",
-  "MAI-Code-1-Flash",
-  "Raptor mini",
-])("ignores retired %s for translation and missing-model discovery", (name) => {
-  const [model] = parseGitHubCopilotPricing([row({ model: name, release_status: "Public preview" })]);
-  expect(githubCopilot.sourceID(model!)).toBeUndefined();
-  expect(githubCopilot.translateModel(model!, translationContext({}))).toBeUndefined();
-  expect(githubCopilot.translateModel(model!, translationContext({
-    [model!.slug]: authoredTerra,
-  }))).toBeUndefined();
-  expect(githubCopilot.translateModel(model!, translationContext({
-    [`${model!.slug}-preview`]: authoredTerra,
-  }))).toBeUndefined();
+function retirement(name: string, date: string) {
+  return { name, retirement_date: date, suggested_alternative: "Latest model" };
+}
+
+const today = "2026-11-24";
+
+test("marks models retired once their retirement date has passed", () => {
+  const models = parseGitHubCopilotSource({
+    pricing: [row({ model: "Claude Sonnet 4", provider: "anthropic" }), row({ model: "Grok 4.5", provider: "xai" })],
+    retirements: [
+      retirement("Claude Sonnet 4", "2026-05-01"),
+      retirement("Kimi K2.7 Code", "2026-11-24"),
+      retirement("Grok 4.5", "2026-12-15"),
+    ],
+  }, today);
+  expect(models.map(({ slug, rows, retirementDate, retired }) => ({ slug, rows: rows.length, retirementDate, retired }))).toEqual([
+    { slug: "claude-sonnet-4", rows: 1, retirementDate: "2026-05-01", retired: true },
+    { slug: "grok-4.5", rows: 1, retirementDate: "2026-12-15", retired: false },
+    { slug: "kimi-k2.7-code", rows: 0, retirementDate: "2026-11-24", retired: true },
+  ]);
+  expect(githubCopilot.retiredIDs(models)).toEqual(["claude-sonnet-4", "kimi-k2.7-code"]);
 });
 
-test("keeps Sonnet 4.6 eligible for annual-plan subscribers", () => {
-  const [model] = parseGitHubCopilotPricing([row({ model: "Claude Sonnet 4.6", provider: "anthropic" })]);
-  expect(githubCopilot.sourceID(model!)).toBe("claude-sonnet-4.6");
-  expect(githubCopilot.translateModel(model!, translationContext({
-    "claude-sonnet-4.6": authoredTerra,
-  }))?.id).toBe("claude-sonnet-4.6");
+test("a retired model is neither translated nor reported as missing, even when still priced", () => {
+  const [model] = parseGitHubCopilotSource({
+    pricing: [row({ model: "Claude Sonnet 4", provider: "anthropic", release_status: "Public preview" })],
+    retirements: [retirement("Claude Sonnet 4", "2026-05-01")],
+  }, today);
+  expect(githubCopilot.sourceID(model!)).toBeUndefined();
+  expect(githubCopilot.translateModel(model!, translationContext({ "claude-sonnet-4": authoredTerra }))).toBeUndefined();
+  expect(githubCopilot.retiredIDs([model!])).toEqual(["claude-sonnet-4", "claude-sonnet-4-preview"]);
+});
+
+test("a model with a future retirement date is deprecated and keeps syncing prices", () => {
+  const [priced, unpriced] = parseGitHubCopilotSource({
+    pricing: [row({})],
+    retirements: [retirement("GPT-5.6 Terra", "2026-12-15"), retirement("GPT-5.4", "2026-12-15")],
+  }, today);
+  expect(githubCopilot.sourceID(priced!)).toBeUndefined();
+  expect(githubCopilot.retiredIDs([priced!, unpriced!])).toEqual([]);
+  expect(githubCopilot.translateModel(priced!, translationContext({ "gpt-5.6-terra": authoredTerra }))?.model)
+    .toMatchObject({ status: "deprecated", cost: { input: 2, output: 12, cache_read: 0.2 } });
+  // No longer in the pricing table: the authored prices stay.
+  expect(githubCopilot.translateModel(unpriced!, translationContext({ "gpt-5.4": authoredTerra }))?.model)
+    .toMatchObject({ status: "deprecated", cost: authoredTerra.cost });
+  expect(githubCopilot.translateModel(unpriced!, translationContext({}))).toBeUndefined();
+});
+
+test.each(["Claude Sonnet 4.6", "Claude Opus 4.8"])("keeps %s for annual-plan subscribers despite its retirement", (name) => {
+  const models = parseGitHubCopilotSource({
+    pricing: [row({ model: name, provider: "anthropic" })],
+    retirements: [retirement(name, "2026-09-01")],
+  }, today);
+  expect(models).toHaveLength(1);
+  const [model] = models;
+  expect(githubCopilot.retiredIDs(models)).toEqual([]);
+  expect(githubCopilot.sourceID(model!)).toBe(model!.slug);
+  const translated = githubCopilot.translateModel(model!, translationContext({ [model!.slug]: authoredTerra }));
+  expect(translated?.id).toBe(model!.slug);
+  expect(translated?.model.status).toBeUndefined();
 });
 
 const pricingYaml = `
@@ -284,7 +316,7 @@ test("runner patches prices in v2 files in place and keeps MIME, flags, status a
     row({ model: "GPT-5.6 Sol", threshold: "≤ 272K", tier: "Default", input: "$4.00", cached_input: "$0.40", cache_write: "$5.00", output: "$20.00" }),
     row({ model: "GPT-5.6 Sol", threshold: "> 272K", tier: "Long context", input: "$8.00", cached_input: "$0.80", cache_write: "$10.00", output: "$30.00" }),
   ];
-  const provider = { ...githubCopilot, modelsDir, fetchModels: async () => rows };
+  const provider = { ...githubCopilot, modelsDir, fetchModels: async () => ({ pricing: rows, retirements: [] }) };
 
   expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 2, deleted: 0, unchanged: 1 });
   expect(await Bun.file(path.join(modelsDir, "claude-haiku-4.5.toml")).text()).toBe(haiku);
@@ -301,7 +333,7 @@ test("a price update keeps the mid-conversation flags copied from Anthropic", as
   const rows = [
     row({ model: "Claude Opus 4.8", provider: "anthropic", input: "$5.00", cached_input: "$0.50", cache_write: "$6.25", output: "$25.00" }),
   ];
-  const provider = { ...githubCopilot, modelsDir, fetchModels: async () => rows };
+  const provider = { ...githubCopilot, modelsDir, fetchModels: async () => ({ pricing: rows, retirements: [] }) };
 
   expect(await syncProvider(provider)).toMatchObject({ updated: 1 });
   const synced = await Bun.file(path.join(modelsDir, "claude-opus-4.8.toml")).text();
@@ -310,4 +342,43 @@ test("a price update keeps the mid-conversation flags copied from Anthropic", as
     cost: { text: { output: { price: 25 } } },
   });
   expect(synced).toBe(opus);
+});
+
+test("runner removes retired files, deprecates scheduled ones and keeps other unpriced files", async () => {
+  const haiku = await Bun.file("providers/github-copilot/models/claude-haiku-4.5.toml").text();
+  const sol = await Bun.file("providers/github-copilot/models/gpt-5.6-sol.toml").text();
+  const kept = 'schema = 2\nbase_model = "openai/gpt-5.5"\n\n[capabilities]\nreasoning = { supported = true, effort = ["low", "medium", "high"] }\n\n[cost.text.input]\nprice = 5\n\n[cost.text.output]\nprice = 30\n';
+  const modelsDir = await scratchProvider({
+    "claude-haiku-4.5.toml": haiku,
+    "gpt-5.6-sol.toml": sol,
+    "gpt-5.5.toml": kept,
+    "kimi-k2.7-code.toml": kept,
+  }, ["anthropic/claude-haiku-4-5", "openai/gpt-5.6-sol", "openai/gpt-5.5"]);
+  const rows = [
+    row({ model: "Claude Haiku 4.5", provider: "anthropic", input: "$1.00", cached_input: "$0.10", cache_write: "$1.25", output: "$5.00" }),
+    row({ model: "GPT-5.6 Sol", threshold: "≤ 272K", tier: "Default", input: "$4.00", cached_input: "$0.40", cache_write: "$5.00", output: "$20.00" }),
+    row({ model: "GPT-5.6 Sol", threshold: "> 272K", tier: "Long context", input: "$8.00", cached_input: "$0.80", cache_write: "$10.00", output: "$30.00" }),
+  ];
+  const retirements = [retirement("Kimi K2.7 Code", "2026-10-02"), retirement("Claude Haiku 4.5", "2999-01-01")];
+  const provider = { ...githubCopilot, modelsDir, fetchModels: async () => ({ pricing: rows, retirements }) };
+
+  expect(await syncProvider(provider, { dryRun: true })).toMatchObject({ created: 0, updated: 1, deleted: 1, unchanged: 2 });
+  expect(await Bun.file(path.join(modelsDir, "kimi-k2.7-code.toml")).exists()).toBe(true);
+
+  expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 1, deleted: 1, unchanged: 2 });
+  expect(await Bun.file(path.join(modelsDir, "kimi-k2.7-code.toml")).exists()).toBe(false);
+  expect(await Bun.file(path.join(modelsDir, "gpt-5.5.toml")).text()).toBe(kept);
+  expect(Bun.TOML.parse(await Bun.file(path.join(modelsDir, "claude-haiku-4.5.toml")).text())).toMatchObject({ status: "deprecated" });
+  expect(await Bun.file(path.join(modelsDir, "gpt-5.6-sol.toml")).text()).toBe(sol);
+  expect(await syncProvider(provider)).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 3 });
+});
+
+test("runner removes nothing when a model fails to translate", async () => {
+  const kept = await Bun.file("providers/github-copilot/models/gpt-5.6-sol.toml").text();
+  const modelsDir = await scratchProvider({ "kimi-k2.7-code.toml": kept, "gpt-5.6-sol.toml": kept }, ["openai/gpt-5.6-sol"]);
+  const rows = [row({ model: "GPT-5.6 Sol", tier: "Standard" })];
+  const provider = { ...githubCopilot, modelsDir, fetchModels: async () => ({ pricing: rows, retirements: [retirement("Kimi K2.7 Code", "2026-10-02")] }) };
+
+  expect(await syncProvider(provider)).toMatchObject({ deleted: 0 });
+  expect(await Bun.file(path.join(modelsDir, "kimi-k2.7-code.toml")).exists()).toBe(true);
 });

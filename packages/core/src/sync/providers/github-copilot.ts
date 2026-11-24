@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
-const PRICING_ENDPOINT = "https://raw.githubusercontent.com/github/docs/main/data/tables/copilot/models-and-pricing.yml";
+const TABLES = "https://raw.githubusercontent.com/github/docs/main/data/tables/copilot";
+const PRICING_ENDPOINT = `${TABLES}/models-and-pricing.yml`;
+// https://docs.github.com/en/copilot/reference/ai-models/supported-models#model-retirement-history
+const RETIREMENTS_ENDPOINT = `${TABLES}/model-deprecation-history.yml`;
 
 const NOT_APPLICABLE = "Not applicable";
 
@@ -24,29 +27,30 @@ export const GitHubCopilotPricingRow = z.object({
 
 export type GitHubCopilotPricingRow = z.infer<typeof GitHubCopilotPricingRow>;
 
+export const GitHubCopilotRetirementRow = z.object({
+  name: z.string().min(1),
+  retirement_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/u),
+}).passthrough();
+
+export type GitHubCopilotRetirementRow = z.infer<typeof GitHubCopilotRetirementRow>;
+
 export interface GitHubCopilotPricingModel {
   slug: string;
   releaseStatus: string;
   rows: GitHubCopilotPricingRow[];
+  /** The retirement table's date, when GitHub lists the model there. */
+  retirementDate?: string;
+  /** The retirement date has passed. */
+  retired?: boolean;
 }
 
 const IGNORED_ROWS = new Set([
   // Goes in [experimental.modes.fast] under claude-opus-4.8
   "claude-opus-4.8-fast-mode-preview",
-  // Retired models can remain in the pricing table; do not rediscover them.
-  // https://docs.github.com/en/copilot/reference/ai-models/supported-models#model-retirement-history
-  // Sonnet 4.6 is still available to annual-plan subscribers and stays eligible.
-  "claude-sonnet-4",
-  "claude-sonnet-4.5",
-  "claude-opus-4.5",
-  "claude-opus-4.6",
-  "gemini-3.1-pro",
-  "gpt-4.1",
-  "gpt-5.2",
-  "gpt-5.2-codex",
-  "mai-code-1-flash",
-  "raptor-mini",
 ]);
+
+// Retired, but GitHub keeps them for individual subscribers on annual plans (footnotes on the retirement table).
+const ANNUAL_PLAN_MODELS = new Set(["claude-sonnet-4.6", "claude-opus-4.8"]);
 
 export function githubCopilotModelSlug(name: string) {
   return name
@@ -111,14 +115,40 @@ export function parseGitHubCopilotPricing(raw: unknown) {
   return [...models.values()];
 }
 
+/**
+ * Adds the retirement table to the priced models. A model retired before `today` (YYYY-MM-DD, UTC) is marked retired,
+ * except the ones GitHub keeps for annual plans; retired models missing from the pricing table are added without rows.
+ */
+export function parseGitHubCopilotSource(raw: unknown, today = new Date().toISOString().slice(0, 10)) {
+  const source = z.object({ pricing: z.unknown(), retirements: z.array(GitHubCopilotRetirementRow) }).parse(raw);
+  const models = new Map(parseGitHubCopilotPricing(source.pricing).map((model) => [model.slug, model]));
+  for (const row of source.retirements) {
+    const slug = githubCopilotModelSlug(row.name);
+    if (ANNUAL_PLAN_MODELS.has(slug)) continue;
+    const model = models.get(slug) ?? { slug, releaseStatus: "GA", rows: [] };
+    model.retirementDate = row.retirement_date;
+    model.retired = row.retirement_date <= today;
+    models.set(slug, model);
+  }
+  return [...models.values()];
+}
+
+function candidateIDs(model: GitHubCopilotPricingModel) {
+  return [
+    model.slug,
+    model.releaseStatus === "Public preview" ? `${model.slug}-preview` : undefined,
+  ].filter((candidate) => candidate !== undefined);
+}
+
 export function buildGitHubCopilotModel(
   model: GitHubCopilotPricingModel,
   authored: ExistingModel,
 ): SyncedModel {
   // Only update token rates, leaving audio/reasoning rates and all other
-  // fields untouched.
-  const cost = { ...authored.cost, ...buildGitHubCopilotCost(model) };
-  return { ...authored, cost } as SyncedModel;
+  // fields untouched. A model that's no longer priced keeps its last prices.
+  const cost = model.rows.length === 0 ? authored.cost : { ...authored.cost, ...buildGitHubCopilotCost(model) };
+  const status = model.retirementDate === undefined ? authored.status : "deprecated";
+  return { ...authored, cost, status } as SyncedModel;
 }
 
 export const githubCopilot = {
@@ -128,7 +158,10 @@ export const githubCopilot = {
   skipCreates: true,
   deleteMissing: false,
   sourceID(model) {
-    return IGNORED_ROWS.has(model.slug) ? undefined : model.slug;
+    return IGNORED_ROWS.has(model.slug) || model.retirementDate !== undefined ? undefined : model.slug;
+  },
+  retiredIDs(models) {
+    return models.filter((model) => model.retired === true).flatMap(candidateIDs);
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
@@ -143,20 +176,19 @@ export const githubCopilot = {
     ];
   },
   async fetchModels() {
-    const response = await fetch(PRICING_ENDPOINT);
-    if (!response.ok) {
-      throw new Error(`Copilot pricing request failed: ${response.status} ${response.statusText}`);
-    }
-    return Bun.YAML.parse(await response.text());
+    const [pricing, retirements] = await Promise.all([PRICING_ENDPOINT, RETIREMENTS_ENDPOINT].map(async (url) => {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Copilot docs request failed for ${url}: ${response.status} ${response.statusText}`);
+      }
+      return Bun.YAML.parse(await response.text());
+    }));
+    return { pricing, retirements };
   },
-  parseModels: parseGitHubCopilotPricing,
+  parseModels: (raw) => parseGitHubCopilotSource(raw),
   translateModel(model, context) {
-    if (IGNORED_ROWS.has(model.slug)) return undefined;
-    const candidates = [
-      model.slug,
-      model.releaseStatus === "Public preview" ? `${model.slug}-preview` : undefined,
-    ].filter((candidate) => candidate !== undefined);
-    const id = candidates.find((candidate) => context.authored(candidate) !== undefined);
+    if (IGNORED_ROWS.has(model.slug) || model.retired === true) return undefined;
+    const id = candidateIDs(model).find((candidate) => context.authored(candidate) !== undefined);
     const authored = id === undefined ? undefined : context.authored(id);
     if (id === undefined || authored === undefined) return undefined;
     return {
