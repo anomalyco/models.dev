@@ -1,0 +1,30 @@
+# Outrun host entry for GPT-6 Astra.
+# Sources (accessed 2026-10-29):
+# - Prices: https://api.outrun.to/pricing and https://outrun.to/model/gpt-6-astra
+# - Setup values (tools, structured output, reasoning effort levels): https://outrun.to/model/gpt-6-astra
+# Cache: automatic prefix caching (live 2026-10-30: repeated 4,193-token prompt returned 3,968 cached_tokens).
+# Custom tools (freeform): left out. Chat Completions accepts `custom` tools with text, regex (ZZ[0-9]{3}) and lark
+# formats, but with tool_choice forcing the tool the model returned no tool call for any of them (live 2026-10-30).
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.588
+cache = { read = 0.0588, write = 0.735 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.176
+cache = { read = 0.1176, write = 1.47 }
+
+[cost.text.output]
+price = 2.94
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4.41

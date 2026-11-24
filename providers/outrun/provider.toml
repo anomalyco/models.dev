@@ -1,0 +1,11 @@
+# Outrun: OpenAI-compatible API gateway, one key for many models, prepaid, published per-token prices.
+# Sources (accessed 2026-10-29):
+# - Base URL and setup: https://outrun.to/docs/
+# - Live price list (USD per 1M tokens): https://api.outrun.to/pricing
+# - Per-model setup values: https://outrun.to/model/<model-id>
+name = "Outrun"
+env = ["OUTRUN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.outrun.to/v1"
+doc = "https://outrun.to/docs/"
