@@ -1,12 +1,10 @@
 # https://chat.jarv.tech/docs/api/openai#openai-reasoning
 # Chat Completions supports reasoning.effort and returns reasoning_content.
 # Personal API keys cap output at 32,768 tokens.
+# JARV API OpenAIChatRequest accepts temperature and ignores top_p/top_k.
+# https://gitlab.com/jarv-group/jarv_new/-/blob/69fef674ed34dcff4cff683e90aa914497591b4d/services/public-api/src/jarv_public_api/api/openai_compat.py#L51-74
 schema = 2
 base_model = "tencent/hy4"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high"] }
