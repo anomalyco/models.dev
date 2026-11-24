@@ -1,0 +1,25 @@
+# Acutis Labs-owned semantic route. The gateway selects an economical general-purpose model for each request while
+# preserving the Anthropic Messages contract.
+schema = 2
+name = "Everyday"
+description = "Fast and economical semantic route for everyday writing, analysis, and tool use"
+family = "model-router"
+open_weights = false
+release_date = "2026-11-24"
+v2_only = true
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
