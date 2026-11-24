@@ -1,12 +1,15 @@
 # Sources (accessed 2026-11-24):
 # - Model: https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash.md#glm-5-3-flashx-legal,
 #   https://docs.z.ai/guides/vlm/glm-5.3-flash (legal-domain mid-training and post-training of GLM-5.3-FlashX)
-# - Context 1M, max output 128K: https://docs.bigmodel.cn/cn/guide/start/model-overview
+# - Context 1M, max output 128K: https://docs.bigmodel.cn/cn/guide/start/model-overview lists GLM-5.3-FlashX-Legal as
+#   1M / 128K, recorded as 1_000_000 like the other GLM-5.3 lab files.
 # - Release date: api.z.ai and open.bigmodel.cn /models list it with created = 1793620800 (2026-11-02 12:00 UTC).
 # - Open weights: no weights published; the GLM-5.3-Flash Hugging Face org has no legal variant.
-# - Input: text plus jpg/png images (Chat API image_url formats: https://docs.z.ai/api-reference/llm/chat-completion).
-#   A PNG was read correctly live on api.z.ai and open.bigmodel.cn (2026-11-24). Video and PDF aren't documented or
-#   tested for this model, so they're left out.
+# - Input: the GLM-5.3-Flash/FlashX page, whose model codes include glm-5.3-flashx-legal, lists input modality
+#   "Video / Image / Text / File" (https://docs.z.ai/guides/vlm/glm-5.3-flash, https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash).
+#   Formats from the Chat API (https://docs.z.ai/api-reference/llm/chat-completion): image_url jpg/png, video_url
+#   mp4/mkv/mov, file (pdf) for the GLM-5.3-Flash series. Live 2026-11-24: a PNG (api.z.ai and open.bigmodel.cn), an MP4
+#   and a PDF (api.z.ai) were each read correctly.
 # - Sampling: the Chat API takes temperature and top_p, no top_k.
 schema = 2
 name = "GLM-5.3-FlashX-Legal"
@@ -16,7 +19,7 @@ open_weights = false
 release_date = "2026-11-02"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime", "application/pdf"]
 output = ["text"]
 
 [capabilities]
@@ -27,5 +30,5 @@ top_p = true
 top_k = false
 
 [limit]
-context = 1_048_576
+context = 1_000_000
 output = 131_072
