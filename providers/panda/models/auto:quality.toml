@@ -1,0 +1,41 @@
+# Panda Max: Panda's best answer, mixed or single. It picks a mix or a strong single model for each request;
+# with tools it can run a mix, and without tools it reads only the latest user message to pick.
+# No [cost]: Panda charges each call that answers 3/2 of what it cost Panda, worked out from the usage or
+# cost its provider reports: one call, or up to three when it runs a mix, with a one-cent minimum and no fee
+# for the choice. So there is no per-token price.
+# Limits: Panda counts each byte of a request as a token and refuses a request past its reference request
+# size with 400 context_length_exceeded, before any charge. Panda Max's reference request size for agents is
+# 751,413 bytes at a 16,384-token output limit, where it would set aside US$5.25, the most Panda sets aside
+# for one request; the size covers its requests without tools too. limit.context is the setup page's
+# suggested agent context, about a quarter of that size: the context callers can rely on, and the setup
+# page's configs use it.
+# The limits assume a token made for Panda Max: a token made another way can send requests without tools to
+# a model with a smaller window.
+# Reasoning depends on the model Panda runs, at a level Panda sets; there is no caller control.
+# https://panda.repair/products/llm-api (accessed 2026-11-24)
+# https://panda.repair/products/llm-api/coding-agents/setup#agents-models ("Suggested agent context
+# (tokens)" and "Reference request size (bytes)", accessed 2026-11-24)
+# https://panda.repair/products/llm-api#llm-api-model-limits (accessed 2026-11-24)
+schema = 2
+name = "Panda Max"
+description = "Panda's best answer, mixed or single"
+family = "auto"
+open_weights = false
+release_date = "2026-11-17"
+last_updated = "2026-11-24"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 187_000
+output = 16_384
+request_bytes = 8_388_608

@@ -1,0 +1,38 @@
+# Panda Mini: one low-cost model, every time. With tools it answers each step with one model.
+# No [cost]: Panda charges the call that answers 3/2 of what it cost Panda, worked out from the usage or
+# cost its provider reports, with a one-cent minimum. So there is no per-token price.
+# Limits: Panda counts each byte of a request as a token and refuses a request past its reference request
+# size with 400 context_length_exceeded, before any charge. Panda Mini's reference request size for agents
+# is 1,032,192 bytes at a 16,384-token output limit. limit.context is the setup page's suggested agent
+# context, about a quarter of that size: the context callers can rely on, and the setup page's configs use
+# it.
+# The limits assume a token made for Panda Mini: a token made another way can send requests without tools to
+# a model with a smaller window.
+# Reasoning depends on the model Panda runs, at a level Panda sets; there is no caller control.
+# https://panda.repair/products/llm-api (accessed 2026-11-24)
+# https://panda.repair/products/llm-api/coding-agents/setup#agents-models ("Suggested agent context
+# (tokens)" and "Reference request size (bytes)", accessed 2026-11-24)
+# https://panda.repair/products/llm-api#llm-api-model-limits (accessed 2026-11-24)
+schema = 2
+name = "Panda Mini"
+description = "One low-cost model, every time"
+family = "auto"
+open_weights = false
+release_date = "2026-11-17"
+last_updated = "2026-11-24"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 258_000
+output = 16_384
+request_bytes = 8_388_608

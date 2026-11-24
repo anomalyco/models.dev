@@ -1,0 +1,42 @@
+# Panda Auto picks the right model for each request. With tools it can run a mix, where two models answer
+# and one combines their answers; without tools it reads only the latest user message to pick.
+# No [cost]: Panda charges each call that answers 3/2 of what it cost Panda, worked out from the usage or
+# cost its provider reports: one call, or up to three when it runs a mix, with a one-cent minimum and no fee
+# for the choice. So there is no per-token price.
+# Limits: Panda counts each byte of a request as a token and refuses a request past its reference request
+# size with 400 context_length_exceeded, before any charge. Panda Auto's reference request size for agents
+# is 899,618 bytes at a 16,384-token output limit. limit.context is the setup page's suggested agent
+# context, about a quarter of that size: the context callers can rely on, and the setup page's configs use
+# it.
+# The limits assume a token made for Panda Auto: a token made another way can send requests without tools to
+# a model with a smaller window.
+# Output: up to 16,384 tokens. Without tools some of its picks write up to 4,096: Panda lowers a larger
+# limit rather than refusing it.
+# Reasoning depends on the model Panda runs, at a level Panda sets; there is no caller control.
+# https://panda.repair/products/llm-api (accessed 2026-11-24)
+# https://panda.repair/products/llm-api/coding-agents/setup#agents-models ("Suggested agent context
+# (tokens)" and "Reference request size (bytes)", accessed 2026-11-24)
+# https://panda.repair/products/llm-api#llm-api-model-limits (accessed 2026-11-24)
+schema = 2
+name = "Panda Auto"
+description = "Picks the right model for each request"
+family = "auto"
+open_weights = false
+release_date = "2026-11-17"
+last_updated = "2026-11-24"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 224_000
+output = 16_384
+request_bytes = 8_388_608
