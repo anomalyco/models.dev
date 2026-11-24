@@ -9,6 +9,7 @@ import {
   offPeakFactor,
   readPrice,
   translateAlibabaModel,
+  declaresImplicitCache,
   type AlibabaModel,
   type AlibabaPrice,
 } from "../src/sync/providers/alibaba.js";
@@ -115,4 +116,19 @@ test("Alibaba reports catalog limits that differ from the file without changing 
   const thinking = { ...model, model_info: { context_window: 1_000_000, max_input_tokens: 991_808, max_output_tokens: 131_072, reasoning_max_output_tokens: 262_144 } } as AlibabaModel;
   expect(limitNotices(thinking, { limit: { context: 1_000_000, output: 262_144 } } as unknown as ExistingModel)).toEqual([]);
   expect(limitNotices({ ...model, model_info: { context_window: null, max_output_tokens: null } } as AlibabaModel, resolved)).toEqual([]);
+});
+
+test("Alibaba writes the implicit cache read only when the file declares implicit caching", () => {
+  const model = { model: "qwen3.6-plus", prices: [{ range_name: "Default", prices: [row("input_token", "0.5"), row("output_token", "3"), row("input_token_cache", "0.12")] }] } as AlibabaModel;
+  const authored = { cost: { input: 0.5, output: 3, cache_read: 0.05 } } as unknown as ExistingModel;
+  const explicitOnly = { capabilities: { cache: { explicit: { ttl: ["5m"] } } } };
+  const implicit = { capabilities: { cache: { implicit: { min_tokens: 1_024 } } } };
+  expect(declaresImplicitCache(explicitOnly)).toBe(false);
+  expect(declaresImplicitCache(implicit)).toBe(true);
+  const skipped = translateAlibabaModel(model, { authored: () => authored, existing: () => authored, v2: () => explicitOnly })!;
+  expect((skipped.model as unknown as ExistingModel).cost?.cache_read).toBe(0.05);
+  expect(skipped.notices).toEqual(["Alibaba qwen3.6-plus: catalog lists an implicit cache price but the file doesn't declare implicit caching; left unchanged"]);
+  const written = translateAlibabaModel(model, { authored: () => authored, existing: () => authored, v2: () => implicit })!;
+  expect((written.model as unknown as ExistingModel).cost?.cache_read).toBe(0.12);
+  expect(written.notices).toBeUndefined();
 });

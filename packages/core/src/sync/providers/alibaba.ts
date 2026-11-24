@@ -6,7 +6,8 @@ import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 // https://dashscope-intl.aliyuncs.com/api/v1/models (DASHSCOPE_API_KEY). It isn't documented, but the model list and
 // pricing pages are built from it. It syncs input, output and cache prices, flat or per context band (a band only
 // updates when the file already has one at the same threshold), peak prices where the file already models the off-peak
-// discount as a utc_hours multiplier, and deprecated status from the catalog's offline date. Limits are only reported.
+// discount as a utc_hours multiplier, and deprecated status from the catalog's offline date. The implicit cache read is
+// only written to files that declare implicit caching. Limits are only reported.
 // alibaba-cn isn't synced: dashscope.aliyuncs.com needs a China key.
 const ENDPOINT = "https://dashscope-intl.aliyuncs.com/api/v1/models";
 const PAGE_SIZE = 200;
@@ -207,6 +208,19 @@ export function offPeakFactor(v2: Doc | undefined): number | undefined {
   return undefined;
 }
 
+/** Whether the file declares implicit caching, the only kind the top-level cache read prices. */
+export function declaresImplicitCache(v2: Doc | undefined): boolean {
+  const implicit = v2?.capabilities?.cache?.implicit;
+  return implicit !== undefined && implicit !== false;
+}
+
+// Drops the implicit cache read when the file doesn't declare implicit caching: some files price explicit hits under the
+// top-level read, which an implicit price would overwrite.
+export function withoutImplicitRead(price: AlibabaPrice): AlibabaPrice {
+  const strip = <T extends AlibabaBandPrice>({ cacheRead: _cacheRead, ...rest }: T) => rest;
+  return { ...strip(price), bands: price.bands.map((band) => strip(band)) };
+}
+
 /** Notices for catalog limits that differ from the resolved file. The output limit may match either mode's cap. */
 export function limitNotices(model: AlibabaModel, resolved: ExistingModel | undefined): string[] {
   const info = model.model_info;
@@ -232,7 +246,13 @@ export function translateAlibabaModel(
   const authored = context.authored(model.model);
   if (authored === undefined) return undefined;
   const notices = limitNotices(model, context.existing(model.model));
-  const price = readPrice(model, offPeakFactor(context.v2?.(model.model)));
+  const v2 = context.v2?.(model.model);
+  const read = readPrice(model, offPeakFactor(v2));
+  let price = read;
+  if (!("skip" in read) && !declaresImplicitCache(v2) && [read, ...read.bands].some((band) => band.cacheRead !== undefined)) {
+    price = withoutImplicitRead(read);
+    notices.push(`Alibaba ${model.model}: catalog lists an implicit cache price but the file doesn't declare implicit caching; left unchanged`);
+  }
   const priced = "skip" in price ? undefined : buildAlibabaModel(price, authored);
   const offline = model.inference_offline_info?.offline_time ?? undefined;
   const deprecate = offline !== undefined && authored.status !== "deprecated";
