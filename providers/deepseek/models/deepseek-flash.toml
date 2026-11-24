@@ -32,9 +32,8 @@
 #   https://api.deepseek.com/beta (https://api-docs.deepseek.com/guides/tool_calls) and are ignored here, so strict is not set.
 # Responses API: POST https://api.deepseek.com/responses, listed for both models on the pricing page
 #   (https://api-docs.deepseek.com/quick_start/pricing) and documented at https://api-docs.deepseek.com/guides/responses_api
-#   (reasoning.effort, tool_choice none|auto|required|named). freeform is left out on purpose: the only custom tool accepted is
-#   one named `apply_patch` ({"type": "custom", "name": "apply_patch"}); any other custom tool name returns 400, so
-#   clients can't declare their own freeform tools.
+#   (reasoning.effort, tool_choice none|auto|required|named).
+# freeform left out: Responses accepts only a custom tool named apply_patch; other custom tool names return 400.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
