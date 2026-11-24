@@ -82,9 +82,10 @@ test("updates prices and context, keeping the rest of the file", () => {
   });
 });
 
-test("never creates files for IDs without a hand-authored one", () => {
+test("reports IDs without a hand-authored file instead of creating one", () => {
   const [model] = parseTinkerModels({ models: [trainingRow({ tinker_id: "Qwen/Qwen9-1B" })], serverless: [] });
   expect(thinkingmachines.translateModel(model!, { existing: () => undefined, authored: () => undefined })).toBeUndefined();
+  expect(thinkingmachines.sourceID(model!)).toBe("Qwen/Qwen9-1B");
 });
 
 test("keeps the hand-authored MIME list that the v1 view would collapse", () => {

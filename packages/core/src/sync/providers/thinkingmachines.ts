@@ -49,6 +49,9 @@ export const thinkingmachines = {
   skipCreates: true,
   // The tables are docs pages, not a lifecycle API, so a file missing from them is reported, not deleted.
   deleteMissing: false,
+  sourceID(model) {
+    return model.id;
+  },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
