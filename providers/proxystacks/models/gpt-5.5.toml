@@ -1,0 +1,41 @@
+# Byte-passthrough relay of the OpenAI GPT-5.5 Chat Completions endpoint; reasoning_effort,
+# prompt_cache_key, and function/custom tools pass through unchanged; reasoning tokens are billed
+# at the output rate.
+# Effort: reasoning_effort = none|low|medium|high|xhigh (off is effort none, no separate toggle;
+# matches providers/openai/models/gpt-5.5.toml).
+# Tools: strict function calling (choice auto|none|required|tool) and ChatCompletionCustomTool
+# freeform = text|lark|regex forwarded unchanged on POST /v1/chat/completions.
+# Cost (retrieved 2026-11-25): https://proxystacks.com/public/model-rates ,
+# https://proxystacks.com/api/public/model-rates , https://proxystacks.com/en/pricing
+# (<=272K context: input $3.50, output $21.00, cache read $0.35 per MTok; >272K context: input
+# $7.00, output $31.50, cache read $0.70 per MTok; the rate card lists no cache-write price for
+# gpt-5.5).
+schema = 2
+base_model = "openai/gpt-5.5"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+system_updates = true
+stream_usage = true
+prompt_cache_key = true
+cache = { implicit = { ttl = ["24h"], min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 3.5
+cache = { read = 0.35 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 7
+cache = { read = 0.7 }
+
+[cost.text.output]
+price = 21
+reasoning = 21
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 31.5
+reasoning = 31.5

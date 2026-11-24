@@ -2,8 +2,11 @@
 # unchanged; reasoning tokens billed at the output rate.
 # Effort: reasoning_effort = low|high|max (default max; always thinks upstream, no off toggle)
 # max_tokens: the upstream accepts only the legacy `max_tokens` output-cap field.
-# Cost (retrieved 2026-11-13): https://proxystacks.com/public/model-rates ,
-# https://proxystacks.com/en/pricing (input $0.0975, output $0.33, cache read $0.0195 per MTok).
+# Cost (retrieved 2026-11-25): https://proxystacks.com/public/model-rates ,
+# https://proxystacks.com/api/public/model-rates , https://proxystacks.com/en/pricing
+# (input $0.105, output $0.35, cache read $0.021, cache write $0.105 per MTok — the rate card
+# sets cache write equal to the $0.105 input rate; Zhipu automatic prefix caching exposes no TTL
+# selector, so write is published as a flat rate).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -17,11 +20,12 @@ cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+capabilities = { system_updates = true }
 
 [cost.text.input]
-price = 0.0975
-cache = { read = 0.0195 }
+price = 0.105
+cache = { read = 0.021, write = 0.105 }
 
 [cost.text.output]
-price = 0.33
-reasoning = 0.33
+price = 0.35
+reasoning = 0.35

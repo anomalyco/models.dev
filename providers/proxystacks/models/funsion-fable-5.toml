@@ -1,0 +1,29 @@
+# ProxyStacks Relay route `funsion-fable-5` (published alias forwarding to Claude Fable 5 on the
+# upstream OpenAI-compatible Chat Completions endpoint at 50% off official USD list pricing; see
+# https://proxystacks.com/en/models/funsion-fable-5).
+# Effort: reasoning_effort = low|medium|high|xhigh|max (always-on adaptive thinking, no off toggle;
+# matches providers/anthropic/models/claude-fable-5.toml and same-surface Chat Completions peers).
+# Cache: explicit cache_control breakpoints (5m and 1h TTLs, up to 4 breakpoints, 512-token
+# minimum) forwarded unchanged; reasoning tokens are billed at the output rate.
+# Cost (retrieved 2026-11-25): https://proxystacks.com/public/model-rates ,
+# https://proxystacks.com/api/public/model-rates , https://proxystacks.com/en/pricing
+# (input $5.00, output $25.00, cache read $0.50, cache write 5m $6.25 / 1h $10.00 per MTok).
+# Tools: choice = auto|none|required|tool (matches providers/anthropic/models/claude-fable-5.toml).
+schema = 2
+base_model = "anthropic/claude-fable-5"
+name = "Funsion Fable 5"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+stream_usage = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
+
+[cost.text.output]
+price = 25
+reasoning = 25
