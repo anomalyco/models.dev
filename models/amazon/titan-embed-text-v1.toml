@@ -1,0 +1,28 @@
+# Sources:
+# - Model card (launch Sep 28, 2023; text in, embedding out; 8K-token context): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-titan-embeddings-g1---text.html
+# - Max input 8,192 tokens: https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html
+# - 1,536 dimensions: https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-supported.html (vector dimensions table)
+# - No inference parameters: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-titan-embed-text.html
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Titan Embeddings G1 - Text"
+description = "Amazon's first-generation text embedding model for search, personalization and clustering"
+family = "titan-embed"
+open_weights = false
+release_date = "2023-09-28"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 1_536

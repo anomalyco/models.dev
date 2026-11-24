@@ -73,7 +73,9 @@ import { requesty } from "./providers/requesty.js";
 import { sambaNova } from "./providers/sambanova.js";
 import { morph } from "./providers/morph.js";
 import { moonshotai } from "./providers/moonshotai.js";
+import { thinkingmachines } from "./providers/thinkingmachines.js";
 import { tinfoil } from "./providers/tinfoil.js";
+import { togetherai } from "./providers/togetherai.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -153,6 +155,8 @@ export interface SyncProvider<SourceModel> {
       authored(id: string): ExistingModel | undefined;
       /** The existing file's TOML. */
       v2?(id: string): Record<string, unknown> | undefined;
+      /** The existing file's leading comment block. */
+      header?(id: string): string | undefined;
     },
   ): {
     id: string;
@@ -256,7 +260,9 @@ export const providers: {
   sambanova: SyncProvider<any>;
   morph: SyncProvider<any>;
   moonshotai: SyncProvider<any>;
+  thinkingmachines: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
+  togetherai: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -316,7 +322,9 @@ export const providers: {
   sambanova: sambaNova,
   morph,
   moonshotai,
+  thinkingmachines,
   tinfoil,
+  togetherai,
   vercel,
   venice,
   wandb,
@@ -348,7 +356,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "alibaba", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "deepseek", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "meta", "mistral", "moonshotai", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "alibaba", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "deepseek", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "meta", "mistral", "moonshotai", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "thinkingmachines", "tinfoil", "togetherai", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
@@ -405,6 +413,9 @@ export async function syncProvider<SourceModel>(
         },
         v2(id) {
           return existing.get(`${id}.toml`)?.v2;
+        },
+        header(id) {
+          return existing.get(`${id}.toml`)?.header;
         },
       });
     } catch (error) {
@@ -867,6 +878,8 @@ export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | 
   const translatedBase = "base_model" in model ? model.base_model : undefined;
   if (translatedBase !== undefined) {
     const translatedOmit = "base_model_omit" in model ? model.base_model_omit : undefined;
+    // An empty list says the module omits nothing: the file's own list goes and none is written.
+    if (translatedOmit?.length === 0) return { ...model, base_model_omit: undefined };
     if (translatedBase !== existing.base_model || translatedOmit !== undefined) return model;
     return { ...model, base_model_omit: existing.base_model_omit };
   }
