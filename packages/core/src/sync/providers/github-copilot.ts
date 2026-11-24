@@ -158,7 +158,8 @@ export const githubCopilot = {
   skipCreates: true,
   deleteMissing: false,
   sourceID(model) {
-    return IGNORED_ROWS.has(model.slug) || model.retirementDate !== undefined ? undefined : model.slug;
+    // A model with a future retirement date is still reported while GitHub prices it.
+    return IGNORED_ROWS.has(model.slug) || model.retired === true || model.rows.length === 0 ? undefined : model.slug;
   },
   retiredIDs(models) {
     return models.filter((model) => model.retired === true).flatMap(candidateIDs);

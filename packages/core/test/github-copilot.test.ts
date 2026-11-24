@@ -217,7 +217,8 @@ test("a model with a future retirement date is deprecated and keeps syncing pric
     pricing: [row({})],
     retirements: [retirement("GPT-5.6 Terra", "2026-12-15"), retirement("GPT-5.4", "2026-12-15")],
   }, today);
-  expect(githubCopilot.sourceID(priced!)).toBeUndefined();
+  expect(githubCopilot.sourceID(priced!)).toBe("gpt-5.6-terra");
+  expect(githubCopilot.sourceID(unpriced!)).toBeUndefined();
   expect(githubCopilot.retiredIDs([priced!, unpriced!])).toEqual([]);
   expect(githubCopilot.translateModel(priced!, translationContext({ "gpt-5.6-terra": authoredTerra }))?.model)
     .toMatchObject({ status: "deprecated", cost: { input: 2, output: 12, cache_read: 0.2 } });
