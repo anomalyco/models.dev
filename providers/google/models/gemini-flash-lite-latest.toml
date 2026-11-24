@@ -1,5 +1,10 @@
 # Alias for the current Gemini Flash-Lite release (gemini-3.5-flash-lite).
-# Keep reasoning_options and cost in sync with gemini-3.5-flash-lite.
+# Target: generateContent on gemini-flash-lite-latest returns modelVersion "gemini-3.5-flash-lite" (checked 2026-11-24).
+# Keep capabilities and cost in sync with gemini-3.5-flash-lite (https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash-lite).
+# Priority cache reads are $0.05 and Flex cache reads $0.02 (vs $0.03 Standard),
+# so those multipliers scale cache.read by 5/3 and 2/3. Cache storage is not scaled.
+# Audio input: the pricing page lists one rate for "text / image / video / audio" ($0.30, cache $0.03).
+# Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed).
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
@@ -23,12 +28,13 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
 cache = { implicit = true, explicit = true }
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_048_576
@@ -49,3 +55,18 @@ cache = { read = 0.03, storage = 1 }
 
 [cost.text.output]
 price = 2.5
+
+[cost.audio.input]
+price = 0.3
+cache = { read = 0.03, storage = 1 }
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 1.8, cache = { read = 1.6666666666666667 } }, output = 1.8 }, audio = { input = { price = 1.8, cache = { read = 1.6666666666666667 } } } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.6666666666666666 } }, output = 0.5 }, audio = { input = { price = 0.5, cache = { read = 0.6666666666666666 } } } }
