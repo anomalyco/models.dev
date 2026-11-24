@@ -64,6 +64,7 @@ jobs:
             NOVITA_AI_API_KEY,models.dev/release/NOVITA_AI_API_KEY
             OPENAI_API_KEY,models.dev/release/OPENAI_API_KEY
             OPENROUTER_API_KEY,models.dev/release/OPENROUTER_API_KEY
+            TOGETHER_API_KEY,models.dev/release/TOGETHER_API_KEY
             XAI_API_KEY,models.dev/release/XAI_API_KEY
           parse-json-secrets: false
 
@@ -101,6 +102,7 @@ jobs:
           GOOGLE_API_KEY: ${{ env.GOOGLE_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+          TOGETHER_API_KEY: ${{ env.TOGETHER_API_KEY }}
           XAI_API_KEY: ${{ env.XAI_API_KEY }}
           CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_WORKERS_AI_SYNC_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_WORKERS_AI_SYNC_ACCOUNT_ID }}
