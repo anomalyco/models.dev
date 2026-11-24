@@ -620,8 +620,9 @@ type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
 const ALLOWED_MODALITIES = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);
 
-// DeepInfra currently applies `input-audio` to the whole Gemma 4 family, but
-// its model page limits audio input to the E2B and E4B variants.
+// DeepInfra tags google/gemma-4-31B-it `input-audio`, but its model page limits
+// audio input to the E2B and E4B variants. The -turbo and -Ultra deployments
+// aren't tagged (checked 2026-11-24).
 const UNSUPPORTED_MODALITIES: Record<string, Set<Modality>> = {
   "google/gemma-4-31B-it": new Set(["audio"]),
 };
