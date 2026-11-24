@@ -3,15 +3,8 @@
 # Cache: implicit (automatic) for OpenAI models (https://docs.nano-gpt.com/api-reference/miscellaneous/prompt-caching)
 # Modalities (image: NanoGPT Chat Completions accepts png, jpeg, webp): https://docs.nano-gpt.com/api-reference/endpoint/chat-completion#image-input
 schema = 2
+base_model = "openai/gpt-6.1-sol"
 name = "GPT 6.1 Sol Pro"
-description = "GPT-6.1 Sol Pro uses the same underlying model as GPT-6.1 Sol with Pro reasoning mode enabled for higher-quality responses on complex tasks."
-family = "gpt-pro"
-open_weights = false
-release_date = "2026-09-29"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "application/pdf"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
@@ -20,9 +13,7 @@ structured_output = true
 cache = { implicit = true }
 
 [limit]
-context = 1_050_000
 input = 1_050_000
-output = 128_000
 
 [cost.text.input]
 price = 2

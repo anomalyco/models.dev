@@ -1,13 +1,5 @@
 schema = 2
-name = "Muse Wonder"
-description = "Meta's Muse Wonder is a frontier reasoning model designed for complex personal and professional agentic tasks. It accepts text, images, audio, video, and PDF documents across a one-million-token context window, supports tool calling and structured output, and always reasons before answering."
-family = "muse-wonder"
-open_weights = false
-release_date = "2026-10-12"
-
-[modalities]
-input = ["text", "image", "video", "audio", "application/pdf"]
-output = ["text"]
+base_model = "meta/muse-wonder-1.0"
 
 [capabilities]
 tools = { supported = true }
@@ -15,7 +7,6 @@ reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "x
 structured_output = true
 
 [limit]
-context = 1_048_576
 input = 1_048_576
 output = 1_048_576
 
