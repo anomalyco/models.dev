@@ -354,6 +354,15 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - New token-priced chat, safety, and embedding models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue for hand-authored metadata.
 - Per-request tool, TTS, transcription, realtime, and document-processing services are ignored because their pricing cannot be represented by the token-cost schema.
 
+## Thinking Machines Notes
+
+- Thinking Machines (Tinker) is implemented in `packages/core/src/sync/providers/thinkingmachines.ts`. Run it with `bun models:sync thinkingmachines` or `bun thinkingmachines:sync`.
+- Sources: `https://tinker-docs.thinkingmachines.ai/tinker/models.json` (base and PEFT models) and `https://tinker-docs.thinkingmachines.ai/tinker/serverless.json` (serverless `:sampling-nvfp4` deployments), the data behind the tables on https://tinker-docs.thinkingmachines.ai/tinker/models/. No authentication is required. The Tinker API's `/v1/models` needs a key and has no prices or limits.
+- Existing models are updated from `prefill`, `cached_prefill` and `sample` (or `input`, `cached_input` and `output`), already USD per 1M tokens, and from `context` (`64K` = 65,536). Training prices are ignored. Listed prices are the current ones, including limited-time discounts (`note`); the `original_*` prices are not published.
+- `context` is the training context. Rows that sample past it name the sampling window, e.g. "Inkling 2 Mini (64K train / 1M sample)", and the sync uses that.
+- Output limits, reasoning controls, input formats and the base model stay hand-authored. The tables' `type` (e.g. "Vision") is not used: only Inkling models accept images through the inference APIs.
+- New IDs are not created (`skipCreates`) and open deduped missing-model issues. Files missing from both tables are reported, not deleted (`deleteMissing: false`), since the tables are docs pages rather than a lifecycle API. Malformed prices, an empty models table and duplicate IDs fail the run before writing.
+
 ## Morph Notes
 
 - Morph is implemented in `packages/core/src/sync/providers/morph.ts`.
