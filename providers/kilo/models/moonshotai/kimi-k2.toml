@@ -9,8 +9,12 @@ description = "Kimi model for long-context chat, coding, and agentic reasoning"
 tools = { supported = true }
 structured_output = false
 
+[limit]
+output = 131_072
+
 [cost.text.input]
 price = 0.57
 
 [cost.text.output]
 price = 2.3
+reasoning = 0
