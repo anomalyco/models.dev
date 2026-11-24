@@ -7,6 +7,8 @@
 # https://build.nvidia.com/moonshotai/kimi-k3_1-pro/apireference
 # Pricing: NVIDIA API Trial Terms of Service — every model is a free trial, so
 # no per-token rate is published and prices are 0.
+# Output limit: NVIDIA NIM caps max_tokens at 65,536 for this model.
+# https://build.nvidia.com/moonshotai/kimi-k3_1-pro/apireference
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -24,5 +26,4 @@ price = 0
 price = 0
 
 [limit]
-# NVIDIA NIM caps max_tokens at 65,536 for this model.
 output = 65_536
