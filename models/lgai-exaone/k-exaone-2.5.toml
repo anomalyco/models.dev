@@ -1,0 +1,25 @@
+# https://docs.exaone.ai/en/docs/models
+# https://docs.exaone.ai/en/docs/k-exaone-2.5
+# https://docs.exaone.ai/en/docs/agent-start
+# https://docs.exaone.ai/en/docs/changelog
+schema = 2
+name = "K-EXAONE 2.5"
+description = "Language model for reasoning, coding, and agentic tool use"
+open_weights = false
+knowledge = "2026-01"
+release_date = "2026-11-09"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 524_288
+output = 524_288
