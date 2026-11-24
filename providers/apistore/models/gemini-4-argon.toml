@@ -4,8 +4,8 @@
 # (incl. minimal); on gemini-3.5-flash-lite minimal/low/medium gave 0 and high 2,467 reasoning_tokens.
 # Live 2026-11-24, same prompt: gemini-3.8-flash low / medium / high -> 0 / 1,122 / 2,350 reasoning_tokens;
 # gemini-4-carbon low / high -> 1,510 / 2,184. Thinking text is not returned, so no reasoning_field.
-# Input: text, images, PDF and audio (input_audio WAV checked live 2026-11-24 on gemini-3.8-flash); video
-# input is not listed because it was not verified on this host.
+# Input: text, images, PDF and WAV audio (input_audio WAV checked live 2026-11-24 on gemini-3.8-flash).
+# Other audio formats and video are not listed because they were not verified on this host.
 schema = 2
 base_model = "google/gemini-4-argon"
 
@@ -15,7 +15,7 @@ structured_output = true
 cache = { implicit = true }
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "application/pdf"]
 output = ["text"]
 
 [cost.text.input]
