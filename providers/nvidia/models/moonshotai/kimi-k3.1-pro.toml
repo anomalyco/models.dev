@@ -1,0 +1,23 @@
+# NVIDIA NIM API reference:
+# https://build.nvidia.com/moonshotai/kimi-k3_1-pro/apireference
+# reasoning_effort = low | high | max; serve-time default is low.
+# Responses can carry reasoning_content.
+# NVIDIA hosted API trial has no published per-token price.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
+structured_output = true
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
