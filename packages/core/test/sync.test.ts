@@ -43,7 +43,13 @@ import {
   type EdenAIModel,
 } from "../src/sync/providers/edenai.js";
 import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
-import { buildHuggingFaceModel, huggingface, type HuggingFaceModel } from "../src/sync/providers/huggingface.js";
+import {
+  buildHuggingFaceModel,
+  huggingface,
+  huggingFaceCandidates,
+  resolveHuggingFaceBaseModel,
+  type HuggingFaceModel,
+} from "../src/sync/providers/huggingface.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
   buildInceptronModel,
@@ -8865,6 +8871,40 @@ test("Hugging Face skips new reasoning models until their controls are authored"
   expect(huggingface.translateModel(huggingFaceModel({ id: "Qwen/Qwen3-Next-80B-A3B-Instruct" }), context))
     .toMatchObject({ v2: { base_model: "alibaba/qwen3-next-80b-a3b-instruct" } });
   expect(() => buildHuggingFaceModel(huggingFaceModel(), "lab/missing")).toThrow("no lab file");
+});
+
+test("Hugging Face maps router orgs to lab directories", () => {
+  expect(resolveHuggingFaceBaseModel("inclusionAI/Ling-3.1-flash")).toBe("inclusionai/ling-3.1-flash");
+  expect(resolveHuggingFaceBaseModel("meta-models/Muse-Glimmer-30B")).toBe("meta/muse-glimmer-30b");
+  expect(resolveHuggingFaceBaseModel("ibm-granite/granite-4.2-8b")).toBe("ibm/granite-4.2-8b");
+  expect(resolveHuggingFaceBaseModel("dphn/Dolphin-Mistral-24B-Venice-Edition"))
+    .toBe("cognitivecomputations/dolphin-mistral-24b-venice-edition");
+  // Matches the OpenRouter table already made still win.
+  expect(resolveHuggingFaceBaseModel("Qwen/Qwen3-Next-80B-A3B-Instruct")).toBe("alibaba/qwen3-next-80b-a3b-instruct");
+  expect(resolveHuggingFaceBaseModel("RadixArk/DaisyRose-27B")).toBeUndefined();
+});
+
+test("Hugging Face strips precision and MoE parameter suffixes only when a lab file then matches", () => {
+  expect(resolveHuggingFaceBaseModel("Qwen/Qwen3.8-Flash-Next-FP8")).toBe("alibaba/qwen3.8-flash-next");
+  expect(resolveHuggingFaceBaseModel("CohereLabs/command-a-plus-05-2026-bf16")).toBe("cohere/command-a-plus-05-2026");
+  expect(resolveHuggingFaceBaseModel("nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4"))
+    .toBe("nvidia/nemotron-3.5-super-vl-120b-a12b");
+  expect(resolveHuggingFaceBaseModel("nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16")).toBe("nvidia/nemotron-3.5-lightning");
+  expect(resolveHuggingFaceBaseModel("mistralai/Mistral-Large-4-1T-A52B")).toBe("mistral/mistral-large-4");
+  expect(resolveHuggingFaceBaseModel("meta-models/Muse-Spark-Open-816B-A42B")).toBe("meta/muse-spark-open");
+  expect(resolveHuggingFaceBaseModel("meta-llama/Llama-4-Maverick-17B-128E-Instruct")).toBe("meta/llama-4-maverick-17b-instruct");
+
+  // A dense size is part of the model's identity and is never stripped.
+  expect(huggingFaceCandidates("Qwen", "Qwen3-14B")).toEqual(["qwen3-14b"]);
+  expect(huggingFaceCandidates("nvidia", "NVIDIA-Nemotron-3-Super-120B-A12B-FP8")).toEqual([
+    "nvidia-nemotron-3-super-120b-a12b-fp8",
+    "nvidia-nemotron-3-super-120b-a12b",
+    "nemotron-3-super-120b-a12b",
+    "nvidia-nemotron-3-super",
+    "nemotron-3-super",
+  ]);
+  // No exact lab file after stripping: not created.
+  expect(resolveHuggingFaceBaseModel("ibm-granite/granite-4.2-3b")).toBeUndefined();
 });
 
 test("Hugging Face writes existing files back unchanged apart from their API tables", () => {
