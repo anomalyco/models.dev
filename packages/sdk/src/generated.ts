@@ -150,6 +150,7 @@ export type ModelFamily =
   | "gemma-embedding"
   | "gemma-free"
   | "genie"
+  | "glimpse"
   | "glm"
   | "glm-air"
   | "glm-asr"
