@@ -108,7 +108,7 @@ import { buildOfoxModel, ofox } from "../src/sync/providers/ofox.js";
 import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
-import { buildVeniceModel, resolveVeniceBaseModel, veniceV2Set, withResponsesApi, type VeniceModel } from "../src/sync/providers/venice.js";
+import { buildVeniceModel, resolveVeniceBaseModel, venice, veniceV2Set, withResponsesApi, type VeniceModel } from "../src/sync/providers/venice.js";
 import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, contextOutput, serviceTierCost, tierMultipliers, vercel, vercelCache, vercelMediaCost, webSearchCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { formatModelV2, patchModelV2, sameV1Model } from "../src/model-file-v2.js";
@@ -5118,6 +5118,16 @@ test("Venice sync lists Responses after the first API and prices web search", ()
   expect(veniceV2Set(veniceModel({ capabilities: { ...capabilities, supportsWebSearch: true } }))["cost.web_search"])
     .toEqual({ price: 10 });
   expect(veniceV2Set(veniceModel())["cost.web_search"]).toBeUndefined();
+});
+
+test("Venice sync writes E2EE models, with Chat Completions only", () => {
+  const model = { ...veniceModel({ name: "GLM 5.3", capabilities: { supportsE2EE: true } }), id: "e2ee-glm-5-3-p" };
+  const skipped = () => undefined;
+  const translated = venice.translateModel(model, { existing: skipped, authored: skipped });
+  // `e2ee-` and `-p` are route markers, so the lab lookup sees `glm-5-3`.
+  expect(translated?.model).toMatchObject({ base_model: "zhipuai/glm-5.3", name: "GLM 5.3 E2EE" });
+  // /responses does not serve E2EE models.
+  expect(translated?.v2Set).not.toHaveProperty("api");
 });
 
 test("prefers OpenRouter API reasoning options over authored ones", () => {

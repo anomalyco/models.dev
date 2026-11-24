@@ -30,6 +30,6 @@ Preserved Fields (manual input)
 - PDF in `modalities.input`: Not auto-added, preserved if exists
 
 Notes
-- The sync updates existing files and skips E2EE models, which require unsupported client-side encryption
+- E2EE models sync like other text models: Venice accepts plain requests to them, and client-side encryption is optional. Their files list Chat Completions only (`/responses` does not serve E2EE models) and take an `E2EE` name suffix. Venice's `e2ee-` prefix and trailing `-p` are route markers, stripped before the lab lookup: `e2ee-glm-5-3-p` resolves to `zhipuai/glm-5.3`.
 - Provider files missing from the API are deleted
 - Run with `--dry-run` to preview changes before applying
