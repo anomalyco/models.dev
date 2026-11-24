@@ -1,0 +1,25 @@
+# Serverless: $0.32 input, $1.28 output per 1M, no cached-input price; context 1,000,000; structured outputs: yes
+#   (https://docs.together.ai/docs/serverless-models and https://www.together.ai/pricing, accessed 2026-11-24).
+# Text only: Together's serverless vision list doesn't include it (https://docs.together.ai/docs/serverless-models#vision-models).
+# Toggle: reasoning.enabled true|false. Together documents this as the switch for its hybrid models
+#   (https://docs.together.ai/docs/inference/chat/reasoning) but doesn't list Qwen3.7 Plus there; the toggle follows this host's
+#   Qwen3.6-Plus and Alibaba's own Qwen3.7 Plus, which is hybrid (enable_thinking). Alibaba's thinking_budget isn't documented
+#   on Together, so no budget.
+# Not probed: the route forwards prompts to a third-party provider and returns 403 unless the
+# organization enables third-party data sharing.
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.32
+
+[cost.text.output]
+price = 1.28

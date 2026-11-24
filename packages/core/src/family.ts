@@ -422,6 +422,9 @@ export const ModelFamilyValues = [
   // RNJ
   "rnj",
 
+  // Elorian
+  "glimpse",
+
   // Tecent Hy
 
   // Ling & Ring (InclusionAI)
