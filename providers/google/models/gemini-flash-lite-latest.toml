@@ -1,6 +1,12 @@
 # Alias for the current Gemini Flash-Lite release (gemini-3.5-flash-lite).
 # Target: generateContent on gemini-flash-lite-latest returns modelVersion "gemini-3.5-flash-lite" (checked 2026-11-24).
-# Keep capabilities and cost in sync with gemini-3.5-flash-lite (https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash-lite). Flex/Priority are not listed for the alias.
+# Keep capabilities and cost in sync with gemini-3.5-flash-lite (https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash-lite).
+# Flex/Priority: the pricing page doesn't list the alias itself, so tiers and rates follow the model it serves.
+#   Google lists 3.5 Flash-Lite for both (https://ai.google.dev/gemini-api/docs/flex-inference#supported-models,
+#   https://ai.google.dev/gemini-api/docs/priority-inference#supported-models). Interactions on gemini-flash-lite-latest with
+#   service_tier "flex" and "priority" answered as gemini-3.5-flash-lite with that service_tier echoed back (live 2026-11-24).
+# Priority cache reads are $0.05 and Flex cache reads $0.02 (vs $0.03 Standard),
+# so those multipliers scale cache.read by 5/3 and 2/3. Cache storage is not scaled.
 # Audio input: the pricing page lists one rate for "text / image / video / audio" ($0.30, cache $0.03).
 # Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed).
 # v2 capabilities and prices:
@@ -32,6 +38,7 @@ temperature = true
 top_p = true
 top_k = true
 cache = { implicit = true, explicit = true }
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_048_576
@@ -59,3 +66,11 @@ cache = { read = 0.03, storage = 1 }
 
 [cost.web_search]
 price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 1.8, cache = { read = 1.6666666666666667 } }, output = 1.8 }, audio = { input = { price = 1.8, cache = { read = 1.6666666666666667 } } } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.6666666666666666 } }, output = 0.5 }, audio = { input = { price = 0.5, cache = { read = 0.6666666666666666 } } } }
