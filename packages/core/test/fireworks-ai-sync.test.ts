@@ -584,3 +584,88 @@ test("lists the Responses and Messages APIs after a Fireworks model's first tabl
   expect(once).toEqual({ ...first, ...extra });
   expect(chatApis(once)).toEqual(once);
 });
+
+test("keeps a System One model's APIs to System One", () => {
+  const systemone = {
+    systemone: {
+      base_url: "https://api.fireworks.ai/inference/v1",
+      sdk: { aisdk: "@ai-sdk/typesafe-ai", opencodeai: "@opencode/ai/providers/typesafe-ai/decisions" },
+    },
+  };
+  expect(chatApis(systemone)).toEqual(systemone);
+  // Responses and Messages tables written by an earlier sync are dropped.
+  expect(chatApis({ ...systemone, responses: {}, messages: {} })).toEqual(systemone);
+});
+
+test("moves an alias to its new target's base_model and reports it", () => {
+  const alias = catalogModel({
+    id: "accounts/fireworks/models/kimi-k3p1-pro",
+    catalogId: "accounts/fireworks/routers/kimi-latest",
+    flagModes: [],
+  });
+  const old = { ...existingModel(), name: "Kimi Latest", description: "Kimi K3", base_model: "moonshotai/kimi-k3" };
+  const target = { ...existingModel(), name: "Kimi K3.1 Pro", description: "Kimi K3.1 Pro", base_model: "moonshotai/kimi-k3.1-pro" };
+  const files: Record<string, ExistingModel> = {
+    [alias.catalogId]: old,
+    [alias.id]: target,
+  };
+  const translated = fireworksAi.translateModel(alias, {
+    existing: (id) => files[id],
+    authored: (id) => id === alias.catalogId ? { name: "Kimi Latest" } as ExistingModel : undefined,
+  });
+
+  expect(translated && "model" in translated ? translated.model : undefined).toMatchObject({
+    base_model: "moonshotai/kimi-k3.1-pro",
+    name: "Kimi Latest",
+  });
+  // The old lab's description isn't carried over as an override.
+  expect(translated && "model" in translated ? translated.model : undefined).not.toHaveProperty("description", "Kimi K3");
+  expect(translated && "notices" in translated ? translated.notices : undefined).toEqual([
+    expect.stringContaining("base_model moved from `moonshotai/kimi-k3` to `moonshotai/kimi-k3.1-pro`"),
+  ]);
+
+  const same = fireworksAi.translateModel(alias, {
+    existing: (id) => id === alias.catalogId ? { ...old, base_model: "moonshotai/kimi-k3.1-pro" } : target,
+    authored: () => undefined,
+  });
+  expect(same && "notices" in same ? same.notices : undefined).toBeUndefined();
+});
+
+test("reports embedding and reranker rows without a local file as missing", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "fireworks-rerank-"));
+  const modelsDir = path.join(dir, "providers/fireworks-ai/models");
+  await mkdir(modelsDir, { recursive: true });
+  const issues = spyOn(missingIssues, "openMissingModelIssues").mockResolvedValue([]);
+  const reranker = "accounts/fireworks/models/qwen3-reranker-8b";
+  const provider = {
+    ...fireworksAi,
+    modelsDir,
+    async fetchModels() {
+      return {
+        serverless: {
+          object: "list" as const,
+          data: [
+            fireworksModel(),
+            fireworksModel({
+              id: reranker,
+              output_modalities: ["embeddings"],
+              pricing: [{ sku: "Embedding input tokens", amount: "0.2", unit: "1M tokens" as const }],
+            }),
+          ],
+        },
+        inventory: [inventoryModel(), inventoryModel({ name: reranker, kind: "EMBEDDING_MODEL" })],
+      };
+    },
+  };
+
+  try {
+    await syncProvider(provider, { openIssues: true });
+    const reported = issues.mock.calls[0]?.[1] ?? [];
+    expect(reported).toContain(reranker);
+    // Legacy embeddings aren't in either source, so a missing file isn't news.
+    expect(reported).not.toContain("BAAI/bge-small-en-v1.5");
+  } finally {
+    issues.mockRestore();
+    await rm(dir, { recursive: true, force: true });
+  }
+});

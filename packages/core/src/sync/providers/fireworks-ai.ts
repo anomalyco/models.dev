@@ -119,6 +119,11 @@ export const fireworksAi = {
   sourceID(model) {
     return supportsCatalogModel(model) ? model.catalogId : undefined;
   },
+  // Embedding and reranker rows are hand-authored, so one without a file is
+  // reported as missing instead of silently skipped.
+  missingModelID(model) {
+    return isEmbeddingModel(model) && !("legacyEmbedding" in model) ? model.catalogId : undefined;
+  },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
@@ -163,13 +168,47 @@ export const fireworksAi = {
         v2Set: { api: chatApis },
       };
     }
+    const retarget = aliasRetarget(model, existing, context);
     return {
       id: model.catalogId,
-      model: buildFireworksModel(model, existing),
+      model: buildFireworksModel(model, retarget?.existing ?? existing),
       v2Set: { api: chatApis },
+      notices: retarget === undefined ? undefined : [retarget.notice],
     };
   },
 } satisfies SyncProvider<FireworksSourceModel>;
+
+function isEmbeddingModel(model: FireworksSourceModel) {
+  return "legacyEmbedding" in model || ("output_modalities" in model && model.output_modalities.includes("embeddings"));
+}
+
+interface TranslateContext {
+  existing(id: string): ExistingModel | undefined;
+  authored(id: string): ExistingModel | undefined;
+}
+
+// An alias or router follows its catalog row's model. When the row now names a
+// model whose file has another base_model, the alias takes that file's facts
+// (keeping its own display name) so it doesn't keep the old lab's.
+function aliasRetarget(
+  model: FireworksCatalogModel,
+  existing: ExistingModel,
+  context: TranslateContext,
+): { existing: ExistingModel; notice: string } | undefined {
+  if (model.catalogId === model.id || existing.base_model === undefined) return undefined;
+  const target = context.existing(model.id);
+  if (target?.base_model === undefined || target.base_model === existing.base_model) return undefined;
+  const name = context.authored(model.catalogId)?.name;
+  return {
+    existing: {
+      ...target,
+      ...(name === undefined ? {} : { name }),
+      provider: existing.provider,
+      experimental: existing.experimental,
+    } satisfies ExistingModel,
+    notice: `Fireworks AI \`${model.catalogId}\` now serves \`${model.id}\`, so its base_model moved from \`${existing.base_model}\` to \`${target.base_model}\`. Check its header comments and v2-only flags (system_updates, tools.updates), which the sync keeps.`,
+  };
+}
 
 // Serverless text models are also served on the Responses API (POST /inference/v1/responses)
 // and the Anthropic Messages API (POST /inference/v1/messages), under the same model IDs:
@@ -181,12 +220,15 @@ const EXTRA_APIS = {
 };
 
 // A model's APIs: its own first table (what v1 reads; an empty table takes the
-// provider's Chat Completions API), then Responses and Messages.
+// provider's Chat Completions API), then Responses and Messages. Decision
+// models such as Rune only serve System One; Responses and Messages return
+// 400 "This model only serves /v1/systemone" for them.
 export function chatApis(current: unknown): Record<string, unknown> {
   const { responses: _responses, messages: _messages, ...own } =
     current !== null && typeof current === "object" && !Array.isArray(current)
       ? current as Record<string, unknown>
       : {};
+  if ("systemone" in own) return own;
   return {
     ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
     ...structuredClone(EXTRA_APIS),

@@ -8,6 +8,7 @@
 #   The same model also takes the OpenAI-format body at POST /inference/v1/decisions
 #   (https://docs.fireworks.ai/api-reference/post-decisions), which no SDK entry point targets on Fireworks yet.
 # Cache: usage.cached_input_tokens counts state tokens served from the prompt cache (post-systemone).
+# Responses and Messages return 400 "This model only serves /v1/systemone." (live 2026-11-24), so only [api.systemone] is listed.
 schema = 2
 v2_only = true
 base_model = "surogate/rune-26b-a4b"
@@ -18,12 +19,6 @@ cache = { implicit = true }
 [api.systemone]
 base_url = "https://api.fireworks.ai/inference/v1"
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
-
-[api.responses]
-sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
-
-[api.messages]
-sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.042
