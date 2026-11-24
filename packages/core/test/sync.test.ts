@@ -9400,6 +9400,21 @@ test("Vercel service tiers become service_tier values and text-only multipliers"
   expect(serviceTierCost({ pricing: { input: "0.000001", output: "0.000002", service_tiers: "flex" } })).toEqual({});
 });
 
+test("Vercel output overrides replace a max_tokens that only repeats the context window", () => {
+  const [inkling, step] = vercel.parseModels({
+    data: [
+      { id: "thinkingmachines/inkling-2-mini", name: "Inkling 2 Mini", created: 1_795_000_000, type: "language", context_window: 1_048_576, max_tokens: 1_000_000, pricing: { input: "0.000000075", output: "0.0000003" } },
+      { id: "stepfun/step-5-preview", name: "Step 5 Preview", created: 1_795_000_000, type: "language", context_window: 1_000_000, max_tokens: 1_000_000, pricing: { input: "0.000001", output: "0.000002" } },
+    ],
+  });
+  // 65,536 matches both lab files, so the factored file leaves output out and inherits it.
+  for (const model of [inkling!, step!]) {
+    const built = buildVercelModel(model, undefined);
+    expect(built).toMatchObject({ base_model: model.id });
+    expect(built.limit?.output).toBeUndefined();
+  }
+});
+
 test("Vercel keeps web search unscaled by making plain tier factors text-only", () => {
   const priority = { when: { service_tier: { equals: "priority" } }, factor: 2 };
   const region = { when: { region: { equals: "eu" } }, factor: 1.1 };

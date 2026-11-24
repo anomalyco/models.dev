@@ -21,7 +21,11 @@ const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "inception/mercury-2": 50_000,
   "minimax/minimax-m2": 196_608,
   "quiverai/arrow-2": 65_536,
+  // Catalog max_tokens (1,000,000) repeats the ~1M context window; 65,536 is the lab file's cap.
+  "thinkingmachines/inkling-2-mini": 65_536,
   "quiverai/arrow-2-telos": 65_536,
+  // Catalog max_tokens (1,000,000) repeats the 1M context window; 65,536 is the lab file's cap.
+  "stepfun/step-5-preview": 65_536,
   "zai/glm-5-turbo": 131_072,
 };
 
