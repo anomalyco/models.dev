@@ -77,6 +77,7 @@ export const ModelFamilyValues = [
   "glmv",
   "glm-air",
   "glm-flash",
+  "glm-flash-legal",
   "cogvideox",
   "glmv-flash",
   "autoglm",

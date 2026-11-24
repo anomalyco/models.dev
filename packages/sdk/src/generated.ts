@@ -156,6 +156,7 @@ export type ModelFamily =
   | "glm-embedding"
   | "glm-flash"
   | "glm-flash-free"
+  | "glm-flash-legal"
   | "glm-free"
   | "glm-image"
   | "glm-turbo"
