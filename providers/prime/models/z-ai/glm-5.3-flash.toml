@@ -3,12 +3,13 @@
 # Effort: top-level reasoning_effort = low|high|max.
 # Mid-conversation: system_updates, effort_updates and tools.updates are unset; Prime documents none of them and they weren't tested live.
 # Prime serves Chat Completions, Anthropic Messages (translated onto chat completions) and Responses (https://api.pinference.ai/openapi.json).
+# Input MIME types: the lab's entries for each kind Prime lists (Prime documents no formats).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "GLM 5.3 Flash"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
 output = ["text"]
 
 [capabilities]
