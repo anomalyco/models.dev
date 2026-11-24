@@ -5,8 +5,10 @@
 # Publish only text and images. ModalitiesV2 requires both input and output.
 # JARV and Gateway2 forward temperature on this Gemini route (see PR #14394).
 # Same-model Google and OpenRouter catalog entries also enable temperature.
-# JSON Schema enforcement is delegated to the selected endpoint and can vary on fallback.
-# https://chat.jarv.tech/docs/api/structured (JARV route evidence in PR #14394).
+# JARV Structured Outputs docs: “Поддержка зависит от выбранной модели.”
+# The deployed Chat Completions relay can return HTTP 200 with non-JSON even for
+# strict: true if upstream does. JARV does not publish a verified route for this model.
+# https://chat.jarv.tech/docs/api/structured (released-code HTTP fixture in PR #14394).
 schema = 2
 base_model = "google/gemini-4-hydrogen"
 
