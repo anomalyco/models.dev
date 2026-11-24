@@ -5,6 +5,7 @@
 # Explicit cache read: CNY 0.65 per 1M at the file's CNY 6.5 = $0.894 rate (https://www.qianwenai.com/models/kimi-k2.7-code, accessed 2026-10-23).
 # Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 20%, explicit creation 125%, explicit read 10% of input (https://www.qianwenai.com/models/kimi-k2.7-code, accessed 2026-10-23).
 # Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+# Limits: Model Studio serves 262,144 context, 229,376 max input and 16,384 max output (https://www.alibabacloud.com/help/en/model-studio/kimi-k2-7-code, https://help.aliyun.com/zh/model-studio/kimi-k2-7-code, accessed 2026-11-24), below the lab's 262,144 output.
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.7-code"
@@ -22,6 +23,11 @@ compatibility = { reasoning_field = "reasoning_content" }
 [api.messages]
 base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
+[limit]
+context = 262_144
+input = 229_376
+output = 16_384
 
 [cost.text.input]
 price = 0.894
