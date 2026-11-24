@@ -1,0 +1,57 @@
+# Serves Qwen3.6-35B-A3B on OpenRelay's own fleet to answer typed questions
+# instead of generating text: one request carries a `state` and up to 64
+# questions, each answered with one letter-constrained token whose letter
+# probabilities become a label, a score or the probability of yes.
+# Sources (accessed 2026-11-24):
+# - API: POST https://inference.openrelay.inc/v1/decisions, body
+#   {model, state, questions}, which is the System One shape. Any other field is
+#   rejected with 400 unknown_field, so temperature, top_p, top_k and tools are
+#   not caller controls here, and `stream` is dropped.
+#   https://docs.openrelay.inc/docs/inference/decisions
+# - Catalog row (GET https://api.openrelay.inc/v1/models): status "available",
+#   supported_apis ["decisions"], endpoint /v1/decisions, modalities
+#   ["text"] -> ["decision"]. Online only: the Batch API does not accept it.
+# - Limits: "64 questions per request, 26 options per question, 32 KB of state,
+#   read whole" (https://openrelay.inc/models/qwen3.6-35b-decide). The published
+#   cap is 32 KB of state, which bounds the prompt at about 32K tokens; 32,768 is
+#   that bound, not a separately documented token window. Nothing is truncated,
+#   and every question reads the whole state.
+# - Billing: input tokens only, with no output rate, because each answer is a
+#   single token.
+# - Price: GET https://api.openrelay.inc/v1/public/pricing, inputPerMTokens 0.05
+#   USD per 1M tokens.
+# - Base weights: https://huggingface.co/Qwen/Qwen3.6-35B-A3B (Apache 2.0). The
+#   deployment is text-only and does not take the checkpoint's image or video
+#   input.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.6-35b-a3b"
+type = "decision"
+name = "Qwen3.6 35B Decide"
+description = "Qwen3.6-35B-A3B answering typed choice, score and yes/no questions about one input, with probabilities per question"
+family = "qwen-decision"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 32_768
+output = 0
+
+[api.systemone]
+path = "/decisions"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0

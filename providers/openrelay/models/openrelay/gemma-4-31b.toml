@@ -1,0 +1,44 @@
+# Serves Google's Gemma 4 31B IT on OpenRelay's own fleet (vLLM with the gemma4
+# reasoning parser), so reasoning comes back in reasoning_content.
+# Sources (accessed 2026-11-24):
+# - Catalog row (GET https://api.openrelay.inc/v1/models): status "available",
+#   supported_apis ["chat_completions"], modalities ["text", "image"] -> ["text"].
+#   The catalog publishes the generic `image` value, so the formats below are the
+#   lab entry's list minus HEIC and HEIF, which are Gemini-API formats left out
+#   here as unverified on this lane.
+# - Model page: https://openrelay.inc/models/gemma-4-31b, "256K tokens online,
+#   128K in batch", and https://docs.openrelay.inc/docs/inference/models,
+#   "vision (text + image input) with reasoning and tool calling, 256K context".
+#   The window the gateway enforces on this lane is 256,000 tokens, not 262,144.
+#   The inherited 32,768-token output cap is unchanged. The separate batch
+#   deployment's 128K window is not published here.
+# - Reasoning: always on, with no caller-side control documented on this API.
+#   OpenRelay publishes no effort scale, toggle or reasoning-token budget for it,
+#   so none is claimed here.
+# - Prompt caching is automatic: the engines' prefix cache applies without the
+#   request asking for it, and the catalog prices cached input.
+# - Prices: GET https://api.openrelay.inc/v1/public/pricing, per 1M tokens:
+#   input 0.07, cached input 0.007, output 0.3.
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[limit]
+context = 256_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 0.3

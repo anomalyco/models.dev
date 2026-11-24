@@ -1,0 +1,54 @@
+# Serves moonshotai/Kimi-K3.1-Pro in its released MXFP4 weights on OpenRelay's
+# own MI355X fleet (SGLang with the kimi_k3 reasoning and tool-call parsers).
+# Toggle: chat_template_kwargs.thinking = true|false
+# Effort: reasoning_effort = low|high|max
+# Sources (accessed 2026-11-24):
+# - Catalog row (GET https://api.openrelay.inc/v1/models): status "available",
+#   supported_apis ["chat_completions"], modalities ["text", "image"] -> ["text"].
+#   The catalog publishes the generic `image` value; the lane takes no video
+#   input, so the lab entry's video values are dropped and its image formats are
+#   kept, minus HEIC and HEIF, which are Kimi-platform formats left out here as
+#   unverified on this lane. Moonshot's own Messages API is not in this listing:
+#   the catalog serves Chat Completions for this model.
+# - Window: "262,144 tokens (256K) on this endpoint, prompt and completion
+#   combined" (https://openrelay.inc/models/kimi-k3.1-pro). The lab entry's
+#   1,048,576-token output cap is Moonshot's API limit, not this lane's.
+# - Reasoning: the lane's own launch checks ran chat_template_kwargs.thinking=false
+#   and reasoning_effort=low against this deployment, so thinking is a caller
+#   control here even though Moonshot's own API has no off switch; the three
+#   levels are the ones Moonshot documents
+#   (https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart). Reasoning
+#   comes back in reasoning_content.
+# - Sampling: temperature and top_p are request parameters on this lane, which the
+#   engines accept on every self-hosted model, unlike Moonshot's own API where
+#   they are fixed. top_k is not published, so it stays off.
+# - Prompt caching is automatic: the engines' prefix cache applies without the
+#   request asking for it, and the catalog prices cached input.
+# - Prices: GET https://api.openrelay.inc/v1/public/pricing, per 1M tokens:
+#   input 0.24, cached input 0.2, output 7.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+temperature = true
+top_p = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.24
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 7

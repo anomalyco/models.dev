@@ -1,0 +1,17 @@
+# Catalog row (GET https://api.openrelay.inc/v1/models, 2026-11-24): status
+# "available", supported_apis ["embeddings"], endpoint /v1/embeddings,
+# modalities text -> embedding.
+# Price: GET https://api.openrelay.inc/v1/public/pricing, inputPerMTokens 0.013
+# USD per 1M tokens. Embeddings are metered on input alone, so there is no
+# output price to publish.
+# Limit: 8,192 tokens per input (https://docs.openrelay.inc/docs/inference/models),
+# the same window as the lab entry, so no override.
+schema = 2
+v2_only = true
+base_model = "baai/bge-m3"
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.013

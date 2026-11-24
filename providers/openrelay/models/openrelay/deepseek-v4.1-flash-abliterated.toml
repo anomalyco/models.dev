@@ -1,0 +1,47 @@
+# Serves pqhaz/DeepSeek-V4.1-Flash-1017-heretic, a community-modified
+# (refusal-removed) checkpoint of DeepSeek V4.1-Flash-1017, on OpenRelay's own
+# MI355X fleet. The lane runs the checkpoint's native 1,048,576-token window,
+# which is why the limits differ from openrelay/deepseek-v4.1-flash.
+# Toggle: chat_template_kwargs.thinking = true|false
+# Effort: reasoning_effort = low|high|max
+# Sources (accessed 2026-11-24):
+# - Catalog row (GET https://api.openrelay.inc/v1/models): status "available",
+#   supported_apis ["chat_completions", "messages"], modalities
+#   ["text", "image"] -> ["text"]. The catalog publishes the generic `image`
+#   value; the image formats inherited from the lab entry are the ones DeepSeek
+#   documents for the base checkpoint.
+# - Model page: https://docs.openrelay.inc/docs/inference/models, "1,048,576-token
+#   shared prompt and completion budget", Chat Completions and Messages.
+# - Checkpoint: https://huggingface.co/pqhaz/DeepSeek-V4.1-Flash-1017-heretic
+# - Reasoning: one engine configuration with openrelay/deepseek-v4.1-flash, whose
+#   launch checks ran reasoning_effort=low and chat_template_kwargs.thinking=false;
+#   the levels are the ones DeepSeek documents for the base checkpoint
+#   (https://api-docs.deepseek.com/guides/thinking_mode). Behavior and response
+#   quality differ from the official checkpoint.
+# - Prices: GET https://api.openrelay.inc/v1/public/pricing, per 1M tokens:
+#   input 0.035, cached input 0.01, cache write 0.035, output 0.5.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1-Flash Abliterated"
+description = "Community-modified (refusal-removed) DeepSeek V4.1-Flash-1017 checkpoint, served on OpenRelay's MI355X fleet"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.035
+cache = { read = 0.01, write = 0.035 }
+
+[cost.text.output]
+price = 0.5

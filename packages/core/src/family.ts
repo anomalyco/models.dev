@@ -101,6 +101,7 @@ export const ModelFamilyValues = [
   "qwen-tts-flash",
   "qwen-asr-flash",
   "qwen-embedding",
+  "qwen-decision",
   "qwen-flash",
   "qwen-vl",
   "qwen-image",
