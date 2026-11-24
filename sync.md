@@ -26,6 +26,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync groq` syncs Groq prices and limits for existing text models.
 - `bun models:sync github-copilot` syncs GitHub Copilot pricing and removes models GitHub has retired.
 - `bun models:sync tinfoil` syncs only Tinfoil.
+- `bun models:sync togetherai` syncs only Together AI.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
@@ -373,6 +374,17 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - `context` is the training context. Rows that sample past it name the sampling window, e.g. "Inkling 2 Mini (64K train / 1M sample)", and the sync uses that.
 - Output limits, reasoning controls, input formats and the base model stay hand-authored. The tables' `type` (e.g. "Vision") is not used: only Inkling models accept images through the inference APIs.
 - New IDs are not created (`skipCreates`) and open deduped missing-model issues. Files missing from both tables are reported, not deleted (`deleteMissing: false`), since the tables are docs pages rather than a lifecycle API. Malformed prices, an empty models table and duplicate IDs fail the run before writing.
+
+## Together AI Notes
+
+- Together AI is implemented in `packages/core/src/sync/providers/togetherai.ts`. Run it with `bun models:sync togetherai` or `bun togetherai:sync`.
+- Sources: `GET https://api.together.xyz/v1/models` (needs `TOGETHER_API_KEY`), the serverless model list `https://docs.together.ai/docs/serverless-models.md` and the deprecations page `https://docs.together.ai/docs/deprecations.md`.
+- `/v1/models` is the source for prices: `pricing.input`, `pricing.output` and `pricing.cached_input` (USD per 1M tokens, rounded to six decimals), and `context_length` (0 or null keeps the file's). A model without `cached_input` loses its cache read price. A cached-input price adds `cache = { implicit = true }` and `prompt_cache_key = true` to a file with no cache yet; authored cache details are kept. The docs table's prices can lag (it showed Qwen4 Max at $1.425 while the API and https://www.together.ai/pricing had $1.50), so they're never read.
+- `/v1/models` can't say which models are serverless: it also lists dedicated-only and retired models, many still priced. Only `type = "chat"` rows in the docs' "Chat models" table are synced. A model that leaves the table is removed, unless the "Scheduled deprecations" table lists it: then it keeps its file with `status = "deprecated"` while `/v1/models` still lists it. A model that leaves the scheduled table loses `deprecated`. A model in the docs but not in `/v1/models` keeps its file unchanged.
+- Both docs tables must parse (the chat table with at least 10 rows), and `/v1/models` must be non-empty without duplicate IDs, or the run fails before writing.
+- New models are created as `base_model` overlays carrying the price, context, `structured_output` from the docs' "Structured outputs" column, and `tools = false` when "Function calling" says no. Hugging Face organisations map to lab directories in `LAB_PREFIXES`. A model without a lab file opens a missing-model issue. A reasoning model is never created: neither source states how a route turns reasoning on, off or up, so it opens an issue for its controls to be probed and authored.
+- Reasoning controls, modalities (exact MIME types), tools, `structured_output`, mid-conversation flags, limits other than context, display names and header comments are hand-authored and kept.
+- Image, video, audio, transcription, embedding, rerank and base (`language`, `code`) rows are ignored. `/v1/models` labels their types clearly, but their prices are estimates or free text (`example_price`, "0.006 - 0.165 per image"), and the catalog has no Together media models.
 
 ## Morph Notes
 
