@@ -9407,6 +9407,10 @@ test("Vercel output overrides replace a max_tokens that only repeats the context
       { id: "stepfun/step-5-preview", name: "Step 5 Preview", created: 1_795_000_000, type: "language", context_window: 1_000_000, max_tokens: 1_000_000, pricing: { input: "0.000001", output: "0.000002" } },
     ],
   });
+  const [neon] = vercel.parseModels({
+    data: [{ id: "google/gemini-4-neon", name: "Gemini 4 Neon", created: 1_795_000_000, type: "language", context_window: 1_000_000, max_tokens: 1_000_000, pricing: { input: "0.000002", output: "0.00001" } }],
+  });
+  expect(buildVercelModel(neon!, { base_model: "google/gemini-4-neon" } as never).limit?.output).toBeUndefined();
   // 65,536 matches both lab files, so the factored file leaves output out and inherits it.
   for (const model of [inkling!, step!]) {
     const built = buildVercelModel(model, undefined);

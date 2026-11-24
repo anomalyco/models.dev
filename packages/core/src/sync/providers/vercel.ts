@@ -18,6 +18,13 @@ const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "amazon/nova-2-lite": 65_535,
   "bytedance/seed-1.8": 32_768,
   "deepseek/deepseek-v3.1-terminus": 32_768,
+  // Gemini 4: catalog max_tokens (1,000,000) is the context window; one request
+  // returns at most 65,536 tokens (the lab files' cap, from Google's model pages).
+  "google/gemini-4-argon": 65_536,
+  "google/gemini-4-carbon": 65_536,
+  "google/gemini-4-hydrogen": 65_536,
+  "google/gemini-4-neon": 65_536,
+  "google/gemini-4-neon-fast": 65_536,
   "inception/mercury-2": 50_000,
   "minimax/minimax-m2": 196_608,
   "quiverai/arrow-2": 65_536,
