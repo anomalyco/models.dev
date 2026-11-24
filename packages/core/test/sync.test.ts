@@ -109,7 +109,7 @@ import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { buildVeniceModel, resolveVeniceBaseModel, veniceV2Set, withResponsesApi, type VeniceModel } from "../src/sync/providers/venice.js";
-import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, serviceTierCost, tierMultipliers, vercel, vercelCache, vercelMediaCost, webSearchCost } from "../src/sync/providers/vercel.js";
+import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, contextOutput, serviceTierCost, tierMultipliers, vercel, vercelCache, vercelMediaCost, webSearchCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { formatModelV2, patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
@@ -9407,16 +9407,32 @@ test("Vercel output overrides replace a max_tokens that only repeats the context
       { id: "stepfun/step-5-preview", name: "Step 5 Preview", created: 1_795_000_000, type: "language", context_window: 1_000_000, max_tokens: 1_000_000, pricing: { input: "0.000001", output: "0.000002" } },
     ],
   });
-  const [neon] = vercel.parseModels({
-    data: [{ id: "google/gemini-4-neon", name: "Gemini 4 Neon", created: 1_795_000_000, type: "language", context_window: 1_000_000, max_tokens: 1_000_000, pricing: { input: "0.000002", output: "0.00001" } }],
+  const [neon, grok] = vercel.parseModels({
+    data: [
+      { id: "google/gemini-4-neon", name: "Gemini 4 Neon", created: 1_795_000_000, type: "language", context_window: 1_000_000, max_tokens: 1_000_000, pricing: { input: "0.000002", output: "0.00001" } },
+      { id: "spacexai/grok-4.3", name: "Grok 4.3", created: 1_795_000_000, type: "language", context_window: 1_000_000, max_tokens: 1_000_000, pricing: { input: "0.000001", output: "0.000002" } },
+    ],
   });
   expect(buildVercelModel(neon!, { base_model: "google/gemini-4-neon" } as never).limit?.output).toBeUndefined();
+  expect(buildVercelModel(grok!, { base_model: "xai/grok-4.3" } as never).limit?.output).toBeUndefined();
   // 65,536 matches both lab files, so the factored file leaves output out and inherits it.
   for (const model of [inkling!, step!]) {
     const built = buildVercelModel(model, undefined);
     expect(built).toMatchObject({ base_model: model.id });
     expect(built.limit?.output).toBeUndefined();
   }
+});
+
+test("Vercel uses the lab output cap when max_tokens only repeats the context window", () => {
+  const row = (max_tokens: number, context_window: number) => ({ max_tokens, context_window });
+  // max_tokens = context and the lab caps lower: the lab's cap.
+  expect(contextOutput(row(1_000_000, 1_000_000), 65_536, 1_000_000)).toBe(65_536);
+  // Capped at the served context.
+  expect(contextOutput(row(128_000, 128_000), 100_000, 64_000)).toBe(64_000);
+  // A real cap below the context, no lab cap, or a lab cap at or above it: keep the catalog's.
+  expect(contextOutput(row(65_536, 1_000_000), 32_768, 1_000_000)).toBeUndefined();
+  expect(contextOutput(row(1_000_000, 1_000_000), undefined, 1_000_000)).toBeUndefined();
+  expect(contextOutput(row(262_144, 262_144), 262_144, 262_144)).toBeUndefined();
 });
 
 test("Vercel keeps web search unscaled by making plain tier factors text-only", () => {

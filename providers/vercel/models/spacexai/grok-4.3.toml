@@ -11,9 +11,6 @@ structured_output = true
 cache = { implicit = true }
 service_tier = ["priority"]
 
-[limit]
-output = 1_000_000
-
 [api.chat-completions]
 capabilities = { system_updates = true }
 

@@ -6,6 +6,9 @@ name = "Nano Banana (Gemini 2.5 Flash Image)"
 cache = { implicit = true }
 service_tier = ["flex"]
 
+[limit]
+context = 32_768
+
 [cost.text.input]
 price = 0.3
 cache = { read = 0.03 }

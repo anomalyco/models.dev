@@ -8,9 +8,6 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = {} }
 cache = { explicit = true }
 
-[limit]
-output = 128_000
-
 [api.chat-completions]
 legacy_interleaved = true
 

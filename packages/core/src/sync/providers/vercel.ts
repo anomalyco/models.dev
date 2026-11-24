@@ -18,21 +18,13 @@ const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "amazon/nova-2-lite": 65_535,
   "bytedance/seed-1.8": 32_768,
   "deepseek/deepseek-v3.1-terminus": 32_768,
-  // Gemini 4: catalog max_tokens (1,000,000) is the context window; one request
-  // returns at most 65,536 tokens (the lab files' cap, from Google's model pages).
-  "google/gemini-4-argon": 65_536,
-  "google/gemini-4-carbon": 65_536,
-  "google/gemini-4-hydrogen": 65_536,
-  "google/gemini-4-neon": 65_536,
-  "google/gemini-4-neon-fast": 65_536,
   "inception/mercury-2": 50_000,
   "minimax/minimax-m2": 196_608,
   "quiverai/arrow-2": 65_536,
-  // Catalog max_tokens (1,000,000) repeats the ~1M context window; 65,536 is the lab file's cap.
-  "thinkingmachines/inkling-2-mini": 65_536,
   "quiverai/arrow-2-telos": 65_536,
-  // Catalog max_tokens (1,000,000) repeats the 1M context window; 65,536 is the lab file's cap.
-  "stepfun/step-5-preview": 65_536,
+  // Catalog max_tokens (1,000,000) is close to, not equal to, the 1,048,576 context, so
+  // contextOutput doesn't catch it; 65,536 is the lab file's cap.
+  "thinkingmachines/inkling-2-mini": 65_536,
   "zai/glm-5-turbo": 131_072,
 };
 
@@ -375,8 +367,9 @@ export function buildVercelModel(
   const context = model.context_window > 0
     ? model.context_window
     : existing?.limit?.context ?? 0;
+  const labOutput = labOutputLimit(existing?.base_model ?? resolveVercelBaseModel(model.id));
   const output = OUTPUT_LIMIT_OVERRIDES[model.id] ?? (model.max_tokens > 0
-    ? model.max_tokens
+    ? contextOutput(model, labOutput, context) ?? model.max_tokens
     : existing?.limit?.output ?? 0);
   const input = model.id.startsWith("openai/") && context > output
     ? context - output
@@ -493,6 +486,20 @@ export function buildVercelModel(
     limit: synced.limit,
     modalities: synced.modalities,
   }, synced.limit, existing?.base_model_omit);
+}
+
+// The catalog fills `max_tokens` with the context window for many models (Gemini 4,
+// Grok 4.x, Muse Spark: 1,000,000 or more), which isn't a real output cap. When the lab
+// caps output lower, its cap is used instead, capped at the served context.
+export function contextOutput(model: Pick<VercelModel, "max_tokens" | "context_window">, labOutput: number | undefined, context: number) {
+  if (model.max_tokens <= 0 || model.max_tokens !== model.context_window) return undefined;
+  if (labOutput === undefined || labOutput <= 0 || labOutput >= model.max_tokens) return undefined;
+  return Math.min(labOutput, context);
+}
+
+function labOutputLimit(modelID: string | undefined) {
+  const output = modelID === undefined ? undefined : labDoc(modelID)?.limit?.output;
+  return typeof output === "number" ? output : undefined;
 }
 
 function vercelReasoningOptions(
