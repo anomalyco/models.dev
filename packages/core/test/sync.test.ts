@@ -109,7 +109,7 @@ import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { buildVeniceModel, resolveVeniceBaseModel, veniceV2Set, withResponsesApi, type VeniceModel } from "../src/sync/providers/venice.js";
-import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, serviceTierCost, vercel, vercelCache, vercelMediaCost, webSearchCost } from "../src/sync/providers/vercel.js";
+import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, serviceTierCost, tierMultipliers, vercel, vercelCache, vercelMediaCost, webSearchCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { formatModelV2, patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
@@ -9398,6 +9398,29 @@ test("Vercel service tiers become service_tier values and text-only multipliers"
   // Unknown tiers and unreadable shapes are skipped.
   expect(serviceTierCost({ pricing: { input: "0.000001", output: "0.000002", service_tiers: { turbo: { input: "0.000002", output: "0.000004" } } } })).toEqual({});
   expect(serviceTierCost({ pricing: { input: "0.000001", output: "0.000002", service_tiers: "flex" } })).toEqual({});
+});
+
+test("Vercel keeps web search unscaled by making plain tier factors text-only", () => {
+  const priority = { when: { service_tier: { equals: "priority" } }, factor: 2 };
+  const region = { when: { region: { equals: "eu" } }, factor: 1.1 };
+  const multipliers = (pricing: object) =>
+    (tierMultipliers({ pricing }) as Record<string, (current: unknown) => unknown>)["cost.multipliers"];
+
+  // gpt-4.1-nano: web search price, no catalog tiers, an authored priority factor.
+  expect(multipliers({ input: "0.0000001", output: "0.0000004", web_search: "14" })!([priority, region]))
+    .toEqual([{ ...priority, factor: { text: 2 } }, region]);
+  expect(multipliers({ input: "0.0000001", output: "0.0000004", web_search: "14" })!(undefined)).toBeUndefined();
+  // No web search price: plain factors are left alone.
+  expect(multipliers({ input: "0.0000001", output: "0.0000004" })).toBeUndefined();
+  // With catalog tiers too, the tier factor is synced on top.
+  expect(multipliers({
+    input: "0.000001",
+    output: "0.000002",
+    web_search: "10",
+    service_tiers: { flex: { input: "0.0000005", output: "0.000001" } },
+  })!([{ when: { service_tier: { equals: "flex" } }, factor: 0.4 }])).toEqual([
+    { when: { service_tier: { equals: "flex" } }, factor: { text: 0.5 } },
+  ]);
 });
 
 test("OpenRouter media models resolve to their lab files", () => {

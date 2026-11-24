@@ -152,7 +152,7 @@ export const vercel = {
       ...(cache === undefined ? {} : { "capabilities.cache": cache }),
       ...languageImageCost(model, type),
       ...webSearchSet(model),
-      ...serviceTierCost(model),
+      ...tierMultipliers(model),
     };
     return {
       id: model.id,
@@ -187,6 +187,29 @@ export function webSearchCost(model: Pick<VercelModel, "pricing">) {
   const value = Number(model.pricing?.web_search);
   if (model.pricing?.web_search === undefined || !Number.isFinite(value) || value <= 0) return undefined;
   return (current: unknown) => ({ ...(current !== null && typeof current === "object" ? current : {}), price: value });
+}
+
+// The catalog prices web search the same on every service tier, so once a file
+// has a web search price, a plain-number tier factor (which would scale it too)
+// becomes a text-only one.
+export function tierMultipliers(model: Pick<VercelModel, "pricing">) {
+  const tiers = serviceTierCost(model) as Record<string, (current: unknown) => unknown>;
+  if (webSearchCost(model) === undefined) return tiers;
+  const synced = tiers["cost.multipliers"];
+  return {
+    ...tiers,
+    "cost.multipliers": (current: unknown) => {
+      const list = textOnlyTierFactors(current);
+      return synced === undefined ? list : synced(list);
+    },
+  };
+}
+
+function textOnlyTierFactors(current: unknown) {
+  if (!Array.isArray(current)) return current;
+  return current.map((rule: Doc) =>
+    tierRule(rule) !== undefined && typeof rule.factor === "number" ? { ...rule, factor: { text: rule.factor } } : rule
+  );
 }
 
 function webSearchSet(model: VercelModel) {
