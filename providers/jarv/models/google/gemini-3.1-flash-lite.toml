@@ -3,8 +3,14 @@
 # Personal API keys cap output at 32,768 tokens.
 # JARV API OpenAIChatRequest accepts temperature and ignores top_p/top_k.
 # https://gitlab.com/jarv-group/jarv_new/-/blob/69fef674ed34dcff4cff683e90aa914497591b4d/services/public-api/src/jarv_public_api/api/openai_compat.py#L51-74
+# JARV Chat Completions forwards image_url message parts (see PR #14394).
+# Publish only text and images. ModalitiesV2 requires both input and output.
 schema = 2
 base_model = "google/gemini-3.1-flash-lite"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }

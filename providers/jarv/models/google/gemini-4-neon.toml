@@ -1,8 +1,14 @@
 # https://chat.jarv.tech/docs/api/openai#openai-reasoning
 # Chat Completions supports reasoning.effort and returns reasoning_content.
 # Personal API keys cap output at 32,768 tokens.
+# JARV Chat Completions forwards image_url message parts (see PR #14394).
+# Publish only text and images. ModalitiesV2 requires both input and output.
 schema = 2
 base_model = "google/gemini-4-neon"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
