@@ -2,13 +2,14 @@
 # Effort: output_config.effort = low|medium|high|xhigh|max
 # Tinker models.json https://tinker-docs.thinkingmachines.ai/tinker/models.json (accessed 2026-11-24): type Hybrid + Vision,
 #   context 64K train / 1M sample. The pricing page: "Inkling 2 Small and Inkling 2 Mini sample up to 1M tokens on
-#   both training options" (https://tinker-docs.thinkingmachines.ai/tinker/models/), so the context is 1M here.
+#   both training options" (https://tinker-docs.thinkingmachines.ai/tinker/models/), matching the lab's 1M context.
 # Images: "Formats: PNG and JPEG" (https://tinker-docs.thinkingmachines.ai/cookbook/inkling/images/).
 # Tinker Anthropic-compatible API (https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/, accessed
 #   2026-11-24) serves any Tinker model: thinking.type = disabled turns reasoning off; output_config.effort (low|medium|high|
 #   xhigh|max) is documented for Thinking Machines models and "Not all models support effort" (400), so it is listed only
 #   for those; images via base64 only (max 2 MiB), Inkling models only; no audio blocks;
-#   cache_control is ignored, prefill tokens that hit the prompt cache bill at 80% off.
+#   cache_control is ignored. Cached prefill is 90% off for Inkling 2 (models.json lists $0.03 on $0.30 and $0.015 on
+#   $0.15), not the 80% off the other models on this host get.
 schema = 2
 base_model = "thinkingmachines/inkling-2-small"
 
@@ -20,9 +21,6 @@ output = ["text"]
 tools = { supported = true, choice = ["auto", "required", "tool", "none"] }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 cache = { implicit = true }
-
-[limit]
-context = 1_048_576
 
 [cost.text.input]
 price = 0.3
