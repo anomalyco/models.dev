@@ -1,0 +1,23 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 0.07, output 0.281, cache hit 0.003).
+#   China list: CNY 0.5 / 2 / 0.02, https://cloud.tencent.com/document/product/1823/130055
+#   A 50% promotion runs until 2026-11-30 12:00 Beijing time; list prices are used here.
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17) (1M context, 960K input, 64K output;
+#   structured output, function calling, caching, image understanding).
+# Effort: reasoning_effort = high|no_think (default high). no_think turns thinking off, so it is
+#   "none" here with no separate toggle (thinking.type also exists, default enabled).
+# Reasoning guide: https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.281

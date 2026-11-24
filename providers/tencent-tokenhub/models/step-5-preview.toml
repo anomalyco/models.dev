@@ -1,0 +1,28 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 1, output 2.7, cache hit 0.05;
+#   cache price as adjusted by the 2026-11-04 notice).
+#   China list: https://cloud.tencent.com/document/product/1823/130055
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17) (1M context, 64K output).
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write price is published.
+# Effort: reasoning_effort = low|medium|high. Tencent's reasoning guide doesn't list Step 5 Preview;
+#   controls follow the StepFun entry for this model.
+schema = 2
+base_model = "stepfun/step-5-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 2.7

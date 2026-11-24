@@ -1,0 +1,28 @@
+# hy3-202608 is the same Hy3 model as hy3 / hy3-preview, billed per token type instead of the
+#   tier-dependent flat rate ("hy3、hy3-preview 与 hy3-202608 底层都是 Hy3 模型，但计价方式不同").
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-24.
+# https://cloud.tencent.com/document/product/1823/133811
+# Input/output/cache-read: 20/80/5 points per million tokens.
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.679299.
+# FX: USD 1 = CNY 6.679299, 2026-11-24, https://open.er-api.com/v6/latest/USD
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
+# Availability: https://cloud.tencent.com/document/product/1823/130060
+# Specifications: https://cloud.tencent.com/document/product/1823/130051
+# Effort: reasoning_effort = low|high|no_think (default high). no_think turns thinking off, so it is
+#   "none" here with no separate toggle (thinking.type also exists, default enabled).
+#   https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+schema = 2
+base_model = "tencent/hy3"
+name = "Hy3 (202608)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.149716
+cache = { read = 0.037429 }
+
+[cost.text.output]
+price = 0.598865
