@@ -1,0 +1,24 @@
+# Capabilities the catalog doesn't state (capabilities.cache) come from qwen/qwen3.8-max-prime, this host's previous model in the family.
+schema = 2
+base_model = "alibaba/qwen4-max"
+name = "Qwen: Qwen4 Max"
+description = "Qwen4 Max is the flagship model in Alibaba's Qwen4 series. It accepts text, image, and video input and returns text, with a 1M-token context window and reasoning enabled by default...."
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, write = 1.875 }
+
+[cost.text.output]
+price = 4.5

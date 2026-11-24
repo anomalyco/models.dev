@@ -3,11 +3,15 @@
 # CNY list price source: https://docs.volcengine.com/docs/82379/1449737 (深度思考) + 智谱官方价目表
 # GLM-5.3-Flash always reasons (thinking cannot be disabled on this model ID)
 # Effort: reasoning_effort = low|high|max
+# Cache: implicit prefix caching is on by default on the Chat API (no request flag), per
+# https://ark.volcengine.com/region:cn-beijing/docs/context-cache.md and the 上下文缓存能力 table in
+# https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
 structured_output = true
 
 [api.chat-completions]

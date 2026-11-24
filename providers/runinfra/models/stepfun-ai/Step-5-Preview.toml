@@ -1,0 +1,52 @@
+# Source: https://runinfra.ai/inference-api/step-5-preview
+# Pricing: USD per million tokens, standing rates with no promotional window, public since
+# 2026-11-06: 0.90 input, 0.09 cached input, 2.43 output. The same three prices are in our
+# provider feed: https://runinfra.ai/api/providers/openrouter/models
+# context is this deployment's window, prompt plus output, 1,048,576 tokens: a 1,023,996-token
+# prompt was answered correctly through the public API on 2026-11-06. output is 32,768, the
+# output length our provider feed advertises for this model. limit.input is omitted because this
+# deployment has no input cap separate from that window.
+# Input is text and images, at most 8 images per request: through the public API 8 PNG images
+# were read correctly and a ninth returned HTTP 400. Only PNG was probed, so only image/png is
+# listed. Video is not served: a video_url part returns HTTP 400 "Step 5 Preview serves text and
+# images. Audio and video are not accepted on this deployment."
+# Reasoning cannot be turned off: reasoning_effort "none" returns HTTP 400 'reasoning_effort
+# "none" is not supported: Step 5 Preview cannot disable thinking. Omit the field or send
+# "high", which matches the measured default.' low, medium and high are StepFun's documented
+# values (https://platform.stepfun.ai/docs/en/api-reference/chat/chat-completion-create) and are
+# passed to the model unchanged. They are the lab's vocabulary, not measured budgets: on this
+# deployment (2026-11-06, one fixed prompt, temperature 1.0, 6 runs per level) mean completion
+# tokens were low 427, medium 682 and high 349, and 349 with the field omitted.
+# Reasoning is returned in message.reasoning and streamed as delta.reasoning, not in
+# reasoning_content. reasoning_field = "reasoning" is valid in v2, but v1's interleaved.field
+# only allows reasoning_content|reasoning_details, so no reasoning_field is set.
+# Verified through the public API on 2026-11-06: tool calls with tool_choice auto, required and a
+# named function, parallel and streamed calls, and tool-result follow-ups; json_object and strict
+# json_schema responses; prefix caching (a repeated prompt reported 384 cached tokens); and a
+# final usage chunk with stream_options.include_usage.
+# Mid-conversation flags are unset: not probed on this deployment.
+schema = 2
+base_model = "stepfun/step-5-preview"
+base_model_omit = ["limit.input"]
+
+[modalities]
+input = ["text", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+stream_usage = true
+
+[limit]
+context = 1_048_576
+output = 32_768
+image = { max_per_request = 8 }
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.09 }
+
+[cost.text.output]
+price = 2.43

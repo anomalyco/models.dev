@@ -1,12 +1,12 @@
 schema = 2
 type = "decision"
-name = "HeyGen Decision Turbo"
+name = "HeyGen Decision 1 Turbo"
 description = "Decision model for typed evaluation of shared state"
 open_weights = false
 release_date = "2026-11-13"
 
 [modalities]
-input = ["text", "image"]
+input = ["text", "image", "video", "audio"]
 output = ["text"]
 
 [capabilities]
@@ -24,7 +24,7 @@ sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/open
 compatibility = { media_input = "state" }
 
 [cost.text.input]
-price = 0.09
+price = 0.042
 
 [cost.text.output]
 price = 0

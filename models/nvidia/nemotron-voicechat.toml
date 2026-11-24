@@ -3,7 +3,7 @@
 schema = 2
 name = "Nemotron VoiceChat"
 description = "Nemotron multimodal model for visual reasoning and agentic AI workflows"
-family = "nemotron"
+family = "nemotron-voice"
 open_weights = true
 release_date = "2026-03-16"
 
@@ -21,3 +21,7 @@ top_k = true
 [limit]
 context = 128_000
 output = 8_192
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/NVIDIA-NemotronLabs-VoiceChat-11B"

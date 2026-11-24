@@ -1,0 +1,26 @@
+schema = 2
+name = "Ousia 1"
+description = "Ousia 1 is a web research model from Hyperresearch: it searches the web for your question and answers with numbered citations and a list of its sources. Answers usually take 30 to 70 seconds and arrive all at once, and harder questions can take several minutes. It follows the answer language and length set in a system message, but not formatting instructions. Leave the output limit unset or at least 15,000 tokens: a smaller limit cuts the research short. Text only, with no tool calling. Ousia 1 searches the web for you: searches based on your question are sent to search providers, some of which may use them to improve their services. Not zero-retention."
+open_weights = false
+release_date = "2026-11-15"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 128_000
+input = 128_000
+output = 32_000
+
+[cost.text.input]
+price = 2
+cache = { read = 2 }
+
+[cost.text.output]
+price = 10

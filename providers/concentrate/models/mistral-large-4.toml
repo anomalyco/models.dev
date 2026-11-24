@@ -1,0 +1,26 @@
+# Always on: reasons even at reasoning.effort none, and the routes take no other level (live probe 2026-11-13)
+# Limit: max_input_tokens 470000, max_tokens 262144 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "mistral/mistral-large-4"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true }
+cache = { implicit = { min_tokens = 64 } }
+
+[limit]
+context = 470_000
+
+[cost.text.input]
+price = 0.7
+cache = { read = 0.07 }
+
+[cost.text.output]
+price = 2.1
+
+[cost.web_search]
+price = 30

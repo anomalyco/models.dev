@@ -1,0 +1,15 @@
+# Capabilities the catalog doesn't state (capabilities.system_updates, capabilities.structured_output) come from gemini-4-hydrogen, this host's previous model in the family.
+schema = 2
+base_model = "google/gemini-4-neon"
+
+[capabilities]
+system_updates = true
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 15

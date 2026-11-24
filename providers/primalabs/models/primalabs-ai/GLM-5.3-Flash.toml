@@ -1,0 +1,45 @@
+# Sources (accessed 2026-11-20):
+# - https://docs.primalabs.ai/inference/models (catalog, feature support, reasoning controls per endpoint)
+# - GET https://api.primalabs.ai/v1/models (authenticated; context_length, max_output_tokens, pricing in USD per token,
+#   input_modalities, supports_* capability checks, reasoning_effort_accepted per endpoint). A capability field the
+#   catalog leaves out is "not verified", so it is not authored here.
+# - Every model is served on /v1/chat/completions, /v1/responses and /v1/messages and reasons by default; reasoning
+#   comes back as message.reasoning_content on Chat Completions. Reasoning controls below are for Chat Completions.
+# Effort: reasoning_effort = low|high|max on Chat Completions; thinking can't be turned off there ("none" returns 400),
+#   only via reasoning.effort = none on /v1/responses (documented known limitation), so no toggle is authored.
+# Modalities: input_modalities = text, image (no video or PDF), so input is text + the lab entry's image MIME types.
+# Limit: context_length = max_output_tokens = 262_144 (served window is smaller than the lab's 1M context).
+#   max_output_tokens is the served window (input + output share it, no separate output cap), so output = context,
+#   as on other hosts that serve the full window (e.g. providers/nebius).
+# Cache: supports_prompt_caching = false in the catalog, so no cache capability is authored; the cached-input rate is
+#   still the published price.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

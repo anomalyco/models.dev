@@ -1,8 +1,10 @@
+# Deprecated: OpenAI shuts this model down on 2027-02-10 (https://developers.openai.com/api/docs/deprecations, accessed 2026-11-23).
 # Pricing (accessed 2026-11-12): https://developers.openai.com/api/docs/pricing (Images, standard tier)
-# Image tokens: input $8 (cached $2), output $30 per 1M; the text.output entry predates the image entries and is kept so v1 output is unchanged.
+# Image tokens: input $8 (cached $2), output $30 per 1M. Text output is unpriced.
 schema = 2
 base_model = "openai/gpt-image-2"
 name = "gpt-image-2"
+status = "deprecated"
 
 [limit]
 input = 0
@@ -13,9 +15,6 @@ sdk = { opencodeai = "@opencode/ai/providers/openai/images" }
 [cost.text.input]
 price = 5
 cache = { read = 1.25 }
-
-[cost.text.output]
-price = 30
 
 [cost.image.input]
 price = 8

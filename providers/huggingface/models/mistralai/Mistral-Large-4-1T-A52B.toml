@@ -1,0 +1,22 @@
+# Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (mistral).
+# Effort: reasoning_effort = low|medium|high, as on Mistral's own API (providers/mistral/models/mistral-large-4.toml), the
+#   router's only provider for this model. Mistral rejects none.
+schema = 2
+base_model = "mistral/mistral-large-4"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.7
+
+[cost.text.output]
+price = 2.1

@@ -1,0 +1,21 @@
+# Price and context: GET https://api.together.xyz/v1/models (accessed 2026-11-23): $0.35 input, $0.04 cached input, $1.50 output per 1M; context 131,072.
+# Effort: reasoning_effort = low|medium|high|xhigh, the set most hosts of this model publish. This host has no earlier muse-glimmer
+#   model; flags follow its Muse Spark Open entry (structured output, implicit cache, reasoning in reasoning_content).
+schema = 2
+base_model = "meta/muse-glimmer-30b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+structured_output = true
+prompt_cache_key = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.35
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.5

@@ -1,6 +1,8 @@
+# Deprecated: OpenAI shuts this model down on 2027-01-14 (https://developers.openai.com/api/docs/deprecations, accessed 2026-11-23).
 # tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (free-form text, or lark/regex grammars; GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
 # APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-4o
 # Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# tools.updates is left out: on GPT-5.5 and earlier, calls to tools added through additional_tools come back namespaced and replaying them without the namespace fails ("Missing namespace for function_call", live 2026-11-16), so callers fold tool changes into the top-level tools list.
 schema = 2
 name = "GPT-4o (2024-11-20)"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
@@ -8,6 +10,7 @@ family = "gpt"
 open_weights = false
 knowledge = "2023-09"
 release_date = "2024-11-20"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
@@ -28,7 +31,6 @@ context = 128_000
 output = 16_384
 
 [api.responses]
-capabilities = { tools = { updates = true } }
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }

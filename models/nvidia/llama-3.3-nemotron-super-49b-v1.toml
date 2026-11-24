@@ -4,7 +4,7 @@
 schema = 2
 name = "Llama 3.3 Nemotron Super 49B v1"
 description = "Nemotron model for efficient reasoning, coding, and specialized AI agents"
-family = "nemotron"
+family = "nemotron-super"
 open_weights = true
 release_date = "2025-03-18"
 
@@ -22,3 +22,7 @@ top_k = true
 [limit]
 context = 131_072
 output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/Llama-3_3-Nemotron-Super-49B-v1"

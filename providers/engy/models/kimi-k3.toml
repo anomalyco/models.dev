@@ -10,6 +10,10 @@
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, toggle = true }

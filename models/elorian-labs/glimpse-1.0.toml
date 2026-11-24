@@ -1,0 +1,39 @@
+# Sources (accessed 2026-11-24):
+# - https://elorian.ai/blog/introducing-glimpse ("Elorian · 16 October 2026"; "post-trained on an open weights base model";
+#   API and chat UI; images and video; benchmark table, Glimpse at max effort with its native agent harness)
+# - https://platform.elorian.ai/docs (Elorian's API docs: temperature, top_p, max_completion_tokens, seed, stop and
+#   reasoning_effort parameters, no top_k; video as one content part per request; upload types PNG, JPEG, WebP, GIF images
+#   and MP4/M4V, MOV, WebM, MKV, AVI video)
+# - https://www.together.ai/models/elorian-glimpse ("research preview"; "Post-trained on an open-weights base model")
+# Weights: not released. Neither Elorian nor Together links any, and https://huggingface.co/elorian has no Glimpse weights.
+# Tools: Elorian's own API only takes its built-in search and code tools, but the model calls user function tools on
+#   Together (live 2026-11-24: a get_weather tool came back as a tool call with finish_reason tool_calls).
+# Limits: context 262,144 (Together GET /v1/models; a max_tokens = 10,000,000 request on Together fails with "maximum context
+#   length is 262144 tokens", live 2026-11-24). Output 256,000 per OpenRouter's listing, whose only endpoint is Together
+#   (https://openrouter.ai/api/v1/models, top_provider.max_completion_tokens).
+# Knowledge cutoff: not published.
+schema = 2
+name = "Glimpse 1.0"
+description = "Visual thinking model that reasons over images and video, post-trained by Elorian on an open-weights base"
+family = "glimpse"
+open_weights = false
+release_date = "2026-10-16"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/quicktime", "video/webm", "video/x-matroska", "video/x-msvideo"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 262_144
+output = 256_000
+
+[[links]]
+url = "https://elorian.ai/blog/introducing-glimpse"
+type = "announcement"

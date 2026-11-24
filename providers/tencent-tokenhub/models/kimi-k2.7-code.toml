@@ -1,0 +1,26 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 0.95, output 4, cache hit 0.19).
+#   China list: https://cloud.tencent.com/document/product/1823/130055
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17)
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# API: https://cloud.tencent.com/document/product/1823/132232
+# Thinking is always enabled; no graded effort control.
+# Reasoning guide: https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4

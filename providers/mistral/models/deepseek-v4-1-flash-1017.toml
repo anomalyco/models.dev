@@ -12,8 +12,11 @@
 # Cache: Mistral prompt caching (https://docs.mistral.ai/studio/conversations/advanced/prompt-caching) and the model page's
 #   cached-input price. Two identical 5.5k-token requests reported no cached tokens live, so no minimum is recorded.
 # Mid-conversation flags weren't checked on this model and are left unset.
+# Lifecycle: Public Preview (https://docs.mistral.ai/models/deepseek-v4-flash-1017, accessed 2026-11-24;
+#   https://docs.mistral.ai/inference/model-lifecycle allows silent updates before GA).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
+status = "beta"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }

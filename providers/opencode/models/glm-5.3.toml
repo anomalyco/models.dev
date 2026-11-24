@@ -1,4 +1,5 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/models/ (accessed 2026-10-21).
+# Pricing: 60% off standard Zen rates (input, cache read, output).
 # Effort: reasoning_effort = low|high|max
 # Cache (live): implicit (cached tokens reported without cache markers).
 # Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/zhipuai/models/glm-5.3.toml (Zen passes requests through).
@@ -18,8 +19,8 @@ base_url = "https://opencode.ai/inference/openai/v1"
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 1.4
-cache = { read = 0.26 }
+price = 0.56
+cache = { read = 0.104 }
 
 [cost.text.output]
-price = 4.4
+price = 1.76

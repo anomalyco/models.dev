@@ -1,0 +1,24 @@
+# Price and context: GET https://api.together.xyz/v1/models (accessed 2026-11-23): $0.30 input, $0.006 cached input, $1.20 output per 1M; context 1,048,576.
+# Controls, layout and flags follow this host's DeepSeek-V4.1-Flash (same deepseek-flash line; probed live there 2026-10-21).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

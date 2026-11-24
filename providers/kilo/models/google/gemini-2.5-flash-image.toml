@@ -10,6 +10,7 @@ output = ["text", "image/png", "image/jpeg"]
 structured_output = true
 
 [limit]
+context = 32_768
 output = 8_192
 
 [cost.text.input]

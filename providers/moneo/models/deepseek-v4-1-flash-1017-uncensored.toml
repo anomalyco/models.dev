@@ -1,0 +1,20 @@
+# Moneo catalog row (retrieved 2026-11-11): id/model=`deepseek-v4-1-flash-1017-uncensored`, context_tokens=1000000,
+# has_vision=true, has_tools=true, has_reasoning=true, input_per_1m_usd=0.33, output_per_1m_usd=1.32:
+# https://api.moneo.one/v1/models
+# `-uncensored` is part of the exact public wire ID, not display text.
+# Toggle wire: reasoning.enabled = true|false. Effort wire: reasoning.effort = low|high|max.
+# Live Chat Completions probe (2026-11-11): false changed reasoning_tokens from 31 to 0; true restored 31;
+# low/high/max produced 61/66/91 reasoning tokens on the same task. Reasoning text remains hidden.
+# Gateway evidence: request allowlist https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L96-L147 ; response stripping https://github.com/kutsaev/MoneoApp/blob/2d6aa67/moneo/supabase/functions/cig-inference/index.ts#L430-L439
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Uncensored"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.33
+
+[cost.text.output]
+price = 1.32

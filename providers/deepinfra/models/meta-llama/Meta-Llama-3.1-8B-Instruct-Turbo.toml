@@ -1,0 +1,18 @@
+schema = 2
+base_model = "meta/llama-3.1-8b-instruct"
+
+[capabilities]
+service_tier = ["flex"]
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.02
+
+[cost.text.output]
+price = 0.04
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

@@ -1,0 +1,78 @@
+# tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (free-form text, or lark/regex grammars; GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
+# tools.search: tool_search on the Responses API only (gpt-5.4 and later, per the model page's Supported tools): https://developers.openai.com/api/docs/guides/tools-tool-search
+# Per-API tools: tool_search is Responses-only (Chat Completions returns 400 "Invalid value: 'tool_search'. Supported values are: 'function' and 'custom'", live 2026-11-17), so tools.search sits on [api.responses]. Strict function tools, tool_choice and custom tools (text, lark and regex) work on both APIs (Chat Completions `ChatCompletionCustomTool`: https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create; live 2026-11-17).
+# gpt-6.2-astra takes function tools on Chat Completions only with reasoning_effort "none", which it doesn't support (https://developers.openai.com/api/docs/models/gpt-6.2-astra, https://developers.openai.com/api/docs/guides/latest-model; live 2026-11-17: 400 "Function tools with reasoning_effort are not supported"), so tools.strict sits on [api.responses]. Custom tools still work there.
+# Pricing: https://developers.openai.com/api/docs/models/gpt-6.2-astra
+# Reasoning and modes: https://developers.openai.com/api/docs/guides/latest-model
+# Ultrafast mode: https://developers.openai.com/api/docs/guides/ultrafast-mode
+# Ultrafast pricing: 3x Standard through 2027-02-28, 6x from 2027-03-01 (Pacific time).
+# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# Token-only multipliers (object factor, so cost.web_search is unscaled): Fast mode (https://developers.openai.com/api/docs/guides/priority-processing); Ultrafast (https://developers.openai.com/api/docs/pricing?latest-pricing=ultrafast); Flex is not offered (live 2026-11-17: 400 "This model does not support service_tier=flex"; the Flex pricing table omits it).
+# APIs: the Endpoints table on https://developers.openai.com/api/docs/models/gpt-6.2-astra
+# Per-API flags: additional_tools (and configuration_update, where set) exist only on the Responses API, so tools.updates / effort_updates sit on [api.responses]. Developer messages mid-conversation are documented on both Chat Completions and Responses, so system_updates stays top-level.
+# Cache writes: 30m (default) is 1.25x input; 12h (Responses API) is 2.5x. https://developers.openai.com/api/docs/guides/prompt-caching
+# Regional processing (data residency) endpoints: +10% on token prices for models released on or after 2026-03-05 (FedRAMP endpoints also +10%, not modeled). Token-only factor so cost.web_search is unscaled. Source: https://developers.openai.com/api/docs/pricing (accessed 2026-11-12)
+# tools.updates: additional_tools add and replace (a redefinition, the call uses the new schema) work live 2026-11-17 on /v1/responses; removal is documented and works the same on gpt-6-astra and gpt-5.6-sol (announced in a developer message, live 2026-11-17). effort_updates: a configuration_update item is accepted live 2026-11-17 (https://developers.openai.com/api/docs/guides/reasoning#change-reasoning-mid-conversation).
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+store = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1_024 } }
+prompt_cache_key = true
+service_tier = ["priority", "ultrafast"]
+
+[api.responses]
+capabilities = { effort_updates = true, tools = { strict = true, search = true, updates = ["add", "remove", "replace"] } }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/openai/chat" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4, write = { "30m" = 10, "12h" = 20 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16
+cache = { read = 0.8, write = { "30m" = 20, "12h" = 40 } }
+
+[cost.text.output]
+price = 40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" }, date = { lt = "2027-03-01" } }
+factor = { text = 3 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" }, date = { gte = "2027-03-01" } }
+factor = { text = 6 }
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = { text = 1.1 }
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }
+
+[experimental.modes.pro]
+body = { reasoning = { mode = "pro" } }
+
+[experimental.modes.ultrafast]
+body = { service_tier = "ultrafast" }

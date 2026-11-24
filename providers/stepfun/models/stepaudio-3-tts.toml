@@ -1,0 +1,38 @@
+# Sources (accessed 2026-11-24):
+# - Model page: https://platform.stepfun.com/docs/zh/guides/models/stepaudio-3-tts
+# - Text-to-speech API (POST /v1/audio/speech; input up to 1,000 characters; response_format wav, mp3, flac, opus, pcm,
+#   default mp3): https://platform.stepfun.com/docs/zh/api-reference/audio/create-audio
+# - Pricing: CNY 95 per 1M billable characters, billed since 2026-11-23 12:00 UTC+8 (free before then):
+#   https://platform.stepfun.com/docs/zh/guides/pricing/details
+#   An English letter counts as 1 character, a Japanese character as 2.5, a Chinese character as 3, anything else as 1.
+#   Voice cloning and voice design (CNY 10 per voice) have no v2 field.
+# CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
+# release_date: StepAudio 3 series launched on 2026-09-15 (https://finance.sina.com.cn/stock/t/2026-09-15/doc-inirxats8546044.shtml).
+schema = 2
+v2_only = true
+type = "speech"
+name = "StepAudio 3 TTS"
+description = "Low-latency streaming speech generation with human-like delivery, laughter, hesitation and self-correction"
+family = "step-tts"
+open_weights = false
+release_date = "2026-09-15"
+
+[modalities]
+input = ["text"]
+output = ["audio/wav", "audio/mpeg", "audio/flac", "audio/opus", "audio/pcm"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 0
+output = 0
+
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
+
+[cost.text.input]
+unit = "character"
+price = 14.223

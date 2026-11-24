@@ -1,0 +1,27 @@
+# Voxtral TTS 3, API IDs voxtral-mini-tts-3-0 and voxtral-mini-tts-3, released 2026-10-20 (Public Preview), Premier license
+#   (no open weights), 35+ languages, zero-shot and professional voice cloning: https://docs.mistral.ai/models/voxtral-mini-tts-3-0
+# Release: https://docs.mistral.ai/getting-started/changelog (October 20, 2026, Voxtral 3 audio family)
+# Output formats (response_format pcm, wav, mp3, flac, opus): https://docs.mistral.ai/studio/audio/text_to_speech/speech
+schema = 2
+v2_only = true
+type = "speech"
+name = "Voxtral TTS 3"
+description = "Multilingual text-to-speech model with zero-shot and professional voice cloning and streaming"
+family = "voxtral-tts"
+open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["text"]
+output = ["audio/pcm", "audio/wav", "audio/mpeg", "audio/flac", "audio/opus"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
