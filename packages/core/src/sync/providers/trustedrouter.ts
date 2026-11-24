@@ -144,15 +144,141 @@ export function unstatedReasoningControls(model: TrustedRouterModel, baseModel: 
     && model.supported_parameters.includes("reasoning_effort")) {
     return "TrustedRouter lists no efforts but accepts reasoning_effort, so always-on is not established; manual authoring is needed";
   }
+  // OpenAI's API takes reasoning_effort on every o-series model, so a mandatory
+  // object with no efforts there (o3-pro) is a gap in the metadata, not always-on.
+  if (model.reasoning.mandatory && !model.reasoning.supported_efforts?.length && /^openai\/o\d/.test(baseModel)) {
+    return "TrustedRouter lists no efforts for this OpenAI o-series model, whose API takes reasoning_effort, so always-on is not established; manual authoring is needed";
+  }
   return undefined;
+}
+
+// Live probes of POST https://api.trustedrouter.com/v1/chat/completions, the
+// evidence AGENTS.md asks for where the catalog states nothing (or contradicts
+// itself) about reasoning. Each model got a request with no reasoning fields,
+// reasoning.enabled = false, reasoning.enabled = true, every reasoning.effort the
+// lab or same-id peers list, and an invalid effort ("banana"), and reasoning was
+// read from usage.completion_tokens_details.reasoning_tokens and the returned
+// reasoning text. The object below stands in for the row's `reasoning` object:
+// - toggle: reasoning.enabled = false returned no reasoning while the default or
+//   reasoning.enabled = true returned it. Efforts are not published where the
+//   invalid effort was accepted too and token use did not follow the level.
+// - efforts: the provider validated reasoning.effort (the invalid value came back
+//   400/422 naming the accepted values), so the field reaches it; `none` is listed
+//   only where it returned no reasoning.
+// - always-on (mandatory, no efforts): reasoning came back on every request,
+//   reasoning.enabled = false was ignored or rejected, and an invalid effort was
+//   accepted with no change in reasoning, so the caller has no control.
+// Models whose probes were inconclusive or failed to route stay held back.
+export const PROBED = "2026-11-24";
+type Effort = z.infer<typeof Efforts>[number];
+export interface ProbedReasoning {
+  mandatory: boolean;
+  supported_efforts?: Effort[];
+  /** What the probe showed, for the file header. */
+  note: string;
+}
+const TOGGLE = (route: string): ProbedReasoning => ({
+  mandatory: false,
+  note: `reasoning.enabled = false returned no reasoning and reasoning.enabled = true returned reasoning (routed to ${route}); `
+    + "efforts are not published: an invalid effort was accepted and reasoning did not follow the level",
+});
+const ALWAYS_ON = (route: string, off = "reasoning.enabled = false still returned reasoning"): ProbedReasoning => ({
+  mandatory: true,
+  note: `Always-on: reasoning came back on every request (routed to ${route}); ${off}, and an invalid effort was accepted with no change`,
+});
+export const PROBED_REASONING: Record<string, ProbedReasoning> = {
+  "deepseek/deepseek-v3.1": TOGGLE("deepinfra"),
+  "deepseek/deepseek-v4-flash-0731-fast": TOGGLE("venice"),
+  "deepseek/deepseek-v4-pro-0423": TOGGLE("deepinfra"),
+  "deepseek/deepseek-v4.1-flash-fast": TOGGLE("baseten"),
+  "moonshotai/kimi-k3-fast": TOGGLE("fireworks"),
+  "nvidia/nemotron-3.5-super-vl-120b-a12b": TOGGLE("baseten"),
+  "qwen/qwen3-omni-30b-a3b-thinking": TOGGLE("novita"),
+  "qwen/qwen3-vl-plus": TOGGLE("novita"),
+  "qwen/qwen3.5-flash": TOGGLE("atlas-cloud"),
+  "qwen/qwen3.5-plus": TOGGLE("atlas-cloud"),
+  "qwen/qwen3.7-plus": TOGGLE("atlas-cloud"),
+  "z-ai/glm-5.2-fast": TOGGLE("baseten"),
+  "z-ai/glm-5.3-fast": TOGGLE("baseten"),
+  "openai/o3": {
+    mandatory: true,
+    supported_efforts: ["high", "medium", "low"],
+    note: "reasoning.enabled = false returned 400 (\"this model cannot turn reasoning off\"); low, medium and high were accepted and an "
+      + "invalid effort returned OpenAI's 400 listing the accepted values (routed to openai; this route reports no reasoning token count)",
+  },
+  "mistralai/mistral-large-4": {
+    mandatory: true,
+    supported_efforts: ["high", "medium", "low"],
+    note: "low, medium and high were accepted with reasoning returned; none and an invalid effort returned Mistral's 422 listing "
+      + "high, low and medium, and reasoning.enabled = false was rejected (routed to mistral)",
+  },
+  "inception/mercury-3": {
+    mandatory: false,
+    supported_efforts: ["high", "medium", "low", "none"],
+    note: "none returned no reasoning and low, medium and high returned reasoning; an invalid effort returned Inception's 400 "
+      + "listing instant, low, medium and high; reasoning.enabled = false was ignored, so there is no separate toggle (routed to inception)",
+  },
+  "qwen/qwen3.6-flash": {
+    mandatory: false,
+    supported_efforts: ["xhigh", "high", "medium", "low", "minimal", "none"],
+    note: "none and minimal returned no reasoning and low to xhigh returned reasoning; an invalid effort and max returned Alibaba's 400 "
+      + "listing none, minimal, low, medium, high and xhigh; reasoning.enabled = false was ignored, so there is no separate toggle (routed to alibaba)",
+  },
+  "qwen/qwen3.7-flash": {
+    mandatory: false,
+    supported_efforts: ["xhigh", "high", "medium", "low", "minimal", "none"],
+    note: "none and minimal returned no reasoning and low to xhigh returned reasoning; an invalid effort and max returned Alibaba's 400 "
+      + "listing none, minimal, low, medium, high and xhigh; reasoning.enabled = false was ignored, so there is no separate toggle (routed to alibaba)",
+  },
+  "aion-labs/aion-2.0": ALWAYS_ON("aion-labs"),
+  "aion-labs/aion-3.0": ALWAYS_ON("aion-labs"),
+  "aion-labs/aion-3.0-mini": ALWAYS_ON("aion-labs"),
+  "deepseek/deepseek-v4.1-flash-1017-fast": ALWAYS_ON("nebius", "reasoning.enabled = false and effort none still returned reasoning"),
+  "google/gemini-2.5-pro": ALWAYS_ON("google-vertex"),
+  "minimax/minimax-m2": ALWAYS_ON("amazon-bedrock"),
+  "moonshotai/kimi-k2-thinking": ALWAYS_ON("amazon-bedrock and novita"),
+  "moonshotai/kimi-k2.7-code": ALWAYS_ON("azure"),
+  "moonshotai/kimi-k2.7-code-highspeed": ALWAYS_ON("kimi", "reasoning.enabled = false and effort none returned 400 (\"only type=enabled is allowed for this model\")"),
+  "openai/gpt-oss-safeguard-120b": ALWAYS_ON("tinfoil"),
+  "qwen/qwen3.6-35b-a3b": ALWAYS_ON("parasail"),
+  "stepfun/step-3.5-flash-2603": ALWAYS_ON("stepfun"),
+  "zai-org/glm-4.5-air": ALWAYS_ON("novita"),
+  "zai-org/glm-4.5v": ALWAYS_ON("novita"),
+  "zai-org/glm-4.6": ALWAYS_ON("novita", "reasoning.enabled = false and effort none still returned reasoning"),
+  "zai-org/glm-4.6v": ALWAYS_ON("novita"),
+  "zai-org/glm-4.7": ALWAYS_ON("novita"),
+  "zai-org/glm-5": ALWAYS_ON("novita", "reasoning.enabled = false and effort none still returned reasoning"),
+};
+
+// The row with a probed `reasoning` object in place of the catalog's. A row
+// that omitted the reasoning fields takes `reasoning`, as the probe showed.
+export function withProbedReasoning(model: TrustedRouterModel, probe: ProbedReasoning): TrustedRouterModel {
+  return {
+    ...model,
+    reasoning: { mandatory: probe.mandatory, supported_efforts: probe.supported_efforts },
+    supported_parameters: model.supported_parameters.includes("reasoning")
+      ? model.supported_parameters
+      : [...model.supported_parameters, "reasoning"],
+  };
 }
 
 // OpenAI GPT-5 and later (not gpt-oss). AGENTS.md asks every host file for these
 // models to state which custom-tool (freeform) formats each API accepts, from host
-// docs or a probe. TrustedRouter documents neither, so they are left for hand
-// authoring rather than published without that evidence.
+// docs or a probe. TrustedRouter documents neither, so a model is left for hand
+// authoring unless it is in FREEFORM_REJECTED below.
 export const GPT5_FREEFORM_UNSTATED =
   "TrustedRouter documents no custom-tool (freeform) formats for this GPT-5+ model; manual authoring is needed";
+// Probed on Chat Completions (the only API these files list) per AGENTS.md: one
+// custom tool per format (text, regex ZZ[0-9]{3}, the same grammar in lark) with
+// tool_choice "required". Each returned 501 not_supported_in_alpha on
+// tools[0].type from the router, so `freeform` is left out. The pro models priced
+// above $20 per million input tokens were not probed and stay held back.
+export const FREEFORM_REJECTED = new Set([
+  "openai/gpt-5", "openai/gpt-5-mini", "openai/gpt-5-nano", "openai/gpt-5-pro", "openai/gpt-5.1", "openai/gpt-5.2",
+  "openai/gpt-5.3-codex", "openai/gpt-5.4", "openai/gpt-5.4-mini", "openai/gpt-5.4-nano", "openai/gpt-5.5",
+  "openai/gpt-5.6-luna", "openai/gpt-5.6-sol", "openai/gpt-5.6-terra", "openai/gpt-6-astra", "openai/gpt-6-luna",
+  "openai/gpt-6-sol", "openai/gpt-6.1-sol", "openai/gpt-6.1-terra", "openai/gpt-6.2-astra", "openai/gpt-6.2-sol",
+]);
 export function isGpt5Plus(baseModel: string) {
   const major = /^openai\/gpt-(\d+)/.exec(baseModel)?.[1];
   return major !== undefined && Number(major) >= 5;
@@ -172,8 +298,6 @@ export const trustedrouter = {
   id: "trustedrouter",
   name: "TrustedRouter",
   modelsDir: "providers/trustedrouter/models",
-  // Lab bases are resolved per model; the catalog is not a source of lab facts.
-  trackMissingModels: false,
   // The header states each file's reasoning wire fields, so it follows the model.
   authoritativeHeaders: true,
   fetchModels: fetchTrustedRouterModels,
@@ -196,23 +320,26 @@ export const trustedrouter = {
     // the catalog stops listing is removed like any other model.
     if (model.id.startsWith(ROUTE_PREFIX)) {
       const authored = context.authored(model.id);
-      return authored === undefined ? undefined : { id: model.id, model: authored };
+      return authored === undefined ? undefined : { id: model.id, model: authored, keepHeader: true };
     }
     if (!publicChatModel(model)) return undefined;
     const existing = context.existing(model.id);
     const baseModel = existing?.base_model ?? resolveModelMetadataBaseModel(model.id) ?? openRouterBaseModel(model.id);
     if (baseModel === undefined) return undefined;
     // Thrown as a missing-controls error so an authored file is kept as written.
-    if (isGpt5Plus(baseModel)) {
+    const gpt5 = isGpt5Plus(baseModel);
+    if (gpt5 && !FREEFORM_REJECTED.has(model.id)) {
       throw new MissingReasoningOptionsError(model.id, GPT5_FREEFORM_UNSTATED);
     }
     // Writing no controls claims always-on, so a reasoner is left for hand
     // authoring (an authored file is kept as written) unless TrustedRouter states
-    // its controls affirmatively.
-    const unstated = unstatedReasoningControls(model, baseModel);
+    // its controls affirmatively or a live probe established them.
+    const probe = PROBED_REASONING[model.id];
+    const unstated = probe === undefined ? unstatedReasoningControls(model, baseModel) : undefined;
     if (unstated !== undefined) throw new MissingReasoningOptionsError(model.id, unstated);
+    const row = probe === undefined ? model : withProbedReasoning(model, probe);
     const labInput = labMimeList(baseModel);
-    const built = buildOpenRouterModel(toOpenRouterShape(model, baseModel), existing, baseModel);
+    const built = buildOpenRouterModel(toOpenRouterShape(row, baseModel), existing, baseModel);
     const options = built.reasoning_options ?? [];
     const efforts = options.find((option) => option.type === "effort");
     const cache = trustedRouterCache(model, baseModel);
@@ -227,11 +354,16 @@ export const trustedrouter = {
         + "# Prices are USD per million tokens; lab facts are inherited via base_model.\n"
         + (options.some((option) => option.type === "toggle") ? "# Toggle: reasoning.enabled = true|false\n" : "")
         + (efforts && "values" in efforts ? `# Effort: reasoning.effort = ${efforts.values.join("|")}\n` : "")
-        + (model.reasoning === undefined ? "" :
+        + (probe !== undefined
+          ? `# Reasoning probed live ${PROBED} on POST https://api.trustedrouter.com/v1/chat/completions: ${probe.note}.\n`
+          : model.reasoning === undefined ? "" :
           "# Reasoning controls are TrustedRouter's published `reasoning` object (OpenRouter's request shape): OpenRouter's\n"
           + "# efforts for the model, narrowed to what the gateway honors on every route (https://trustedrouter.com/docs).\n")
-        + (model.reasoning?.mandatory && options.length === 0 && takesReasoning(model, baseModel)
+        + (probe === undefined && model.reasoning?.mandatory && options.length === 0 && takesReasoning(model, baseModel)
           ? "# Always-on: the object marks reasoning mandatory with no efforts, and the row does not take reasoning_effort.\n"
+          : "")
+        + (gpt5
+          ? `# tools.freeform left out: Chat Completions, the only API listed, rejects custom tools. Text, regex ZZ[0-9]{3} and lark custom tools each returned 501 not_supported_in_alpha on tools[0].type (live ${PROBED} on this model).\n`
           : "")
         + (cache === undefined ? "" : "explicit" in cache
           ? `# Cache: explicit; Anthropic cache_control breakpoints pass through to the provider (${CACHE_DOCS}).\n`

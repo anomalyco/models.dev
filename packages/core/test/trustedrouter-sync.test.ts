@@ -1,11 +1,17 @@
 import { expect, test } from "bun:test";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
-import { syncProviderMatrix } from "../src/sync/index.js";
+import { syncProvider, syncProviderMatrix } from "../src/sync/index.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
   fetchTrustedRouterModels,
+  FREEFORM_REJECTED,
   GPT5_FREEFORM_UNSTATED,
   isGpt5Plus,
+  PROBED,
+  PROBED_REASONING,
   labMimeInput,
   trustedrouter,
   TrustedRouterResponse,
@@ -88,7 +94,24 @@ test("trustedrouter/* routes keep their authored files and are never generated",
   expect(trustedrouter.translateModel(route, { existing: () => authored, authored: () => authored })).toEqual({
     id: "trustedrouter/zdr",
     model: authored,
+    keepHeader: true,
   });
+});
+
+test("a hand-authored route file keeps its header through a sync", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "sync-trustedrouter-route-"));
+  try {
+    const authored = await readFile(path.join(import.meta.dir, "../../../providers/trustedrouter/models/trustedrouter/zdr.toml"), "utf8");
+    const header = "# Hand-authored routing alias; see https://trustedrouter.com/docs.\n";
+    await mkdir(path.join(dir, "trustedrouter"));
+    await Bun.write(path.join(dir, "trustedrouter/zdr.toml"), header + authored);
+    const route = model({ id: "trustedrouter/zdr", supported_parameters: [], trustedrouter: { route_kind: "zdr_pool" } });
+    const result = await syncProvider({ ...trustedrouter, modelsDir: dir, async fetchModels() { return { data: [route] }; } });
+    expect(result.deleted).toBe(0);
+    expect(await readFile(path.join(dir, "trustedrouter/zdr.toml"), "utf8")).toStartWith(header);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });
 
 test("generic input kinds take the lab's MIME entries, and match the lab list by inheriting it", () => {
@@ -158,13 +181,13 @@ test("a reasoner without stated controls is left for hand authoring, never writt
   const alias = model({ id: "anthropic/claude-opus-4-7", name: "Anthropic: Claude Opus 4.7", reasoning: undefined });
   expect(() => trustedrouter.translateModel(alias, none)).toThrow(MissingReasoningOptionsError);
   // Mandatory with no efforts while the row still takes reasoning_effort (o3): contradictory, not always-on.
-  const o3 = model({
-    id: "openai/o3",
-    name: "OpenAI: o3",
+  const o4 = model({
+    id: "openai/o4-mini",
+    name: "OpenAI: o4 Mini",
     supported_parameters: ["tools", "reasoning", "reasoning_effort", "include_reasoning"],
     reasoning: { mandatory: true, supported_efforts: [] },
   });
-  expect(() => trustedrouter.translateModel(o3, none)).toThrow("accepts reasoning_effort");
+  expect(() => trustedrouter.translateModel(o4, none)).toThrow("accepts reasoning_effort");
 });
 
 test("mandatory reasoning with no efforts on a row that refuses effort is an affirmative always-on claim", () => {
@@ -189,11 +212,13 @@ test("GPT-5+ OpenAI models are left for hand authoring: TrustedRouter states no 
   expect(isGpt5Plus("openai/gpt-oss-120b")).toBe(false);
   expect(isGpt5Plus("anthropic/claude-sonnet-4-5")).toBe(false);
 
+  // gpt-5.4-pro (over the probe price cap) was not probed.
   const gpt = model({
-    id: "openai/gpt-5.4",
-    name: "OpenAI: GPT-5.4",
-    reasoning: { mandatory: false, supported_efforts: ["xhigh", "high", "medium", "low", "none"] },
+    id: "openai/gpt-5.4-pro",
+    name: "OpenAI: GPT-5.4 Pro",
+    reasoning: { mandatory: true, supported_efforts: ["xhigh", "high", "medium"] },
   });
+  expect(FREEFORM_REJECTED.has(gpt.id)).toBe(false);
   expect(() => trustedrouter.translateModel(gpt, none)).toThrow(MissingReasoningOptionsError);
   expect(() => trustedrouter.translateModel(gpt, none)).toThrow(GPT5_FREEFORM_UNSTATED);
   const gpt41 = trustedrouter.translateModel(model({ id: "openai/gpt-4.1", name: "OpenAI: GPT-4.1", reasoning: undefined, supported_parameters: ["tools"] }), none)!;
@@ -235,4 +260,82 @@ test("a lab output cap above the row's context is bounded by that context", () =
   const translated = trustedrouter.translateModel(deepseek, none)!.model as { limit?: { context?: number; output?: number } };
   expect(translated.limit?.context).toBe(128_000);
   expect(translated.limit?.output).toBe(128_000);
+});
+
+test("GPT-5+ models whose custom tools were probed and rejected publish without freeform, citing the probe", () => {
+  const gpt = trustedrouter.translateModel(model({
+    id: "openai/gpt-5.4",
+    name: "OpenAI: GPT-5.4",
+    reasoning: { mandatory: false, supported_efforts: ["xhigh", "high", "medium", "low", "none"] },
+  }), none)!;
+  expect(JSON.stringify(gpt.model)).not.toContain("freeform");
+  expect(JSON.stringify(gpt.v2Set ?? {})).not.toContain("freeform");
+  expect((gpt.model as { reasoning_options?: unknown }).reasoning_options).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high", "xhigh"] },
+  ]);
+  expect(gpt.header).toContain(`# tools.freeform left out: Chat Completions, the only API listed, rejects custom tools.`);
+  expect(gpt.header).toContain(`501 not_supported_in_alpha on tools[0].type (live ${PROBED} on this model)`);
+});
+
+test("a probed toggle publishes the toggle for a row that omitted reasoning, with the probe in the header", () => {
+  expect(PROBED_REASONING["qwen/qwen3.5-plus"]).toMatchObject({ mandatory: false });
+  const qwen = model({
+    id: "qwen/qwen3.5-plus",
+    name: "Qwen: Qwen3.5 Plus",
+    supported_parameters: ["tools", "max_tokens"],
+    reasoning: undefined,
+  });
+  const translated = trustedrouter.translateModel(qwen, none)!;
+  // The lab reasons, so the factored file inherits `supported` and adds the toggle.
+  expect((translated.model as { reasoning?: boolean }).reasoning).not.toBe(false);
+  expect((translated.model as { reasoning_options?: unknown }).reasoning_options).toEqual([{ type: "toggle" }]);
+  expect(translated.header).toContain("# Toggle: reasoning.enabled = true|false\n");
+  expect(translated.header).toContain(`# Reasoning probed live ${PROBED} on POST https://api.trustedrouter.com/v1/chat/completions:`);
+  expect(translated.header).not.toContain("# Effort:");
+});
+
+test("probed provider-validated efforts replace a contradictory catalog object", () => {
+  // o3's row marks reasoning mandatory with no efforts but takes reasoning_effort.
+  const o3 = trustedrouter.translateModel(model({
+    id: "openai/o3",
+    name: "OpenAI: o3",
+    supported_parameters: ["tools", "reasoning", "reasoning_effort", "include_reasoning"],
+    reasoning: { mandatory: true, supported_efforts: [] },
+  }), none)!;
+  expect((o3.model as { reasoning_options?: unknown }).reasoning_options).toEqual([{ type: "effort", values: ["low", "medium", "high"] }]);
+  expect(o3.header).toContain("# Effort: reasoning.effort = low|medium|high\n");
+  expect(o3.header).not.toContain("# Toggle:");
+});
+
+test("a probed always-on model publishes no controls even though its row takes reasoning_effort", () => {
+  const kimi = trustedrouter.translateModel(model({
+    id: "moonshotai/kimi-k2.7-code",
+    name: "MoonshotAI: Kimi K2.7 Code",
+    supported_parameters: ["tools", "reasoning", "reasoning_effort", "include_reasoning"],
+    reasoning: { mandatory: true, supported_efforts: [] },
+  }), none)!;
+  expect((kimi.model as { reasoning?: boolean }).reasoning).not.toBe(false);
+  expect((kimi.model as { reasoning_options?: unknown[] }).reasoning_options ?? []).toEqual([]);
+  expect(kimi.header).toContain("Always-on: reasoning came back on every request");
+  expect(kimi.header).not.toContain("# Always-on: the object marks");
+});
+
+test("an OpenAI o-series row marked mandatory with no efforts is held back, not written as always-on", () => {
+  const o3pro = model({
+    id: "openai/o3-pro",
+    name: "OpenAI: o3 Pro",
+    supported_parameters: ["tools", "reasoning", "include_reasoning"],
+    reasoning: { mandatory: true, supported_efforts: [] },
+  });
+  expect(PROBED_REASONING[o3pro.id]).toBeUndefined();
+  expect(() => trustedrouter.translateModel(o3pro, none)).toThrow(MissingReasoningOptionsError);
+  expect(() => trustedrouter.translateModel(o3pro, none)).toThrow("o-series");
+});
+
+test("models whose probes were inconclusive or failed to route stay held back", () => {
+  for (const id of ["anthropic/claude-opus-4-7", "qwen/qwen3.8-max", "NousResearch/Hermes-4-405B"]) {
+    expect(PROBED_REASONING[id]).toBeUndefined();
+  }
+  const opus = model({ id: "anthropic/claude-opus-4-7", name: "Anthropic: Claude Opus 4.7", reasoning: undefined });
+  expect(() => trustedrouter.translateModel(opus, none)).toThrow(MissingReasoningOptionsError);
 });

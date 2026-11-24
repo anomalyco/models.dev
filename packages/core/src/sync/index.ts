@@ -165,6 +165,11 @@ export interface SyncProvider<SourceModel> {
      */
     header?: string;
     /**
+     * Keep the existing file's leading comments even when authoritativeHeaders
+     * is enabled, for files the module keeps as written (hand-authored aliases).
+     */
+    keepHeader?: boolean;
+    /**
      * v2 values the source states that v1 fields can't carry (e.g. a price per
      * cache TTL), keyed by dotted path as in `base_model_omit`. Each replaces
      * the value at its path in a v2 file after the v1 patch, and a v2 file is
@@ -509,7 +514,7 @@ export async function syncProvider<SourceModel>(
     const translatedHeader = translated.header === undefined
       ? undefined
       : leadingComments(translated.header);
-    const header = provider.authoritativeHeaders
+    const header = provider.authoritativeHeaders && translated.keepHeader !== true
       ? keepInheritedNote(existing.get(relativePath)?.header, translatedHeader ?? "")
       : (existing.get(relativePath)?.header || translatedHeader) ?? "";
     desired.set(relativePath, {
