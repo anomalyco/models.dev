@@ -1,13 +1,5 @@
 schema = 2
-name = "Muse Ember"
-description = "Meta's Muse Ember is the smallest and most efficient Muse model, built for the work agents repeat all day: tool calls, coding-agent subtasks, routing, and extraction. It accepts text, images, audio, video, and PDF documents across a one-million-token context window, supports tool calling and structured output, and always reasons before answering."
-family = "muse-ember"
-open_weights = false
-release_date = "2026-11-11"
-
-[modalities]
-input = ["text", "image", "video", "audio", "application/pdf"]
-output = ["text"]
+base_model = "meta/muse-ember-1.0"
 
 [capabilities]
 tools = { supported = true }
@@ -15,7 +7,6 @@ reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "x
 structured_output = true
 
 [limit]
-context = 1_048_576
 input = 1_048_576
 output = 1_048_576
 
