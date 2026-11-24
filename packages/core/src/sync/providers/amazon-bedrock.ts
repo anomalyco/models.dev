@@ -1,7 +1,7 @@
 import path from "node:path";
 import { z } from "zod";
 
-import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedModel, SyncedV2Model } from "../index.js";
 import { modelMetadata } from "./openrouter.js";
 
 // AWS's public price list, no key. Foundation models sold through Bedrock (Anthropic, OpenAI, Cohere, ...) are in
@@ -9,8 +9,8 @@ import { modelMetadata } from "./openrouter.js";
 // https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/using-ppslong.html
 const OFFERS = ["AmazonBedrockFoundationModels", "AmazonBedrock"];
 const REGION = "us-east-1";
-const offerURL = (offer: string) =>
-  `https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/${offer}/current/${REGION}/index.json`;
+const offerURL = (offer: string, region = REGION) =>
+  `https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/${offer}/current/${region}/index.json`;
 const MODELS_DIR = path.resolve(import.meta.dir, "../../../../../providers/amazon-bedrock/models");
 
 const Offer = z.object({
@@ -245,6 +245,168 @@ export function buildBedrockModel(model: BedrockModel, authored: ExistingModel):
   return { ...authored, cost: next } as SyncedModel;
 }
 
+
+// Embedding, speech and video models, priced per token, image or second. The price list names them in its own words
+// (some Titan rows have no model at all), so each file lists the usage types of its prices, with the AWS model name
+// where a marketplace usage type is shared between models. The prices replace the file's v2 cost at each path;
+// everything else stays hand-written, and files for other geographies (eu., ...) aren't in these offers.
+// Usage types are written without their region prefix: `USE1-MP:USE1_InputTokenCount-Units` is `MP:InputTokenCount-Units`.
+export interface MediaPrice {
+  usage: string;
+  // The price list's unit, compared case-insensitively, and what one unit costs as a multiple of the catalog price.
+  unit: string;
+  scale: number;
+}
+
+export interface MediaFile {
+  offer: "AmazonBedrock" | "AmazonBedrockFoundationModels";
+  region: "us-east-1" | "us-west-2";
+  model?: string;
+  prices: Record<string, MediaPrice>;
+}
+
+const perK = (usage: string): MediaPrice => ({ usage, unit: "1K tokens", scale: 1000 });
+const perM = (usage: string): MediaPrice => ({ usage, unit: "1M tokens", scale: 1 });
+const each = (usage: string, unit: string): MediaPrice => ({ usage, unit, scale: 1 });
+
+const sonic = (name: string): MediaFile["prices"] => ({
+  "cost.text.input.price": perK(`${name}-text-input-tokens`),
+  "cost.text.output.price": perK(`${name}-text-output-tokens`),
+  "cost.audio.input.price": perK(`${name}-speech-input-tokens`),
+  "cost.audio.output.price": perK(`${name}-speech-output-tokens`),
+});
+const embedV4: MediaFile = { offer: "AmazonBedrockFoundationModels", region: "us-east-1", model: "Embed v4", prices: { "cost.text.input.price": perM("MP:InputTokenCount-Units") } };
+const marengoImage = { "cost.image.input.price": each("MP:InputImageCount-Units", "Input Images") };
+
+export const MEDIA_FILES: Record<string, MediaFile> = {
+  "amazon.titan-embed-text-v1": { offer: "AmazonBedrock", region: "us-east-1", prices: { "cost.text.input.price": perK("TitanEmbeddingsG1-Text-input-tokens") } },
+  "amazon.titan-embed-text-v2:0": { offer: "AmazonBedrock", region: "us-east-1", prices: { "cost.text.input.price": perK("TitanEmbeddingV2-Text-input-tokens") } },
+  "amazon.titan-embed-image-v1": {
+    offer: "AmazonBedrock",
+    region: "us-east-1",
+    prices: {
+      "cost.text.input.price": perK("TitanEmbeddingsG1-Image-input-tokens"),
+      "cost.image.input.price": each("TitanEmbeddingsG1-Image-input-image", "Images Processed"),
+    },
+  },
+  "amazon.nova-2-multimodal-embeddings-v1:0": {
+    offer: "AmazonBedrock",
+    region: "us-east-1",
+    prices: {
+      "cost.text.input.price": perK("NovaMultiModalEmbeddings-input-tokens"),
+      "cost.image.input.price": each("NovaMultiModalEmbeddings-input-standard-image", "Images Processed"),
+      "cost.video.input.price": each("NovaMultiModalEmbeddings-input-video-second", "seconds"),
+      "cost.audio.input.price": each("NovaMultiModalEmbeddings-input-audio-second", "seconds"),
+    },
+  },
+  "amazon.nova-2-sonic-v1:0": { offer: "AmazonBedrock", region: "us-east-1", prices: sonic("NovaSonic2.0") },
+  "amazon.nova-2-5-sonic": { offer: "AmazonBedrock", region: "us-east-1", prices: sonic("NovaSonic2.5") },
+  ...Object.fromEntries(["Embed English", "Embed Multilingual"].map((model) => [
+    `cohere.${model.toLowerCase().replace(" ", "-")}-v3`,
+    {
+      offer: "AmazonBedrockFoundationModels",
+      region: "us-east-1",
+      model,
+      prices: { "cost.text.input.price": perM("MP:InputTokenCount-Units"), "cost.image.input.price": each("MP:InputImageCount-Units", "Input Images") },
+    } satisfies MediaFile,
+  ])),
+  "cohere.embed-v4:0": embedV4,
+  "us.cohere.embed-v4:0": embedV4,
+  "twelvelabs.marengo-embed-3-0-v1:0": {
+    offer: "AmazonBedrockFoundationModels",
+    region: "us-east-1",
+    model: "Marengo Embed 3.0",
+    prices: {
+      ...marengoImage,
+      "cost.video.input.price": each("MP:inputVideoSecond-Units", "seconds"),
+      "cost.audio.input.price": each("MP:inputAudioSecond-Units", "seconds"),
+    },
+  },
+  "us.twelvelabs.marengo-embed-3-0-v1:0": { offer: "AmazonBedrockFoundationModels", region: "us-east-1", model: "Marengo Embed 3.0", prices: marengoImage },
+  "luma.ray-v2:0": {
+    offer: "AmazonBedrockFoundationModels",
+    region: "us-west-2",
+    model: "Ray v2",
+    prices: {
+      // 720p, the base price; the file's first override is 540p.
+      "cost.video.output.price": each("MP:videoMediumFpsHdRes-Units", "seconds"),
+      "cost.video.output.overrides.0.price": each("MP:videoMediumFpsStandardRes-Units", "seconds"),
+    },
+  },
+};
+
+const MEDIA_OFFERS = [...new Set(Object.values(MEDIA_FILES).map((file) => `${file.offer}/${file.region}`))];
+
+export interface OfferRow {
+  model?: string;
+  usage: string;
+  unit: string;
+  usd: number;
+}
+
+/** Every on-demand price row of an offer file, with its usage type's region prefix removed. */
+export function offerRows(raw: unknown): OfferRow[] {
+  const offer = Offer.parse(raw);
+  const rows: OfferRow[] = [];
+  for (const product of Object.values(offer.products)) {
+    const usageType = product.attributes.usagetype;
+    if (usageType === undefined) continue;
+    const usage = usageType.replace(/^[A-Z0-9]+-/, "").replace(/^MP:[A-Z0-9]+_/, "MP:");
+    for (const term of Object.values(offer.terms.OnDemand[product.sku] ?? {})) {
+      for (const dimension of Object.values(term.priceDimensions)) {
+        rows.push({ model: product.attributes.model, usage, unit: dimension.unit, usd: Number(dimension.pricePerUnit.USD) });
+      }
+    }
+  }
+  return rows;
+}
+
+export interface BedrockMediaModel {
+  id: string;
+  media: true;
+  // Catalog prices by v2 path, or what's missing when a row isn't in the price list exactly once.
+  prices: Record<string, number>;
+  missing: string[];
+}
+
+/** Catalog prices for each media file, from the rows of the offer it's priced in. */
+export function mediaModels(rows: Map<string, OfferRow[]>, files: Record<string, MediaFile> = MEDIA_FILES): BedrockMediaModel[] {
+  return Object.entries(files).map(([id, file]) => {
+    const offerRows = rows.get(`${file.offer}/${file.region}`) ?? [];
+    const prices: Record<string, number> = {};
+    const missing: string[] = [];
+    for (const [pricePath, price] of Object.entries(file.prices)) {
+      const matches = offerRows.filter((row) => row.usage === price.usage
+        && (file.model === undefined || row.model === file.model)
+        && row.unit.toLowerCase() === price.unit.toLowerCase());
+      const values = [...new Set(matches.map((row) => Number((row.usd * price.scale).toFixed(6))))];
+      if (values.length === 1 && Number.isFinite(values[0])) prices[pricePath] = values[0]!;
+      else missing.push(`${pricePath} (${file.offer} ${file.region} ${file.model ?? ""} ${price.usage}: ${values.length} prices)`);
+    }
+    return { id, media: true as const, prices, missing };
+  });
+}
+
+function setPath(target: Record<string, unknown>, dotted: string, value: number) {
+  const keys = dotted.split(".");
+  let node: Record<string, unknown> = target;
+  for (const key of keys.slice(0, -1)) {
+    const next = node[key];
+    if (typeof next !== "object" || next === null) return false;
+    node = next as Record<string, unknown>;
+  }
+  node[keys.at(-1)!] = value;
+  return true;
+}
+
+/** The file's v2 body with its media prices replaced, or undefined when a price or its place in the file is missing. */
+export function buildMediaModel(model: BedrockMediaModel, file: Record<string, unknown> | undefined): SyncedV2Model | undefined {
+  if (file === undefined || model.missing.length > 0) return undefined;
+  const v2 = structuredClone(file);
+  for (const [pricePath, price] of Object.entries(model.prices)) if (!setPath(v2, pricePath, price)) return undefined;
+  return { id: model.id, v2 };
+}
+
 export const amazonBedrock = {
   id: "amazon-bedrock",
   name: "Amazon Bedrock",
@@ -256,6 +418,11 @@ export const amazonBedrock = {
   sourceID(model) {
     return model.id;
   },
+  sourceNotices(models) {
+    return models.flatMap((model) => "media" in model && model.missing.length > 0
+      ? [`Bedrock price list is missing prices for ${model.id}, so its file is unchanged: ${model.missing.join("; ")}`]
+      : []);
+  },
   skippedNotice() {
     return [];
   },
@@ -263,24 +430,30 @@ export const amazonBedrock = {
     return [];
   },
   async fetchModels() {
-    const offers = await Promise.all(OFFERS.map(async (offer) => {
-      const response = await fetch(offerURL(offer));
-      if (!response.ok) throw new Error(`Bedrock price list ${offer} failed: ${response.status} ${response.statusText}`);
-      return response.json();
-    }));
+    const keys = [...new Set([...OFFERS.map((offer) => `${offer}/${REGION}`), ...MEDIA_OFFERS])];
+    const offers = Object.fromEntries(await Promise.all(keys.map(async (key) => {
+      const [offer, region] = key.split("/") as [string, string];
+      const response = await fetch(offerURL(offer, region));
+      if (!response.ok) throw new Error(`Bedrock price list ${key} failed: ${response.status} ${response.statusText}`);
+      return [key, await response.json()] as const;
+    })));
     return { offers, files: await localFiles() };
   },
   parseModels(raw) {
-    const { offers, files } = raw as { offers: unknown[]; files: LocalFile[] };
+    const { offers, files } = raw as { offers: Record<string, unknown>; files: LocalFile[] };
     const prices = new Map<string, BedrockPrice[]>();
-    for (const offer of offers) for (const [name, rows] of offerPrices(offer)) prices.set(name, [...(prices.get(name) ?? []), ...rows]);
+    for (const offer of OFFERS) {
+      for (const [name, rows] of offerPrices(offers[`${offer}/${REGION}`])) prices.set(name, [...(prices.get(name) ?? []), ...rows]);
+    }
     if (prices.size === 0) throw new Error("Bedrock price list had no token prices; refusing to sync");
-    return matchModels(prices, files);
+    const rows = new Map(Object.entries(offers).map(([key, offer]) => [key, offerRows(offer)]));
+    return [...matchModels(prices, files.filter((file) => MEDIA_FILES[file.id] === undefined)), ...mediaModels(rows)];
   },
   translateModel(model, context) {
+    if ("media" in model) return buildMediaModel(model, context.v2?.(model.id));
     const authored = context.authored(model.id);
     if (authored === undefined) return undefined;
     const built = buildBedrockModel(model, authored);
     return built === undefined ? undefined : { id: model.id, model: built };
   },
-} satisfies SyncProvider<BedrockModel>;
+} satisfies SyncProvider<BedrockModel | BedrockMediaModel>;

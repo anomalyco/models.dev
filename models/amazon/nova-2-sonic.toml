@@ -1,0 +1,28 @@
+# Sources:
+# - Model card (launch Dec 2, 2025; speech and text in and out; context 1M tokens, max output 64K):
+#   https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-2-sonic.html
+# - Speech-to-speech over a bidirectional stream, function calling: https://docs.aws.amazon.com/nova/latest/nova2-userguide/using-conversational-speech.html
+# - Audio is mediaType "audio/lpcm"; sessionStart inferenceConfiguration takes maxTokens, topP and temperature (no topK):
+#   https://docs.aws.amazon.com/nova/latest/nova2-userguide/sonic-input-events.html
+schema = 2
+v2_only = true
+type = "realtime"
+name = "Nova 2 Sonic"
+description = "Amazon speech-to-speech model for real-time voice conversations with tool calling"
+open_weights = false
+release_date = "2025-12-02"
+
+[modalities]
+input = ["text", "audio/lpcm"]
+output = ["text", "audio/lpcm"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 65_536

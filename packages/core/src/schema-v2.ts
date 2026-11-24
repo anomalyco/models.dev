@@ -461,6 +461,12 @@ export const ApiProtocolV2Values = [
   // Vertex AI `publishers/google/models/{model}:predict` (`instances` in, `predictions` out).
   "predict",
   "contextualized-embeddings",
+  // Amazon Bedrock InvokeModel: `POST /model/{modelId}/invoke` with the model's own request body.
+  "invoke-model",
+  // Amazon Bedrock StartAsyncInvoke: `POST /async-invoke` (`modelInput` in, results written to S3).
+  "start-async-invoke",
+  // Amazon Bedrock InvokeModelWithBidirectionalStream: `POST /model/{modelId}/invoke-with-bidirectional-stream` (HTTP/2 event stream).
+  "invoke-model-with-bidirectional-stream",
   "fim",
   "moderations",
   "ocr",
