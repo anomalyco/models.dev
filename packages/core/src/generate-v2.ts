@@ -413,7 +413,7 @@ const DEFAULT_NPM_BASE_URLS: Record<string, string> = {
   "watsonx-ai-provider": "https://${WATSONX_REGION}.ml.cloud.ibm.com",
   // `qvac serve --openai` listens on port 11434 by default (@qvac/cli 0.16.0 README).
   "@qvac/ai-sdk-provider": "http://127.0.0.1:11434/v1",
-  "@jerome-benoit/sap-ai-provider-v2": "${AICORE_DEPLOYMENT_URL}",
+  "@jerome-benoit/sap-ai-provider": "${AICORE_DEPLOYMENT_URL}",
   "gitlab-ai-provider": "https://gitlab.com/api/v4",
 };
 
