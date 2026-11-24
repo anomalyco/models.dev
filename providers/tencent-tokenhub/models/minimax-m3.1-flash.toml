@@ -1,0 +1,25 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 0.15, output 0.6, cache hit 0.015).
+#   China list: https://cloud.tencent.com/document/product/1823/130055
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17) (1M context, 512K output; no structured output listed).
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write price is published.
+# API: https://cloud.tencent.com/document/product/1823/132246
+# Effort: low|medium|high|xhigh|max (default max); thinking cannot be disabled. Tencent's reasoning guide
+#   (https://cloud.tencent.com/document/product/1823/131208) doesn't list M3.1 Flash yet; controls follow
+#   the MiniMax entry for this model.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6
