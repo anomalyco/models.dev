@@ -1,6 +1,7 @@
 # Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
+# Reasoning field: reasoning_content, the field Inkling's chat template reads back (https://huggingface.co/thinkingmachines/Inkling-Small). Kilo routes to Vercel AI Gateway or OpenRouter, and both read reasoning_content back on earlier assistant turns for Inkling Small (live 2026-11-23).
 schema = 2
 base_model = "thinkingmachines/inkling-small"
 description = "Inkling Small is an open-weight multimodal mixture-of-experts model from Thinking Machines Lab, with 12B active parameters out of 276B total. It is positioned as the smaller, more efficient member of..."
@@ -13,6 +14,9 @@ structured_output = false
 [limit]
 context = 524_288
 output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.45

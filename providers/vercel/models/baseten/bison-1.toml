@@ -1,0 +1,28 @@
+schema = 2
+type = "decision"
+name = "Bison-1"
+description = "Bison-1 is a 31B decision model from Baseten's Base Labs, post-trained from Gemma 4 31B for classification, routing, and scoring. It answers choice, yes/no, and ordered scoring questions about text and images with probabilities over predefined options rather than generated text, with a 131,072-token context window."
+open_weights = false
+release_date = "2026-11-20"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[limit]
+context = 131_072
+output = 0
+
+[api.decisions]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/decisions" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0
