@@ -1,0 +1,26 @@
+# Price: lowest of 10 supplier resource(s) on https://cysuo.com/model-market/deepseek-v4.1-flash-1017?region=guangzhou
+# (accessed 2026-11-23); the API key's resource configuration picks the supplier. Cheapest: supplier 1060.
+# CNY per 1M tokens: input 0.68, output 2.72, cache read 0.0136.
+# CNY→USD rate: 6.681345, 2026-11-23, source: https://open.er-api.com/v6/latest/USD
+# Limit: the model page lists max output 1,048,576, above its 1M context; capped at the context (1,000,000).
+# Reasoning: reasoning_effort, the host's documented levels (low|medium|high) that the lab's own API also takes; see provider.toml.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 1_000_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.101776
+cache = { read = 0.002036 }
+
+[cost.text.output]
+price = 0.407104

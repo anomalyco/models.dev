@@ -1,0 +1,17 @@
+# Price: USD per 1M tokens, https://cysuo.ai/model-market/gemini-3.5-flash-lite?region=singapore (accessed 2026-11-23).
+# Reasoning: reasoning_effort, the host's documented levels (low|medium|high) that the lab's own API also takes; see provider.toml.
+schema = 2
+base_model = "google/gemini-3.5-flash-lite"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 2.5

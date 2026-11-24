@@ -1,0 +1,19 @@
+# Cysuo international site (cysuo.ai), run by Baidu AI Cloud. Prices are listed in USD.
+# OpenAI-compatible POST /v1/chat/completions with `Authorization: Bearer <API_KEY>`.
+# Synchronous Chat and Images APIs are served in three regions: Singapore https://api-sg.cysuo.ai
+# (the docs' example, used here), Germany https://api-de.cysuo.ai and California https://api-ca.cysuo.ai.
+# https://cysuo.ai/en/docs/api-reference/guide (accessed 2026-11-23)
+# Keys are created per region (Singapore, California, Germany); use a Singapore key.
+# The China site (cysuo.com) has its own accounts and keys.
+# Raw Chat: $.reasoning_effort = "low"|"medium"|"high"; responses carry message.reasoning_content.
+# Gemini 2.5 models take a thinking budget on Google's API, not these levels, so they list no control.
+# https://cysuo.ai/en/docs/api-reference/chat/openai/chatcompletions (accessed 2026-11-23)
+# Models and prices: GET https://cysuo.ai/kog/v1/te/market/model/list and the /model-market/<id> pages.
+# Only Singapore models are listed; GLM models are served in Germany only and are left out.
+# https://cysuo.ai/docs/userguide/apikey-oversea (accessed 2026-11-23)
+name = "Cysuo"
+env = ["CYSUO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api-sg.cysuo.ai/v1"
+doc = "https://cysuo.ai/docs"

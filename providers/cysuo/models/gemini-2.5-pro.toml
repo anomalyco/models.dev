@@ -1,0 +1,17 @@
+# Price: USD per 1M tokens, https://cysuo.ai/model-market/gemini-2.5-pro?region=singapore (accessed 2026-11-23).
+# Reasoning: no effort level both the host documents (low|medium|high) and the lab's own API takes; no caller control listed.
+schema = 2
+base_model = "google/gemini-2.5-pro"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 10
