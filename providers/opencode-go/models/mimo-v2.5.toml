@@ -1,6 +1,6 @@
 # Pricing and endpoint (Chat Completions): https://opencode.ai/v2/docs/console/go/ (accessed 2026-10-21).
 # Deprecated: GET https://opencode.ai/inference/go/v1/models no longer lists this ID, and https://opencode.ai/docs/go lists only MiMo V2.6 Pro and Flash (2026-11-24).
-# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/xiaomi/models/mimo-v2.5.toml (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow Xiaomi's own API for mimo-v2.5 (none set; retired there 2026-10-21: https://mimo.mi.com/static/docs/updates/deprecate.md) (Go is a passthrough: opencode.ai/inference/go/... proxies the same upstreams, https://opencode.ai/v2/docs/console/go/).
 schema = 2
 base_model = "xiaomi/mimo-v2.5"
 name = "MiMo V2.5"
