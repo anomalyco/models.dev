@@ -33,7 +33,8 @@
 #   (https://api-docs.deepseek.com/quick_start/pricing) and documented at https://api-docs.deepseek.com/guides/responses_api
 #   (reasoning.effort, tool_choice none|auto|required|named).
 # Responses toggle and effort: reasoning.effort = none|low|high|max, where none turns thinking off
-#   (https://api-docs.deepseek.com/guides/thinking_mode); Chat Completions and Messages use thinking.type for the toggle.
+#   (https://api-docs.deepseek.com/guides/thinking_mode, and the reasoning.effort = "none" example in the Responses guide);
+#   Chat Completions and Messages use thinking.type for the toggle.
 # freeform left out: Responses accepts only a custom tool named apply_patch; other custom tool names return 400.
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
