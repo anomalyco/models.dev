@@ -4,6 +4,7 @@
 # Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 # max_tokens_field: ignores max_completion_tokens, max_tokens caps output (live probe 2026-10-24); Model Studio lists it outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions)
 # Tools: tool_choice auto|none|named on every API; required (Messages `any`) is accepted but ignored (live 2026-10-26); no strict tool mode (sources in provider.toml).
+# Cache read: implicit cache hits $0.32 per 1M (catalog API GET https://dashscope-intl.aliyuncs.com/api/v1/models, input_token_cache, accessed 2026-11-24).
 schema = 2
 name = "Qwen Max"
 description = "Flagship Qwen model for complex reasoning, coding, and agentic workflows"

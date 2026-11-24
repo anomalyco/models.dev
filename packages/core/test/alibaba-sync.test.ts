@@ -32,7 +32,8 @@ test("Alibaba keeps a file price that rounds to the listed one", () => {
   const built = buildAlibabaModel({ input: 0.063, output: 2, bands: [] }, authored) as unknown as ExistingModel;
   expect(built.cost).toEqual({ input: 0.0625, output: 2, cache_read: 0.01 });
   // A whole-number listed price is exact to three decimals too, so 2.5 doesn't pass for 3.
-  expect((buildAlibabaModel({ input: 3, output: 2, bands: [] }, authored) as unknown as ExistingModel).cost?.input).toBe(3);
+  const close = { cost: { input: 2.5, output: 2 } } as unknown as ExistingModel;
+  expect((buildAlibabaModel({ input: 3, output: 2, bands: [] }, close) as unknown as ExistingModel).cost?.input).toBe(3);
 });
 
 test("Alibaba updates context bands only where the file has one at the same threshold", () => {
@@ -197,4 +198,18 @@ test("Alibaba writes drifted explicit cache prices through the sync runner", asy
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
+});
+
+test("Alibaba matches overrides by their full condition when restoring cache prices", () => {
+  const price: AlibabaPrice = { input: 1, output: 4, bands: [] };
+  const original = { overrides: [
+    { when: { service_tier: { equals: "flex" } }, cache: { write: 0.5, explicit: { write: 1 } } },
+    { when: { service_tier: { equals: "priority" } }, cache: { write: 2, explicit: { write: 4 } } },
+  ] };
+  const overrides = explicitCacheV2Set(price, original)["cost.text.input.overrides"] as (value: unknown) => unknown;
+  const current = [
+    { when: { service_tier: { equals: "flex" } }, cache: { write: 9, explicit: { write: 9 } } },
+    { when: { service_tier: { equals: "priority" } }, cache: { write: 9, explicit: { write: 9 } } },
+  ];
+  expect(overrides(current)).toEqual(original.overrides);
 });

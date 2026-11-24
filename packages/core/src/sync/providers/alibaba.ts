@@ -183,6 +183,15 @@ function patchExplicit(current: Doc | undefined, band: AlibabaBandPrice): Doc | 
   return next;
 }
 
+// The same override condition: equal, or context tiers at the same size whatever the operator (as the runner's sameTier).
+function sameWhen(a: Doc | undefined, b: Doc | undefined): boolean {
+  const stable = (value: unknown): string => JSON.stringify(value, (_key, item) =>
+    item !== null && typeof item === "object" && !Array.isArray(item) ? Object.fromEntries(Object.entries(item).sort(([x], [y]) => x.localeCompare(y))) : item);
+  if (stable(a) === stable(b)) return true;
+  const size = (when: Doc | undefined) => (Object.keys(when ?? {}).length === 1 ? when?.context?.gt ?? when?.context?.gte : undefined);
+  return size(a) !== undefined && size(a) === size(b);
+}
+
 /**
  * v2 values for explicit cache prices, at the base price and in each context override the file already has. Given the
  * file's input cost, they start from it: the runner's v1 patch puts v1's single cache write at the top level of each
@@ -200,7 +209,7 @@ export function explicitCacheV2Set(price: AlibabaPrice, original?: Doc): Record<
     ...(original === undefined ? {} : { "cost.text.input.cache.write": original.cache?.write }),
     "cost.text.input.cache.explicit": (current: Doc | undefined) => patchExplicit(from(current, (input) => input.cache?.explicit), price),
     "cost.text.input.overrides": (current: Doc[] | undefined) => current?.map((override) => {
-      const before = (original?.overrides as Doc[] | undefined)?.find((item) => contextSize(item.when) === contextSize(override.when));
+      const before = (original?.overrides as Doc[] | undefined)?.find((item) => sameWhen(item.when, override.when));
       override = { ...override, ...(override.cache === undefined ? {} : { cache: restoreWrite(override.cache, before?.cache) }) };
       if (before?.cache?.explicit !== undefined) override = { ...override, cache: { ...override.cache, explicit: before.cache.explicit } };
       const band = price.bands.find((item) => item.above === contextSize(override.when));
