@@ -7,11 +7,10 @@
 # none -- K2.8 Preview requests with thinking disabled are served by K2.8
 # Preview without thinking, so no separate thinking.type toggle is authored.
 # Not re-measured on this endpoint; adjust if wire probing shows the levels
-# collapsing as they do on kimi-k2.7-code (see that file).
-# Output limit: the Kimi Code docs only specify context (1M); 32_768 is the
-# value kept by the K2.8-backed kimi-for-coding entries on Kimi's own coding
-# relays (kimi-code-plan-cn / -global). The v1 catalog requires limit.output,
-# so it is overridden here rather than left unset.
+# collapsing as they did on kimi-k2.7-code (measured 2026-08, see provider.toml).
+# Output limit: the plan overview lists Kimi-K2.8-Preview at 1024K context and 1024K max output
+# (https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-plan-overview.md,
+# accessed 2026-11-24). The lab file sets no output limit, so it is set here.
 schema = 2
 base_model = "moonshotai/kimi-k2.8-preview"
 
@@ -20,7 +19,7 @@ reasoning = { supported = true, default = { type = "effort", value = "max" }, ef
 structured_output = true
 
 [limit]
-output = 32_768
+output = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

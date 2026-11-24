@@ -1,22 +1,22 @@
 # Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-character-260628`
 # CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = minimal|low|high, and it must be paired with
-# thinking.type=enabled. This model defaults thinking OFF, so a graded effort sent
-# on its own is rejected: "Invalid combination of reasoning_effort and thinking
-# type: low + disabled". 'none' is likewise unavailable; 'minimal' is the off value.
-# Only three levels are separable. With thinking enabled, n=4 runs per level on a
-# prompt hard enough to consume the budget:
-#   minimal 0 0 0 0                 low  1347/1258/1166/1149
-#   high    1709/2696/1695/1513     max  2304/1881/1985/1480
-# max overlaps high rather than exceeding it, and medium/xhigh sit inside the same
-# band, so they are dropped.
+# Effort: reasoning_effort = none|low|medium|high. Per the deep-thinking doc
+# (https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking.md, accessed 2026-11-24) this model defaults
+# thinking on (enabled default, disabled supported) and shares the doubao 2.0 mapping:
+# none -> minimal (thinking off), xhigh/max -> high. Not re-checked live; the earlier
+# 2026-08 probe here found thinking off by default and rejected effort without
+# thinking.type=enabled, which the current doc no longer describes.
+# Limits: 128K context, 128K input, 32K output per the model list (inherited from the lab).
+# Cache: implicit prefix caching is on by default on the Chat API (no request flag), per
+# https://ark.volcengine.com/region:cn-beijing/docs/context-cache.md and the 上下文缓存能力 table in
+# https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24).
 schema = 2
 base_model = "bytedance-seed/seed-character"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { implicit = true }
 structured_output = true
 
 [api.chat-completions]
