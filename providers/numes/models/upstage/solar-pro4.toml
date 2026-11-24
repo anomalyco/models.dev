@@ -1,0 +1,14 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/upstage/solar-pro4 (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|minimal|low|medium|high|xhigh|max
+schema = 2
+base_model = "upstage/solar-pro4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.15825
+
+[cost.text.output]
+price = 0.633

@@ -1,0 +1,19 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/tencent/hy4-preview (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|low|high
+schema = 2
+base_model = "tencent/hy4-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501

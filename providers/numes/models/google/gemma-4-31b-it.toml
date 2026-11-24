@@ -1,0 +1,19 @@
+# Reasoning controls: Numes /public/v1/models `reasoning` declaration for this model.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.4

@@ -1,0 +1,18 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/x-ai/grok-4.3 (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|low|medium|high
+schema = 2
+base_model = "xai/grok-4.3"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.31875
+
+[cost.text.output]
+price = 2.6375

@@ -1,0 +1,15 @@
+schema = 2
+base_model = "mistral/mistral-medium-3"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.4642
+
+[cost.text.output]
+price = 2.321

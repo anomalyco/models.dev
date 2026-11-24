@@ -1,0 +1,22 @@
+# Reasoning controls: always on (Numes /public/v1/models declares mandatory = true with no effort or budget controls).
+schema = 2
+base_model = "stepfun/step-5-preview"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.7

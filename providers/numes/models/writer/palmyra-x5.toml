@@ -1,0 +1,17 @@
+# Reasoning: not supported on this host (not in Numes supported_parameters; matches openrouter/writer/palmyra-x5).
+schema = 2
+base_model = "writer/palmyra-x5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 0.633
+
+[cost.text.output]
+price = 6.33

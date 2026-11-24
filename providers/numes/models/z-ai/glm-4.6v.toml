@@ -1,0 +1,19 @@
+# Reasoning controls: always on (Numes /public/v1/models declares mandatory = true with no effort or budget controls).
+schema = 2
+base_model = "zhipuai/glm-4.6v"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.055 }
+
+[cost.text.output]
+price = 0.9

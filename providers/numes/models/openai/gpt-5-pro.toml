@@ -1,0 +1,21 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/openai/gpt-5-pro (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = high
+schema = 2
+base_model = "openai/gpt-5-pro"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 12.66
+
+[cost.text.output]
+price = 101.28

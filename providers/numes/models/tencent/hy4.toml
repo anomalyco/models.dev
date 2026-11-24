@@ -1,0 +1,24 @@
+# Reasoning controls: always on (Numes /public/v1/models declares mandatory = true with no effort or budget controls).
+schema = 2
+base_model = "tencent/hy4"
+base_model_omit = ["limit.input"]
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+output = 64_000
+
+[cost.text.input]
+price = 0.417
+cache = { read = 0.021 }
+
+[cost.text.output]
+price = 1.2505

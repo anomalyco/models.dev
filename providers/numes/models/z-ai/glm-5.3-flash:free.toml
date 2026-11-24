@@ -1,0 +1,20 @@
+# Reasoning controls: Numes /public/v1/models `reasoning` declaration for this model.
+# Effort: reasoning.effort = low|high|max
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash (free)"
+family = "glm-flash-free"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,21 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/deepseek/deepseek-v4-flash-vision-exp (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-vision-exp"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.4642
+
+[cost.text.output]
+price = 1.3926

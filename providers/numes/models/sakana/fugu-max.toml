@@ -1,0 +1,18 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/sakana/fugu-max (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = high|xhigh|max
+schema = 2
+base_model = "sakana/fugu-max"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2.11
+
+[cost.text.output]
+price = 6.33

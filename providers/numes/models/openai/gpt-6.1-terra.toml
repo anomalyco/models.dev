@@ -1,0 +1,23 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/openai/gpt-6.1-terra (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+base_model_omit = ["limit.input"]
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
+
+[limit]
+context = 500_000
+
+[cost.text.input]
+price = 0.844
+
+[cost.text.output]
+price = 4.22

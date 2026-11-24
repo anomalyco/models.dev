@@ -1,0 +1,19 @@
+# Reasoning controls: always on (not declared by Numes; no caller control documented on peers).
+# Capabilities the catalog doesn't state (capabilities.cache) come from inclusionai/ling-3.1-flash, this host's previous model in the family.
+schema = 2
+base_model = "inclusionai/ling-3.2-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3165
+
+[cost.text.output]
+price = 1.055

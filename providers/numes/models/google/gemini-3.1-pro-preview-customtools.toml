@@ -1,0 +1,18 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/google/gemini-3.1-pro-preview-customtools (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = low|medium|high
+schema = 2
+base_model = "google/gemini-3.1-pro-preview-customtools"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 2.11
+
+[cost.text.output]
+price = 12.66

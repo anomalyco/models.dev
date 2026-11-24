@@ -1,0 +1,19 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/openai/gpt-6-luna (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
+
+[cost.text.input]
+price = 0.0844
+
+[cost.text.output]
+price = 0.422

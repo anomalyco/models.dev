@@ -574,6 +574,7 @@ export const ModelFamilyValues = [
   "inkling-small-free",
   "jev-free",
   "kimi-free",
+  "kimi-pro-free",
   "laguna-s-free",
   "lfm-free",
   "ling-flash-free",

@@ -244,6 +244,7 @@ export type ModelFamily =
   | "kimi-code"
   | "kimi-free"
   | "kimi-pro"
+  | "kimi-pro-free"
   | "kinfra-embedding"
   | "kling"
   | "kling-flash"

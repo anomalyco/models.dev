@@ -1,0 +1,21 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/thinkingmachines/inkling-2-small (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = minimal|low|medium|high|max
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.3165
+
+[cost.text.output]
+price = 1.055

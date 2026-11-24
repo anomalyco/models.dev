@@ -1,0 +1,15 @@
+schema = 2
+base_model = "mistral/voxtral-small-24b-2507"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.1055
+
+[cost.text.output]
+price = 0.3165

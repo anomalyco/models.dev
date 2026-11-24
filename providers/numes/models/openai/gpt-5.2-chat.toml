@@ -1,0 +1,17 @@
+# Reasoning controls: always on (not declared by Numes; no caller control documented on peers).
+schema = 2
+base_model = "openai/gpt-5.2-chat-latest"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.477
+
+[cost.text.output]
+price = 11.816

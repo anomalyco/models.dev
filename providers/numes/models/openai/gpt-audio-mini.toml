@@ -1,0 +1,15 @@
+schema = 2
+base_model = "openai/gpt-audio-mini"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.5064
+
+[cost.text.output]
+price = 2.0256

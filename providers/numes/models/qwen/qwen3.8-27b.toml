@@ -1,0 +1,14 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/qwen/qwen3.8-27b (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|low|medium|xhigh
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.0633
+
+[cost.text.output]
+price = 2.321

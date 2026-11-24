@@ -1,0 +1,15 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/nousresearch/hermes-4-405b (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "nousresearch/hermes-4-405b"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 1.055
+
+[cost.text.output]
+price = 3.165

@@ -1,0 +1,13 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/z-ai/glm-5-turbo (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "zhipuai/glm-5-turbo"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 1.266
+
+[cost.text.output]
+price = 4.22

@@ -1,0 +1,19 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/sakana/sakana-namazu (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|high
+schema = 2
+base_model = "sakana/sakana-namazu"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+temperature = false
+
+[cost.text.input]
+price = 1.00225
+
+[cost.text.output]
+price = 4.22

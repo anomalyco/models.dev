@@ -1,0 +1,25 @@
+# Reasoning controls: Numes /public/v1/models `reasoning` declaration for this model.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high
+schema = 2
+base_model = "thinkingmachines/inkling-small"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 524_288
+output = 131_072
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1.2

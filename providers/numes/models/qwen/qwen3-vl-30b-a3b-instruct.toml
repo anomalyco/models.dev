@@ -1,0 +1,18 @@
+schema = 2
+base_model = "alibaba/qwen3-vl-30b-a3b-instruct"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

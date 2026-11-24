@@ -1,0 +1,17 @@
+# Reasoning controls: always on (not declared by Numes; matches openrouter/openai/gpt-5-image, which exposes no caller control).
+schema = 2
+base_model = "openai/gpt-5-image"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[cost.text.input]
+price = 8.44
+
+[cost.text.output]
+price = 8.44

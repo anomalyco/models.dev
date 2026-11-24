@@ -1,0 +1,18 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/meta/muse-spark-1.1 (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = minimal|low|medium|high|xhigh
+schema = 2
+base_model = "meta/muse-spark-1.1"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.31875
+
+[cost.text.output]
+price = 4.48375

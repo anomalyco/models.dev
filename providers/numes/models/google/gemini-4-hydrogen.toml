@@ -1,0 +1,18 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/google/gemini-4-hydrogen (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = low|medium|high|xhigh
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5825
+
+[cost.text.output]
+price = 7.9125

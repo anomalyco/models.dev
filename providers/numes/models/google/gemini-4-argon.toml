@@ -1,0 +1,18 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/google/gemini-4-argon (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = low|medium|high
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 2.11
+
+[cost.text.output]
+price = 10.55

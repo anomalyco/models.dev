@@ -1,0 +1,12 @@
+# Reasoning controls: always on (not declared by Numes; no caller control documented on peers).
+schema = 2
+base_model = "baichuan/baichuan-m2-32b"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.07
