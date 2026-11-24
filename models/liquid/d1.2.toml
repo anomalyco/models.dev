@@ -1,0 +1,25 @@
+# https://www.liquid.ai/blog/d1-2 (hosted release, 2026-11-16)
+# https://docs.liquid.ai/lfm/models/d1 (per-question input limit, supported MIME types and typed answers without generated tokens)
+schema = 2
+v2_only = true
+type = "decision"
+name = "d1.2"
+description = "Classifies text, images and audio, extracts spans and locates objects in images using typed questions."
+family = "liquid-decision"
+open_weights = false
+release_date = "2026-11-16"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "audio/wav", "audio/mpeg", "audio/flac", "audio/ogg"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 65_536
+output = 0

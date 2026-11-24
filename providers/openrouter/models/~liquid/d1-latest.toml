@@ -1,24 +1,16 @@
+# OpenRouter lists text and images for this route. Image formats follow https://docs.liquid.ai/lfm/models/d1.
+# https://openrouter.ai/api/v1/models?output_modalities=decisions
 schema = 2
-type = "decision"
+base_model = "liquid/d1.2"
 name = "d1 Latest"
 description = "Decision model for typed evaluation of shared state"
-family = "liquid"
-open_weights = false
-release_date = "2026-10-27"
 
 [modalities]
-input = ["text", "image"]
-output = ["text"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["decision"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
-temperature = false
-
-[limit]
-context = 65_536
-output = 0
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
