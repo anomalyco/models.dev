@@ -99,7 +99,7 @@ describe("Concentrate sync", () => {
     expect((result as { v2: Record<string, any> }).v2.capabilities.reasoning.toggle).toBe(true);
     expect((result as { header?: string }).header).toBe("# Toggle: thinking.type = enabled|disabled");
     // Budget-only Claude takes no effort levels, whatever the routes list (Messages rejects output_config.effort).
-    expect(v2(model("claude-haiku-4-5", "anthropic", { anthropic: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true, budget: { min: 1_024 } });
+    expect(v2(model("claude-haiku-4-5", "anthropic", { anthropic: route({ effort: all }) })).capabilities.reasoning).toEqual({ supported: true, toggle: true, budget: { min: 1_024 } });
   });
 
   test("serves decision models over System One", () => {
