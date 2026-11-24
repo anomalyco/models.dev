@@ -75,6 +75,7 @@ import { morph } from "./providers/morph.js";
 import { moonshotai } from "./providers/moonshotai.js";
 import { thinkingmachines } from "./providers/thinkingmachines.js";
 import { tinfoil } from "./providers/tinfoil.js";
+import { togetherai } from "./providers/togetherai.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -261,6 +262,7 @@ export const providers: {
   moonshotai: SyncProvider<any>;
   thinkingmachines: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
+  togetherai: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -322,6 +324,7 @@ export const providers: {
   moonshotai,
   thinkingmachines,
   tinfoil,
+  togetherai,
   vercel,
   venice,
   wandb,
@@ -353,7 +356,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "alibaba", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "deepseek", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "meta", "mistral", "moonshotai", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "thinkingmachines", "tinfoil", "venice", "wandb", "xai"],
+  direct: ["aiand", "alibaba", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "deepseek", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "meta", "mistral", "moonshotai", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "thinkingmachines", "tinfoil", "togetherai", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;
