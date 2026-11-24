@@ -190,8 +190,9 @@ export const fireworksAi = {
     if (existing === undefined) return undefined;
     const authored = context.authored(model.catalogId);
     if ("documented" in model) {
-      // No source has data for it, so the file stays as written.
-      return { id: model.catalogId, model: authored as SyncedModel, v2Set: { api: chatApis } };
+      // No source has data for it, so the file stays as written, API tables
+      // included (the US routes point every table at us.api.fireworks.ai).
+      return { id: model.catalogId, model: authored as SyncedModel };
     }
     if ("inventoryOnly" in model && authored === undefined) {
       throw new Error(`Fireworks AI model ${model.catalogId} has no local TOML to preserve`);

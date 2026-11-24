@@ -718,10 +718,19 @@ price = 6.6
     },
   };
 
+  // A route that only lists its own first table doesn't get the global Responses and Messages tables.
+  const flex = path.join(modelsDir, "accounts/fireworks/routers/deepseek-v4p1-flash-1017-flex.toml");
+  const flexText = text
+    .replace(/\n\[api\.responses\][\s\S]*?(?=\n\[cost)/, "\n")
+    .replaceAll('base_url = "https://us.api.fireworks.ai/inference/v1"\n', "");
+  await Bun.write(flex, flexText);
+
   try {
     const result = await syncProvider(provider);
     expect(result.deleted).toBe(0);
     expect(await Bun.file(us).text()).toBe(text);
+    expect(await Bun.file(flex).text()).toBe(flexText);
+    expect(flexText).not.toContain("[api.responses]");
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
