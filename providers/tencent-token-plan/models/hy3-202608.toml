@@ -11,6 +11,7 @@
 # Effort: reasoning_effort = low|high|no_think (default high). no_think turns thinking off, so it is
 #   "none" here with no separate toggle (thinking.type also exists, default enabled).
 #   https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+# Reasoning is returned at choices[].message.reasoning_content (https://cloud.tencent.com/document/product/1823/131208).
 schema = 2
 base_model = "tencent/hy3"
 name = "Hy3 (202608)"
@@ -19,6 +20,9 @@ name = "Hy3 (202608)"
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
 cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
 price = 0.149716
