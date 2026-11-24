@@ -1,1 +1,27 @@
-../../../morph/models/morph-v3-fast.toml
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-11-24): 81,920 context, 16,384 output, no temperature parameter.
+schema = 2
+base_model = "morph/morph-v3-fast"
+
+[capabilities]
+structured_output = true
+temperature = false
+
+[limit]
+context = 81_920
+output = 16_384
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.8
+
+[cost.text.output]
+price = 1.2
