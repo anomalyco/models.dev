@@ -334,12 +334,26 @@ test("runner-level: creates a file from a block, then follows the block with its
 });
 
 test("runner-level: leaves a hand-authored file byte for byte and reports the disagreement", async () => {
-  const modelsDir = await tempRepo(
-    ["models/zhipuai/glm-5.3-flash.toml", "models/zhipuai/glm-5.3-flash.toml"],
-    ["providers/0g/models/glm-5.3-flash.toml", "providers/0g/models/glm-5.3-flash.toml"],
-  );
+  const modelsDir = await tempRepo(["models/zhipuai/glm-5.3-flash.toml", "models/zhipuai/glm-5.3-flash.toml"]);
   const file = path.join(modelsDir, "glm-5.3-flash.toml");
-  const original = await readFile(file, "utf8");
+  // Written here rather than copied from providers/0g, whose price the sync owns
+  // and may change; it matches the glmFlash() catalog row's price.
+  const original = [
+    "# Reasoning probed by hand: low, high and max change how much it thinks; none does not turn thinking off.",
+    "schema = 2",
+    'base_model = "zhipuai/glm-5.3-flash"',
+    "",
+    "[capabilities]",
+    'reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }',
+    "",
+    "[cost.text.input]",
+    "price = 0.15",
+    "",
+    "[cost.text.output]",
+    "price = 0.5",
+    "",
+  ].join("\n");
+  await writeFile(file, original);
 
   const result = await syncProvider(
     { ...zerog, modelsDir, fetchModels: async () => ({ data: [glmFlash({ reasoning: block(true, ["max", "low"]) })] }) },
