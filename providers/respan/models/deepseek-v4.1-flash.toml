@@ -1,3 +1,6 @@
+# Price: DeepSeek's off-peak list price for V4.1 Flash, doubled at peak (01:00-04:00 and
+# 06:00-10:00 UTC, Mon-Fri), as https://api-docs.deepseek.com/quick_start/pricing; Respan bills
+# the upstream list price.
 # Off is reasoning_effort=none; graded levels low|high|max. thinking.type is not
 # forwarded on this route (live 2026-11-23).
 schema = 2
@@ -9,8 +12,13 @@ structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.0498
-cache = { read = 0.000996 }
+price = 0.15
+cache = { read = 0.003 }
 
 [cost.text.output]
-price = 0.1992
+price = 0.6
+reasoning = 0.6
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, not = { holiday = { equals = "CN" } }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

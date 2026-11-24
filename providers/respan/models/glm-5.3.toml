@@ -1,5 +1,8 @@
+# Price: Z.ai's USD list price, https://docs.z.ai/guides/overview/pricing (cache reads automatic,
+# no write price: https://docs.z.ai/guides/capabilities/cache); Respan bills the upstream list price.
 # Always thinks. Effort: reasoning_effort = low|high|max (none is rejected upstream,
 # live 2026-11-23).
+# Reasoning text comes back in message.reasoning_content (live 2026-11-24).
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
@@ -9,8 +12,11 @@ structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.0699
-cache = { read = 0.0689 }
+price = 1.4
+cache = { read = 0.26 }
 
 [cost.text.output]
-price = 1.4
+price = 4.4
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

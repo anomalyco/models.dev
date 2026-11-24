@@ -1,15 +1,21 @@
-# Off is reasoning_effort=none; graded levels low|high|max (live 2026-11-23).
+# Price: Moonshot's list price, https://platform.kimi.ai/docs/pricing/chat (cache write $2 for
+# the default 5m TTL, $4 for 1h); Respan bills the upstream list price.
+# Always thinks. Effort: reasoning_effort = low|high|max
+# Reasoning text comes back in message.reasoning_content (live 2026-11-24).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
-price = 1.4
-cache = { read = 0.14 }
+price = 2
+cache = { read = 0.2, write = { "5m" = 2, "1h" = 4 } }
 
 [cost.text.output]
-price = 7
+price = 10
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

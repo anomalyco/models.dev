@@ -1,6 +1,11 @@
+# Price: OpenAI's standard-tier list price, https://openai.com/api/pricing/; Respan bills the upstream
+# list price. Only the 30m cache TTL is offered: the 12h TTL is Responses-only and Respan serves
+# /chat/completions.
 # freeform: custom tools with text, lark and regex grammars work on /chat/completions
 # (live 2026-11-23: regex ZZ[0-9]{3} and the same lark grammar both returned ZZ000
 # for the input "hello").
+# Function tools work at every listed reasoning_effort on this route (live 2026-11-24:
+# get_weather was called at reasoning_effort=low); Respan does not need effort=none for them.
 schema = 2
 base_model = "openai/gpt-6.2-sol"
 

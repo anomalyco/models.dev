@@ -1,9 +1,9 @@
 # Endpoint: https://gateway.respan.ai/v1 (OpenAI-compatible; GET /v1/models lists
 # the model IDs, API key required).
-# Pricing: USD per million tokens, the list price Respan bills for each model,
-# published without auth at https://api.respan.ai/api/v1/models
-# (`pricing.input_cost` / `output_cost`) and on
-# https://platform.respan.ai/platform/models.
+# Pricing: USD per million tokens. Respan bills each model at its lab's list price
+# (Anthropic, OpenAI, Google, DeepSeek, Z.ai, Moonshot), whichever upstream serves
+# the request, so every model file states that list price and cites the lab's
+# pricing page in its header. Temporary promotions are left out.
 # Reasoning HTTP format (live on the gateway 2026-11-23): POST /chat/completions
 # accepts top-level `reasoning_effort` (the values listed per model) and, where a
 # model file says so, Anthropic's `thinking` object.
