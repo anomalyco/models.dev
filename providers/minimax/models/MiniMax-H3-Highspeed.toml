@@ -11,7 +11,7 @@ base_model = "minimax/MiniMax-H3-Highspeed"
 [api.videos]
 base_url = "https://api.minimax.io"
 path = "/v2/video_generation"
-sdk = { aisdk = "none", opencodeai = "none" }
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/minimax/videos" }
 
 [cost.video.output]
 unit = "second"

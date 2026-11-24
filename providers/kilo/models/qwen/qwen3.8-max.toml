@@ -1,3 +1,4 @@
+# Capabilities the catalog doesn't state (capabilities.cache) come from qwen/qwen3.7-max, this host's previous model in the family.
 schema = 2
 base_model = "alibaba/qwen3.8-max"
 name = "Qwen: Qwen 3.8 Max"
@@ -10,14 +11,15 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
-context = 262_144
 output = 128_000
 
 [cost.text.input]
 price = 2
-cache = { read = 0.25 }
+cache = { read = 0.25, write = 2.5 }
 
 [cost.text.output]
 price = 6
+reasoning = 0

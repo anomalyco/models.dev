@@ -4,7 +4,7 @@ schema = 2
 type = "image"
 name = "MAI-Image-2.6-Flash"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "mai"
+family = "mai-image-flash"
 open_weights = false
 release_date = "2026-10-13"
 
@@ -29,9 +29,6 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/vercel-ai
 
 [cost.text.input]
 price = 1.75
-
-[cost.text.output]
-price = 19
 
 [cost.image.output]
 price = 19

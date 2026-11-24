@@ -1,10 +1,23 @@
-# Pool metadata: https://api.opper.ai/v3/models (2026-09-08).
-# No pool-wide effort control: at least one member does not forward reasoning_effort.
+# Pool metadata: https://api.opper.ai/v3/models (2026-11-23).
+# Effort: top-level reasoning_effort on POST /v3/compat/chat/completions. The list is what Opper
+# accepts for every pooled member (params.reasoning.supported on the seven pooled rows), not each
+# host's native levels: Opper translates the level into the member's own control.
+# Probed live through Opper on 2026-11-23, each pooled member pinned by its id, one short prompt:
+# - low, medium, high: reasoning_content came back on all seven members.
+# - none: no reasoning on six members; morph/morph-dsv4flash still returned reasoning.
+# - max is left out. The morph/morph-dsv4flash row lists none|low|medium|high and Opper does not
+#   forward a level outside a member's row, so max is not passed to that member. The other six
+#   returned reasoning with max.
+# - medium is accepted on every member. DeepSeek V4 backends run it as high (lab mapping in
+#   providers/deepseek/models/deepseek-v4-flash.toml), and TensorX also runs low as high
+#   (providers/tensorx/models/deepseek/deepseek-v4-flash-0731.toml).
+# No default is set here: with no reasoning_effort, four members answered without reasoning and
+# three (munito, munito:global, morph) answered with it.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 
 [api.chat-completions]

@@ -8,7 +8,7 @@ schema = 2
 type = "video"
 name = "Grok Imagine Video"
 description = "Image model for prompt-driven generation, editing, and visual design workflows"
-family = "grok"
+family = "grok-imagine-video"
 open_weights = false
 release_date = "2026-01-28"
 
@@ -28,7 +28,7 @@ context = 1_024
 output = 0
 
 [api.videos]
-sdk = { opencodeai = "@opencode/ai/protocols/xai-video" }
+sdk = { opencodeai = "@opencode/ai/providers/xai/videos" }
 
 [cost.video.output]
 unit = "second"

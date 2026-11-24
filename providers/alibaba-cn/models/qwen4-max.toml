@@ -1,0 +1,43 @@
+# Sources (accessed 2026-11-24):
+# https://help.aliyun.com/zh/model-studio/qwen4-max (China (Beijing): ¥10 input, ¥30 output per 1M)
+# https://help.aliyun.com/zh/model-studio/explicit-cache-qwen4
+# CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
+# Cache: the page lists no CNY cache prices, so they follow the Singapore ratios from the catalog API GET https://dashscope-intl.aliyuncs.com/api/v1/models: implicit and explicit read 5% (¥0.5), creation 125% (¥12.5, 5m) and 200% (¥20, 1h) of input.
+# Reasoning (Chat API reference https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions and https://www.alibabacloud.com/help/en/model-studio/qwen4-max, accessed 2026-11-24):
+# Effort: reasoning_effort = none|low|high|xhigh (default high); minimal maps to low, medium to high, max to xhigh, none disables thinking. Responses uses reasoning.effort, Anthropic Messages output_config.effort, with the same levels.
+# Budget: thinking_budget 1..262144 (positive integer, not 0) cannot be combined with reasoning_effort. Off is effort none, so no separate toggle.
+# Limits: 1,000,000 context; 991,808 max input; 131,072 max output (262,144 with thinking), from the lab file.
+# Cache: implicit and explicit (https://www.alibabacloud.com/help/en/model-studio/explicit-cache-qwen4): cache_control ephemeral or prompt_cache_options, TTL 5m or 1h, up to 4 breakpoints, 1,024-token minimum. Writes bill at about 125% (5m) and 200% (1h) of input.
+# Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
+# Not probed live, so system_updates and effort_updates are left unset.
+# Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "xhigh"], budget = { min = 1, max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/responses" }
+
+[api.messages]
+base_url = "https://dashscope.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+
+[cost.text.input]
+price = 1.497163
+cache = { read = 0.074858, explicit = { read = 0.074858, write = { "5m" = 1.871454, "1h" = 2.994326 } } }
+
+[cost.text.output]
+price = 4.491489
+
+[cost.web_search]
+price = 0.573411

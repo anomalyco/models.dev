@@ -1,3 +1,4 @@
+# Mid-conversation, tool and cache flags backfilled 2026-11-18 from hy4-preview.toml on this host (same API layout; the sync doesn't carry them).
 schema = 2
 base_model = "tencent/hy4"
 base_model_omit = ["limit.input"]
@@ -14,6 +15,7 @@ context = 1_024_000
 output = 64_000
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 base_url = "https://ai-gateway.vercel.sh/v1"

@@ -1,0 +1,29 @@
+# Sources (accessed 2026-11-23):
+# - Served on the Z.AI and BigModel Coding Plans from 2026-11-23. The pay-as-you-go APIs, the lab's model page
+#   (https://docs.bigmodel.cn/cn/guide/start/model-overview, https://docs.z.ai/guides/overview/overview)
+#   and the weights were not published at catalog time.
+# - Input formats follow the lab's Chat API vision and file items, as on GLM-5.3-Flash (image_url: jpg, jpeg, png;
+#   video_url: mp4, mkv, mov; file: PDF):
+#   https://docs.z.ai/api-reference/llm/chat-completion, https://docs.bigmodel.cn/api-reference/模型-api/对话补全
+# - Limits follow GLM-5.3 on the same APIs.
+schema = 2
+name = "GLM-5.4"
+description = "Multimodal GLM flagship model for coding, agents, and complex project delivery"
+family = "glm"
+open_weights = false
+release_date = "2026-11-23"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 131_072

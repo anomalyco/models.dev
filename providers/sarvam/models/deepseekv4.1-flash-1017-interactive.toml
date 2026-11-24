@@ -1,0 +1,29 @@
+# Pricing: https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17): DeepSeek V4.1 Flash 1017 Interactive INR 25.00 input / 0.50 cached input / 105.00 output per 1M tokens.
+# INR->USD at 94 INR per USD, the rate Sarvam publishes for its USD view on https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17), rounded to 8 decimals.
+# Served on the provider's OpenAI-compatible /v2 endpoint.
+# max_tokens: the host rejects max_completion_tokens above 32,768 but accepts max_tokens up to the window, so consumers must send the older field.
+# Off is effort=none; graded levels, no toggle.
+# Default effort: GET https://api.sarvam.ai/v2/models publishes reasoning.default_effort = "high" (accessed 2026-11-17).
+# Image cap: GET https://api.sarvam.ai/v2/models publishes input_media.image.max_per_request = 999 (accessed 2026-11-17).
+# Context: GET https://api.sarvam.ai/v2/models publishes context_length 1048576 (accessed 2026-11-17).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Interactive"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "high" } }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+image = { max_per_request = 999 }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0.26595745
+cache = { read = 0.00531915 }
+
+[cost.text.output]
+price = 1.11702128

@@ -6,6 +6,7 @@ description = "GPT-5.6 Terra is a balanced GPT-5.6 model for everyday work, with
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+temperature = false
 
 [cost.text.input]
 price = 4
@@ -13,3 +14,7 @@ cache = { read = 0.4, write = 5 }
 
 [cost.text.output]
 price = 24
+reasoning = 0
+
+[cost.web_search]
+price = 10

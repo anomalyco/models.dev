@@ -1,8 +1,10 @@
+# Capabilities the catalog doesn't state (capabilities.structured_output) come from qwen3.8-2.4t-a95b, this host's previous model in the family.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
 
 [limit]
 context = 1_000_000

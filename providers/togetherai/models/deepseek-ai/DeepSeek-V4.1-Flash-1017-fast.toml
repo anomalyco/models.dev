@@ -1,0 +1,30 @@
+# Serverless: $0.60 input, $0.012 cached input, $2.40 output per 1M; context 1,048,576 (GET https://api.together.xyz/v1/models,
+#   https://docs.together.ai/docs/serverless-models and https://www.together.ai/pricing, accessed 2026-11-24). A faster
+#   deployment of DeepSeek V4.1 Flash 1017 at twice the price.
+# Controls, layout and flags follow this host's DeepSeek-V4.1-Flash-1017. Live 2026-11-24: reasoning_effort none returns no
+#   reasoning; low, high and max reason; an invalid value fails with "DeepSeek V4.1 reasoning effort must be none, low, high,
+#   xhigh, max or an integer budget from 1 to 100 (minimal and medium aliases are accepted)". Reasoning comes back in
+#   message.reasoning_content.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Fast"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 2.4

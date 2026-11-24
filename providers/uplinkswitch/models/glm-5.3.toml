@@ -1,0 +1,15 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog (accessed 2026-11-14), USD per million tokens.
+# The catalog price includes this month's 3% co-op volume discount (coop_discount_pct), so it can change when a month starts.
+# Effort: reasoning_effort = low|high|max on Chat Completions, passed through by the gateway. Levels copied from providers/zhipuai for this model.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.317772
+cache = { read = 0.06596 }
+
+[cost.text.output]
+price = 0.998712

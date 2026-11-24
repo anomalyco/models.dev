@@ -6,6 +6,7 @@ description = "GPT-5.6 Luna is a fast, affordable GPT-5.6 model that brings stro
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+temperature = false
 
 [cost.text.input]
 price = 0.4
@@ -13,3 +14,7 @@ cache = { read = 0.04, write = 0.5 }
 
 [cost.text.output]
 price = 2.4
+reasoning = 0
+
+[cost.web_search]
+price = 10

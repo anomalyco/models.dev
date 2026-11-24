@@ -5,7 +5,9 @@
 # Tools follow Z.ai's API: https://docs.z.ai/api-reference/llm/chat-completion (tool_choice: only auto); Zen passes requests through.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
+family = "glm-flash-free"
 name = "GLM-5.3-Flash Free"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]

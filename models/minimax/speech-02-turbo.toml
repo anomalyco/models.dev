@@ -1,0 +1,26 @@
+# Released 2025-04-02: https://platform.minimax.io/docs/release-notes/models (https://www.minimax.io/news/minimax-speech-02)
+# Output formats (audio_setting.format mp3, pcm, flac, wav, pcmu_raw/pcmu_wav μ-law, opus): https://platform.minimax.io/docs/api-reference/speech-t2a-http
+# Interjection (sound) tags are speech-2.8 only, per the same reference.
+schema = 2
+v2_only = true
+type = "speech"
+name = "Speech 02 Turbo"
+description = "Low-latency text-to-speech model with voice cloning"
+family = "minimax-speech"
+open_weights = false
+release_date = "2025-04-02"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg", "audio/pcm", "audio/flac", "audio/wav", "audio/basic", "audio/opus"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

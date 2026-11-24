@@ -1,5 +1,6 @@
 # Modalities: the router catalog lists ["text","image"]; exact types are the lab's (thinkingmachines/inkling).
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Reasoning field: reasoning_content, the field Inkling's chat template reads back (https://huggingface.co/thinkingmachines/Inkling). The router's upstreams for this model (Together, Modal, Deep Infra) read it back on earlier assistant turns (Together live 2026-11-23: only reasoning_content is read, not reasoning).
 schema = 2
 base_model = "thinkingmachines/inkling"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
@@ -14,7 +15,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
 [api.chat-completions]
-compatibility = { max_tokens_field = "max_tokens" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

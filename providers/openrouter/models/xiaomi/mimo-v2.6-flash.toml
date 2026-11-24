@@ -13,9 +13,6 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 
-[limit]
-context = 1_050_000
-
 [api.chat-completions]
 capabilities = { system_updates = true }
 

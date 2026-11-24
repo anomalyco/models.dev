@@ -24,7 +24,12 @@ export const TinfoilModel = z.object({
   context_window: z.number().int().positive().optional(),
   pricing: TinfoilPricing,
   reasoning: z.boolean(),
-  supported_efforts: z.array(z.enum(["none", "minimal", "low", "medium", "high", "xhigh", "max"])).optional(),
+  // "auto" (Inkling 2 Small) isn't in Tinfoil's reasoning docs (https://docs.tinfoil.sh/guides/reasoning.md) or any
+  // catalog level, and clients send effort values verbatim, so it's left out rather than renamed.
+  supported_efforts: z
+    .array(z.enum(["none", "minimal", "low", "medium", "auto", "high", "xhigh", "max"]))
+    .transform((efforts) => efforts.filter((effort): effort is Exclude<typeof effort, "auto"> => effort !== "auto"))
+    .optional(),
   tool_calling: z.boolean(),
   multimodal: z.boolean(),
   type: z.string().min(1),
@@ -89,7 +94,7 @@ function isRepresentableTokenModel(model: TinfoilModel) {
 
 const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] as const;
 
-// The catalog's supported_efforts are the reasoning_effort values Tinfoil accepts; they replace the authored effort
+// The catalog's supported_efforts are the reasoning_effort values Tinfoil accepts (minus auto, see above); they replace the authored effort
 // list and keep any other authored control. Without them, the authored controls stay as they are.
 function tinfoilReasoningOptions(model: TinfoilModel, existing: ExistingModel) {
   const efforts = model.supported_efforts ?? [];

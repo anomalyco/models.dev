@@ -1,0 +1,30 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 0.435, output 0.87, cache hit 0.0036).
+#   China list: https://cloud.tencent.com/document/product/1823/130055
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17)
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write price is published.
+# API: https://cloud.tencent.com/document/product/1823/138677
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# The host lists text/image/video input, not audio (same as the Tencent Token Plan entry).
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "video/mp4", "video/quicktime", "video/x-msvideo", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.435
+cache = { read = 0.0036 }
+
+[cost.text.output]
+price = 0.87

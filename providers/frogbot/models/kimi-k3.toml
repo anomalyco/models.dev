@@ -9,6 +9,7 @@
 # providers/fireworks-ai/.../kimi-k3.toml.
 # https://docs.fireworks.ai/api-reference/post-chatcompletions
 # https://docs.frogbot.ai/api-reference/chat-completions
+# Output limit: no host-specific cap is documented, so output is capped at the context served here (the lab's raised cap would exceed it).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -21,6 +22,7 @@ reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"
 
 [limit]
 context = 1_040_000
+output = 1_040_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

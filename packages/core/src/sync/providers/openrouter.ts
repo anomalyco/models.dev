@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { describeModel } from "../../describe.js";
-import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
+import { inferKimiFamily, type ModelFamily, ModelFamilyValues } from "../../family.js";
 import { readLabModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 
@@ -30,6 +30,15 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
   "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
   "openai/gpt-5.6-sol-pro": "openai/gpt-5.6-sol",
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
+  "openai/gpt-6-astra-pro": "openai/gpt-6-astra",
+  "openai/gpt-6-luna-pro": "openai/gpt-6-luna",
+  "openai/gpt-6-sol-pro": "openai/gpt-6-sol",
+  "openai/gpt-6.1-sol-pro": "openai/gpt-6.1-sol",
+  "openai/gpt-6.1-terra-pro": "openai/gpt-6.1-terra",
+  "openai/gpt-6.2-astra-pro": "openai/gpt-6.2-astra",
+  "openai/gpt-6.2-sol-pro": "openai/gpt-6.2-sol",
+  "meta/muse-ember": "meta/muse-ember-1.0",
+  "meta/muse-wonder": "meta/muse-wonder-1.0",
   "anthropic/claude-opus-4.7-fast": "anthropic/claude-opus-4-7",
   "anthropic/claude-opus-4.8-fast": "anthropic/claude-opus-4-8",
   "typesafe/jev-1.13": "typesafe/jev-1.13.0",
@@ -41,6 +50,16 @@ const DECISION_DESCRIPTION = "Decision model for typed evaluation of shared stat
 const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "minimax/minimax-01": 40_000,
 };
+
+// OpenRouter fills max_completion_tokens with 90% of the context when a host publishes no
+// output cap (943,718 of 1,048,576; 942,818 of GPT-4.1 Nano's 1,047,576, where OpenAI caps
+// output at 32,768). It isn't a real limit, so the lab's output is used instead.
+export function isPlaceholderOutputLimit(model: OpenRouterModel) {
+  const output = model.top_provider.max_completion_tokens;
+  if (output === null) return false;
+  return [model.context_length, model.top_provider.context_length]
+    .some((context) => context !== null && context > 0 && output === Math.floor((context * 9) / 10));
+}
 
 // OpenRouter's metadata still lists the preview's efforts for these models, but requests
 // are rejected upstream. Mistral Large 4: `none` returns 400 "supported values: high, low,
@@ -175,6 +194,8 @@ export const OpenRouterModel = z.object({
   supported_parameters: z.array(z.string()),
   // Images API endpoint records, attached by fetchModels for image models.
   image_endpoints: z.array(OpenRouterImageEndpoint).optional(),
+  // Set by fetchModels when the model's endpoints page answers 404.
+  image_endpoints_missing: z.boolean().optional(),
   // Video SKU prices from the video models list, attached by fetchModels for video models.
   video_pricing_skus: z.record(z.string()).optional(),
   reasoning: z
@@ -227,20 +248,40 @@ export const openrouter = {
     for (const model of text.data) {
       if (model.architecture.output_modalities.includes("video")) model.video_pricing_skus = skus.get(model.id);
     }
-    await Promise.all(extra.filter((model) => mediaType(model) === "image").map(async (model) => {
-      model.image_endpoints = OpenRouterImageEndpoints.parse(await get(IMAGE_ENDPOINTS_URL(model.id))).endpoints;
+    const images = extra.filter((model) => mediaType(model) === "image");
+    await Promise.all(images.map(async (model) => {
+      // Some listed image models (openrouter/auto, a few :free variants) have no endpoints page and answer 404.
+      const response = await fetch(IMAGE_ENDPOINTS_URL(model.id), { headers });
+      if (response.status === 404) {
+        model.image_endpoints_missing = true;
+        return;
+      }
+      if (!response.ok) throw new Error(`OpenRouter request failed: ${response.status} ${response.statusText}`);
+      model.image_endpoints = OpenRouterImageEndpoints.parse(await response.json()).endpoints;
     }));
+    const missing = images.filter((model) => model.image_endpoints_missing).length;
+    // A few 404s are models without a page; most of them means the endpoints API moved.
+    if (missing >= 5 && missing * 2 >= images.length) {
+      throw new Error(`OpenRouter image endpoints answered 404 for ${missing} of ${images.length} image models`);
+    }
     return { data: [...text.data, ...extra] };
   },
   parseModels(raw) {
     // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
-    return OpenRouterResponse.parse(raw).data.filter((model) => !model.id.endsWith(":batch"));
+    return OpenRouterResponse.parse(raw).data
+      .filter((model) => !model.id.endsWith(":batch"))
+      .map(withStableBasePrice);
   },
   sourceNotices(models) {
     const ids = new Set(models.map((model) => model.id));
-    return [...TIME_BILLED_AUDIO]
-      .filter((id) => !ids.has(id))
-      .map((id) => `${id}: listed in TIME_BILLED_AUDIO but no longer in the OpenRouter catalog`);
+    return [
+      ...[...TIME_BILLED_AUDIO]
+        .filter((id) => !ids.has(id))
+        .map((id) => `${id}: listed in TIME_BILLED_AUDIO but no longer in the OpenRouter catalog`),
+      ...models
+        .filter((model) => model.image_endpoints_missing)
+        .map((model) => `${model.id}: no Images API endpoints page (404), so no image price`),
+    ];
   },
   translateModel(model, context) {
     const type = mediaType(model);
@@ -265,6 +306,23 @@ export const openrouter = {
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
     const built = buildOpenRouterModel(model, context.existing(model.id));
+    // Factoring compares v1 modality kinds, which collapse all image formats.
+    // Keep a real v2 host-format override when the catalog still lists those kinds.
+    const formats = context.v2?.(model.id)?.modalities;
+    const authored = formats === undefined ? undefined : context.authored(model.id);
+    if (
+      "base_model" in built && typeof built.base_model === "string"
+      && built.modalities === undefined && authored?.modalities !== undefined
+      && sameInheritedValue(authored.modalities, {
+        input: modalities(model.architecture.input_modalities, ["text"]),
+        output: modalities(model.architecture.output_modalities, ["text"]),
+      })
+    ) {
+      const base = rawLabModel(built.base_model);
+      if (base !== undefined && !sameInheritedValue(formats, base.modalities)) {
+        built.modalities = authored.modalities;
+      }
+    }
     // The decision model's first API (systemone) names its own AI SDK package,
     // which v1 reads as the model's provider npm.
     const translated = isDecisionModel(model)
@@ -423,8 +481,9 @@ const BASE_URL = "https://openrouter.ai/api/v1";
 // SDK provider implements embeddings. Rerank takes and returns Cohere's rerank
 // shape, so @ai-sdk/cohere works against it. Images also answer OpenAI's
 // /images/generations, so OpenCode uses its OpenAI media protocols for images,
-// speech and transcription, and its OpenRouter provider for embeddings; it has
-// none for video or rerank.
+// speech and transcription, and its OpenRouter provider for embeddings and video
+// (providers/openrouter/videos, added in anomalyco/opencode#63681); it has none
+// for rerank.
 // https://openrouter.ai/docs/api/api-reference/tts/create-speech (POST /audio/speech)
 // https://openrouter.ai/docs/api/api-reference/stt/create-transcription (POST /audio/transcriptions)
 // https://openrouter.ai/docs/api/api-reference/embeddings/submit-an-embedding-request (POST /embeddings)
@@ -443,7 +502,7 @@ const MEDIA_APIS: Record<MediaType, { protocol: string; aisdk: string; opencodea
   embedding: { protocol: "embeddings", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/embeddings" },
   reranking: { protocol: "rerank", aisdk: "@ai-sdk/cohere", opencodeai: "none" },
   image: { protocol: "images", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/images" },
-  video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "none" },
+  video: { protocol: "videos", aisdk: "@openrouter/ai-sdk-provider", opencodeai: "@opencode/ai/providers/openrouter/videos" },
 };
 
 const MEDIA_HEADERS: Record<MediaType, string> = {
@@ -800,6 +859,8 @@ export function buildOpenRouterMediaModel(
     // takes on what the endpoint accepts and returns.
     const route = lab.type === type ? undefined : routeOverrides(type, lab, modalities, context);
     if (route !== undefined) doc.type = type;
+    const free = freeFamily(base, current?.family);
+    if (free !== undefined) doc.family = free;
     const name = model.name.replace(/^[^:]+:\s+/, "");
     if (
       name !== lab.name &&
@@ -1007,6 +1068,12 @@ function rawLabModel(modelID: string) {
   }
 }
 
+// The lab's output limit, capped at the context this host serves.
+function labOutputLimit(modelID: string | undefined, context: number) {
+  const output = modelID === undefined ? undefined : (rawLabModel(modelID)?.limit as { output?: unknown } | undefined)?.output;
+  return typeof output === "number" && output > 0 ? Math.min(output, context) : undefined;
+}
+
 function dateFromTimestamp(timestamp: number) {
   return new Date(timestamp * 1000).toISOString().slice(0, 10);
 }
@@ -1161,6 +1228,48 @@ export function overrideWhen(override: PriceOverride): Record<string, unknown> |
     if (hours.length === 2) when.all = hours;
   }
   return when;
+}
+
+// Whether an override's time window (days and hours) includes a minute of the week,
+// with the same wrap-past-midnight rule as overrideWhen.
+function windowIncludes(override: PriceOverride, day: string, minute: number) {
+  if (override.utc_days !== undefined) {
+    if (!Array.isArray(override.utc_days)) return false;
+    if (!override.utc_days.some((value) => typeof value === "string" && UTC_DAYS[value.toLowerCase()] === day)) return false;
+  }
+  if (override.utc_start === undefined && override.utc_end === undefined) return true;
+  const start = utcTime(override.utc_start);
+  const end = utcTime(override.utc_end);
+  if (start === undefined || end === undefined) return false;
+  const toMinutes = (time: string) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3));
+  const from = toMinutes(start);
+  const until = toMinutes(end);
+  if (until > from) return minute >= from && minute < until;
+  if (until === from) return true;
+  return minute >= from || minute < until;
+}
+
+/**
+ * OpenRouter's top-level prices are the time window live when the catalog is read. When
+ * pricing.overrides price every minute of the week by time alone, the top-level price never
+ * applies, so the base becomes the first window's and stays the same from run to run.
+ * https://openrouter.ai/docs/guides/overview/models#pricing-overrides
+ */
+export function withStableBasePrice(model: OpenRouterModel): OpenRouterModel {
+  const windows = (model.pricing.overrides ?? []).filter((override) =>
+    isTimeWindow(override)
+    && Object.keys(override).every((key) => TIME_WINDOW_KEYS.includes(key) || isPriceKey(key))
+    && typeof overrideWhen(override) !== "string"
+  );
+  const first = windows[0];
+  if (first === undefined) return model;
+  for (const day of Object.values(UTC_DAYS)) {
+    for (let minute = 0; minute < 24 * 60; minute++) {
+      if (!windows.some((override) => windowIncludes(override, day, minute))) return model;
+    }
+  }
+  const prices = Object.fromEntries(Object.entries(first).filter(([key]) => !TIME_WINDOW_KEYS.includes(key)));
+  return { ...model, pricing: { ...model.pricing, ...prices } };
 }
 
 function utcTime(value: unknown) {
@@ -1404,7 +1513,7 @@ function inferFamily(model: OpenRouterModel, name: string) {
       if (family === "o") {
         return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
       }
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(target);
     });
 }
 
@@ -1454,16 +1563,19 @@ export function buildOpenRouterModel(
         tiers: costTiers(model, existing),
       }
     : existing?.cost;
+  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
+  const catalogOutput = isPlaceholderOutputLimit(model) ? undefined : model.top_provider.max_completion_tokens;
   const limit = {
     context,
     input: existing?.limit?.input,
     // Decision models evaluate state without generating completion tokens.
     output: decision ? 0 : (OUTPUT_LIMIT_OVERRIDES[model.id]
+      ?? catalogOutput
+      ?? labOutputLimit(canonical, Math.min(context, model.top_provider.context_length ?? context))
       ?? model.top_provider.max_completion_tokens
       ?? existing?.limit?.output
       ?? context),
   };
-  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
 
   if (canonical !== undefined) {
     const canonicalOverride = canonicalBaseModelOverride(model.id);
@@ -1474,6 +1586,7 @@ export function buildOpenRouterModel(
         name: shouldPreserveFactoredName(model.id, canonical, baseModel, canonicalOverride)
           ? name
           : undefined,
+        family: freeFamily(canonical, existing?.family),
         // The lab describes a decision model; don't override it with a generic chat description.
         description: decision ? existing?.description : existing?.description ?? describeModel({
           id: model.id,
@@ -1677,6 +1790,13 @@ type BaseModelOverrides = Omit<Partial<SyncedFullModel>, "limit" | "modalities">
     output?: SyncedFullModel["modalities"]["output"];
   };
 };
+
+// A free route keeps its "<lab family>-free" family on a base_model file; any other family
+// there is a stale model fact and is left to the lab.
+export function freeFamily(baseModel: string, family: unknown) {
+  const lab = modelMetadata(baseModel).family;
+  return typeof lab === "string" && family === `${lab}-free` ? (family as ModelFamily) : undefined;
+}
 
 export function factorBaseModel(
   modelID: string,

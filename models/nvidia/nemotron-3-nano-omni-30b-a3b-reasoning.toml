@@ -5,7 +5,7 @@
 schema = 2
 name = "Nemotron 3 Nano Omni 30B A3B Reasoning"
 description = "Open Nemotron omni model combining reasoning with text, vision, and audio"
-family = "nemotron"
+family = "nemotron-nano"
 open_weights = true
 release_date = "2026-04-28"
 
@@ -23,3 +23,7 @@ top_k = true
 [limit]
 context = 256_000
 output = 65_536
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16"

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { providerModelToV2 } from "../../model-file-v2.js";
@@ -25,6 +25,39 @@ const CANONICAL_ORG_PREFIXES: Record<string, string> = {
   XiaomiMiMo: "xiaomi",
   "zai-org": "zai",
 };
+
+// Hugging Face orgs mapped to the models/ directory holding their lab files, for orgs
+// resolveCanonicalBaseModel doesn't know or whose IDs it can't match.
+const LAB_DIRS: Record<string, string> = {
+  aisingapore: "aisingapore",
+  // Re-upload of Microsoft's WizardLM-2 weights.
+  alpindale: "microsoft",
+  "anthracite-org": "anthracite-org",
+  CohereLabs: "cohere",
+  // Cognitive Computations' renamed org (Dolphin models).
+  dphn: "cognitivecomputations",
+  Gryphe: "gryphe",
+  "ibm-granite": "ibm",
+  inclusionAI: "inclusionai",
+  "meta-llama": "meta",
+  "meta-models": "meta",
+  mistralai: "mistral",
+  NousResearch: "nousresearch",
+  nvidia: "nvidia",
+  Qwen: "alibaba",
+  reflection: "reflection",
+  "swiss-ai": "swiss-ai",
+  Undi95: "undi95",
+};
+
+// Weight-precision suffixes the router appends to a served checkpoint
+// (`GLM-5.3-BF16`, `Qwen3.8-Flash-Next-FP8`).
+const PRECISION_SUFFIX = /-(bf16|fp8|nvfp4)$/i;
+// A trailing total/active parameter pair on MoE IDs (`-816B-A42B`, `-1T-A52B`).
+// Only the pair is stripped, so a dense size like `-14B` never collapses onto a family file.
+const MOE_PARAMS_SUFFIX = /-\d+(\.\d+)?[bt]-a\d+(\.\d+)?b$/i;
+// Llama 4's expert count (`Llama-4-Maverick-17B-128E-Instruct`).
+const EXPERTS_TOKEN = /-\d+e(?=-)/i;
 
 const HuggingFaceProvider = z.object({
   provider: z.string(),
@@ -196,19 +229,25 @@ export function buildHuggingFaceModel(
 ): Record<string, unknown> {
   if (lab === undefined) throw new Error(`Hugging Face model ${model.id}: no lab file for ${baseModel}`);
   const labModalities = lab.modalities as { input: string[]; output: string[] };
+  // A served context below the lab's output cap would publish an output larger than the
+  // window, so the output is capped at the context.
+  const labOutput = (lab.limit as { output?: number } | undefined)?.output;
+  const output = labOutput !== undefined && aggregate.context !== undefined && labOutput > aggregate.context
+    ? aggregate.context
+    : undefined;
   const factored = factorBaseModel(baseModel, {
     structured_output: aggregate.structuredOutput || undefined,
     cost: aggregate.cost,
-    limit: { context: aggregate.context } as SyncedFullModel["limit"],
+    limit: { context: aggregate.context, ...(output === undefined ? {} : { output }) } as SyncedFullModel["limit"],
   }, { context: aggregate.context });
   const doc = providerModelToV2(factored);
 
   const input = exactModalities(model.architecture.input_modalities, labModalities.input);
-  const output = exactModalities(model.architecture.output_modalities, labModalities.output);
+  const outputKinds = exactModalities(model.architecture.output_modalities, labModalities.output);
   const kinds = (values: string[]) => [...new Set(values.map((value) => value.split("/")[0]))].sort().join();
-  if (input.length > 0 && output.length > 0
-    && (kinds(input) !== kinds(labModalities.input) || kinds(output) !== kinds(labModalities.output))) {
-    doc.modalities = { input, output };
+  if (input.length > 0 && outputKinds.length > 0
+    && (kinds(input) !== kinds(labModalities.input) || kinds(outputKinds) !== kinds(labModalities.output))) {
+    doc.modalities = { input, output: outputKinds };
   }
 
   // Chat Completions takes tools and reasoning_effort per request, with no
@@ -264,6 +303,46 @@ export function resolveHuggingFaceBaseModel(id: string) {
   const [prefix, ...parts] = id.split("/");
   if (prefix === undefined || parts.length === 0) return undefined;
   const canonicalPrefix = CANONICAL_ORG_PREFIXES[prefix];
-  if (canonicalPrefix === undefined) return resolveCanonicalBaseModel(id);
-  return resolveCanonicalBaseModel(`${canonicalPrefix}/${parts.join("/").toLowerCase()}`);
+  const canonical = canonicalPrefix === undefined
+    ? resolveCanonicalBaseModel(id)
+    : resolveCanonicalBaseModel(`${canonicalPrefix}/${parts.join("/").toLowerCase()}`);
+  if (canonical !== undefined) return canonical;
+
+  const dir = LAB_DIRS[prefix];
+  if (dir === undefined) return undefined;
+  const files = labFileIDs(dir);
+  const match = huggingFaceCandidates(prefix, parts.join("/")).find((candidate) => files.has(candidate));
+  return match === undefined ? undefined : `${dir}/${files.get(match)}`;
+}
+
+// Lab file IDs a router model may match, most specific first. Each one must equal a
+// lab file name (case-insensitive); nothing is matched by prefix.
+export function huggingFaceCandidates(org: string, model: string) {
+  const name = model.toLowerCase();
+  const base = name.replace(PRECISION_SUFFIX, "");
+  const unprefixed = org === "nvidia" ? base.replace(/^nvidia-/, "") : base;
+  const candidates = [name, base, unprefixed];
+  for (const candidate of [base, unprefixed]) {
+    candidates.push(candidate.replace(MOE_PARAMS_SUFFIX, ""));
+    candidates.push(candidate.replace(EXPERTS_TOKEN, ""));
+  }
+  return [...new Set(candidates)];
+}
+
+const labFileCache = new Map<string, Map<string, string>>();
+
+// Lab file IDs in a models/ directory, keyed by their lowercase form.
+function labFileIDs(dir: string) {
+  const cached = labFileCache.get(dir);
+  if (cached !== undefined) return cached;
+  let names: string[] = [];
+  try {
+    names = readdirSync(path.join(MODELS_DIR, dir)).filter((file) => file.endsWith(".toml"));
+  } catch {}
+  const files = new Map(names.map((file) => {
+    const id = file.slice(0, -".toml".length);
+    return [id.toLowerCase(), id] as const;
+  }));
+  labFileCache.set(dir, files);
+  return files;
 }

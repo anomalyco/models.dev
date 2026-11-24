@@ -1,0 +1,31 @@
+# https://platform.stepfun.ai/docs/en/guides/models/stepaudio-2.5-chat, https://platform.stepfun.com/docs/zh/guides/models/stepaudio-2.5-chat
+#   (accessed 2026-11-24): end-to-end speech understanding over Chat Completions; audio (mp3, wav) or text in, text only out
+#   (modalities with "audio" is rejected with 400).
+# Context and output limits aren't documented anywhere, so they use the unknown-limit encoding (0) until StepFun
+#   publishes one.
+# Tools: not in the Tool Call API's list of supported models (https://platform.stepfun.com/docs/zh/api-reference/tool-call),
+#   so left off.
+# Sampling: Chat Completions documents temperature and top_p, not top_k.
+# release_date: closest documented date. StepAudio 2.5 Realtime, which shares this model, launched on 2026-05-09
+#   (https://agent.csdn.net/6a2b693c662f9a54cb7d6a25.html); no separate Chat launch date is published.
+schema = 2
+name = "StepAudio 2.5 Chat"
+family = "step-audio"
+description = "Speech-understanding chat model that reads tone, hesitation and laughter in audio input and replies in text"
+open_weights = false
+release_date = "2026-05-09"
+
+[modalities]
+input = ["text", "audio/mpeg", "audio/wav"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 0
+output = 0

@@ -19,7 +19,7 @@ base_model = "bytedance-seed/seedance-2.0-fast"
 
 [api.videos]
 base_url = "https://ark.cn-beijing.volces.com/api/v3"
-sdk = { aisdk = "@ai-sdk/bytedance", opencodeai = "none" }
+sdk = { aisdk = "@ai-sdk/bytedance", opencodeai = "@opencode/ai/providers/volcengine/videos" }
 
 [cost.video.output]
 price = 5.53412

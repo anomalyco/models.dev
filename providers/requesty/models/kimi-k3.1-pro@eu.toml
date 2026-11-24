@@ -1,0 +1,17 @@
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro (EU)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+
+[limit]
+output = 262_144
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

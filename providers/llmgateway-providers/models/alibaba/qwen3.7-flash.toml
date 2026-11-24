@@ -1,5 +1,7 @@
+# Input limit: dropped, the base model's 991,808 is larger than this host's 983,616 context and the host documents none.
 schema = 2
 base_model = "alibaba/qwen3.7-flash"
+base_model_omit = ["limit.input"]
 name = "Qwen3.7 Flash (Alibaba Cloud)"
 
 [capabilities]

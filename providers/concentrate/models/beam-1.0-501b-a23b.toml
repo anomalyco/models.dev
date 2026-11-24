@@ -1,0 +1,14 @@
+schema = 2
+base_model = "reflection/beam-1.0-501b-a23b"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.2

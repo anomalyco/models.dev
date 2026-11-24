@@ -1,13 +1,16 @@
-# Lab metadata carried over from providers/openrouter/models/mistralai/mistral-medium-3-5.toml (curated catalogue data already in this repo),
-# with provider-specific fields (cost, reasoning_options, status) stripped.
+# Model: https://docs.mistral.ai/models/mistral-medium-3-5 (released 2026-04-28; weights linked under Modified MIT, accessed 2026-11-24).
+# Weights: https://huggingface.co/mistralai/Mistral-Medium-3.5-128B (public, not gated).
+# Output: Mistral's API takes max_tokens up to the 262,144 context (live 2026-11-24: 262,145 was also accepted on
+#   mistral-medium-3-5). The old 209,715 was OpenRouter's own completion cap.
 # Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 # Sampling: temperature and top_p only; Mistral's chat API has no top_k (https://docs.mistral.ai/api/endpoint/chat; 400 "top_k sampling is not enabled for this model", 2026-10-19)
 schema = 2
 name = "Mistral Medium 3.5"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 family = "mistral-medium"
-open_weights = false
-release_date = "2026-04-30"
+open_weights = true
+release_date = "2026-04-28"
+license = "Modified MIT"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
@@ -22,4 +25,8 @@ top_k = false
 
 [limit]
 context = 262_144
-output = 209_715
+output = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B"

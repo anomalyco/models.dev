@@ -5,9 +5,6 @@ base_model = "moonshotai/kimi-k3.1-pro"
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 
-[limit]
-output = 1_048_576
-
 [cost.text.input]
 price = 2
 cache = { read = 0.2, write = 2 }

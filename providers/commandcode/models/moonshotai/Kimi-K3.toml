@@ -1,6 +1,7 @@
 # Source: https://commandcode.ai/docs/provider (accessed 2026-10-14)
 # Model catalog + pricing: https://commandcode.ai/models and
 # https://api.commandcode.ai/provider/v1/models
+# Output limit: no host-specific cap is documented, so output is capped at the context served here (the lab's raised cap would exceed it).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
@@ -10,6 +11,7 @@ structured_output = true
 
 [limit]
 context = 1_000_000
+output = 1_000_000
 
 [cost.text.input]
 price = 3

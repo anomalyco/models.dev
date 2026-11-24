@@ -4,6 +4,7 @@
 # - https://ai.google.dev/gemini-api/docs/thinking (default high)
 # - https://ai.google.dev/gemini-api/docs/generate-content/caching
 # - Introductory rates through 2026-12-31 double from 2027-01-01 (cache storage too).
+# - Audio input: one rate for "text / image / video / audio" ($1.00, cache $0.10): https://ai.google.dev/gemini-api/docs/pricing#gemini-robotics-er-2
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 # Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-robotics-er-2; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-2-preview
@@ -11,7 +12,9 @@
 # APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
 # tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
 # tools: ANY with allowedFunctionNames, VALIDATED and NONE also verified live on this model 2026-10-24.
+# recommended_api: Google recommends Interactions for all new projects (https://ai.google.dev/gemini-api/docs/interactions-overview); Interactions answered this model live 2026-11-18.
 schema = 2
+recommended_api = "interactions"
 v2_only = true
 base_model = "google/gemini-robotics-er-2-preview"
 
@@ -37,9 +40,13 @@ cache = { read = 0.1, storage = 0.5 }
 [cost.text.output]
 price = 5
 
+[cost.audio.input]
+price = 1
+cache = { read = 0.1, storage = 0.5 }
+
 [cost.web_search]
 price = 14
 
 [[cost.multipliers]]
 when = { date = { gte = "2027-01-01" } }
-factor = { text = 2 }
+factor = { text = 2, audio = 2 }

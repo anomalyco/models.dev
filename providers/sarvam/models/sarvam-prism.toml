@@ -1,0 +1,20 @@
+# Pricing: https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17): Sarvam Prism INR 4.00 input / 0 output per 1M tokens.
+# INR->USD at 94 INR per USD, the rate Sarvam publishes for its USD view on https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17), rounded to 8 decimals.
+# Decision model: POST https://api.sarvam.ai/v2/systemone with a state and a map
+# of typed questions. https://docs.sarvam.ai/api/token-factory/decisions-api
+# Context: GET https://api.sarvam.ai/v2/models publishes context_length 32768 for this host, below the lab's 131072.
+schema = 2
+v2_only = true
+base_model = "sarvam/sarvam-prism"
+
+[limit]
+context = 32_768
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.04255319
+
+[cost.text.output]
+price = 0

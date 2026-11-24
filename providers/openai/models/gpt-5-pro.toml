@@ -1,3 +1,4 @@
+# Deprecated: OpenAI shuts this model down on 2026-12-11 (https://developers.openai.com/api/docs/deprecations, accessed 2026-11-23).
 # tools: function calling (strict mode, tool_choice auto/none/required/named) and custom tools (free-form text, or lark/regex grammars; GPT-5 and later): https://developers.openai.com/api/docs/guides/function-calling
 # Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
 # tools.updates: left out. This model has no prompt caching (no cached-input price), so there is no cache for a tool change to keep.
@@ -8,6 +9,7 @@ family = "gpt-pro"
 open_weights = false
 knowledge = "2024-09-30"
 release_date = "2025-10-06"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]

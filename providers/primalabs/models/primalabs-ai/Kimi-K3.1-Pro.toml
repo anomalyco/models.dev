@@ -1,0 +1,41 @@
+# Sources (accessed 2026-11-20):
+# - https://docs.primalabs.ai/inference/models (catalog, feature support, reasoning controls per endpoint)
+# - GET https://api.primalabs.ai/v1/models (authenticated; context_length, max_output_tokens, pricing in USD per token,
+#   input_modalities, supports_* capability checks, reasoning_effort_accepted per endpoint). A capability field the
+#   catalog leaves out is "not verified", so it is not authored here.
+# - Every model is served on /v1/chat/completions, /v1/responses and /v1/messages and reasons by default; reasoning
+#   comes back as message.reasoning_content on Chat Completions. Reasoning controls below are for Chat Completions.
+# Effort: reasoning_effort = none|low|high|max (none = thinking off, so no toggle). The catalog also accepts medium,
+#   which Moonshot's own API doesn't have (providers/moonshotai: low|high|max), so only the lab's levels are authored.
+# Modalities: input_modalities = text, image (video is not checked on any PrimaLabs model), so input is text + the
+#   lab entry's image MIME types.
+# Cache: supports_prompt_caching = true (automatic prefix cache).
+# Sampling: temperature 0, 0.6 or 1 and top_p 0.95 only, per Moonshot's Kimi Vendor Verifier; other values return 400
+#   (https://docs.primalabs.ai/inference/models#sampling-parameters), so the lab's fixed-sampling flags are kept.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 9

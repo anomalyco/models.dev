@@ -6,11 +6,14 @@ description = "GPT-6.1 Terra is OpenAI’s model for visual reasoning, precise c
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-temperature = true
 
 [cost.text.input]
 price = 2
 cache = { read = 0.1, write = 2.5 }
 
 [cost.text.output]
+price = 10
+reasoning = 0
+
+[cost.web_search]
 price = 10

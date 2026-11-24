@@ -1,0 +1,17 @@
+schema = 2
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.53
+cache = { read = 0.11 }
+
+[cost.text.output]
+price = 2.66

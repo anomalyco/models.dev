@@ -1,6 +1,7 @@
 schema = 2
 name = "Particle-1"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+family = "particle"
 open_weights = false
 release_date = "2026-10-28"
 
@@ -27,8 +28,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.05
-cache = { read = 0.003 }
+price = 0.07
+cache = { read = 0.03 }
 
 [cost.text.output]
 price = 0.5

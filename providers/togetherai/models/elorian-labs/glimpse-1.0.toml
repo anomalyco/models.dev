@@ -1,0 +1,28 @@
+# Serverless: $0.60 input, $0.06 cached input, $3.00 output per 1M; context 262,144; function calling and structured
+#   outputs: yes (https://docs.together.ai/docs/serverless-models and https://www.together.ai/pricing, accessed 2026-11-24).
+# Effort (live 2026-11-24): reasoning_effort = none|low|medium|xhigh. Any other value fails with "Unexpected reasoning effort
+#   <x>. Supported types are xhigh (default), medium, and low." none (and reasoning.enabled = false, or
+#   chat_template_kwargs.enable_thinking = false) returns no reasoning; minimal is accepted and acts like none. Off is
+#   effort none, so no toggle.
+# Reasoning is returned in message.reasoning_content (live 2026-11-24).
+# Live 2026-11-24 (reasoning_effort none): a PNG image was read correctly; a function tool came back as a tool call; a strict
+#   json_schema response_format returned matching JSON. Video and other image types weren't probed.
+# Cache and prompt_cache_key: Together's automatic prefix cache (provider.toml).
+schema = 2
+base_model = "elorian-labs/glimpse-1.0"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }
+cache = { implicit = true }
+structured_output = true
+prompt_cache_key = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 3

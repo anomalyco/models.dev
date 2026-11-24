@@ -5,6 +5,10 @@ schema = 2
 base_model = "meta/muse-spark-1.1"
 description = "Muse Spark 1.1 is a multimodal reasoning model from Meta, built for agentic tasks. It accepts text, images, video, audio, and PDF documents and returns text, with a 1M-token context..."
 
+[modalities]
+input = ["text", "image", "video", "application/pdf"]
+output = ["text"]
+
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }

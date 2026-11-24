@@ -1,0 +1,25 @@
+# Price: https://router.huggingface.co/v1/models (2026-11-24). The highest-throughput live provider (groq) lists no price, so this is the
+#   fastest priced one (amazon-bedrock): $0.07 input / $0.2 output per MTok, context 131,072 (the lab's). Groq reports
+#   structured outputs and both report tools.
+# Effort: reasoning_effort = low|medium|high, the model's Harmony levels (https://huggingface.co/openai/gpt-oss-safeguard-20b),
+#   as on this host's openai/gpt-oss-20b entry and the Groq and Bedrock entries for this model.
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+schema = 2
+base_model = "openai/gpt-oss-safeguard-20b"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.2

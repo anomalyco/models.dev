@@ -1,16 +1,20 @@
+# Effort: Cortecs takes reasoning_effort none|minimal|low|medium|high|xhigh|max and maps a level the model lacks to the next lower one it has (https://docs.cortecs.ai/routing/reasoning, "Controlling reasoning" and "How Cortecs maps effort"). For Gemini it "translates reasoning_effort into ... a thinking level for newer Gemini models" (same page, Google Gemini and Vertex AI), so the levels are the lab's: low|medium|high (providers/google/models/gemini-4-carbon.toml). Not probed live: no Cortecs key here.
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
+# Cache: automatic prefix caching on every routed provider (google, google_priority). https://docs.cortecs.ai/routing/prompt-caching
+# Input MIME types: the lab's types for each kind the Cortecs catalog lists (https://api.cortecs.ai/v1/models input_modalities: text, image, audio, file); the catalog lists no video, so the lab's video types are dropped.
+# Limit: the catalog's max_output_tokens (1,048,576) equals its context_size, which is not a per-request output cap, so the lab's 65,536 output limit is inherited.
+# Prices: catalog EUR converted at 1.114 USD per EUR, the sync's rate as of 2026-07-30.
 schema = 2
 base_model = "google/gemini-4-carbon"
 
 [modalities]
-input = ["text", "image", "audio", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
 structured_output = true
-
-[limit]
-output = 1_048_576
 
 [cost.text.input]
 price = 2.229

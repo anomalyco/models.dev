@@ -1,0 +1,26 @@
+schema = 2
+name = "Clover 2"
+description = "Clover 2 is Kitani's MoLE (Mixture of LoRA Experts) model: a base model with seven LoRA experts and trained per-token routing between them. Text chat with reasoning off by default (Clover 2 Thinking turns it on). It supports function calling and a 200,000-token context window shared by input and output, with up to 8,192 output tokens."
+open_weights = false
+release_date = "2026-11-17"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
+
+[limit]
+context = 200_000
+input = 200_000
+output = 8_192
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 1.5

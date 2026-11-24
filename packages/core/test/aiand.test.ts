@@ -85,6 +85,11 @@ test("a vocabulary miss preserves authored reasoning options instead of publishi
   expect(built.reasoning_options).toEqual([{ type: "effort", values: ["high"] }]);
 });
 
+test("a curated family wins over the feed's", () => {
+  const built = buildAiandModel(aiandModel({ family: "deepseek-flash" }), { family: "deepseek" }, null);
+  expect(built.family).toBe("deepseek");
+});
+
 test("a family the enum does not know falls back to the curated value", () => {
   const unknown = buildAiandModel(aiandModel({ family: "not-a-family" }), undefined, null);
   expect(unknown.family).toBeUndefined();

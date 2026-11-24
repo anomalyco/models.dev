@@ -1,0 +1,30 @@
+schema = 2
+base_model = "meta/muse-ember-1.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.004 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_001 } }
+price = 0.3
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_001 } }
+price = 1.5
+
+[cost.web_search]
+price = 2.5

@@ -7,7 +7,7 @@ schema = 2
 base_model = "xai/grok-imagine-video-1.5"
 
 [api.videos]
-sdk = { opencodeai = "@opencode/ai/protocols/xai-video" }
+sdk = { opencodeai = "@opencode/ai/providers/xai/videos" }
 
 [cost.video.output]
 unit = "second"
