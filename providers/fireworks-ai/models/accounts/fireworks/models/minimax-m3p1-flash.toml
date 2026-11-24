@@ -9,7 +9,8 @@
 # - Image types: lab JPEG/PNG/GIF/WEBP subset that Fireworks accepts; Fireworks documents .png/.jpg/.jpeg/.gif/.bmp/.tiff/.ppm
 #   (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations), webp also decoded in live tests on this host.
 #   Video is not listed for this model on Fireworks (only GLM 5.3 Flash supports Serverless video per https://docs.fireworks.ai/guides/video-audio-inputs),
-#   so lab video inputs are dropped; server context/output ceilings are inherited from the lab pending a live probe.
+#   so lab video inputs are dropped. Output is inherited from the lab.
+# Context: GET https://api.fireworks.ai/v1/serverless/models and List Models report context_length 1_048_576 (2026-11-24), above the lab's 1,000,000.
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
@@ -21,6 +22,9 @@ output = ["text"]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { implicit = true }
+
+[limit]
+context = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

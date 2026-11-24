@@ -1,0 +1,18 @@
+# Qwen3 Reranker 8B on Fireworks Serverless: accounts/fireworks/models/qwen3-reranker-8b
+# GET https://api.fireworks.ai/v1/serverless/models (2026-11-24): output "embeddings", "Embedding input tokens" $0.20 per 1M, context_length 40960;
+#   List Models kind EMBEDDING_MODEL, supportsServerless.
+# Live 2026-11-24: POST /inference/v1/rerank with {model, query, documents} returned data[{index, relevance_score, document}] and usage with
+#   prompt_tokens only. That shape isn't Cohere's, so no SDK is named.
+# Context inherits the lab's 32,768, not the catalog's 40,960 (same as qwen3-embedding-8b here).
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-reranker-8b"
+
+[api.rerank]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0
