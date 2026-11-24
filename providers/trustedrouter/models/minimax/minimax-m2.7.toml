@@ -13,11 +13,8 @@ description = "MiniMax model for chat, coding, office work, and agentic tasks"
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+temperature = false
 cache = { implicit = true }
-
-[limit]
-context = 196_608
-output = 176_947
 
 [cost.text.input]
 price = 0.3165

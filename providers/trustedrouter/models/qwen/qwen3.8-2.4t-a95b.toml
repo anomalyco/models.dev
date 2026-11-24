@@ -6,18 +6,15 @@
 # Mid-conversation: system_updates, effort_updates and tools.updates are unset; TrustedRouter documents none of them.
 schema = 2
 base_model = "alibaba/qwen3.8-2.4t-a95b"
-description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
 
 [limit]
-context = 1_000_000
+context = 1_048_576
+output = 65_536
 
 [cost.text.input]
 price = 1.055

@@ -3,11 +3,11 @@
 # Mid-conversation: system_updates, effort_updates and tools.updates are unset; TrustedRouter documents none of them.
 schema = 2
 base_model = "moonshotai/kimi-k2-0905"
-name = "Kimi K2 0905"
 description = "Kimi model for long-context chat, coding, and agentic reasoning"
 
 [capabilities]
 structured_output = true
+temperature = false
 
 [cost.text.input]
 price = 0.633

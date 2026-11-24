@@ -3,7 +3,6 @@
 # Toggle: reasoning.enabled = true|false
 # Reasoning controls are TrustedRouter's published `reasoning` object (OpenRouter's request shape): OpenRouter's
 # efforts for the model, narrowed to what the gateway honors on every route (https://trustedrouter.com/docs).
-# Cache: implicit; the selected provider caches prompt prefixes automatically (https://trustedrouter.com/docs/prompt-caching).
 # Mid-conversation: system_updates, effort_updates and tools.updates are unset; TrustedRouter documents none of them.
 schema = 2
 base_model = "alibaba/qwen3.5-27b"
@@ -16,14 +15,12 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-cache = { implicit = true }
 
 [limit]
 output = 81_920
 
 [cost.text.input]
-price = 0.211
-cache = { read = 0.0211 }
+price = 0.2743
 
 [cost.text.output]
-price = 1.84625
+price = 2.2788

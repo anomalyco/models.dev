@@ -4,6 +4,7 @@ import { syncProviderMatrix } from "../src/sync/index.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import {
   fetchTrustedRouterModels,
+  GPT5_FREEFORM_UNSTATED,
   isGpt5Plus,
   labMimeInput,
   trustedrouter,
@@ -94,8 +95,23 @@ test("generic input kinds take the lab's MIME entries, and match the lab list by
   const lab = ["text", "image/jpeg", "image/png", "application/pdf"];
   expect(labMimeInput(["text", "image"], lab)).toEqual(["text", "image/jpeg", "image/png"]);
   expect(labMimeInput(["text", "image", "pdf"], lab)).toBeUndefined();
-  expect(labMimeInput(["text", "audio"], lab)).toEqual(["text", "audio"]);
   expect(labMimeInput(["text"], undefined)).toEqual(["text"]);
+});
+
+test("input kinds the lab does not document are dropped, never published as raw kinds", () => {
+  const lab = ["text", "image/jpeg", "image/png", "application/pdf"];
+  expect(labMimeInput(["text", "audio"], lab)).toEqual(["text"]);
+  // A text-only lab (GLM 5.3) whose row lists `image` inherits the lab's list.
+  expect(labMimeInput(["text", "image"], ["text"])).toBeUndefined();
+  const glm = trustedrouter.translateModel(model({
+    id: "z-ai/glm-5.3",
+    name: "Z.ai: GLM 5.3",
+    architecture: { input_modalities: ["text", "image"], output_modalities: ["text"] },
+    reasoning: { mandatory: true, supported_efforts: ["max", "high", "low"] },
+  }), none)!;
+  expect(JSON.stringify((glm.model as { modalities?: unknown }).modalities ?? {})).not.toContain("image");
+  const input = glm.v2Set!["modalities.input"] as (current: unknown) => unknown;
+  expect(input(["text", "image"])).toBeUndefined();
 });
 
 test("headers state the reasoning wire fields each file uses", () => {
@@ -115,6 +131,26 @@ test("a passed-through reasoning parameter does not make a non-reasoning lab mod
   const translated = trustedrouter.translateModel(gemma, none)!.model as { reasoning?: boolean; reasoning_options?: unknown };
   expect(translated.reasoning).not.toBe(true);
   expect(translated.reasoning_options).toBeUndefined();
+});
+
+test("a row that omits reasoning does not make a reasoning lab model a non-reasoner", () => {
+  // Hermes 4 405B's row lists only tools and max_tokens; its lab file says it reasons.
+  const hermes = model({
+    id: "NousResearch/Hermes-4-405B",
+    name: "Hermes 4 405B",
+    supported_parameters: ["tools", "max_tokens"],
+    reasoning: undefined,
+  });
+  expect(() => trustedrouter.translateModel(hermes, none)).toThrow(MissingReasoningOptionsError);
+  expect(() => trustedrouter.translateModel(hermes, none)).toThrow("the lab model reasons");
+  // A non-reasoning lab model with the same row is still written, as a non-reasoner.
+  const gemma = model({
+    id: "google/gemma-3-12b-it",
+    name: "Google: Gemma 3 12B",
+    supported_parameters: ["tools", "max_tokens"],
+    reasoning: undefined,
+  });
+  expect((trustedrouter.translateModel(gemma, none)!.model as { reasoning?: boolean }).reasoning).not.toBe(true);
 });
 
 test("a reasoner without stated controls is left for hand authoring, never written as always-on", () => {
@@ -145,7 +181,7 @@ test("mandatory reasoning with no efforts on a row that refuses effort is an aff
   expect(translated.header).not.toContain("# Toggle:");
 });
 
-test("GPT-5+ files leave freeform out and say so in the header; other models carry no such note", () => {
+test("GPT-5+ OpenAI models are left for hand authoring: TrustedRouter states no freeform formats", () => {
   expect(isGpt5Plus("openai/gpt-5")).toBe(true);
   expect(isGpt5Plus("openai/gpt-5.4-mini")).toBe(true);
   expect(isGpt5Plus("openai/gpt-6.1-sol")).toBe(true);
@@ -153,14 +189,16 @@ test("GPT-5+ files leave freeform out and say so in the header; other models car
   expect(isGpt5Plus("openai/gpt-oss-120b")).toBe(false);
   expect(isGpt5Plus("anthropic/claude-sonnet-4-5")).toBe(false);
 
-  const gpt = trustedrouter.translateModel(model({
+  const gpt = model({
     id: "openai/gpt-5.4",
     name: "OpenAI: GPT-5.4",
     reasoning: { mandatory: false, supported_efforts: ["xhigh", "high", "medium", "low", "none"] },
-  }), none)!;
-  expect(gpt.header).toContain("# Custom tools: freeform is left out;");
-  expect(JSON.stringify(gpt.model)).not.toContain("freeform");
-  expect(trustedrouter.translateModel(model(), none)!.header).not.toContain("freeform");
+  });
+  expect(() => trustedrouter.translateModel(gpt, none)).toThrow(MissingReasoningOptionsError);
+  expect(() => trustedrouter.translateModel(gpt, none)).toThrow(GPT5_FREEFORM_UNSTATED);
+  const gpt41 = trustedrouter.translateModel(model({ id: "openai/gpt-4.1", name: "OpenAI: GPT-4.1", reasoning: undefined, supported_parameters: ["tools"] }), none)!;
+  expect(gpt41.id).toBe("openai/gpt-4.1");
+  expect(gpt41.header).not.toContain("freeform");
 });
 
 test("rows that price cache reads publish the cache kind, Anthropic as explicit", () => {
@@ -169,9 +207,10 @@ test("rows that price cache reads publish the cache kind, Anthropic as explicit"
   expect(anthropic.header).toContain("# Cache: explicit;");
 
   const gpt = trustedrouter.translateModel(model({
-    id: "openai/gpt-5.4",
-    name: "OpenAI: GPT-5.4",
-    reasoning: { mandatory: false, supported_efforts: ["high", "low"] },
+    id: "openai/gpt-4.1",
+    name: "OpenAI: GPT-4.1",
+    supported_parameters: ["tools"],
+    reasoning: undefined,
   }), none)!;
   expect(gpt.v2Set?.["capabilities.cache"]).toEqual({ implicit: true });
   expect(gpt.header).toContain("# Cache: implicit;");

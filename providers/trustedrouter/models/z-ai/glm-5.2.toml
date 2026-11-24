@@ -8,11 +8,7 @@
 schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2"
-description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
+description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high", "xhigh"] }

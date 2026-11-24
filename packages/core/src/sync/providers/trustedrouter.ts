@@ -88,7 +88,8 @@ function toOpenRouterShape(model: TrustedRouterModel, baseModel: string): OpenRo
     context_length: model.context_length!,
     architecture: {
       // Lab order (text first), so the MIME mapping below lines up with the v1 list.
-      input_modalities: [...model.architecture.input_modalities].sort((a, b) => kindRank(a) - kindRank(b)),
+      input_modalities: labDocumentedKinds(model.architecture.input_modalities, labMimeList(baseModel))
+        .sort((a, b) => kindRank(a) - kindRank(b)),
       output_modalities: model.architecture.output_modalities,
     },
     pricing: {
@@ -129,7 +130,13 @@ function takesReasoning(model: TrustedRouterModel, baseModel: string) {
 // with no efforts is an always-on claim only when the row also refuses an
 // effort; one that takes `reasoning_effort` (o3, Gemini 2.5 Pro) contradicts it.
 export function unstatedReasoningControls(model: TrustedRouterModel, baseModel: string) {
-  if (!takesReasoning(model, baseModel)) return undefined;
+  if (!takesReasoning(model, baseModel)) {
+    // The OpenRouter builder would write a non-reasoner. A row that omits the
+    // reasoning fields states nothing, so it never overrides a lab that reasons.
+    return labReasons(baseModel)
+      ? "TrustedRouter's row omits reasoning, but the lab model reasons; manual authoring is needed"
+      : undefined;
+  }
   if (model.reasoning === undefined) {
     return "TrustedRouter publishes no reasoning controls for this reasoning model; manual authoring is needed";
   }
@@ -140,8 +147,12 @@ export function unstatedReasoningControls(model: TrustedRouterModel, baseModel: 
   return undefined;
 }
 
-// OpenAI GPT-5 and later (not gpt-oss), whose custom-tool formats AGENTS.md asks
-// every host file to state.
+// OpenAI GPT-5 and later (not gpt-oss). AGENTS.md asks every host file for these
+// models to state which custom-tool (freeform) formats each API accepts, from host
+// docs or a probe. TrustedRouter documents neither, so they are left for hand
+// authoring rather than published without that evidence.
+export const GPT5_FREEFORM_UNSTATED =
+  "TrustedRouter documents no custom-tool (freeform) formats for this GPT-5+ model; manual authoring is needed";
 export function isGpt5Plus(baseModel: string) {
   const major = /^openai\/gpt-(\d+)/.exec(baseModel)?.[1];
   return major !== undefined && Number(major) >= 5;
@@ -191,6 +202,10 @@ export const trustedrouter = {
     const existing = context.existing(model.id);
     const baseModel = existing?.base_model ?? resolveModelMetadataBaseModel(model.id) ?? openRouterBaseModel(model.id);
     if (baseModel === undefined) return undefined;
+    // Thrown as a missing-controls error so an authored file is kept as written.
+    if (isGpt5Plus(baseModel)) {
+      throw new MissingReasoningOptionsError(model.id, GPT5_FREEFORM_UNSTATED);
+    }
     // Writing no controls claims always-on, so a reasoner is left for hand
     // authoring (an authored file is kept as written) unless TrustedRouter states
     // its controls affirmatively.
@@ -221,9 +236,6 @@ export const trustedrouter = {
         + (cache === undefined ? "" : "explicit" in cache
           ? `# Cache: explicit; Anthropic cache_control breakpoints pass through to the provider (${CACHE_DOCS}).\n`
           : `# Cache: implicit; the selected provider caches prompt prefixes automatically (${CACHE_DOCS}).\n`)
-        + (isGpt5Plus(baseModel)
-          ? "# Custom tools: freeform is left out; TrustedRouter documents no custom-tool (text/lark/regex) support and none was probed.\n"
-          : "")
         + "# Mid-conversation: system_updates, effort_updates and tools.updates are unset; TrustedRouter documents none of them.\n",
     };
   },
@@ -242,7 +254,8 @@ function openRouterBaseModel(id: string) {
 
 // The catalog lists generic input kinds (`image`, `pdf`, ...). Use the lab's
 // exact MIME entries for each kind TrustedRouter serves, and inherit the lab's
-// list when it is the same.
+// list when it is the same. A kind the lab does not document is dropped: the
+// row alone is not evidence the model accepts it.
 const KIND_PREFIX: Record<string, (mime: string) => boolean> = {
   text: (mime) => mime === "text",
   image: (mime) => mime.startsWith("image"),
@@ -250,12 +263,13 @@ const KIND_PREFIX: Record<string, (mime: string) => boolean> = {
   audio: (mime) => mime.startsWith("audio"),
   video: (mime) => mime.startsWith("video"),
 };
+export function labDocumentedKinds(kinds: string[], lab: string[] | undefined) {
+  return lab === undefined ? [...kinds] : kinds.filter((kind) => lab.some((mime) => KIND_PREFIX[kind]?.(mime)));
+}
 export function labMimeInput(current: unknown, lab: string[] | undefined) {
   if (!Array.isArray(current) || lab === undefined) return current;
   const kinds = current.filter((value): value is string => typeof value === "string");
-  const mapped = lab.filter((mime) => kinds.some((kind) => KIND_PREFIX[kind]?.(mime)));
-  const unmatched = kinds.filter((kind) => !lab.some((mime) => KIND_PREFIX[kind]?.(mime)));
-  const input = [...mapped, ...unmatched];
+  const input = lab.filter((mime) => kinds.some((kind) => KIND_PREFIX[kind]?.(mime)));
   return input.length === lab.length && input.every((value, index) => value === lab[index]) ? undefined : input;
 }
 
@@ -286,4 +300,8 @@ export async function fetchTrustedRouterModels(fetcher: typeof fetch = fetch) {
 
 function labDoesNotReason(baseModel: string) {
   return (modelMetadata(baseModel) as { reasoning?: unknown }).reasoning === false;
+}
+
+function labReasons(baseModel: string) {
+  return (modelMetadata(baseModel) as { reasoning?: unknown }).reasoning === true;
 }
