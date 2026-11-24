@@ -9,9 +9,12 @@
 #   as written, the same as the Gemini lab files.
 # Sampling: Moonshot fixes temperature (1.0) and top_p (0.95) for this model and documents no top_k
 # (https://platform.kimi.ai/docs/api/models-overview); the lab keeps all three off.
+# Thinking is always on: GET https://api.moonshot.ai/v1/models reports kimi-k3 with reasoning.type = "only" (2026-11-24),
+# and Kimi Code serves thinking-disabled K3 requests with K2.8 Preview instead
+# (https://www.kimi.com/code/docs/en/kimi-code/models.html, "Effort mapping and routing rules").
 schema = 2
 name = "Kimi K3"
-description = "Multimodal Kimi model with 1M context and toggleable max-effort thinking for long-horizon agent work"
+description = "Multimodal Kimi model with 1M context and always-on thinking for long-horizon agent work"
 family = "kimi"
 open_weights = true
 release_date = "2026-07-16"
