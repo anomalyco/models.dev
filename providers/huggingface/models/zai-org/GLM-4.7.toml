@@ -1,5 +1,6 @@
 # Lab identity: https://huggingface.co/zai-org/GLM-4.7
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 schema = 2
 base_model = "zhipuai/glm-4.7"
 description = "Flagship GLM model for hybrid reasoning, coding, and agentic engineering"
@@ -8,6 +9,9 @@ description = "Flagship GLM model for hybrid reasoning, coding, and agentic engi
 tools = { supported = true }
 reasoning = { supported = true }
 
+[limit]
+context = 202_752
+
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
@@ -15,8 +19,8 @@ compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.6
+price = 0.4
 cache = { read = 0.11 }
 
 [cost.text.output]
-price = 2.2
+price = 1.75

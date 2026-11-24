@@ -1,5 +1,6 @@
 # Lab identity: https://huggingface.co/MiniMaxAI/MiniMax-M2.7
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 schema = 2
 base_model = "minimax/MiniMax-M2.7"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
@@ -9,6 +10,9 @@ tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 
+[limit]
+context = 196_608
+
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
@@ -16,8 +20,8 @@ compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.3
+price = 0.6
 cache = { read = 0.06 }
 
 [cost.text.output]
-price = 1.2
+price = 1.8
