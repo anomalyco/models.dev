@@ -3,6 +3,7 @@
 # thinking.type = disabled unless the request sets it.
 # Toggle: thinking.type = enabled|disabled
 # Effort: reasoning_effort = low|high|max
+# top_k: the Ark Chat API takes only temperature and top_p (as in the byteplus entries).
 # Economy tier: BytePlus documents the same weights and capabilities as the standard
 # model, cheaper and slower.
 # Off-peak prices are the base; the standard prices apply Mon-Fri (UTC+8) 09:00-12:00 and
@@ -14,6 +15,7 @@ name = "DeepSeek V4.1 Flash Economy"
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+top_k = false
 cache = { implicit = true }
 
 [api.chat-completions]

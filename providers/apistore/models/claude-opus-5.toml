@@ -1,15 +1,15 @@
 # Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
-# Served over Chat Completions and translated to Anthropic Messages by API Store's gateway.
-# Toggle: thinking.type = adaptive|disabled (Anthropic's `thinking` field, passed through unchanged; values as on Anthropic's API)
-# Effort: reasoning_effort maps to Claude's output_config.effort (adaptive thinking), or to a
-# thinking budget on 4.5 models; `thinking` and `output_config` are also passed through as Anthropic fields.
-# Cache: cache_control on message parts and at the top level is passed to Anthropic; API Store
-# bills cache writes at the normal input price.
+# Relayed over Chat Completions. Effort: reasoning_effort (levels as on Anthropic's API); without it the model
+# does not think. Anthropic's own `thinking` field is not forwarded, so no toggle or budget is listed.
+# Live 2026-11-24: claude-haiku-4-5 no effort / low / medium / high -> 0 / 970 / 1,657 / 1,667 chars of
+# reasoning_content; claude-sonnet-5-5 low / max -> 475 / 10,689 completion tokens.
+# Cache: cache_control on message parts; live 2026-11-24 on claude-sonnet-5-5 a ~4k-token system prompt
+# read 4,052 cached tokens on the second call. API Store bills cache writes at the normal input price.
 schema = 2
 base_model = "anthropic/claude-opus-5"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { explicit = true }
 

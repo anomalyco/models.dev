@@ -1,20 +1,16 @@
 # Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
-# Served over Chat Completions and translated to Gemini generateContent by API Store's gateway.
-# Reasoning: no caller control listed. Live 2026-11-24 on gemini-4-argon, reasoning_effort low and high gave the same
-# output size (750/751 completion tokens, reasoning_tokens 0) and no reasoning_content.
-# Input: the gateway converts image_url parts and PDF file parts; audio and video parts are not converted.
+# Relayed over Chat Completions. Effort: reasoning_effort = low|medium|high ("none" returns 400).
+# Live 2026-11-24, same prompt: gemini-3.8-flash low / medium / high -> 0 / 1,122 / 2,350 reasoning_tokens;
+# gemini-4-carbon low / high -> 1,510 / 2,184. Thinking text is not returned, so no reasoning_field.
+# Audio input checked live 2026-11-24 (input_audio WAV on gemini-3.8-flash).
 # Long prompts: above 200,000 input tokens the whole request is billed at the catalog's `long_prompt` prices.
 schema = 2
 base_model = "google/gemini-3.1-pro-preview"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
-output = ["text"]
 
 [cost.text.input]
 price = 1.4
