@@ -1,4 +1,4 @@
-# Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (deepinfra).
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 # Effort: reasoning_effort = none|low|high, as on OpenRouter and DeepInfra (via Eden AI), the router's fastest provider here.
 #   none turns reasoning off, so no toggle.
 schema = 2
@@ -19,4 +19,4 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 price = 0.06
 
 [cost.text.output]
-price = 0.25
+price = 0.15

@@ -154,6 +154,8 @@ export interface SyncProvider<SourceModel> {
       authored(id: string): ExistingModel | undefined;
       /** The existing file's TOML. */
       v2?(id: string): Record<string, unknown> | undefined;
+      /** The existing file's leading comment block. */
+      header?(id: string): string | undefined;
     },
   ): {
     id: string;
@@ -408,6 +410,9 @@ export async function syncProvider<SourceModel>(
         },
         v2(id) {
           return existing.get(`${id}.toml`)?.v2;
+        },
+        header(id) {
+          return existing.get(`${id}.toml`)?.header;
         },
       });
     } catch (error) {
@@ -870,6 +875,8 @@ export function preserveBaseModel(model: SyncedModel, existing: ExistingModel | 
   const translatedBase = "base_model" in model ? model.base_model : undefined;
   if (translatedBase !== undefined) {
     const translatedOmit = "base_model_omit" in model ? model.base_model_omit : undefined;
+    // An empty list says the module omits nothing: the file's own list goes and none is written.
+    if (translatedOmit?.length === 0) return { ...model, base_model_omit: undefined };
     if (translatedBase !== existing.base_model || translatedOmit !== undefined) return model;
     return { ...model, base_model_omit: existing.base_model_omit };
   }

@@ -44,6 +44,7 @@ Sync runs also write `.sync/model-sync-report.md` for the automation workflow PR
 - Reads existing TOML files from the provider `modelsDir`.
 - Parses existing files with `Bun.TOML.parse` and `AuthoredModelShape.partial()`.
 - Resolves existing `base_model` / `base_model_omit` metadata before passing local metadata to provider modules.
+- Keeps an existing file's `base_model_omit` when a module returns none. A module that returns an empty list omits nothing: the file's list is removed and none is written.
 - Calls the provider module to fetch, parse, and translate source models.
 - Validates translated models with `AuthoredModel` before writing.
 - Patches the result into the existing v2 file (new files are written in v2). Provider modules return the v1-shaped `AuthoredModel` (`reasoning_options`, `cost.input`, `tool_call`, `attachment`, `interleaved`, …), so the per-provider notes below use those names; the runner maps them to v2 fields (`capabilities.reasoning`, `cost.text.input.price`, `capabilities.tools`, modalities, `[api.*] compatibility`) and keeps v2 data it doesn't own (cache, overrides, multipliers). Hand-authored files always use v2 fields (see `AGENTS.md`).
@@ -191,6 +192,16 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 - `capabilities.context.caching = true` sets `capabilities.cache = { implicit = true }` in v2 files that have no cache kinds yet (CrossModel documents no mechanism or TTL). Authored `implicit` / `explicit` details are kept.
 - Effort lists are sorted low to high, because v2 compares them in order.
 - Intrinsic model facts (`knowledge`, dates, `family`, `open_weights`) are never synced; they stay inherited from the canonical `base_model` metadata. Display names are not synced either, so v1 names remain the lab's.
+
+## Hugging Face Notes
+
+Hugging Face is implemented in `packages/core/src/sync/providers/huggingface.ts`.
+
+- Source endpoint: `https://router.huggingface.co/v1/models` (`HF_TOKEN` optional). The router lists one entry per inference provider and no model-level price or context.
+- Price and context follow what the OpenRouter sync publishes, OpenRouter's model-level values: the context is the largest any live provider serves (OpenRouter's `context_length`), and the price is the cheapest live provider's (lowest input + output, then highest throughput, then provider id), the provider default routing favors. Hugging Face routes language models through OpenRouter's default routing.
+- Existing files are refreshed: price and context, and an output cap that follows the context (an output equal to the old context is worked out again from the lab's; a hand-set cap stays, at most the context). Reasoning controls, modalities, API tables and other comments are kept. The router lists no cache prices, so a cache price is hand-authored, and its header names the router provider it comes from on a `# Cache read: <provider>` line. It is kept only when that provider is the one the price now comes from and the read price isn't above the new input price. Otherwise the cache read and write prices and that line are dropped, with a notice, so one file never mixes two providers' prices. A file's own `limit.input` is kept (capped at the context). The lab's inherited `limit.input` is dropped with `base_model_omit = ["limit.input"]` while the context differs from the lab's, so it can't exceed a smaller context. The sync owns that omit entry and works it out again on every run, so it goes once the context matches the lab's; other omit entries are kept. Each file's header carries one synced `# Price and context:` line, which replaces earlier router price lines.
+- New files are created only for models that map to a lab file and have a priced live provider. New reasoning models wait for hand-authored controls.
+- Models missing from the router are kept for manual review (`deleteMissing: false`).
 
 ## Prime Inference Notes
 

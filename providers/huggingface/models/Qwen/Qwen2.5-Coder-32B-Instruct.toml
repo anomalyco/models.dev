@@ -1,5 +1,5 @@
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
-# Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (cloudflare): $0.66 input / $1 output per MTok, context 32,768.
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 # Output: the lab's 8,192 is already under the 32,768 context.
 schema = 2
 base_model = "alibaba/qwen2.5-coder-32b-instruct"

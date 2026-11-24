@@ -1,7 +1,7 @@
 # Effort: reasoning_effort = none|high, Tencent's native set (https://cloud.tencent.com/document/product/1823/131208),
 #   as on the Vercel, Kilo and OpenCode Go entries. none turns reasoning off, so no toggle. Not probed (no HF token).
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
-# Price: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (deepinfra): $0.07 input / $0.281 output per MTok.
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 schema = 2
 base_model = "tencent/hy4-flash"
 
