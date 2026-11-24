@@ -3,7 +3,7 @@
 schema = 2
 name = "Laguna XS.2"
 description = "Agentic coding model from Poolside in the XS size class for local deployment"
-family = "laguna"
+family = "laguna-xs"
 open_weights = true
 release_date = "2026-04-28"
 last_updated = "2026-06-13"
@@ -22,3 +22,7 @@ top_k = true
 [limit]
 context = 262_144
 output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/poolside/Laguna-XS.2"

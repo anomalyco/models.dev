@@ -1,0 +1,37 @@
+# Capabilities the catalog doesn't state (capabilities.cache) come from google/gemini-4-carbon, this host's previous model in the family.
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+description = "Gemini multimodal model for text, image, audio, video, and document tasks"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
+cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, write = 0.083333 }
+
+[cost.text.output]
+price = 7.5
+reasoning = 7.5
+
+[cost.audio.input]
+price = 1.5
+cache = { read = 0.075 }
+
+[cost.image.input]
+price = 1.5
+
+[cost.web_search]
+price = 14

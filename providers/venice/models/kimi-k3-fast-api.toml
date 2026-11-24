@@ -5,6 +5,7 @@
 # effort_updates = false: reasoning_effort / reasoning.effort are request-level, with no per-turn field (https://docs.venice.ai/swagger.yaml).
 # tools.updates = false: `tools` is request-level, with no tool addition/removal message.
 # Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
+# Output limit: https://api.venice.ai/api/v1/models lists maxCompletionTokens 131072 (accessed 2026-11-13); the lab's raised cap would exceed this host's context.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 name = "Kimi K3 Fast"
@@ -23,6 +24,7 @@ prompt_cache_key = true
 
 [limit]
 context = 1_000_000
+output = 131_072
 
 [api.chat-completions]
 

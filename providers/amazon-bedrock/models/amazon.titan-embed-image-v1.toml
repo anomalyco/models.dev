@@ -1,0 +1,18 @@
+# Model card (in-region only; InvokeModel): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-titan-multimodal-embeddings-g1.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json (USE1-TitanEmbeddingsG1-Image-input-tokens $0.0008 per 1K tokens;
+#   USE1-TitanEmbeddingsG1-Image-input-image $0.00006 per image)
+# API: InvokeModel (POST /model/{modelId}/invoke, the model's own JSON body): https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModel.html
+#   @ai-sdk/amazon-bedrock's embedding model calls InvokeModel for Titan, Cohere and Nova embeddings; @opencode/ai's Bedrock provider only routes Converse.
+schema = 2
+v2_only = true
+base_model = "amazon/titan-embed-image-v1"
+
+[api.invoke-model]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.8
+
+[cost.image.input]
+unit = "image"
+price = 0.00006

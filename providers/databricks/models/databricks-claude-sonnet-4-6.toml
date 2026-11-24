@@ -1,6 +1,8 @@
 # Models, inputs and lifecycle (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
-# Reasoning (accessed 2026-10-20): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
-# Budget: Chat `thinking = { type = "enabled", budget_tokens = N }`; N >= 1024 and must be less than `max_tokens`.
+# Reasoning (accessed 2026-11-24): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Toggle: `thinking.type` = adaptive|enabled|disabled, as on Anthropic's API (providers/anthropic).
+# Effort: Anthropic Messages `thinking = { type = "adaptive" }` with `output_config.effort` = low|medium|high|max; Databricks recommends adaptive thinking for this endpoint.
+# Budget: `thinking = { type = "enabled", budget_tokens = N }`; N >= 1024 and must be less than `max_tokens`. Databricks calls budget_tokens deprecated for this endpoint but still documents it.
 # Pricing (accessed 2026-10-20): DBU rates from https://www.databricks.com/product/pricing/proprietary-foundation-model-serving x USD 0.070/DBU (`prop_model_serving` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json: Anthropic, Google and OpenAI on AWS Premium/Enterprise, every region).
 # The pricing page marks this model with a 10% DBU uplift when regional processing (data residency) is enabled: the 1.1x multiplier when region is not global.
 # Batch inference is billed per DBU-hour, not per token; not modeled.
@@ -14,7 +16,7 @@ schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
 [capabilities]
-reasoning = { supported = true, budget = { min = 1_024 } }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"] } }
 

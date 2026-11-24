@@ -10,9 +10,6 @@ description = "Qwen coding model for software agents, repository edits, and code
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 
-[limit]
-output = 235_929
-
 [api.chat-completions]
 capabilities = { system_updates = true }
 

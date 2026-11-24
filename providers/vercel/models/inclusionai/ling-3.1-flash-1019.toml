@@ -1,7 +1,7 @@
 schema = 2
 name = "Ling 3.1 Flash 1019"
 description = "Efficient model for low-latency assistance, extraction, and routine automation"
-family = "ling"
+family = "ling-flash"
 open_weights = false
 release_date = "2026-10-30"
 
@@ -11,7 +11,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
 
 [limit]

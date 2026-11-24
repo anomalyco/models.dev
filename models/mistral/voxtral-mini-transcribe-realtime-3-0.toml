@@ -1,0 +1,29 @@
+# Voxtral Mini Transcribe Realtime 3, API IDs voxtral-mini-transcribe-realtime-3-0 and voxtral-mini-transcribe-realtime-3,
+#   released 2026-10-20 (Public Preview), Premier license (no open weights), streaming over WebSocket with configurable
+#   latency (80 ms to 2,400 ms), end-of-turn detection and diarization: https://docs.mistral.ai/models/voxtral-mini-transcribe-realtime-3-0
+# Release: https://docs.mistral.ai/getting-started/changelog (October 20, 2026, Voxtral 3 audio family)
+# Input encodings: https://docs.mistral.ai/api/endpoint/realtime/sessions (audio_format.encoding pcm_s16le|pcm_s32le|
+#   pcm_f16le|pcm_f32le|pcm_mulaw|pcm_alaw), as for models/mistral/voxtral-mini-transcribe-realtime-2602.toml.
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Voxtral Mini Transcribe Realtime 3"
+description = "Low-latency streaming speech-to-text model with turn detection for voice agents"
+family = "voxtral-transcribe"
+open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["audio/pcm", "audio/pcmu", "audio/pcma"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

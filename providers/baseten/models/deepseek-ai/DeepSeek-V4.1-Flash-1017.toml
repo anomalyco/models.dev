@@ -1,6 +1,8 @@
 # Baseten documents top-level reasoning_effort = none | low | medium | high
-# (default) | max for DeepSeek V4.1 Flash 1017, each run as sent. Reasoning
-# output is returned in reasoning_content.
+# (default) | xhigh | max for DeepSeek V4.1 Flash 1017. medium runs at high and
+# the rest run as sent, so the distinct levels are none | low | high | xhigh |
+# max (reasoning guide, accessed 2026-11-24). Reasoning output is returned in
+# reasoning_content.
 # https://docs.baseten.co/inference/model-apis/reasoning
 # https://www.baseten.co/library/deepseek-v41-flash-1017/
 # Mid-conversation (live probe, Chat Completions, 2026-10-21; notes/deepinfra-baseten-v2-2026-10-21/probe.ts):
@@ -13,7 +15,7 @@ description = "Fast DeepSeek model for efficient chat, coding help, and agent lo
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
 structured_output = true
 cache = { implicit = true }
 system_updates = true

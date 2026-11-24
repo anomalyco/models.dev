@@ -4,10 +4,12 @@
 #   although the schema and the Content-Type header say image/png. Text input only: the schema lists img2img fields, but
 #   image_b64 fails with "input tensor `image` is not present in the model" (live check 2026-10-25).
 # Price: $0 per step (Workers AI models search API, price property of this beta model; not on the pricing page).
+# Deprecated: Workers AI retires this model on 2026-11-20; requests then return HTTP 410 Gone.
+# https://developers.cloudflare.com/changelog/post/2026-11-05-planned-model-deprecations/
 schema = 2
 v2_only = true
 base_model = "bytedance-seed/stable-diffusion-xl-lightning"
-status = "beta"
+status = "deprecated"
 
 [modalities]
 input = ["text"]

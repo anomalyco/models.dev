@@ -1,0 +1,22 @@
+# Sources (accessed 2026-11-07): https://docs.morphllm.com/api-reference/endpoint/systemone and
+# https://www.morphllm.com/api/models/json?prices=list (reflex, output modality decisions).
+# API: POST https://api.morphllm.com/v1/systemone with the System One {model, state, questions} body; no chat completions.
+# Media: base64 data URLs in a top-level `images` list (image_url parts inside `state` also work).
+# Price: $0.042/M input, $0.008/M cached input (automatic prefix cache), no output charge.
+schema = 2
+v2_only = true
+base_model = "morph/reflex"
+
+[capabilities]
+cache = { implicit = true }
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+compatibility = { media_input = "root" }
+
+[cost.text.input]
+price = 0.042
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0

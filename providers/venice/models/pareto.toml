@@ -1,0 +1,22 @@
+schema = 2
+base_model = "unbiased/pareto"
+
+[limit]
+context = 1_000_000
+output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.0375 }
+
+[cost.text.output]
+price = 4
+
+[cost.web_search]
+price = 10

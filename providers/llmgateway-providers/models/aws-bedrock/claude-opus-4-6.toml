@@ -3,7 +3,7 @@ base_model = "anthropic/claude-opus-4-6"
 name = "Claude Opus 4.6 (AWS Bedrock)"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 
 [cost.text.input]

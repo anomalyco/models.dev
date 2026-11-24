@@ -1,0 +1,21 @@
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.039
+cache = { read = 0.0039 }
+
+[cost.text.output]
+price = 1.25

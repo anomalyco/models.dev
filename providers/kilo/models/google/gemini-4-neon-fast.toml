@@ -1,0 +1,28 @@
+schema = 2
+base_model = "google/gemini-4-neon"
+name = "Google: Gemini 4 Neon (Fast)"
+description = "Gemini 4 Neon is Google's fast multimodal reasoning model for coding, agentic workflows, and complex tasks, delivering high-quality results with low latency. It accepts text, images, video, and documents, with tool calling and structured outputs for building responsive applications."
+
+[modalities]
+input = ["text", "image", "application/pdf", "video"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[cost.text.input]
+price = 5.4
+cache = { read = 0.27 }
+
+[cost.text.output]
+price = 27
+reasoning = 0
+
+[cost.web_search]
+price = 14

@@ -1,0 +1,34 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 0.3, output 1.2, cache hit 0.06;
+#   input above 512K tokens, cached + uncached, doubles every rate).
+#   China list: https://cloud.tencent.com/document/product/1823/130055
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17)
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write price is published.
+# API: https://cloud.tencent.com/document/product/1823/132246
+# Toggle: thinking.type = adaptive|disabled (default adaptive)
+# Reasoning guide: https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 512_000 } }
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 1.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 512_000 } }
+price = 2.4

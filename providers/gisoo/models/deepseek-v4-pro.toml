@@ -1,0 +1,12 @@
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+
+[cost.text.input]
+price = 1.848
+cache = { read = 0.0616 }
+
+[cost.text.output]
+price = 5.544

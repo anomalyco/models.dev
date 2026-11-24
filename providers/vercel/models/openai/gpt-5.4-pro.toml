@@ -11,10 +11,11 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh"] }
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
 structured_output = false
 temperature = true
 system_updates = true
+service_tier = ["flex"]
 
 [api.chat-completions]
 capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
@@ -41,3 +42,10 @@ price = 180
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 270
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }

@@ -3,7 +3,7 @@
 # levels are none | high | max. Reasoning is enabled by default;
 # reasoning_effort: "none" disables it. Reasoning output is returned in
 # reasoning_content.
-# Baseten serves at most 32k output tokens for this model on Model APIs.
+# Max output 262,144 (Model APIs overview table and GET /v1/models max_completion_tokens, 2026-11-24).
 # https://www.baseten.co/library/deepseek-v41-flash/
 # https://docs.baseten.co/inference/model-apis/overview
 # https://docs.baseten.co/inference/model-apis/reasoning
@@ -23,7 +23,7 @@ system_updates = true
 
 [limit]
 context = 1_048_576
-output = 32_768
+output = 262_144
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

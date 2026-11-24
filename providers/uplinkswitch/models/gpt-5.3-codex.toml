@@ -1,0 +1,14 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog (accessed 2026-11-14), USD per million tokens.
+# Effort: reasoning_effort = none|low|medium|high|xhigh on Chat Completions, passed through by the gateway. Levels copied from providers/openai for this model.
+schema = 2
+base_model = "openai/gpt-5.3-codex"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 14

@@ -8,8 +8,11 @@
 # overlapped -- low 200/517/616/638/313, high 466/673/604/1075/415,
 # max 389/204/240/1535/688. The levels are not separable, so only the toggle is
 # declared, matching the toggle the lab (providers/deepseek) exposes.
+# Base model: the plan's release notes say the `deepseek-v4-pro` Model Name serves the 正式版 (GA) release
+# since 2026-08-26 (https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-model-release.md,
+# accessed 2026-11-24), the same weights as Ark's pay-as-you-go deepseek-v4-pro-ga snapshot.
 schema = 2
-base_model = "deepseek/deepseek-v4-pro"
+base_model = "deepseek/deepseek-v4-pro-0813"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }

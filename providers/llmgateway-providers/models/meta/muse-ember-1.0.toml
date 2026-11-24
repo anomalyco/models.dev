@@ -1,0 +1,14 @@
+schema = 2
+base_model = "meta/muse-ember-1.0"
+name = "Muse Ember 1.0 (Meta)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.004 }
+
+[cost.text.output]
+price = 0.5

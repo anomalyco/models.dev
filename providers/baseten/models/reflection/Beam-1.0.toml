@@ -1,0 +1,27 @@
+# Reasoning is always on. Baseten documents top-level reasoning_effort = none | minimal | low | medium | high | xhigh | max;
+# none leaves reasoning on and the rest run as sent, so the levels are minimal through max. Reasoning is returned in
+# reasoning_content (live, 2026-11-24). https://docs.baseten.co/inference/model-apis/reasoning
+# Limits: 1,048,576 context, 131,072 max output (GET https://inference.baseten.co/v1/models, overview table), the lab's.
+# Sampling: temperature, top_p, stop (https://docs.baseten.co/inference/model-apis/overview).
+# Price: $0.40 input, $0.04 cached input, $1.20 output per 1M tokens (https://www.baseten.co/pricing/, accessed 2026-11-24).
+schema = 2
+base_model = "reflection/beam-1.0-501b-a23b"
+name = "Beam"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.2

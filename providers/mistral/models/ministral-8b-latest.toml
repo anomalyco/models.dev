@@ -16,13 +16,8 @@
 #   keeps the cached prefix and is obeyed. Adding or removing tools between requests
 #   drops the cache after the system prompt (live 2026-10-22).
 schema = 2
-name = "Ministral 8B (latest)"
-description = "Compact Mistral model for edge, latency-sensitive, and cost-efficient workloads"
-family = "ministral"
-open_weights = true
-knowledge = "2024-10"
-release_date = "2024-10-01"
-last_updated = "2024-10-04"
+base_model = "mistral/ministral-3-8b-instruct-2512"
+name = "Ministral 3 8B (latest)"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
@@ -30,19 +25,12 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = false }
 structured_output = true
-temperature = true
-top_p = true
 top_k = false
 system_updates = true
 stream_usage = true
 prompt_cache_key = true
 cache = { implicit = { min_tokens = 64 } }
-
-[limit]
-context = 262_144
-output = 128_000
 
 [cost.text.input]
 price = 0.15

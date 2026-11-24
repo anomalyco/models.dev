@@ -1,15 +1,30 @@
-# `thinking.type` accepts enabled/disabled (default disabled), while top-level
-# `reasoning_effort` accepts low/medium/high (default low), accessed 2026-06-25.
-# https://cloud.tencent.com/document/product/1823/131208
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 0.132, output 0.528, cache hit 0.033;
+#   no cache-write price is published). China list: CNY 1 / 4 / 0.25, https://cloud.tencent.com/document/product/1823/130055
+# hy3-preview is no longer served on TokenHub pay-as-you-go: retirement notice (2026-07-28)
+#   https://cloud.tencent.com/announce/detail/2391, and it is absent from the TokenHub model list
+#   https://cloud.tencent.com/document/product/1823/130051 and price list
+#   https://cloud.tencent.com/document/product/1823/130055 (both checked 2026-11-24). Only the Hy Token
+#   Plan still accepts the hy3-preview id, routed to Hy3 (see tencent-token-plan/hy3).
+# Capabilities (structured output, function calling, caching): https://cloud.tencent.com/document/product/1823/130051
+# Effort: reasoning_effort = low|high|no_think (default high). no_think turns thinking off, so it is
+#   "none" here with no separate toggle (thinking.type also exists, default enabled).
+#   https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+# Reasoning is returned at choices[].message.reasoning_content (https://cloud.tencent.com/document/product/1823/131208).
 schema = 2
 base_model = "tencent/hy3"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["none", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0
-cache = { read = 0, write = 0 }
+price = 0.132
+cache = { read = 0.033 }
 
 [cost.text.output]
-price = 0
+price = 0.528

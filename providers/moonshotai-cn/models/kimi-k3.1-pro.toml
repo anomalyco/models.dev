@@ -28,16 +28,13 @@ stream_usage = true
 prompt_cache_key = true
 cache = { implicit = { ttl = ["5m", "1h"] } }
 
-[limit]
-output = 1_048_576
-
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-capabilities = { tools = { updates = true } }
+capabilities = { tools = { updates = ["add"] } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }
-capabilities = { tools = { choice = ["auto"], updates = true } }
+capabilities = { tools = { choice = ["auto"], updates = ["add"] } }
 
 [api.messages]
 base_url = "https://api.moonshot.cn/anthropic/v1"

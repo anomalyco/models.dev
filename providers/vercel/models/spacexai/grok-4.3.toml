@@ -9,9 +9,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
-
-[limit]
-output = 1_000_000
+service_tier = ["priority"]
 
 [api.chat-completions]
 capabilities = { system_updates = true }
@@ -39,3 +37,10 @@ price = 2.5
 [[cost.text.output.overrides]]
 when = { context = { gt = 200_001 } }
 price = 5
+
+[cost.web_search]
+price = 5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }

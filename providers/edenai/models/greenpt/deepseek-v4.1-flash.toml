@@ -5,11 +5,11 @@ name = "DeepSeek V4.1 Flash (Greenpt)"
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
-structured_output = false
+structured_output = true
 
 [cost.text.input]
-price = 0.24563
-cache = { read = 0.012282 }
+price = 0.241186
+cache = { read = 0.012059 }
 
 [cost.text.output]
-price = 1.22815
+price = 1.20593

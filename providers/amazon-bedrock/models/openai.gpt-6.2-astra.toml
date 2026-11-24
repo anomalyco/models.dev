@@ -1,0 +1,66 @@
+# Model IDs, routes, limits and pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-2-astra.html
+# Mantle In-Region: us-east-1, /openai/v1 Responses and Chat Completions. AWS prices include the 10% regional premium.
+# Ultrafast: service_tier=ultrafast; AWS specifies 3x Standard through 2027-02-28, then 6x from 2027-03-01.
+# AWS specifies calendar dates without a timezone. Dated mode prices stay v2-only; v1 publishes the Ultrafast request body without a mode price.
+# Reasoning: reasoning.effort (Responses), reasoning_effort (Chat); low|medium|high|xhigh|max, no none: https://developers.openai.com/api/docs/models/gpt-6.2-astra
+# Bedrock's feature matrix excludes reasoning updates: https://developers.openai.com/api/docs/guides/amazon-bedrock#responses-api-feature-availability
+# Modalities: Mantle accepts images and rejects PDF on both APIs (live 2026-11-17); the card directs Runtime document input to Responses input_file.
+# tools.freeform: text, lark and regex verified on both APIs, 2026-11-17; ZZ[0-9]{3} and equivalent Lark grammar both return ZZ000 despite a conflicting instruction.
+# Strict function tools work on Responses; Chat rejects function tools with reasoning_effort (live 2026-11-17). The card documents JSON Schema output on both Mantle APIs.
+# Cache: implicit + explicit, 30m TTL, 1,024-token minimum, up to four writes per request: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html#prompt-caching-openai-56
+# Explicit caching: prompt_cache_options={mode:"explicit",ttl:"30m"} and prompt_cache_breakpoint={mode:"explicit"} on Responses input_text blocks or Chat text parts.
+# Mid-conversation developer messages preserve cache on both APIs (live 2026-11-17): https://developers.openai.com/api/docs/guides/keep-prefix-unchanged
+# Responses add/remove/replace preserves cache for tools declared through additional_tools; initialize mutable tools there, since replacing a top-level declaration loses its cache (live 2026-11-17).
+# tools.search: client-side Responses tool_search with namespaced results completes a round trip; flat results omit function_call.namespace and fail replay (live 2026-11-18): https://developers.openai.com/api/docs/guides/tools-tool-search
+# Mid-conversation, tool and cache flags backfilled 2026-11-18 from openai.gpt-6-astra.toml on this host (same API layout; the sync doesn't carry them).
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+service_tier = ["ultrafast"]
+
+[api.responses]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/responses" }
+capabilities = { tools = { strict = true, search = true, updates = ["add", "remove", "replace"] }, system_updates = true }
+
+[api.chat-completions]
+base_url = "https://bedrock-mantle.${AWS_REGION}.api.aws/openai/v1"
+sdk = { aisdk = "@ai-sdk/amazon-bedrock/mantle", opencodeai = "@opencode/ai/providers/amazon-bedrock/mantle/chat" }
+
+[cost.text.input]
+price = 8.8
+cache = { read = 0.44, write = { "30m" = 11 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 17.6
+cache = { read = 0.88, write = { "30m" = 22 } }
+
+[cost.text.output]
+price = 44
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 66
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" }, date = { lt = "2027-03-01" } }
+factor = { text = 3 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" }, date = { gte = "2027-03-01" } }
+factor = { text = 6 }
+
+[experimental.modes.ultrafast]
+body = { service_tier = "ultrafast" }

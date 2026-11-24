@@ -1,0 +1,18 @@
+# Created by the Hugging Face sync. Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (novita).
+schema = 2
+base_model = "microsoft/wizardlm-2-8x22b"
+
+[limit]
+context = 65_535
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.62
+
+[cost.text.output]
+price = 0.62

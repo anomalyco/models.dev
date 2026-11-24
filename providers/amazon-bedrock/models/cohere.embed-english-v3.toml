@@ -1,0 +1,23 @@
+# Model card (in-region only; InvokeModel): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-cohere-embed-english.html
+# Request (texts up to 512 tokens, or one image as a data URI in image/jpeg or image/png): https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-embed-v3.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json (Embed English: USE1_InputTokenCount $0.10 per 1M tokens;
+#   USE1_InputImageCount $0.0001 per image)
+# API: InvokeModel (POST /model/{modelId}/invoke, the model's own JSON body): https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModel.html
+#   @ai-sdk/amazon-bedrock's embedding model calls InvokeModel for Titan, Cohere and Nova embeddings; @opencode/ai's Bedrock provider only routes Converse.
+schema = 2
+v2_only = true
+base_model = "cohere/embed-english-v3.0"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["embedding"]
+
+[api.invoke-model]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.image.input]
+unit = "image"
+price = 0.0001

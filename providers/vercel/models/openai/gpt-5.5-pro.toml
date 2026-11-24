@@ -11,6 +11,7 @@ reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
 structured_output = true
 temperature = true
 system_updates = true
+service_tier = ["flex"]
 
 [limit]
 context = 1_000_000
@@ -41,3 +42,10 @@ price = 180
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 270
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }

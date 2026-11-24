@@ -13,6 +13,7 @@ structured_output = true
 
 [limit]
 context = 1_048_576
+output = 393_216
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -24,8 +25,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.565848
-cache = { read = 0.047154 }
+price = 1.28
+cache = { read = 0.108 }
 
 [cost.text.output]
-price = 1.131696
+price = 2.56

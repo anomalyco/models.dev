@@ -1,0 +1,18 @@
+# Price: https://kunavo.com/pricing.json (read 2026-10-24), USD per 1M tokens.
+# Cache: read 0.1x and write 1.25x input, the vendor's structure at Kunavo's rate.
+# Reasoning: no caller control on this surface. For a Claude id Kunavo builds
+# the Anthropic request on /v1/chat/completions from a fixed field list, so
+# reasoning_effort, reasoning and thinking are dropped, never forwarded:
+# https://kunavo.com/docs/chat#reasoning (the Claude row).
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.7
+cache = { read = 0.07, write = 0.875 }
+
+[cost.text.output]
+price = 3.5

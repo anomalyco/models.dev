@@ -1,0 +1,45 @@
+# Source: GET https://api.isoquant.ai/v1/models (accessed 2026-11-10).
+# Same weights as the lab model on a higher-throughput serve; the host names it "... Fast".
+# Pricing (nano-USD per token -> USD per million): 35/5/370 = $0.035/$0.005/$0.37
+# input/cached input/output. Prompt caching is automatic with no write price.
+# Reasoning: the host publishes exactly `none|low|high` (default high) on all three APIs:
+# chat `reasoning_effort`, messages `output_config.effort`, responses `reasoning.effort`.
+# Its `supported_parameters.reasoning_effort.values` lists the same enum; `max` is not
+# accepted. It exposes no `thinking.type` toggle; `none` is how reasoning is turned off.
+# Chat Completions returns the trace in `reasoning_content`.
+# Tools: the host reports `strict_tools: true` and tool_choice auto/none/required/function on
+# Chat Completions and Responses, and auto/none/any/tool on Messages; its docs state "Strict
+# function tools are supported." The top-level list is the union across those APIs, with any
+# mapped to required and named to tool.
+# Limits: the host reports context_length 1048576 and output_limit.max_tokens 943718
+# (policy `remaining_context`); the lab's 384,000 output cap does not apply on this serve.
+# Modalities: the host advertises text+image on all three APIs, which matches the lab.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Fast"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 943_718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.035
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.37

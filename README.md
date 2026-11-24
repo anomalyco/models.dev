@@ -33,6 +33,27 @@ curl "https://models.dev/api.json?type=all"
 The currently supported model type is `decision`. The `type` parameter is also
 available on `models.json`, `catalog.json`, and `model-schema.json`.
 
+### Experimental v2
+
+The experimental v2 catalog includes every model type by default and supports
+the same `type` filters. `openai-codex` (ChatGPT plans through Codex) and
+`openai-chatgpt` (ChatGPT plans through Sign in with ChatGPT) are hidden unless
+explicitly included:
+
+```bash
+curl "https://models.dev/experimental/v2.0/api.json?include=openai-codex"
+curl "https://models.dev/experimental/v2.0/api.json?include=openai-codex,openai-chatgpt&type=chat"
+```
+
+`include` adds named opt-in providers to the usual catalog; it does not filter
+out existing providers such as `openai` or `github-copilot`. Comma-separated IDs
+and repeated `include` parameters are combined, with whitespace and duplicates
+ignored. Unknown IDs are ignored.
+
+Both need client-managed ChatGPT OAuth, so clients should opt in only when they
+support that setup. The v1 endpoints never expose them, even with `include` or
+`type=all`, and the website doesn't list them.
+
 Use the **Model ID** field to do a lookup on any model; it's the identifier used by [AI SDK](https://ai-sdk.dev/).
 
 Provider-agnostic model metadata is available separately:
@@ -189,6 +210,7 @@ Rules:
 - Plain tables (`[limit]`, `[modalities]`, `[capabilities]`, inline tables) deep-merge; arrays and primitives replace.
 - `base_model_omit` removes inherited fields after merging, e.g. `base_model_omit = ["limit.input"]`.
 - Lifecycle goes in `status` (`alpha`, `beta`, `deprecated`). A model served through a different SDK, base URL, or reasoning field gets an `[api.<protocol>]` table, e.g. `[api.chat-completions] compatibility = { reasoning_field = "reasoning_content" }`.
+- Tables are in order and the first one is the default. `recommended_api = "<protocol>"` (v2 only) names the API we recommend when a client supports it; it must be one of the model's tables, and the v2 API publishes the first table when it's left out.
 - A full definition without `base_model` is only for first-party labs and host-unique models. It has every lab field plus the provider fields.
 
 **Reasoning controls (short):** classify first-party lab vs multi-model relay (not by npm). Copy the underlying model’s controls from the lab's provider entry and same-surface peers: often `effort = ["low", "medium", "high"]` on GPT-style relays, but DeepSeek V4 is `toggle = true` with `effort = ["low", "high", "max"]`, etc. Don't drop controls from uncertainty on relays. Full policy: `AGENTS.md`.

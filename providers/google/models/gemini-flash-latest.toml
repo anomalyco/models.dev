@@ -1,5 +1,9 @@
-# Alias for the current Gemini Flash release (gemini-3.7-flash).
-# Keep reasoning_options and cost in sync with gemini-3.7-flash.
+# Alias for the current Gemini Flash release (gemini-3.8-flash): live generateContent on gemini-flash-latest returned
+# modelVersion "gemini-3.8-flash" on 2026-11-23.
+# Keep reasoning_options and cost in sync with gemini-3.8-flash (https://ai.google.dev/gemini-api/docs/pricing#gemini-3.8-flash).
+# Flex and Priority do not scale cache storage. Rates double from 2027-01-01.
+# description and knowledge (none stated) follow models/google/gemini-3.8-flash.toml.
+# Grounding with Google Search: $14 per 1,000 search queries, as for gemini-3.8-flash. Token-only multipliers (object factor), so cost.web_search is unscaled.
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
 # - https://generativelanguage.googleapis.com/v1beta/models (topP/topK per model)
@@ -7,13 +11,14 @@
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 # APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
 # tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
+# recommended_api: Google recommends Interactions for all new projects (https://ai.google.dev/gemini-api/docs/interactions-overview); Interactions answered this model live 2026-11-18.
 schema = 2
+recommended_api = "interactions"
 name = "Gemini Flash Latest"
-description = "High-efficiency Gemini model for agentic workflows, coding, and multimodal reasoning"
+description = "Google's most intelligent Flash model, engineered for long-horizon software engineering, autonomous agents, and complex enterprise workflows"
 family = "gemini-flash"
 open_weights = false
-knowledge = "2026-03"
-release_date = "2026-08-13"
+release_date = "2026-09-02"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
@@ -21,12 +26,13 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
 structured_output = true
 temperature = true
 top_p = true
 top_k = true
-cache = { implicit = true, explicit = true }
+cache = { implicit = { min_tokens = 4_096 }, explicit = true }
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_048_576
@@ -43,10 +49,26 @@ sdk = { opencodeai = "@opencode/ai/providers/google/interactions" }
 
 [cost.text.input]
 price = 0.75
-cache = { read = 0.075 }
+cache = { read = 0.075, storage = 0.5 }
 
 [cost.text.output]
 price = 3.75
 
 [cost.audio.input]
 price = 0.75
+cache = { read = 0.075, storage = 0.5 }
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 1.8, cache = { read = 1.8 } }, output = 1.8 }, audio = { input = { price = 1.8, cache = { read = 1.8 } } } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.5 } }, output = 0.5 }, audio = { input = { price = 0.5, cache = { read = 0.5 } } } }
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = { text = 2, audio = 2 }
