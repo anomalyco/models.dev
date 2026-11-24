@@ -1,0 +1,19 @@
+# https://chat.jarv.tech/docs/api/openai#openai-reasoning
+# Chat Completions supports reasoning.effort and returns reasoning_content.
+# Personal API keys cap output at 32,768 tokens.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+top_p = false
+
+[limit]
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
