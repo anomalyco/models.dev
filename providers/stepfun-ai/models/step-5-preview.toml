@@ -24,7 +24,6 @@ cache = { implicit = { min_tokens = 256 } }
 [limit]
 context = 1_024_000
 input = 1_024_000
-output = 65_536
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }

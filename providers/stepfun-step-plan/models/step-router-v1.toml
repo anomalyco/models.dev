@@ -1,7 +1,7 @@
 # Sources (accessed 2026-10-21):
 # - Model: https://platform.stepfun.com/docs/zh/guides/models/step-router, https://platform.stepfun.com/docs/zh/guides/developer/step-router
-#   Step Plan only. Routes each request to deepseek-v4-pro or step-3.7-flash; no image input; max_tokens up to 250K;
-#   Messages ignores output_config.effort (https://platform.stepfun.com/docs/zh/api-reference/chat/messages-create,
+#   Step Plan only. Routes each request to step-5-preview or step-3.7-flash; no image or document input;
+#   max_tokens up to 64K (accessed 2026-11-24); Messages ignores output_config.effort (https://platform.stepfun.com/docs/zh/api-reference/chat/messages-create,
 #   https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create).
 # - Step Plan (credit subscription, no per-token price, so no [cost]): https://platform.stepfun.com/docs/zh/step-plan/overview, https://platform.stepfun.com/docs/zh/step-plan/pricing
 # - Plan endpoints: POST /step_plan/v1/chat/completions and /step_plan/v1/messages (no Responses):
@@ -30,7 +30,7 @@ temperature = true
 [limit]
 context = 256_000
 input = 256_000
-output = 256_000
+output = 65_536
 
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }

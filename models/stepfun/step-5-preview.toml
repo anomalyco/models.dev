@@ -1,6 +1,8 @@
 # release_date is StepFun's API catalog first-appearance timestamp (created=1789564127,
 # 2026-09-16 13:08 UTC) — no dated launch announcement was found on the model docs page.
 # https://platform.stepfun.com/docs/zh/guides/models/step-5-preview
+# Max output 64k tokens on both model pages (accessed 2026-11-24):
+#   https://platform.stepfun.com/docs/zh/guides/models/step-5-preview, https://platform.stepfun.ai/docs/en/guides/models/step-5-preview
 # Sampling: open weights; the model card recommends temperature=1.0, top_p=0.95, top_k=0
 #   (https://huggingface.co/stepfun-ai/Step-5-Preview).
 # Input formats: images JPG/JPEG, PNG, static GIF and WebP; video containers MP4, QuickTime and Matroska
@@ -28,7 +30,7 @@ top_k = true
 [limit]
 context = 1_000_000
 input = 1_000_000
-output = 1_000_000
+output = 65_536
 
 [[weights]]
 label = "Hugging Face"
