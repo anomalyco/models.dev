@@ -25,7 +25,8 @@
 # system_updates holds on every API: the tool-calls guide says Chat Completions, Messages and Responses all accept
 #   system messages mid-conversation (https://api-docs.deepseek.com/guides/tool_calls#inserting-tool-calls-mid-conversation),
 #   and GET /models reports anthropic_messages.system_prompt_update = "in-history" (https://api-docs.deepseek.com/api/list-models).
-#   The late system message was checked in place on Chat Completions (live 2026-10-23).
+#   The late system message was checked in place on Chat Completions (live 2026-10-23) and on Responses (live 2026-11-24:
+#   a system message after the first exchange was obeyed and cached_tokens stayed at 6144 of 6297).
 # Tools: tool_choice none|auto|required|named on Chat Completions (required and named return 400 in thinking mode;
 #   https://api-docs.deepseek.com/api/create-chat-completion) and none|auto|any|tool on Anthropic Messages
 #   (https://api-docs.deepseek.com/guides/anthropic_api). strict tools work only on the beta base URL
@@ -33,6 +34,8 @@
 # Responses API: POST https://api.deepseek.com/responses, listed for both models on the pricing page
 #   (https://api-docs.deepseek.com/quick_start/pricing) and documented at https://api-docs.deepseek.com/guides/responses_api
 #   (reasoning.effort, tool_choice none|auto|required|named).
+# Responses toggle and effort: reasoning.effort = none|low|high|max, where none turns thinking off
+#   (https://api-docs.deepseek.com/guides/thinking_mode); Chat Completions and Messages use thinking.type for the toggle.
 # freeform left out: Responses accepts only a custom tool named apply_patch; other custom tool names return 400.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
