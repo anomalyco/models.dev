@@ -1,15 +1,19 @@
-# `thinking.type` accepts enabled/disabled (default disabled), while top-level
-# `reasoning_effort` accepts low/medium/high (default low), accessed 2026-06-25.
-# https://cloud.tencent.com/document/product/1823/131208
+# hy3-preview: on the Hy Token Plan only, the hy3-preview id is still accepted and routed to Hy3,
+#   billed like hy3 (https://cloud.tencent.com/document/product/1823/130060). This is the plan, not
+#   TokenHub pay-as-you-go, which retired hy3-preview (https://cloud.tencent.com/announce/detail/2391).
+# Pricing: hy3 (and the plan's hy3-preview alias) is billed at one tier-dependent rate for input, output
+#   and cached input: Lite / Standard / Pro / Max = 16 / 15.6 / 14.875 / 14.4 points per million
+#   tokens (20 points = CNY 1), checked 2026-11-24.
+#   https://cloud.tencent.com/document/product/1823/133811
+#   Cost omitted pending subscription-tier representation; unknown does not mean free.
+# Capabilities (structured output, function calling, caching): https://cloud.tencent.com/document/product/1823/130051
+# Effort: reasoning_effort = low|high|no_think (default high). no_think turns thinking off, so it is
+#   "none" here with no separate toggle (thinking.type also exists, default enabled).
+#   https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
 schema = 2
 base_model = "tencent/hy3"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["none", "high"] }
-
-[cost.text.input]
-price = 0
-cache = { read = 0, write = 0 }
-
-[cost.text.output]
-price = 0
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+cache = { implicit = true }
