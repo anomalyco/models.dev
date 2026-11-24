@@ -1,0 +1,21 @@
+# The file schema requires both modality arrays when either differs from the lab.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Identity: Release date is the original Gradium voice service launch; default is a moving model alias.
+# Native media requires an operation-bound inference ticket, not bearer-key SDK authentication.
+# Setup: https://github.com/anonrouter/anonrouter-sdk/blob/main/docs/ticketed-media.md.
+schema = 2
+v2_only = true
+base_model = "gradium/default"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg"]
+
+[api.speech]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+unit = "character"
+price = 50

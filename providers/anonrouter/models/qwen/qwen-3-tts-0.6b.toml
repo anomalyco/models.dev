@@ -1,0 +1,27 @@
+# The file schema requires both modality arrays when either differs from the lab.
+# Catalog: https://api.anonrouter.ai/v1/models (2026-11-17).
+# Route-dependent prices and limits are the default plaintext route snapshot.
+# Routing requirements may select another route: https://docs.anonrouter.ai/provider-routing.
+# Identity: Repository created 2026-01-21 (Hugging Face API createdAt); Venice lists the same nine preset speakers as this CustomVoice checkpoint.
+# Native media requires an operation-bound inference ticket, not bearer-key SDK authentication.
+# Setup: https://github.com/anonrouter/anonrouter-sdk/blob/main/docs/ticketed-media.md.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3-tts-12hz-0.6b-customvoice"
+name = "Qwen3-TTS 0.6B"
+
+[modalities]
+input = ["text"]
+output = ["audio/mpeg"]
+
+[capabilities]
+temperature = false
+top_p = false
+top_k = false
+
+[api.speech]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+unit = "character"
+price = 101

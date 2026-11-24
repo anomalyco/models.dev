@@ -1,0 +1,27 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://ideogram.ai/models/4.5/
+# Announced September 30, 2026: https://x.com/ideogram_ai/status/2105327223431737780
+# Official post metadata: https://publish.twitter.com/oembed?url=https%3A%2F%2Fx.com%2Fideogram_ai%2Fstatus%2F2105327223431737780&omit_script=true
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "image"
+name = "Ideogram 4.5"
+description = "Image generation and precise editing model for repeated image revisions"
+open_weights = false
+release_date = "2026-09-30"
+
+[modalities]
+input = ["text", "image"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

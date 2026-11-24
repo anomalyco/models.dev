@@ -1,0 +1,27 @@
+# Token limits are unspecified (0); each serving host supplies its own limits.
+# https://gradium.ai/Gradium%20-%20press%20release%20EN%20final.pdf
+# https://gradium.ai/text-to-speech
+# Release date is the original Gradium voice service launch; default is a moving model alias.
+# Limits that the lab does not publish are left to each serving host.
+schema = 2
+v2_only = true
+type = "speech"
+name = "Gradium TTS"
+description = "Streaming multilingual speech synthesis model for conversational voice applications"
+open_weights = false
+release_date = "2025-12-02"
+
+[modalities]
+input = ["text"]
+output = ["audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
