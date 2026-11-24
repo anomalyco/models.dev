@@ -1,0 +1,25 @@
+# Prices and limit: https://api.deepinfra.com/v1/openai/models (thinkingmachines/Inkling-2-Mini, accessed 2026-11-24): $0.075 input, $0.015 cached
+#   input, $0.3 output per 1M tokens; context_length and max_tokens 1,048,576 (the lab's window, so no limit override); tags vision, prompt_cache,
+#   reasoning. The deploy catalog https://api.deepinfra.com/models/list lists the same prices with tags tools and structured-output.
+# Effort: reasoning_effort = none|minimal|low|medium|high|max, copied from this host's Inkling-2-Small; "none" disables reasoning
+#   (https://docs.deepinfra.com/chat/reasoning).
+# Capabilities and layout (implicit cache with prompt_cache_key, system_updates, reasoning_content) follow this host's Inkling-2-Small.
+schema = 2
+base_model = "thinkingmachines/inkling-2-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+system_updates = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.3
