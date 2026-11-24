@@ -3,6 +3,8 @@
 # Personal API keys cap output at 32,768 tokens.
 # JARV Chat Completions forwards image_url message parts (see PR #14394).
 # Publish only text and images. ModalitiesV2 requires both input and output.
+# JSON Schema enforcement is delegated to the selected endpoint and can vary on fallback.
+# https://chat.jarv.tech/docs/api/structured (JARV route evidence in PR #14394).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 

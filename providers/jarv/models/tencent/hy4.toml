@@ -3,6 +3,8 @@
 # Personal API keys cap output at 32,768 tokens.
 # JARV API OpenAIChatRequest accepts temperature and ignores top_p/top_k.
 # https://gitlab.com/jarv-group/jarv_new/-/blob/69fef674ed34dcff4cff683e90aa914497591b4d/services/public-api/src/jarv_public_api/api/openai_compat.py#L51-74
+# JSON Schema enforcement is delegated to the selected endpoint and can vary on fallback.
+# https://chat.jarv.tech/docs/api/structured (JARV route evidence in PR #14394).
 schema = 2
 base_model = "tencent/hy4"
 
