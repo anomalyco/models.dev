@@ -1,6 +1,7 @@
 # Sources (accessed 2026-08-01):
 # - https://thinkingmachines.ai/news/inkling-small/
 # - https://huggingface.co/thinkingmachines/Inkling-Small
+# - https://huggingface.co/thinkingmachines/Inkling-Small-NVFP4 (NVFP4 checkpoint, linked from the model card)
 # Input formats: https://tinker-docs.thinkingmachines.ai/cookbook/inkling/images/ ("Formats: PNG and JPEG") and
 #   https://tinker-docs.thinkingmachines.ai/cookbook/inkling/audio/ (WAV); the model card lists 16kHz WAV audio.
 # Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
@@ -30,3 +31,8 @@ output = 1_048_576
 [[weights]]
 label = "Hugging Face"
 url = "https://huggingface.co/thinkingmachines/Inkling-Small"
+
+[[weights]]
+label = "Hugging Face (NVFP4)"
+url = "https://huggingface.co/thinkingmachines/Inkling-Small-NVFP4"
+quantization = "nvfp4"
