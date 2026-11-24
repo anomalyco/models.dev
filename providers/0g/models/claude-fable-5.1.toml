@@ -1,0 +1,19 @@
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-24).
+# Reasoning probed 2026-11-24 through 0G's staging router (0g-router param-probe --reasoning, 3 runs per request)
+# on the rows mainnet serves the model from (anonymous1, anonymous2).
+# On Chat Completions every level, none to max, is accepted on @anonymous1, where high to max report 38-74 reasoning tokens
+# (lower levels 0); on @anonymous2 high is accepted but thinking is not returned (reasoning_tokens 0). On /v1/messages
+# @anonymous2's adaptive thinking at output_config.effort max thinks more than at low (one request each).
+# Levels follow Anthropic's own entry; no toggle is listed, as turning thinking off was not shown on every row.
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 10
+cache = { write = 12.5 }
+
+[cost.text.output]
+price = 50

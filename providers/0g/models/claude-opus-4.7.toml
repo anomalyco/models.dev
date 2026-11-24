@@ -1,0 +1,17 @@
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-24).
+# Reasoning probed 2026-11-24 through 0G's staging router (0g-router param-probe --reasoning, 3 runs per request)
+# on @anonymous1; mainnet also serves it from @anonymous2, not probed.
+# No caller control on Chat Completions: every request with reasoning_effort (high, 3 runs) is refused there with 400
+# (likely the upstream mapping to thinking.type enabled, which Anthropic documents Opus 4.7 refusing). The default works.
+schema = 2
+base_model = "anthropic/claude-opus-4-7"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 5
+cache = { write = 6.25 }
+
+[cost.text.output]
+price = 25

@@ -1,0 +1,16 @@
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-24).
+# Reasoning probed 2026-11-24 through 0G's staging router (0g-router param-probe --reasoning, 3 runs per request)
+# on the rows mainnet serves the model from (anonymous1, tencent).
+# reasoning_effort="none" (and thinking.type=disabled) gives 0 reasoning tokens on both rows, so effort lists none, although
+# Moonshot's own entry says K3.x always thinks. low 37-76, high 114-207, max 209-257 reasoning tokens on @tencent. Levels follow Moonshot's entry.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["none", "low", "high", "max"] }
+
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 15

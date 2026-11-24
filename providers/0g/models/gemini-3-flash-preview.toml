@@ -1,0 +1,17 @@
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-24).
+# Reasoning probed 2026-11-24 through 0G's staging router (0g-router param-probe --reasoning, 3 runs per request)
+# on the rows mainnet serves the model from (anonymous1, anonymous2).
+# On @anonymous1 none and minimal give 0 reasoning tokens and higher levels think more (low 378-466, high 537-578; capped at 600 in this run).
+# @anonymous2 answered 503 to every request, so it is unmeasured.
+# Levels follow Google's own entry.
+schema = 2
+base_model = "google/gemini-3-flash-preview"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 3

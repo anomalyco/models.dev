@@ -1,0 +1,19 @@
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-24).
+# Reasoning probed 2026-11-24 through 0G's staging router (0g-router param-probe --reasoning, 3 runs per request)
+# on the rows mainnet serves the model from (anonymous1, anonymous2).
+# reasoning_effort high is accepted on every row, but no reasoning is reported on Chat Completions with or without it
+# (reasoning_tokens 0), so whether the level reaches the model is not verified. Levels follow OpenAI's own entry.
+# Custom tools: 0G's router rejects every non-function tool on Chat Completions before routing (400 invalid_tools,
+# "type must be function"; probed on gpt-5.5 2026-11-22 with text, regex `ZZ[0-9]{3}` and lark), so no freeform is listed.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1
+cache = { write = 1.25 }
+
+[cost.text.output]
+price = 5
