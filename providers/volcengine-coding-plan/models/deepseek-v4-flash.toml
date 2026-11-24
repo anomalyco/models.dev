@@ -9,8 +9,11 @@
 # high 121/123/132/349/262, xhigh 928/753/268/480/110, max 811/435/570/910/623.
 # 'high' sits below 'low', so the levels are not separable and only the toggle is
 # declared, matching the toggle the lab (providers/deepseek) exposes.
+# Base model: the plan's release notes say the `deepseek-v4-flash` Model Name serves the 正式版 (GA) release
+# since 2026-08-07 (https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-model-release.md,
+# accessed 2026-11-24), the same weights as Ark's pay-as-you-go deepseek-v4-flash-ga snapshot.
 schema = 2
-base_model = "deepseek/deepseek-v4-flash"
+base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }

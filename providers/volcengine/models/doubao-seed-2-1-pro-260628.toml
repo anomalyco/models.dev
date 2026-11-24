@@ -1,15 +1,27 @@
 # Model ID verified against POST /api/v3/chat/completions (2026-08-26): `doubao-seed-2-1-pro-260628`
 # CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
-# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max
-# none/minimal disable thinking, so no separate toggle: sending effort alone
-# already enables it, and thinking.type=disabled + a graded effort is rejected.
+# Effort: reasoning_effort = none|low|medium|high. Ark accepts all 7 values but maps
+# none -> minimal (thinking off) and xhigh/max -> high, so only these four are distinct
+# (兼容映射 table, https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking.md, accessed 2026-11-24).
+# No separate toggle: thinking.type=disabled + a graded effort is rejected.
+# Limits: this snapshot is 256K context / 256K input / 256K output per the model list
+# (https://ark.volcengine.com/region:cn-beijing/docs/model-list.md, accessed 2026-11-24); the lab's
+# 1024K belongs to the newer doubao-seed-2-1-pro-260915.
+# Cache: implicit prefix caching is on by default on the Chat API (no request flag), per
+# https://ark.volcengine.com/region:cn-beijing/docs/context-cache.md and the 上下文缓存能力 table in
+# https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24).
 schema = 2
 base_model = "bytedance-seed/seed-2.1-pro"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { implicit = true }
 structured_output = true
+
+[limit]
+context = 256_000
+input = 256_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
