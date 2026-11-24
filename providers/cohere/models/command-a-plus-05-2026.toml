@@ -16,8 +16,11 @@
 #   leave at least 1K tokens for the response). Live: switching thinking off between turns rewrote the
 #   cached prefix (Command A Reasoning: 6144 -> 480 cached tokens; Command A+: 0 cached in 2/2 runs).
 # Tools: tool_choice returns 400 "tool_choice is not supported for this model"; strict_tools = true is accepted.
-# Pricing: free, per https://cohere.com/pricing (accessed 2026-11-24): the Generative models tab lists Command A+
-#   as "API key $0 / Free" and "Model download $0 / Free". Replaces the $2.50/$10 per 1M added on launch day.
+# Pricing: free (sources accessed 2026-11-24). https://cohere.com/pricing, Generative models tab, lists Command A+
+#   as "API key $0 / Free" and "Model download $0 / Free"; https://docs.cohere.com/docs/command-a-plus#pricing says
+#   "For both trial keys and production keys, Command A+ is free until rate limits are reached." The pricing page's
+#   source still embeds an unrendered model card with $2.50/$10 per 1M (the launch-day price this replaces); the
+#   rendered section and the docs are authoritative, so don't restore it from that card.
 # APIs: native Chat (POST /v2/chat) and the Compatibility API's Chat Completions (https://docs.cohere.com/docs/compatibility-api), both confirmed live 2026-10-22.
 # Per-API flags: system_updates sits on [api.cohere-chat] only. Native /v2/chat documents system messages anywhere in the conversation and kept them in place live (2026-10-23); the Compatibility API's Chat Completions doesn't document where a late system message goes and wasn't checked for it.
 schema = 2
