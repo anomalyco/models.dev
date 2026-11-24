@@ -1,0 +1,21 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/hermes-4-405b
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# Relayed from OpenRouter, the only upstream for this model, so tools, structured output and limits follow
+# models.dev's OpenRouter entry: providers/openrouter/models/nousresearch/hermes-4-405b.toml
+# Input is text only, as the lab lists.
+# Reasoning: off on this route. The router never forwards reasoning switches for this model (reasoning,
+# reasoning_effort, include_reasoning and thinking are dropped before the upstream sees the request), so it
+# runs with OpenRouter's default, reasoning disabled (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens).
+schema = 2
+base_model = "nousresearch/hermes-4-405b"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3

@@ -1,21 +1,20 @@
-# Served by Open Uncensored through venice, nanogpt. Price as
-# listed on https://openuncensored.com/models/deepseek-v4.1-flash-1017-uncensored
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/deepseek-v4.1-flash-1017-uncensored
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
 # Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
 # measure it on: providers/venice/models/deepseek-v4-1-flash-1017-uncensored.toml
-# Input is text only: the router replaces image parts with a note for text models.
-# Output limit: Venice serves this model first and caps output at 131,072 tokens.
+# Accepts image input: the router passes images through for this model (Venice lists supportsVision true).
+# Limits: Venice serves this model first and caps it at a 1,000,000-token context and 131,072 output tokens
+# (https://api.venice.ai/api/v1/models: availableContextTokens, maxCompletionTokens, 2026-11-24).
 schema = 2
 base_model = "dealignai/deepseek-v4.1-flash-1017-uncensored"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
 [limit]
+context = 1_000_000
+input = 1_000_000
 output = 131_072
 
 [cost.text.input]

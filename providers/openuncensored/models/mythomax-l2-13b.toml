@@ -1,0 +1,20 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/mythomax-l2-13b
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# Relayed from OpenRouter, the only upstream for this model, so tools, structured output and limits follow
+# models.dev's OpenRouter entry: providers/openrouter/models/gryphe/mythomax-l2-13b.toml
+# Input is text only, as the lab lists.
+# Context: 8,192 tokens, as OpenRouter serves it and https://api.openuncensored.com/v1/models lists it.
+schema = 2
+base_model = "gryphe/mythomax-l2-13b"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 8_192
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0.11

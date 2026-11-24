@@ -1,4 +1,4 @@
-# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# Lab metadata for a model hosted by several providers (OpenUncensored, NanoGPT, Venice, ...),
 # taken from the existing curated entry providers/nano-gpt/models/z-ai/glm-5.3-flash-apex-abliterated.toml; provider fields stripped.
 # Source: https://huggingface.co/cantina-security/apex-flash-1-abliterated
 schema = 2
@@ -23,3 +23,7 @@ top_k = true
 context = 1_048_576
 input = 1_048_576
 output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/cantina-security/apex-flash-1-abliterated"

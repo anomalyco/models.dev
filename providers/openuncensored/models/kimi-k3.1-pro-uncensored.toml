@@ -1,0 +1,38 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/kimi-k3.1-pro-uncensored
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# Standalone (no base_model): an abliterated build of Kimi K3.1 Pro (models/moonshotai/kimi-k3.1-pro.toml) served by a
+# single upstream host that has not published its weights, so there is no lab file to point to. Family, tools and
+# limits follow the base model's lab file; the release date is the day this build went live on this API.
+# Input is text only: the router replaces image parts with a note for text models.
+# Effort: reasoning_effort = none|low|high|max. The upstream rejects other values ("reasoning_effort must be one of
+# off (or none), low, high, or max", 2026-11-19) and the router maps any other level to the nearest of these; none
+# turns reasoning off, so no toggle.
+# Sampling: the router forwards temperature, top_p and top_k unchanged (supported_parameters in
+# https://api.openuncensored.com/v1/openrouter/models).
+schema = 2
+name = "Kimi K3.1 Pro Uncensored"
+description = "Abliterated build of Moonshot AI's Kimi K3.1 Pro, a reasoning model with a 1M-token context for coding and agentic work, with fewer refusals"
+family = "kimi-pro"
+open_weights = false
+release_date = "2026-11-17"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 5

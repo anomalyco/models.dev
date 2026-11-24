@@ -1,6 +1,7 @@
-# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# Lab metadata for a model hosted by several providers (OpenUncensored, NanoGPT, Venice, ...),
 # taken from the existing curated entry providers/nano-gpt/models/deepseek/deepseek-v4.1-flash-0910-uncensored.toml; provider fields stripped.
 # Source: dealignai's release, as named by NanoGPT's entry
+# Weights: https://huggingface.co/dealignai/DeepSeek-V4.1-Flash-UNCENSORED-FP8 (dealignai's September release, published 2026-09-10).
 schema = 2
 name = "DeepSeek V4.1 Flash 0910 Uncensored"
 description = "dealignai's September 10 uncensored release of DeepSeek V4.1 Flash. This dated model stays on the original checkpoint, with optional reasoning and tool calling."
@@ -23,3 +24,8 @@ top_k = true
 context = 524_288
 input = 524_288
 output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/dealignai/DeepSeek-V4.1-Flash-UNCENSORED-FP8"
+quantization = "fp8"

@@ -1,4 +1,4 @@
-# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# Lab metadata for a model hosted by several providers (OpenUncensored, NanoGPT, Venice, ...),
 # carried over from the existing curated provider entries in this repo; provider fields stripped.
 # Source: https://huggingface.co/soob3123/GrayLine-Qwen3-8B
 schema = 2
@@ -22,3 +22,7 @@ top_k = true
 context = 32_768
 input = 32_768
 output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/soob3123/GrayLine-Qwen3-8B"

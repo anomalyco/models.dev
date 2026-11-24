@@ -1,12 +1,14 @@
-# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# Lab metadata for a model hosted by several providers (OpenUncensored, NanoGPT, Venice, ...),
 # taken from the existing curated entry providers/nano-gpt/models/xiaomi/mimo-v2.6-flash-uncensored.toml; provider fields stripped.
 # Source: Heabsy's fine-tune, as named by NanoGPT's entry
 # Sampling: as the base model's lab, models/xiaomi/mimo-v2.6-flash.toml (the NanoGPT entry authors none).
+# Weights: not published. Heabsy's Hugging Face account (https://huggingface.co/heabsy) has no MiMo repo and its
+# catalog lists none for this model (2026-11-24), so open_weights is false.
 schema = 2
 name = "MiMo V2.6 Flash Uncensored"
 description = "A lower-refusal MiMo V2.6 Flash finetune served by Heabsy with a 1M-token context window, separate reasoning output, and tool calling."
 family = "mimo"
-open_weights = true
+open_weights = false
 release_date = "2026-09-25"
 
 [modalities]

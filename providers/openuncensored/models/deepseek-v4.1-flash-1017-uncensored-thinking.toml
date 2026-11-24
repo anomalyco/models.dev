@@ -1,15 +1,11 @@
-# Served by Open Uncensored through nanogpt. Price as
-# listed on https://openuncensored.com/models/deepseek-v4.1-flash-1017-uncensored-thinking
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/deepseek-v4.1-flash-1017-uncensored-thinking
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
 # Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
 # measure it on: providers/nano-gpt/models/deepseek/deepseek-v4.1-flash-1017-uncensored:thinking.toml
-# Input is text only: the router replaces image parts with a note for text models.
+# Accepts image input: the router passes images through for this model.
 schema = 2
 base_model = "dealignai/deepseek-v4.1-flash-1017-uncensored"
 name = "DeepSeek V4.1 Flash 1017 Uncensored Thinking"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }

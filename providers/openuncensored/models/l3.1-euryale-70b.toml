@@ -1,0 +1,17 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/l3.1-euryale-70b
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# Relayed from OpenRouter, the only upstream for this model, so tools, structured output and limits follow
+# models.dev's OpenRouter entry: providers/openrouter/models/sao10k/l3.1-euryale-70b.toml
+# Input is text only, as the lab lists.
+schema = 2
+base_model = "sao10k/l3.1-euryale-70b"
+
+[capabilities]
+tools = { supported = false }
+structured_output = true
+
+[cost.text.input]
+price = 0.85
+
+[cost.text.output]
+price = 0.85

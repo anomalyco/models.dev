@@ -1,0 +1,23 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/deepseek-v4-pro-qwen3.5-9b-uncensored-heretic
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# Served through NanoGPT, so tools, reasoning and limits follow models.dev's NanoGPT entry:
+# providers/nano-gpt/models/xtools-at/deepseek-v4-pro-qwen3.5-9b-uncensored-heretic.toml (no tools, answers without a
+# thinking phase, 32,768-token window shared by input and output, up to 8,192 output tokens).
+schema = 2
+base_model = "xtools-at/deepseek-v4-pro-qwen3.5-9b-uncensored-heretic"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+
+[limit]
+context = 32_768
+input = 32_768
+output = 8_192
+
+[cost.text.input]
+price = 0.28
+
+[cost.text.output]
+price = 0.28

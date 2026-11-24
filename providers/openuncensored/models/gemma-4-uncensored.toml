@@ -1,10 +1,13 @@
-# Served by Open Uncensored through venice. Price as
-# listed on https://openuncensored.com/models/gemma-4-uncensored
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/gemma-4-uncensored
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
 # Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
 # measure it on: providers/venice/models/gemma-4-uncensored.toml
 # Input is text only: the router replaces image parts with a note for text models.
 # Standalone (no base_model): the hosts serving this model do not say whose weights it is, and
 # several unrelated Hugging Face repos share the name, so there is no lab identity to point to.
+# Sampling: the router forwards temperature, top_p and top_k unchanged (supported_parameters in
+# https://api.openuncensored.com/v1/openrouter/models), and the upstream APIs take all three
+# (https://docs.nano-gpt.com/api-reference/endpoint/chat-completion).
 schema = 2
 name = "Gemma 4 Uncensored"
 description = "Open Gemma instruction model for efficient chat and self-hosted deployments"
@@ -21,6 +24,9 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
+temperature = true
+top_p = true
+top_k = true
 
 [limit]
 context = 256_000

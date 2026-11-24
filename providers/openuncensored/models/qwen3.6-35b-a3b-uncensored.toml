@@ -1,0 +1,28 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/qwen3.6-35b-a3b-uncensored
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# Hosted by OpenUncensored itself: llama.cpp's llama-server with the Q6_K_P GGUF and the model's own chat template
+# (--jinja), a 131,072-token cache shared by 4 parallel slots, so each request gets 32,768 tokens
+# (https://api.openuncensored.com/v1/models context_length).
+# Input is text only: the server runs without the mmproj vision file and the router replaces image parts with a
+# note for text models.
+# Reasoning: always on, with no caller control on this route. The model thinks by default (model card) and this
+# server sets no reasoning budget or per-request thinking switch.
+schema = 2
+base_model = "hauhaucs/qwen3.6-35b-a3b-uncensored-hauhaucs-aggressive"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 32_768
+output = 32_768
+
+[cost.text.input]
+price = 0.12
+
+[cost.text.output]
+price = 0.8

@@ -1,6 +1,8 @@
-# Lab metadata for a model hosted by several providers (Open Uncensored, NanoGPT, Venice, ...),
+# Lab metadata for a model hosted by several providers (OpenUncensored, NanoGPT, Venice, ...),
 # carried over from the existing curated provider entries in this repo; provider fields stripped.
 # Source: Venice's own model (https://venice.ai)
+# Weights: Venice Uncensored ships from https://huggingface.co/dphn/Dolphin-Mistral-24B-Venice-Edition (the model card:
+# "now live on https://venice.ai/ as 'Venice Uncensored'"; repo last updated 2026-06-12).
 schema = 2
 name = "Venice Uncensored 1.2"
 description = "Multimodal model for analyzing text, images, documents, and rich media"
@@ -23,3 +25,7 @@ top_k = true
 [limit]
 context = 128_000
 output = 8_192
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/dphn/Dolphin-Mistral-24B-Venice-Edition"
