@@ -260,6 +260,8 @@ export const ModelFamilyValues = [
   // Step (StepFun)
   "step",
   "step-flash",
+  "step-vision",
+  "step-audio",
   "step-tts",
   "step-asr",
 
