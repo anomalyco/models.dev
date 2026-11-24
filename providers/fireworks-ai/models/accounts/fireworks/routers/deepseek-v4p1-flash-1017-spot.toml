@@ -1,4 +1,4 @@
-# Spot serverless for DeepSeek V4.1 Flash 1017 (30% below Standard, same OpenAI-compatible API; service_tier does not select Spot).
+# Spot serverless for DeepSeek V4.1 Flash 1017 (50% below Standard in the catalog, same OpenAI-compatible API; service_tier does not select Spot).
 # Pricing: GET https://api.fireworks.ai/v1/serverless/models (serverless_mode "spot", usage_identifier = this ID, 2026-11-24): $0.15 / $0.003 / $0.60 per 1M
 #   (input / cached input / output), 50% below Standard $0.30 / $0.006 / $1.20 (https://docs.fireworks.ai/serverless/pricing).
 #   https://docs.fireworks.ai/guides/spot-serverless still says Spot is 30% below Standard; the catalog's rates are recorded. Fallback to Standard is billed at Standard.
