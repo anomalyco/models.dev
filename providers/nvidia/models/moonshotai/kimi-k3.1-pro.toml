@@ -22,3 +22,7 @@ price = 0
 
 [cost.text.output]
 price = 0
+
+[limit]
+# NVIDIA NIM caps max_tokens at 65,536 for this model.
+output = 65_536
