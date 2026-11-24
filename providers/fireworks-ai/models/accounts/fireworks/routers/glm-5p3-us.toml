@@ -4,8 +4,8 @@
 #   per 1M input / cached input / output. US-only routes are 1.5x the global price.
 # Live 2026-11-24 on us.api.fireworks.ai: Chat Completions (with service_tier = "priority"), Responses and Messages all answered on accounts/fireworks/routers/glm-5p3-us.
 #   This route isn't in GET /v1/serverless/models.
-# Reasoning, modalities and structured output follow the global sibling models/glm-5p3; the mid-conversation flags
-#   tested there weren't re-tested on this route, so they're left out.
+# Reasoning, modalities and structured output follow the global sibling models/glm-5p3, and so do the
+#   mid-conversation flags live-tested there (not re-tested on this route, same host and API).
 # Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field
 #   (https://docs.fireworks.ai/guides/prompt-caching).
 # Thinking-only: effort low|high|max, no toggle (same as the global route).
@@ -14,9 +14,9 @@ base_model = "zhipuai/glm-5.3"
 name = "GLM 5.3 (US)"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+system_updates = true
 cache = { implicit = true }
 
 [limit]

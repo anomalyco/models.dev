@@ -4,8 +4,8 @@
 #   per 1M input / cached input / output. US-only routes are 1.5x the global price.
 # Live 2026-11-24 on us.api.fireworks.ai: Chat Completions (with service_tier = "priority"), Responses and Messages all answered on accounts/fireworks/routers/kimi-k3-us.
 #   This route isn't in GET /v1/serverless/models.
-# Reasoning, modalities and structured output follow the global sibling models/kimi-k3; the mid-conversation flags
-#   tested there weren't re-tested on this route, so they're left out.
+# Reasoning, modalities and structured output follow the global sibling models/kimi-k3, and so do the
+#   mid-conversation flags live-tested there (not re-tested on this route, same host and API).
 # Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field
 #   (https://docs.fireworks.ai/guides/prompt-caching).
 # Toggle: thinking.type = enabled|disabled
@@ -19,7 +19,6 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
@@ -27,6 +26,7 @@ cache = { implicit = true }
 [api.chat-completions]
 base_url = "https://us.api.fireworks.ai/inference/v1"
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true, tools = { updates = ["add"] } }
 
 [api.responses]
 base_url = "https://us.api.fireworks.ai/inference/v1"

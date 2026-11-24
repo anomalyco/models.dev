@@ -6,6 +6,7 @@
 # Lab identity, minor update to V4.1 Flash: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
 # Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
 # Effort: reasoning_effort = low|high|max (same as accounts/fireworks/models/deepseek-v4p1-flash-1017)
+# system_updates follows the same sibling's live test (2026-10-21); not re-tested on this route.
 # Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
 # Structured output: response_format json_schema (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
 # Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field (https://docs.fireworks.ai/guides/prompt-caching).
@@ -14,9 +15,9 @@ base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash 1017 Flex"
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
+system_updates = true
 cache = { implicit = true }
 
 [limit]
