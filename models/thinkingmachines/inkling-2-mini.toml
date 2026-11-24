@@ -3,7 +3,9 @@
 # - https://thinkingmachines.ai/model-card/inkling-2-mini/ (released November 20, 2026; Apache 2.0; open weights; text and
 #   image input, text output; "a context window of up to 1M tokens")
 # - https://huggingface.co/thinkingmachines/Inkling-2-Mini
-# Output: the model card names no output cap; 65,536 is the largest a host publishes (OpenRouter's catalog, 2026-11-23).
+# Output: the model card names no output cap; 65,536 is the largest real cap a host publishes (OpenRouter's catalog, 2026-11-23).
+#   Vercel's catalog max_tokens (1,000,000, https://ai-gateway.vercel.sh/v1/models, 2026-11-24) is the full ~1M context window,
+#   not an output cap, so it isn't used here.
 # Input: the model card lists "any pixel-based image input" without naming formats, so the generic image modality is used.
 schema = 2
 name = "Inkling 2 Mini"
