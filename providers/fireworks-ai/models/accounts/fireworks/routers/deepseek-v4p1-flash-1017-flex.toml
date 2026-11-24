@@ -1,0 +1,39 @@
+# Flex serving mode for DeepSeek V4.1 Flash 1017: same model at 50% off Standard, for workloads that can wait. Selected by model ID
+#   (https://docs.fireworks.ai/serverless/serverless-modes#flex). The API echoes accounts/fireworks/models/deepseek-v4p1-flash-1017.
+# Pricing: https://docs.fireworks.ai/serverless/pricing ("DeepSeek V4.1 Flash 1017 Flex" row, accessed 2026-11-24): $0.15 / $0.003 / $0.60
+#   per 1M input / cached input / output, no Priority.
+# Live 2026-11-24: Chat Completions, Responses and Messages all answered on this ID. It isn't in GET /v1/serverless/models.
+# Lab identity, minor update to V4.1 Flash: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = low|high|max (same as accounts/fireworks/models/deepseek-v4p1-flash-1017)
+# Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Structured output: response_format json_schema (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field (https://docs.fireworks.ai/guides/prompt-caching).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Flex"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6

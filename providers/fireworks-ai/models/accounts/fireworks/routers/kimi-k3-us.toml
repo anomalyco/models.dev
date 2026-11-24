@@ -1,0 +1,51 @@
+# US-only Serverless route for Kimi K3: same model, served only from US capacity. Call it on https://us.api.fireworks.ai
+#   (https://docs.fireworks.ai/serverless/us-only-serverless). The API echoes the underlying accounts/fireworks/models/kimi-k3.
+# Pricing: https://docs.fireworks.ai/serverless/pricing ("Kimi K3 (US)" row, accessed 2026-11-24): Standard $4.50 / $0.45 / $22.50, Priority $5.625 / $0.5625 / $28.125
+#   per 1M input / cached input / output. US-only routes are 1.5x the global price.
+# Live 2026-11-24 on us.api.fireworks.ai: Chat Completions (with service_tier = "priority"), Responses and Messages all answered on accounts/fireworks/routers/kimi-k3-us.
+#   This route isn't in GET /v1/serverless/models.
+# Reasoning, modalities and structured output follow the global sibling models/kimi-k3; the mid-conversation flags
+#   tested there weren't re-tested on this route, so they're left out.
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field
+#   (https://docs.fireworks.ai/guides/prompt-caching).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|medium|high|max
+schema = 2
+base_model = "moonshotai/kimi-k3"
+name = "Kimi K3 (US)"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+base_url = "https://us.api.fireworks.ai/inference/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+base_url = "https://us.api.fireworks.ai/inference/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://us.api.fireworks.ai/inference/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 4.5
+cache = { read = 0.45 }
+
+[cost.text.output]
+price = 22.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }

@@ -1,0 +1,50 @@
+# US-only Serverless route for DeepSeek V4.1 Flash: same model, served only from US capacity. Call it on https://us.api.fireworks.ai
+#   (https://docs.fireworks.ai/serverless/us-only-serverless). The API echoes the underlying accounts/fireworks/models/deepseek-v4p1-flash.
+# Pricing: https://docs.fireworks.ai/serverless/pricing ("DeepSeek V4.1 Flash (US)" row, accessed 2026-11-24): Standard $0.45 / $0.009 / $1.80, Priority $0.5625 / $0.01125 / $2.25
+#   per 1M input / cached input / output. US-only routes are 1.5x the global price.
+# Live 2026-11-24 on us.api.fireworks.ai: Chat Completions (with service_tier = "priority"), Responses and Messages all answered on accounts/fireworks/routers/deepseek-v4p1-flash-us.
+#   This route isn't in GET /v1/serverless/models.
+# Reasoning, modalities and structured output follow the global sibling models/deepseek-v4p1-flash; the mid-conversation flags
+#   tested there weren't re-tested on this route, so they're left out.
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field
+#   (https://docs.fireworks.ai/guides/prompt-caching).
+# Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" or false also disables)
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash (US)"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+base_url = "https://us.api.fireworks.ai/inference/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+base_url = "https://us.api.fireworks.ai/inference/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://us.api.fireworks.ai/inference/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.45
+cache = { read = 0.009 }
+
+[cost.text.output]
+price = 1.8
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }
