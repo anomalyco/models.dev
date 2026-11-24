@@ -374,8 +374,10 @@ function buildV2Set(
   baseModel: string,
   synced: Record<string, unknown>,
 ): Record<string, unknown> | undefined {
+  const lab = readLabToml(baseModel);
   const result: Record<string, unknown> = {
-    ...(exactModalities(baseModel, synced.modalities as Partial<Record<"input" | "output", Modality[]>> | undefined) ?? {}),
+    ...(lab.v2_only === true ? { v2_only: true } : {}),
+    ...(exactModalities(lab.modalities, synced.modalities as Partial<Record<"input" | "output", Modality[]>> | undefined) ?? {}),
   };
   const costValue = synced.cost as { cache_read?: number } | undefined;
   if (costValue?.cache_read !== undefined) {
@@ -388,18 +390,24 @@ function buildV2Set(
   return Object.keys(result).length > 0 ? result : undefined;
 }
 
+function readLabToml(baseModel: string): { v2_only?: boolean; modalities?: Record<string, string[]> } {
+  const file = path.join(LAB_MODELS_DIR, `${baseModel}.toml`);
+  return Bun.TOML.parse(readFileSync(file, "utf8")) as { v2_only?: boolean; modalities?: Record<string, string[]> };
+}
+
 /**
  * v1 patches write generic categories. Where Numes narrows a lab's modalities,
  * write the lab's own exact entries (MIME types) for the categories kept.
  */
-function exactModalities(baseModel: string, narrowed: Partial<Record<"input" | "output", Modality[]>> | undefined) {
-  if (narrowed === undefined) return undefined;
-  const file = path.join(LAB_MODELS_DIR, `${baseModel}.toml`);
-  const lab = (Bun.TOML.parse(readFileSync(file, "utf8")) as { modalities?: Record<string, string[]> }).modalities;
+function exactModalities(
+  lab: Record<string, string[]> | undefined,
+  narrowed: Partial<Record<"input" | "output", Modality[]>> | undefined,
+) {
+  if (narrowed === undefined || lab === undefined) return undefined;
   const result: Record<string, string[]> = {};
   for (const direction of ["input", "output"] as const) {
     const kept = narrowed[direction];
-    const exact = lab?.[direction];
+    const exact = lab[direction];
     if (kept === undefined || exact === undefined) continue;
     result[`modalities.${direction}`] = exact.filter((value) => (kept as string[]).includes(category(value)));
   }

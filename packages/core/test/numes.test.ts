@@ -180,3 +180,13 @@ test("assigns -free families to free routes and resolves non-OpenRouter lab slug
   expect(resolveBaseModel("bytedance/seed-1.8")).toBe("bytedance-seed/seed-1-8");
   expect(resolveBaseModel("mindai/macaron-v1-tall")).toBe("mindlab/macaron-v1-tall");
 });
+
+test("propagates v2_only from v2-only lab files", () => {
+  const audio = translate(numesModel({ compatible_request_id: "openai/gpt-audio", reasoning: null }));
+  const audioV2 = audio && "v2Set" in audio ? (audio.v2Set as Record<string, unknown>) : undefined;
+  expect(audioV2?.v2_only).toBe(true);
+
+  const regular = translate(numesModel());
+  const regularV2 = regular && "v2Set" in regular ? (regular.v2Set as Record<string, unknown>) : undefined;
+  expect(regularV2?.v2_only).toBeUndefined();
+});
