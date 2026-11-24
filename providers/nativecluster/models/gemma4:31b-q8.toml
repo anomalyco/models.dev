@@ -1,0 +1,29 @@
+# NativeCluster's build: unsloth/gemma-4-31B-it-GGUF, Q8_0 (https://www.nativecluster.com/models/gemma4-31b-q8).
+# Input: text only. This build has no vision projector, and the API refuses pictures for it (docs/api;
+#   the model page says Text → Text).
+# Window: each Mac runs a model at the window its memory holds, reported as `context_length` by GET /v1/models;
+#   a longer prompt is refused with 400 `context_length_exceeded` before any output (docs/api). This one gets
+#   its own 262,144 on Macs with 64 GB or more, the smallest it runs on.
+# Toggle: think = true|false, for a model whose `capabilities` in GET /v1/models name `thinking` (docs/api).
+# max_tokens_field: the API takes `max_tokens`; a field it doesn't list (`max_completion_tokens`, `top_k`) is
+#   dropped (https://www.nativecluster.com/docs/api, accessed 2026-11-20).
+# Cost: none; it runs on the team's own Macs.
+schema = 2
+base_model = "google/gemma-4-31b-it"
+name = "Gemma 4 31B IT (Q8_0)"
+
+[modalities]
+input = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+top_k = false
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

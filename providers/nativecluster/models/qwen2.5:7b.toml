@@ -1,0 +1,24 @@
+# NativeCluster's build: bartowski/Qwen2.5-7B-Instruct-GGUF, Q4_K_M (https://www.nativecluster.com/models/qwen2.5-7b).
+# Window: each Mac runs a model at the window its memory holds, reported as `context_length` by GET /v1/models;
+#   a longer prompt is refused with 400 `context_length_exceeded` before any output (docs/api). This one gets
+#   its native 32,768 (no YaRN) on Macs with 32 GB or more, 16,384 on 16 and 24 GB.
+# max_tokens_field: the API takes `max_tokens`; a field it doesn't list (`max_completion_tokens`, `top_k`) is
+#   dropped (https://www.nativecluster.com/docs/api, accessed 2026-11-20).
+# Cost: none; it runs on the team's own Macs.
+schema = 2
+base_model = "alibaba/qwen2.5-7b-instruct"
+
+[capabilities]
+top_k = false
+
+[limit]
+context = 32_768
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

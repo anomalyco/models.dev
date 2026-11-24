@@ -1,0 +1,28 @@
+# NativeCluster's build: unsloth/Qwen3.8-27B-GGUF, Q4_K_XL (https://www.nativecluster.com/models/qwen3.8-27b).
+# Input: text only. This build has no vision projector, and the API refuses pictures for it (docs/api;
+#   the model page says Text → Text).
+# Window: each Mac runs a model at the window its memory holds, reported as `context_length` by GET /v1/models;
+#   a longer prompt is refused with 400 `context_length_exceeded` before any output (docs/api). This one gets
+#   its own 262,144 on Macs with 48 GB or more; 215,040 at 36 GB, 122,880 at 32 GB.
+# Toggle: think = true|false, for a model whose `capabilities` in GET /v1/models name `thinking` (docs/api).
+# max_tokens_field: the API takes `max_tokens`; a field it doesn't list (`max_completion_tokens`, `top_k`) is
+#   dropped (https://www.nativecluster.com/docs/api, accessed 2026-11-20).
+# Cost: none; it runs on the team's own Macs.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+top_k = false
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
