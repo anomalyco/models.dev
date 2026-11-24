@@ -1,0 +1,28 @@
+# https://platform.stepfun.com/docs/zh/guides/models/vision, https://platform.stepfun.com/docs/zh/guides/models/list (accessed 2026-11-24)
+# Context 32K; text, image and video in, text out. Up to 60 images (20 MB total) or an MP4 under 128 MB per request.
+# Images JPG/JPEG, PNG, static GIF, WebP; video MP4 (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create).
+# Output limit isn't documented; Chat Completions max_tokens is bounded only by the context, so output = context.
+# Sampling: Chat Completions documents temperature and top_p, not top_k.
+# release_date: closest documented date. No launch date is published for the Turbo variant; Step-1o Vision, the model it
+#   speeds up, launched on 2025-01-21 (https://baike.baidu.com/item/Step-1o%20Vision/69298584).
+schema = 2
+name = "Step-1o Turbo Vision"
+description = "Fast StepFun vision model for image and video understanding with text output"
+family = "step"
+open_weights = false
+release_date = "2025-01-21"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 32_768
+output = 32_768
