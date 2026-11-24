@@ -16,9 +16,6 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
 structured_output = true
 cache = { implicit = true, explicit = true }
 
-[limit]
-output = 262_144
-
 [api.chat-completions]
 capabilities = { system_updates = true }
 
