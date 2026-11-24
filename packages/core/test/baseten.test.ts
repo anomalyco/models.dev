@@ -10,6 +10,7 @@ import {
   buildBasetenDecisionModel,
   buildBasetenModel,
   chatApis,
+  resolveBasetenBaseModel,
   type BasetenModel,
 } from "../src/sync/providers/baseten.js";
 
@@ -211,4 +212,51 @@ test("Baseten chat models list the Messages API after their first table", () => 
     authored: () => undefined,
   });
   expect(translated?.v2Set?.api).toBe(chatApis);
+});
+test("Baseten slugs resolve to their exact lab files", () => {
+  // NVIDIA slugs repeat the lab name; the lab file doesn't.
+  expect(resolveBasetenBaseModel("nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B")).toBe("nvidia/nemotron-3.5-super-vl-120b-a12b");
+  expect(resolveBasetenBaseModel("meta-models/muse-spark-open")).toBe("meta/muse-spark-open");
+  expect(resolveBasetenBaseModel("reflection/Beam-1.0")).toBe("reflection/beam-1.0-501b-a23b");
+  // Only that alias resolves: no prefix or fuzzy matching on the short ID.
+  expect(resolveBasetenBaseModel("reflection/Beam-1.1")).toBeUndefined();
+  expect(resolveBasetenBaseModel("nvidia/NVIDIA-Nemotron-9-Unknown")).toBeUndefined();
+  expect(resolveBasetenBaseModel("moonshotai/Kimi-K3.1-Pro")).toBe("moonshotai/kimi-k3.1-pro");
+});
+
+test("Baseten reports decision models whose lab file is missing", () => {
+  const decision = (id: string, name: string) => basetenModel({
+    id,
+    name,
+    context_length: 16_384,
+    max_completion_tokens: undefined,
+    pricing: { prompt: "0.00000001", completion: "0" },
+    supported_features: [],
+  });
+  const missing = decision("decision-models/baseten-ghost-latest", "ghost-1");
+  const present = decision("decision-models/baseten-elephant-9b-latest", "elephant-1");
+
+  expect(baseten.sourceNotices([missing, present, basetenModel()])).toEqual([
+    "`decision-models/baseten-ghost-latest` was not created: decision models need a lab file at `models/baseten/ghost-1.toml`.",
+  ]);
+  // Reported once, by sourceNotices, not again in the generic skipped list.
+  expect(baseten.sourceID(missing)).toBeUndefined();
+  expect(baseten.sourceID(present)).toBe("decision-models/baseten-elephant-9b-latest");
+});
+
+test("Baseten reports a hand-set output limit that differs from the catalog", () => {
+  const context = (output: number) => ({
+    existing: () => ({ base_model: "deepseek/deepseek-v4.1-flash", limit: { context: 1_048_576, output } }),
+    authored: () => ({ base_model: "deepseek/deepseek-v4.1-flash", limit: { context: 1_048_576, output } }),
+  });
+  const model = basetenModel({ id: "deepseek-ai/DeepSeek-V4.1-Flash", name: "DeepSeek V4.1 Flash", max_completion_tokens: 262_144 });
+
+  const pinned = baseten.translateModel(model, context(32_768));
+  expect(pinned && "model" in pinned ? pinned.model?.limit?.output : undefined).toBe(32_768);
+  expect(pinned && "notices" in pinned ? pinned.notices : undefined).toEqual([
+    "`deepseek-ai/DeepSeek-V4.1-Flash` keeps its hand-set limit.output 32768; the catalog lists max_completion_tokens 262144.",
+  ]);
+
+  const same = baseten.translateModel(model, context(262_144));
+  expect(same && "notices" in same ? same.notices : undefined).toBeUndefined();
 });

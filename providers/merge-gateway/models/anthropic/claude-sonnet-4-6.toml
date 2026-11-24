@@ -11,9 +11,6 @@ structured_output = true
 tools = { supported = true }
 cache = { implicit = true, explicit = { ttl = ["5m", "1h"] } }
 
-[limit]
-output = 128_000
-
 [cost.text.input]
 price = 3
 cache = { read = 0.3, write = 3.75 }

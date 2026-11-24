@@ -1,22 +1,27 @@
-# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-02.
+# Deprecated: Hy4 preview goes offline on 2026-12-07 (Token Plan model list, updated 2026-11-16):
+#   https://cloud.tencent.com/document/product/1823/130060
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-24.
 # https://cloud.tencent.com/document/product/1823/133811
 # Input/output/cache-read: 120/360/6 points per million tokens.
-# 20 points = CNY 1; USD/MTok = points / 20 / 6.660856.
-# FX: USD 1 = CNY 6.660856, 2026-11-02, https://open.er-api.com/v6/latest/USD
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.679299.
+# FX: USD 1 = CNY 6.679299, 2026-11-24, https://open.er-api.com/v6/latest/USD
 # Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
-# Toggle: thinking.type = enabled|disabled (default disabled)
-# Effort: reasoning_effort = none|high
-# https://cloud.tencent.com/document/product/1823/130055
-# https://cloud.tencent.com/document/product/1823/131208
+# Capabilities (structured output, function calling, caching): https://cloud.tencent.com/document/product/1823/130051
+# Effort: reasoning_effort = high|no_think (default high). no_think turns thinking off, so it is
+#   "none" here with no separate toggle (thinking.type also exists, default enabled).
+#   https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
 schema = 2
 base_model = "tencent/hy4-preview"
+status = "deprecated"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["none", "high"] }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
-price = 0.90078512
-cache = { read = 0.04503926 }
+price = 0.898298
+cache = { read = 0.044915 }
 
 [cost.text.output]
-price = 2.70235537
+price = 2.694894

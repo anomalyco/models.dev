@@ -24,7 +24,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
 - `bun models:sync groq` syncs Groq prices and limits for existing text models.
-- `bun models:sync github-copilot` syncs only GitHub Copilot pricing.
+- `bun models:sync github-copilot` syncs GitHub Copilot pricing and removes models GitHub has retired.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
@@ -299,11 +299,11 @@ Google is implemented in `packages/core/src/sync/providers/google.ts`.
 
 GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilot.ts`.
 
-- Source: `https://raw.githubusercontent.com/github/docs/main/data/tables/copilot/models-and-pricing.yml`
+- Sources: `https://raw.githubusercontent.com/github/docs/main/data/tables/copilot/models-and-pricing.yml` and `https://raw.githubusercontent.com/github/docs/main/data/tables/copilot/model-deprecation-history.yml` (the retirement table)
 - The YML contains only token rates, so the sync only updates `[cost]`: `input`, `cached_input` (as `cache_read`), `cache_write`, `output`, and long-context rows as `cost.tiers`.
 - Display names are converted to file IDs, with minimal special case logic to match existing model entries.
-- Unmatched rows open missing-model issues, and local entries missing from the source are kept.
-- When removing a fully retired Copilot model, add its pricing-table slug to `IGNORED_ROWS` so stale pricing rows cannot trigger translation or missing-model issues. Models still served to some subscribers (such as Sonnet 4.6 on annual plans) remain eligible.
+- Unmatched rows open missing-model issues, and local entries missing from the pricing table are kept.
+- Models in the retirement table are removed once their retirement date passes, even if a pricing row remains, and are marked `deprecated` before that. A model scheduled for retirement that GitHub still prices, with no local file, is still reported as missing. Models GitHub keeps for annual-plan subscribers (Sonnet 4.6, Opus 4.8) are listed in `ANNUAL_PLAN_MODELS` and stay. `IGNORED_ROWS` is only for pricing rows that aren't models of their own, such as the Opus 4.8 fast-mode row.
 
 ## Novita AI Notes
 

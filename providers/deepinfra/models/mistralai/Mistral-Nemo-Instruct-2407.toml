@@ -1,0 +1,19 @@
+schema = 2
+base_model = "mistral/mistral-nemo"
+
+[capabilities]
+structured_output = true
+service_tier = ["flex"]
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.029
+
+[cost.text.output]
+price = 0.03
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

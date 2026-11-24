@@ -27,15 +27,10 @@ schema = 2
 base_model = "mistral/mistral-medium-latest"
 status = "deprecated"
 
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
-output = ["text"]
-
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "high"] }
 structured_output = true
-top_k = false
 system_updates = true
 stream_usage = true
 prompt_cache_key = true

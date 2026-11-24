@@ -1,7 +1,9 @@
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-19): Gemini takes system text only as systemInstruction, and a mid-conversation system message is hoisted there (cache miss). No per-turn effort or tool-change mechanism is forwarded.
+# Status: deprecated_at 2027-01-28T05:05:00Z in https://ai-gateway.vercel.sh/v1/models (accessed 2026-11-24)
 schema = 2
 base_model = "google/gemini-3.7-flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
@@ -12,6 +14,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_000_000
@@ -33,3 +36,14 @@ cache = { read = 0.075 }
 
 [cost.text.output]
 price = 3.75
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 1.8 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }

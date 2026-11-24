@@ -1,5 +1,7 @@
 # Lab identity: https://huggingface.co/MiniMaxAI/MiniMax-M2.5
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (digitalocean): $0.3 input / $1.2 output per MTok, context 65,536.
+# Output: capped at the served context (the lab's output is larger).
 schema = 2
 base_model = "minimax/MiniMax-M2.5"
 description = "MiniMax model for chat, coding, office work, and agentic tasks"
@@ -7,6 +9,10 @@ description = "MiniMax model for chat, coding, office work, and agentic tasks"
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
+
+[limit]
+context = 65_536
+output = 65_536
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }

@@ -1,15 +1,17 @@
 # Toggle: thinking.type = disabled (Tinker type Hybrid: "chain-of-thought can be disabled")
 # Tinker models.json https://tinker-docs.thinkingmachines.ai/tinker/models.json (accessed 2026-10-21): type Hybrid + Vision, context 32K.
+# Input: text only. "Only Inkling models accept images via the inference APIs" (https://tinker-docs.thinkingmachines.ai/tinker/models/,
+#   accessed 2026-11-24); the Anthropic-compatible API takes "Image inputs via base64 image sources, on Inkling models only".
 # Tinker Anthropic-compatible API (https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/, accessed
-#   2026-10-21) serves any Tinker model: thinking.type = disabled turns reasoning off; output_config.effort (low|medium|high|
+#   2026-11-24) serves any Tinker model: thinking.type = disabled turns reasoning off; output_config.effort (low|medium|high|
 #   xhigh|max) is documented for Thinking Machines models and "Not all models support effort" (400), so it is listed only
-#   for those; images via base64 or URL; no audio blocks;
+#   for those; images via base64 only (max 2 MiB), Inkling models only; no audio blocks;
 #   cache_control is ignored, prefill tokens that hit the prompt cache bill at 80% off.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+input = ["text"]
 output = ["text"]
 
 [capabilities]

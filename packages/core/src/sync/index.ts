@@ -122,6 +122,8 @@ export interface SyncProvider<SourceModel> {
   /** Report remote-only models skipped by skipCreates as GitHub issues. */
   trackMissingModels?: boolean;
   deleteMissing?: boolean;
+  /** Local model IDs the source lists as retired. Their files are removed even when deleteMissing is false. */
+  retiredIDs?(models: SourceModel[]): string[];
   preserveSymlinks?: boolean;
   preserveBaseModels?: boolean;
   preserveDescriptions?: boolean;
@@ -385,6 +387,7 @@ export async function syncProvider<SourceModel>(
   const translateNotices: string[] = [];
   const translateFailures: string[] = [];
   let nonTextLabs: Set<string> | undefined;
+  const retiredIDs = new Set(provider.retiredIDs?.(sourceModels) ?? []);
   for (const notice of provider.sourceNotices?.(sourceModels) ?? []) {
     translateNotices.push(notice);
     console.warn(notice);
@@ -648,7 +651,7 @@ export async function syncProvider<SourceModel>(
       unchanged++;
       continue;
     }
-    if (provider.deleteMissing === false || translateFailures.length > 0) {
+    if ((provider.deleteMissing === false && !retiredIDs.has(relativePath.slice(0, -5))) || translateFailures.length > 0) {
       missingLocal.push(relativePath);
       console.log(`Retaining model missing from source: ${relativePath}`);
       unchanged++;

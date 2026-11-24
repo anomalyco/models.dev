@@ -14,6 +14,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 structured_output = true
 system_updates = true
 cache = { implicit = true, explicit = true }
+service_tier = ["flex", "priority"]
 
 [api.chat-completions]
 capabilities = { tools = { freeform = ["text", "lark", "regex"], updates = ["add"] } }
@@ -42,3 +43,14 @@ price = 1.2
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 1.8
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 2, cache = { read = 2 } }, output = { price = 2 } } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.5 } }, output = { price = 0.5 } } }

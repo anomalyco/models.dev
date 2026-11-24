@@ -11,6 +11,9 @@
 # API: https://cloud.tencent.com/document/product/1823/132248
 # Direct-service IDs: deepseek/deepseek-flash and deepseek/deepseek-v4-pro.
 # Use Tencent's recommended IDs; omit aliases to avoid duplicates, not as retired.
+# The Tencent-hosted deepseek-v4-pro-0813 is a separate service, not an alias of this one: its own row,
+#   per-token-type pricing (90/270/3 points with peak pricing) instead of this tier-flat rate, and
+#   Tencent's SLA instead of DeepSeek's vendor-direct terms (see ../deepseek-v4-pro-0813.toml).
 # Tencent manages the routed version; mapping is documented in Availability above.
 # Current documented upstream version: DeepSeek-V4-Pro-0813 (checked 2026-11-02).
 # Controls: thinking.type = enabled|disabled; reasoning_effort = low|high|max
