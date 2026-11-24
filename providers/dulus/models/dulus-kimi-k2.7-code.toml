@@ -1,8 +1,10 @@
+# tool_choice: narrowed to auto|none to match the first-party Moonshot entry for
+# this model (required and named-tool choice are rejected while thinking is on).
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.7-code"
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+tools = { supported = true, choice = ["auto", "none"] }
 reasoning = { supported = true }
 structured_output = true
