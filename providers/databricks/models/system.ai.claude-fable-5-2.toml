@@ -1,0 +1,35 @@
+# Models, inputs and lifecycle (accessed 2026-11-24): https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/supported-models, https://docs.databricks.com/aws/en/machine-learning/retired-models-policy
+# Unity Gateway only: supported-models names this model only by its model service name, system.ai.claude-fable-5-2, and says pay-per-token serving-endpoint queries aren't supported, so the model ID is that name. Requests go to the provider's /ai-gateway/mlflow/v1 base (https://docs.databricks.com/aws/en/ai-gateway/query-model-services).
+# Data retention: prompts and responses are kept for 30 days for trust and safety; workspaces that opt out of data retention can't use Claude Fable 5.2 (supported-models).
+# Reasoning (accessed 2026-11-24): https://docs.databricks.com/aws/en/machine-learning/model-serving/query-reason-models
+# Effort: Messages `output_config.effort` = low|medium|high|xhigh|max; adaptive thinking is always on, and Databricks sets no default (Anthropic uses `high`).
+# Pricing (accessed 2026-11-24): DBU rates from https://www.databricks.com/product/pricing/proprietary-foundation-model-serving x USD 0.070/DBU (`prop_model_serving` in https://www.databricks.com/en-pricing-assets/data/pricing/cards.json: Anthropic, Google, OpenAI and SpaceXAI on AWS Premium/Enterprise, every region).
+# Standard DBU per 1M input/output/cache-read/5m-write/1h-write tokens: 114.286/571.429/2.857/142.857/228.571.
+# The pricing page marks this model with a 10% DBU uplift when regional processing (data residency) is enabled: the 1.1x multiplier when region is not global.
+# Batch inference is billed per DBU-hour, not per token; not modeled.
+# Images: JPEG, PNG, GIF, WebP; query-vision-models defers to Anthropic's (and Amazon Bedrock's) vision limits, so no Databricks image limit is recorded. Databricks hosts this model through Amazon Bedrock (supported-models).
+# Cache: `cache_control` on Databricks-hosted Claude (https://docs.databricks.com/aws/en/machine-learning/model-serving/score-foundation-models#prompt-caching); 5m and 1h write prices from the pricing page.
+# structured_output: not recorded. The Messages `output_config.format` note lists only Opus 5.5, Sonnet 5.5 and Haiku 5.5 (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-anthropic-messages).
+# system_updates, effort_updates and tools.updates are undocumented on Databricks and untested (no Databricks key).
+# APIs: Anthropic Messages API only, at the Unity Gateway base https://<workspace>/ai-gateway/anthropic (https://docs.databricks.com/aws/en/machine-learning/model-serving/query-anthropic-messages); supported-models and query-reason-models document this model on Messages only.
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[api.messages]
+base_url = "https://${DATABRICKS_HOST}/ai-gateway/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = { "5m" = 10, "1h" = 16 } }
+
+[cost.text.output]
+price = 40
+
+[[cost.multipliers]]
+when = { not = { region = { equals = "global" } } }
+factor = 1.1
