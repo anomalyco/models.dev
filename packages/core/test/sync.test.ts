@@ -9171,7 +9171,8 @@ test("Hugging Face creates v2 files with host data only and the lab's exact MIME
       tools: { supported: true },
       structured_output: true,
     },
-    cost: { text: { input: { price: 0.4 }, output: { price: 3.2 } } },
+    // The cheapest live provider's price ("slow"), not the fastest's.
+    cost: { text: { input: { price: 0.3 }, output: { price: 2 } } },
     api: {
       "chat-completions": { compatibility: { max_tokens_field: "max_tokens" } },
       responses: { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } },
@@ -9234,35 +9235,6 @@ test("Hugging Face strips precision and MoE parameter suffixes only when a lab f
   ]);
   // No exact lab file after stripping: not created.
   expect(resolveHuggingFaceBaseModel("ibm-granite/granite-4.2-3b")).toBeUndefined();
-});
-
-test("Hugging Face writes existing files back unchanged apart from their API tables", () => {
-  const v2 = { schema: 2, base_model: "alibaba/qwen3.5-122b-a10b", cost: { text: { input: { price: 9 }, output: { price: 9 } } } };
-  const responses = { sdk: { aisdk: "@ai-sdk/openai", opencodeai: "@opencode/ai/providers/openai-compatible/responses" } };
-  const translate = (doc: Record<string, unknown>) => huggingface.translateModel(huggingFaceModel(), {
-    existing: () => ({ base_model: "alibaba/qwen3.5-122b-a10b" }),
-    authored: () => ({ base_model: "alibaba/qwen3.5-122b-a10b" }),
-    v2: () => doc,
-  });
-  // A file with no table gets the provider's Chat Completions API (capped by max_tokens) first, then Responses.
-  const once = translate(v2);
-  expect(once).toEqual({
-    id: "Qwen/Qwen3.5-122B-A10B",
-    v2: { ...v2, api: { "chat-completions": { compatibility: { max_tokens_field: "max_tokens" } }, responses } },
-  });
-  // An existing first table keeps its settings and gains max_tokens_field, and a second run changes nothing.
-  const first = { "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } };
-  const kept = translate({ ...v2, api: first }) as { v2: Record<string, unknown> };
-  expect(Object.keys(kept.v2.api as object)).toEqual(["chat-completions", "responses"]);
-  expect(kept.v2.api).toEqual({
-    "chat-completions": { compatibility: { reasoning_field: "reasoning_content", max_tokens_field: "max_tokens" } },
-    responses,
-  });
-  expect(translate(kept.v2)).toEqual(kept);
-  expect(huggingface.translateModel(huggingFaceModel({ providers: [] }), {
-    existing: () => undefined,
-    authored: () => undefined,
-  })).toBeUndefined();
 });
 
 test("OpenRouter web search prices become v2 prices per 1,000, by search context size where listed", () => {

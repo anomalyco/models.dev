@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { providerModelToV2 } from "../../model-file-v2.js";
-import type { SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
+import type { ExistingModel, SyncProvider, SyncedFullModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
@@ -98,6 +98,8 @@ export const huggingface = {
   name: "Hugging Face",
   modelsDir: "providers/huggingface/models",
   deleteMissing: false,
+  // translateModel returns each file's own header with the synced price line replaced.
+  authoritativeHeaders: true,
   sourceID(model) {
     return model.id;
   },
@@ -131,12 +133,23 @@ export const huggingface = {
   translateModel(model, context) {
     if (!model.providers.some((provider) => provider.status === "live")) return undefined;
 
-    // Existing files are curated (prices differ per inference provider), so the
-    // sync only creates new ones and writes existing files back unchanged.
-    const v2 = context.v2?.(model.id);
-    if (v2 !== undefined) return { id: model.id, v2: { ...v2, api: chatApis(v2.api) } };
-    const authored = context.authored(model.id);
-    if (authored !== undefined) return { id: model.id, model: authored as SyncedModel };
+    const aggregate = aggregateProviders(model);
+    const existing = context.existing(model.id);
+    if (existing !== undefined) {
+      const authored = context.authored(model.id);
+      const modalities = context.v2?.(model.id)?.modalities;
+      return {
+        id: model.id,
+        model: refreshHuggingFaceModel(model.id, existing, authored, aggregate),
+        header: syncedHeader(context.header?.(model.id) ?? "", aggregate.cost !== undefined),
+        v2Set: {
+          api: (current: unknown) => chatApis(current),
+          // The v1 view reduces MIME types to generic kinds, which can factor a
+          // hand-authored format list away against the lab file; keep it verbatim.
+          ...(modalities === undefined ? {} : { modalities }),
+        },
+      };
+    }
 
     const baseModel = resolveHuggingFaceBaseModel(model.id);
     const lab = baseModel === undefined ? undefined : labModel(baseModel);
@@ -144,7 +157,6 @@ export const huggingface = {
 
     // The router only exposes pricing per inference provider, so a new model with
     // no priced provider cannot be created with a meaningful cost.
-    const aggregate = aggregateProviders(model);
     if (aggregate.cost === undefined) return undefined;
     // Reasoning controls depend on the inference provider the router picks, so a
     // new reasoning model needs them researched before it's created.
@@ -152,7 +164,11 @@ export const huggingface = {
       throw new MissingReasoningOptionsError(model.id, "Hugging Face reasoning controls vary by inference provider; author them before creating this model");
     }
 
-    return { id: model.id, v2: buildHuggingFaceModel(model, baseModel, aggregate, lab) };
+    return {
+      id: model.id,
+      v2: buildHuggingFaceModel(model, baseModel, aggregate, lab),
+      header: `# Created by the Hugging Face sync.\n${SYNCED_LINE}\n`,
+    };
   },
 } satisfies SyncProvider<HuggingFaceModel>;
 
@@ -169,39 +185,99 @@ function price(value: number) {
     : undefined;
 }
 
-// The router aggregates several inference providers per model and sends traffic to
-// the fastest one, so this collapses them into the route a request would actually
-// take: pricing and context from the highest-throughput provider, plus capabilities
-// advertised by any provider (a caller can always pin a slower provider).
-function aggregateProviders(model: HuggingFaceModel): Aggregate {
+// The router publishes no model-level price or context, only one entry per inference
+// provider. This collapses them the way OpenRouter's own model-level values do (the
+// OpenRouter sync publishes those as is): the context is the largest any live provider
+// serves (OpenRouter's `context_length`), and the price is the cheapest live provider's,
+// the one default routing favors (lowest input + output, then highest throughput, then
+// provider id). Capabilities are advertised by any provider (a caller can pin one).
+export function aggregateProviders(model: HuggingFaceModel): Aggregate {
   const providers = model.providers.filter((provider) => provider.status === "live");
 
-  const byThroughput = (a: HuggingFaceProvider, b: HuggingFaceProvider) =>
-    (b.throughput ?? -Infinity) - (a.throughput ?? -Infinity);
-  // The provider the router routes to (fastest). Take its price when it reports one;
-  // otherwise fall back to the fastest provider that does, so a new model can still
-  // be costed.
-  const routed = [...providers].sort(byThroughput).at(0);
-  const costProvider = routed?.pricing !== undefined
-    ? routed
-    : [...providers]
-        .filter((provider): provider is HuggingFaceProvider & { pricing: { input: number; output: number } } =>
-          provider.pricing !== undefined)
-        .sort(byThroughput)
-        .at(0);
-  const input = costProvider?.pricing === undefined ? undefined : price(costProvider.pricing.input);
-  const output = costProvider?.pricing === undefined ? undefined : price(costProvider.pricing.output);
+  const priced = providers.flatMap((provider) => {
+    if (provider.pricing === undefined) return [];
+    const input = price(provider.pricing.input);
+    const output = price(provider.pricing.output);
+    return input === undefined || output === undefined ? [] : [{ provider, cost: { input, output } }];
+  });
+  const cheapest = priced.sort((a, b) =>
+    (a.cost.input + a.cost.output) - (b.cost.input + b.cost.output)
+    || (b.provider.throughput ?? -Infinity) - (a.provider.throughput ?? -Infinity)
+    || a.provider.provider.localeCompare(b.provider.provider)
+  ).at(0);
 
   const contexts = providers
     .map((provider) => provider.context_length)
     .filter((value): value is number => value !== undefined);
 
   return {
-    cost: input !== undefined && output !== undefined ? { input, output } : undefined,
-    context: routed?.context_length ?? (contexts.length > 0 ? Math.max(...contexts) : undefined),
+    cost: cheapest?.cost,
+    context: contexts.length > 0 ? Math.max(...contexts) : undefined,
     tools: providers.some((provider) => provider.supports_tools === true),
     structuredOutput: providers.some((provider) => provider.supports_structured_output === true),
   };
+}
+
+const SYNCED_LINE =
+  "# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).";
+const CONTEXT_LINE =
+  "# Context: synced from https://router.huggingface.co/v1/models (largest live context); price kept, no live provider lists one.";
+// Lines earlier syncs and hand edits wrote for the router's price and context, which
+// the synced line replaces. Indented lines after one continue it.
+const STALE_LINE = /^# (Created by the Hugging Face sync\. )?(Price|Price and context|Context): (synced from )?https:\/\/router\.huggingface\.co\/v1\/models\b/;
+
+// A file's header with its router price line replaced by the synced one, in place,
+// or appended when it has none.
+export function syncedHeader(header: string, priced: boolean) {
+  const lines = header.split("\n").filter((line, index, all) => !(line === "" && index === all.length - 1));
+  const out: string[] = [];
+  let at: number | undefined;
+  let created = false;
+  for (let index = 0; index < lines.length; index++) {
+    const line = lines[index]!;
+    if (STALE_LINE.test(line)) {
+      at ??= out.length;
+      created ||= line.startsWith("# Created by the Hugging Face sync.");
+      while (lines[index + 1]?.startsWith("#   ")) index++;
+      continue;
+    }
+    if (line === "# Created by the Hugging Face sync.") {
+      at ??= out.length;
+      created = true;
+      continue;
+    }
+    out.push(line);
+  }
+  const synced = [...(created ? ["# Created by the Hugging Face sync."] : []), priced ? SYNCED_LINE : CONTEXT_LINE];
+  out.splice(at ?? out.length, 0, ...synced);
+  return `${out.join("\n")}\n`;
+}
+
+// An existing file with the router's price and context in place of its own. The output
+// cap follows the context: a file's own output equal to its old context was a cap at
+// that context and is worked out again; another own output is a hand-set cap and kept,
+// at most the context. Everything else in the file is kept.
+export function refreshHuggingFaceModel(
+  id: string,
+  existing: ExistingModel,
+  authored: ExistingModel | undefined,
+  aggregate: Aggregate,
+): SyncedFullModel {
+  const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = existing;
+  const context = aggregate.context ?? existing.limit?.context;
+  if (context === undefined) throw new Error(`Hugging Face model ${id}: no context in the router or the file`);
+  const own = authored?.limit?.output;
+  const labOutput = baseModel === undefined
+    ? undefined
+    : (labModel(baseModel)?.limit as { output?: number } | undefined)?.output;
+  const kept = own !== undefined && own !== existing.limit?.context ? own : (labOutput ?? existing.limit?.output);
+  const output = kept === undefined ? undefined : Math.min(kept, context);
+  const limit = { ...existing.limit, context, ...(output === undefined ? {} : { output }) } as SyncedFullModel["limit"];
+  const cost = aggregate.cost === undefined ? existing.cost : { ...existing.cost, ...aggregate.cost };
+  const values = { ...current, cost, limit } as SyncedFullModel;
+  return (baseModel === undefined
+    ? values
+    : factorBaseModel(baseModel, values, limit, baseModelOmit)) as SyncedFullModel;
 }
 
 const KINDS = ["text", "image", "audio", "video", "pdf"];

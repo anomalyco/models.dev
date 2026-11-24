@@ -192,6 +192,16 @@ CrossModel is implemented in `packages/core/src/sync/providers/crossmodel.ts`.
 - Effort lists are sorted low to high, because v2 compares them in order.
 - Intrinsic model facts (`knowledge`, dates, `family`, `open_weights`) are never synced; they stay inherited from the canonical `base_model` metadata. Display names are not synced either, so v1 names remain the lab's.
 
+## Hugging Face Notes
+
+Hugging Face is implemented in `packages/core/src/sync/providers/huggingface.ts`.
+
+- Source endpoint: `https://router.huggingface.co/v1/models` (`HF_TOKEN` optional). The router lists one entry per inference provider and no model-level price or context.
+- Price and context follow what the OpenRouter sync publishes, OpenRouter's model-level values: the context is the largest any live provider serves (OpenRouter's `context_length`), and the price is the cheapest live provider's (lowest input + output, then highest throughput, then provider id), the provider default routing favors. Hugging Face routes language models through OpenRouter's default routing.
+- Existing files are refreshed: price and context, and an output cap that follows the context (an output equal to the old context is worked out again from the lab's; a hand-set cap stays, at most the context). Reasoning controls, cache prices, modalities, API tables and other comments are kept. Each file's header carries one synced `# Price and context:` line, which replaces earlier router price lines.
+- New files are created only for models that map to a lab file and have a priced live provider. New reasoning models wait for hand-authored controls.
+- Models missing from the router are kept for manual review (`deleteMissing: false`).
+
 ## Prime Inference Notes
 
 - Run with `bun models:sync prime` or `bun prime:sync`. Registration enables the hourly provider-specific workflow; no API key or new workflow secret is required.
