@@ -4,6 +4,8 @@
 # `reasoning` block, served on staging's /v1/models and not yet on mainnet's. Toggle, when listed: reasoning_effort = "none"
 # turns thinking off on every row; effort levels are the vendor's documented levels that every row accepts and that
 # measurably change how much the model thinks. No controls listed: reasoning_effort cannot turn thinking off.
+# No budget: thinking.budget_tokens (1024 and 4096, with thinking.type enabled) had no visible effect on Chat Completions
+# on either row (anonymous1, anonymous2; probed 2026-11-24): no reasoning reported and similar output either way.
 # Reasoning block reviewed: 2026-11-24
 schema = 2
 base_model = "anthropic/claude-opus-4-6"

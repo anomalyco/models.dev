@@ -4,12 +4,14 @@
 # `reasoning` block, served on staging's /v1/models and not yet on mainnet's. Toggle, when listed: reasoning_effort = "none"
 # turns thinking off on every row; effort levels are the vendor's documented levels that every row accepts and that
 # measurably change how much the model thinks. No controls listed: reasoning_effort cannot turn thinking off.
+# Budget: thinking_budget (reasoning tokens). Probed 2026-11-24 on @aliyun through 0G's staging router, one request each:
+# 64 gave 65 reasoning tokens, 1024 gave 1025. Bounds, if any, follow Alibaba's own entry.
 # Reasoning block reviewed: 2026-11-24
 schema = 2
 base_model = "alibaba/qwen3-vl-plus"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [cost.text.input]
 price = 0.145833

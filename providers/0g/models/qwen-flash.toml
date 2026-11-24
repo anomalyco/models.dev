@@ -3,12 +3,14 @@
 # Reasoning probed 2026-11-24 through 0G's staging router (0g-router param-probe --reasoning, 3 runs per request)
 # on the rows mainnet serves the model from (aliyun).
 # Off by default on this row (0 reasoning tokens with no field and at reasoning_effort high); enable_thinking=true gave 1232.
-# reasoning_effort has no effect. No budget is listed: thinking_budget was not probed.
+# reasoning_effort has no effect.
+# Budget: thinking_budget (reasoning tokens). Probed 2026-11-24 on @aliyun through 0G's staging router, one request each:
+# 64 gave 64 reasoning tokens, 1024 gave 1024. Bounds, if any, follow Alibaba's own entry.
 schema = 2
 base_model = "alibaba/qwen-flash"
 
 [capabilities]
-reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = {} }
 
 [cost.text.input]
 price = 0.021875
