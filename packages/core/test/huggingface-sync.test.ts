@@ -81,19 +81,20 @@ test("existing files take the router's price and context and keep the rest", () 
     base_model: "alibaba/qwen3.5-122b-a10b",
     reasoning: true,
     reasoning_options: [{ type: "effort", values: ["low", "high"] }],
-    cost: { input: 9, output: 9, cache_read: 0.5 },
+    cost: { input: 9, output: 9, cache_read: 0.15 },
     limit: { context: 262_144, output: 65_536 },
   } as ExistingModel;
   const refreshed = refreshHuggingFaceModel("Qwen/Qwen3.5-122B-A10B", existing, { base_model: existing.base_model } as ExistingModel, {
     cost: { input: 0.3, output: 2 },
+    provider: "cheap",
     context: 131_072,
     tools: true,
     structuredOutput: true,
-  });
+  }, "# Cache read: cheap's rate (https://example.com/pricing).\n");
   expect(refreshed).toMatchObject({
     base_model: "alibaba/qwen3.5-122b-a10b",
     reasoning_options: [{ type: "effort", values: ["low", "high"] }],
-    cost: { input: 0.3, output: 2, cache_read: 0.5 },
+    cost: { input: 0.3, output: 2, cache_read: 0.15 },
     limit: { context: 131_072 },
   });
 });
@@ -170,8 +171,44 @@ price = 1
   }
 });
 
+test("a cache price stays only when its header names the provider the price now comes from", () => {
+  const existing = { base_model: "alibaba/qwen3.5-122b-a10b", cost: { input: 9, output: 9, cache_read: 0.1, cache_write: 1 } } as ExistingModel;
+  const aggregate = { cost: { input: 0.3, output: 2 }, provider: "cheap", context: 262_144, tools: false, structuredOutput: false };
+  const refresh = (header: string, input = 0.3) =>
+    refreshHuggingFaceModel("m", existing, existing, { ...aggregate, cost: { input, output: 2 } }, header).cost;
+
+  expect(refresh("# Cache read: cheap's rate (https://example.com).\n")).toMatchObject({ input: 0.3, cache_read: 0.1, cache_write: 1 });
+  // Another provider's cache price, or one with no named provider: dropped with the write price.
+  for (const header of ["# Cache read: fast's rate.\n", "# Lab identity: x\n", ""]) {
+    const cost = refresh(header);
+    expect(cost).toMatchObject({ input: 0.3, output: 2 });
+    expect(cost?.cache_read).toBeUndefined();
+    expect(cost?.cache_write).toBeUndefined();
+  }
+  // Same provider, but the read price is above the new input price: dropped.
+  expect(refresh("# Cache read: cheap's rate.\n", 0.05)?.cache_read).toBeUndefined();
+  // No priced provider: the price and its cache price stay as they are.
+  expect(refreshHuggingFaceModel("m", existing, existing, { ...aggregate, cost: undefined, provider: undefined }, "").cost)
+    .toMatchObject({ input: 9, cache_read: 0.1 });
+});
+
+test("a dropped cache price is reported and its header line removed", () => {
+  const existing = { base_model: "alibaba/qwen3.5-122b-a10b", cost: { input: 9, output: 9, cache_read: 0.1 }, limit: { context: 262_144 } } as ExistingModel;
+  const translated = huggingface.translateModel(routerModel([provider({ provider: "cheap", pricing: { input: 0.3, output: 2 } })]), {
+    existing: () => existing,
+    authored: () => existing,
+    header: () => "# Cache read: fast's rate (https://example.com),\n#   per MTok.\n# Lab identity: x\n",
+  });
+  expect(translated).toMatchObject({
+    notices: ["Hugging Face Qwen/Qwen3.5-122B-A10B: dropped the cache price (read 0.1) because the input price now comes from cheap and it is fast's."],
+    header: `# Lab identity: x\n${SYNCED}\n`,
+  });
+  expect(syncedHeader("# Cache read: cheap's rate.\n", true)).toBe(`# Cache read: cheap's rate.\n${SYNCED}\n`);
+});
+
 const LAB = "alibaba/qwen3.5-122b-a10b";
 const EXISTING = `# Effort: reasoning_effort = low|high, as on the lab's API.
+# Cache read: cheap's rate (https://example.com/pricing).
 # Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (fast).
 schema = 2
 base_model = "${LAB}"

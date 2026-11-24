@@ -138,10 +138,16 @@ export const huggingface = {
     if (existing !== undefined) {
       const authored = context.authored(model.id);
       const modalities = context.v2?.(model.id)?.modalities;
+      const header = context.header?.(model.id) ?? "";
+      const refreshed = refreshHuggingFaceModel(model.id, existing, authored, aggregate, header);
+      const dropped = droppedCache(existing, refreshed);
       return {
         id: model.id,
-        model: refreshHuggingFaceModel(model.id, existing, authored, aggregate),
-        header: syncedHeader(context.header?.(model.id) ?? "", aggregate.cost !== undefined),
+        model: refreshed,
+        header: syncedHeader(header, aggregate.cost !== undefined, dropped),
+        ...(dropped
+          ? { notices: [cacheNotice(model.id, existing, aggregate, header)] }
+          : {}),
         v2Set: {
           api: (current: unknown) => chatApis(current),
           // The v1 view reduces MIME types to generic kinds, which can factor a
@@ -174,6 +180,8 @@ export const huggingface = {
 
 interface Aggregate {
   cost: { input: number; output: number } | undefined;
+  /** The router provider the price comes from. */
+  provider?: string;
   context: number | undefined;
   tools: boolean;
   structuredOutput: boolean;
@@ -212,6 +220,7 @@ export function aggregateProviders(model: HuggingFaceModel): Aggregate {
 
   return {
     cost: cheapest?.cost,
+    provider: cheapest?.provider.provider,
     context: contexts.length > 0 ? Math.max(...contexts) : undefined,
     tools: providers.some((provider) => provider.supports_tools === true),
     structuredOutput: providers.some((provider) => provider.supports_structured_output === true),
@@ -228,7 +237,41 @@ const STALE_LINE = /^# (Created by the Hugging Face sync\. )?(Price|Price and co
 
 // A file's header with its router price line replaced by the synced one, in place,
 // or appended when it has none.
-export function syncedHeader(header: string, priced: boolean) {
+// The router lists no cache prices, so a file's cache price is hand-authored. Its header
+// names the router provider it comes from on a `# Cache read: <provider>` line.
+const CACHE_LINE = /^# Cache read: ([a-z0-9][a-z0-9-]*)/;
+
+export function cacheSource(header: string) {
+  for (const line of header.split("\n")) {
+    const match = CACHE_LINE.exec(line);
+    if (match !== null) return match[1];
+  }
+  return undefined;
+}
+
+function droppedCache(existing: ExistingModel, refreshed: SyncedFullModel) {
+  const before = existing.cost as { cache_read?: number; cache_write?: number } | undefined;
+  const after = refreshed.cost as { cache_read?: number; cache_write?: number } | undefined;
+  return (before?.cache_read !== undefined && after?.cache_read === undefined)
+    || (before?.cache_write !== undefined && after?.cache_write === undefined);
+}
+
+function cacheNotice(id: string, existing: ExistingModel, aggregate: Aggregate, header: string) {
+  const cache = existing.cost as { cache_read?: number; cache_write?: number } | undefined;
+  const source = cacheSource(header);
+  const prices = [
+    cache?.cache_read === undefined ? undefined : `read ${cache.cache_read}`,
+    cache?.cache_write === undefined ? undefined : `write ${cache.cache_write}`,
+  ].filter((item) => item !== undefined).join(", ");
+  const reason = source === undefined
+    ? "its header names no provider for it"
+    : source !== aggregate.provider
+      ? `it is ${source}'s`
+      : `the read price is above the new input price ${aggregate.cost?.input}`;
+  return `Hugging Face ${id}: dropped the cache price (${prices}) because the input price now comes from ${aggregate.provider} and ${reason}.`;
+}
+
+export function syncedHeader(header: string, priced: boolean, dropCache = false) {
   const lines = header.split("\n").filter((line, index, all) => !(line === "" && index === all.length - 1));
   const out: string[] = [];
   let at: number | undefined;
@@ -246,6 +289,10 @@ export function syncedHeader(header: string, priced: boolean) {
       created = true;
       continue;
     }
+    if (dropCache && CACHE_LINE.test(line)) {
+      while (lines[index + 1]?.startsWith("#   ")) index++;
+      continue;
+    }
     out.push(line);
   }
   const synced = [...(created ? ["# Created by the Hugging Face sync."] : []), priced ? SYNCED_LINE : CONTEXT_LINE];
@@ -256,12 +303,15 @@ export function syncedHeader(header: string, priced: boolean) {
 // An existing file with the router's price and context in place of its own. The output
 // cap follows the context: a file's own output equal to its old context was a cap at
 // that context and is worked out again; another own output is a hand-set cap and kept,
-// at most the context. Everything else in the file is kept.
+// at most the context. A cache price is kept only when the header names the provider
+// the price now comes from and the read price isn't above the new input price; prices
+// from two providers never share a file. Everything else in the file is kept.
 export function refreshHuggingFaceModel(
   id: string,
   existing: ExistingModel,
   authored: ExistingModel | undefined,
   aggregate: Aggregate,
+  header = "",
 ): SyncedFullModel {
   const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = existing;
   const context = aggregate.context ?? existing.limit?.context;
@@ -287,7 +337,14 @@ export function refreshHuggingFaceModel(
   // context matches the lab's again. An empty list still replaces the file's own.
   const dropInput = lab?.input !== undefined && input === undefined && lab.context !== context;
   const omit = [...(baseModelOmit ?? []).filter((key) => key !== "limit.input"), ...(dropInput ? ["limit.input"] : [])];
-  const cost = aggregate.cost === undefined ? existing.cost : { ...existing.cost, ...aggregate.cost };
+  const keepCache = aggregate.cost !== undefined
+    && cacheSource(header) === aggregate.provider
+    && ((existing.cost as { cache_read?: number } | undefined)?.cache_read ?? 0) <= aggregate.cost.input;
+  const cost = aggregate.cost === undefined
+    ? existing.cost
+    : keepCache
+      ? { ...existing.cost, ...aggregate.cost }
+      : { ...existing.cost, ...aggregate.cost, cache_read: undefined, cache_write: undefined };
   const values = { ...current, cost, limit } as SyncedFullModel;
   return (baseModel === undefined
     ? values
