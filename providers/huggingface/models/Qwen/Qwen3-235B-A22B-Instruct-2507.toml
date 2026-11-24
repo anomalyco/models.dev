@@ -1,4 +1,5 @@
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (parasail): $0.14 input / $0.8 output per MTok, context 131,072.
 schema = 2
 base_model = "alibaba/qwen3-235b-a22b-instruct-2507"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
@@ -7,6 +8,9 @@ description = "Qwen instruction model for multilingual chat, reasoning, and tool
 tools = { supported = true }
 structured_output = true
 
+[limit]
+context = 131_072
+
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }
 
@@ -14,7 +18,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.855
+price = 0.14
 
 [cost.text.output]
-price = 2.565
+price = 0.8
