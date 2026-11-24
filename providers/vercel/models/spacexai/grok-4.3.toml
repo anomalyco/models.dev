@@ -9,6 +9,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
+service_tier = ["priority"]
 
 [limit]
 output = 1_000_000
@@ -39,3 +40,10 @@ price = 2.5
 [[cost.text.output.overrides]]
 when = { context = { gt = 200_001 } }
 price = 5
+
+[cost.web_search]
+price = 5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }

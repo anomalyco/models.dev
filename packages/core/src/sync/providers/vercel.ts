@@ -6,6 +6,7 @@ import { describeModel } from "../../describe.js";
 import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import { providerModelToV2 } from "../../model-file-v2.js";
 import { ReasoningOption } from "../../schema.js";
+import { ServiceTierV2Values } from "../../schema-v2.js";
 import { roundPrice } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { factorBaseModel, freeFamily, resolveCanonicalBaseModel } from "./openrouter.js";
@@ -61,6 +62,11 @@ const Pricing = z.object({
   output_tiers: z.array(PricingTier).optional(),
   input_cache_read_tiers: z.array(PricingTier).optional(),
   input_cache_write_tiers: z.array(PricingTier).optional(),
+  // USD per 1,000 searches (or grounded prompts), not per token.
+  web_search: z.string().optional(),
+  // Per-tier token prices, e.g. { flex: { input, output, input_cache_read } }.
+  // Read with safeParse in serviceTierCost so a new shape can't fail the sync.
+  service_tiers: z.unknown().optional(),
 }).passthrough();
 
 export const VercelModel = z.object({
@@ -82,6 +88,8 @@ export const VercelModel = z.object({
   // effort values; unresolved options retain the authored menu below.
   reasoning_options: z.array(z.unknown()).optional(),
   pricing: Pricing.optional(),
+  // Shutdown time in ms; the catalog keeps listing the model until then.
+  deprecated_at: z.number().optional(),
 }).passthrough();
 
 const VercelResponse = z.object({
@@ -113,6 +121,8 @@ export const vercel = {
       const v2 = buildVercelMediaModel(model, mediaType, current, context.authored(model.id));
       const cache = vercelCache(model);
       if (cache !== undefined) v2.capabilities = { ...v2.capabilities, cache: cache((current?.capabilities as Doc | undefined)?.cache) };
+      const webSearch = webSearchCost(model);
+      if (webSearch !== undefined) v2.cost = { ...v2.cost, web_search: webSearch((current?.cost as Doc | undefined)?.web_search) };
       return {
         id: model.id,
         v2,
@@ -141,6 +151,8 @@ export const vercel = {
         : {}),
       ...(cache === undefined ? {} : { "capabilities.cache": cache }),
       ...languageImageCost(model, type),
+      ...webSearchSet(model),
+      ...serviceTierCost(model),
     };
     return {
       id: model.id,
@@ -167,6 +179,111 @@ function languageImageCost(model: VercelModel, type: string | undefined) {
     if (error instanceof Unrepresentable) return {};
     throw error;
   }
+}
+
+// `pricing.web_search` is USD per 1,000 searches. Overrides already in the file are kept.
+// https://vercel.com/docs/ai-gateway/models-and-providers/web-search
+export function webSearchCost(model: Pick<VercelModel, "pricing">) {
+  const value = Number(model.pricing?.web_search);
+  if (model.pricing?.web_search === undefined || !Number.isFinite(value) || value <= 0) return undefined;
+  return (current: unknown) => ({ ...(current !== null && typeof current === "object" ? current : {}), price: value });
+}
+
+function webSearchSet(model: VercelModel) {
+  const cost = webSearchCost(model);
+  return cost === undefined ? {} : { "cost.web_search": cost };
+}
+
+const TierPrices = z.record(z.object({
+  input: z.string().optional(),
+  output: z.string().optional(),
+  input_cache_read: z.string().optional(),
+  input_cache_write: z.string().optional(),
+}).passthrough());
+
+const TIER_PRICE_KEYS = ["input", "output", "input_cache_read", "input_cache_write"] as const;
+// Existing Vercel files list priority before flex.
+const MULTIPLIER_ORDER = ["priority", "flex", "ultrafast", "fast", "standby"];
+
+// `pricing.service_tiers` lists each tier's token prices. Each tier becomes a
+// `service_tier` value and a multiplier on text prices only (object factor, so
+// web_search is unscaled): `{ text = 2 }` when every listed price scales the
+// same, else per price. A price the tier doesn't list (Gemini flex cache reads)
+// keeps the standard rate. Tiers and multiplier parts the catalog doesn't state
+// (audio factors, tiers it dropped) stay as the file has them.
+export function serviceTierCost(model: Pick<VercelModel, "pricing">) {
+  const pricing = (model.pricing ?? {}) as Record<string, unknown>;
+  const parsed = TierPrices.safeParse(pricing.service_tiers);
+  if (!parsed.success) return {};
+  const factors = new Map<string, unknown>();
+  for (const [tier, prices] of Object.entries(parsed.data)) {
+    if (!(ServiceTierV2Values as readonly string[]).includes(tier)) continue;
+    const factor = tierFactor(pricing, prices);
+    if (factor !== undefined) factors.set(tier, factor);
+  }
+  if (factors.size === 0) return {};
+  const tierOrder = (tier: string) => (ServiceTierV2Values as readonly string[]).indexOf(tier);
+  const multiplierOrder = (tier: string) => MULTIPLIER_ORDER.indexOf(tier);
+  return {
+    "capabilities.service_tier": (current: unknown) => {
+      const authored = Array.isArray(current) ? current as string[] : [];
+      return [...new Set([...authored, ...factors.keys()])].sort((a, b) => tierOrder(a) - tierOrder(b));
+    },
+    "cost.multipliers": (current: unknown) => {
+      const list = Array.isArray(current) ? [...current] as Doc[] : [];
+      const tiers = [...factors.keys()].sort((a, b) => multiplierOrder(a) - multiplierOrder(b));
+      for (const tier of tiers) {
+        const text = factors.get(tier);
+        const index = list.findIndex((rule) => tierRule(rule) === tier);
+        if (index === -1) {
+          list.push({ when: { service_tier: { equals: tier } }, factor: { text } });
+          continue;
+        }
+        const factor = list[index]!.factor;
+        list[index] = {
+          ...list[index],
+          factor: factor !== null && typeof factor === "object" ? { ...factor, text } : { text },
+        };
+      }
+      return list;
+    },
+  };
+}
+
+function tierFactor(pricing: Record<string, unknown>, prices: Record<string, unknown>) {
+  const ratios: Partial<Record<(typeof TIER_PRICE_KEYS)[number], number>> = {};
+  let unscaled = false;
+  for (const key of TIER_PRICE_KEYS) {
+    const base = Number(pricing[key]);
+    if (pricing[key] === undefined || !Number.isFinite(base) || base <= 0) continue;
+    const tier = Number(prices[key]);
+    if (prices[key] === undefined || !Number.isFinite(tier) || tier < 0) {
+      unscaled = true;
+      continue;
+    }
+    ratios[key] = Math.round((tier / base) * 1e10) / 1e10;
+  }
+  if (ratios.input === undefined || ratios.output === undefined) return undefined;
+  const values = Object.values(ratios);
+  if (!unscaled && values.every((value) => value === values[0])) return values[0];
+  const cache = {
+    ...(ratios.input_cache_read === undefined ? {} : { read: ratios.input_cache_read }),
+    ...(ratios.input_cache_write === undefined ? {} : { write: ratios.input_cache_write }),
+  };
+  return {
+    input: { price: ratios.input, ...(Object.keys(cache).length > 0 ? { cache } : {}) },
+    output: { price: ratios.output },
+  };
+}
+
+// The tier a multiplier applies to, when its only condition is one service tier.
+function tierRule(rule: Doc) {
+  const when = rule?.when;
+  if (when === null || typeof when !== "object" || Object.keys(when).length !== 1) return undefined;
+  const condition = when.service_tier;
+  return condition !== null && typeof condition === "object" && Object.keys(condition).length === 1
+    ? condition.equals
+    : undefined;
 }
 
 // A tool-calling model that lists `tool_choice` takes "auto", "none", "required"
@@ -291,7 +408,7 @@ export function buildVercelModel(
     structured_output: existing?.structured_output,
     knowledge: existing?.knowledge,
     open_weights: existing?.open_weights ?? false,
-    status: existing?.status,
+    status: model.deprecated_at !== undefined ? "deprecated" : existing?.status,
     interleaved: existing?.interleaved,
     experimental: existing?.experimental,
     provider: model.type === "evaluation" ? DECISION_V1_PROVIDER : existing?.provider,
@@ -661,7 +778,8 @@ export function buildVercelMediaModel(
     // change on resync), or Vercel's for a new file.
     const name = existing === undefined ? model.name : existing.name;
     if (name !== undefined && name !== lab.name) doc.name = name;
-    if (existing?.status !== undefined) doc.status = existing.status;
+    const status = model.deprecated_at !== undefined ? "deprecated" : existing?.status;
+    if (status !== undefined) doc.status = status;
     // A lab of this type keeps its inputs and outputs, so only a host override
     // (with generic kinds made exact from the lab) is kept. A lab of another type
     // takes on what this endpoint accepts and returns.
@@ -697,7 +815,8 @@ export function buildVercelMediaModel(
       ? dateFromTimestamp(model.released)
       : dateFromTimestamp(model.created));
     if (existing?.last_updated !== undefined) doc.last_updated = existing.last_updated;
-    if (existing?.status !== undefined) doc.status = existing.status;
+    const status = model.deprecated_at !== undefined ? "deprecated" : existing?.status;
+    if (status !== undefined) doc.status = status;
     doc.modalities = mediaModalities(model, type, existing?.modalities, undefined);
     doc.capabilities = orderedCapabilities({
       tools: { supported: false },

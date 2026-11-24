@@ -7,6 +7,7 @@ name = "Grok 4.20 Non-Reasoning"
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 cache = { implicit = true }
+service_tier = ["priority"]
 
 [limit]
 context = 2_000_000
@@ -38,3 +39,10 @@ price = 2.5
 [[cost.text.output.overrides]]
 when = { context = { gt = 200_001 } }
 price = 5
+
+[cost.web_search]
+price = 5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }

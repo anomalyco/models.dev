@@ -109,7 +109,7 @@ import { pioneer } from "../src/sync/providers/pioneer.js";
 import { buildGoogleModel, google, shouldTrackGoogleModel } from "../src/sync/providers/google.js";
 import { buildTinfoilModel, tinfoil, type TinfoilModel } from "../src/sync/providers/tinfoil.js";
 import { buildVeniceModel, resolveVeniceBaseModel, veniceV2Set, withResponsesApi, type VeniceModel } from "../src/sync/providers/venice.js";
-import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, vercel, vercelCache, vercelMediaCost } from "../src/sync/providers/vercel.js";
+import { buildVercelMediaModel, buildVercelModel, chatApis, realtimePriceNote, serviceTierCost, vercel, vercelCache, vercelMediaCost, webSearchCost } from "../src/sync/providers/vercel.js";
 import { buildKiloModel, kilo } from "../src/sync/providers/kilo.js";
 import { formatModelV2, patchModelV2, sameV1Model } from "../src/model-file-v2.js";
 import { modelV2ToV1 } from "../src/translate.js";
@@ -9340,6 +9340,64 @@ test("Vercel cache support comes from tags, else from a cache read price", () =>
   expect(cache([], "mistral/codestral", { input_cache_read: "0.03" })!(undefined)).toEqual({ implicit: true });
   expect(cache([], "anthropic/claude-x", { input_cache_read: "0.3" })!(undefined)).toEqual({ explicit: true });
   expect(cache([], "perplexity/sonar", { input_cache_write: "0.0625" })).toBeUndefined();
+});
+
+test("Vercel deprecated_at marks chat and media models deprecated, and keeps an authored status otherwise", () => {
+  const [chat, media, plain] = vercel.parseModels({
+    data: [
+      { id: "inception/mercury-3", name: "Mercury 3", created: 1_780_000_000, type: "language", deprecated_at: 1_798_434_300_000, pricing: { input: "0.0000001", output: "0.00000035" } },
+      { id: "openai/whisper-1", name: "Whisper", created: 1_780_000_000, type: "transcription", deprecated_at: 1_803_600_000_000, pricing: { transcription_duration_cost_per_second: "0.0001" } },
+      { id: "example/model", name: "Example", created: 1_780_000_000, type: "language", pricing: { input: "0.000001", output: "0.000002" } },
+    ],
+  });
+  expect(buildVercelModel(chat!, undefined).status).toBe("deprecated");
+  expect(buildVercelMediaModel(media!, "transcription").status).toBe("deprecated");
+  expect(buildVercelModel(plain!, undefined).status).toBeUndefined();
+  expect(buildVercelModel(plain!, { status: "beta" } as never).status).toBe("beta");
+});
+
+test("Vercel web search prices go to v2 per 1,000, keeping authored overrides", () => {
+  expect(webSearchCost({ pricing: { web_search: "14" } })!(undefined)).toEqual({ price: 14 });
+  const overrides = [{ when: { search_context_size: { equals: "high" } }, price: 50 }];
+  expect(webSearchCost({ pricing: { web_search: "10" } })!({ price: 25, overrides })).toEqual({ price: 10, overrides });
+  expect(webSearchCost({ pricing: { web_search: "0" } })).toBeUndefined();
+  expect(webSearchCost({ pricing: {} })).toBeUndefined();
+});
+
+test("Vercel service tiers become service_tier values and text-only multipliers", () => {
+  const pricing = {
+    input: "0.0000003",
+    output: "0.0000025",
+    input_cache_read: "0.00000003",
+    service_tiers: {
+      priority: { input: "0.00000054", output: "0.0000045", input_cache_read: "0.000000054" },
+      // Gemini flex leaves cache reads at the standard rate.
+      flex: { input: "0.00000015", output: "0.00000125" },
+    },
+  };
+  const set = serviceTierCost({ pricing }) as Record<string, (current: unknown) => unknown>;
+
+  expect(set["capabilities.service_tier"]!(undefined)).toEqual(["flex", "priority"]);
+  expect(set["cost.multipliers"]!(undefined)).toEqual([
+    { when: { service_tier: { equals: "priority" } }, factor: { text: 1.8 } },
+    { when: { service_tier: { equals: "flex" } }, factor: { text: { input: { price: 0.5 }, output: { price: 0.5 } } } },
+  ]);
+
+  // Authored audio factors, other tiers and other multipliers stay.
+  const region = { when: { region: { equals: "eu" } }, factor: 1.1 };
+  expect(set["capabilities.service_tier"]!(["standby"])).toEqual(["flex", "priority", "standby"]);
+  expect(set["cost.multipliers"]!([
+    { when: { service_tier: { equals: "priority" } }, factor: { text: 2, audio: 1.8 } },
+    region,
+  ])).toEqual([
+    { when: { service_tier: { equals: "priority" } }, factor: { text: 1.8, audio: 1.8 } },
+    region,
+    { when: { service_tier: { equals: "flex" } }, factor: { text: { input: { price: 0.5 }, output: { price: 0.5 } } } },
+  ]);
+
+  // Unknown tiers and unreadable shapes are skipped.
+  expect(serviceTierCost({ pricing: { input: "0.000001", output: "0.000002", service_tiers: { turbo: { input: "0.000002", output: "0.000004" } } } })).toEqual({});
+  expect(serviceTierCost({ pricing: { input: "0.000001", output: "0.000002", service_tiers: "flex" } })).toEqual({});
 });
 
 test("OpenRouter media models resolve to their lab files", () => {

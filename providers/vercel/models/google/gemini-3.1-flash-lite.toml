@@ -11,6 +11,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_000_000
@@ -32,3 +33,14 @@ cache = { read = 0.03 }
 
 [cost.text.output]
 price = 1.5
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = { input = { price = 1.8, cache = { read = 1.5 } }, output = { price = 1.8 } } }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.4166666667 } }, output = { price = 0.5 } } }

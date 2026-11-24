@@ -4,6 +4,7 @@ name = "Nano Banana (Gemini 2.5 Flash Image)"
 
 [capabilities]
 cache = { implicit = true }
+service_tier = ["flex"]
 
 [cost.text.input]
 price = 0.3
@@ -15,3 +16,7 @@ price = 2.5
 [cost.image.output]
 unit = "image"
 price = 0.039
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5 }, output = { price = 0.5 } } }
