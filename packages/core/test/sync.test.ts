@@ -67,7 +67,9 @@ import {
   resolveCanonicalBaseModel,
   resolveMediaBaseModel,
   catalogCost,
+  isPlaceholderOutputLimit,
   overrideWhen,
+  withStableBasePrice,
   withSystemOneMediaInput,
   withTextApis,
   type OpenRouterModel,
@@ -2844,7 +2846,7 @@ const CLAUDE_CACHE = { capabilities: { cache: { explicit: { ttl: ["5m", "1h"] } 
 const translateContext = { existing: () => undefined, authored: () => undefined };
 type OverridesSet = (current: unknown) => unknown;
 
-test("OpenRouter time-window prices become v2 overrides in catalog order, with the base unchanged", () => {
+test("OpenRouter time-window prices become v2 overrides in catalog order, with the first window as the base", () => {
   const [source] = openrouter.parseModels({ data: [openRouterPeakPricedModel()] });
   const translated = openrouter.translateModel(source!, translateContext) as {
     model: SyncedModel;
@@ -2852,8 +2854,8 @@ test("OpenRouter time-window prices become v2 overrides in catalog order, with t
     notices: string[];
   };
 
-  // v1 keeps the catalog's top-level prices, with no context tiers.
-  expect(translated.model.cost).toEqual({ input: 0.3, output: 1.2, cache_read: 0.006 });
+  // The windows price the whole week, so v1 takes the first one (weekend off-peak), with no context tiers.
+  expect(translated.model.cost).toEqual({ input: 0.15, output: 0.6, cache_read: 0.003 });
   expect(translated.notices).toEqual([]);
   const windows = [
     { utc_days: { in: ["sat", "sun"] } },
@@ -4606,6 +4608,172 @@ test("uses OpenRouter model context when top provider reports a shorter context"
       output: 8_192,
     },
   });
+});
+
+// tencent/hy3 (https://openrouter.ai/api/v1/models, 2026-11-24): the top-level price is the window live at read time.
+function openRouterTimeOfDayModel(live: "day" | "evening") {
+  const day = { prompt: "0.000000132", completion: "0.000000528", input_cache_read: "0.000000033" };
+  const evening = { prompt: "0.0000000825", completion: "0.00000033", input_cache_read: "0.000000020625" };
+  return openRouterModel({
+    id: "tencent/hy3",
+    name: "Tencent: Hy3",
+    pricing: {
+      ...(live === "day" ? day : evening),
+      overrides: [
+        { utc_start: 0, utc_end: 1600, ...day },
+        { utc_start: 1600, utc_end: 0, ...evening },
+      ],
+    },
+  });
+}
+
+test("OpenRouter keeps the base price on the first window when time windows price every hour", () => {
+  const costs = (["day", "evening"] as const).map((live) => {
+    const [parsed] = openrouter.parseModels({ data: [openRouterTimeOfDayModel(live)] });
+    return buildOpenRouterModel(parsed!, undefined).cost;
+  });
+  expect(costs[0]).toEqual({ input: 0.132, output: 0.528, cache_read: 0.033 });
+  expect(costs[1]).toEqual(costs[0]);
+  // Overrides are untouched.
+  expect(withStableBasePrice(openRouterTimeOfDayModel("evening")).pricing.overrides)
+    .toEqual(openRouterTimeOfDayModel("evening").pricing.overrides);
+});
+
+test("OpenRouter keeps the catalog base price when time windows leave hours unpriced", () => {
+  const partial = openRouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.00001",
+      overrides: [{ utc_start: 1000, utc_end: 100, prompt: "0.000001", completion: "0.000005" }],
+    },
+  });
+  expect(withStableBasePrice(partial)).toBe(partial);
+
+  const weekdaysOnly = openRouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.00001",
+      overrides: [
+        { utc_days: WEEKDAYS, utc_start: 0, utc_end: 1200, prompt: "0.000001" },
+        { utc_days: WEEKDAYS, utc_start: 1200, utc_end: 0, prompt: "0.000003" },
+      ],
+    },
+  });
+  expect(withStableBasePrice(weekdaysOnly)).toBe(weekdaysOnly);
+
+  // Context tiers aren't time windows, even alongside ones that cover the day.
+  const tiered = openRouterModel({
+    pricing: {
+      prompt: "0.000002",
+      completion: "0.00001",
+      overrides: [
+        { min_prompt_tokens: 200_000, prompt: "0.000004", completion: "0.00002" },
+        { min_prompt_tokens: 200_000, utc_start: 0, utc_end: 0, prompt: "0.000001" },
+      ],
+    },
+  });
+  expect(withStableBasePrice(tiered)).toBe(tiered);
+});
+
+test("OpenRouter's 90%-of-context max_completion_tokens is a placeholder", () => {
+  // [context, top_provider.context_length, max_completion_tokens] seen on https://openrouter.ai/api/v1/models (2026-11-24).
+  const placeholders: Array<[number, number, number]> = [
+    [1_048_576, 1_048_576, 943_718], // z-ai/glm-5.3, google/gemini-4-*, meta/muse-spark-*
+    [1_047_576, 1_047_576, 942_818], // openai/gpt-4.1-nano
+    [1_048_576, 1_048_575, 943_717], // z-ai/glm-5.3-flash
+    [262_144, 262_144, 235_929], // qwen/qwen3.5-9b
+    [131_072, 131_072, 117_964], // meta-llama/llama-3.1-8b-instruct
+    [65_536, 65_536, 58_982], // google/gemini-nano-banana-2.1
+    [32_768, 32_768, 29_491], // qwen/qwen-2.5-coder-32b-instruct
+    [8_192, 8_192, 7_372], // gryphe/mythomax-l2-13b
+    [163_840, 163_840, 147_456], // deepseek/deepseek-v3.2
+    [128_000, 128_000, 115_200], // meta-llama/llama-3.3-70b-instruct
+    [1_000_000, 1_000_000, 900_000], // x-ai/grok-4.3
+    [1_000_192, 1_000_192, 900_172], // minimax/minimax-01
+  ];
+  for (const [context, top, output] of placeholders) {
+    const model = openRouterModel({
+      context_length: context,
+      top_provider: { context_length: top, max_completion_tokens: output },
+    });
+    expect([output, isPlaceholderOutputLimit(model)]).toEqual([output, true]);
+  }
+  for (const [context, output] of [[1_000_000, 128_000], [256_000, 204_800], [1_048_576, 393_216]]) {
+    expect(isPlaceholderOutputLimit(openRouterModel({
+      context_length: context,
+      top_provider: { context_length: context, max_completion_tokens: output },
+    }))).toBe(false);
+  }
+});
+
+test("OpenRouter takes the lab's output limit when the catalog's is a placeholder", () => {
+  const placeholder = buildOpenRouterModel(openRouterModel({
+    id: "openai/gpt-4.1-nano",
+    name: "OpenAI: GPT-4.1 Nano",
+    context_length: 1_047_576,
+    top_provider: { context_length: 1_047_576, max_completion_tokens: 942_818 },
+  }), undefined);
+  // 32,768 is the lab's own output, so the factored file inherits it.
+  expect(placeholder).toMatchObject({ base_model: "openai/gpt-4.1-nano" });
+  expect((placeholder as { limit?: { output?: number } }).limit?.output ?? 32_768).toBe(32_768);
+
+  // A real host cap still wins over the lab.
+  const capped = buildOpenRouterModel(openRouterModel({
+    id: "openai/gpt-4.1-nano",
+    name: "OpenAI: GPT-4.1 Nano",
+    context_length: 1_047_576,
+    top_provider: { context_length: 1_047_576, max_completion_tokens: 16_384 },
+  }), undefined);
+  expect((capped as { limit?: { output?: number } }).limit?.output).toBe(16_384);
+
+  // thinkingmachines/inkling: the lab's 1,048,576 output is capped at the top provider's 524,288 context.
+  const inkling = buildOpenRouterModel(openRouterModel({
+    id: "thinkingmachines/inkling",
+    name: "Thinking Machines: Inkling",
+    context_length: 1_048_576,
+    top_provider: { context_length: 524_288, max_completion_tokens: 471_859 },
+  }), undefined);
+  expect(inkling).toMatchObject({ base_model: "thinkingmachines/inkling", limit: { output: 524_288 } });
+
+  // Without a lab file the placeholder is the only number there is.
+  const standalone = buildOpenRouterModel(openRouterModel({
+    id: "examplelab/no-lab-model",
+    name: "Example: No Lab Model",
+    context_length: 1_048_576,
+    top_provider: { context_length: 1_048_576, max_completion_tokens: 943_718 },
+  }), undefined);
+  expect(standalone.limit?.output).toBe(943_718);
+});
+
+test("maps Muse Ember, Muse Wonder and GPT-6.x Pro routes to their lab files", () => {
+  expect([
+    "meta/muse-ember",
+    "meta/muse-wonder",
+    "openai/gpt-6-astra-pro",
+    "openai/gpt-6-luna-pro",
+    "openai/gpt-6-sol-pro",
+    "openai/gpt-6.1-sol-pro",
+    "openai/gpt-6.1-terra-pro",
+    "openai/gpt-6.2-astra-pro",
+    "openai/gpt-6.2-sol-pro",
+  ].map(resolveCanonicalBaseModel)).toEqual([
+    "meta/muse-ember-1.0",
+    "meta/muse-wonder-1.0",
+    "openai/gpt-6-astra",
+    "openai/gpt-6-luna",
+    "openai/gpt-6-sol",
+    "openai/gpt-6.1-sol",
+    "openai/gpt-6.1-terra",
+    "openai/gpt-6.2-astra",
+    "openai/gpt-6.2-sol",
+  ]);
+  const model = buildOpenRouterModel(openRouterModel({
+    id: "openai/gpt-6-sol-pro",
+    name: "OpenAI: GPT-6 Sol Pro",
+    context_length: 1_050_000,
+    top_provider: { context_length: 1_050_000, max_completion_tokens: 128_000 },
+  }), undefined);
+  expect(model).toMatchObject({ base_model: "openai/gpt-6-sol", name: "GPT-6 Sol Pro" });
 });
 
 test("uses a verified OpenRouter output limit over catalog metadata", () => {
