@@ -4,9 +4,10 @@ import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
 // Alibaba Cloud Model Studio (international): the console's catalog API, GET
 // https://dashscope-intl.aliyuncs.com/api/v1/models (DASHSCOPE_API_KEY). It isn't documented, but the model list and
-// pricing pages are built from it. This first version syncs input and output prices, flat or per context band (a band
-// only updates when the file already has one at the same threshold). Peak/off-peak bands, cache prices and limits stay
-// hand-written until each is checked against the files. alibaba-cn isn't synced: dashscope.aliyuncs.com needs a China key.
+// pricing pages are built from it. It syncs input, output and cache prices, flat or per context band (a band only
+// updates when the file already has one at the same threshold), peak prices where the file already models the off-peak
+// discount as a utc_hours multiplier, and deprecated status from the catalog's offline date. Limits are only reported.
+// alibaba-cn isn't synced: dashscope.aliyuncs.com needs a China key.
 const ENDPOINT = "https://dashscope-intl.aliyuncs.com/api/v1/models";
 const PAGE_SIZE = 200;
 
@@ -17,9 +18,18 @@ const Price = z.object({
   time_band: z.string().nullable(),
 }).passthrough();
 
+const Limit = z.number().int().nonnegative().nullable().optional();
+
 export const AlibabaModel = z.object({
   model: z.string().min(1),
   prices: z.array(z.object({ range_name: z.string(), prices: z.array(Price) }).passthrough()).nullable(),
+  model_info: z.object({
+    context_window: Limit,
+    max_input_tokens: Limit,
+    max_output_tokens: Limit,
+    reasoning_max_output_tokens: Limit,
+  }).passthrough().nullable().optional(),
+  inference_offline_info: z.object({ offline_time: z.string().nullable().optional() }).passthrough().nullable().optional(),
 }).passthrough();
 export type AlibabaModel = z.infer<typeof AlibabaModel>;
 
@@ -28,11 +38,19 @@ const AlibabaPage = z.object({
   output: z.object({ total: z.number().int().nonnegative(), models: z.array(AlibabaModel) }).passthrough(),
 }).passthrough();
 
-export interface AlibabaPrice {
+export interface AlibabaBandPrice {
   input: number;
   output: number;
+  // Implicit cache hits (input_token_cache).
+  cacheRead?: number;
+  // Explicit cache: hits (input_token_cache_read) and creation per TTL (input_token_cache_creation_5m / _1h).
+  explicitRead?: number;
+  explicitWrite?: { "5m"?: number; "1h"?: number };
+}
+
+export interface AlibabaPrice extends AlibabaBandPrice {
   // Context bands after the first: prices for prompts above `above` tokens.
-  bands: { above: number; input: number; output: number }[];
+  bands: (AlibabaBandPrice & { above: number })[];
 }
 
 // "Default" and "Input<=256k" start at 0; "256k<Input<=1m" starts above 256,000 tokens.
@@ -43,29 +61,75 @@ function bandStart(name: string): number | undefined {
   return Number(match[1]) * (match[2] === "k" ? 1_000 : 1_000_000);
 }
 
-/** Input and output prices per 1M tokens per context band, or undefined for time bands, other units or odd ranges. */
-export function flatPrice(model: AlibabaModel): AlibabaPrice | undefined {
-  const ranges = (model.prices ?? []).map((range) => ({ start: bandStart(range.range_name), rows: range.prices }));
-  if (ranges.length === 0 || ranges.some((range) => range.start === undefined)) return undefined;
-  ranges.sort((a, b) => a.start! - b.start!);
-  if (ranges[0]!.start !== 0 || new Set(ranges.map((range) => range.start)).size !== ranges.length) return undefined;
-  const read = (rows: z.infer<typeof Price>[]) => {
-    if (rows.some((row) => row.time_band !== null && row.time_band !== "standard")) return undefined;
-    const pick = (type: string) => {
-      const matches = rows.filter((row) => row.type === type);
-      if (matches.length !== 1 || matches[0]!.price_unit !== "Per 1M tokens") return undefined;
-      return Number(matches[0]!.price);
-    };
-    const input = pick("input_token");
-    const output = pick("output_token");
-    return input === undefined || output === undefined ? undefined : { input, output };
+type PriceRow = z.infer<typeof Price>;
+
+function readBand(rows: PriceRow[]): AlibabaBandPrice | undefined {
+  const pick = (type: string) => {
+    const matches = rows.filter((row) => row.type === type);
+    if (matches.length === 0) return undefined;
+    if (matches.length !== 1 || matches[0]!.price_unit !== "Per 1M tokens") return null;
+    return Number(matches[0]!.price);
   };
-  const prices = ranges.map((range) => read(range.rows));
-  if (prices.some((price) => price === undefined)) return undefined;
+  const input = pick("input_token");
+  const output = pick("output_token");
+  if (typeof input !== "number" || typeof output !== "number") return undefined;
+  const optional = (value: number | null | undefined) => (typeof value === "number" ? value : undefined);
+  const write5m = optional(pick("input_token_cache_creation_5m"));
+  const write1h = optional(pick("input_token_cache_creation_1h"));
+  return {
+    input,
+    output,
+    ...(optional(pick("input_token_cache")) === undefined ? {} : { cacheRead: optional(pick("input_token_cache")) }),
+    ...(optional(pick("input_token_cache_read")) === undefined ? {} : { explicitRead: optional(pick("input_token_cache_read")) }),
+    ...(write5m === undefined && write1h === undefined ? {} : {
+      explicitWrite: { ...(write5m === undefined ? {} : { "5m": write5m }), ...(write1h === undefined ? {} : { "1h": write1h }) },
+    }),
+  };
+}
+
+// The rows to price from: standard rows, or peak rows when the file already models the off-peak discount (offPeak is
+// its multiplier factor). Off-peak rows must be the peak price times that factor, or the band is skipped with a reason.
+function bandRows(rows: PriceRow[], offPeak: number | undefined): { rows: PriceRow[] } | { skip: string } {
+  const bands = new Set(rows.map((row) => row.time_band ?? "standard"));
+  if (bands.size === 1 && bands.has("standard")) return { rows };
+  if (bands.size !== 2 || !bands.has("peak") || !bands.has("offpeak")) return { skip: "time bands" };
+  if (offPeak === undefined) return { skip: "peak/off-peak prices without an off-peak multiplier in the file" };
+  const peak = rows.filter((row) => row.time_band === "peak");
+  for (const row of rows.filter((item) => item.time_band === "offpeak")) {
+    const match = peak.find((item) => item.type === row.type);
+    if (match === undefined || Math.abs(Number(match.price) * offPeak - Number(row.price)) > 1e-9 + Number(row.price) * 0.01) {
+      return { skip: `off-peak ${row.type} ${row.price} isn't the peak price times the file's multiplier ${offPeak}` };
+    }
+  }
+  return { rows: peak };
+}
+
+/** Prices per 1M tokens per context band, or a reason it can't be read (other units, odd ranges, time bands). */
+export function readPrice(model: AlibabaModel, offPeak?: number): AlibabaPrice | { skip: string } {
+  const ranges = (model.prices ?? []).map((range) => ({ start: bandStart(range.range_name), rows: range.prices }));
+  if (ranges.length === 0 || ranges.some((range) => range.start === undefined)) return { skip: "no token price ranges" };
+  ranges.sort((a, b) => a.start! - b.start!);
+  if (ranges[0]!.start !== 0 || new Set(ranges.map((range) => range.start)).size !== ranges.length) {
+    return { skip: "overlapping price ranges" };
+  }
+  const prices: AlibabaBandPrice[] = [];
+  for (const range of ranges) {
+    const rows = bandRows(range.rows, offPeak);
+    if ("skip" in rows) return rows;
+    const price = readBand(rows.rows);
+    if (price === undefined) return { skip: "no per-token input and output price" };
+    prices.push(price);
+  }
   return {
     ...prices[0]!,
     bands: ranges.slice(1).map((range, index) => ({ above: range.start!, ...prices[index + 1]! })),
   };
+}
+
+/** Standard input and output prices per context band, or undefined for time bands, other units or odd ranges. */
+export function flatPrice(model: AlibabaModel): AlibabaPrice | undefined {
+  const price = readPrice(model);
+  return "skip" in price ? undefined : price;
 }
 
 // The API rounds to three decimals (0.0625 -> 0.063), so a file price that rounds to the listed one is kept.
@@ -74,6 +138,9 @@ const keepPrecise = (listed: number, file: number | undefined) => {
   return file !== undefined && Math.abs(file - listed) <= 0.5 * 10 ** -places + 1e-12 ? file : listed;
 };
 
+const withCacheRead = <T extends { cache_read?: number }>(target: T, listed: number | undefined) =>
+  listed === undefined ? target : { ...target, cache_read: keepPrecise(listed, target.cache_read) };
+
 // A band updates only when the file already has a band at the same threshold; otherwise the model is left alone, since
 // adding or moving bands changes the file's structure.
 export function buildAlibabaModel(price: AlibabaPrice, authored: ExistingModel): SyncedModel | undefined {
@@ -81,18 +148,103 @@ export function buildAlibabaModel(price: AlibabaPrice, authored: ExistingModel):
   const sizes = tiers.map((tier) => tier.tier.size).sort((a, b) => a - b);
   const above = price.bands.map((band) => band.above);
   if (JSON.stringify(sizes) !== JSON.stringify(above)) return undefined;
-  const cost = {
+  const cost = withCacheRead({
     ...authored.cost,
     input: keepPrecise(price.input, authored.cost?.input),
     output: keepPrecise(price.output, authored.cost?.output),
     ...(tiers.length === 0 ? {} : {
       tiers: tiers.map((tier) => {
         const band = price.bands.find((item) => item.above === tier.tier.size)!;
-        return { ...tier, input: keepPrecise(band.input, tier.input), output: keepPrecise(band.output, tier.output) };
+        return withCacheRead({ ...tier, input: keepPrecise(band.input, tier.input), output: keepPrecise(band.output, tier.output) }, band.cacheRead);
       }),
     }),
-  };
+  }, price.cacheRead);
   return { ...authored, cost } as SyncedModel;
+}
+
+type Doc = Record<string, any>;
+
+// Explicit cache prices patch the keys the file already has (a read price, a write price or a write per TTL), so a
+// file that leaves explicit cache out, or prices it under the implicit fields, keeps its layout.
+function patchExplicit(current: Doc | undefined, band: AlibabaBandPrice): Doc | undefined {
+  if (current === undefined || current === null || typeof current !== "object") return current;
+  const next = { ...current };
+  if (typeof next.read === "number" && band.explicitRead !== undefined) next.read = keepPrecise(band.explicitRead, next.read);
+  const write = band.explicitWrite;
+  if (write !== undefined) {
+    if (typeof next.write === "number" && write["5m"] !== undefined) next.write = keepPrecise(write["5m"], next.write);
+    else if (next.write !== null && typeof next.write === "object") {
+      next.write = Object.fromEntries(Object.entries<number>(next.write).map(([ttl, value]) => {
+        const listed = write[ttl as "5m" | "1h"];
+        return [ttl, listed === undefined ? value : keepPrecise(listed, value)];
+      }));
+    }
+  }
+  return next;
+}
+
+/** v2 values for explicit cache prices, at the base price and in each context override the file already has. */
+export function explicitCacheV2Set(price: AlibabaPrice): Record<string, unknown> {
+  const contextSize = (when: Doc | undefined) => when?.context?.gt ?? when?.context?.gte;
+  return {
+    "cost.text.input.cache.explicit": (current: Doc | undefined) => patchExplicit(current, price),
+    "cost.text.input.overrides": (current: Doc[] | undefined) => current?.map((override) => {
+      const band = price.bands.find((item) => item.above === contextSize(override.when));
+      if (band === undefined || override.cache?.explicit === undefined) return override;
+      return { ...override, cache: { ...override.cache, explicit: patchExplicit(override.cache.explicit, band) } };
+    }),
+  };
+}
+
+/** The file's off-peak discount: the factor of a utc_hours multiplier, plain or on text prices. */
+export function offPeakFactor(v2: Doc | undefined): number | undefined {
+  for (const multiplier of (v2?.cost?.multipliers ?? []) as Doc[]) {
+    const keys = Object.keys(multiplier.when ?? {});
+    if (keys.length !== 1 || keys[0] !== "utc_hours") continue;
+    if (typeof multiplier.factor === "number") return multiplier.factor;
+    if (typeof multiplier.factor?.text === "number" && Object.keys(multiplier.factor).length === 1) return multiplier.factor.text;
+  }
+  return undefined;
+}
+
+/** Notices for catalog limits that differ from the resolved file. The output limit may match either mode's cap. */
+export function limitNotices(model: AlibabaModel, resolved: ExistingModel | undefined): string[] {
+  const info = model.model_info;
+  const limit = resolved?.limit;
+  if (!info || !limit) return [];
+  const notices: string[] = [];
+  const context = info.context_window;
+  if (typeof context === "number" && context > 0 && limit.context !== context && limit.context !== info.max_input_tokens) {
+    notices.push(`Alibaba ${model.model}: catalog context_window ${context}, file limit.context ${limit.context}`);
+  }
+  const outputs = [...new Set([info.max_output_tokens, info.reasoning_max_output_tokens])]
+    .filter((value): value is number => typeof value === "number" && value > 0);
+  if (outputs.length > 0 && !outputs.includes(limit.output)) {
+    notices.push(`Alibaba ${model.model}: catalog max_output_tokens ${outputs.join(" / ")}, file limit.output ${limit.output}`);
+  }
+  return notices;
+}
+
+export function translateAlibabaModel(
+  model: AlibabaModel,
+  context: { authored(id: string): ExistingModel | undefined; existing(id: string): ExistingModel | undefined; v2?(id: string): Doc | undefined },
+) {
+  const authored = context.authored(model.model);
+  if (authored === undefined) return undefined;
+  const notices = limitNotices(model, context.existing(model.model));
+  const price = readPrice(model, offPeakFactor(context.v2?.(model.model)));
+  const priced = "skip" in price ? undefined : buildAlibabaModel(price, authored);
+  const offline = model.inference_offline_info?.offline_time ?? undefined;
+  const deprecate = offline !== undefined && authored.status !== "deprecated";
+  if (deprecate) notices.push(`Alibaba ${model.model}: catalog offline_time ${offline}; marked deprecated`);
+  if (priced === undefined && !deprecate) return notices.length === 0 ? undefined : { id: model.model, model: authored as SyncedModel, notices };
+  const built = { ...(priced ?? authored), ...(deprecate ? { status: "deprecated" as const } : {}) } as SyncedModel;
+  return {
+    id: model.model,
+    model: built,
+    ...(priced === undefined || "skip" in price ? {} : { v2Set: explicitCacheV2Set(price) }),
+    ...(notices.length === 0 ? {} : { notices }),
+  };
 }
 
 export const alibaba = {
@@ -135,10 +287,6 @@ export const alibaba = {
     return models;
   },
   translateModel(model, context) {
-    const authored = context.authored(model.model);
-    const price = flatPrice(model);
-    if (authored === undefined || price === undefined) return undefined;
-    const built = buildAlibabaModel(price, authored);
-    return built === undefined ? undefined : { id: model.model, model: built };
+    return translateAlibabaModel(model, context);
   },
 } satisfies SyncProvider<AlibabaModel>;
