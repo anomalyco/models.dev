@@ -1,0 +1,21 @@
+# Pricing and endpoint (Chat Completions): Zen list price set 2026-11-24 ($2 input / $0.20 cache read / $2 cache write / $10 output).
+# Served on Zen through Fireworks (accounts/fireworks/models/kimi-k3p1-pro). Streaming, tool calls and reasoning confirmed live on Zen on 2026-11-24.
+# Capabilities follow providers/opencode-go/models/kimi-k3.1-pro.toml; Zen passes requests through.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+base_url = "https://opencode.ai/inference/openai/v1"
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2 }
+
+[cost.text.output]
+price = 10
