@@ -303,7 +303,7 @@ GitHub Copilot is implemented in `packages/core/src/sync/providers/github-copilo
 - The YML contains only token rates, so the sync only updates `[cost]`: `input`, `cached_input` (as `cache_read`), `cache_write`, `output`, and long-context rows as `cost.tiers`.
 - Display names are converted to file IDs, with minimal special case logic to match existing model entries.
 - Unmatched rows open missing-model issues, and local entries missing from the pricing table are kept.
-- Models in the retirement table are removed once their retirement date passes, even if a pricing row remains, and are marked `deprecated` before that. Models GitHub keeps for annual-plan subscribers (Sonnet 4.6, Opus 4.8) are listed in `ANNUAL_PLAN_MODELS` and stay. `IGNORED_ROWS` is only for pricing rows that aren't models of their own, such as the Opus 4.8 fast-mode row.
+- Models in the retirement table are removed once their retirement date passes, even if a pricing row remains, and are marked `deprecated` before that. A model scheduled for retirement that GitHub still prices, with no local file, is still reported as missing. Models GitHub keeps for annual-plan subscribers (Sonnet 4.6, Opus 4.8) are listed in `ANNUAL_PLAN_MODELS` and stay. `IGNORED_ROWS` is only for pricing rows that aren't models of their own, such as the Opus 4.8 fast-mode row.
 
 ## Novita AI Notes
 

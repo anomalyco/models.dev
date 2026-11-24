@@ -383,3 +383,21 @@ test("runner removes nothing when a model fails to translate", async () => {
   expect(await syncProvider(provider)).toMatchObject({ deleted: 0 });
   expect(await Bun.file(path.join(modelsDir, "kimi-k2.7-code.toml")).exists()).toBe(true);
 });
+
+test("runner still reports a model scheduled for retirement that has no local file", async () => {
+  const sol = await Bun.file("providers/github-copilot/models/gpt-5.6-sol.toml").text();
+  const modelsDir = await scratchProvider({ "gpt-5.6-sol.toml": sol }, ["openai/gpt-5.6-sol"]);
+  const rows = [
+    row({ model: "GPT-5.6 Sol", threshold: "≤ 272K", tier: "Default", input: "$4.00", cached_input: "$0.40", cache_write: "$5.00", output: "$20.00" }),
+    row({ model: "GPT-5.6 Sol", threshold: "> 272K", tier: "Long context", input: "$8.00", cached_input: "$0.80", cache_write: "$10.00", output: "$30.00" }),
+    row({ model: "Grok 4.5", provider: "xai" }),
+  ];
+  const retirements = [retirement("Grok 4.5", "2999-01-01"), retirement("Kimi K2.7 Code", "2999-01-01")];
+  const provider = { ...githubCopilot, modelsDir, fetchModels: async () => ({ pricing: rows, retirements }) };
+
+  const result = await syncProvider(provider, { dryRun: true });
+  expect(result).toMatchObject({ created: 0, updated: 0, deleted: 0 });
+  // Priced and scheduled for retirement: reported. Only in the retirement table: not.
+  expect(result.notices.join("\n")).toContain("`grok-4.5`");
+  expect(result.notices.join("\n")).not.toContain("kimi-k2.7-code");
+});
