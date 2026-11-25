@@ -1,0 +1,29 @@
+# Source: https://api.helping.io/models, our public model list: prices, limits, reasoning efforts,
+# input types and structured output. Limits and input types are stated where they differ from the lab file.
+# Prices are list prices in US dollars per million tokens (https://docs.helping.io/billing/credits/).
+# Cache: our API caches prompts itself, and a caller sends no cache markers.
+# Reasoning: reasoning_effort is the only reasoning control this endpoint takes, and it accepts exactly the efforts GET /models lists for this model (none alone is no caller control); by default any other effort is refused with a 400, and a thinking field or a reasoning budget always is.
+# Custom tools: refused, this endpoint takes function tools only, and a request that offers a custom (freeform) tool is a 400.
+# From 2027-01-01 every price is multiplied by 2, as GET /models publishes.
+schema = 2
+base_model = "google/gemini-3.7-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = 2
