@@ -428,7 +428,7 @@ export type ModelFamily =
   | "phi-mini"
   | "phocinae-largha"
   | "phoenix"
-  | "phonellm"
+  | "phonellm-mini"
   | "pixtral"
   | "pixtral-large"
   | "plamo-embedding"

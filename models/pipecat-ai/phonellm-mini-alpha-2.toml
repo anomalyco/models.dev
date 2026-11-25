@@ -6,12 +6,13 @@
 # Limits: config.json max_position_embeddings 262,144 (https://huggingface.co/pipecat-ai/phonellm-mini-alpha-2/blob/main/config.json);
 #   no separate output ceiling is documented, so output matches the window, as on the base model
 #   (models/nvidia/nemotron-3-nano-30b-a3b.toml).
+# Family: Alpha 2 ships two size tiers, PhoneLLM Mini (30B MoE) and PhoneLLM Max (120B MoE), per the release post above.
 # Knowledge: no cutoff is published for the fine-tune, so it's left out.
 # Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
 schema = 2
 name = "PhoneLLM Mini Alpha 2"
 description = "Fast open-weights Nemotron 3 Nano fine-tune for phone voice agents with tool calling"
-family = "phonellm"
+family = "phonellm-mini"
 open_weights = true
 release_date = "2026-10-15"
 license = "BSD-2-Clause"
