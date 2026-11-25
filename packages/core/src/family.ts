@@ -413,6 +413,7 @@ export const ModelFamilyValues = [
   "seed-turbo",
   "seedream-lite",
   "seedance-mini",
+  "seedance-flash",
   "seed-oss",
   "seed-pro",
 
