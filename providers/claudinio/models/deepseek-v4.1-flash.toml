@@ -16,26 +16,31 @@
 # Upstream: Novita's `deepseek/deepseek-v4.1-flash` (the 2026-09-10 build, not the -1017 one;
 #   both are listed separately in https://api.novita.ai/openai/v1/models), hence this base.
 # Input: text and images (inherited); audio, video and other files are refused.
-# Effort: reasoning_effort = none|low|high|max, forwarded to the upstream as sent on Chat
-#   Completions, in the body or in extra_body. `none` turns thinking off: probed 2026-11-25
-#   on the upstream, 0 reasoning tokens with `none` against 18 with `high` on the same prompt.
-#   An Anthropic `thinking` block is translated to an effort level only when it is
-#   type = enabled; `thinking.type = disabled` is not forwarded, so there is no toggle.
-# system_updates: a system message sent mid-conversation on Chat Completions is forwarded in
-#   place. Probed 2026-11-25 on the upstream: a late "begin every reply with BANANA" was
-#   obeyed ("BANANA 35") and 12416 of 12502 prompt tokens stayed cached.
+# APIs: POST /v1/chat/completions and POST /v1/messages on the provider's base URL. A
+#   DeepSeek-plan key gets 400 unsupported_endpoint on /v1/responses, so it is not listed.
+# Effort: reasoning_effort = none|low|high|max on Chat Completions, forwarded to the upstream
+#   as sent, in the body or in extra_body. `none` turns thinking off: probed 2026-11-25 on the
+#   upstream, 0 reasoning tokens with `none` against 18 with `high` on the same prompt.
+# No toggle: Claudinio strips `thinking` from a Chat Completions request, top-level and in
+#   extra_body, so `thinking.type = disabled` never reaches the upstream there. On Messages, a
+#   `thinking` block with type = enabled is translated to an effort level by its budget_tokens;
+#   type = disabled is dropped, and thinking stays at the upstream default.
+# system_updates (Chat Completions only): a system message sent mid-conversation is forwarded
+#   in place. Probed 2026-11-25 on the upstream: a late "begin every reply with BANANA" was
+#   obeyed ("BANANA 35") and 12416 of 12502 prompt tokens stayed cached. Not checked on Messages.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
-name = "DeepSeek V4.1 Flash"
-release_date = "2026-11-23"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }
-system_updates = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.15
