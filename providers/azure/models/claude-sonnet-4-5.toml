@@ -6,8 +6,10 @@
 # the tool-change beta (tool_addition/tool_removal) for the Claude API, Bedrock and Google Cloud only, not Foundry: https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages
 # Web search: $10 per 1,000 searches; Foundry bills Claude in CCUs at Anthropic's standard per-feature rates: https://platform.claude.com/docs/en/about-claude/pricing#claude-in-microsoft-foundry-pricing
 # Knowledge: "Reliable knowledge cutoff: Jan 2025" (training data cutoff Jul 2025): https://platform.claude.com/docs/en/models/sonnet-4-5/overview
+# Deprecated: retires 2026-11-30 (replacement claude-sonnet-5-5), Anthropic table in https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule#anthropic (accessed 2026-11-25)
 schema = 2
 name = "Claude Sonnet 4.5"
+status = "deprecated"
 description = "Balanced Claude model for coding, analysis, agent workflows, and cost control"
 family = "claude-sonnet"
 open_weights = false
