@@ -1,0 +1,27 @@
+# Availability: MAI-Image-2.6 (2026-07-31) is GA, retires 2027-05-01:
+#   https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule#microsoft and https://ai.azure.com/catalog/models/MAI-Image-2.6 (accessed 2026-11-25)
+# API: POST https://<resource>.services.ai.azure.com/mai/v1/images/generations (and /images/edits) with {model, prompt, width, height};
+#   the response is OpenAI-shaped (data[].b64_json): https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-mai-image
+#   The size is width/height rather than OpenAI's `size`, so no package is named for it.
+# Pricing: MAI Models product, global meters "Image 2.6 Text Input Glbl" 5, "Image 2.6 Image Input Glbl" 8, "Image 2.6 Image Output Glbl" 38 per 1M tokens; data-zone meters are 1.1x (5.5 / 8.8 / 41.8):
+#   https://prices.azure.com/api/retail/prices?$filter=productName eq 'MAI Models' (accessed 2026-11-25)
+schema = 2
+v2_only = true
+base_model = "microsoft/mai-image-2.6"
+
+[api.images]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/mai/v1"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 5
+
+[cost.image.input]
+price = 8
+
+[cost.image.output]
+price = 38
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = 1.1
