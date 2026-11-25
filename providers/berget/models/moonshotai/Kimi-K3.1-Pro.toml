@@ -12,7 +12,7 @@
 # formats come from the lab model; Berget advertises no video input.
 # Prices: https://api.berget.ai/v1/models lists EUR per 1M tokens (public, checked 2026-11-17);
 # EUR 3 input / 0.90 cached input / 10 output,
-# converted to USD at the ECB reference rate of 1.1215 USD/EUR (2026-10-20).
+# converted to USD at the ECB reference rate of 1.0989 USD/EUR (2026-11-17).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -32,8 +32,8 @@ output = 32_768
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 3.3645
-cache = { read = 1.00935 }
+price = 3.2967
+cache = { read = 0.98901 }
 
 [cost.text.output]
-price = 11.215
+price = 10.989
