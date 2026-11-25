@@ -27,6 +27,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync github-copilot` syncs GitHub Copilot pricing and removes models GitHub has retired.
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync togetherai` syncs only Together AI.
+- `bun models:sync trustedrouter` syncs only TrustedRouter.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
@@ -387,6 +388,18 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - New models are created as `base_model` overlays carrying the price, context, `structured_output` from the docs' "Structured outputs" column, and `tools = false` when "Function calling" says no. Hugging Face organisations map to lab directories in `LAB_PREFIXES`. A model without a lab file opens a missing-model issue. A reasoning model is never created: neither source states how a route turns reasoning on, off or up, so it opens an issue for its controls to be probed and authored.
 - Reasoning controls, modalities (exact MIME types), tools, `structured_output`, mid-conversation flags, limits other than context, display names and header comments are hand-authored and kept.
 - Image, video, audio, transcription, embedding, rerank and base (`language`, `code`) rows are ignored. `/v1/models` labels their types clearly, but their prices are estimates or free text (`example_price`, "0.006 - 0.165 per image"), and the catalog has no Together media models.
+
+## TrustedRouter Notes
+
+- TrustedRouter is implemented in `packages/core/src/sync/providers/trustedrouter.ts`.
+- Source endpoint: the public `https://api.trustedrouter.com/v1/models`; no authentication. It uses OpenRouter's model IDs and list shape plus a `trustedrouter` object, so entries are built with the OpenRouter builder and resolve the same lab bases (falling back to the `base_model` of OpenRouter's file for the same ID).
+- Only public, priced, tool-capable text chat rows are synced. Rows marked `internal_only`, `configuration_hidden` or `synthetic_monitor` are ignored. An empty or duplicate-ID catalog fails the run before writing.
+- New models are created as `base_model` overlays carrying TrustedRouter's prices (including cache read/write), context, and reasoning controls. A model with no lab file to inherit from is skipped.
+- Input modalities use the lab file's exact MIME entries for each kind the row lists; a kind the lab does not document is dropped. A row that prices cache reads gets `cache = { implicit = true }`, or `{ explicit = true }` for Anthropic models.
+- Reasoning controls come from the row's `reasoning` object. A reasoning model whose row states no controls, or a contradictory always-on claim, is not written: it raises a missing-reasoning error, so an existing file is kept and a missing-model issue opens. `PROBED_REASONING` holds controls established by live probes of `/v1/chat/completions` where the catalog states nothing; the date and result are written in each file's header.
+- OpenAI GPT-5+ models are held back the same way unless listed in `FREEFORM_REJECTED`, whose custom-tool probes were rejected on Chat Completions; those files leave `freeform` out and cite the probe.
+- `trustedrouter/*` routing aliases are hand-authored. While listed they are kept as written, header included (`keepHeader`); new routes are not created.
+- Headers are authoritative (`authoritativeHeaders`) and state each file's reasoning wire fields.
 
 ## Morph Notes
 
