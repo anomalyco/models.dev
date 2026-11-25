@@ -152,10 +152,16 @@ function tokens(display: string | undefined, known: number | undefined) {
   return Number.isSafeInteger(number) && number > 0 ? number : undefined;
 }
 
-function documentedLimits(model: VolcengineModel, known: ExistingModel | undefined) {
+function documentedLimits(model: VolcengineModel, known: ExistingModel | undefined, newVersion = false) {
   const values = Object.fromEntries((["context", "input", "output"] as const).map((key) => [
     key, tokens(model.limits[key], known?.limit?.[key]),
   ]));
+  // For a new version only, an identical input/context display shares the
+  // already-verified context value when the peer has no separate input cap.
+  if (newVersion && known?.limit?.input === undefined && values.context !== undefined
+    && model.limits.input?.toLowerCase() === model.limits.context?.toLowerCase()) {
+    values.input = values.context;
+  }
   return Object.fromEntries(Object.entries(values).filter(([, value]) => value !== undefined)) as Partial<NonNullable<ExistingModel["limit"]>>;
 }
 
@@ -207,7 +213,7 @@ export const volcengine = {
     const resolvedPeer = context.existing(peerID);
     if (peer?.base_model !== base || resolvedPeer?.reasoning !== model.reasoning
       || (model.reasoning && peer.reasoning_options === undefined)) return undefined;
-    const limits = documentedLimits(model, resolvedPeer);
+    const limits = documentedLimits(model, resolvedPeer, true);
     if (limits.context === undefined || limits.output === undefined
       || (model.limits.input !== undefined && limits.input === undefined)) return undefined;
     // The canonical file must already exist on dev; new labs and model
@@ -219,11 +225,15 @@ export const volcengine = {
     const effort = controls.find((option) => option.type === "effort");
     const peerV2 = context.v2?.(peerID);
     const peerCapabilities = peerV2?.capabilities as Record<string, unknown> | undefined;
+    const tools = model.tools ? true : resolvedPeer.tool_call;
     // Same-canonical dated versions are not selected by the shared predecessor
     // finder. Use our explicitly audited peer with the shared capability merge;
     // source-declared values win, and prices/limits are never inherited here.
     const inherited: Record<string, unknown> = {
-      capabilities: model.structured ? { structured_output: true } : {},
+      capabilities: {
+        ...(model.structured ? { structured_output: true } : {}),
+        ...(tools === undefined ? {} : { tools: { supported: tools } }),
+      },
       ...(peerV2?.api === undefined ? {} : { api: structuredClone(peerV2.api) }),
     };
     const copied = peerV2 === undefined ? [] : inheritCapabilities(inherited, peerV2);
@@ -232,7 +242,9 @@ export const volcengine = {
       ["modalities", peerV2?.modalities],
       ["api", inherited.api],
       ["recommended_api", peerV2?.api === undefined ? undefined : peerV2.recommended_api],
+      ["capabilities.reasoning", peerCapabilities?.reasoning],
       ...copied.map((key) => [key, key.split(".").reduce<unknown>((value, part) => (value as Record<string, unknown> | undefined)?.[part], inherited)]),
+      ...(copied.some((key) => key.startsWith("capabilities.tools.")) && tools !== undefined ? [["capabilities.tools.supported", tools]] : []),
       ...["temperature", "top_p", "top_k"].map((key) => [`capabilities.${key}`, peerCapabilities?.[key]]),
     ].filter(([, value]) => value !== undefined));
     const header = [
@@ -250,7 +262,7 @@ export const volcengine = {
           name: `${canonical.name} (${model.id.slice(-6)})`,
           reasoning: model.reasoning,
           reasoning_options: peer.reasoning_options,
-          tool_call: model.tools ? true : undefined,
+          tool_call: tools,
           structured_output: typeof hostCapabilities.structured_output === "boolean" ? hostCapabilities.structured_output : undefined,
           temperature: peer.temperature,
           modalities: peer.modalities,

@@ -6,6 +6,7 @@ import path from "node:path";
 import { groups, providers, syncProvider, type ExistingModel } from "../src/sync/index.js";
 import { modelMetadata } from "../src/sync/providers/openrouter.js";
 import { classifyAutoMerge } from "../src/sync/auto-merge.js";
+import { modelV2ToV1 } from "../src/translate.js";
 import { fetchVolcengineModels, parseVolcengineModels, volcengine } from "../src/sync/providers/volcengine.js";
 
 const peerID = "doubao-seed-2-1-pro-260915";
@@ -40,6 +41,7 @@ ${rows.join("\n")}
 `;
 }
 
+// Synthetic, reviewed binary limits below exercise k-unit handling independently of current dev data.
 const controls = [{ type: "effort" as const, values: ["minimal" as const, "low" as const, "medium" as const, "high" as const] }];
 const authored: ExistingModel & { base_model: string } = {
   base_model: "bytedance-seed/seed-2.1-pro",
@@ -101,6 +103,22 @@ test("creates a known-family version without copying prices or inventing zero pr
   expect(authored.cost?.input).toBe(9);
 });
 
+test("new versions resolve a missing input cap only from an identical verified context display", () => {
+  const peer = { ...authored, limit: { context: 1_048_576, output: 262_144 } };
+  const withoutInput = {
+    authored: (id: string) => id === peerID ? peer : undefined,
+    existing: (id: string) => id === peerID ? { ...peer, reasoning: true, tool_call: true } : undefined,
+  };
+  const model = parseVolcengineModels({ models: modelDocs([modelRow(newID, "", ["1024k", "1024K", "256k"])]) })[0]!;
+  expect(volcengine.translateModel(model, withoutInput)?.model.limit?.input).toBe(1_048_576);
+  for (const limits of [["1024k", "512k", "256k"], ["1M", "1M", "256k"]]) {
+    const unresolved = parseVolcengineModels({ models: modelDocs([modelRow(newID, "", limits)]) })[0]!;
+    expect(volcengine.translateModel(unresolved, withoutInput)).toBeUndefined();
+  }
+  // Existing metadata does not acquire an inferred input cap through this fallback.
+  expect(volcengine.translateModel({ ...model, id: peerID }, withoutInput)?.model.limit?.input).toBeUndefined();
+});
+
 test("new families, ambiguous limits and unknown host controls go to missing-model issues", () => {
   for (const row of [
     modelRow(unknownID),
@@ -135,13 +153,13 @@ test("new Kimi versions preserve curated host MIME and sampling restrictions and
   };
   const translated = volcengine.translateModel(model, {
     authored: (id: string) => id === kimiPeer ? kimiAuthored : undefined,
-    existing: (id: string) => id === kimiPeer ? { ...kimiAuthored, reasoning: true, limit: existing.limit } : undefined,
+    existing: (id: string) => id === kimiPeer ? { ...kimiAuthored, reasoning: true, tool_call: true, limit: existing.limit } : undefined,
     v2: (id: string) => id === kimiPeer ? {
-      modalities: preciseModalities, api, recommended_api: "messages", capabilities: { top_k: false, cache: { implicit: true }, system_updates: true, tools: { choice: ["auto"] } }, cost: { text: { input: { price: 9 } } },
+      modalities: preciseModalities, api, recommended_api: "messages", capabilities: { reasoning: { supported: true, default: { type: "effort", value: "max" }, effort: ["low", "high", "max"] }, top_k: false, cache: { implicit: true }, system_updates: true, tools: { supported: true, choice: ["auto"] } }, cost: { text: { input: { price: 9 } } },
     } : undefined,
   })!;
   expect(translated.model.modalities).toEqual(modalities);
-  expect(translated.v2Set).toEqual({ modalities: preciseModalities, api, recommended_api: "messages", "capabilities.cache": { implicit: true }, "capabilities.system_updates": true, "capabilities.tools.choice": ["auto"], "capabilities.top_k": false });
+  expect(translated.v2Set).toEqual({ modalities: preciseModalities, api, recommended_api: "messages", "capabilities.reasoning": { supported: true, default: { type: "effort", value: "max" }, effort: ["low", "high", "max"] }, "capabilities.cache": { implicit: true }, "capabilities.system_updates": true, "capabilities.tools.choice": ["auto"], "capabilities.tools.supported": true, "capabilities.top_k": false });
   expect(translated.model.cost).toBeUndefined();
   expect(translated.header).toContain("Hand-set capabilities");
   expect(translated.header).toContain(kimiPeer);
@@ -341,7 +359,7 @@ recommended_api = "messages"
 input = ["text", "image/png", "video/mp4"]
 output = ["text"]
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 top_k = false
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -362,10 +380,59 @@ price = 30
     expect((created.capabilities as any).top_k).toBe(false);
     expect(Object.keys(created.api as object)).toEqual(["chat-completions", "messages"]);
     expect(created.recommended_api).toBe("messages");
+    expect(created.capabilities.reasoning.default).toEqual({ type: "effort", value: "max" });
     expect(created.cost).toBeUndefined();
     expect({ ...base.limit, ...created.limit }).toEqual(limits);
     expect(await syncProvider(provider, { openIssues: false })).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 2 });
   } finally {
     await rm(root, { recursive: true, force: true });
+  }
+});
+test("runner preserves tool support, details and reasoning defaults across new versions", async () => {
+  for (const [peerSupports, documented, expected] of [[true, false, true], [false, false, false], [false, true, true]] as const) {
+    const root = await mkdtemp(path.join(tmpdir(), "models-dev-volcengine-tools-"));
+    const modelsDir = path.join(root, "providers", "volcengine", "models");
+    try {
+      const canonical = await canonicalText("bytedance-seed/seed-2.1-pro");
+      const lab = Bun.TOML.parse(canonical) as Record<string, any>;
+      await Bun.write(path.join(root, "models", "bytedance-seed", "seed-2.1-pro.toml"), canonical);
+      await Bun.write(path.join(path.dirname(modelsDir), "provider.toml"), `name = "Volcengine Ark"
+npm = "@ai-sdk/openai-compatible"
+api = "https://ark.cn-beijing.volces.com/api/v3"
+env = ["ARK_API_KEY"]
+doc = "https://ark.volcengine.com/region:cn-beijing/docs/model-list"
+`);
+      const peer = `schema = 2
+base_model = "bytedance-seed/seed-2.1-pro"
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "medium", "high"] }
+cache = { implicit = true }
+[capabilities.tools]
+supported = ${peerSupports}
+${peerSupports ? 'choice = ["auto"]' : ""}
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+[cost.text.input]
+price = 9
+[cost.text.output]
+price = 30
+`;
+      const peerPath = path.join(modelsDir, `${peerID}.toml`);
+      await Bun.write(peerPath, peer);
+      let row = modelRow(newID, "", [String(lab.limit.context), String(lab.limit.context), String(lab.limit.output)]);
+      if (!documented) row = row.replace("工具调用", "文本理解");
+      const provider = { ...volcengine, modelsDir, fetchModels: async () => ({ models: modelDocs([row]) }) };
+      const first = await syncProvider(provider, { openIssues: false });
+      expect(first).toMatchObject({ created: 1, updated: 0, deleted: 0 });
+      const created = Bun.TOML.parse(await Bun.file(path.join(modelsDir, `${newID}.toml`)).text()) as Record<string, any>;
+      expect(created.capabilities.tools).toEqual(peerSupports ? { supported: expected, choice: ["auto"] } : expected ? undefined : { supported: false });
+      expect(modelV2ToV1({ ...lab, ...created, capabilities: { ...lab.capabilities, ...created.capabilities }, id: newID }).tool_call).toBe(expected);
+      expect(created.capabilities.reasoning.default).toEqual({ type: "effort", value: "high" });
+      expect(created.cost).toBeUndefined();
+      expect(await Bun.file(peerPath).text()).toBe(peer);
+      expect(await syncProvider(provider, { openIssues: false })).toMatchObject({ created: 0, updated: 0, deleted: 0, unchanged: 2 });
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   }
 });
