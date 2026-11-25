@@ -4,7 +4,8 @@
 # Video: inherited; video_url (mp4) is accepted and billed as input (+23 prompt tokens for a 2 s clip).
 # Reasoning controls: providers/alibaba/models/qwen3.8-27b.toml, kept where this host honours them (/v1/chat/completions).
 # Toggle: reasoning.enabled = true|false (true -> 475 reasoning tokens, false -> 0; on by default here, 273 with no control)
-# Effort: not listed; reasoning.effort does not order reasoning here (low -> 185, medium -> 485, xhigh -> 335 reasoning tokens), and unknown values are accepted (bogus -> 239).
+# Off: reasoning.effort = none also turns reasoning off (0 reasoning tokens), the same as the toggle.
+# Effort: no levels listed; the other values don't order reasoning here (low -> 185, medium -> 485, xhigh -> 335 reasoning tokens), and unknown values are accepted (bogus -> 239), so this host is binary on/off.
 # tool schemas: rejects JSON Schema keyword(s) `not` (HTTP 400).
 # tools: the catalog says function_calling=false; the API returns well-formed tool calls.
 schema = 2
