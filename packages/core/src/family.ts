@@ -782,6 +782,7 @@ export const ModelFamilyValues = [
   "perceptron-mk",
   "phi-mini",
   "phocinae-largha",
+  "phonellm",
   "pixtral-large",
   "plamo-embedding",
   "pplx-decider",
