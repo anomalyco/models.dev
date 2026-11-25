@@ -1,0 +1,29 @@
+# Price and context: https://api.deepinfra.com/models/list?type=text-generation (meta-models/Muse-Glimmer-30B, read 2026-11-24): $0.30 input, $1.20 output per 1M tokens,
+#   cached input at 0.1333x ($0.04); 131,072-token context; tags tools, multimodal, structured-output.
+# Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
+# Effort: reasoning_effort = low|medium|high|xhigh (https://docs.deepinfra.com/chat/reasoning), the levels the model card and the
+#   other hosts publish (https://huggingface.co/meta-models/Muse-Glimmer-30B; providers/togetherai, providers/openrouter). Reasoning
+#   can't be turned off, so no none and no toggle.
+# Reasoning probe (live 2026-11-24, OpenRouter pinned to Deep Infra: provider.only = ["deepinfra"], allow_fallbacks = false;
+#   the account's own Deep Infra balance was empty, so direct calls returned 402):
+#   reasoning.enabled=false and effort none were rejected ("Reasoning is mandatory for this endpoint and cannot be disabled");
+#   minimal..xhigh were all accepted and reasoned (103-850 tokens).
+schema = 2
+base_model = "meta/muse-glimmer-30b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.2

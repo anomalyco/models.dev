@@ -524,7 +524,14 @@ export function buildDeepInfraModel(
     }
     // Everything except context / cost / capability flags is inherited from the
     // `models/` metadata.
-    return factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+    const factored = factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+    // A file that authors its own modalities (a narrower MIME list than the lab
+    // file, e.g. Deep Infra's jpg/png/webp) keeps them even when their generic
+    // kinds match the lab file; otherwise the patch drops the override.
+    if (authored?.modalities !== undefined && modalities !== undefined && factored.modalities === undefined) {
+      return { ...factored, modalities };
+    }
+    return factored;
   }
 
   const required = z.object({
