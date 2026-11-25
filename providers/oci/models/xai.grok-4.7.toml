@@ -1,7 +1,9 @@
 # OCI list price, pay as you go, USD per 1M tokens (public price list parts B113303-B113308
 # standard, B113309-B113314 priority, accessed 2026-11-25:
-# https://apexapps.oracle.com/pls/apex/cetools/api/v1/products/?currencyCode=USD). Long-context
-# rates apply once a prompt reaches 200K tokens, as for Grok 4.6 on OCI. Priority rows are exactly 2x
+# https://apexapps.oracle.com/pls/apex/cetools/api/v1/products/?currencyCode=USD). The rows are
+# "Short Context"/"Long Context" and OCI's model page gives no threshold; OCI relays the model to
+# xAI, which bills long context for prompts >= 200K tokens (https://docs.x.ai/developers/models),
+# the same wording as OCI's Grok 4.6 page ("when a prompt reaches 200,000 tokens"). Priority rows are exactly 2x
 # the standard rows: the priority multiplier.
 # Model is hosted by xAI and called through OCI. Model page:
 # https://docs.oracle.com/en-us/iaas/Content/generative-ai/x-ai-grok-4-7.htm (500,000-token context,
