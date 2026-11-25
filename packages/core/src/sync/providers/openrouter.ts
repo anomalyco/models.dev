@@ -1060,7 +1060,7 @@ export function resolveMediaBaseModel(openrouterID: string) {
   return matches.length === 1 ? `${lab}/${matches[0]!.slice(0, -".toml".length)}` : undefined;
 }
 
-function rawLabModel(modelID: string) {
+export function rawLabModel(modelID: string) {
   try {
     return Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8")) as Record<string, unknown>;
   } catch {
