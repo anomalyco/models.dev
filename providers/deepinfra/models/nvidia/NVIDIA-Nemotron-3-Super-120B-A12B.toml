@@ -1,0 +1,30 @@
+# Price and context: https://api.deepinfra.com/models/list?type=text-generation (nvidia/NVIDIA-Nemotron-3-Super-120B-A12B, read 2026-11-24): $0.075 input, $0.40 output per 1M tokens,
+#   no cache price; service tiers priority 1.5x and flex 0.8x; 262,144-token context; tags tools, structured-output.
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+#   The model card's control is enable_thinking on/off, with an extra low_effort switch and a client-side reasoning_budget
+#   (https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16); Deep Infra documents no mapping to either.
+# Reasoning probe (live 2026-11-24, OpenRouter pinned to Deep Infra: provider.only = ["deepinfra"], allow_fallbacks = false;
+#   the account's own Deep Infra balance was empty, so direct calls returned 402):
+#   reasoning tokens: enabled=false 0, none 0; default 512 / 164, 84, 85; low 54 / 181, 58, 76; medium 92 / 177, 139, 59;
+#   high 530 / 139, 556, 92. Graded levels don't separate, so only the toggle is listed.
+schema = 2
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+service_tier = ["flex", "priority"]
+
+[cost.text.input]
+price = 0.075
+
+[cost.text.output]
+price = 0.4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8

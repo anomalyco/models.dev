@@ -1,0 +1,32 @@
+# Price, context and tags: https://api.deepinfra.com/models/list?type=text-generation (ByteDance/Seed-1.8, read 2026-11-24): "$0.25 in $2 out $0.05 cached <= 128K,
+#   $0.5 in $4 out $0.1 cached" per 1M tokens (pricing.full); 256,000-token context; tags tools, multimodal, structured-output.
+# Modalities are inherited from the lab file: the sync keeps image input from the catalog's multimodal tag but drops a narrower
+#   MIME list on base_model files (Deep Infra documents jpg, png, webp: https://docs.deepinfra.com/chat/vision, Limitations).
+# Reasoning: Deep Infra tags it reasoning but not can-disable-reasoning, and this host's other Seed models (Seed-2.0-pro,
+#   Seed-2.0-mini, Seed-2.0-code) are authored always-on with no caller control; the same layout is used here. Not probed:
+#   the Deep Infra account had no balance and Seed 1.8 isn't on OpenRouter.
+schema = 2
+base_model = "bytedance-seed/seed-1-8"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.05 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.5
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 4

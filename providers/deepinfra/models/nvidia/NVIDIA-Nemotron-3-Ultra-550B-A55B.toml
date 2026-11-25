@@ -1,0 +1,37 @@
+# Price and context: https://api.deepinfra.com/models/list?type=text-generation (nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B, read 2026-11-24): $0.50 input, $2.20 output per 1M tokens,
+#   cached input at 0.2x ($0.10); prompt cache retention 5m at 1.25x ($0.625) and 1h at 2x ($1), 8,192-token granularity;
+#   service tiers priority 1.5x and flex 0.8x; 262,144-token context (the lab's 1M isn't served here); tags tools, structured-output.
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+#   Controls follow this host's Nemotron 3 Super: the model card's switch is enable_thinking on/off
+#   (https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16), and Deep Infra documents no per-model effort mapping.
+# Reasoning probe (live 2026-11-24, OpenRouter pinned to Deep Infra: provider.only = ["deepinfra"], allow_fallbacks = false;
+#   the account's own Deep Infra balance was empty, so direct calls returned 402):
+#   reasoning tokens: enabled=false 0, none 0; default 373 / 420, 434, 811; low 430 / 122, 250, 304; medium 220 / 260, 438, 118;
+#   high 813 / 387, 420, 460. Graded levels overlap, so only the toggle is listed.
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], min_tokens = 8_192 } }
+prompt_cache_key = true
+service_tier = ["flex", "priority"]
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1, explicit = { write = { "5m" = 0.625, "1h" = 1 } } }
+
+[cost.text.output]
+price = 2.2
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8
