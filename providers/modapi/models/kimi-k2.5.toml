@@ -1,4 +1,6 @@
 # Price: https://modapi.ai/api/pricing (model kimi-k2.5), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# No caller control: on ModAPI POST /v1/chat/completions 2026-11-23, thinking disabled and enabled returned
+# 134 and 105 output tokens with no difference in behaviour, so no toggle is listed.
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.5"

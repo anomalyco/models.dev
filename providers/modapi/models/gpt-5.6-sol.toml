@@ -1,5 +1,6 @@
 # Price: https://modapi.ai/api/pricing (model gpt-5.6-sol), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
-# Reasoning controls copied from the 302ai entry for openai/gpt-5.6-sol (OpenAI-compatible Chat Completions relay) and checked live on ModAPI /v1/chat/completions for this model family.
+# Effort: reasoning_effort. Levels tested on ModAPI POST /v1/chat/completions
+# 2026-11-23 with gpt-5.4-mini (none, low, medium, high, xhigh): none returned 0 reasoning tokens, low/medium/high/xhigh returned 65-342.
 schema = 2
 v2_only = true
 base_model = "openai/gpt-5.6-sol"
