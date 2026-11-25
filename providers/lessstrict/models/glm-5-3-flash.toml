@@ -1,0 +1,25 @@
+# Prices (USD per 1M tokens), limits and effort levels: https://lessstrict.com/v1/models (the host's public catalog API, accessed 2026-11-26).
+# API reference: https://lessstrict.com/docs
+# Effort: reasoning_effort = low|high|max on Chat Completions (effort_levels in the catalog; default_effort = low).
+# Reasoning comes back as reasoning_content. Cached input is billed at the catalog's cached_input_per_1m without cache markers in the request.
+# [limit] is what the host's catalog publishes for this API id (context_length, max_output_tokens).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 1_000_000
+output = 66_000
+
+[cost.text.input]
+price = 0.16
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.6
