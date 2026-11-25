@@ -4,12 +4,10 @@
 # Effort: low|high|xhigh, default high (Alibaba launch notes 2026-11-16: the middle level is high, not medium)
 # Budget: thinking.budget_tokens with thinking.type = enabled
 # Modalities: image and video input as the file already listed (not PDF); MIME types from the lab.
-# family: "qwen4-max" (not the lab's broader family): the OpenCode app shows only the newest model per family by default, so a shared family would hide this model or Qwen3.8 Max.
 # Tools follow Alibaba's API: https://www.alibabacloud.com/help/en/model-studio/qwen-function-calling (Qwen models reject tool_choice required); Go passes requests through.
 # Cache: implicit by default; explicit cache_control with ttl 5m (1.25x input) or 1h (2x input) on Messages (Alibaba launch notes 2026-11-16). Prices from Alibaba's Qwen4 Max price sheet.
 schema = 2
 base_model = "alibaba/qwen4-max"
-family = "qwen4-max"
 
 [modalities]
 input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]

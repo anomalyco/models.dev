@@ -1,3 +1,6 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models, read 2026-11-24) lists mistral/mistral-medium-3-5 with
+#   input_modalities ["text", "image", "file"], so it keeps the lab's PDF input. mistral-medium-latest and
+#   mistral-medium-2604 on this host list ["text", "image"] only and override it.
 schema = 2
 base_model = "mistral/mistral-medium-3-5"
 

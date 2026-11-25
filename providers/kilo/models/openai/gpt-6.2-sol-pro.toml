@@ -1,23 +1,12 @@
 schema = 2
+base_model = "openai/gpt-6.2-sol"
 name = "OpenAI: GPT-6.2 Sol Pro"
 description = "GPT-6.2 Sol Pro is the same underlying model as [GPT-6.2 Sol](https://openrouter.ai/openai/gpt-6.2-sol), served with `reasoning.mode` set to `pro` for higher-quality responses on complex tasks. **Cost note:** pro mode spends far more..."
-family = "gpt"
-open_weights = false
-release_date = "2026-11-17"
-
-[modalities]
-input = ["application/pdf", "image", "text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-temperature = false
-
-[limit]
-context = 1_050_000
-output = 128_000
 
 [cost.text.input]
 price = 2

@@ -13,11 +13,10 @@ reasoning = { supported = true }
 structured_output = false
 
 [limit]
-context = 128_000
-output = 32_000
+output = 32_768
 
 [cost.text.input]
-price = 0.05
+price = 0.09
 
 [cost.text.output]
-price = 0.25
+price = 0.36

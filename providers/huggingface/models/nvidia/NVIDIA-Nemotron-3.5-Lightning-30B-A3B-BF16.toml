@@ -1,0 +1,25 @@
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+# Toggle: reasoning.enabled = true|false (the router's OpenAI-compatible reasoning object, live-tested on this host's
+#   MiMo-V2.5). NVIDIA's own API has an on/off switch only (providers/nvidia/models/nvidia/nemotron-3.5-lightning-30b-a3b.toml).
+schema = 2
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.16

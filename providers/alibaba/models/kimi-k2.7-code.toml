@@ -6,6 +6,7 @@
 # effort_updates: left out. Changing thinking_budget on the next request keeps the cache, but there's no in-history effort message, so it doesn't count.
 # Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 # Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+# Limits: Model Studio serves 262,144 context, 229,376 max input and 16,384 max output (https://www.alibabacloud.com/help/en/model-studio/kimi-k2-7-code, https://help.aliyun.com/zh/model-studio/kimi-k2-7-code, accessed 2026-11-24), below the lab's 262,144 output.
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.7-code"
@@ -24,6 +25,10 @@ capabilities = { system_updates = true }
 [api.messages]
 base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
+[limit]
+input = 229_376
+output = 16_384
 
 [cost.text.input]
 price = 0.95

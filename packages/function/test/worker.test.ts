@@ -22,10 +22,17 @@ const v2Providers = {
   ...providers,
   "github-copilot": { id: "github-copilot", models: { text: textModel } },
 };
-const expandedProviders = {
-  ...v2Providers,
+const optInProviders = {
+  "openai-chatgpt": { id: "openai-chatgpt", models: { text: textModel } },
   "openai-codex": { id: "openai-codex", models: { text: textModel } },
 };
+const expandedProviders = { ...v2Providers, ...optInProviders };
+function withOptIn(ids: readonly string[]) {
+  return {
+    ...v2Providers,
+    ...Object.fromEntries(Object.entries(optInProviders).filter(([id]) => ids.includes(id))),
+  };
+}
 
 describe("catalog API model type filtering", () => {
   test("omits typed models from api.json by default", async () => {
@@ -126,17 +133,18 @@ describe("experimental provider opt-in", () => {
   const endpoint = "/experimental/v2.0/api.json";
 
   test("requires opt-in even with type=all and leaves existing providers unchanged", async () => {
-    for (const query of ["", "?type=all", "?include=unknown", "?include=openai-chatgpt", "?include=openai,github-copilot"]) {
+    for (const query of ["", "?type=all", "?include=unknown", "?include=openai,github-copilot"]) {
       const response = await request(endpoint + query);
       expect(await response.json()).toEqual(v2Providers);
     }
-    for (const query of [
-      "include=openai-codex",
-      "include=openai-codex,openai-chatgpt",
-      "include= openai-chatgpt, openai-codex,openai-codex &include=unknown",
-    ]) {
+    for (const [query, ids] of [
+      ["include=openai-codex", ["openai-codex"]],
+      ["include=openai-chatgpt&include=unknown", ["openai-chatgpt"]],
+      ["include=openai-codex,openai-chatgpt", ["openai-chatgpt", "openai-codex"]],
+      ["include= openai-chatgpt, openai-codex,openai-codex &include=unknown", ["openai-chatgpt", "openai-codex"]],
+    ] as const) {
       const response = await request(endpoint + "?" + query);
-      expect(await response.json()).toEqual(expandedProviders);
+      expect(await response.json()).toEqual(withOptIn(ids));
     }
   });
 
@@ -153,7 +161,14 @@ describe("experimental provider opt-in", () => {
   });
 
   test("separates static and composed view validators in both directions", async () => {
-    const queries = ["", "?include=openai-codex", "?type=chat,decision", "?include=openai-codex&type=chat,decision"];
+    const queries = [
+      "",
+      "?include=openai-codex",
+      "?include=openai-chatgpt",
+      "?include=openai-chatgpt,openai-codex",
+      "?type=chat,decision",
+      "?include=openai-codex&type=chat,decision",
+    ];
     for (const query of queries) {
       const response = await request(endpoint + query);
       const etag = response.headers.get("etag")!;
@@ -181,8 +196,58 @@ describe("experimental provider opt-in", () => {
   test("prebuilt v2 files retain direct static access", async () => {
     const defaults = await request("/_experimental_v2.0_api.json");
     expect(await defaults.json()).toEqual(v2Providers);
-    const included = await request("/_experimental_v2.0_api-optin-all.json");
+    const included = await request("/_experimental_v2.0_api-include-openai-chatgpt-openai-codex-all.json");
     expect(await included.json()).toEqual(expandedProviders);
+  });
+});
+
+describe("HEAD requests", () => {
+  test("answer filtered catalogs with the GET headers and no body", async () => {
+    for (const path of [
+      "/experimental/v2.0/api.json?type=chat,decision",
+      "/models.json?type=chat,decision",
+      "/api.json",
+      "/model-schema.json",
+    ]) {
+      const get = await request(path);
+      const head = await request(path, undefined, undefined, { method: "HEAD" });
+
+      expect(head.status).toBe(200);
+      expect(head.headers.get("etag")).toBe(get.headers.get("etag"));
+      expect(head.headers.get("content-type")).toBe(get.headers.get("content-type"));
+      expect(await head.text()).toBe("");
+    }
+  });
+
+  test("keep serving prebuilt catalogs and conditional revalidation", async () => {
+    const head = await request("/experimental/v2.0/api.json?type=decision", undefined, undefined, {
+      method: "HEAD",
+    });
+    expect(head.status).toBe(200);
+    expect(head.headers.get("etag")).toBe('"v2-decision"');
+
+    const etag = (await request("/models.json?type=chat,decision")).headers.get("etag")!;
+    const again = await request(
+      "/models.json?type=chat,decision",
+      { "user-agent": "test", "if-none-match": etag },
+      undefined,
+      { method: "HEAD" },
+    );
+    expect(again.status).toBe(304);
+    expect(again.headers.get("etag")).toBe(etag);
+  });
+});
+
+describe("logos", () => {
+  test("fall back to the default logo without forwarding the request body", async () => {
+    assetBodies.length = 0;
+    for (const init of [{ method: "GET" }, { method: "POST", body: "ignored" }]) {
+      const response = await request("/logos/missing.svg", undefined, undefined, init);
+
+      expect(response.status).toBe(200);
+      expect(await response.text()).toBe("<svg>default</svg>");
+    }
+    expect(assetBodies).toEqual([]);
   });
 });
 
@@ -276,94 +341,113 @@ describe("hit tracking", () => {
   });
 });
 
+const assetBodies: string[] = [];
+
 async function request(
   path: string,
   headers: Record<string, string> = { "user-agent": "test" },
   waitUntil: (promise: Promise<unknown>) => void = () => {},
+  init: RequestInit = {},
 ) {
   const env = {
     PosthogToken: secret("posthog-token"),
     LakeEndpoint: secret("https://stream.example/"),
     LakeToken: secret("lake-token"),
     ASSETS: {
-      fetch(input: Request) {
-        const pathname = new URL(input.url).pathname;
-        if (pathname.startsWith("/_experimental_v2.0_api")) {
-          const expanded = pathname.includes("-optin");
-          const type = pathname.replace("/_experimental_v2.0_api", "").replace("-optin", "").replace(".json", "");
-          const source = expanded ? expandedProviders : v2Providers;
-          const value = type === "-decision"
-            ? { example: { ...providers.example, models: { decision: decisionModel } } }
-            : type === "-chat"
-              ? Object.fromEntries(Object.entries(source).map(([id, provider]) => [
-                  id, { ...provider, models: { text: textModel } },
-                ]))
-              : source;
-          const etag = `"v2${expanded ? "-optin" : ""}${type}"`;
-          const headers = { etag, "Cache-Control": "public, max-age=3600" };
-          if (input.headers.get("if-none-match")?.includes(etag)) {
-            return new Response(null, { status: 304, headers });
-          }
-          return Response.json(value, { headers });
-        }
-        if (pathname === "/_api.json") {
-          return Response.json({
-            example: { ...providers.example, models: { text: textModel } },
-          });
-        }
-        if (pathname === "/_api-all.json") return Response.json(providers);
-        if (pathname === "/_api-decision.json") {
-          return Response.json({
-            example: {
-              ...providers.example,
-              models: { decision: decisionModel },
-            },
-          });
-        }
-        if (pathname === "/_models.json") {
-          return Response.json({ text: textModel });
-        }
-        if (pathname === "/_models-all.json") {
-          if (input.headers.get("if-none-match") === 'W/"all"') {
-            return new Response(null, { status: 304, headers: { etag: 'W/"all"' } });
-          }
-          return Response.json(models, { headers: { etag: 'W/"all"' } });
-        }
-        if (pathname === "/_models-decision.json") {
-          return Response.json({ decision: decisionModel });
-        }
-        if (pathname === "/_catalog.json") {
-          return Response.json({
-            providers: {
-              example: { ...providers.example, models: { text: textModel } },
-            },
-            models: { text: textModel },
-          });
-        }
-        if (pathname === "/_catalog-all.json") {
-          return Response.json({ providers, models });
-        }
-        if (pathname === "/_catalog-decision.json") {
-          return Response.json({
-            providers: {
-              example: {
-                ...providers.example,
-                models: { decision: decisionModel },
-              },
-            },
-            models: { decision: decisionModel },
-          });
-        }
-        return new Response(null, { status: 404 });
+      // Like the assets binding: consumes the request body and answers HEAD
+      // without one.
+      async fetch(input: Request) {
+        if (input.body) assetBodies.push(await input.text());
+        const response = await asset(input);
+        return input.method === "HEAD" ? new Response(null, response) : response;
       },
     },
   } as unknown as Env;
 
   return worker.fetch(
-    new Request(`https://models.dev${path}`, { headers }),
+    new Request(`https://models.dev${path}`, { headers, ...init }),
     env,
     { waitUntil } as unknown as ExecutionContext,
   );
+}
+
+function asset(input: Request) {
+  const pathname = new URL(input.url).pathname;
+  if (pathname.startsWith("/_experimental_v2.0_api")) {
+    const view = Object.keys(optInProviders).filter((id) => pathname.includes(id));
+    const type = pathname
+      .replace("/_experimental_v2.0_api", "")
+      .replace(/-include(-openai-(chatgpt|codex))+/, "")
+      .replace(".json", "");
+    const source = withOptIn(view);
+    const value = type === "-decision"
+      ? { example: { ...providers.example, models: { decision: decisionModel } } }
+      : type === "-chat"
+        ? Object.fromEntries(Object.entries(source).map(([id, provider]) => [
+            id, { ...provider, models: { text: textModel } },
+          ]))
+        : source;
+    const etag = `"v2${view.map((id) => `-${id}`).join("")}${type}"`;
+    const headers = { etag, "Cache-Control": "public, max-age=3600" };
+    if (input.headers.get("if-none-match")?.includes(etag)) {
+      return new Response(null, { status: 304, headers });
+    }
+    return Response.json(value, { headers });
+  }
+  if (pathname === "/_api.json") {
+    return Response.json({
+      example: { ...providers.example, models: { text: textModel } },
+    });
+  }
+  if (pathname === "/_api-all.json") return Response.json(providers);
+  if (pathname === "/_api-decision.json") {
+    return Response.json({
+      example: {
+        ...providers.example,
+        models: { decision: decisionModel },
+      },
+    });
+  }
+  if (pathname === "/_models.json") {
+    return Response.json({ text: textModel });
+  }
+  if (pathname === "/_models-all.json") {
+    if (input.headers.get("if-none-match") === 'W/"all"') {
+      return new Response(null, { status: 304, headers: { etag: 'W/"all"' } });
+    }
+    return Response.json(models, { headers: { etag: 'W/"all"' } });
+  }
+  if (pathname === "/_models-decision.json") {
+    return Response.json({ decision: decisionModel });
+  }
+  if (pathname === "/_catalog.json") {
+    return Response.json({
+      providers: {
+        example: { ...providers.example, models: { text: textModel } },
+      },
+      models: { text: textModel },
+    });
+  }
+  if (pathname === "/_catalog-all.json") {
+    return Response.json({ providers, models });
+  }
+  if (pathname === "/_catalog-decision.json") {
+    return Response.json({
+      providers: {
+        example: {
+          ...providers.example,
+          models: { decision: decisionModel },
+        },
+      },
+      models: { decision: decisionModel },
+    });
+  }
+  if (pathname === "/logos/default.svg") {
+    return new Response("<svg>default</svg>", {
+      headers: { "Content-Type": "image/svg+xml" },
+    });
+  }
+  return new Response(null, { status: 404 });
 }
 
 function secret(value: string) {

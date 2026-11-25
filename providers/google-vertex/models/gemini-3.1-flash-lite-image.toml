@@ -10,7 +10,7 @@
 # fields (systemInstruction, generationConfig.thinkingConfig, tools; Content.role is user or model): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/system-instruction-introduction
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image
 # The documented text/plain document type is covered by `text`.
-# Video and PDF input are documented on the model page (the lab entry lists text and image only).
+# Only the video MIME set differs from the lab entry: Vertex documents video/quicktime and video/mpegs where the lab lists video/mov and video/avi.
 schema = 2
 base_model = "google/gemini-3.1-flash-lite-image"
 

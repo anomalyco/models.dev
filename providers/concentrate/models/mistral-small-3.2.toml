@@ -1,0 +1,22 @@
+# Limit: max_input_tokens 128000, max_tokens 32768 at https://api.concentrate.ai/v1/models, capped at the lab's
+schema = 2
+base_model = "mistral/mistral-small-3.2-24b-instruct"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.3
+
+[cost.web_search]
+price = 30

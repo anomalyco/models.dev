@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 
-import { findPredecessor, inheritCapabilities, withPredecessorCapabilities } from "../src/sync/inherit.js";
+import { findPredecessor, inheritCapabilities, keepInheritedNote, withPredecessorCapabilities } from "../src/sync/inherit.js";
 
 const labs = {
   "openai/gpt-6.1-sol": { family: "gpt", release_date: "2026-10-01" },
@@ -46,4 +46,44 @@ test("a new file gets a header line naming where its capabilities came from", ()
   const out = withPredecessorCapabilities(content, existing, labs);
   expect(out).toContain("come from openai/gpt-6.1-sol, this host's previous model in the family.");
   expect(out).toContain("system_updates = true");
+});
+
+test("a rewritten header keeps the note naming the predecessor", () => {
+  const note = "# Capabilities the catalog doesn't state (capabilities.system_updates) come from openai/gpt-4.1, this host's previous model in the family.";
+  const existing = `# Route: native\n${note}\n`;
+  expect(keepInheritedNote(existing, "# Route: native\n")).toBe(existing);
+  expect(keepInheritedNote(existing, existing)).toBe(existing);
+  expect(keepInheritedNote("# Route: native\n", "# Route: native\n")).toBe("# Route: native\n");
+  expect(keepInheritedNote(undefined, "")).toBe("");
+});
+
+test("copied tool details bring the predecessor's supported flag into a new tools table", () => {
+  const doc: Record<string, unknown> = { base_model: "openai/gpt-6.2-sol", capabilities: { structured_output: true } };
+  const added = inheritCapabilities(doc, {
+    base_model: "openai/gpt-6.1-sol",
+    capabilities: { tools: { supported: true, freeform: ["text", "lark", "regex"] } },
+  });
+  expect(added).toEqual(["capabilities.tools.freeform"]);
+  expect((doc.capabilities as { tools: unknown }).tools).toEqual({ freeform: ["text", "lark", "regex"], supported: true });
+});
+
+test("a file without API tables matches a predecessor whose only table is the provider's default API, and a reasoning model takes its reasoning field", () => {
+  const labs = {
+    "thinkingmachines/inkling-small": { family: "inkling-small", release_date: "2026-07-30" },
+    "thinkingmachines/inkling-2-small": { family: "inkling-small", release_date: "2026-11-05" },
+  };
+  const predecessor = {
+    base_model: "thinkingmachines/inkling-small",
+    capabilities: { system_updates: true },
+    api: { "chat-completions": { compatibility: { reasoning_field: "reasoning_content", max_tokens_field: "max_tokens" } } },
+  };
+  const doc: Record<string, any> = { base_model: "thinkingmachines/inkling-2-small" };
+  const existing: [string, Record<string, unknown>][] = [["thinkingmachines/inkling-small.toml", predecessor]];
+  expect(findPredecessor(doc, existing, labs)).toBeUndefined();
+  expect(findPredecessor(doc, existing, labs, "chat-completions")?.path).toBe("thinkingmachines/inkling-small.toml");
+  expect(inheritCapabilities(structuredClone(doc), predecessor, "chat-completions")).toEqual(["capabilities.system_updates"]);
+  expect(inheritCapabilities(doc, predecessor, "chat-completions", true)).toEqual([
+    "capabilities.system_updates", "api.chat-completions.compatibility.reasoning_field",
+  ]);
+  expect(doc.api).toEqual({ "chat-completions": { compatibility: { reasoning_field: "reasoning_content" } } });
 });

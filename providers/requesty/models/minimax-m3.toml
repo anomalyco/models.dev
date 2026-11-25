@@ -6,12 +6,11 @@ base_model = "minimax/MiniMax-M3"
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
-structured_output = true
+structured_output = false
 system_updates = true
 
 [limit]
-context = 1_000_000
-output = 128_000
+context = 512_000
 
 [cost.text.input]
 price = 0.3

@@ -1,9 +1,11 @@
 # Sampling: open weights; generation_config.json sets temperature 0.9, top_p 1, top_k -1 and the model card
 #   recommends temperature=0.9, top_p=1.0 (https://huggingface.co/tencent/Hy4-preview).
+# Limits: 1M context, 960K max input, 64K max output (https://cloud.tencent.com/document/product/1823/130051,
+#   accessed 2026-11-24); config.json sets max_position_embeddings = 1048576.
 schema = 2
 name = "Hy4 preview"
 description = "A next-generation productivity model with significantly enhanced Agent and complex task execution capabilities."
-family = "Hy"
+family = "hy"
 open_weights = true
 release_date = "2026-08-28"
 
@@ -19,5 +21,10 @@ top_p = true
 top_k = true
 
 [limit]
-context = 1_024_000
-output = 64_000
+context = 1_048_576
+input = 983_040
+output = 65_536
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/tencent/Hy4-preview"

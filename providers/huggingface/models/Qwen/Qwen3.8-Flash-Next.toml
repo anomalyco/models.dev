@@ -1,0 +1,29 @@
+# Router catalog https://router.huggingface.co/v1/models (accessed 2026-11-24): one live provider, featherless-ai
+#   (context_length 262144, $0.15 in / $0.50 out, supports_tools true, supports_structured_output false).
+# Modalities: the router catalog lists ["text","image"]; exact types are the lab's (alibaba/qwen3.8-flash-next).
+# Effort: reasoning_effort = low|medium|xhigh, thinking always on (model card https://huggingface.co/Qwen/Qwen3.8-Flash-Next),
+#   as on this host's other Qwen3.8 files (Qwen3.8-Flash-Next-FP8, Qwen3.8-27B, Qwen3.8-2.4T-A95B).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+schema = 2
+base_model = "alibaba/qwen3.8-flash-next"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.5

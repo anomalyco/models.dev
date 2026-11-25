@@ -1,0 +1,18 @@
+# Hosted GPT-Live: POST https://opencode.ai/inference/openai/v1/live/sessions takes OpenAI's GPT-Live session request
+# with a Console credential and x-opencode-org-id, for OpenCode workspaces with access. WebRTC only: WebSocket transport
+# is refused, and no SDK has been verified against it.
+# Pricing: OpenAI's session-time price, billed per second without a markup, with OpenAI's 15-second WebRTC minimum.
+# Delegated Responses turns bill separately, at the backend model's price. https://developers.openai.com/api/docs/pricing
+# OpenAI's $0.02 / minute standby rate has no field, so only the active rate is published.
+# v2_only, like other realtime models: it shouldn't appear in v1 model lists.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-live-1.1"
+
+[api.live]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.05

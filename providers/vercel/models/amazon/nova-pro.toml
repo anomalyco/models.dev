@@ -1,1 +1,33 @@
-../../../amazon-bedrock/models/amazon.nova-pro-v1:0.toml
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-11-24): 300,000 context, 8,192 output.
+# Modalities: the catalog lists text, image and PDF input (no video); Nova image formats PNG, JPEG, GIF, WEBP as on Amazon Bedrock (https://docs.aws.amazon.com/nova/latest/userguide/modalities-image.html)
+schema = 2
+base_model = "amazon/nova-pro"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 8_192
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.2

@@ -1,7 +1,18 @@
 import { expect, test } from "bun:test";
 
 import type { ExistingModel } from "../src/sync/index.js";
-import { buildBedrockModel, matchModels, normalize, offerPrices, parseUsageType, type BedrockModel } from "../src/sync/providers/amazon-bedrock.js";
+import {
+  buildBedrockModel,
+  buildMediaModel,
+  matchModels,
+  mediaModels,
+  normalize,
+  offerPrices,
+  offerRows,
+  parseUsageType,
+  type BedrockModel,
+  type MediaFile,
+} from "../src/sync/providers/amazon-bedrock.js";
 
 test("Bedrock reads token kind, TTL, long context, route and tier from a usage type", () => {
   expect(parseUsageType("USE1-MP:USE1_cache_write_tokens_1h_long_ctx_global_standard-Units")).toEqual({
@@ -83,4 +94,50 @@ test("Bedrock compares AWS and lab names without punctuation, instruct, .0 or ve
   expect(normalize("R1")).toBe(normalize("DeepSeek-R1"));
   expect(normalize("Pixtral Large 25.02")).toBe(normalize("Pixtral Large (25.02)"));
   expect(normalize("Llama 3.3 70B")).toBe(normalize("llama-3.3-70b-instruct"));
+});
+
+const mediaOffer = {
+  products: {
+    T: { sku: "T", attributes: { usagetype: "USE1-TitanEmbeddingV2-Text-input-tokens" } },
+    E: { sku: "E", attributes: { model: "Embed English", usagetype: "USE1-MP:USE1_InputTokenCount-Units" } },
+    M: { sku: "M", attributes: { model: "Embed Multilingual", usagetype: "USE1-MP:USE1_InputTokenCount-Units" } },
+    I: { sku: "I", attributes: { model: "Embed English", usagetype: "USE1-MP:USE1_InputImageCount-Units" } },
+  },
+  terms: {
+    OnDemand: Object.fromEntries(Object.entries({
+      T: ["1K tokens", "0.00002"], E: ["1M tokens", "0.1"], M: ["1M tokens", "0.2"], I: ["Input Images", "0.0001"],
+    }).map(([sku, [unit, usd]]) => [sku, { t: { priceDimensions: { d: { unit, pricePerUnit: { USD: usd } } } } }])),
+  },
+};
+
+test("Bedrock prices media files from usage types, scoped to the AWS model when the usage type is shared", () => {
+  const files: Record<string, MediaFile> = {
+    "amazon.titan-embed-text-v2:0": { offer: "AmazonBedrock", region: "us-east-1", prices: { "cost.text.input.price": { usage: "TitanEmbeddingV2-Text-input-tokens", unit: "1k tokens", scale: 1000 } } },
+    "cohere.embed-english-v3": {
+      offer: "AmazonBedrockFoundationModels",
+      region: "us-east-1",
+      model: "Embed English",
+      prices: {
+        "cost.text.input.price": { usage: "MP:InputTokenCount-Units", unit: "1M tokens", scale: 1 },
+        "cost.image.input.price": { usage: "MP:InputImageCount-Units", unit: "Input Images", scale: 1 },
+      },
+    },
+    "cohere.embed-v4:0": { offer: "AmazonBedrockFoundationModels", region: "us-east-1", model: "Embed v4", prices: { "cost.text.input.price": { usage: "MP:InputTokenCount-Units", unit: "1M tokens", scale: 1 } } },
+  };
+  const rows = offerRows(mediaOffer);
+  const models = mediaModels(new Map([["AmazonBedrock/us-east-1", rows], ["AmazonBedrockFoundationModels/us-east-1", rows]]), files);
+  expect(models.map(({ id, prices, missing }) => [id, prices, missing.length])).toEqual([
+    ["amazon.titan-embed-text-v2:0", { "cost.text.input.price": 0.02 }, 0],
+    ["cohere.embed-english-v3", { "cost.text.input.price": 0.1, "cost.image.input.price": 0.0001 }, 0],
+    ["cohere.embed-v4:0", {}, 1],
+  ]);
+
+  const file = { schema: 2, base_model: "cohere/embed-english-v3.0", cost: { text: { input: { price: 1 } }, image: { input: { unit: "image", price: 1 } } } };
+  expect(buildMediaModel(models[1]!, file)?.v2).toEqual({
+    schema: 2, base_model: "cohere/embed-english-v3.0", cost: { text: { input: { price: 0.1 } }, image: { input: { unit: "image", price: 0.0001 } } },
+  });
+  expect(file.cost.text.input.price).toBe(1);
+  // A price missing from the list, or a file without the table it belongs in, leaves the file alone.
+  expect(buildMediaModel(models[2]!, file)).toBeUndefined();
+  expect(buildMediaModel(models[1]!, { schema: 2, cost: { text: { input: { price: 1 } } } })).toBeUndefined();
 });

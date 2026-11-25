@@ -1,20 +1,19 @@
 # Coding Plan model name from https://www.volcengine.com/docs/82379/1928261
 # (accessed 2026-09-11), listed alongside kimi-k2.7-code. Subscription tier:
 # no per-token price.
-# reasoning_options mirror the lab (providers/moonshotai/models/kimi-k3.toml)
-# and the kimi-code-plan-cn relay peer. Wire fields on this provider's OpenAI
-# path (provider.toml): POST /api/coding/v3/chat/completions takes
-# thinking.type = enabled|disabled plus reasoning_effort = low|high|max
-# (`adaptive` is the Moonshot lab surface, not accepted here); the separate
-# Anthropic path (/api/coding/v1/messages) uses output_config.effort.
-# Endpoint-specific effort behavior on this relay was not measured; the
-# baseline is copied per relay convention — adjust if wire probing shows
-# levels collapsing as they do on kimi-k2.7-code (see that file).
+# Always thinks: the plan overview says Kimi-K3 默认开启思考，不支持关闭思考 (thinking is on by
+# default and can't be turned off), so no toggle is declared. Effort =
+# reasoning_effort low|high|max on POST /api/coding/v3/chat/completions, per relay
+# convention from the lab (providers/moonshotai); not re-measured on this endpoint.
+# https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-plan-overview.md (accessed 2026-11-24)
+# Deprecated: closed to new users 2026-11-11, shuts down 2026-11-25 14:00 UTC+8 (migrate to
+# kimi-k3.1-pro): https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-model-deprecation.md
 schema = 2
 base_model = "moonshotai/kimi-k3"
+status = "deprecated"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]

@@ -16,6 +16,7 @@
 #   effort_updates = false: changing reasoning_effort low → high on the last turn left 0/0 cached tokens in 2 trials.
 #   tools.updates = false: adding a second tool on the last turn left 0/152 cached tokens in 2 trials (tools render before the messages).
 #   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
+# Context: GET https://api.fireworks.ai/v1/serverless/models and List Models report context_length 1_048_576 (2026-11-24), above the lab's 1,000,000.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
@@ -25,6 +26,9 @@ reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 system_updates = true
 cache = { implicit = true }
+
+[limit]
+context = 1_048_576
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

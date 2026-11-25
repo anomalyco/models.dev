@@ -1,0 +1,43 @@
+# Sources (accessed 2026-11-23):
+# - https://thinkingmachines.ai/news/inkling-2-mini/ (Nov 20, 2026; looped MoE, 26.4B total, 3.4B active)
+# - https://thinkingmachines.ai/model-card/inkling-2-mini/ (released November 20, 2026; Apache 2.0; open weights; text and
+#   image input, text output; "a context window of up to 1M tokens")
+# - https://huggingface.co/thinkingmachines/Inkling-2-Mini
+# Output: the model card names no output cap; 65,536 is the largest real cap a host publishes (OpenRouter's catalog, 2026-11-23).
+#   Vercel's catalog max_tokens (1,000,000, https://ai-gateway.vercel.sh/v1/models, 2026-11-24) is the full ~1M context window,
+#   not an output cap, so it isn't used here.
+# Input: the model card lists "any pixel-based image input" without naming formats, so the generic image modality is used.
+schema = 2
+name = "Inkling 2 Mini"
+description = "Looped MoE reasoning model (26.4B total, 3.4B active) for agentic coding, vision, and knowledge work"
+family = "inkling-mini"
+open_weights = true
+release_date = "2026-11-20"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/thinkingmachines/Inkling-2-Mini"
+
+[[links]]
+url = "https://thinkingmachines.ai/news/inkling-2-mini/"
+type = "announcement"
+
+[[links]]
+url = "https://thinkingmachines.ai/model-card/inkling-2-mini/"
+type = "model_card"

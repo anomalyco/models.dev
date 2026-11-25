@@ -3,7 +3,7 @@
 schema = 2
 name = "LFM2.5 2.6B"
 description = "Liquid AI's compact 2.6B reasoning model for agent workflows, data extraction, RAG, and long-context processing. It supports tool calling and structured output, but Liquid advises against using it for agentic coding. Warning: prompts and responses may be logged and used for model training or service improvement; do not send sensitive data."
-family = "liquid"
+family = "lfm"
 open_weights = true
 release_date = "2026-08-12"
 
@@ -12,14 +12,14 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
+tools = { supported = false }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
-structured_output = true
+structured_output = false
 
 [limit]
-context = 128_000
-input = 128_000
-output = 32_768
+context = 8_192
+input = 8_192
+output = 4_096
 
 [cost.text.input]
 price = 0.1

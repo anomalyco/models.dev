@@ -5,7 +5,7 @@ base_model = "google/gemini-3.1-flash-lite-preview"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 cache = { explicit = true }
 structured_output = true
 

@@ -1,13 +1,13 @@
-# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-02.
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-24.
 # https://cloud.tencent.com/document/product/1823/133811
 # Input/output/cache-read: 400/2000/40 points per million tokens.
-# 20 points = CNY 1; USD/MTok = points / 20 / 6.660856.
-# FX: USD 1 = CNY 6.660856, 2026-11-02, https://open.er-api.com/v6/latest/USD
+# Cache write (billed from 2026-11-20): 5m 400, 1h 800 points per million tokens.
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.679299.
+# FX: USD 1 = CNY 6.679299, 2026-11-24, https://open.er-api.com/v6/latest/USD
 # Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
 # Availability: https://cloud.tencent.com/document/product/1823/130060
 # Specifications: https://cloud.tencent.com/document/product/1823/130051
 # Implicit cache: https://cloud.tencent.com/document/product/1823/131410
-# Cached-input deductions: pricing source above; no separate cache-write rate published.
 # API: https://cloud.tencent.com/document/product/1823/132232
 # Effort: reasoning_effort = low|high|max; thinking cannot be disabled.
 # max_completion_tokens allows 1048576; 131072 is the default, not the maximum.
@@ -26,8 +26,8 @@ output = 1_048_576
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 3.00261708
-cache = { read = 0.30026171 }
+price = 2.994326
+cache = { read = 0.299433, write = { "5m" = 2.994326, "1h" = 5.988652 } }
 
 [cost.text.output]
-price = 15.01308541
+price = 14.971631

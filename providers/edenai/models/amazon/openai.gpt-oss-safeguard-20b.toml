@@ -6,7 +6,7 @@ name = "GPT OSS Safeguard 20B (Amazon Bedrock)"
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-structured_output = true
+structured_output = false
 
 [limit]
 context = 128_000

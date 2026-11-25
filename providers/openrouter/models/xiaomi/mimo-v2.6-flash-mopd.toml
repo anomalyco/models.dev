@@ -1,0 +1,37 @@
+# Toggle: reasoning.enabled = true|false
+# https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+schema = 2
+name = "MiMo-V2.6-Flash-MOPD"
+description = "MiMo flash model for fast multimodal assistance and agent workflows"
+family = "mimo"
+open_weights = true
+release_date = "2026-11-23"
+
+[modalities]
+input = ["text", "image", "video", "audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.42

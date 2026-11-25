@@ -3,7 +3,6 @@ base_model = "openai/gpt-oss-20b"
 name = "GPT OSS 20B (Greenference)"
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 

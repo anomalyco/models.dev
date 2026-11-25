@@ -1,0 +1,26 @@
+# Pricing: https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17): GLM 5.3 INR 126.00 input / 20.00 cached input / 390.00 output per 1M tokens.
+# INR->USD at 94 INR per USD, the rate Sarvam publishes for its USD view on https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17), rounded to 8 decimals.
+# Served on the provider's OpenAI-compatible /v2 endpoint.
+# max_tokens: the host rejects max_completion_tokens above 32,768 but accepts max_tokens up to the window, so consumers must send the older field.
+# Reasoning is always on; reasoning_effort = low|high|max.
+# Default effort: GET https://api.sarvam.ai/v2/models publishes reasoning.default_effort = "max" (accessed 2026-11-17).
+# Context: GET https://api.sarvam.ai/v2/models publishes context_length 1048576 (accessed 2026-11-17).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 1.34042553
+cache = { read = 0.21276596 }
+
+[cost.text.output]
+price = 4.14893617

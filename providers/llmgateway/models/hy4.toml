@@ -1,12 +1,11 @@
+# Capabilities the catalog doesn't state (capabilities.structured_output) come from hy4-preview, this host's previous model in the family.
 schema = 2
 base_model = "tencent/hy4"
 base_model_omit = ["limit.input"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
-
-[limit]
-context = 1_000_000
+structured_output = true
 
 [cost.text.input]
 price = 0.834

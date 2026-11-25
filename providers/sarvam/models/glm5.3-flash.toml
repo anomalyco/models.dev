@@ -1,0 +1,32 @@
+# Pricing: https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17): GLM 5.3 Flash INR 13.50 input / 2.50 cached input / 45.00 output per 1M tokens.
+# INR->USD at 94 INR per USD, the rate Sarvam publishes for its USD view on https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17), rounded to 8 decimals.
+# Served on the provider's OpenAI-compatible /v2 endpoint.
+# max_tokens: the host rejects max_completion_tokens above 32,768 but accepts max_tokens up to the window, so consumers must send the older field.
+# Reasoning is always on; reasoning_effort = low|high|max.
+# Default effort: GET https://api.sarvam.ai/v2/models publishes reasoning.default_effort = "high" (accessed 2026-11-17).
+# Context: GET https://api.sarvam.ai/v2/models publishes context_length 1048576 (accessed 2026-11-17).
+# Images: GET https://api.sarvam.ai/v2/models publishes input_media.image.mime_types = png, jpeg, gif, webp; no max_per_request is published (accessed 2026-11-17).
+# Images only: the host reads png, jpeg, gif and webp; video and PDF are not served.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "high" } }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0.14361702
+cache = { read = 0.02659574 }
+
+[cost.text.output]
+price = 0.47872340

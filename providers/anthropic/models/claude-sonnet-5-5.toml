@@ -13,12 +13,13 @@
 # Per-API flags: mid-conversation system messages, per-message output_config and tool_addition/tool_removal are Messages API features, so they sit on [api.messages]. The OpenAI SDK compatibility endpoint hoists system messages to the top (https://platform.claude.com/docs/en/api/openai-sdk) and has no per-message effort or tool changes.
 # Per-API tools: the OpenAI SDK compatibility layer ignores `strict` and takes only function tools, so strict and search sit on [api.messages] only; tool_choice works on both APIs and stays top-level (https://platform.claude.com/docs/en/api/openai-sdk). Live 2026-10-26 on Chat Completions (claude-sonnet-4-6): a strict tool whose schema strict mode rejects was accepted, and a tool_search_tool_regex tool returned 400 "tools.0.type: Input should be 'function'".
 # tools.updates (live 2026-11-17, tool_addition / tool_removal blocks with inline-tools-2026-09-15 on Anthropic's API, claude-opus-5-5, sonnet-5-5, haiku-5-5, opus-5, opus-4-8, fable-5, fable-5-1, fable-5-2): add, a redefinition (the call uses the new schema) and a removal all work, 3/3 each; a same-name tool_addition redefines the tool. Re-adding a removed tool works (2026-11-16).
+# Default effort: "Claude Sonnet 5.5 supports all five effort levels, and `high` is the default on the Claude API." https://platform.claude.com/docs/en/build-with-claude/effort
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none"] }
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "high" } }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
