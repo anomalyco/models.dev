@@ -1,9 +1,10 @@
-# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probe on /v1/chat/completions.
+# Effort: reasoning_effort = low|high|max (matching providers/moonshotai/models/kimi-k3.1-pro.toml; note live 2026-11-25 probe on Straitly /v1/chat/completions also accepted reasoning_effort="none" with reasoning_tokens=0, omitted here to stay on the lab/peer baseline)
+# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probes on /v1/chat/completions.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 

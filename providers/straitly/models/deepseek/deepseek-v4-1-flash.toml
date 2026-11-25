@@ -1,9 +1,11 @@
-# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probe on /v1/chat/completions.
+# Toggle: thinking.type = enabled|disabled and enable_thinking = true|false (both live-verified 2026-11-25 on Straitly /v1/chat/completions: false/disabled returned reasoning_tokens=0, true/enabled returned 16-22)
+# Effort: reasoning_effort = low|high|max (live-verified 2026-11-25)
+# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probes on /v1/chat/completions.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
 
