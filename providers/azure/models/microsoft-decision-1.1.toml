@@ -7,8 +7,8 @@
 #   No package of its own, so the TypeSafe decisions entry point is used with the host's base_url (AGENTS.md).
 # Context: 32,767 tokens (https://ai.azure.com/catalog/models/Microsoft-Decision-1.1, Quick facts, accessed 2026-11-25).
 # Pricing: "Decision 1.1 Gl" meter 0.042 per 1M input tokens, no output meter (Microsoft Decision Models product):
-#   https://prices.azure.com/api/retail/prices?$filter=productName eq 'Microsoft Decision Models' (accessed 2026-11-25). The data-zone meter is 0.046 (about 1.095x),
-#   left out as a multiplier because it isn't a round factor.
+#   https://prices.azure.com/api/retail/prices?$filter=productName eq 'Microsoft Decision Models' (accessed 2026-11-25). The data-zone meter "Decision 1.1 DZ" is 0.046,
+#   recorded as a region override at that exact price (data zones are US and EU, as on this host's other data-zone files).
 schema = 2
 v2_only = true
 base_model = "microsoft/microsoft-decision-1.1"
@@ -22,6 +22,10 @@ sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/type
 
 [cost.text.input]
 price = 0.042
+
+[[cost.text.input.overrides]]
+when = { region = { in = ["us", "eu"] } }
+price = 0.046
 
 [cost.text.output]
 price = 0
