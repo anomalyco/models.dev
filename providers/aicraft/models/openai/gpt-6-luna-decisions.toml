@@ -3,6 +3,8 @@
 # Decision surface: POST /v1/decisions takes only model, input and questions (no reasoning or tools).
 schema = 2
 base_model = "openai/gpt-6-luna"
+type = "decision"
+name = "GPT-6 Luna Decisions"
 
 [capabilities]
 tools = { supported = false }

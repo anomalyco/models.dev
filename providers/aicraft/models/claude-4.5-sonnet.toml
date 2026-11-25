@@ -1,10 +1,11 @@
 # Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
 # Model id as published in the AICraft Model Catalog.
+# Toggle: thinking.type = enabled|disabled.
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
 
 [capabilities]
-reasoning = { supported = true, budget = { min = 1_024 } }
+reasoning = { supported = true, toggle = true, budget = { min = 1_024 } }
 
 [cost.text.input]
 price = 3.315
