@@ -1,3 +1,5 @@
+# Reasoning response field: message.reasoning_content (live-verified 2026-11-25 on Straitly /v1/chat/completions)
+# Max tokens: max_completion_tokens=20 enforced completion_tokens=20 live 2026-11-25 (matching max_tokens=20), so max_tokens_field is not needed.
 # Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probe on /v1/chat/completions.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
@@ -6,6 +8,9 @@ base_model = "zhipuai/glm-5.3-flash"
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
 context = 1_048_576
