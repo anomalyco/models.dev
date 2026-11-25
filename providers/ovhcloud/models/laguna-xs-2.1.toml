@@ -1,0 +1,24 @@
+# Price (USD per Mtoken, accessed 2026-11-24): $0.06 input / $0.12 output on
+# https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/laguna-xs-2-1/ and the same rates in
+# https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter. OVHcloud publishes USD prices here, so no currency conversion.
+# Effort: Chat `reasoning_effort` = low|medium|high ("Either low, medium, or high") and Responses
+# `reasoning.effort`, per https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/laguna-xs-2-1/
+# Limits: catalog context_length 131_072, max_output_length 65_536 (https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter).
+# Mid-conversation: OVHcloud AI Endpoints serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/
+schema = 2
+base_model = "poolside/laguna-xs-2.1"
+name = "laguna-xs-2.1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 131_072
+output = 65_536
+
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.12
