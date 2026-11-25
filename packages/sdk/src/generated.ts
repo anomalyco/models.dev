@@ -514,6 +514,7 @@ export type ModelFamily =
   | "seed-tts"
   | "seed-turbo"
   | "seedance"
+  | "seedance-flash"
   | "seedance-mini"
   | "seedance-pro"
   | "seedream"
