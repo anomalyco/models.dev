@@ -3,9 +3,11 @@ base_model = "mistral/mistral-saba"
 
 [capabilities]
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.211
+cache = { read = 0.0211 }
 
 [cost.text.output]
 price = 0.633

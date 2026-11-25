@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import { buildNumesModel, numes, perMillion, reasoningControls, resolveBaseModel, type NumesModel } from "../src/sync/providers/numes.js";
 
 function numesModel(overrides: Partial<NumesModel> = {}): NumesModel {
@@ -68,6 +69,28 @@ test("copies OpenRouter's controls for an undeclared reasoning model", () => {
 
   expect(controls.options).toEqual([{ type: "effort", values: ["high", "xhigh", "max"] }]);
   expect(controls.header).toContain("openrouter/sakana/fugu-ultra");
+
+  const freePeer = reasoningControls(
+    numesModel({ compatible_request_id: "inclusionai/ling-3.2-flash", reasoning: null }),
+    "inclusionai/ling-3.2-flash",
+    "inclusionai/ling-3.2-flash",
+  );
+  expect(freePeer.options).toEqual([{ type: "toggle" }]);
+  expect(freePeer.header).toContain("openrouter/inclusionai/ling-3.2-flash:free");
+});
+
+test("fails closed when an undeclared reasoning model has no OpenRouter or lab peer", () => {
+  expect(() =>
+    reasoningControls(
+      numesModel({
+        compatible_request_id: "baichuan/baichuan-m2-32b",
+        reasoning: null,
+        supported_parameters: ["max_tokens", "stop", "temperature", "top_p"],
+      }),
+      "baichuan/baichuan-m2-32b",
+      "baichuan/baichuan-m2-32b",
+    ),
+  ).toThrow(MissingReasoningOptionsError);
 });
 
 test("falls back to the lab provider when OpenRouter has no peer and respects host non-reasoning", () => {

@@ -1,4 +1,6 @@
-# Reasoning controls: always on (Numes /public/v1/models declares mandatory = true with no effort or budget controls).
+# Reasoning controls: Numes /public/v1/models `reasoning` declaration for this model.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high
 schema = 2
 base_model = "tencent/hy4-flash"
 base_model_omit = ["limit.input"]
@@ -8,13 +10,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
-
-[limit]
-context = 1_000_000
-output = 64_000
 
 [cost.text.input]
 price = 0.035

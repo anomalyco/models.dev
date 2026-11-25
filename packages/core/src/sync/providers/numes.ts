@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { ModelFamilyValues, type ModelFamily } from "../../family.js";
 import type { SyncProvider, SyncedFullModel } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 // The public catalogue needs no key and lists only models that are routable
@@ -264,25 +265,24 @@ export function reasoningControls(model: NumesModel, id: string, baseModel: stri
   if (declared === null || declared === undefined) {
     if (labFacts(baseModel).reasoning !== true) return {};
     const bare = id.replace(/:(free|batch)$/, "");
-    const openRouter = openRouterPeer(bare)?.capabilities?.reasoning;
-    if (openRouter?.supported === false && !model.supported_parameters.includes("reasoning")) {
+    const openRouter = openRouterReasoningPeer(bare);
+    if (openRouter?.reasoning?.supported === false && !model.supported_parameters.includes("reasoning")) {
       return {
         reasoning: false,
-        header: `# Reasoning: not supported on this host (not in Numes supported_parameters; matches openrouter/${bare}).`,
+        header: `# Reasoning: not supported on this host (not in Numes supported_parameters; matches ${openRouter.source}).`,
       };
     }
-    if (openRouter?.supported === true) {
-      return peerReasoningControls(openRouter, `openrouter/${bare}`, false);
+    if (openRouter?.reasoning?.supported === true) {
+      return peerReasoningControls(openRouter.reasoning, openRouter.source, false);
     }
     const labPeer = labProviderPeer(baseModel);
     if (labPeer?.reasoning?.supported === true) {
       return peerReasoningControls(labPeer.reasoning, labPeer.source, true);
     }
-    return {
-      reasoning: true,
-      options: [] as ReasoningOptions,
-      header: "# Reasoning controls: always on (not declared by Numes; no caller control documented on peers).",
-    };
+    throw new MissingReasoningOptionsError(
+      id,
+      `Numes /public/v1/models declares no reasoning controls for ${id} (base ${baseModel}) and no OpenRouter or lab provider peer documents them`,
+    );
   }
   const efforts = sortEfforts(declared.supported_efforts);
   const toggle = !declared.mandatory && !efforts.includes("none");
@@ -293,16 +293,30 @@ export function reasoningControls(model: NumesModel, id: string, baseModel: stri
   return { reasoning: true, options, header: wireHeader(toggle, efforts, declared.supports_max_tokens) };
 }
 
+function openRouterReasoningPeer(bare: string): { source: string; reasoning: Record<string, any> } | undefined {
+  for (const candidate of [bare, `${bare}:free`]) {
+    const reasoning = openRouterPeer(candidate)?.capabilities?.reasoning;
+    if (reasoning !== undefined) {
+      return { source: `openrouter/${candidate}`, reasoning };
+    }
+  }
+  return undefined;
+}
+
 function labProviderPeer(baseModel: string): { source: string; reasoning: Record<string, any> } | undefined {
   const slash = baseModel.indexOf("/");
   if (slash <= 0) return undefined;
   const lab = baseModel.slice(0, slash);
   const slug = baseModel.slice(slash + 1);
-  const file = path.join(PROVIDERS_DIR, lab, "models", `${slug}.toml`);
-  if (!existsSync(file)) return undefined;
-  const parsed = Bun.TOML.parse(readFileSync(file, "utf8")) as Record<string, any>;
-  if (parsed?.capabilities?.reasoning === undefined) return undefined;
-  return { source: `${lab}/${slug}`, reasoning: parsed.capabilities.reasoning };
+  for (const rel of [slug, `${lab}/${slug}`]) {
+    const file = path.join(PROVIDERS_DIR, lab, "models", `${rel}.toml`);
+    if (!existsSync(file)) continue;
+    const parsed = Bun.TOML.parse(readFileSync(file, "utf8")) as Record<string, any>;
+    if (parsed?.capabilities?.reasoning !== undefined) {
+      return { source: `${lab}/${rel}`, reasoning: parsed.capabilities.reasoning };
+    }
+  }
+  return undefined;
 }
 
 function peerReasoningControls(reasoning: Record<string, any>, source: string, stripBudgetBounds: boolean) {

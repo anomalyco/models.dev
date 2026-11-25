@@ -1,0 +1,18 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/qwen/qwen3.6-flash (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "alibaba/qwen3.6-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.1978125
+
+[cost.text.output]
+price = 1.186875

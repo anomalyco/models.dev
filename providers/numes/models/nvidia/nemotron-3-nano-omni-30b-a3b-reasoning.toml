@@ -1,4 +1,6 @@
-# Reasoning controls: always on (not declared by Numes; no caller control documented on peers).
+# Reasoning controls: not declared by Numes; copied from openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+# Budget: reasoning.max_tokens (integer reasoning tokens)
 schema = 2
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
 
@@ -7,7 +9,7 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [cost.text.input]
 price = 0.3165

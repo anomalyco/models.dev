@@ -3,9 +3,11 @@ base_model = "mistral/codestral-2508"
 
 [capabilities]
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.3165
+cache = { read = 0.03165 }
 
 [cost.text.output]
 price = 0.9495

@@ -7,9 +7,11 @@ output = ["text"]
 
 [capabilities]
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.1055
+cache = { read = 0.01055 }
 
 [cost.text.output]
 price = 0.1055

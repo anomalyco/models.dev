@@ -6,12 +6,11 @@ base_model = "openai/gpt-oss-safeguard-20b"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
-
-[limit]
-output = 65_536
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.0633
+cache = { read = 0.03165 }
 
 [cost.text.output]
 price = 0.2532

@@ -3,9 +3,11 @@ base_model = "mistral/mistral-large-2407"
 
 [capabilities]
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 2.11
+cache = { read = 0.211 }
 
 [cost.text.output]
 price = 6.33

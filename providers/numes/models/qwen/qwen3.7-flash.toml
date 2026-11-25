@@ -1,0 +1,22 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/qwen/qwen3.7-flash (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+# Budget: reasoning.max_tokens (integer reasoning tokens)
+# Capabilities the catalog doesn't state (capabilities.structured_output) come from qwen/qwen3.5-flash-02-23, this host's previous model in the family.
+schema = 2
+base_model = "alibaba/qwen3.7-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+cache = { implicit = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.03165
+cache = { read = 0.00633 }
+
+[cost.text.output]
+price = 0.13715

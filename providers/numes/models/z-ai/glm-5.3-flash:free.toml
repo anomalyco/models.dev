@@ -13,6 +13,9 @@ output = ["text"]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 
+[limit]
+output = 65_536
+
 [cost.text.input]
 price = 0
 

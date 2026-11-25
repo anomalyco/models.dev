@@ -3,12 +3,14 @@ base_model = "mistral/devstral-2512"
 
 [capabilities]
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 131_072
 
 [cost.text.input]
 price = 0.422
+cache = { read = 0.0422 }
 
 [cost.text.output]
 price = 2.11

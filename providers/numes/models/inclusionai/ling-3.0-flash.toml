@@ -1,17 +1,16 @@
-# Reasoning controls: Numes /public/v1/models `reasoning` declaration for this model.
+# Reasoning controls: not declared by Numes; copied from openrouter/inclusionai/ling-3.0-flash (Numes forwards the OpenRouter reasoning object).
 # Toggle: reasoning.enabled = true|false
-# Effort: reasoning.effort = low|medium|high
 schema = 2
 base_model = "inclusionai/ling-3.0-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, toggle = true }
 structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]
 price = 0.022155
-cache = { read = 0.012 }
+cache = { read = 0.004431 }
 
 [cost.text.output]
 price = 0.066465

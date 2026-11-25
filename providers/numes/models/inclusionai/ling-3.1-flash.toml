@@ -6,10 +6,11 @@ base_model = "inclusionai/ling-3.1-flash"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 cache = { implicit = true }
+structured_output = true
 
 [cost.text.input]
-price = 0.0633
-cache = { read = 0.06 }
+price = 0.079125
+cache = { read = 0.015825 }
 
 [cost.text.output]
-price = 0.1899
+price = 0.237375

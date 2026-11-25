@@ -1,7 +1,3 @@
-name = "Numes"
-env = ["NUMES_API_KEY"]
-npm = "@openrouter/ai-sdk-provider"
-opencodeai = "@opencode/ai/providers/openrouter"
 # Numes is a multi-model inference marketplace with an OpenRouter-compatible
 # Chat Completions API. Reasoning (accessed 2026-11-22): requests take the
 # OpenRouter `reasoning` object (`enabled`, `effort`, `max_tokens`) and the
@@ -18,5 +14,9 @@ opencodeai = "@opencode/ai/providers/openrouter"
 # Sources:
 # https://api.numes.ai/public/v1/models
 # https://numes.ai/docs
+name = "Numes"
+env = ["NUMES_API_KEY"]
+npm = "@openrouter/ai-sdk-provider"
+opencodeai = "@opencode/ai/providers/openrouter"
 api = "https://api.numes.ai/api/v1"
 doc = "https://numes.ai/docs"

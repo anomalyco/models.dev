@@ -12,12 +12,9 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 cache = { implicit = true }
 
-[limit]
-output = 65_536
-
 [cost.text.input]
 price = 1.31875
-cache = { read = 0.1875 }
+cache = { read = 0.15825 }
 
 [cost.text.output]
 price = 4.48375
