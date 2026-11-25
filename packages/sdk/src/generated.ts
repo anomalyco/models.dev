@@ -50,6 +50,7 @@ export type ModelFamily =
   | "codestral-embed"
   | "cogito"
   | "cogvideox"
+  | "cogview"
   | "cohere-embed"
   | "cohere-embed-fast"
   | "cohere-embed-light"

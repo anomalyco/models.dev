@@ -2,8 +2,8 @@
 # - Plan and supported models: https://docs.bigmodel.cn/cn/coding-plan/overview, https://docs.bigmodel.cn/cn/coding-plan/latest-model
 # - Thinking (Coding Plan effort mapping): https://docs.bigmodel.cn/cn/guide/capabilities/thinking
 # Subscription plan billed in credits, so no per-token cost.
-# GLM-5.3 Highspeed is not listed in the current plan docs; earlier it was tier-gated on the coding
-# endpoint (403 "not available on plan" on lower tiers). Kept as-is pending confirmation.
+# Deprecated (2026-11-25): the plan FAQ (https://docs.bigmodel.cn/cn/coding-plan/faq) says only GLM-5.4, GLM-5.3 and GLM-5.3-Flash can be
+# called on the plan; earlier GLM-5.3 Highspeed was tier-gated on the coding endpoint (403 "not available on plan" on lower tiers).
 # Effort: none|minimal|low map to low, medium|high to high, xhigh|max to max; disabling thinking maps to low.
 # Tools: tool_choice supports only auto on Chat Completions and none|auto on Responses; no strict tool mode
 #   (https://docs.bigmodel.cn/cn/guide/capabilities/function-calling, https://docs.bigmodel.cn/cn/guide/develop/responses/introduction),
@@ -11,6 +11,7 @@
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 Highspeed"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true, choice = ["auto"] }
