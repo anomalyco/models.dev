@@ -1,0 +1,35 @@
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-25.
+# https://cloud.tencent.com/document/product/1823/133811
+# Input/output/cache-read: 160/560/40 points per million tokens.
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.679299.
+# FX: USD 1 = CNY 6.679299, 2026-11-24, https://open.er-api.com/v6/latest/USD
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
+# Availability: General Token Plan > Available models, https://cloud.tencent.com/document/product/1823/130060 (updated 2026-11-25)
+# Not on the TokenHub pay-as-you-go model list (https://cloud.tencent.com/document/product/1823/130051), so Tencent
+#   documents no input types or limits for it: input is text-only until Tencent lists image/video understanding.
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write rate published.
+# Controls follow this host's GLM-5.3 entry (same family, same API guide):
+# API: https://cloud.tencent.com/document/product/1823/132061
+# Effort: reasoning_effort = low|high|max; thinking cannot be disabled.
+schema = 2
+base_model = "zhipuai/glm-5.4"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.19773
+cache = { read = 0.299433 }
+
+[cost.text.output]
+price = 4.192057

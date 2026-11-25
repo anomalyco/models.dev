@@ -1,5 +1,5 @@
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
-# Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (deepinfra): $0.32 input / $0.89 output per MTok, context 163,840.
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 schema = 2
 base_model = "deepseek/deepseek-v3"
 description = "DeepSeek chat model for instruction following, coding, and analysis"

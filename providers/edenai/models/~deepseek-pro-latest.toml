@@ -1,0 +1,19 @@
+# Capabilities the catalog doesn't state (capabilities.cache) come from deepseek-v4-pro, this host's previous model in the family.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek Pro Latest (DeepSeek V4 Pro 0813)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.429
+cache = { read = 0.0429 }
+
+[cost.text.output]
+price = 1.287

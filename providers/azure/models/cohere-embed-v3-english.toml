@@ -2,9 +2,11 @@
 # with an OpenAI-shaped body (input, dimensions, encoding_format, model) and response (data[].embedding, usage).
 # https://learn.microsoft.com/en-us/rest/api/microsoftfoundry/model-inference/get-embeddings/get-embeddings
 # Cohere Embed on Foundry: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#cohere-models-sold-by-azure
+# Deprecated: deprecated on 2026-11-15, retires 2027-02-15 (replacement Cohere-embed-v5-fast/-pro), Cohere partner table in https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule (accessed 2026-11-25)
 schema = 2
 type = "embedding"
 name = "Embed v3 English"
+status = "deprecated"
 description = "Embedding model for semantic search, retrieval, clustering, and ranking pipelines"
 family = "cohere-embed"
 open_weights = true

@@ -12,10 +12,15 @@ const PRODUCTS = ["Azure OpenAI GPT6", "Azure OpenAI GPT5", "Azure Grok Models",
 // with no model ID, so each local file lists the labels its meters use. Only models from the last few months are here;
 // older ones keep hand-written prices.
 export const PARTNER_MODELS: Record<string, { product: string; labels: string[] }> = {
+  "grok-4-20-reasoning": { product: "Azure Grok Models", labels: ["Grok 4.2"] },
+  "grok-4-20-non-reasoning": { product: "Azure Grok Models", labels: ["Grok 4.2"] },
   "grok-4.6": { product: "Azure Grok Models", labels: ["4.6"] },
   "grok-4.7": { product: "Azure Grok Models", labels: ["4.7"] },
+  "kimi-k2.5": { product: "Azure Kimi", labels: ["K2.5 Thinking", "K2.5"] },
   "kimi-k2.6": { product: "Azure Kimi", labels: ["K2.6 Thinking", "K2.6"] },
   "kimi-k2.7-code": { product: "Azure Kimi", labels: ["K2.7 Code"] },
+  // Its cached-input meter drops "Pro": "Kimi 3.1 Cached Inp Glbl".
+  "kimi-k3.1-pro": { product: "Azure Kimi", labels: ["Kimi 3.1 Pro", "Kimi 3.1"] },
   "deepseek-v4-flash": { product: "Azure Deepseek Models", labels: ["V4 Flash"] },
   "deepseek-v4-pro": { product: "Azure Deepseek Models", labels: ["V4 Pro"] },
   "deepseek-v4.1-flash": { product: "Azure Deepseek Models", labels: ["V4.1 Flash"] },
@@ -50,8 +55,9 @@ export interface AzureModel {
   prices: AzurePrice[];
 }
 
-// `6.1-sol LongCo Cd Inp Std Gl`, `61 terra ShortCo Opt std Gl`, `5.6 luna ShortCo Cd Wr PP DZ`.
-const METER = /^(.+?) (ShortCo|LongCo) (Cd Inp|Cd Wr|Inp|Opt) (Std|Flex|PP) (Gl|DZ)$/i;
+// `6.1-sol LongCo Cd Inp Std Gl`, `61 terra ShortCo Opt std Gl`, `5.6 luna ShortCo Cd Wr PP DZ`; GPT-6.2 shortens the band to
+// ShCo/LoCo (`6.2-sol LoCo Cd Inp Std Gl`).
+const METER = /^(.+?) (ShortCo|LongCo|ShCo|LoCo) (Cd Inp|Cd Wr|Inp|Opt) (Std|Flex|PP) (Gl|DZ)$/i;
 const KINDS: Record<string, AzurePrice["kind"]> = { "cd inp": "cache_read", "cd wr": "cache_write", inp: "input", opt: "output" };
 const TIERS: Record<string, AzurePrice["tier"]> = { std: "standard", flex: "flex", pp: "priority" };
 
@@ -64,7 +70,7 @@ export function parseMeter(skuName: string): ({ key: string } & Omit<AzurePrice,
   return {
     key: modelKey(match[1]!),
     kind: KINDS[match[3]!.toLowerCase()]!,
-    longContext: match[2]!.toLowerCase() === "longco",
+    longContext: ["longco", "loco"].includes(match[2]!.toLowerCase()),
     tier: TIERS[match[4]!.toLowerCase()]!,
     global: match[5]!.toLowerCase() === "gl",
   };

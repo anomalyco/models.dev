@@ -12,8 +12,10 @@
 # tools.strict: strict tool use on Claude 4.5 and later: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/structured-outputs
 # tools.choice: Messages tool_choice auto/any/tool/none; Opus 5.5, Sonnet 5.5 and Fable 5.1 reject any/tool: https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
 # tools.search: left out. Claude on Google Cloud supports client tools, not server tools (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/use-claude), and the tool search tool isn't documented here.
+# Deprecated 2026-11-23, shutdown 2027-01-22 (existing customers only): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/deprecations/partner-models#opus-4-5
 schema = 2
 base_model = "anthropic/claude-opus-4-5-20251101"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }

@@ -1,19 +1,24 @@
-# Announced in the Ornith 1.0 family but not yet published on Hugging Face as
-# of 2026-06-28 — no weights URL or benchmark scores available yet. Modalities
-# and context window are provisional, assumed consistent with the rest of the
-# family pending the public release.
-# https://deep-reinforce.com/ornith_1_0.html
-# Sampling: open weights; the Ornith model cards use temperature=0.6, top_p=0.95, top_k=20
-#   (https://huggingface.co/ornith-ai/Ornith-1.0-9B, https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B).
-# Input: image input comes from the Qwen3.5 vision stack (config.json image_token_id). Neither the model card nor
-#   DeepReinforce (no first-party API) lists image formats, so input stays generic `image`.
+# Weights not public, so open_weights = false. The announcement (https://deep-reinforce.com/ornith_1_0.html) only
+#   lists the size: "Ornith-1.0 spans the full spectrum, from compact 9B Dense models suitable for edge device
+#   deployment to 397B MoE frontier-scale models optimized for maximum performance, with variants including 9B Dense,
+#   31B Dense, 35B MoE, and 397B MoE." It gives no 31B weights link, model card or benchmark; release_date is the
+#   announcement date.
+# As of 2026-11-24, the ornith-ai Hugging Face org (https://huggingface.co/ornith-ai, 36 repos) and its Ornith-1.0
+#   collection (https://huggingface.co/collections/ornith-ai/ornith-10) have 1.0 weights only for 9B, 35B and 397B
+#   (plus GGUF/FP8 builds), and a Hugging Face search for "Ornith-1.0-31B" returns nothing.
+# Once the 31B weights ship: set open_weights = true, add a [[weights]] link, and source the license from the model card.
+# License left out: the announcement names none, and the MIT license on the other Ornith 1.0 files comes from their
+#   model cards, which this size doesn't have.
+# Modalities, context window and sampling are provisional, assumed consistent with the rest of the family: the Ornith
+#   model cards use temperature=0.6, top_p=0.95, top_k=20
+#   (https://huggingface.co/ornith-ai/Ornith-1.0-9B, https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B), and the
+#   published family models take image input with no documented formats, so input stays generic `image`.
 schema = 2
 name = "Ornith 1.0 31B"
-description = "Open coding-reasoning model for repository tasks and self-improving agents"
+description = "Coding-reasoning model for repository tasks and self-improving agents"
 family = "ornith"
-open_weights = true
+open_weights = false
 release_date = "2026-06-25"
-license = "MIT"
 
 [modalities]
 input = ["text", "image"]

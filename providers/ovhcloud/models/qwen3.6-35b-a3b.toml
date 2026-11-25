@@ -1,0 +1,27 @@
+# Price (USD per Mtoken, accessed 2026-11-24): $0.20 input / $1.33 output on
+# https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/qwen3-6-35b-a3b/ and the same rates in
+# https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter. OVHcloud publishes USD prices here, so no currency conversion.
+# Effort: Chat `reasoning_effort` supports none|minimal|low|medium|high; `none` disables it. Same
+# controls as OVHcloud's Qwen3.6-27B (providers/ovhcloud/models/qwen3.6-27b.toml); the catalog page shows
+# reasoning_effort and Responses `reasoning.effort`:
+# https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/qwen3-6-35b-a3b/
+# Modalities: OVHcloud's catalog lists text-only input for this model (https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter).
+# Limits: catalog context_length 262_144, max_output_length 65_536 (https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter).
+# Mid-conversation: OVHcloud AI Endpoints serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 1.33
