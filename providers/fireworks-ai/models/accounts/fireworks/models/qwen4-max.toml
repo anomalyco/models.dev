@@ -6,6 +6,8 @@
 #   omitted adds no effort prompt (the model's default); none, false and thinking.type = disabled close the think block and returned
 #   0 reasoning tokens. Off is effort none, so no separate toggle. Layout follows qwen3p8-max, Fireworks' previous Qwen Max.
 # No budget: an integer reasoning_effort returns 400 "Qwen4 reasoning_effort supports minimal, low, medium, high, xhigh, none, adaptive, or a boolean".
+#   thinking = { type = "enabled", budget_tokens = N } is rejected too (live 2026-11-24): 1024 and 2048 return the same 400
+#   (budget_tokens maps to an integer effort), and 500 returns 400 "thinking.budget_tokens must be >= 1024".
 # Modalities: Fireworks lists text and image input only (no video or PDF). The lab's bmp, jpeg, png, tiff, webp and heic all decoded in live tests (2026-11-24).
 # Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
 #   and returned schema-shaped JSON without being asked for JSON in a live test (2026-11-24).
