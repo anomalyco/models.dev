@@ -1,3 +1,6 @@
+# Deprecated (checked 2026-11-25): the M Plan includes only MiniMax-M3.1-Flash as its text model on
+#   every tier (https://platform.minimaxi.com/docs/m-plan/intro, https://platform.minimaxi.com/docs/token-plan/faq). MiniMax-M3 may still
+#   answer on a plan key, billed from Credits at its API price; no plan key to confirm live.
 # Sources (accessed 2026-10-19):
 # - API: https://platform.minimaxi.com/docs/api-reference/text-anthropic-api, https://platform.minimaxi.com/docs/api-reference/text-chat-anthropic
 # - Caching: https://platform.minimaxi.com/docs/api-reference/text-prompt-caching
@@ -21,6 +24,7 @@ family = "minimax-m"
 open_weights = true
 release_date = "2026-06-01"
 last_updated = "2026-06-25"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/x-msvideo", "video/quicktime", "video/x-matroska"]
