@@ -1,13 +1,19 @@
 # Model ID verified against POST /api/v3/chat/completions (2026-08-27): `glm-5-2-260617`
 # CNY→USD rate: 6.737012, 2026-08-26, source: https://open.er-api.com/v6/latest/USD
 # CNY list price source: https://www.volcengine.com/docs/82379/1544106
-# Toggle: thinking.type = enabled|disabled
-# Effort: reasoning_effort = minimal|low|medium|high
+# Effort: reasoning_effort = none|high|max. Ark maps none/minimal to thinking off,
+# low/medium -> high and xhigh -> max (default max), so only these three are distinct
+# (兼容映射 table, https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking.md, accessed 2026-11-24).
+# none is the off switch, so no separate toggle is declared.
+# Cache: implicit prefix caching is on by default on the Chat API (no request flag), per
+# https://ark.volcengine.com/region:cn-beijing/docs/context-cache.md and the 上下文缓存能力 table in
+# https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24).
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+cache = { implicit = true }
 structured_output = true
 
 [api.chat-completions]

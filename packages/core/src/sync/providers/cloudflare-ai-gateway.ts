@@ -1122,7 +1122,7 @@ function waitForRetry(delay: number, signal: AbortSignal | null | undefined) {
     if (signal?.aborted) return reject(signal.reason);
     const onAbort = () => {
       clearTimeout(timer);
-      reject(signal.reason);
+      reject(signal?.reason);
     };
     const timer = setTimeout(() => {
       signal?.removeEventListener("abort", onAbort);

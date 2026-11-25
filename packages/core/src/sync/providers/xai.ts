@@ -119,7 +119,7 @@ export const xai = {
 } satisfies SyncProvider<XAIModel>;
 
 async function assertFullModelAccess(key: string) {
-  const response = await fetch(`${API_BASE}/api-key`, {
+  const response = await fetchXAIWithRetry(`${API_BASE}/api-key`, {
     headers: { Authorization: `Bearer ${key}` },
   });
   if (!response.ok) {
@@ -132,8 +132,18 @@ async function assertFullModelAccess(key: string) {
   }
 }
 
+// xAI's model endpoints sometimes return a one-off 5xx (or 429): retry those up to three times with backoff.
+// Any other status, or a failure that lasts through every attempt, is returned so the sync fails.
+export async function fetchXAIWithRetry(url: string, init: RequestInit, attempts = 4, delay = (attempt: number) => 2 ** attempt * 1000) {
+  for (let attempt = 1; ; attempt++) {
+    const response = await fetch(url, init);
+    if ((response.status !== 429 && response.status < 500) || attempt >= attempts) return response;
+    await Bun.sleep(delay(attempt));
+  }
+}
+
 async function fetchTypedModels(key: string, endpoint: string) {
-  const response = await fetch(`${API_BASE}/${endpoint}`, {
+  const response = await fetchXAIWithRetry(`${API_BASE}/${endpoint}`, {
     headers: { Authorization: `Bearer ${key}` },
   });
   if (!response.ok) {

@@ -1,0 +1,51 @@
+# Model IDs, routes, limits and Global CRIS pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-2-astra.html
+# Global cross-Region profile on bedrock-runtime; this entry uses Converse.
+# Ultrafast: additionalModelRequestFields.service_tier=ultrafast (Converse, live 2026-11-17); AWS specifies 3x Standard through 2027-02-28, then 6x from 2027-03-01.
+# AWS specifies calendar dates without a timezone. Dated mode prices stay v2-only; v1 publishes the Ultrafast request body without a mode price.
+# Reasoning: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh|max; all accepted and effort=none rejected live, 2026-11-17.
+# Converse tools: toolSpec.strict enforces JSON schemas; toolChoice supports auto, any (required), and named tool (live 2026-11-17).
+# JSON Schema output requires outputConfig.textFormat.type=json_schema and additionalModelRequestFields.text.format.strict=true; encode the schema as a JSON string. The card documents non-streaming Runtime calls.
+# Converse accepts user text/image blocks and rejects document blocks and images inside toolResult, per the model card. Documents use Runtime Responses input_file.
+# Image formats: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html
+# Converse caching is implicit only; explicit cachePoint is unsupported, per the model card. Minimum 1,024 tokens and 30m cache-write pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html#prompt-caching-openai-56
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+name = "GPT-6.2 Astra (Global)"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 } }
+service_tier = ["ultrafast"]
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4, write = { "30m" = 10 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16
+cache = { read = 0.8, write = { "30m" = 20 } }
+
+[cost.text.output]
+price = 40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" }, date = { lt = "2027-03-01" } }
+factor = { text = 3 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" }, date = { gte = "2027-03-01" } }
+factor = { text = 6 }
+
+[experimental.modes.ultrafast]
+body = { additionalModelRequestFields = { service_tier = "ultrafast" } }

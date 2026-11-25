@@ -101,6 +101,7 @@ test("prices a decision model's input only and keeps its authored output limit",
 test("skips OpenRouter aliases, approval-only and unready entries without reporting them missing", () => {
   expect(morph.sourceID(morphModel({ id: "morph-dsv4flash-0731" }))).toBeUndefined();
   expect(morph.sourceID(morphModel({ id: "morph-dsv41flash-abliterated" }))).toBeUndefined();
+  expect(morph.sourceID(morphModel({ id: "morph-kimik3-abliterated" }))).toBeUndefined();
   expect(morph.sourceID(morphModel({ is_ready: false }))).toBeUndefined();
   expect(morph.sourceID(morphModel({ id: "morph-new" }))).toBe("morph-new");
   expect(morph.translateModel(morphModel({ id: "morph-new" }), context({}))).toBeUndefined();

@@ -6,6 +6,9 @@ name = "Nano Banana (Vertex AI)"
 [capabilities]
 structured_output = true
 
+[limit]
+context = 32_768
+
 [api.images]
 sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
 

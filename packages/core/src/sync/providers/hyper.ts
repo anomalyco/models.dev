@@ -161,7 +161,7 @@ export function buildHyperModel(
     ? false
     : modelMetadata(resolvedBase).reasoning === true;
   const releaseDate = existing?.release_date ?? dateFromTimestamp(model.created);
-  const values: Partial<SyncedFullModel> = {
+  const common = {
     attachment: modalities.input.some((value) => value !== "text"),
     modalities,
     reasoning,
@@ -171,6 +171,7 @@ export function buildHyperModel(
     cost: buildCost(model, existing?.cost),
     limit,
   };
+  const values: Partial<SyncedFullModel> = { ...common };
   if (advertisedReasoning) {
     values.reasoning_options = reasoningOptions(model);
   } else if (inheritedReasoning) {
@@ -203,7 +204,9 @@ export function buildHyperModel(
       modalities,
     }),
     family: existing?.family,
-    ...values,
+    ...common,
+    reasoning: advertisedReasoning,
+    ...(values.reasoning_options === undefined ? {} : { reasoning_options: values.reasoning_options }),
     temperature: existing?.temperature,
     tool_call: existing?.tool_call ?? true,
     structured_output: existing?.structured_output,
@@ -212,5 +215,5 @@ export function buildHyperModel(
     status: existing?.status,
     provider: existing?.provider,
     experimental: existing?.experimental,
-  };
+  } satisfies SyncedFullModel;
 }

@@ -1,0 +1,27 @@
+# Voxtral Mini Transcribe 3, API IDs voxtral-mini-transcribe-3-0 and voxtral-mini-transcribe-3, released 2026-10-20
+#   (Public Preview), audio in, text out, Premier license (no open weights): https://docs.mistral.ai/models/voxtral-mini-transcribe-3-0
+# Release: https://docs.mistral.ai/getting-started/changelog (October 20, 2026, Voxtral 3 audio family)
+# Input formats ("Supported formats: WAV, MP3, FLAC, OGG, WEBM"): https://docs.mistral.ai/resources/known-limitations
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Voxtral Mini Transcribe 3"
+description = "Speech-to-text model with transcription, diarization and timestamps at a low price point"
+family = "voxtral-transcribe"
+open_weights = false
+release_date = "2026-10-20"
+
+[modalities]
+input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/ogg", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

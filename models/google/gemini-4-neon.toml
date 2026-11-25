@@ -1,0 +1,61 @@
+# Sources:
+# - https://ai.google.dev/gemini-api/docs/models/gemini-4-neon
+# - https://ai.google.dev/gemini-api/docs/whats-new-gemini-4-neon (thinking levels low, medium, high default, xhigh)
+# - https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/
+# - https://deepmind.google/models/model-cards/gemini-4-neon/ (adapted from Gemini 4 Carbon)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/4-neon (knowledge cutoff March 2026, released 2026-11-18)
+# Input, thinking, and output share one 1,048,576-token window. A single
+# request returns at most 65,536 output tokens; longer outputs (up to 1M) need
+# long decode.
+schema = 2
+name = "Gemini 4 Neon"
+description = "Google's Gemini 4 model for fast, frontier-level coding, knowledge work and science workflows, with four thinking levels and a 1M-token context window"
+family = "gemini"
+open_weights = false
+knowledge = "2026-03"
+release_date = "2026-11-18"
+
+[modalities]
+input = [
+  "text",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/mpeg",
+  "video/mov",
+  "video/avi",
+  "video/x-flv",
+  "video/mpg",
+  "video/webm",
+  "video/wmv",
+  "video/3gpp",
+  "audio/wav",
+  "audio/mp3",
+  "audio/aiff",
+  "audio/aac",
+  "audio/ogg",
+  "audio/flac",
+  "audio/mpeg",
+  "audio/m4a",
+  "audio/l16",
+  "audio/opus",
+  "audio/alaw",
+  "audio/mulaw",
+  "audio/webm",
+  "application/pdf",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 65_536

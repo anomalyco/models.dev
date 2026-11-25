@@ -12,7 +12,6 @@ cache = { implicit = true }
 
 [limit]
 context = 256_000
-output = 256_000
 
 [api.chat-completions]
 capabilities = { system_updates = true }
@@ -31,3 +30,6 @@ cache = { read = 0.15 }
 
 [cost.text.output]
 price = 4
+
+[cost.web_search]
+price = 7

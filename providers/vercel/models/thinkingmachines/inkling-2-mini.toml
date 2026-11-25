@@ -1,0 +1,29 @@
+# Not tested live on this model. These follow the sibling Inkling files on this host, which share the serving route:
+# - system_updates: thinkingmachines/inkling-small (live 2026-10-19, a mid-conversation system message stays in place) and inkling-2-small.
+# - reasoning_field: thinkingmachines/inkling-2-small (live 2026-11-23); reasoning_content is the field Inkling's chat template reads (https://huggingface.co/thinkingmachines/Inkling-2-Small).
+schema = 2
+base_model = "thinkingmachines/inkling-2-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+capabilities = { system_updates = true }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.3

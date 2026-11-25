@@ -7,15 +7,15 @@ base_model = "alibaba/qwen3.5-9b"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
-structured_output = false
+structured_output = true
 tools = { supported = true }
 
 [limit]
 input = 262_144
 
 [cost.text.input]
-price = 0.05
-cache = { read = 0.008 }
+price = 0.1
+cache = { read = 0.05 }
 
 [cost.text.output]
 price = 0.15

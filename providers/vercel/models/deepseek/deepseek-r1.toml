@@ -1,1 +1,26 @@
-../../../amazon-bedrock/models/deepseek.r1-v1:0.toml
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-11-24): 128,000 context, 8,192 output, tool-use tag, always-on reasoning (no reasoning_options).
+schema = 2
+base_model = "deepseek/deepseek-r1"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
+
+[limit]
+output = 8_192
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 1.35
+
+[cost.text.output]
+price = 5.4

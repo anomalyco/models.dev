@@ -4,7 +4,8 @@ base_model = "mistral/ministral-14b"
 name = "Ministral 14B (Arkanecloud)"
 
 [capabilities]
-structured_output = false
+structured_output = true
+tools = { supported = false }
 
 [limit]
 context = 32_768

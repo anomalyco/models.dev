@@ -3,18 +3,19 @@
 # - https://ai.google.dev/gemini-api/docs/image-generation
 # - https://deepmind.google/models/model-cards/gemini-3-1-flash-lite-image/
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image
+# Inputs: "Text, Image, Video, and PDF" (https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-lite-image); video and PDF MIME types as on gemini-3.1-flash-image.
 # Image output formats: https://ai.google.dev/gemini-api/docs/image-generation (response_format mime_type image/png or image/jpeg).
 schema = 2
 type = "image"
 name = "Nano Banana 2 Lite"
 description = "Fastest, most cost-efficient Gemini image model for high-volume 1K generation and editing"
-family = "gemini-flash-lite"
+family = "nano-banana-lite"
 open_weights = false
 knowledge = "2025-01"
 release_date = "2026-06-30"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "application/pdf"]
 output = ["text", "image/png", "image/jpeg"]
 
 [capabilities]

@@ -1,0 +1,26 @@
+schema = 2
+name = "OrcaCyber Ling 3.2 Flash"
+description = "An OrcaCyber model for authorized security research, vulnerability analysis, code auditing, and tool use. Accepts text and images, with optional reasoning. Supports a 1,048,576-token context window and up to 262,144 output tokens. Offensive work is permitted only within an authorized security engagement."
+open_weights = false
+release_date = "2026-11-23"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_064
+input = 1_048_064
+output = 262_144
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 1.8

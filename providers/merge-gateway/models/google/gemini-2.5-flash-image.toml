@@ -5,6 +5,9 @@ name = "Gemini 2.5 Flash Image"
 [capabilities]
 structured_output = false
 
+[limit]
+context = 32_768
+
 [cost.text.input]
 price = 0.3
 

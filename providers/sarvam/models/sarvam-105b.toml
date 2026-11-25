@@ -1,20 +1,28 @@
-# Pricing: https://www.sarvam.ai/api-pricing (LLM, accessed 2026-10-21): Sarvam 105B INR 15.00 input / 5.00 cached input / 60.00 output per 1M tokens.
-# INR->USD at 94.995216 INR per USD (2026-10-21, https://open.er-api.com/v6/latest/USD), rounded to 8 decimals.
+# Pricing: https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17): Sarvam 105B introductory INR 10.00 input / 0.25 cached input / 25.00 output per 1M tokens.
+# INR->USD at 94 INR per USD, the rate Sarvam publishes for its USD view on https://www.sarvam.ai/token-factory/pricing (accessed 2026-11-17), rounded to 8 decimals.
 # Toggle: reasoning_effort = null (off)
 # Effort: reasoning_effort = low|medium|high
+# Default effort: GET https://api.sarvam.ai/v2/models publishes reasoning.default_effort = "low" (accessed 2026-11-17).
+# Context: GET https://api.sarvam.ai/v2/models publishes context_length 128000 for this host, below the lab's 131072. The output cap follows the host's window.
+# max_tokens: this model rejects max_completion_tokens above 32,768 but accepts max_tokens up to the window, so consumers must send the older field.
 schema = 2
 base_model = "sarvam/sarvam-105b"
 name = "Sarvam-105B"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"], default = { type = "effort", value = "low" } }
+cache = { implicit = true }
+
+[limit]
+context = 128_000
+output = 128_000
 
 [api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
 
 [cost.text.input]
-price = 0.15790269
-cache = { read = 0.05263423 }
+price = 0.10638298
+cache = { read = 0.00265957 }
 
 [cost.text.output]
-price = 0.63161075
+price = 0.26595745

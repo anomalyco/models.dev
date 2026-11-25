@@ -1,4 +1,4 @@
-# Web search: $10 per 1,000 web_search tool calls (all models): https://developers.openai.com/api/docs/pricing#built-in-tools
+# Web search: $14 per 1,000 searches (pricing.web_search in https://ai-gateway.vercel.sh/v1/models, accessed 2026-11-24)
 # Token-only multipliers (object factor, so cost.web_search is unscaled): Flex (https://developers.openai.com/api/docs/guides/flex-processing).
 # Per API: /v1/messages has no tool-add item. system_updates stays top level: a mid-conversation developer/system message stays in place on all three APIs (gpt-5.4-mini cache read 8832 with and without it on /v1/responses and /v1/messages, live 2026-10-23).
 # tools.updates is left out: on GPT-5.5 and earlier, calls to tools added through additional_tools come back namespaced and replaying them without the namespace fails ("Missing namespace for function_call", live 2026-11-16), so callers fold tool changes into the top-level tools list.
@@ -41,7 +41,7 @@ cache = { read = 0.275 }
 price = 4.4
 
 [cost.web_search]
-price = 10
+price = 14
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "flex" } }

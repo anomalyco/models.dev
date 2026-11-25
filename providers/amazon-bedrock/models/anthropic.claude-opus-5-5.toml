@@ -31,8 +31,8 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/amazon
 capabilities = { effort_updates = true, tools = { updates = ["add", "remove", "replace"], choice = ["auto", "none"], search = true } }
 
 [cost.text.input]
-price = 4
-cache = { read = 0.2, write = { "5m" = 5, "1h" = 8 } }
+price = 4.4
+cache = { read = 0.22, write = { "5m" = 5.5, "1h" = 8.8 } }
 
 [cost.text.output]
-price = 20
+price = 22

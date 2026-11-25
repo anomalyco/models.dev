@@ -59,7 +59,10 @@ export const CortecsResponse = z.object({
 
 export type CortecsModel = z.infer<typeof CortecsModel>;
 
-export const CortecsFile = AuthoredModelV2.omit({ id: true }).extend({ schema: z.literal(2) });
+export const CortecsFile = z.object({ schema: z.literal(2) }).passthrough().transform(({ schema, ...model }) => {
+  const { id: _id, ...parsed } = AuthoredModelV2.parse({ ...model, id: "cortecs" });
+  return { schema, ...parsed };
+});
 export type CortecsFile = z.infer<typeof CortecsFile>;
 
 export const cortecs = {
@@ -156,7 +159,10 @@ function readLabModel(canonical: string) {
   return model;
 }
 
-function usd(value: number) {
+function usd(value: number): number;
+function usd(value: number | undefined): number | undefined;
+function usd(value: number | undefined) {
+  if (value === undefined) return undefined;
   return Math.round(value * EUR_TO_USD * 1_000) / 1_000;
 }
 

@@ -1,0 +1,23 @@
+# Serverless: free ($0 input and output per 1M), no cached-input price; context 262,144; function calling and structured
+#   outputs: yes (https://docs.together.ai/docs/serverless-models, https://www.together.ai/pricing and
+#   GET https://api.together.xyz/v1/models, accessed 2026-11-24).
+# Toggle: chat_template_kwargs.enable_thinking = true|false (live 2026-11-24: false returned no reasoning; thinking is on by
+#   default). reasoning.enabled = false and every reasoning_effort value, even an invalid one, were accepted and still reasoned.
+# Inputs (live 2026-11-24): PNG, JPEG, GIF and WebP images and MP4 video were read (each named the color of a test image).
+# Tools and json_schema structured output both worked live (2026-11-24).
+schema = 2
+base_model = "prism-ml/ternary-bonsai-27b"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "video/mp4"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

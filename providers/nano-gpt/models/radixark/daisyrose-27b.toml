@@ -1,0 +1,26 @@
+schema = 2
+name = "DaisyRose 27B"
+description = "DaisyRose 27B is RadixArk’s multimodal reasoning model for coding, tool use and long-horizon agent tasks. Built from Qwen3.8-27B using reinforcement learning without supervised fine-tuning or distillation, it accepts text and images and returns text. It supports function calling, JSON-schema output and a 262,144-token context window, with up to 65,536 output tokens. Thinking is on by default; choose low, medium or high effort, or turn it off. The weights are released under Apache 2.0."
+open_weights = true
+release_date = "2026-11-20"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 262_144
+input = 262_144
+output = 65_536
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.0375 }
+
+[cost.text.output]
+price = 1.875

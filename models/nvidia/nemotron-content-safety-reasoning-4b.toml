@@ -2,7 +2,7 @@
 schema = 2
 name = "Nemotron Content Safety Reasoning 4B"
 description = "Safety model for policy screening, moderation, and risk-aware routing workflows"
-family = "nemotron"
+family = "nemotron-safety"
 open_weights = true
 release_date = "2026-01-22"
 
@@ -20,3 +20,7 @@ top_k = false
 [limit]
 context = 128_000
 output = 4_096
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/nvidia/Nemotron-Content-Safety-Reasoning-4B"

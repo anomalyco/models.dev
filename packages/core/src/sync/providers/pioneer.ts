@@ -188,7 +188,7 @@ function dateFromModel(model: PioneerModel) {
   return "2024-01-01";
 }
 
-function supported(model: PioneerModel, capability: keyof PioneerModel["capabilities"]) {
+function supported(model: PioneerModel, capability: "image_input" | "pdf_input" | "structured_outputs" | "thinking") {
   return model.capabilities[capability]?.supported === true;
 }
 

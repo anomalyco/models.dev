@@ -27,6 +27,9 @@ const BASE_MODEL_ALIASES: Record<string, string | undefined> = {
   // "unsloth" re-hosts models from many providers, so it has no org mapping; alias the
   // ones whose canonical metadata lives under the original provider's namespace.
   "unsloth/Mistral-Nemo-Instruct-2407-TEE": "mistral/mistral-nemo",
+  // Alibaba's hosted Max models: without a link they'd be written as standalone open-weight files.
+  "Qwen/Qwen4-Max": "alibaba/qwen4-max",
+  "Qwen/Qwen3.8-Max-0902": "alibaba/qwen3.8-max-0902",
 };
 
 const Pricing = z.object({
@@ -230,6 +233,6 @@ function inferFamily(id: string, name: string) {
     .find((family) => {
       const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(target);
     });
 }

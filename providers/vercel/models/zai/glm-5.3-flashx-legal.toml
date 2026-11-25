@@ -1,9 +1,7 @@
 schema = 2
+base_model = "zhipuai/glm-5.3-flashx-legal"
 name = "GLM 5.3 FlashX Legal"
 description = "GLM vision model for visual reasoning, documents, and multimodal agents"
-family = "glm"
-open_weights = false
-release_date = "2026-11-02"
 
 [modalities]
 input = ["text", "image"]
@@ -13,10 +11,6 @@ output = ["text"]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
-
-[limit]
-context = 1_000_000
-output = 131_072
 
 [api.chat-completions]
 

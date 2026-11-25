@@ -108,10 +108,11 @@ async function loadProviderV2(
     const v1Model = modelV2ToV1(rawModel, { modelPath }, v1Provider.npm);
     const resolved = resolveV1Model(v1Model, baseModels, modelPath);
     const tables = (rawModel as Record<string, unknown>).api as Record<string, AuthoredApiEntryV2> | undefined;
-    const { model, tools } = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
+    const { model, tools, recommended } = withV2Fields(toModelV2(resolved, v1Provider), rawModel, labsV2, modelPath);
     if (tables !== undefined) model.api = toModelApis(tables, v1Provider, opencodeai);
     else if (opencodeai !== undefined && opencodeai !== "none") model.api = withOpencodePackage(model.api, opencodeai);
     model.api = withApiTools(model.api, tools, tables, { modelPath });
+    model.recommended_api = recommended ?? firstApi(model.api);
     models[modelID] = model;
   }
 
@@ -181,7 +182,7 @@ function withV2Fields(
   if (authored.cost !== undefined) result.cost = authored.cost;
   if (authored.experimental !== undefined) result.experimental = authored.experimental;
   if (authored.metadata !== undefined) result.metadata = authored.metadata;
-  return { model: result, tools: capabilities.tools };
+  return { model: result, tools: capabilities.tools, recommended: authored.recommended_api };
 }
 
 function withoutSchema(raw: Record<string, unknown>) {
@@ -195,6 +196,7 @@ function withoutSchema(raw: Record<string, unknown>) {
 
 export function toModelV2(model: Model, provider: Provider): ModelV2 {
   const type = model.type ?? "chat";
+  const api = toApiV2(model, provider);
   const normalizeModality = (m: string) =>
     m === "pdf" ? "application/pdf" : m;
   const outputModalities = ((): OutputModalityV2[] => {
@@ -242,7 +244,8 @@ export function toModelV2(model: Model, provider: Provider): ModelV2 {
         : { output: model.limit.output }),
     },
     ...(model.cost !== undefined ? { cost: toCostV2(model.cost) } : {}),
-    api: toApiV2(model, provider),
+    api,
+    recommended_api: firstApi(api),
     ...(model.experimental?.modes
       ? {
           experimental: {
@@ -533,6 +536,12 @@ function withApiTools(
       ];
     }),
   ) as ApiV2;
+}
+
+// Without its own `recommended_api`, a model recommends its first API, the
+// one clients use by default.
+function firstApi(api: ApiV2) {
+  return Object.keys(api)[0] as ApiProtocolV2;
 }
 
 // A model without its own tables uses the provider's default API, so it takes

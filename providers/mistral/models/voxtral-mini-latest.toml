@@ -1,3 +1,6 @@
+# Lifecycle: Voxtral Mini Transcribe 2 (voxtral-mini-2602) was deprecated 2026-10-31 and retires 2027-04-30; replacement
+#   Voxtral Mini Transcribe 3 (https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02 and the deprecation table at
+#   https://docs.mistral.ai/getting-started/models/). /v1/models (2026-11-23) still maps voxtral-mini-latest -> voxtral-mini-2602.
 # Sources:
 #   GET https://api.mistral.ai/v1/models (voxtral-mini-latest -> voxtral-mini-2602, capability audio_transcription only)
 #   https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02 (Voxtral Mini Transcribe 2, API IDs voxtral-mini-2602
@@ -17,9 +20,10 @@ schema = 2
 type = "transcription"
 name = "Voxtral Mini (latest)"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
-family = "voxtral"
+family = "voxtral-transcribe"
 open_weights = false
 release_date = "2026-02-04"
+status = "deprecated"
 
 [modalities]
 input = ["audio/wav", "audio/mpeg", "audio/flac", "audio/ogg", "audio/webm"]

@@ -13,6 +13,7 @@
 # Not supported on this route: Xiaomi-native thinking.type
 # Listed as effort with "none" and no separate toggle, since "none" turns reasoning off.
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (deepinfra): $0.14 input / $0.28 output per MTok.
 schema = 2
 base_model = "xiaomi/mimo-v2.5"
 description = "MiMo model for long-context reasoning, perception, and agentic tasks"
@@ -36,7 +37,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.4
+price = 0.14
 
 [cost.text.output]
-price = 2
+price = 0.28

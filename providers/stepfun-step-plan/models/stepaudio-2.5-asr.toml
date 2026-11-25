@@ -1,0 +1,30 @@
+# Copied from providers/stepfun/models/stepaudio-2.5-asr.toml (sources there), without [cost].
+# - Step Plan audio models: https://platform.stepfun.com/docs/zh/step-plan/integrations/audio-api (accessed 2026-11-24)
+#   The plan only documents POST /step_plan/v1/audio/asr/sse, not the OpenAI-style /audio/transcriptions, so no SDK is named.
+# - Step Plan (credit subscription, no per-token price, so no [cost]): https://platform.stepfun.com/docs/zh/step-plan/pricing
+schema = 2
+v2_only = true
+type = "transcription"
+name = "StepAudio 2.5 ASR"
+description = "Speech transcription model for accurate audio-to-text and captioning workflows"
+family = "step-asr"
+open_weights = false
+release_date = "2026-04-24"
+last_updated = "2026-07-02"
+
+[modalities]
+input = ["audio/ogg", "audio/mpeg", "audio/wav", "audio/pcm", "audio/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 0
+output = 0
+
+[api.transcriptions]
+path = "/audio/asr/sse"
+sdk = { aisdk = "none", opencodeai = "none" }

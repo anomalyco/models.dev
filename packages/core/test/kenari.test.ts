@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 
 import type { ExistingModel } from "../src/sync/index.js";
-import { kenari, unitCosts, type KenariCatalogModel, type KenariPricingLine } from "../src/sync/providers/kenari.js";
+import { isRetired, kenari, resolveReasoningOptions, unitCosts, type KenariCatalogModel, type KenariPricingLine } from "../src/sync/providers/kenari.js";
 
 const RATE = 17_500;
 
@@ -76,4 +76,23 @@ test("still writes token prices for chat models as before", () => {
     [line({ billable: "input", endpoint: "chat", unit: "token_1m", micro_idr: 17_500_000_000 })],
   );
   expect(chat?.model).toMatchObject({ cost: { input: 1, output: 5 } });
+});
+
+test("reads sunset_at as an ISO date or Unix seconds", () => {
+  expect(isRetired(null)).toBe(false);
+  expect(isRetired("2020-01-01T00:00:00Z")).toBe(true);
+  expect(isRetired(1_577_836_800)).toBe(true);
+  expect(isRetired(4_102_444_800)).toBe(false);
+});
+
+test("a reasoner with no effort levels but reasoning_toggle on gets a toggle", () => {
+  // Inkling 2 Mini Uncensored: the lab entry states no controls and the feed lists no levels, only reasoning_toggle.
+  expect(resolveReasoningOptions("inkling-2-mini-uncensored", "thinkingmachines/inkling-2-mini", null, true, true)).toEqual([{ type: "toggle" }]);
+  expect(() => resolveReasoningOptions("inkling-2-mini-uncensored", "thinkingmachines/inkling-2-mini", null, true, false)).toThrow();
+});
+
+test("reasoning_toggle joins effort levels unless they already include none", () => {
+  const levels = (values: string[]) => resolveReasoningOptions("example-model", "example/none", values, true, true);
+  expect(levels(["low", "medium", "high"])).toEqual([{ type: "toggle" }, { type: "effort", values: ["low", "medium", "high"] }]);
+  expect(levels(["none", "low", "high"])).toEqual([{ type: "effort", values: ["none", "low", "high"] }]);
 });

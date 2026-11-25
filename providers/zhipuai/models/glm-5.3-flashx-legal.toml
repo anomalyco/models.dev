@@ -1,0 +1,44 @@
+# Sources (accessed 2026-11-24):
+# - Pricing (CNY): https://docs.bigmodel.cn/cn/guide/start/pricing
+# - Model: https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash.md#glm-5-3-flashx-legal
+# - Caching (automatic, no write price): https://docs.bigmodel.cn/cn/guide/capabilities/cache
+# - Listed by https://open.bigmodel.cn/api/paas/v4/models and callable there (live 2026-11-24).
+# CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
+# List price: CNY 2/0.57/7 (input/cache read/output per MTok; cache storage limited-time free)
+# Effort: reasoning_effort = low|high|max (default max); thinking.type only accepts enabled
+#   (live 2026-11-24 on open.bigmodel.cn: thinking.type = disabled returns 1210 "always engages in thinking ... use low, high,
+#   or max"; reasoning_effort = low works).
+# Mid-conversation (live 2026-11-24 on api.z.ai and open.bigmodel.cn, ~7k-token first user message): a late system
+# message is followed (reply in French) and keeps the cache (6,976 cached tokens, same as the unchanged control).
+# Per-API flags: system_updates sits on [api.chat-completions] only; Messages and Responses weren't tested.
+# Tools: tool_choice supports only auto on Chat Completions and none|auto on Responses; no strict tool mode
+#   (https://docs.z.ai/guides/capabilities/function-calling, https://docs.bigmodel.cn/cn/guide/develop/responses/introduction),
+#   so [api.responses] adds none. Messages documents no tool_choice.
+schema = 2
+base_model = "zhipuai/glm-5.3-flashx-legal"
+
+[capabilities]
+tools = { supported = true, choice = ["auto"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+capabilities = { system_updates = true }
+
+[api.messages]
+base_url = "https://open.bigmodel.cn/api/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/zai-coding-plan/messages" }
+
+[api.responses]
+base_url = "https://open.bigmodel.cn/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/zai-coding-plan/responses" }
+capabilities = { tools = { choice = ["auto", "none"] } }
+
+[cost.text.input]
+price = 0.29943
+cache = { read = 0.08534, write = 0 }
+
+[cost.text.output]
+price = 1.04801
