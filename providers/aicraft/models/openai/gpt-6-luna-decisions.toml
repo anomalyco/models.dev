@@ -10,6 +10,9 @@ name = "GPT-6 Luna Decisions"
 tools = { supported = false }
 reasoning = { supported = false }
 
+[limit]
+output = 0
+
 [api.decisions]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "none" }
 
