@@ -1,0 +1,14 @@
+schema = 2
+base_model = "cohere/command-a-03-2025"
+
+[capabilities]
+structured_output = false
+
+[limit]
+context = 288_000
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 10

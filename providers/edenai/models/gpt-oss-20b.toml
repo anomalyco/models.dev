@@ -1,0 +1,13 @@
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.009
+cache = { read = 0.0045 }
+
+[cost.text.output]
+price = 0.045

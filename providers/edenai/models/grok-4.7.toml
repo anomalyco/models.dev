@@ -1,0 +1,22 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models) lists input_modalities text, image, file for xai/grok-4.7 (2026-11-25);
+# listed media kinds use the lab's MIME types.
+schema = 2
+base_model = "xai/grok-4.7"
+
+[modalities]
+input = ["text", "application/pdf", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[limit]
+context = 524_288
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 6
