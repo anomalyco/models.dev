@@ -1,0 +1,16 @@
+# Sources:
+# - https://poyo.ai/models (pricing: PoYo bills credits at $0.005 each; per-1M-token prices converted to USD, accessed 2026-11-24)
+# - PoYo GET https://api.poyo.ai/v1/models lists "gemini-3.8-flash" (accessed 2026-11-24)
+# - Reasoning: PoYo forwards reasoning_effort on /v1/chat/completions to the upstream API (converted for Anthropic models); effort levels follow the first-party API
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 3

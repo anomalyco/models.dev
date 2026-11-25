@@ -1,0 +1,15 @@
+# Sources:
+# - https://poyo.ai/models (pricing: PoYo bills credits at $0.005 each; per-1M-token prices converted to USD, accessed 2026-11-24)
+# - PoYo GET https://api.poyo.ai/v1/models lists "kimi-k3" (accessed 2026-11-24)
+# - Reasoning: PoYo forwards reasoning_effort on /v1/chat/completions to the upstream API (converted for Anthropic models); effort levels follow the first-party API
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 2.28
+
+[cost.text.output]
+price = 11.4
