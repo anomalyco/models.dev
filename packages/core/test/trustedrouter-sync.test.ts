@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
@@ -12,6 +12,7 @@ import {
   isGpt5Plus,
   PROBED,
   PROBED_REASONING,
+  labDocumentedKinds,
   labMimeInput,
   trustedrouter,
   TrustedRouterResponse,
@@ -228,7 +229,9 @@ test("GPT-5+ OpenAI models are left for hand authoring: TrustedRouter states no 
 
 test("rows that price cache reads publish the cache kind, Anthropic as explicit", () => {
   const anthropic = trustedrouter.translateModel(model(), none)!;
-  expect(anthropic.v2Set?.["capabilities.cache"]).toEqual({ explicit: true });
+  const fill = (translated: { v2Set?: Record<string, unknown> }) =>
+    (translated.v2Set?.["capabilities.cache"] as ((current: unknown) => unknown) | undefined)?.(undefined);
+  expect(fill(anthropic)).toEqual({ explicit: true });
   expect(anthropic.header).toContain("# Cache: explicit;");
 
   const gpt = trustedrouter.translateModel(model({
@@ -237,7 +240,7 @@ test("rows that price cache reads publish the cache kind, Anthropic as explicit"
     supported_parameters: ["tools"],
     reasoning: undefined,
   }), none)!;
-  expect(gpt.v2Set?.["capabilities.cache"]).toEqual({ implicit: true });
+  expect(fill(gpt)).toEqual({ implicit: true });
   expect(gpt.header).toContain("# Cache: implicit;");
 
   const uncached = trustedrouter.translateModel(
@@ -338,4 +341,70 @@ test("models whose probes were inconclusive or failed to route stay held back", 
   }
   const opus = model({ id: "anthropic/claude-opus-4-7", name: "Anthropic: Claude Opus 4.7", reasoning: undefined });
   expect(() => trustedrouter.translateModel(opus, none)).toThrow(MissingReasoningOptionsError);
+});
+
+test("a hand-authored cache table survives a sync; the row's claim fills only a file with no cache kinds", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "sync-trustedrouter-cache-"));
+  const dir = path.join(root, "providers", "trustedrouter", "models");
+  const lab = "anthropic/claude-sonnet-4-5";
+  try {
+    // The runner resolves base_model against the models/ next to providers/.
+    await mkdir(path.join(root, "models", "anthropic"), { recursive: true });
+    await copyFile(path.join(import.meta.dir, "../../../models", `${lab}.toml`), path.join(root, "models", `${lab}.toml`));
+    await mkdir(dir, { recursive: true });
+    let source = model();
+    const sync = () => syncProvider({ ...trustedrouter, modelsDir: dir, async fetchModels() { return { data: [source] }; } });
+    expect((await sync()).created).toBe(1);
+    const file = path.join(dir, "anthropic/claude-sonnet-4.5.toml");
+    const created = Bun.TOML.parse(await readFile(file, "utf8")) as { capabilities?: { cache?: unknown } };
+    expect(created.capabilities?.cache).toEqual({ explicit: true });
+
+    const authored = (await readFile(file, "utf8"))
+      .replace(/\[capabilities\.cache\]\nexplicit = true\n|cache = \{ explicit = true \}\n/, "")
+      + "\n[capabilities.cache.explicit]\nttl = [\"5m\", \"1h\"]\nmax_breakpoints = 4\nmin_tokens = 1024\n";
+    await Bun.write(file, authored);
+    const before = Bun.TOML.parse(authored) as { capabilities?: { cache?: unknown } };
+    expect(before.capabilities?.cache).toEqual({ explicit: { ttl: ["5m", "1h"], max_breakpoints: 4, min_tokens: 1024 } });
+
+    // A price change forces a rewrite; the authored cache details ride through it.
+    source = model({ pricing: { ...model().pricing, prompt: "0.000004" } });
+    expect(await sync()).toMatchObject({ created: 0, updated: 1, deleted: 0 });
+    const after = Bun.TOML.parse(await readFile(file, "utf8")) as { capabilities?: { cache?: unknown }; cost?: { text?: { input?: { price?: number } } } };
+    expect(after.cost?.text?.input?.price).toBe(4);
+    expect(after.capabilities?.cache).toEqual({ explicit: { ttl: ["5m", "1h"], max_breakpoints: 4, min_tokens: 1024 } });
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("a probe stands in only while the row is unstated: a probed id whose row now states efforts publishes the catalog's", () => {
+  expect(PROBED_REASONING["mistralai/mistral-large-4"]?.supported_efforts).toEqual(["high", "medium", "low"]);
+  const translated = trustedrouter.translateModel(model({
+    id: "mistralai/mistral-large-4",
+    name: "Mistral: Mistral Large 4",
+    pricing: { prompt: "0.000002", completion: "0.000006" },
+    supported_parameters: ["tools", "reasoning", "reasoning_effort", "include_reasoning"],
+    reasoning: { mandatory: false, supported_efforts: ["high", "low", "none"] },
+  }), none)!;
+  // `none` among the efforts is the off switch, so no separate toggle is written.
+  expect((translated.model as { reasoning_options?: unknown }).reasoning_options).toEqual([
+    { type: "effort", values: ["none", "low", "high"] },
+  ]);
+  expect(translated.header).toContain("# Effort: reasoning.effort = none|low|high\n");
+  expect(translated.header).not.toContain("Reasoning probed live");
+  expect(translated.header).toContain("TrustedRouter's published `reasoning` object");
+});
+
+test("the catalog's `file` input kind is PDF input, mapped to the lab's PDF entry", () => {
+  const lab = ["text", "image/jpeg", "image/png", "application/pdf"];
+  expect(labDocumentedKinds(["text", "file"], lab)).toEqual(["text", "file"]);
+  expect(labDocumentedKinds(["text", "file"], ["text"])).toEqual(["text"]);
+  expect(labMimeInput(["text", "file"], lab)).toEqual(["text", "application/pdf"]);
+  expect(labMimeInput(["text", "image", "file"], lab)).toBeUndefined();
+});
+
+test("an update reads the MIME types already in the file as their kinds, so the list is kept", () => {
+  const lab = ["text", "image/jpeg", "image/png", "application/pdf"];
+  expect(labMimeInput(["text", "image/jpeg", "image/png"], lab)).toEqual(["text", "image/jpeg", "image/png"]);
+  expect(labMimeInput(["text", "image/jpeg", "application/pdf"], lab)).toBeUndefined();
 });
