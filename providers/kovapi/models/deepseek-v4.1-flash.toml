@@ -3,6 +3,8 @@
 #   (https://kovapi.com/announcements#2026-11-20-deepseek-v41-flash-price-1122). One rate at all hours.
 # Toggle: thinking.type = enabled|disabled; thinking is on by default and comes back in
 #   reasoning_content (docs page, "Thinking").
+# Effort: reasoning_effort = low|high|max, the same levels as providers/deepseek. Checked through KovAPI's
+#   Chat Completions on 2026-11-25: one prompt used 87 / 143 / 174 reasoning tokens at low / high / max.
 # Max tokens: the docs page documents max_tokens as the output cap, the same field as providers/deepseek.
 # Input: text only on KovAPI (docs page, "At a glance").
 # Cache: automatic prefix caching, no write charge (docs page, "Prompt caching").
@@ -14,7 +16,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
 cache = { implicit = true }
 
 [api.chat-completions]
