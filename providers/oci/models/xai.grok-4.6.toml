@@ -34,3 +34,6 @@ price = 12
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }
 factor = 2
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }
