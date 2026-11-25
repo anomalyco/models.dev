@@ -7,8 +7,10 @@
 # Mid-conversation updates follow the per-model lists in Anthropic's docs, which cover Google Cloud:
 # - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference)
 # - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort)
+# Deprecated 2026-11-23, shutdown 2027-01-22 (existing customers only): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/deprecations/partner-models#opus-4-5
 schema = 2
 base_model = "anthropic/claude-opus-4-5-20251101"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true }
