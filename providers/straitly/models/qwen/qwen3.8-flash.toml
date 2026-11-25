@@ -1,10 +1,10 @@
-# Toggle: reasoning.enabled = true|false
-# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probe on /v1/chat/completions.
+# Reasoning controls (live 2026-11-25 on /v1/chat/completions): reasoning_effort / reasoning.effort ("none", "low", "medium", "high") and reasoning.max_tokens (budget) control reasoning tokens (reasoning_tokens=0 with "none", 62-248 with low/medium/high and max_tokens=256/1024); enable_thinking and reasoning.enabled returned 0 reasoning tokens so toggle is omitted.
+# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probes on /v1/chat/completions.
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, budget = {} }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"], budget = {} }
 structured_output = true
 cache = { implicit = true }
 
