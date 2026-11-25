@@ -17,8 +17,12 @@
 #   overrides choice. strict: Chat Completions defaults function tools to strict = true, Responses function tools take strict,
 #   Messages has no strict field but needs MFJS input schemas and is served by the Chat Completions backend
 #   (https://platform.kimi.ai/docs/api/chat, https://platform.kimi.ai/docs/api/messages).
+# Deprecated: Moonshot's China pricing page (https://platform.kimi.com/docs/pricing/chat, accessed 2026-11-25) says
+#   "尊敬的 Kimi 用户，K2 系列模型将于 2026 年 10 月 31 日起停止向新注册用户开放，已注册用户不受影响；我们计划在 12 月底下线所有 K2 系列模型，请提前做好迁移准备。"
+#   (K2 series closed to new users from 2026-10-31; all K2 series models to be retired at the end of December 2026.)
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
