@@ -5,6 +5,11 @@
 # Reasoning is returned in message.reasoning_content, the answer in
 # message.content.
 # https://api.berget.ai/openapi.json
+# Served limits and modalities: https://api.berget.ai/v1/openrouter/models
+# (checked 2026-11-25) reports context_length = 327680,
+# max_output_length = 32768, input_modalities = ["text", "image"], and
+# output_modalities = ["text"] for moonshotai/Kimi-K3.1-Pro. The image MIME
+# formats come from the lab model; Berget advertises no video input.
 # Prices: https://api.berget.ai/v1/models lists EUR per 1M tokens (public, checked 2026-11-17);
 # EUR 3 input / 0.90 cached input / 10 output,
 # converted to USD at the ECB reference rate of 1.1215 USD/EUR (2026-10-20).
