@@ -7,6 +7,7 @@
 #   An administrator must first register the Fireworks.EnableDeploy feature on the subscription (same page); Fireworks on Foundry is GA.
 #   Shape copied from this host's Grok files (Chat Completions via the Azure package, then Responses).
 # Mid-conversation flags: left out; Foundry documents none for Fireworks models and they weren't tested through Foundry.
+# Limits: 1,048,576-token context window (https://ai.azure.com/catalog/models/FW-GLM-5.3-Flash, Quick facts, accessed 2026-11-25); output is the lab's.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "FW-GLM-5.3-Flash"
@@ -16,10 +17,12 @@ input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
 cache = { implicit = true }
+
+[limit]
+context = 1_048_576
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
