@@ -5,9 +5,8 @@
 # The model page lists system instructions, structured output and context caching as not supported, and gives no token
 # limits, so limits come from the base model. v2_only: realtime models stay out of v1 (AGENTS.md).
 # Live API WebSocket: wss://{HOST}/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/live-api/start-manage-session).
-# The host comes from GOOGLE_VERTEX_ENDPOINT, as for the Interactions files, because this model runs on the global
-# endpoint (aiplatform.googleapis.com) as well as {location}-aiplatform.googleapis.com. No @opencode/ai entry point
-# speaks the Live API, so opencodeai = "none".
+# The model page lists the global endpoint only, so the host is pinned to aiplatform.googleapis.com.
+# No @opencode/ai entry point speaks the Live API, so opencodeai = "none".
 schema = 2
 v2_only = true
 base_model = "google/gemini-3.5-live-translate-preview"
@@ -18,7 +17,7 @@ structured_output = false
 cache = false
 
 [api.bidi-generate-content]
-base_url = "wss://${GOOGLE_VERTEX_ENDPOINT}/ws/google.cloud.aiplatform.v1.LlmBidiService"
+base_url = "wss://aiplatform.googleapis.com/ws/google.cloud.aiplatform.v1.LlmBidiService"
 path = "/BidiGenerateContent"
 sdk = { opencodeai = "none" }
 

@@ -5,7 +5,7 @@
 # needs a text input price, so text input repeats the audio rate, as in the google provider's file.
 # Live API WebSocket: wss://{HOST}/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/live-api/start-manage-session).
 # The host comes from GOOGLE_VERTEX_ENDPOINT, as for the Interactions files, because this model runs on the global
-# endpoint (aiplatform.googleapis.com) as well as {location}-aiplatform.googleapis.com. No @opencode/ai entry point
+# endpoint and the us and eu multi-regions (model page), not on single regions. No @opencode/ai entry point
 # speaks the Live API, so opencodeai = "none".
 schema = 2
 v2_only = true
