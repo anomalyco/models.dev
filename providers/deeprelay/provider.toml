@@ -1,0 +1,14 @@
+# deeprelay is an OpenAI-compatible serverless inference relay: one key for open-weight
+# models from DeepSeek, Moonshot AI, Z.AI, Alibaba Qwen, MiniMax, Meta and OpenAI.
+# Catalog: GET https://api.deeprelay.ai/v1/models (needs an API key); public list at
+# https://deeprelay.ai/models. Every model id carries the `deeprelay/` prefix, which the
+# API requires. Model files are generated from that catalog (context, output cap,
+# supported_parameters, reasoning_efforts, prices). Reasoning: `reasoning_effort` per
+# model, returned in message.reasoning_content. Cache: implicit prefix cache, billed at
+# the cache-read price on models that list one.
+name = "deeprelay"
+env = ["DEEPRELAY_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.deeprelay.ai/v1"
+doc = "https://deeprelay.ai/docs"
