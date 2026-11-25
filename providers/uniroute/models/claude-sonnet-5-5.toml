@@ -1,5 +1,6 @@
 # Pricing: UniRoute discounted channel (USD/MTok) from https://api.uniroute.app/api/v1/models/public-prices?category=text&scope=all_text (accessed 2026-11-25; snapshot sha256:ede774017f6000e9d83ca0d7a47a0585c84fba2cf5c48c3c59dd01ec5d15eb0e).
 # Standard channel rate on the same feed: $2 input / $10 output per MTok.
+# Note: the live public-prices feed verbatim reports discounted cache_read=0.084 and cache_write_1h=1.05 (standard: 0.2 read, 2.5 5m/1h write) for claude-sonnet-5-5.
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
