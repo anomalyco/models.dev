@@ -1,0 +1,21 @@
+# Pricing: UniRoute discounted channel (USD/MTok) from https://api.uniroute.app/api/v1/models/public-prices?category=text&scope=all_text (accessed 2026-11-25; snapshot sha256:ede774017f6000e9d83ca0d7a47a0585c84fba2cf5c48c3c59dd01ec5d15eb0e).
+# Standard channel rate on the same feed: $10 input / $50 output per MTok.
+schema = 2
+base_model = "anthropic/claude-fable-5"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 4.2
+cache = { read = 0.42, write = { "5m" = 5.25, "1h" = 8.4 } }
+
+[cost.text.output]
+price = 21

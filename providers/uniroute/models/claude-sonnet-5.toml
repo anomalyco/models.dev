@@ -1,0 +1,22 @@
+# Pricing: UniRoute discounted channel (USD/MTok) from https://api.uniroute.app/api/v1/models/public-prices?category=text&scope=all_text (accessed 2026-11-25; snapshot sha256:ede774017f6000e9d83ca0d7a47a0585c84fba2cf5c48c3c59dd01ec5d15eb0e).
+# Standard channel rate on the same feed: $2 input / $10 output per MTok.
+# Toggle: thinking.type = "adaptive"|"disabled" and output_config.effort on /v1/messages.
+schema = 2
+base_model = "anthropic/claude-sonnet-5"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.84
+cache = { read = 0.084, write = { "5m" = 1.05, "1h" = 1.68 } }
+
+[cost.text.output]
+price = 4.2

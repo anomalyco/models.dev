@@ -1,0 +1,16 @@
+# Pricing: UniRoute discounted channel (USD/MTok) from https://api.uniroute.app/api/v1/models/public-prices?category=text&scope=all_text (accessed 2026-11-25; snapshot sha256:ede774017f6000e9d83ca0d7a47a0585c84fba2cf5c48c3c59dd01ec5d15eb0e).
+# Standard channel rate on the same feed: $1.25 input / $10 output per MTok.
+schema = 2
+base_model = "google/gemini-2.5-pro"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, budget = { min = 128, max = 32_768 } }
+cache = { implicit = { min_tokens = 2_048 } }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 4
