@@ -11,6 +11,7 @@ base_model = "alibaba/qwen3.8-27b"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+cache = { implicit = true }
 
 [limit]
 context = 262_134
