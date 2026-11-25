@@ -2,7 +2,7 @@
 # API reference: https://lessstrict.com/docs
 # Effort: reasoning_effort = low|high|max on Chat Completions (effort_levels in the catalog; default_effort = low).
 # Reasoning comes back as reasoning_content. Cached input is billed at the catalog's cached_input_per_1m without cache markers in the request.
-# [limit] is what the host's catalog publishes for this API id (context_length, max_output_tokens).
+# [limit] is exactly what the host's catalog returns for this API id (context_length, max_output_tokens): the caps the host has set.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 LessStrict Fast"
@@ -16,7 +16,6 @@ cache = { implicit = true }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
-context = 1_000_000
 output = 393_000
 
 [cost.text.input]

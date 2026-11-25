@@ -1,8 +1,8 @@
 # Prices (USD per 1M tokens), limits and effort levels: https://lessstrict.com/v1/models (the host's public catalog API, accessed 2026-11-26).
 # API reference: https://lessstrict.com/docs
 # Effort: reasoning_effort = low|high|max on Chat Completions (effort_levels in the catalog; default_effort = low).
-# Reasoning comes back as reasoning_content. Cached input is billed at the catalog's cached_input_per_1m without cache markers in the request.
-# [limit] is what the host's catalog publishes for this API id (context_length, max_output_tokens).
+# Reasoning comes back as reasoning_content. The catalog prices cached input the same as input for this id, so no cache discount is listed.
+# [limit] is exactly what the host's catalog returns for this API id (context_length, max_output_tokens): the caps the host has set.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 name = "Qwen3.8 27B LessStrict"
@@ -10,7 +10,6 @@ description = "LessStrict's less restricted variant of Qwen3.8 27B, served by Le
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
-cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -21,7 +20,6 @@ output = 66_000
 
 [cost.text.input]
 price = 0.5
-cache = { read = 0.5 }
 
 [cost.text.output]
 price = 3.5

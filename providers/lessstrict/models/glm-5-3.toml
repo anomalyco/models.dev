@@ -3,13 +3,12 @@
 # Effort: reasoning_effort = low|high|max on Chat Completions (effort_levels in the catalog; default_effort = low).
 # Reasoning comes back as reasoning_content. Cached input is billed at the catalog's cached_input_per_1m without cache markers in the request.
 # Image input is added by the host (capabilities.vision in the catalog); the lab serves this model as text only.
-# [limit] is what the host's catalog publishes for this API id (context_length, max_output_tokens).
+# [limit] is exactly what the host's catalog returns for this API id (context_length, max_output_tokens): the caps the host has set.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
@@ -19,7 +18,6 @@ cache = { implicit = true }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [limit]
-context = 1_000_000
 output = 131_000
 
 [cost.text.input]
