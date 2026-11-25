@@ -1,25 +1,30 @@
-# Source: https://acutislabs.org/api/ (accessed 2026-11-24). Acutis Labs owns this semantic route and selects its
-# backend. The documented access model has no public per-token list price, so this entry intentionally has no cost.
+# Source: https://acutislabs.org/api/ (accessed 2026-11-24). Acutis Labs owns this zero-cost combo route and selects
+# verified free backends; it fails closed rather than using a metered fallback.
 schema = 2
 name = "Free Premium Coding (Combo)"
 description = "Text-only coding combo routed across available premium backends"
 family = "model-router"
 open_weights = false
 release_date = "2026-11-24"
-v2_only = true
-
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
+reasoning = { supported = true }
 temperature = true
 top_p = true
-top_k = false
+top_k = true
 
 [limit]
 context = 131_072
 input = 131_072
-output = 32_768
+output = 65_536
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
+reasoning = 0

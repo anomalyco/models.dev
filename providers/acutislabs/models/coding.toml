@@ -1,25 +1,30 @@
-# Source: https://acutislabs.org/api/ (accessed 2026-11-24). Acutis Labs owns this semantic route and selects its
-# backend. The documented access model has no public per-token list price, so this entry intentionally has no cost.
+# Source: https://acutislabs.org/api/ (accessed 2026-11-24). Acutis Labs owns this combo route and selects its backend.
 schema = 2
 name = "Coding (Combo)"
 description = "Quality-focused coding route for implementation, debugging, and tool use"
 family = "model-router"
 open_weights = false
 release_date = "2026-11-24"
-v2_only = true
-
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
+reasoning = { supported = true }
 temperature = true
 top_p = true
-top_k = false
+top_k = true
 
 [limit]
-context = 400_000
-input = 400_000
+context = 1_000_000
+input = 1_000_000
 output = 128_000
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20
+reasoning = 20
