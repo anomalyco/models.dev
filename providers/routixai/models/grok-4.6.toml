@@ -1,0 +1,20 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Plus or higher; prices are PAYG USD per million tokens.
+# Grok effort baseline: xAI and Concentrate.
+schema = 2
+base_model = "xai/grok-4.6"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 1.5

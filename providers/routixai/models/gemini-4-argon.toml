@@ -1,0 +1,20 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Pro or higher; prices are PAYG USD per million tokens.
+# Gemini Chat Completions effort baseline: Google, OpenRouter and Cloudflare AI Gateway.
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 2.5

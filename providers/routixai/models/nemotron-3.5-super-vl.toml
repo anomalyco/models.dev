@@ -1,0 +1,21 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Free or higher; prices are PAYG USD per million tokens.
+# NVIDIA Chat Completions (Nemotron 3.5 Super VL).
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0375
+cache = { read = 0.005 }
+
+[cost.text.output]
+price = 0.125

@@ -1,0 +1,20 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Go or higher; prices are PAYG USD per million tokens.
+# Tencent Chat Completions and Together AI; Tencent calls off `no_think`: https://cloud.tencent.com/document/product/1823/131208
+schema = 2
+base_model = "tencent/hy4"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.2085
+cache = { read = 0.0105 }
+
+[cost.text.output]
+price = 0.6255

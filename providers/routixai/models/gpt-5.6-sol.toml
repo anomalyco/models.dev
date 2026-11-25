@@ -1,0 +1,21 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Plus or higher; prices are PAYG USD per million tokens.
+# GPT Chat Completions effort baseline: OpenAI and OpenRouter.
+# Chat custom-tool formats are not advertised: RoutixAI documents function tools only, not text/Lark/regex custom tools.
+schema = 2
+base_model = "openai/gpt-5.6-sol"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 5

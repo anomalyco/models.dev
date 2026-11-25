@@ -1,0 +1,17 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Go or higher; prices are PAYG USD per million tokens.
+# DeepSeek Chat Completions: https://api-docs.deepseek.com/guides/thinking_mode; levels cross-checked against Model Studio and OpenRouter.
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.011 }
+
+[cost.text.output]
+price = 0.99
