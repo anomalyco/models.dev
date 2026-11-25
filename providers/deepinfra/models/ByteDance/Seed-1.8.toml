@@ -3,7 +3,8 @@
 # Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations).
 # Effort: reasoning_effort = none|low|medium|high; none disables reasoning (https://docs.deepinfra.com/chat/reasoning). Copied from
 #   this host's Seed-2.0-code, whose live probe showed reasoning_effort changing reasoning on Deep Infra (reasoning tokens 0 -> 175 / 0 -> 82).
-#   Not probed for Seed 1.8 itself: the Deep Infra account had no balance and Seed 1.8 isn't on OpenRouter.
+#   The catalog's missing can-disable-reasoning tag doesn't mean no control: Seed-2.0-code has the same tags (reasoning, no
+#   can-disable-reasoning; read 2026-11-24) and still went from reasoning to none. Not probed for Seed 1.8 itself: the Deep Infra account had no balance and Seed 1.8 isn't on OpenRouter.
 schema = 2
 base_model = "bytedance-seed/seed-1-8"
 
@@ -12,7 +13,6 @@ input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
