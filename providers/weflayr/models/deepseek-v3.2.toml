@@ -1,0 +1,16 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (azure, GLOBAL).
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+output = 8_000
+
+[cost.text.input]
+price = 0.58
+
+[cost.text.output]
+price = 1.68

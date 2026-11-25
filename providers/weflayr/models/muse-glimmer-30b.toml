@@ -1,0 +1,15 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (together, GLOBAL).
+schema = 2
+base_model = "meta/muse-glimmer-30b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.35
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.5

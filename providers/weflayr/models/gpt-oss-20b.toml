@@ -1,0 +1,17 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (bedrock, us-east-1).
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[limit]
+context = 128_000
+output = 8_192
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.3

@@ -1,0 +1,14 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (openai, GLOBAL).
+schema = 2
+base_model = "openai/gpt-4o-mini"
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 0.6
