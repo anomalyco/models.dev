@@ -1,6 +1,7 @@
 # Toggle: thinking.type = adaptive|disabled. Models API (GET https://api.anthropic.com/v1/models/claude-opus-5, 2026-11-23): capabilities.thinking.types.disabled.supported = true; thinking is "Adaptive", not always on: https://platform.claude.com/docs/en/models/opus-5/overview
 # tools.strict/search: strict tool use (models: https://platform.claude.com/docs/en/build-with-claude/structured-outputs) and the tool search tool on the Messages API: https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool#model-compatibility
 # tools.choice: auto/any/tool/none; Opus 5.5, Sonnet 5.5 and Fable 5.1 reject forced tool use (any/tool): https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use
+# Toggle: thinking.type = adaptive|disabled (adaptive only, on by default); "disabled" is accepted at effort high or below, xhigh/max reject it: https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting
 # Per-turn effort needs the mid-conversation-output-config-2026-07-01 header from the first turn:
 # toggling it mid-session splits the cache on this model.
 # tools.updates: tool_addition/tool_removal blocks (inline-tools-2026-09-15) keep the cache.
