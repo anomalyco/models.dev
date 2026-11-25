@@ -1,8 +1,8 @@
 # Price and context: https://api.deepinfra.com/models/list?type=text-generation (inclusionAI/Ling-3.0-flash-VL, read 2026-11-24): $0.06 input, $0.18 output per 1M tokens,
 #   cached input at 0.2x ($0.012); 131,072-token context (the lab's 262,144 isn't served here); tags tools, structured-output,
 #   multimodal, input-video.
-# Modalities are inherited from the lab file: the sync keeps image input from the catalog's multimodal tag but drops a narrower
-#   MIME list on base_model files (Deep Infra documents jpg, png, webp: https://docs.deepinfra.com/chat/vision, Limitations).
+# Image formats: jpg, png, webp (https://docs.deepinfra.com/chat/vision, Limitations). Video: catalog tag input-video; Deep Infra
+#   documents no video formats.
 # Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
 #   Controls follow this host's Ling-3.0-flash (binary lab thinking switch, no graded effort).
 # Reasoning probe (live 2026-11-24, OpenRouter pinned to Deep Infra: provider.only = ["deepinfra"], allow_fallbacks = false;
@@ -10,6 +10,10 @@
 #   reasoning tokens: default 699, enabled=false 0, none 0; minimal..xhigh 451-652 with no ordering, so no effort list.
 schema = 2
 base_model = "inclusionai/ling-3.0-flash-vl"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "video"]
+output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true }

@@ -4133,6 +4133,27 @@ test("DeepInfra preserves live modalities for new base models", () => {
   expect(same).not.toHaveProperty("modalities");
 });
 
+test("DeepInfra keeps authored modalities that match the lab's kinds", () => {
+  // The file narrows the lab's image formats to Deep Infra's jpg/png/webp; in v1 terms that equals the lab file.
+  const existing = { base_model: "bytedance-seed/seed-1-8", modalities: { input: ["text", "image"], output: ["text"] } };
+  const model = buildDeepInfraModel(
+    deepInfraModel("ByteDance/Seed-1.8", ["multimodal"]),
+    existing,
+    "bytedance-seed/seed-1-8",
+    existing,
+  );
+  expect(model).toMatchObject({ modalities: { input: ["text", "image"], output: ["text"] } });
+
+  // Without authored modalities the lab's are inherited.
+  const inherited = buildDeepInfraModel(
+    deepInfraModel("ByteDance/Seed-1.8", ["multimodal"]),
+    { base_model: "bytedance-seed/seed-1-8" },
+    "bytedance-seed/seed-1-8",
+    { base_model: "bytedance-seed/seed-1-8" },
+  );
+  expect(inherited).not.toHaveProperty("modalities");
+});
+
 test("DeepInfra excludes incorrectly tagged Gemma 4 audio input", () => {
   const model = buildDeepInfraModel(
     deepInfraModel("google/gemma-4-31B-it", ["multimodal", "input-audio", "input-video"]),
