@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-25):
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-5-live-translate (model ID gemini-3.5-live-translate-preview, Preview, Live API; global only; Standard PayGo only)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (Gemini 3.5 Live Translate: $3.50 audio input, $21.00 audio output per 1M tokens; billed on audio tokens only,
+#   so the optional text transcripts carry no separate price)
+# The model page lists system instructions, structured output and context caching as not supported, and gives no token
+# limits, so limits come from the base model. v2_only: realtime models stay out of v1 (AGENTS.md).
+# Live API WebSocket: wss://{HOST}/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/live-api/start-manage-session).
+# The model page lists the global endpoint only, so the host is pinned to aiplatform.googleapis.com.
+# No @opencode/ai entry point speaks the Live API, so opencodeai = "none".
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.5-live-translate-preview"
+status = "beta"
+
+[capabilities]
+structured_output = false
+cache = false
+
+[api.bidi-generate-content]
+base_url = "wss://aiplatform.googleapis.com/ws/google.cloud.aiplatform.v1.LlmBidiService"
+path = "/BidiGenerateContent"
+sdk = { opencodeai = "none" }
+
+[cost.audio.input]
+price = 3.5
+
+[cost.audio.output]
+price = 21
