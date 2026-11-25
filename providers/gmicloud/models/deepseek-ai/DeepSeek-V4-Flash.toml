@@ -1,5 +1,7 @@
-# GMI Cloud model card (list prices, checked 2026-11-26):
-# https://console.gmicloud.ai/user-console/ie/model-hub/llm/16e9ccd2-84e0-43b4-9d9a-5cb31b3341a2
+# GMI Cloud model card, accessed 2026-11-26 (USD per million tokens):
+# https://console.gmicloud.ai/model/llm/deepseek-v4-flash/16e9ccd2-84e0-43b4-9d9a-5cb31b3341a2
+# The advertised 35% discount has no published end date. List rates are
+# $0.14 input, $0.028 cached input, and $0.28 output.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
@@ -14,8 +16,8 @@ context = 1_048_575
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.14
-cache = { read = 0.028 }
+price = 0.091
+cache = { read = 0.0182 }
 
 [cost.text.output]
-price = 0.28
+price = 0.182
