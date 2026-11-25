@@ -1,0 +1,20 @@
+# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-20.
+# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
+# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
+# Docs: https://docs.modellix.ai/llm/api/api
+# Upstream model id is qwen4-max, not the preview id (backend/deploy/litellm/README.md).
+# Alibaba Cloud documents low, high, and xhigh for reasoning_effort in Chat Completions.
+# https://www.alibabacloud.com/help/en/model-studio/qwen4-max#reasoning-effort
+# The Modellix Alibaba Cloud deployment lists reasoning_effort as a supported parameter.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, write = 1.875 }
+
+[cost.text.output]
+price = 4.5

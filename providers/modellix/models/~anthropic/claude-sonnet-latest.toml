@@ -1,0 +1,19 @@
+# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
+# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
+# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
+# Docs: https://docs.modellix.ai/llm/api/api
+# Chat Completions field: reasoning_effort (https://docs.modellix.ai/llm/api/api). Levels were not probed on Modellix.
+# Latest alias ~anthropic/claude-sonnet-latest currently routes to anthropic/claude-sonnet-5.5. Price and limits follow that target.
+# Catalog publishes the Modellix customer price. The public list price is higher on at least one component.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.09, write = 2.25 }
+
+[cost.text.output]
+price = 9

@@ -1,0 +1,23 @@
+# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
+# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
+# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
+# Docs: https://docs.modellix.ai/llm/api/api
+# modalities.output is repeated because AuthoredModelV2 requires both keys when the table is present. The value matches the lab.
+# No Modellix Chat Completions evidence for a caller control. Lab toggle/budget fields were removed; reasoning stays supported with no published control.
+# Input modalities drop lab types the public pricing catalog does not list: video/mp4, video/x-msvideo, video/x-matroska, video/quicktime, video/x-flv, video/x-ms-wmv.
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
+
+[capabilities]
+reasoning = { supported = true }
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.32
+cache = { read = 0.064, write = 0.4 }
+
+[cost.text.output]
+price = 1.28

@@ -1,0 +1,27 @@
+# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-20.
+# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
+# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
+# Docs: https://docs.modellix.ai/llm/api/api
+# Upstream id kimi-k2.7-code on the Moonshot and tencent-intl deployments (docs/llm-data.md; backend/deploy/litellm/tag-routing.md).
+# Thinking is always on. providers/moonshotai/models/kimi-k2.7-code.toml sets reasoning supported with no caller control.
+# Published context is 262000. The lab and Moonshot deployment report 262144, so output is clamped to the published window.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[limit]
+context = 262_000
+output = 262_000
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19, write = 0 }
+
+[cost.text.output]
+price = 4

@@ -1,0 +1,18 @@
+# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-20.
+# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
+# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
+# Docs: https://docs.modellix.ai/llm/api/api
+# Chat Completions field: reasoning_effort = none|high. providers/kilo/models/tencent/hy4-flash.toml uses the same levels as stable Hy4.
+# Not probed on Modellix. Public price matches that file: 0.07 / 0.281 / 0.003.
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.003, write = 0 }
+
+[cost.text.output]
+price = 0.281

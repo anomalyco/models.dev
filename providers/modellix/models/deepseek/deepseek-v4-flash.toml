@@ -1,0 +1,23 @@
+# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
+# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
+# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
+# Docs: https://docs.modellix.ai/llm/api/api
+# Routing is not one snapshot. docs/llm-data.md shows deepseek/deepseek-v4-flash, anthropic/deepseek-v4-flash, and anthropic/deepseek-v4-flash-202605. base_model stays the undated lab id.
+# The Modellix deployments report different support for reasoning_effort.
+# Catalog publishes the Modellix customer price. The public list price is higher on at least one component.
+# Host context 1050000 differs from the lab context 1000000. The public catalog value is used.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_050_000
+
+[cost.text.input]
+price = 0.396
+cache = { read = 0.0126, write = 0 }
+
+[cost.text.output]
+price = 1.188

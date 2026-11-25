@@ -1,0 +1,18 @@
+# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
+# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
+# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
+# Docs: https://docs.modellix.ai/llm/api/api
+# No Modellix Chat Completions evidence for a caller control. Lab toggle/budget fields were removed; reasoning stays supported with no published control.
+# Catalog publishes the Modellix customer price. The public list price is higher on at least one component.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.09, write = 1.125 }
+
+[cost.text.output]
+price = 4.5

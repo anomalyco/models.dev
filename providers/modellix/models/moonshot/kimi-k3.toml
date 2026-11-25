@@ -1,0 +1,28 @@
+# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
+# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
+# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
+# Docs: https://docs.modellix.ai/llm/api/api
+# modalities.output is repeated because AuthoredModelV2 requires both keys when the table is present. The value matches the lab.
+# Chat Completions reasoning_effort accepts low, high, and max.
+# Upstream parameter reference: https://www-sg.tencentcloud.com/ind/document/product/1300/80635
+# Host context 1050000 differs from the lab context 1048576. The public catalog value is used.
+# Input modalities drop lab types the public pricing catalog does not list: video/mp4, video/mpeg, video/mov, video/avi, video/x-flv, video/mpg, video/webm, video/wmv, video/3gpp.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[limit]
+context = 1_050_000
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 0 }
+
+[cost.text.output]
+price = 15

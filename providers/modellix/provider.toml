@@ -1,0 +1,9 @@
+# First catalog slice is OpenAI-compatible Chat Completions only.
+# Auth is a Bearer token. Callers supply their own Modellix API key.
+# Docs: https://docs.modellix.ai/llm/api/api
+name = "Modellix"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["MODELLIX_API_KEY"]
+api = "https://llm.modellix.ai/v1"
+doc = "https://docs.modellix.ai/llm/api/api"
