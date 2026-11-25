@@ -1,0 +1,42 @@
+# Raw DeepSeek V4.1 Flash, sold on the Claudinio DeepSeek plans (DeepSeek Pro and
+# DeepSeek Ultra). Served without the Claudinio system prompt and without routing,
+# on the same base URL and key as the other Claudinio models.
+# A DeepSeek-plan key is always served this model: a request naming `claudinio`,
+# `claudius` or any other alias from such a key is answered by DeepSeek V4.1 Flash
+# and billed at the prices below. `claudinio` and `claudius` keep their own entries
+# for the other plans.
+# Pricing: DeepSeek's own table at 1.00x (https://api-docs.deepseek.com/quick_start/pricing):
+#   $0.15 input / $0.003 cache read / $0.60 output per 1M off-peak, 2x at peak.
+#   Peak is 01:00-04:00 and 06:00-10:00 UTC, Monday-Friday; a request pays the
+#   window it starts in. Chinese public holidays are NOT excluded here, unlike
+#   DeepSeek's own entry. https://claudin.io (accessed 2026-11-25)
+# Input: text and images; audio, video and other files are refused.
+# Effort: reasoning_effort is passed through to the upstream (low|high|max).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash"
+release_date = "2026-11-23"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6
+reasoning = 0.6
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
