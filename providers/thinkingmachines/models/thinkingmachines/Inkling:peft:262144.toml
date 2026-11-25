@@ -1,17 +1,17 @@
 # Toggle: thinking.type = disabled
 # Effort: output_config.effort = low|medium|high|xhigh|max
-# Tinker Anthropic-compatible API (accessed 2026-10-21):
+# Tinker Anthropic-compatible API (accessed 2026-11-24):
 #   https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/
 # - Effort: output_config.effort = low|medium|high|xhigh|max ("max" behaves the same as "xhigh"); a default level is
 #   applied when omitted. Toggle: thinking.type = disabled forces reasoning off. thinking.budget_tokens is accepted but
 #   not applied.
-# - tool_choice: auto, any, a named tool, none. Image input via base64 or URL sources; audio content blocks are not part
+# - tool_choice: auto, any, a named tool, none. Image input via base64 sources only (max 2 MiB); audio content blocks are not part
 #   of the Messages API, so input is text plus the lab's image types (PNG, JPEG).
 # - "Prompt caching: cache_control is ignored" and the cache usage fields are always null, so there is no explicit
 #   cache; the pricing page bills prefill tokens "that hit the prompt cache" at 80% off.
 # Pricing (https://tinker-docs.thinkingmachines.ai/tinker/models/ and its machine-readable models.json, accessed
-#   2026-10-21): prefill / cached prefill / sample per MTok under a "Limited-time 50% discount" with no end date;
-#   original prices $3.74 / $0.748 / $9.36. ":peft:" models cost more for training only; "prefill and sampling prices
+#   2026-11-25): prefill / cached prefill / sample per MTok are list prices (the earlier "Limited-time 50% discount"
+#   label is gone and the prices stayed). ":peft:" models cost more for training only; "prefill and sampling prices
 #   are the same as the standard context."
 # APIs on this host: Anthropic Messages (/v1/messages, /v1/messages/count_tokens); an OpenAI-compatible API for
 #   tinker:// sampler checkpoints; serverless beta IDs (...:sampling-nvfp4) with their own prices are not listed here.

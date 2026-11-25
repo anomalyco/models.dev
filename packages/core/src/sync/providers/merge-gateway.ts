@@ -195,7 +195,8 @@ export function mergeGatewayReasoningOptions(
     (controls.includes("reasoning.effort") || controls.includes("reasoning_effort"))
     && effortValues.length > 0
   ) {
-    options.push({ type: "effort" as const, values: sortEfforts(effortValues) });
+    // Unknown levels stay and fail validation rather than being dropped silently.
+    options.push({ type: "effort" as const, values: sortEfforts(effortValues) as EffortLevel[] });
   }
 
   if (controls.includes("thinking.budget_tokens")) {
@@ -331,6 +332,7 @@ export function buildMergeGatewayModel(
     ?? releaseDate;
   return {
     ...authoritative,
+    name: model.display_name,
     description: existing.description ?? describeModel({
       id: model.model,
       name: model.display_name,
@@ -399,6 +401,7 @@ function sortEfforts(values: string[]) {
 }
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";
+type EffortLevel = Extract<NonNullable<SyncedFullModel["reasoning_options"]>[number], { type: "effort" }>["values"][number];
 
 function modalities(values: string[]): Modality[] {
   const allowed = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);

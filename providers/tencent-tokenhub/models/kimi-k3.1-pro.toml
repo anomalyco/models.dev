@@ -1,0 +1,27 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 2, output 10, cache hit 0.2, cache write 5m 2, 1h 4).
+#   China list: https://cloud.tencent.com/document/product/1823/130055
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17)
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# API: https://cloud.tencent.com/document/product/1823/132232
+# Effort: reasoning_effort = low|high|max (default max), always thinks. Tencent's reasoning guide
+#   (https://cloud.tencent.com/document/product/1823/131208) doesn't list K3.1 Pro yet; controls follow
+#   the Moonshot entry for this model.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = { "5m" = 2, "1h" = 4 } }
+
+[cost.text.output]
+price = 10

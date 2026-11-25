@@ -2,6 +2,7 @@
 # with provider-specific fields (cost, reasoning_options, status) stripped.
 # Tools: Command A supports tool use (https://docs.cohere.com/docs/command-a: "Command A excels at tool use";
 #   Cohere's GET /v1/models lists the `tools` feature for command-a-03-2025).
+# License: https://huggingface.co/CohereLabs/c4ai-command-a-03-2025 (model card metadata: license: cc-by-nc-4.0).
 schema = 2
 name = "Command A"
 description = "Cohere command model for multilingual enterprise agents, tools, and chat"
@@ -9,6 +10,7 @@ family = "command-a"
 open_weights = true
 knowledge = "2024-08-31"
 release_date = "2025-03-13"
+license = "CC-BY-NC-4.0"
 
 [modalities]
 input = ["text"]
@@ -24,3 +26,7 @@ top_k = true
 [limit]
 context = 256_000
 output = 8_192
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/CohereLabs/c4ai-command-a-03-2025"

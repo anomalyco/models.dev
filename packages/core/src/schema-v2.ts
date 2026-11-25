@@ -107,13 +107,20 @@ export type ToolFreeformV2 = z.infer<typeof ToolFreeformV2>;
 // on each API (`api[<protocol>].capabilities.tools`), not on the model.
 // `freeform` lists the formats an API accepts for custom tools; leaving it out
 // means the API has no free-form tools.
+// Tool changes an API accepts mid-conversation, as a message in the history,
+// without changing the leading tool list. `add` declares a tool not declared
+// before, `remove` withdraws a declared tool, and `replace` declares a tool under
+// a name declared before (a redefinition, or re-adding a removed tool).
+export const ToolUpdateV2 = z.enum(["add", "remove", "replace"]);
+export type ToolUpdateV2 = z.infer<typeof ToolUpdateV2>;
+
 export const ToolDetailsV2 = z
   .object({
     strict: z.boolean().optional(),
     choice: z.array(ToolChoiceV2).optional(),
     search: z.boolean().optional(),
     freeform: z.array(ToolFreeformV2).optional(),
-    updates: z.boolean().optional(),
+    updates: z.array(ToolUpdateV2).optional(),
   })
   .strict();
 
@@ -121,7 +128,8 @@ export type ToolDetailsV2 = z.infer<typeof ToolDetailsV2>;
 
 // A file's top-level tool details hold on every API the model lists; an
 // `[api.<protocol>]` table can replace any of them for that API. Files may leave
-// `updates` out, which means false.
+// `updates` out, which means none (callers fold every change into the leading
+// tool list).
 export const AuthoredToolsSupportV2 = z.discriminatedUnion("supported", [
   z.object({ supported: z.literal(false) }).strict(),
   z.object({ supported: z.literal(true), ...ToolDetailsV2.shape }).strict(),
@@ -393,9 +401,10 @@ export const AuthoredApiCapabilitiesV2 = z
 export type AuthoredApiCapabilitiesV2 = z.infer<typeof AuthoredApiCapabilitiesV2>;
 
 // `tools` is set on every API of a model that supports tools: the model's
-// top-level tool details merged with the API table's, with `updates` always stated.
+// top-level tool details merged with the API table's, with `updates` always stated
+// (`[]` when the API accepts no tool changes).
 export const ApiCapabilitiesV2 = AuthoredApiCapabilitiesV2.extend({
-  tools: ToolDetailsV2.extend({ updates: z.boolean() }).strict().optional(),
+  tools: ToolDetailsV2.extend({ updates: z.array(ToolUpdateV2) }).strict().optional(),
 }).strict();
 
 export type ApiCapabilitiesV2 = z.infer<typeof ApiCapabilitiesV2>;
@@ -432,6 +441,8 @@ export const ApiProtocolV2Values = [
   "cohere-chat",
   "systemone",
   "decisions",
+  // Gemini Decisions API: `POST /v1beta/decisions` (`input` content blocks, `questions` map).
+  "gemini-decisions",
   "evaluate",
   "workers-ai-run",
   "images",
@@ -450,6 +461,12 @@ export const ApiProtocolV2Values = [
   // Vertex AI `publishers/google/models/{model}:predict` (`instances` in, `predictions` out).
   "predict",
   "contextualized-embeddings",
+  // Amazon Bedrock InvokeModel: `POST /model/{modelId}/invoke` with the model's own request body.
+  "invoke-model",
+  // Amazon Bedrock StartAsyncInvoke: `POST /async-invoke` (`modelInput` in, results written to S3).
+  "start-async-invoke",
+  // Amazon Bedrock InvokeModelWithBidirectionalStream: `POST /model/{modelId}/invoke-with-bidirectional-stream` (HTTP/2 event stream).
+  "invoke-model-with-bidirectional-stream",
   "fim",
   "moderations",
   "ocr",
@@ -769,6 +786,10 @@ export const ModelV2 = z
     limit: LimitV2.optional(),
     cost: CostV2.optional(),
     api: ApiV2,
+    // The API we recommend for this model when the client supports it: the
+    // file's `recommended_api`, else the first API. It's an opinion, not the
+    // default; `api`'s order still says which API to fall back to.
+    recommended_api: ApiProtocolV2,
     experimental: ExperimentalV2.optional(),
     metadata: z.record(JsonValue).optional(),
   })
@@ -822,15 +843,19 @@ export type LabModelV2 = z.infer<typeof LabModelV2>;
 // on the website's lab pages. Not part of the v1 or v2 API output.
 export const LabMetadataV2 = z
   .object({
-    description: z.string().min(1, "Lab description cannot be empty"),
+    name: z.string().min(1, "Lab name cannot be empty").optional(),
+    description: z.string().min(1, "Lab description cannot be empty").optional(),
   })
-  .strict();
+  .strict()
+  .refine((lab) => lab.name !== undefined || lab.description !== undefined, {
+    message: "Lab metadata needs a name or a description",
+  });
 
 export type LabMetadataV2 = z.infer<typeof LabMetadataV2>;
 
 // `sdk.opencodeai` (and provider.toml's `opencodeai`) is an `@opencode/ai` entry
 // point: `@opencode/ai/providers/<path>` for a provider's chat, responses,
-// messages, images or decisions model (`@opencode/ai/providers/openai/chat`,
+// messages, images, videos or decisions model (`@opencode/ai/providers/openai/chat`,
 // `@opencode/ai/providers/openrouter/images`; System One decision hosts
 // without their own package use `@opencode/ai/providers/typesafe-ai/decisions`), or
 // `@opencode/ai/protocols/<name>` for an API with no provider entry point, such
@@ -928,10 +953,26 @@ export const AuthoredModelV2 = z
     limit: LimitV2.optional(),
     cost: CostV2.optional(),
     api: AuthoredApisV2.optional(),
+    // v2 only: the API we recommend when the client supports it. Must name one
+    // of the file's own `[api.<protocol>]` tables; the v2 API publishes the
+    // first one when it's left out.
+    recommended_api: ApiProtocolV2.optional(),
     experimental: ExperimentalV2.optional(),
     metadata: z.record(JsonValue).optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((model, ctx) => {
+    if (model.recommended_api === undefined || model.api?.[model.recommended_api] !== undefined) return;
+    const tables = Object.keys(model.api ?? {});
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["recommended_api"],
+      message:
+        tables.length === 0
+          ? `recommended_api = "${model.recommended_api}" needs an [api.${model.recommended_api}] table, but the model has no [api.*] tables`
+          : `recommended_api = "${model.recommended_api}" must name one of the model's [api.*] tables: ${tables.join(", ")}`,
+    });
+  });
 
 export type AuthoredModelV2 = z.infer<typeof AuthoredModelV2>;
 

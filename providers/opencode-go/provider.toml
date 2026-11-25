@@ -5,7 +5,8 @@ opencodeai = "@opencode/ai/providers/openai-compatible"
 # Every model sets its own `provider.api` for its protocol (accessed 2026-10-15):
 # the `/inference/go/...` equivalents of the standard paths, billed against the Go
 # subscription. `api` here is required by the schema for
-# `@ai-sdk/openai-compatible`. Requests require `x-opencode-session`.
+# `@ai-sdk/openai-compatible`. Requests require `x-opencode-session`, except decision and
+# embeddings requests.
 # https://opencode.ai/v2/docs/console/go/
 api = "https://opencode.ai/inference/go/openai/v1"
 doc = "https://opencode.ai/v2/docs/console/go/"

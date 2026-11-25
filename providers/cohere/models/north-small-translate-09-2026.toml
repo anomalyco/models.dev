@@ -1,5 +1,5 @@
-# Cohere's /v1/models and /v2/chat use north-small-translate-09-2026 (verified October 1, 2026).
-# The public docs call the same model north-small-translate-1-0, but that ID returned 404.
+# Both north-small-translate-09-2026 and north-small-translate-1.0 answer on /v1/models/<id> and /v2/chat (live 2026-11-24);
+# north-small-translate-1.0 is the documented ID (https://docs.cohere.com/docs/models) and the one GET /v1/models lists.
 # The live catalog reports a 32,768-token context; the public model docs say 16K.
 # https://docs.cohere.com/docs/north-small-translate-1.0
 # The hosted model is free until rate limits are reached on trial and production keys.

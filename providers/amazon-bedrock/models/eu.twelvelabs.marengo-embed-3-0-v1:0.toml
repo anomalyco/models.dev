@@ -1,0 +1,20 @@
+# Model card: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-twelvelabs-marengo-embed-3-0.html
+# Request formats and per-API support: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-marengo-3.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/eu-west-1/index.json (Marengo Embed 3.0):
+#   EU_InputImageCount $0.0001 per image. Text (EU_inputTextRequestCount) is $0.00007 per request, which has no cost unit, so it is left out.
+# @ai-sdk/amazon-bedrock's embedding model has no Marengo request format, and @opencode/ai's Bedrock provider only routes Converse.
+# APIs: inference profiles only take InvokeModel, which embeds text and images; StartAsyncInvoke (video, audio) needs the base model.
+schema = 2
+v2_only = true
+base_model = "twelvelabs/marengo3.0"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["embedding"]
+
+[api.invoke-model]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.image.input]
+unit = "image"
+price = 0.0001

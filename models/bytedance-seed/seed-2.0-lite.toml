@@ -6,12 +6,20 @@
 #   https://www.volcengine.com/docs/82379/1362931
 # Video formats: Volcengine Ark video understanding, 视频格式说明 table (MP4 video/mp4, AVI video/x-msvideo,
 #   MOV video/quicktime): https://www.volcengine.com/docs/82379/1895586
+# Audio formats: Volcengine Ark audio understanding, 音频格式说明, 纯音频格式
+#   (mp3 audio/mpeg, wav audio/wav, aac audio/aac, m4a audio/x-m4a):
+#   https://www.volcengine.com/docs/82379/1362907; doubao-seed-2-0-lite-260428 is listed under
+#   音频理解能力 in https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24).
 # Sampling: the Ark Chat API takes temperature and top_p and has no top_k: https://www.volcengine.com/docs/82379/1494384
 #   doubao-seed-2-0-lite-260215 pins temperature 1 and top_p 0.95; the current 260428 snapshot takes both.
+# Limits: 256K context, 224K input, 128K output (最大回答) per the model list
+#   (https://ark.volcengine.com/region:cn-beijing/docs/model-list.md, accessed 2026-11-25). Ark's 128K output is
+#   131_072: max_tokens=131072 is accepted and 132000 rejected on doubao-seed-2-0-lite/mini-260428 (probed 2026-08-27,
+#   see providers/volcengine). Context and input stay in thousands; no live check bounds them.
 schema = 2
 name = "Seed 2.0 Lite"
 description = "Cost-efficient ByteDance Seed 2.0 model for production chat, analysis, and structured generation"
-family = "seed"
+family = "seed-lite"
 open_weights = false
 release_date = "2026-02-14"
 
@@ -29,6 +37,10 @@ input = [
   "image/sgi",
   "image/jp2",
   "image/heic",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/aac",
+  "audio/x-m4a",
   "video/mp4",
   "video/x-msvideo",
   "video/quicktime",
@@ -44,4 +56,5 @@ top_k = false
 
 [limit]
 context = 256_000
-output = 32_000
+input = 224_000
+output = 131_072

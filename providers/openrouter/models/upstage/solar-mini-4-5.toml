@@ -1,0 +1,35 @@
+schema = 2
+name = "Solar Mini 4.5 (Preview)"
+description = "Efficient model for low-latency assistance, extraction, and routine automation"
+family = "solar-mini"
+open_weights = false
+release_date = "2026-11-24"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 524_288
+output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.01
+cache = { read = 0.001 }
+
+[cost.text.output]
+price = 0.04

@@ -28,6 +28,12 @@ jobs:
         )
       )
     runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: read
+      id-token: write
     env:
       GH_REPO: ${{ github.repository }}
       FAILED_RUN_ID: ${{ github.event.workflow_run.id }}
@@ -100,6 +106,22 @@ jobs:
           ref: dev
           persist-credentials: false
 
+      - name: Configure AWS credentials
+        if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::604439173067:role/github/models.dev-release
+          role-session-name: models.dev-ci-fixer-${{ github.run_id }}
+          aws-region: us-east-1
+
+      - name: Fetch secrets
+        if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
+        uses: aws-actions/aws-secretsmanager-get-secrets@2297f9a879480a9e3af9b293ed15c70caf8e1c88 # v3.0.2
+        with:
+          secret-ids: |
+            OPENCODE_API_KEY,models.dev/release/OPENCODE_API_KEY
+          parse-json-secrets: false
+
       - name: Install opencode
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
         run: curl -fsSL https://opencode.ai/install | bash -s -- --version 1.19.4
@@ -128,7 +150,7 @@ jobs:
       - name: Run CI fixer
         if: steps.budget.outputs.run == 'true' && steps.budget-cache.outputs.cache-hit != 'true'
         env:
-          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_API_KEY: ${{ env.OPENCODE_API_KEY }}
           OPENCODE_PERMISSION: '{"bash":"deny"}'
           OPENCODE_CONFIG_CONTENT: '{"snapshot":false}'
         run: |
@@ -188,17 +210,36 @@ jobs:
     if: needs.fix.outputs.changed == 'true'
     runs-on: ubuntu-latest
     environment: automation
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: read
+      id-token: write
     env:
       GH_REPO: ${{ github.repository }}
       FAILED_RUN_URL: ${{ github.event.workflow_run.html_url }}
 
     steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::604439173067:role/github/models.dev-automation
+          role-session-name: models.dev-automation-${{ github.run_id }}
+          aws-region: us-east-1
+
+      - name: Fetch secrets
+        uses: aws-actions/aws-secretsmanager-get-secrets@2297f9a879480a9e3af9b293ed15c70caf8e1c88 # v3.0.2
+        with:
+          secret-ids: |
+            AUTOMATION_APP_PRIVATE_KEY,models.dev/automation/AUTOMATION_APP_PRIVATE_KEY
+          parse-json-secrets: false
+
       - name: Create app token
         id: app
         uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349 # v2.2.2
         with:
           app-id: ${{ vars.AUTOMATION_APP_ID }}
-          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          private-key: ${{ env.AUTOMATION_APP_PRIVATE_KEY }}
           repositories: models.dev
           permission-contents: write
           permission-issues: write

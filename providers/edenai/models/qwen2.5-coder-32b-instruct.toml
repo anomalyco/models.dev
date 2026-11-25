@@ -1,0 +1,15 @@
+schema = 2
+base_model = "alibaba/qwen2.5-coder-32b-instruct"
+
+[capabilities]
+tools = { supported = false }
+structured_output = true
+
+[limit]
+context = 32_768
+
+[cost.text.input]
+price = 0.66
+
+[cost.text.output]
+price = 1

@@ -1,11 +1,15 @@
+# Model: https://docs.mistral.ai/models/mistral-large-4 (released 2026-10-05; weights linked under the Mistral Ecosystem
+#   Open Weight License, accessed 2026-11-24).
+# Weights: https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B (public, not gated).
 # Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
 # Sampling: temperature and top_p only; Mistral's chat API has no top_k (https://docs.mistral.ai/api/endpoint/chat; 400 "top_k sampling is not enabled for this model", 2026-10-19)
 schema = 2
 name = "Mistral Large 4"
 description = "Mistral's 1T-parameter multimodal MoE for reasoning, coding, and agentic work"
 family = "mistral-large"
-open_weights = false
-release_date = "2026-10-06"
+open_weights = true
+release_date = "2026-10-05"
+license = "Mistral Ecosystem Open Weight License"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
@@ -21,3 +25,7 @@ top_k = false
 [limit]
 context = 1_048_576
 output = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B"

@@ -1,0 +1,20 @@
+# Availability: gpt-image-1-mini (2025-10-06) is GA, retires 2027-04-07:
+#   https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule#azure-openai (accessed 2026-11-25)
+# Image prices: Azure OpenAI Media product, global meters "gpt img 1 mini inp txt" 0.002/1K, "inp cchd txt" 0.0002/1K,
+#   "inp img" 0.0025/1K, "inp cchd img" 0.00025/1K, "out img" 0.008/1K: https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure OpenAI Media' (accessed 2026-11-25)
+schema = 2
+base_model = "openai/gpt-image-1-mini"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/azure/images" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.image.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.image.output]
+price = 8

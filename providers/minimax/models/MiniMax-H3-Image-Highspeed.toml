@@ -1,0 +1,22 @@
+# Sources (accessed 2026-11-12):
+# - API: POST https://api.minimax.io/v1/images/generations and POST https://api.minimax.io/v1/images/edits
+#   (https://platform.minimax.io/docs/guides/image-generation)
+# - Pricing: https://platform.minimax.io/docs/pricing/overview#models/image, USD per 1M tokens:
+#   text input $2.30, image input $3.00, image output $7.60 (Highspeed tier)
+# Not modeled: launch offer of 50% off the whole request for outputs of at least 16,600,000 pixels, ending 2026-11-17 16:00 UTC.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3-Image-Highspeed"
+
+[api.images]
+base_url = "https://api.minimax.io/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.text.input]
+price = 2.3
+
+[cost.image.input]
+price = 3
+
+[cost.image.output]
+price = 7.6

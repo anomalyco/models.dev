@@ -8,6 +8,7 @@ schema = 2
 base_model = "tencent/hy4-preview"
 name = "Hy4 Preview"
 description = "Preview model for early access evaluation, prototyping, and compatibility testing"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true }
@@ -17,7 +18,7 @@ cache = { implicit = true }
 prompt_cache_key = true
 
 [limit]
-context = 1_048_576
+output = 64_000
 
 [api.chat-completions]
 

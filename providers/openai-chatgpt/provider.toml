@@ -1,0 +1,17 @@
+# ChatGPT plans (Plus, Pro, Business, ...) through Sign in with ChatGPT: apps that sign users in with their ChatGPT
+# account and send eligible Responses API requests to https://api.openai.com/v1 with the OAuth access token, billed to
+# the plan instead of per token (https://developers.openai.com/siwc/token-sharing-open-source).
+# Endpoint: POST https://api.openai.com/v1/responses (store: false, stream: true); model catalog GET
+# https://api.openai.com/v1/models with the same token (authenticated, per account)
+# (https://developers.openai.com/siwc/token-sharing-open-source/models-and-inference).
+# Not the Codex backend: that is openai-codex. The two routes serve different model lists.
+# env: there is no API key; the client holds the ChatGPT OAuth token. The name below is a placeholder because a
+# provider needs at least one entry.
+# opencodeai: the OpenAI Responses entry point, as `openai` uses. Signing in and sending the OAuth token is the
+# client's job.
+name = "OpenAI (Sign in with ChatGPT)"
+env = ["CHATGPT_ACCESS_TOKEN"]
+npm = "@ai-sdk/openai"
+opencodeai = "@opencode/ai/providers/openai/responses"
+doc = "https://developers.openai.com/siwc/token-sharing-open-source"
+api = "https://api.openai.com/v1"

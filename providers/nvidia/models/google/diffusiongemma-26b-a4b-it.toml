@@ -7,8 +7,10 @@
 # Inputs: NVIDIA's card lists "Text, Image, Video" with "Video (MP4)"
 # (https://build.nvidia.com/google/diffusiongemma-26b-a4b-it);
 # live 2026-10-21 an MP4 clip was read (answered its color) and audio was rejected ("does not have an audio tower").
+# NVIDIA API: HTTP 410 Gone, end of life 2026-11-12T09:00:00Z (probed 2026-11-25, POST https://integrate.api.nvidia.com/v1/chat/completions)
 schema = 2
 base_model = "google/diffusiongemma-26b-a4b-it"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "video/mp4"]

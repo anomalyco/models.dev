@@ -1,4 +1,6 @@
+# Pricing (accessed 2026-11-23): https://developers.openai.com/api/docs/pricing (Realtime & Audio: audio input $32, cached $0.40; image input $5, cached $0.50; text input $4, cached $0.40)
 schema = 2
+v2_only = true
 base_model = "openai/gpt-realtime-2.1"
 
 [capabilities]
@@ -17,6 +19,11 @@ price = 24
 
 [cost.audio.input]
 price = 32
+cache = { read = 0.4 }
 
 [cost.audio.output]
 price = 64
+
+[cost.image.input]
+price = 5
+cache = { read = 0.5 }

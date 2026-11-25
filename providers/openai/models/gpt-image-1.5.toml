@@ -1,3 +1,4 @@
+# Pricing (accessed 2026-11-12): https://developers.openai.com/api/docs/pricing (Images, standard tier)
 # Status: deprecated, shutdown 2026-12-01: https://developers.openai.com/api/docs/deprecations
 schema = 2
 base_model = "openai/gpt-image-1.5"
@@ -9,3 +10,17 @@ input = 0
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/providers/openai/images" }
+
+[cost.text.input]
+price = 5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10
+
+[cost.image.input]
+price = 8
+cache = { read = 2 }
+
+[cost.image.output]
+price = 32

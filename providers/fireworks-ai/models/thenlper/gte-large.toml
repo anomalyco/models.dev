@@ -8,7 +8,7 @@ v2_only = true
 base_model = "thenlper/gte-large"
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/fireworks/embeddings" }
 
 [cost.text.input]
 price = 0.016

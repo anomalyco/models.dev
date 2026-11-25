@@ -1,0 +1,16 @@
+# Effort: reasoning_effort = none|low|high|xhigh, no separate toggle; same set as providers/llmgateway-providers/models/alibaba/qwen4-max.toml
+#   (Alibaba docs for low|high|xhigh, gateway docs and the Novita peer for none). Not probed on the gateway.
+# Capabilities the catalog doesn't state (capabilities.structured_output) come from qwen3.8-max, this host's previous model in the family.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.45
+cache = { read = 0.072, write = 1.875 }
+
+[cost.text.output]
+price = 4.25

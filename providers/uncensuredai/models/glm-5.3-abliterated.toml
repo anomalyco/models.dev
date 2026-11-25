@@ -1,0 +1,31 @@
+# Pricing (USD per 1M tokens): https://uncensuredai.com/api/pricing
+# Public Chat Completions QA (2026-11-13): https://uncensuredai.com/v1/chat/completions
+# Hosted model: https://uncensuredai.com/en/models/glm-5.3-abliterated
+# Client capabilities: https://uncensuredai.com/model-capabilities.json
+# The glm-5.3-abliterated entry's context_window is 1,048,576 tokens.
+# The hosted model page lists GLM 5.3 as the base model.
+# Effort: reasoning_effort = low|high|max, matching the Zhipu lab baseline.
+# Public gateway QA: low, high, and max produced reasoning.
+# Chat Completions QA (2026-11-13): reasoning_content and reasoning were both
+# present in the JSON message and in streamed deltas. Use reasoning_content for replay.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 Abliterated"
+description = "GLM 5.3 Abliterated served by UncensuredAI over Chat Completions."
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.70
+cache = { read = 0.28 }
+
+[cost.text.output]
+price = 1.95

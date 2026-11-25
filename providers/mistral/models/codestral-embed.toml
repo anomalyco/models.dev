@@ -1,16 +1,18 @@
 # Sources:
 #   GET https://api.mistral.ai/v1/models (codestral-embed is the canonical row, alias codestral-embed-2505)
 #   https://docs.mistral.ai/models/codestral-embed-25-05 and https://docs.mistral.ai/inference/pricing ($0.15 per MTok input)
+# Cached input $0.015 per MTok: https://docs.mistral.ai/inference/pricing (accessed 2026-11-23).
 # API: POST https://api.mistral.ai/v1/embeddings (https://docs.mistral.ai/api/endpoint/embeddings).
 schema = 2
 v2_only = true
 base_model = "mistral/codestral-embed-2505"
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
 
 [cost.text.input]
 price = 0.15
+cache = { read = 0.015 }
 
 [cost.text.output]
 price = 0

@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const ModelFamilyValues = [
   // Arcee
-  "trinity",
   "trinity-mini",
 
   // OpenAI/GPT style
@@ -20,11 +19,25 @@ export const ModelFamilyValues = [
   "gpt-oss",
   "gpt-image",
   "gpt-live",
+  "gpt-audio",
+  "gpt-audio-mini",
+  "gpt-image-mini",
+  "gpt-realtime",
+  "gpt-realtime-mini",
+  "gpt-realtime-translate",
+  "gpt-transcribe",
+  "gpt-transcribe-mini",
+  "gpt-tts",
+  "gpt-tts-mini",
+  "gpt-oss-safeguard",
+  "omni-moderation",
 
   // OpenAI o-series (reasoning models)
   "o",
   "o-mini",
   "o-pro",
+  "o-deep-research",
+  "o-deep-research-mini",
 
   // Anthropic style
   "claude",
@@ -40,39 +53,95 @@ export const ModelFamilyValues = [
   "gemini-flash",
   "gemini-flash-lite",
   "gemini-embedding",
+  "gemini-live",
+  "gemini-live-translate",
+  "gemini-tts-flash",
+  "gemini-tts-flash-lite",
+  "gemini-tts-pro",
+  "gemini-transcribe",
+  "gemini-omni-flash",
+  "gemini-decision",
+  "gemini-robotics-er",
+  "gemini-robotics-er-live",
+  "gemini-computer-use",
+  "gemini-deep-research",
+  "gemini-deep-research-max",
+  "nano-banana-pro",
+  "nano-banana-lite",
+  "google-text-embedding",
+  "chirp",
+  "genie",
 
   // GLM (zai)
   "glm",
   "glmv",
   "glm-air",
   "glm-flash",
-  "glm-free",
+  "glm-flash-legal",
+  "cogvideox",
+  "cogview",
+  "glmv-flash",
+  "autoglm",
+  "glm-asr",
+  "glmv-turbo",
+  "glm-turbo",
+  "glm-image",
+  "glm-embedding",
   "glm-z",
 
   // Meta Llama
   "llama",
 
   // Meta Muse
-  "muse",
-  "muse-free",
 
   // Alibaba Qwen
   "qwen",
-  "qwen3.5",
-  "qwen3.6",
-  "qwen3.7-plus",
-  "qwen3.7-max",
-  "qwen3.8-max",
-  "qwen-free",
+  "qwq",
+  "wan",
+  "qwen-coder",
+  "qwen-tts-flash",
+  "qwen-asr-flash",
+  "qwen-embedding",
+  "qwen-flash",
+  "qwen-vl",
+  "qwen-image",
+  "qwen-max",
+  "qwen-vl-plus",
+  "qwen-vl-flash",
+  "qwen-plus",
+  "gte",
+  "qwen-image-pro",
+  "happyhorse",
+  "qwen-omni",
+  "qwen-embedding-flash",
+  "qwen-coder-flash",
+  "qwen-reranker",
+  "qwen-omni-flash",
+  "qwen-asr",
+  "qwen-tts-plus",
+  "qwen-image-turbo",
+  "qwen-vl-max",
+  "qwen-mt-plus",
+  "qwen-turbo",
+  "qwen-coder-plus",
+  "qwen-math-turbo",
+  "qwen-math-plus",
+  "qwen-omni-realtime-flash",
+  "qwen-mt-turbo",
+  "tongyi",
+  "qwen-omni-realtime",
+  "qwen-livetranslate",
+  "qwen-tts",
 
   // DeepReinforce
   "ornith",
 
   // DeepSeek
   "deepseek",
-  "deepseek-thinking",
   "deepseek-flash",
-  "deepseek-flash-free",
+  "deepseek-ocr",
+  "deepseek-pro",
+  "deepseek-r",
   "deepseek-flash-think",
 
   // Microsoft Phi
@@ -80,16 +149,13 @@ export const ModelFamilyValues = [
 
   // Moonshot Kimi
   "kimi",
-  "kimi-k2",
-  "kimi-k3",
-  "kimi-free",
-  "kimi-thinking",
+  "kimi-code",
+  "kimi-pro",
 
   // Motif Technologies
   "motif",
 
   // Poolside Laguna
-  "laguna",
   "laguna-s",
 
   // Reflection Beam
@@ -116,9 +182,18 @@ export const ModelFamilyValues = [
   "grok-build",
   "grok-vision",
   "grok-beta",
+  "grok-code",
+  "grok-imagine-image",
+  "grok-imagine-video",
+  "grok-imagine-video-lite",
+  "grok-tts",
+  "grok-voice",
+  "grok-transcribe",
 
   // Google Gemma
   "gemma",
+  "gemma-embedding",
+  "gemma-diffusion",
 
   // AWS Nova
   "nova",
@@ -131,15 +206,11 @@ export const ModelFamilyValues = [
   "command-r",
   "command-a",
   "command-light",
-  "north",
-  "north-free",
 
   // AI21 Jamba
-  "jamba",
 
   // NVIDIA Nemotron
   "nemotron",
-  "nemotron-free",
 
   // AWS Titan
   "titan",
@@ -147,17 +218,25 @@ export const ModelFamilyValues = [
 
   // MiniMax
   "minimax",
-  "minimax-m2.5",
-  "minimax-m2.7",
-  "minimax-m3",
-  "minimax-m3-free",
-  "minimax-free",
+  "minimax-m",
+  "minimax-m-flash",
+  "minimax-h",
+  "minimax-h-lite",
+  "minimax-h-max",
+  "minimax-h-image",
+  "minimax-image",
+  "minimax-speech",
+  "hailuo",
 
   // Hunyuan
   "hunyuan",
 
   // Hy
-  "Hy",
+  "hy-mt",
+  "kinfra-embedding",
+  "hy-flash",
+  "hy",
+  "hy-image",
 
   // Yi
   "yi",
@@ -181,6 +260,11 @@ export const ModelFamilyValues = [
 
   // Step (StepFun)
   "step",
+  "step-flash",
+  "step-vision",
+  "step-audio",
+  "step-tts",
+  "step-asr",
 
   // Embedding models
   "text-embedding",
@@ -188,7 +272,6 @@ export const ModelFamilyValues = [
   "voyage",
   "mistral-embed",
   "bge",
-  "plamo",
   "codestral-embed",
 
   // Image generation
@@ -203,6 +286,7 @@ export const ModelFamilyValues = [
   // Video generation
   "sora",
   "veo",
+  "veo-lite",
   "runway",
   "dream-machine",
 
@@ -210,10 +294,14 @@ export const ModelFamilyValues = [
   "whisper",
   "elevenlabs",
   "lyria",
+  "lyria-pro",
+  "lyria-clip",
+  "lyria-realtime",
   "melotts",
 
   // Baidu Ernie
   "ernie",
+  "cobuddy",
 
   // Hermes
   "hermes",
@@ -246,14 +334,9 @@ export const ModelFamilyValues = [
   "mimo",
   "mimo-pro",
   "mimo-omni",
-  "mimo-v2-pro",
-  "mimo-v2-omni",
-  "mimo-v2.5-pro",
-  "mimo-v2.5",
-  "mimo-v2.5-free",
-  "mimo-pro-free",
-  "mimo-omni-free",
-  "mimo-flash-free",
+  "mimo-asr",
+  "mimo-tts",
+  "mimo-flash",
 
   // Clarifai
   "mm-poly",
@@ -262,7 +345,6 @@ export const ModelFamilyValues = [
   "longcat",
 
   // Magistral
-  "magistral",
   "magistral-small",
   "magistral-medium",
 
@@ -289,12 +371,12 @@ export const ModelFamilyValues = [
 
   // Sarvam
   "sarvam",
+  "sarvam-prism",
 
   // Falcon
   "falcon",
 
   // Baichuan
-  "baichuan",
 
   // Skywork
   "skywork",
@@ -319,6 +401,22 @@ export const ModelFamilyValues = [
 
   // Seed
   "seed",
+  "seedance-pro",
+  "seed-tts",
+  "seedance",
+  "seed-lite",
+  "seed-mini",
+  "seed-code",
+  "seedream",
+  "seedream-flash",
+  "seed-flash",
+  "seedream-pro",
+  "seed-turbo",
+  "seedream-lite",
+  "seedance-mini",
+  "seedance-flash",
+  "seed-oss",
+  "seed-pro",
 
   // Ray
   "ray",
@@ -329,15 +427,19 @@ export const ModelFamilyValues = [
   // RNJ
   "rnj",
 
+  // Elorian
+  "glimpse",
+
   // Tecent Hy
-  "hy3",
-  "hy3-free",
 
   // Ling & Ring (InclusionAI)
-  "ling",
-  "ling-flash-free",
+  "ling-flash",
+  "inkling",
+  "inkling-small",
+  "inkling-mini",
+  "ling-tiny",
+  "ming-image",
   "ring",
-  "ring-1t-free",
 
   // Kat Coder
   "kat-coder",
@@ -364,7 +466,6 @@ export const ModelFamilyValues = [
   "una-cybertron",
 
   // Morph
-  "morph",
 
   // Voxtral
   "voxtral",
@@ -389,7 +490,6 @@ export const ModelFamilyValues = [
   "tako",
 
   // MAI
-  "mai",
 
   // RedNote
   "rednote",
@@ -419,10 +519,8 @@ export const ModelFamilyValues = [
   "unsloth",
 
   // Nousresearch
-  "nousresearch",
 
   // Alpha variants (experimental models)
-  "alpha",
 
   // OSWE
   "oswe",
@@ -431,31 +529,310 @@ export const ModelFamilyValues = [
   "neural-chat",
 
   // Pangu (Ascend Tribe)
-  "pangu",
 
   // LiquidAI
   "liquid",
 
   // Sourceful
-  "sourceful",
 
   // AllenAI
   "allenai",
 
   // Writer
   "palmyra",
+  "palmyra-vision",
+
+  // Paper Instruments
+  "ultramarine",
 
   // ALLaM
   "allam",
 
   // Canopy Labs
-  "canopylabs",
 
   // Groq
   "groq",
 
+  // Kuaishou Kling
+  "kling-flash",
+  "kling-image",
+  "kling",
+  "kling-omni",
+  "kling-image-omni",
+  "kling-turbo",
+
   // Elephant
   "elephant",
+
+  // Base Labs decision models
+  "joey",
+  "bison",
+  "groundhog",
+
+  // Free variants: the base family plus "-free"
+  "beam-free",
+  "deepseek-flash-free",
+  "deepseek-pro-free",
+  "ernie-free",
+  "fish-s-pro-free",
+  "flint-free",
+  "gemma-free",
+  "glm-flash-free",
+  "glm-free",
+  "glmv-flash-free",
+  "gpt-free",
+  "heygen-voice-turbo-free",
+  "hy-flash-free",
+  "hy-free",
+  "inkling-small-free",
+  "jev-free",
+  "kimi-free",
+  "laguna-s-free",
+  "lfm-free",
+  "ling-flash-free",
+  "ling-tiny-free",
+  "longcat-free",
+  "mimo-flash-free",
+  "mimo-free",
+  "mimo-omni-free",
+  "mimo-pro-free",
+  "minimax-m-flash-free",
+  "minimax-m-free",
+  "muse-glimmer-free",
+  "muse-spark-free",
+  "nemotron-embed-free",
+  "nemotron-lightning-free",
+  "nemotron-nano-free",
+  "nemotron-safety-free",
+  "nemotron-super-free",
+  "nemotron-ultra-free",
+  "north-mini-free",
+  "particle-free",
+  "qwen-flash-free",
+  "qwen-free",
+  "qwen-max-free",
+  "qwen-plus-free",
+  "ring-free",
+  "solar-mini-free",
+  "step-flash-free",
+  "step-free",
+  "trinity-large-free",
+
+  // Product lines (one per lab, type and size tier)
+  "aion",
+  "ampersand",
+  "eva",
+  "aion-mini",
+  "aion-rp",
+  "apertus",
+  "apodex-mini",
+  "arrow",
+  "assemblyai-universal",
+  "asure",
+  "aya",
+  "aya-tiny",
+  "aya-vision",
+  "baichuan-m",
+  "bge-base",
+  "bge-large",
+  "bge-reranker",
+  "bge-small",
+  "blink",
+  "chatterbox",
+  "cicero",
+  "clef",
+  "clef-flash",
+  "clip",
+  "cohere-embed-fast",
+  "cohere-embed-light",
+  "cohere-embed-pro",
+  "cohere-rerank",
+  "cohere-rerank-fast",
+  "cohere-rerank-pro",
+  "cohere-transcribe",
+  "command-a-plus",
+  "command-r-plus",
+  "csm",
+  "cydonia",
+  "d3",
+  "d3-flash",
+  "d3-mini",
+  "decider",
+  "deepgram-flux",
+  "deepgram-nova",
+  "devstral-medium",
+  "devstral-small",
+  "dolphin",
+  "dracarys",
+  "drex",
+  "e5-base",
+  "e5-large",
+  "e5-multilingual",
+  "elevenlabs-flash",
+  "elevenlabs-multilingual",
+  "elevenlabs-turbo",
+  "ember",
+  "euryale",
+  "fibo",
+  "fish-drama",
+  "fish-s",
+  "fish-s-pro",
+  "fish-transcribe",
+  "fish-transcribe-pro",
+  "flux-dev",
+  "flux-flex",
+  "flux-klein",
+  "flux-kontext-dev",
+  "flux-kontext-max",
+  "flux-kontext-pro",
+  "flux-max",
+  "flux-pro",
+  "flux-schnell",
+  "flux-video",
+  "fugu-max",
+  "fugu-ultra",
+  "granite-micro",
+  "granite-small",
+  "heygen-avatar",
+  "heygen-video",
+  "heygen-voice",
+  "heygen-voice-turbo",
+  "inworld-tts",
+  "inworld-tts-max",
+  "inworld-tts-mini",
+  "jamba-large",
+  "jamba-mini",
+  "jev",
+  "kev",
+  "kokoro",
+  "kolibri",
+  "krea",
+  "krea-large",
+  "krea-medium",
+  "krea-medium-turbo",
+  "laguna-m",
+  "laguna-xs",
+  "levanto-sage",
+  "lfm",
+  "lfm-embedding",
+  "lightonocr",
+  "liquid-decision",
+  "llama-guard",
+  "llama-prompt-guard",
+  "lunaris",
+  "macaron-tall",
+  "macaron-venti",
+  "magnum",
+  "mai-code",
+  "mai-code-flash",
+  "mai-image",
+  "mai-image-flash",
+  "mai-image-pro",
+  "mai-transcribe",
+  "mai-voice",
+  "mai-voice-flash",
+  "mammoth",
+  "mercury-coder",
+  "mercury-decide",
+  "mercury-edit",
+  "microsoft-decision",
+  "mineru",
+  "minicpm",
+  "minicpm-v",
+  "minilm",
+  "mistral-moderation",
+  "mistral-ocr",
+  "morph-fast",
+  "morph-large",
+  "morph-reflex",
+  "mpnet",
+  "muse-ember",
+  "muse-glimmer",
+  "muse-image",
+  "muse-spark",
+  "muse-transcribe",
+  "muse-video",
+  "muse-wonder",
+  "mxbai-embed",
+  "mythomax",
+  "nemotron-asr",
+  "nemotron-cascade",
+  "nemotron-embed",
+  "nemotron-lightning",
+  "nemotron-mini",
+  "nemotron-nano",
+  "nemotron-rerank",
+  "nemotron-safety",
+  "nemotron-super",
+  "nemotron-ultra",
+  "nemotron-voice",
+  "nex-n",
+  "nex-n-mini",
+  "nex-n-pro",
+  "nomic-embed",
+  "north-mini",
+  "north-small",
+  "nova-premier",
+  "olmocr",
+  "omnivoice",
+  "orpheus",
+  "paddleocr",
+  "pangu-flash",
+  "pangu-pro",
+  "pareto",
+  "particle",
+  "perceptron-mk",
+  "phi-mini",
+  "phocinae-largha",
+  "phonellm-mini",
+  "pixtral-large",
+  "plamo-embedding",
+  "pplx-decider",
+  "pplx-decider-flash",
+  "pplx-embed",
+  "pplx-embed-context",
+  "recraft-flash",
+  "recraft-pro",
+  "relace-apply",
+  "relace-search",
+  "remm",
+  "restyler",
+  "riverflow-fast",
+  "riverflow-pro",
+  "rune",
+  "runway-aleph",
+  "runway-gen",
+  "schematron-small",
+  "schematron-turbo",
+  "scribe",
+  "sea-lion",
+  "skyfall",
+  "sonar-reasoning-pro",
+  "span",
+  "text2vec",
+  "toast",
+  "trinity-large",
+  "trinity-nano",
+  "turion-extract",
+  "turion-jev",
+  "uae",
+  "unslopnemo",
+  "vispark-vision-large",
+  "vispark-vision-medium",
+  "vispark-vision-small",
+  "viv",
+  "voxtral-mini",
+  "voxtral-small",
+  "voxtral-transcribe",
+  "voxtral-tts",
+  "voyage-code",
+  "voyage-large",
+  "voyage-lite",
+  "voyage-multimodal",
+  "voyage-rerank",
+  "voyage-rerank-lite",
+  "weaver",
+  "wizardlm",
 ] as const;
 
 export const ModelFamily = z.enum(ModelFamilyValues);
@@ -463,8 +840,8 @@ export type ModelFamily = z.infer<typeof ModelFamily>;
 
 export function inferKimiFamily(...values: string[]): ModelFamily | undefined {
   const target = values.join(" ").toLowerCase();
-  if (/kimi[^a-z0-9]*k2(?:[^a-z0-9]*\d+)?[^a-z0-9]*thinking/.test(target)) return "kimi-thinking";
-  if (/kimi[\s_-]*k2/.test(target)) return "kimi-k2";
-  if (/kimi[\s_-]*k3/.test(target)) return "kimi-k3";
-  return undefined;
+  if (!/kimi[\s_-]*k\d/.test(target)) return undefined;
+  if (/code/.test(target)) return "kimi-code";
+  if (/[^a-z0-9]pro(?:$|[^a-z0-9])/.test(target)) return "kimi-pro";
+  return "kimi";
 }

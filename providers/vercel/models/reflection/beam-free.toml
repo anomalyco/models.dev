@@ -2,6 +2,7 @@
 # Interleaved: on Chat Completions every prior assistant message must include reasoning_content; without it (or with an empty string) the request fails with 400 "Missing required parameter: 'messages[N].reasoning_content'" (live probe through the gateway, 2026-11-02). Same as the first-party Reflection entry.
 schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
+family = "beam-free"
 name = "Beam 1.0 (Free)"
 description = "Free provider route for experiments, demos, and cost-sensitive chat workloads"
 

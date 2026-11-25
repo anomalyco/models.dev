@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 
-import { buildOvhcloudModel, type OvhcloudModel } from "../src/sync/providers/ovhcloud.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
+import { buildOvhcloudModel, ovhcloud, type OvhcloudModel } from "../src/sync/providers/ovhcloud.js";
 
 function model(pricing?: OvhcloudModel["pricing"]): OvhcloudModel {
   return {
@@ -17,10 +18,12 @@ test.each([
   { label: "empty pricing", pricing: {} },
   { label: "blank rates", pricing: { prompt: "", completion: "" } },
   { label: "whitespace rates", pricing: { prompt: " ", completion: "\t" } },
-  { label: "explicit zero rates", pricing: { prompt: "0", completion: "0" } },
-])("OVHcloud serializes zero costs for $label", ({ pricing }) => {
-  const result = buildOvhcloudModel(model(pricing), undefined);
-  expect(result.cost).toEqual({ input: 0, output: 0 });
+])("OVHcloud writes no cost for $label", ({ pricing }) => {
+  expect(buildOvhcloudModel(model(pricing), undefined).cost).toBeUndefined();
+});
+
+test("OVHcloud keeps an explicit zero rate as free", () => {
+  expect(buildOvhcloudModel(model({ prompt: "0", completion: "0" }), undefined).cost).toEqual({ input: 0, output: 0 });
 });
 
 test("OVHcloud converts paid and cache rates to per-million costs", () => {
@@ -33,17 +36,37 @@ test("OVHcloud converts paid and cache rates to per-million costs", () => {
   expect(result.cost).toEqual({ input: 0.47, output: 3.19, cache_read: 0.09, cache_write: 0.12 });
 });
 
-test.each([
-  { pricing: { prompt: "0.00000047" }, expected: { input: 0.47, output: 0 } },
-  { pricing: { completion: "0.00000319" }, expected: { input: 0, output: 3.19 } },
-])("OVHcloud preserves a supplied rate when the other is missing: %j", ({ pricing, expected }) => {
-  const result = buildOvhcloudModel(model(pricing), undefined);
-  expect(result.cost).toEqual(expected);
+test("OVHcloud keeps authored costs when the catalog has no prices", () => {
+  const result = buildOvhcloudModel(model(), { cost: { input: 0.47, output: 3.19 } });
+  expect(result.cost).toEqual({ input: 0.47, output: 3.19 });
 });
 
-test("OVHcloud replaces prior costs with zeros when pricing is absent", () => {
-  const result = buildOvhcloudModel(model(), { cost: { input: 0.47, output: 3.19 } });
-  expect(result.cost).toEqual({ input: 0, output: 0 });
+test("OVHcloud skips new models that have no published price", () => {
+  const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  expect(ovhcloud.translateModel({ ...model({ prompt: "", completion: "" }), id: "gemma-4-26b-a4b" }, context)).toBeUndefined();
+});
+
+test("OVHcloud skips new reasoning models until their controls are authored", () => {
+  const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  const priced = { prompt: "0.00000047", completion: "0.00000319" };
+  expect(() => ovhcloud.translateModel({ ...model(priced), supported_features: ["reasoning"] }, context)).toThrow(MissingReasoningOptionsError);
+  // A row that drops the flag still skips when the lab reasons.
+  expect(() => ovhcloud.translateModel({ ...model(priced), id: "Qwen3.6-27B", hugging_face_id: "Qwen/Qwen3.6-27B" }, context)).toThrow(MissingReasoningOptionsError);
+});
+
+test("OVHcloud links new non-reasoning models to the lab file", () => {
+  const context = { existing: () => undefined, authored: () => undefined, v2: () => undefined };
+  const result = ovhcloud.translateModel({
+    ...model({ prompt: "0.00000074", completion: "0.00000074" }),
+    id: "Meta-Llama-3_3-70B-Instruct",
+    hugging_face_id: "meta-llama/Llama-3.3-70B-Instruct",
+    name: "Meta-Llama-3_3-70B-Instruct",
+    context_length: 131_072,
+    supported_features: ["tools"],
+  }, context);
+  expect(result).toMatchObject({ model: { base_model: "meta/llama-3.3-70b-instruct", cost: { input: 0.74, output: 0.74 } } });
+  expect(result?.model).not.toHaveProperty("release_date");
+  expect(result?.model).not.toHaveProperty("open_weights");
 });
 
 test("OVHcloud factors a base_model file and leaves model facts to the lab", () => {

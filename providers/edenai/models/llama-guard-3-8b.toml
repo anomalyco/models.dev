@@ -1,0 +1,14 @@
+schema = 2
+base_model = "meta/llama-guard-3-8b"
+
+[capabilities]
+structured_output = false
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.055
+
+[cost.text.output]
+price = 0.055

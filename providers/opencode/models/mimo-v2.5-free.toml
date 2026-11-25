@@ -1,6 +1,7 @@
-# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow providers/xiaomi/models/mimo-v2.5.toml (Zen passes requests through).
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) follow Xiaomi's own API for mimo-v2.5 (none set; retired there 2026-10-21: https://mimo.mi.com/static/docs/updates/deprecate.md) (Zen passes requests through).
 schema = 2
 base_model = "xiaomi/mimo-v2.5"
+family = "mimo-free"
 name = "MiMo V2.5 Free"
 description = "MiMo omni model for text, image, video, audio, and agents"
 status = "deprecated"

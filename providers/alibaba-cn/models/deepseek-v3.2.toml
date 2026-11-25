@@ -1,0 +1,28 @@
+# Prices (China (Beijing), CNY per 1M): ¥2 input, ¥3 output (https://help.aliyun.com/zh/model-studio/model-pricing, accessed 2026-11-24).
+# CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
+# Toggle: enable_thinking true|false (the Chat API reference lists the DeepSeek-V3.2 series under enable_thinking): https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions (accessed 2026-11-24).
+# max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (same page). top_k: the DeepSeek series does not support it.
+# Limits: 131,072 context and 65,536 output, as on the Alibaba Token Plan entry for this model.
+# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset.
+# Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+schema = 2
+base_model = "deepseek/deepseek-v3.2"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+top_k = false
+
+[limit]
+context = 131_072
+output = 65_536
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0.299433
+
+[cost.text.output]
+price = 0.449149

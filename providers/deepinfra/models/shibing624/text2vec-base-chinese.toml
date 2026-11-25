@@ -7,7 +7,7 @@ v2_only = true
 base_model = "shibing624/text2vec-base-chinese"
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/deepinfra/embeddings" }
 
 [cost.text.input]
 price = 0.005

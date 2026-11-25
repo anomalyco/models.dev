@@ -1,0 +1,37 @@
+# Model: https://platform.minimax.io/docs/guides/video-generation (MiniMax-H3)
+# API: POST https://api.minimax.io/v2/video_generation (https://platform.minimax.io/docs/api-reference/video-generation-v2-create)
+# Pricing: https://platform.minimax.io/docs/pricing/overview#models/video (USD per second of output and of input
+#   video; input images are billed per image after the first 5 per task)
+#   USD per second: output 2K $0.13, 768P $0.08; input video 2K $0.13, 768P $0.08; input image $0.04 each after
+#   the first 5. The create request requires an explicit resolution; 2K is the base price.
+# OpenCode exposes MiniMax's native v2 task API: create, query, and DELETE (cancel a queued task, delete an ended one).
+# The gateway bills input images past the free five; audio input is free. List, callback_url and mm_file references
+# are not available through OpenCode.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3"
+
+[api.videos]
+base_url = "https://opencode.ai/inference/minimax"
+path = "/v2/video_generation"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/minimax/videos" }
+
+[cost.video.output]
+unit = "second"
+price = 0.13
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "768P" } }
+price = 0.08
+
+[cost.video.input]
+unit = "second"
+price = 0.13
+
+[[cost.video.input.overrides]]
+when = { resolution = { equals = "768P" } }
+price = 0.08
+
+[cost.image.input]
+unit = "image"
+price = 0.04

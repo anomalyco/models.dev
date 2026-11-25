@@ -18,8 +18,8 @@ system_updates = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
 
 [cost.text.input]
-price = 8
-cache = { read = 0.2, write = { "5m" = 10, "1h" = 16 } }
+price = 8.8
+cache = { read = 0.22, write = { "5m" = 11, "1h" = 17.6 } }
 
 [cost.text.output]
-price = 40
+price = 44

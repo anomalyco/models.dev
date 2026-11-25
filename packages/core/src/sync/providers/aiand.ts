@@ -244,7 +244,7 @@ export function buildAiandModel(
     ...host,
     name: authored?.name ?? model.name,
     description: authored?.description ?? model.description ?? model.name,
-    family: family.success ? family.data : authored?.family,
+    family: authored?.family ?? (family.success ? family.data : undefined),
     // Release dates are lab metadata the gateway is not authoritative for.
     release_date: authored?.release_date ?? model.release_date,
     // The feed's last_updated tracks catalog-row edits, not model revisions.

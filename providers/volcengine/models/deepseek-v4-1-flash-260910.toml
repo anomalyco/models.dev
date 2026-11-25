@@ -1,0 +1,34 @@
+# Model ID, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24); not called live (no Ark key).
+# CNY list prices (在线推理（常规）): https://ark.volcengine.com/region:cn-beijing/docs/model-pricing.md (accessed 2026-11-24)
+# CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
+# CNY off-peak 1 input / 0.02 cache hit / 4 output per M tokens (peak 2 / 0.04 / 8), same as -261017.
+# Peak is Beijing Mon-Fri 09:00-12:00 and 14:00-18:00 (UTC 01:00-04:00, 06:00-10:00), billed by request
+# completion time; peak prices are double. Base prices below are off-peak and the multiplier doubles
+# them at peak, as in providers/deepseek. Ark names no holiday exception, so none is modelled.
+# Effort: reasoning_effort = none|low|high|max (default high). Ark maps none to thinking off,
+# minimal -> low, medium/xhigh -> high and ultra -> max (兼容映射 table, https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking.md).
+# none is the off switch, so no separate toggle is declared (thinking.type enabled|disabled also works).
+# Cache: implicit prefix caching is on by default on the Chat API, per https://ark.volcengine.com/region:cn-beijing/docs/context-cache.md and the
+# model list's 上下文缓存能力 table.
+# Not modelled: the flex tier (service_tier=flex, half input/output price) and the low-latency tier.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.14972
+cache = { read = 0.00299 }
+
+[cost.text.output]
+price = 0.59886
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

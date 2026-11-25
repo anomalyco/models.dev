@@ -1,0 +1,38 @@
+# Availability: FW-GLM-5.3 is GA on Fireworks on Foundry, pay-per-token Global Standard and Data Zone Standard (US): https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/fireworks-model-catalog#pay-per-token (accessed 2026-11-25)
+# Controls, structured output and cache follow Fireworks' own entry for the same weights (providers/fireworks-ai/models/accounts/fireworks/models/glm-5p3.toml); Foundry runs Fireworks' serving.
+# Limits: 1,048,576-token context (https://ai.azure.com/catalog/models/FW-GLM-5.3, accessed 2026-11-25); the 131,072 max output matches the lab.
+# Reasoning is always on with low, high and max effort (same catalog page).
+# Pricing: Azure Fireworks Models product, global "FW GLM 5.3 Inp" 0.00175/1K, "FW GLM 5.3 Cd Inp" 0.000325/1K, "FW GLM 5.3 Opt" 0.0055/1K; US data zone "FW GLM 5.3 DZ Inp/Cd Inp/Opt" 0.0021 / 0.00039 / 0.0066 (1.2x): https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Fireworks Models' (accessed 2026-11-25)
+# APIs: every Fireworks catalog model takes the OpenAI/v1 Chat Completions and Responses APIs on the Foundry resource
+#   (https://{resource}.services.ai.azure.com/openai/v1/...): https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/enable-fireworks-models
+#   An administrator must first register the Fireworks.EnableDeploy feature on the subscription (same page); Fireworks on Foundry is GA.
+#   Shape copied from this host's Grok files (Chat Completions via the Azure package, then Responses).
+# Mid-conversation flags: left out; Foundry documents none for Fireworks models and they weren't tested through Foundry.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "FW-GLM-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.325 }
+
+[cost.text.output]
+price = 5.5
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = { text = 1.2 }

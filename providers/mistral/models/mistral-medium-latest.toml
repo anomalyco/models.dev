@@ -1,3 +1,5 @@
+# Lifecycle: Mistral Medium 3.5 was deprecated 2026-10-31 and retires 2027-04-30; replacement Mistral Large 4
+#   (https://docs.mistral.ai/models/mistral-medium-3-5-26-04 and https://docs.mistral.ai/getting-started/models/).
 # mistral-medium-latest is Mistral's alias for Mistral Medium 3.5 (https://docs.mistral.ai/models/mistral-medium-3-5-26-04;
 # /v1/models lists mistral-medium-2604 and mistral-medium-3-5 as aliases). Medium 3.1 (mistral-medium-2508)
 # was deprecated 2026-05-22 and retired 2026-08-31.
@@ -23,16 +25,12 @@
 #   control kept it).
 schema = 2
 base_model = "mistral/mistral-medium-latest"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
-output = ["text"]
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "high"] }
 structured_output = true
-top_k = false
 system_updates = true
 stream_usage = true
 prompt_cache_key = true

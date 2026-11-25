@@ -1,15 +1,19 @@
 # mistral-medium-latest is Mistral's alias for Mistral Medium 3.5 (mistral-medium-2604).
 # Medium 3.1 (mistral-medium-2508) was deprecated 2026-05-22, retiring 2026-08-31.
+# Same model as models/mistral/mistral-medium-3-5.toml: https://docs.mistral.ai/models/mistral-medium-3-5 (released 2026-04-28,
+#   Modified MIT weights, PDF via Document QnA: https://docs.mistral.ai/studio/document-processing/document_qna).
 # Image formats: https://docs.mistral.ai/studio/conversations/vision (PNG, JPEG, WEBP, non-animated GIF)
+# Sampling: temperature and top_p only; Mistral's chat API has no top_k (https://docs.mistral.ai/api/endpoint/chat; 400 "top_k sampling is not enabled for this model", 2026-10-19)
 schema = 2
 name = "Mistral Medium (latest)"
 description = "Balanced Mistral model for enterprise assistants, multilingual work, and tools"
 family = "mistral-medium"
 open_weights = true
-release_date = "2026-04-29"
+release_date = "2026-04-28"
+license = "Modified MIT"
 
 [modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
 
 [capabilities]
@@ -17,7 +21,7 @@ tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-top_k = true
+top_k = false
 
 [limit]
 context = 262_144

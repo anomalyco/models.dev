@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-25):
+# - Model (128K context, 16K max output, text in/out, function calling, structured output):
+#   https://docs.z.ai/guides/llm/glm-4-32b-0414-128k
+# - Weights and license (MIT): https://huggingface.co/zai-org/GLM-4-32B-0414
+# - Release 2025-04-14: https://github.com/zai-org/GLM-4 (News: "2025/04/14: We are releasing the GLM-4-32B-0414 series")
+# No reasoning: the model card describes GLM-4-32B-0414 as the dialogue model and GLM-Z1-32B-0414 as the
+# reasoning model built on it. Live 2026-11-25 on api.z.ai, thinking.type = enabled returns no reasoning_content.
+schema = 2
+name = "GLM-4-32B-0414-128K"
+description = "32B GLM-4 foundation model tuned for instruction following, code generation, function calling and search-based Q&A"
+family = "glm"
+open_weights = true
+release_date = "2025-04-14"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 128_000
+output = 16_384
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/zai-org/GLM-4-32B-0414"

@@ -1,10 +1,14 @@
 # Status: deprecated, shutdown 2027-03-15: https://ai.google.dev/gemini-api/docs/deprecations
 # v2 capabilities and prices:
-# - https://ai.google.dev/gemini-api/docs/pricing
+# - https://ai.google.dev/gemini-api/docs/pricing (no context caching price; text priced as Gemini 2.5 Flash, image output $30 / 1M tokens)
+# - https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-image (Context caching: Not supported, checked 2026-11-25)
 # Interactions API: https://ai.google.dev/gemini-api/docs/interactions-overview (confirmed live 2026-10-22). OpenCode's google/interactions reads text output only.
 schema = 2
 base_model = "google/gemini-2.5-flash-image"
 status = "deprecated"
+
+[capabilities]
+cache = false
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/providers/google/images" }
@@ -16,10 +20,9 @@ sdk = { opencodeai = "none" }
 
 [cost.text.input]
 price = 0.3
-cache = { read = 0.075 }
 
 [cost.text.output]
-price = 30
+price = 2.5
 
 [cost.image.output]
 price = 30

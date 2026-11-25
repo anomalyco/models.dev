@@ -15,10 +15,11 @@ structured_output = false
 
 [limit]
 input = 256_000
+output = 32_000
 
 [cost.text.input]
 price = 0.25
-cache = { read = 0.0731 }
+cache = { read = 0.125 }
 
 [cost.text.output]
 price = 2

@@ -1,0 +1,25 @@
+# Price and context: https://api.deepinfra.com/models/list?type=text-generation (inclusionAI/Ling-3.0-flash, read 2026-11-24): $0.06 input, $0.18 output per 1M tokens,
+#   cached input at 0.2x ($0.012); 131,072-token context (the lab's 262,144 isn't served here); tags tools, structured-output.
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning
+#   The lab's thinking switch is binary (thinking.type = enabled|disabled, https://developer.ant-ling.com); no graded effort.
+# Reasoning probe (live 2026-11-24, OpenRouter pinned to Deep Infra: provider.only = ["deepinfra"], allow_fallbacks = false;
+#   the account's own Deep Infra balance was empty, so direct calls returned 402):
+#   reasoning tokens: default 466, enabled=false 0, none 0; minimal..xhigh 451-1649 with no ordering, so no effort list.
+schema = 2
+base_model = "inclusionai/ling-3.0-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.18

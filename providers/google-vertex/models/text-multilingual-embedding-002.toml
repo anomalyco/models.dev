@@ -6,12 +6,14 @@
 #   Embedding)": $0.000025 per 1,000 characters online = $0.025 per 1M characters; output no charge)
 # - API: POST .../publishers/google/models/text-multilingual-embedding-002:predict (same route @ai-sdk/google-vertex
 #   uses for gemini-embedding-001). Confirmed live via express-mode :predict on 2026-11-08.
+# Deprecated: retirement 2027-04-01: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions
 schema = 2
 v2_only = true
 base_model = "google/text-multilingual-embedding-002"
+status = "deprecated"
 
 [api.predict]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/google-vertex/embeddings" }
 
 [cost.text.input]
 unit = "character"

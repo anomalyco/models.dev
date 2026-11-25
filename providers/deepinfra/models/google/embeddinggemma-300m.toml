@@ -1,12 +1,14 @@
 # Catalog (accessed 2026-11-08): https://api.deepinfra.com/models/list (type "embeddings", not deprecated),
 #   model page https://deepinfra.com/google/embeddinggemma-300m; price 2e-7 cents per input token = $0.002/MTok, max_tokens 2048.
 # API: OpenAI-compatible POST https://api.deepinfra.com/v1/openai/embeddings, "supports the OpenAI embeddings API for all embedding models" (https://docs.deepinfra.com/apis/embeddings.md).
+# Deprecated: https://api.deepinfra.com/models/list sets deprecated = 2026-11-23 with replaced_by = google/embeddinggemma-2 (checked 2026-11-24).
 schema = 2
 v2_only = true
 base_model = "google/embeddinggemma-300m"
+status = "deprecated"
 
 [api.embeddings]
-sdk = { opencodeai = "none" }
+sdk = { opencodeai = "@opencode/ai/providers/deepinfra/embeddings" }
 
 [cost.text.input]
 price = 0.002

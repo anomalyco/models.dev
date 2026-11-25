@@ -1,0 +1,31 @@
+# Model card (in-region only, us-east-1): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-amazon-nova-multimodal-embeddings.html
+# APIs: the card lists only StartAsyncInvoke, but the Nova guide documents synchronous InvokeModel for text, images and short audio/video
+#   (https://docs.aws.amazon.com/nova/latest/nova2-userguide/embeddings.html), which @ai-sdk/amazon-bedrock calls for text.
+#   StartAsyncInvoke (POST /async-invoke, results in S3): https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_StartAsyncInvoke.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-1/index.json (on-demand, us-east-1): text $0.000135 per 1K tokens,
+#   standard image $0.00006, video $0.0007 per second, audio $0.00014 per second. Document images are $0.0006 each,
+#   which no cost condition can tell apart from standard images, so only the standard image price is listed.
+schema = 2
+v2_only = true
+base_model = "amazon/nova-2-multimodal-embeddings"
+
+[api.invoke-model]
+sdk = { opencodeai = "none" }
+
+[api.start-async-invoke]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.135
+
+[cost.image.input]
+unit = "image"
+price = 0.00006
+
+[cost.video.input]
+unit = "second"
+price = 0.0007
+
+[cost.audio.input]
+unit = "second"
+price = 0.00014

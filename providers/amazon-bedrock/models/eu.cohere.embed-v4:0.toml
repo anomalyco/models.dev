@@ -1,0 +1,15 @@
+# Model card (EU geo cross-Region inference profile): https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-cohere-embed-v4.html
+# Request (texts, images, interleaved inputs; png, jpeg, webp, gif; ~128K tokens): https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-embed-v4.html
+# Pricing: https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/eu-west-1/index.json (Embed v4, EU_InputTokenCount $0.12 per 1M tokens).
+#   Images are billed as input tokens (the pricing page lists no per-image price for Embed 4: https://aws.amazon.com/bedrock/pricing/).
+# API: InvokeModel (POST /model/{modelId}/invoke, the model's own JSON body): https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InvokeModel.html
+#   @ai-sdk/amazon-bedrock's embedding model calls InvokeModel for Titan, Cohere and Nova embeddings; @opencode/ai's Bedrock provider only routes Converse.
+schema = 2
+v2_only = true
+base_model = "cohere/embed-v4.0"
+
+[api.invoke-model]
+sdk = { opencodeai = "none" }
+
+[cost.text.input]
+price = 0.12

@@ -9,13 +9,16 @@
 # - https://ai.google.dev/gemini-api/docs/thinking
 # Priority cache reads are $0.05 and Flex cache reads $0.02 (vs $0.03 Standard),
 # so those multipliers scale cache.read by 5/3 and 2/3. Cache storage is not scaled.
+# Audio input: the pricing page lists one rate for "text / image / video / audio" ($0.30, cache $0.03).
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 # Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash-lite; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite
 # APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
 # tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
+# recommended_api: Google recommends Interactions for all new projects and lists this model as supported: https://ai.google.dev/gemini-api/docs/interactions-overview#supported-models-agents
 schema = 2
 base_model = "google/gemini-3.5-flash-lite"
+recommended_api = "interactions"
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"] }
@@ -40,13 +43,17 @@ cache = { read = 0.03, storage = 1 }
 [cost.text.output]
 price = 2.5
 
+[cost.audio.input]
+price = 0.3
+cache = { read = 0.03, storage = 1 }
+
 [cost.web_search]
 price = 14
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "priority" } }
-factor = { text = { input = { price = 1.8, cache = { read = 1.6666666666666667 } }, output = 1.8 } }
+factor = { text = { input = { price = 1.8, cache = { read = 1.6666666666666667 } }, output = 1.8 }, audio = { input = { price = 1.8, cache = { read = 1.6666666666666667 } } } }
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "flex" } }
-factor = { text = { input = { price = 0.5, cache = { read = 0.6666666666666666 } }, output = 0.5 } }
+factor = { text = { input = { price = 0.5, cache = { read = 0.6666666666666666 } }, output = 0.5 }, audio = { input = { price = 0.5, cache = { read = 0.6666666666666666 } } } }

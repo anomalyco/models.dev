@@ -1,0 +1,32 @@
+# https://opencode.ai/docs/go/#endpoints
+# https://help.aliyun.com/en/model-studio/anthropic-api-messages
+# Toggle (Messages): thinking.type = enabled|disabled
+# Effort: low|high|xhigh, default high (Alibaba launch notes 2026-11-16: the middle level is high, not medium)
+# Budget: thinking.budget_tokens with thinking.type = enabled
+# Modalities: image and video input as the file already listed (not PDF); MIME types from the lab.
+# Tools follow Alibaba's API: https://www.alibabacloud.com/help/en/model-studio/qwen-function-calling (Qwen models reject tool_choice required); Go passes requests through.
+# Cache: implicit by default; explicit cache_control with ttl 5m (1.25x input) or 1h (2x input) on Messages (Alibaba launch notes 2026-11-16). Prices from Alibaba's Qwen4 Max price sheet.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
+system_updates = true
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"] } }
+
+[api.messages]
+base_url = "https://opencode.ai/inference/go/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, write = { "5m" = 1.875, "1h" = 3 } }
+
+[cost.text.output]
+price = 4.5

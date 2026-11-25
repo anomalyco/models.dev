@@ -1,0 +1,24 @@
+# Effort: reasoning_effort none|high turns thinking off and on, as on the Kilo and OpenRouter entries for this model; Cortecs maps reasoning_effort to the model's own controls (https://docs.cortecs.ai/routing/reasoning).
+# Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields.
+# Input MIME types: the lab's types for the kinds the Cortecs catalog lists (text, image); no video.
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 500_000
+
+[cost.text.input]
+price = 0.204
+cache = { read = 0.041 }
+
+[cost.text.output]
+price = 0.51

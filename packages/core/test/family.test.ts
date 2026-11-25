@@ -2,19 +2,21 @@ import { expect, test } from "bun:test";
 
 import { inferKimiFamily } from "../src/family.js";
 
-test("Kimi family inference ignores K2 versions", () => {
-  expect(inferKimiFamily("moonshotai/kimi-k2.5")).toBe("kimi-k2");
-  expect(inferKimiFamily("moonshotai/kimi-k2.7-code")).toBe("kimi-k2");
-  expect(inferKimiFamily("Kimi K2.6")).toBe("kimi-k2");
+test("Kimi family inference ignores versions", () => {
+  expect(inferKimiFamily("moonshotai/kimi-k2.5")).toBe("kimi");
+  expect(inferKimiFamily("moonshotai/kimi-k2.7-code")).toBe("kimi-code");
+  expect(inferKimiFamily("Kimi K2.6")).toBe("kimi");
 });
 
-test("Kimi family inference preserves thinking variants", () => {
-  expect(inferKimiFamily("moonshotai/kimi-k2-thinking")).toBe("kimi-thinking");
-  expect(inferKimiFamily("Kimi K2.5 Thinking")).toBe("kimi-thinking");
-  expect(inferKimiFamily("moonshotai/kimi-k2.6:thinking")).toBe("kimi-thinking");
+test("Kimi thinking variants share the base family", () => {
+  expect(inferKimiFamily("moonshotai/kimi-k2-thinking")).toBe("kimi");
+  expect(inferKimiFamily("Kimi K2.5 Thinking")).toBe("kimi");
+  expect(inferKimiFamily("moonshotai/kimi-k2.6:thinking")).toBe("kimi");
 });
 
-test("Kimi family inference maps K3 to its own family", () => {
-  expect(inferKimiFamily("moonshotai/kimi-k3")).toBe("kimi-k3");
-  expect(inferKimiFamily("Kimi K3")).toBe("kimi-k3");
+test("Kimi K3 shares the family and Pro is its own tier", () => {
+  expect(inferKimiFamily("moonshotai/kimi-k3")).toBe("kimi");
+  expect(inferKimiFamily("Kimi K3")).toBe("kimi");
+  expect(inferKimiFamily("moonshotai/kimi-k3.1-pro")).toBe("kimi-pro");
+  expect(inferKimiFamily("Kimi K3.1 Pro Highspeed")).toBe("kimi-pro");
 });

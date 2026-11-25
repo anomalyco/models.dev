@@ -1,0 +1,22 @@
+# https://developers.cloudflare.com/workers-ai/models/phonellm-mini-alpha-2/ (task "Text Generation"; Context Window
+#   262,140 tokens; function calling; $0.06 per M input tokens, $0.24 per M output tokens)
+# Price: https://developers.cloudflare.com/workers-ai/platform/pricing/ (accessed 2026-11-25).
+# Tools: the request schema's tool_choice takes none|auto|required or a named function
+#   (https://developers.cloudflare.com/workers-ai/models/phonellm-mini-alpha-2/sync-input.json).
+# Not set (not checked live): structured_output (the schema advertises response_format for most models), cache
+#   (the page lists no cached-input price) and mid-conversation flags.
+schema = 2
+base_model = "pipecat-ai/phonellm-mini-alpha-2"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[limit]
+context = 262_140
+output = 262_140
+
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.24
