@@ -1,0 +1,33 @@
+# Sources:
+# - Weights & model card: https://huggingface.co/oruk/oruk-fourier-2b (2.04B English-only Qwen3ASRForConditionalGeneration, CC BY-NC 4.0)
+# - Release date: 2026-11-20 (Hugging Face model creation date)
+# - Supported audio formats & request fields: https://speech-api.oruk.ai/openapi.json (WAV, FLAC, MP3, M4A, OGG, WebM; up to 60 min & 30 MiB; no temperature/top_p/top_k request parameters)
+# - Benchmarks: https://oruk.ai/benchmarks and https://huggingface.co/spaces/hf-audio/open_asr_leaderboard
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Oruk Fourier 2B"
+family = "oruk-fourier"
+description = "2.04B-parameter open-weights English speech recognition model built on the Qwen3-ASR architecture"
+open_weights = true
+release_date = "2026-11-20"
+license = "CC-BY-NC-4.0"
+
+[modalities]
+input = ["audio/wav", "audio/flac", "audio/mpeg", "audio/mp4", "audio/ogg", "audio/webm"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/oruk/oruk-fourier-2b"

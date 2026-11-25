@@ -1,0 +1,14 @@
+# Sources (accessed 2026-11-25):
+# - OpenAPI spec: https://speech-api.oruk.ai/openapi.json (`POST /v1/audio/transcriptions`, `model = "oruk-fourier-2b"`, WAV/FLAC/MP3/M4A/OGG/WebM up to 60 min & 30 MiB)
+# - Pricing: https://oruk.ai/pricing and https://speech-api.oruk.ai/openapi.json ($0.0080 per audio minute reference task rate; 1-second minimum; subscription plans also include shared monthly minutes)
+# - Weights & benchmarks: https://huggingface.co/oruk/oruk-fourier-2b and https://oruk.ai/benchmarks
+schema = 2
+v2_only = true
+base_model = "oruk/oruk-fourier-2b"
+
+[api.transcriptions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.008
