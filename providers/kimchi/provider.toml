@@ -1,0 +1,12 @@
+# Kimchi Inference (kimchi.dev): OpenAI-compatible serverless inference API.
+# https://kimchi.dev (API base https://llm.kimchi.dev/openai/v1)
+# Auth: Authorization: Bearer <KIMCHI_API_KEY>
+# Pricing: https://docs.kimchi.dev/docs/model-apis-pricing
+# Current served models, pricing and limits come from the public model-prices feed.
+# Protocol fields are host overrides; do not infer them from a model's lab entry.
+name = "Kimchi Inference"
+env = ["KIMCHI_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+doc = "https://docs.kimchi.dev/docs/model-apis-pricing"
+api = "https://llm.kimchi.dev/openai/v1"

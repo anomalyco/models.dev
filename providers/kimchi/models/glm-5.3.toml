@@ -1,0 +1,21 @@
+# Sync: https://api.cast.ai/ai-optimizer/v1beta/model-prices; prices are USD per million tokens.
+# Feed owns roster, cap bounds, tool/reasoning support and image input kinds.
+# Effort: top-level reasoning_effort=low|high|max; side channel: reasoning_content.
+# Model-specific controls verified 2026-11-25.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+top_k = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 4.4

@@ -206,6 +206,15 @@ Hugging Face is implemented in `packages/core/src/sync/providers/huggingface.ts`
 - New files are created only for models that map to a lab file and have a priced live provider. New reasoning models wait for hand-authored controls.
 - Models missing from the router are kept for manual review (`deleteMissing: false`).
 
+## Kimchi Notes
+
+- Public source: `GET https://api.cast.ai/ai-optimizer/v1beta/model-prices`; no credential. This is the published Kimchi model billing/catalog endpoint, not the authenticated gateway routing table. The host is `api.cast.ai` because Kimchi uses CAST AI's inference catalog; prices converted per-token to per-million.
+- Lifecycle, prices, limits (capped at lab maxima), tool/reasoning support and image input kinds come from the feed. Output limits are not expanded above a lab maximum. A billed cached-input price denotes implicit caching; no cache-kind evidence beyond that is claimed.
+- Every served model resolves through an explicit `base_model` map. Unknown rows are surfaced for manual metadata. Feed absence and new IDs never delete or automatically create a catalog entry.
+- Chat Completions checks on 2026-11-25 covered `reasoning_effort` (Gemma toggle `reasoning_effort = "none"`) plus MiniMax's `thinking.type = "disabled"`. Side channels (`reasoning_content`/`reasoning_tokens`) distinguish enabled from disabled. Retired aliases retain inherited controls without invented off defaults; three now serve replacement aliases.
+- DeepSeek and GLM inherit same-surface `top_k = false`; tools/update semantics and cache TTL remain unasserted. Billed cache reads use `implicit = true`.
+- The checked-in fixture proves clean generation, idempotence, malformed/truncated-feed rejection and preservation of authored status/protocol/cost details. Unexpected reasoner mappings fail closed rather than publishing no-control.
+
 ## Prime Inference Notes
 
 - Run with `bun models:sync prime` or `bun prime:sync`. Registration enables the hourly provider-specific workflow; no API key or new workflow secret is required.

@@ -1,0 +1,23 @@
+# Sync: https://api.cast.ai/ai-optimizer/v1beta/model-prices; prices are USD per million tokens.
+# Feed owns roster, cap bounds, tool/reasoning support and image input kinds.
+# Effort: top-level reasoning_effort=none|low|high|max; side channel: reasoning_content.
+# Model-specific controls verified 2026-11-25.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek-V4.1-Flash"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2
