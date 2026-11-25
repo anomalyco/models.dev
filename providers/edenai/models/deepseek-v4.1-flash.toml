@@ -1,0 +1,18 @@
+# Cache: DeepSeek caches automatically, no marker required (https://www.edenai.co/docs/v3/llms/prompt-caching).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.0975
+cache = { read = 0.00195 }
+
+[cost.text.output]
+price = 0.39

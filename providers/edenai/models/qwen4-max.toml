@@ -1,0 +1,17 @@
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.975
+cache = { read = 0.04875, write = 1.21875 }
+
+[cost.text.output]
+price = 2.925
