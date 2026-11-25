@@ -234,3 +234,14 @@ test("propagates v2_only from v2-only lab files", () => {
   const regularV2 = regular && "v2Set" in regular ? (regular.v2Set as Record<string, unknown>) : undefined;
   expect(regularV2?.v2_only).toBeUndefined();
 });
+
+test("records custom-tool freeform exclusion in headers for OpenAI GPT-5+ and o3 models", () => {
+  const gpt5 = translate(numesModel({ compatible_request_id: "openai/gpt-5.4", reasoning: null }));
+  expect(gpt5 && "header" in gpt5 ? gpt5.header : undefined).toContain("custom (freeform) tools");
+
+  const o3 = translate(numesModel({ compatible_request_id: "openai/o3", reasoning: null }));
+  expect(o3 && "header" in o3 ? o3.header : undefined).toContain("custom (freeform) tools");
+
+  const gpt4 = translate(numesModel({ compatible_request_id: "openai/gpt-4o", reasoning: null }));
+  expect(gpt4 && "header" in gpt4 ? gpt4.header : undefined).toBeUndefined();
+});

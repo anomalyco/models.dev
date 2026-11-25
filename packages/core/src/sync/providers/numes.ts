@@ -82,6 +82,7 @@ export const numes = {
   name: "Numes",
   modelsDir: "providers/numes/models",
   authoritativeHeaders: true,
+  preserveBaseModels: false,
   deleteMissing: false,
   sourceID(model) {
     return isEncrypted(model) ? undefined : model.compatible_request_id;
@@ -123,10 +124,11 @@ export const numes = {
     const reasoning = reasoningControls(model, id, baseModel);
     const synced = buildNumesModel(model, baseModel, reasoning);
     const v2Set = buildV2Set(baseModel, synced);
+    const header = modelHeader(baseModel, reasoning.header);
     return {
       id,
       model: synced,
-      header: reasoning.header,
+      ...(header === undefined ? {} : { header }),
       ...(v2Set === undefined ? {} : { v2Set }),
     };
   },
@@ -348,6 +350,20 @@ function peerReasoningControls(reasoning: Record<string, any>, source: string, s
     options,
     header: wireHeader(toggle, efforts, hasBudget, source),
   };
+}
+
+const FREEFORM_TOOLS_HEADER =
+  "# Tools: custom (freeform) tools are not supported on Numes Chat Completions (tools accepts only function and hosted tools, per https://numes.ai/docs/api-reference/parameters), so freeform is left out.";
+
+function isOpenAIFreeformCheckModel(baseModel: string) {
+  return /^openai\/(?:gpt-(?:[5-9]|\d{2,})|o3)(?:[.-]|$)/.test(baseModel);
+}
+
+function modelHeader(baseModel: string, reasoningHeader: string | undefined) {
+  const parts: string[] = [];
+  if (reasoningHeader !== undefined) parts.push(reasoningHeader);
+  if (isOpenAIFreeformCheckModel(baseModel)) parts.push(FREEFORM_TOOLS_HEADER);
+  return parts.length > 0 ? parts.join("\n") : undefined;
 }
 
 function wireHeader(toggle: boolean, efforts: string[], budget: boolean, source?: string) {

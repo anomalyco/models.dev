@@ -1,5 +1,6 @@
 # Reasoning controls: not declared by Numes; copied from openrouter/openai/o3-pro (Numes forwards the OpenRouter reasoning object).
 # Toggle: reasoning.enabled = true|false
+# Tools: custom (freeform) tools are not supported on Numes Chat Completions (tools accepts only function and hosted tools, per https://numes.ai/docs/api-reference/parameters), so freeform is left out.
 schema = 2
 base_model = "openai/o3-pro"
 

@@ -1,10 +1,9 @@
-# Reasoning controls: not declared by Numes; copied from openrouter/deepseek/deepseek-v4-flash-0731 (Numes forwards the OpenRouter reasoning object).
-# Effort: reasoning.effort = none|low|high|max
+# Reasoning controls: always on (Numes /public/v1/models declares mandatory = true with no effort or budget controls).
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+reasoning = { supported = true }
 structured_output = true
 cache = { implicit = true }
 
@@ -12,7 +11,7 @@ cache = { implicit = true }
 output = 131_072
 
 [cost.text.input]
-price = 0.049585
+price = 0.13
 cache = { read = 0.028 }
 
 [cost.text.output]
