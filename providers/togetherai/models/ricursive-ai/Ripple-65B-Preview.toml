@@ -1,0 +1,30 @@
+# Price and context: GET https://api.together.xyz/v1/models (accessed 2026-11-24): $0.20 input, $0.02 cached input,
+#   $0.60 output per 1M; context_length 131,072. The serverless chat table (https://docs.together.ai/docs/serverless-models)
+#   lists the same prices and context, NVFP4, function calling Yes, structured outputs Yes.
+# Reasoning: always on, no caller control. Together's reasoning guide (https://docs.together.ai/docs/inference/chat/reasoning)
+#   doesn't list this model, and Ricursive's chat template has no thinking switch
+#   (https://huggingface.co/ricursiveAI/Ripple-65B-Preview/raw/main/chat_template.jinja). Live 2026-11-24 at temperature 0,
+#   reasoning.enabled=false, reasoning_effort=none and chat_template_kwargs.enable_thinking=false all still returned
+#   reasoning_content, and reasoning_effort low, medium, high and xhigh produced identical output.
+# Reasoning field: message.reasoning_content (live 2026-11-24).
+schema = 2
+base_model = "ricursiveai/ripple-65b-preview"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+structured_output = true
+prompt_cache_key = true
+
+[limit]
+context = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.6

@@ -8,6 +8,7 @@
 # tools.updates = false: `tools` is request-level, with no tool addition/removal message.
 # Cache: implicit = true, prompt_cache_key = true. Caching is automatic and `prompt_cache_key` is a routing hint (https://docs.venice.ai/guides/features/prompt-caching).
 # Cache (Claude): Venice adds cache_control breakpoints to the system prompt and the second-to-last user message itself; callers can add `cache_control` (ephemeral, 5m) on system and message content blocks, up to 4 breakpoints per request (same page).
+# Output cap 64,000: model_spec.maxCompletionTokens on https://api.venice.ai/api/v1/models?type=text (2026-11-24).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 
@@ -21,6 +22,9 @@ reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
 structured_output = true
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"] } }
 prompt_cache_key = true
+
+[limit]
+output = 64_000
 
 [api.chat-completions]
 

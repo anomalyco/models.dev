@@ -1,0 +1,37 @@
+# Sources (accessed 2026-11-24):
+# - Model page: https://platform.stepfun.ai/docs/en/guides/models/stepaudio-3-asr
+# - Speech recognition API (POST /v1/audio/asr/sse, the only endpoint that takes this model; format ogg, mp3, wav, pcm, m4a):
+#   https://platform.stepfun.ai/docs/en/api-reference/audio/asr-sse
+#   It isn't the OpenAI transcriptions format, so no SDK is named.
+# - Pricing: USD 0.60 per hour of audio = USD 0.01 per minute, billed since 2026-11-23 12:00 UTC+8 (free before then):
+#   https://platform.stepfun.ai/docs/en/guides/pricing/details
+# release_date: StepAudio 3 series launched on 2026-09-15 (https://finance.sina.com.cn/stock/t/2026-09-15/doc-inirxats8546044.shtml).
+schema = 2
+v2_only = true
+type = "transcription"
+name = "StepAudio 3 ASR Max"
+description = "StepFun's largest speech recognition model, with context-aware transcription of names, terms, dialects and singing"
+family = "step-asr"
+open_weights = false
+release_date = "2026-09-15"
+
+[modalities]
+input = ["audio/ogg", "audio/mpeg", "audio/wav", "audio/pcm", "audio/mp4"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+
+[limit]
+context = 0
+output = 0
+
+[api.transcriptions]
+path = "/audio/asr/sse"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.01

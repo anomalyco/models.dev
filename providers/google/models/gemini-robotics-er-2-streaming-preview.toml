@@ -2,6 +2,7 @@
 # - https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-2-streaming-preview
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - Introductory rates through 2026-12-31 double from 2027-01-01.
+# - Audio input: one rate for "text / image / video / audio" ($1.00): https://ai.google.dev/gemini-api/docs/pricing#gemini-robotics-er-2-streaming
 # Mid-conversation updates: https://ai.google.dev/api/caching#Content (role is "user" or "model");
 # systemInstruction, thinking config and tools are request-level in generateContent and Interactions.
 # Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#gemini-robotics-er-2-streaming; support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-robotics-er-2-streaming-preview
@@ -25,9 +26,12 @@ price = 1
 [cost.text.output]
 price = 5
 
+[cost.audio.input]
+price = 1
+
 [cost.web_search]
 price = 14
 
 [[cost.multipliers]]
 when = { date = { gte = "2027-01-01" } }
-factor = { text = 2 }
+factor = { text = 2, audio = 2 }

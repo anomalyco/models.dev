@@ -1,17 +1,17 @@
 # Effort: reasoning_effort = none|high; none disables reasoning (no separate toggle).
 # https://docs.deepinfra.com/chat/reasoning
 # https://cloud.tencent.com/document/product/1823/131208
+# Deprecated: https://api.deepinfra.com/models/list sets deprecated = 2026-11-27 with replaced_by = tencent/Hy4,
+# and the model is no longer listed by https://api.deepinfra.com/v1/openai/models (checked 2026-11-24).
 schema = 2
 base_model = "tencent/hy4-preview"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 cache = { implicit = true }
 prompt_cache_key = true
-
-[limit]
-context = 1_048_576
 
 [cost.text.input]
 price = 0.834

@@ -1,0 +1,27 @@
+# Sources:
+# - API model_name marengo3.0: https://docs.twelvelabs.io/api-reference/create-embeddings-v2/create-embeddings
+# - Model page (text up to 500 tokens, 512-dimensional embeddings; images JPEG, PNG; audio WAV, MP3, FLAC;
+#   video in any FFmpeg-supported format, so left generic): https://docs.twelvelabs.io/v1.3/docs/concepts/models/marengo/marengo-3-0
+# - General availability Dec 1, 2025: https://press.aboutamazon.com/aws/2025/12/twelvelabs-launches-its-most-powerful-video-understanding-model-marengo-3-0-on-twelvelabs-and-amazon-bedrock
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Marengo 3.0"
+description = "TwelveLabs video understanding embedding model for any-to-any search across video, audio, images and text"
+open_weights = false
+release_date = "2025-12-01"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "audio/wav", "audio/mpeg", "audio/flac", "video"]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 500
+output = 512

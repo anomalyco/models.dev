@@ -15,6 +15,9 @@
 # API: https://cloud.tencent.com/document/product/1823/132248
 # Direct-service IDs: deepseek/deepseek-flash and deepseek/deepseek-v4-pro.
 # Use Tencent's recommended IDs; omit aliases to avoid duplicates, not as retired.
+# The Tencent-hosted deepseek-v4.1-flash-1017 is a separate service, not an alias of this one: its own
+#   row in the plan's model and pricing tables, Tencent's SLA instead of DeepSeek's vendor-direct terms,
+#   and its own promotions (see ../deepseek-v4.1-flash-1017.toml).
 # Tencent manages the routed version; mapping is documented in Availability above.
 # Current documented upstream version: DeepSeek-V4.1-Flash-1017 (checked 2026-11-02).
 # All direct Flash aliases were upgraded to V4.1 Flash 1017 on 2026-10-17.

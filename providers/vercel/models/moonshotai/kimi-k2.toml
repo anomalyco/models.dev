@@ -9,9 +9,6 @@ description = "Kimi model for long-context chat, coding, and agentic reasoning"
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = false
 
-[limit]
-output = 131_072
-
 [api.chat-completions]
 capabilities = { system_updates = true }
 

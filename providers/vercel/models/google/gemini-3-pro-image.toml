@@ -4,6 +4,7 @@ base_model = "google/gemini-3-pro-image"
 [capabilities]
 reasoning = { supported = false }
 cache = { implicit = true }
+service_tier = ["flex"]
 
 [cost.text.input]
 price = 2
@@ -19,3 +20,10 @@ price = 0.1344
 [[cost.image.output.overrides]]
 when = { resolution = { equals = "4K" } }
 price = 0.24
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = { input = { price = 0.5 }, output = { price = 0.5 } } }

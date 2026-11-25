@@ -1,6 +1,7 @@
 # Lab identity: https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507
 # knowledge: kept from the earlier Hugging Face file; unsourced (no cutoff in the model card or lab docs, checked 2026-10-20).
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 schema = 2
 base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
 name = "Qwen3-235B-A22B-Thinking-2507"
@@ -11,6 +12,9 @@ knowledge = "2025-04"
 tools = { supported = true }
 reasoning = { supported = true }
 
+[limit]
+context = 128_000
+
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }
 
@@ -18,7 +22,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.3
+price = 0.45
 
 [cost.text.output]
-price = 3
+price = 3.5

@@ -1,0 +1,26 @@
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+# Toggle: reasoning.enabled = true|false (the router's OpenAI-compatible reasoning object, live-tested on this host's
+#   MiMo-V2.5). Cohere's own API turns thinking on and off (providers/cohere/models/command-a-plus-05-2026.toml); its
+#   token budget isn't listed, as the router doesn't document a budget field.
+schema = 2
+base_model = "cohere/command-a-plus-05-2026"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 192_000
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.5

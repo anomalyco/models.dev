@@ -19,9 +19,6 @@ reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 temperature = true
 
-[limit]
-output = 943_718
-
 [api.chat-completions]
 
 [api.responses]
@@ -31,8 +28,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.19
-cache = { read = 0.19 }
+price = 0.1824
+cache = { read = 0.18 }
 
 [cost.text.output]
-price = 10.6066
+price = 11.0055

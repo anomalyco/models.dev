@@ -1,0 +1,19 @@
+# Created by the Hugging Face sync.
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+schema = 2
+base_model = "anthracite-org/magnum-v4-72b"
+
+[capabilities]
+structured_output = true
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 5

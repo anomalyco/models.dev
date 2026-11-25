@@ -8,9 +8,6 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"], budget = {} }
 cache = { explicit = true }
 
-[limit]
-output = 128_000
-
 [api.chat-completions]
 legacy_interleaved = true
 
@@ -38,3 +35,6 @@ price = 15
 [[cost.text.output.overrides]]
 when = { context = { gt = 200_000 } }
 price = 22.5
+
+[cost.web_search]
+price = 10

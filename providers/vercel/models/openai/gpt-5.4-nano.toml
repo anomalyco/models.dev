@@ -17,6 +17,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 structured_output = true
 system_updates = true
 cache = { implicit = true }
+service_tier = ["flex"]
 
 [api.chat-completions]
 capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
@@ -36,3 +37,10 @@ cache = { read = 0.02 }
 
 [cost.text.output]
 price = 1.25
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }

@@ -1,3 +1,4 @@
+# Output cap 64,000: providers[].max_output on https://api.llmgateway.io/v1/models (2026-11-24).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-6"
 name = "Claude Sonnet 4.6 (Vertex AI (Anthropic))"
@@ -5,6 +6,9 @@ name = "Claude Sonnet 4.6 (Vertex AI (Anthropic))"
 [capabilities]
 reasoning = { supported = true, budget = { min = 1_024, max = 63_999 }, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+
+[limit]
+output = 64_000
 
 [cost.text.input]
 price = 3

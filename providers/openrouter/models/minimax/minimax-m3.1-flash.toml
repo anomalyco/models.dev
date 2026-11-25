@@ -11,7 +11,7 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [limit]
 context = 1_048_576
-output = 943_718
+output = 131_072
 
 [api.chat-completions]
 capabilities = { system_updates = true }
@@ -23,8 +23,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.1
-cache = { read = 0.025 }
+price = 0.075
+cache = { read = 0.0075 }
 
 [cost.text.output]
-price = 0.4
+price = 0.3

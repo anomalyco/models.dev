@@ -49,7 +49,16 @@ export const baseten = {
   modelsDir: "providers/baseten/models",
   deleteMissing: false,
   sourceID(model) {
-    return model.id;
+    // Decision models without a lab file are reported by sourceNotices.
+    return missingDecisionLab(model) === undefined ? model.id : undefined;
+  },
+  sourceNotices(models) {
+    return models.flatMap((model) => {
+      const lab = missingDecisionLab(model);
+      return lab === undefined
+        ? []
+        : [`\`${model.id}\` was not created: decision models need a lab file at \`models/${lab}.toml\`.`];
+    });
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
@@ -90,9 +99,14 @@ export const baseten = {
     ) return undefined;
 
     const built = buildBasetenModel(model, existing, baseModel, authored);
+    const pinned = authored?.limit?.output;
+    const listed = model.max_completion_tokens;
     return {
       id: model.id,
       model: built,
+      notices: pinned !== undefined && listed !== undefined && pinned !== listed
+        ? [`\`${model.id}\` keeps its hand-set limit.output ${pinned}; the catalog lists max_completion_tokens ${listed}.`]
+        : undefined,
       // Model APIs cache prompt prefixes automatically and bill cached input
       // at the catalog's input_cache_read price.
       v2Set: { ...basetenV2Set(built.cost?.cache_read, context.v2?.(model.id)), api: chatApis },
@@ -154,6 +168,13 @@ export function buildBasetenDecisionModel(
   if (api !== undefined) doc.api = api;
   doc.cost = { text: { input: { price: input }, output: { price: output } } };
   return doc;
+}
+
+// The lab model a decision model's catalog name points at, when that lab file is missing.
+function missingDecisionLab(model: BasetenModel) {
+  if (!model.id.startsWith(DECISION_PREFIX)) return undefined;
+  const lab = `baseten/${model.name}`;
+  return labModel(lab) === undefined ? lab : undefined;
 }
 
 function labModel(modelID: string) {
@@ -290,18 +311,30 @@ export function buildBasetenModel(
   return values as SyncedFullModel;
 }
 
+// Slugs whose lab ID can't be derived from the slug, each mapped to one exact lab file.
+const LAB_ALIASES: Record<string, string> = {
+  "reflection/Beam-1.0": "reflection/beam-1.0-501b-a23b",
+};
+
 export function resolveBasetenBaseModel(id: string) {
+  const alias = LAB_ALIASES[id];
+  if (alias !== undefined) return labModel(alias) === undefined ? undefined : alias;
   const [prefix, ...parts] = id.split("/");
   if (prefix === undefined || parts.length === 0) return undefined;
   const canonicalPrefix = {
     "deepseek-ai": "deepseek",
+    "meta-models": "meta",
     MiniMaxAI: "minimax",
     moonshotai: "moonshotai",
     nvidia: "nvidia",
     "zai-org": "zai",
   }[prefix];
   if (canonicalPrefix === undefined) return resolveCanonicalBaseModel(id);
-  return resolveCanonicalBaseModel(`${canonicalPrefix}/${parts.join("/").toLowerCase()}`);
+  const model = parts.join("/").toLowerCase();
+  const resolved = resolveCanonicalBaseModel(`${canonicalPrefix}/${model}`);
+  // NVIDIA's slugs repeat the lab in the model name (nvidia/NVIDIA-Nemotron-…); its lab files don't.
+  if (resolved !== undefined || prefix !== "nvidia" || !model.startsWith("nvidia-")) return resolved;
+  return resolveCanonicalBaseModel(`nvidia/${model.slice("nvidia-".length)}`);
 }
 
 type Modality = "text" | "audio" | "image" | "video" | "pdf";

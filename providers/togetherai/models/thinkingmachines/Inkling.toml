@@ -1,3 +1,6 @@
+# Status: deprecated. Together lists thinkingmachines/Inkling for removal from serverless on 2026-11-06
+#   (replacement meta-models/Muse-Spark-Open-816B-A42B): https://docs.together.ai/docs/deprecations (accessed 2026-11-24).
+#   It is no longer on https://docs.together.ai/docs/serverless-models, though it still answered a live call on 2026-11-24.
 # Serverless: $1.00 input, $0.17 cached input, $4.05 output per 1M; context 524,288 (accessed 2026-10-21):
 # https://docs.together.ai/docs/serverless-models
 # Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max (live 2026-10-21, rendered
@@ -11,6 +14,7 @@
 # rendered before the first user turn.
 schema = 2
 base_model = "thinkingmachines/inkling"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "audio/wav"]

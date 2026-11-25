@@ -1,0 +1,22 @@
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+# Effort: reasoning_effort = low|medium|high|xhigh, as on Together (one of the router's providers,
+#   providers/togetherai/models/meta-models/Muse-Glimmer-30B.toml) and OpenRouter.
+schema = 2
+base_model = "meta/muse-glimmer-30b"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2

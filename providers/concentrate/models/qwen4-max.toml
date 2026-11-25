@@ -9,7 +9,7 @@ output = ["text"]
 [capabilities]
 structured_output = true
 reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
-cache = { implicit = true }
+cache = { implicit = { min_tokens = 1_024 } }
 
 [limit]
 output = 131_072

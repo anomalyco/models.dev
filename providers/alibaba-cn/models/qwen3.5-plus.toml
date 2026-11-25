@@ -10,6 +10,7 @@
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
 # Web search: $0.573411 per 1,000 calls in China (Beijing) (agent policy, also the Responses and Anthropic web_search tool rate): https://www.alibabacloud.com/help/en/model-studio/web-search (accessed 2026-10-23).
 # Tools: tool_choice auto|none|named on every API, plus required (`any`) on Anthropic Messages; no strict tool mode (sources in provider.toml).
+# Deprecated: Model Studio retires this model on 2027-01-19 (notice https://www.alibabacloud.com/notice/detail?id=2217, listed on https://www.alibabacloud.com/help/en/model-studio/model-depreciation; the catalog API GET https://dashscope-intl.aliyuncs.com/api/v1/models reports inference_offline_info.offline_time 2027-01-19 10:00 UTC+8; accessed 2026-11-24).
 schema = 2
 name = "Qwen3.5 Plus"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
@@ -18,6 +19,7 @@ open_weights = false
 knowledge = "2025-04"
 release_date = "2026-02-16"
 last_updated = "2026-09-22"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]

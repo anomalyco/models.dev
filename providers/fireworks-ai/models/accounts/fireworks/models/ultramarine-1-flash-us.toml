@@ -1,0 +1,37 @@
+# Ultramarine 1 Flash on Fireworks Serverless: accounts/fireworks/models/ultramarine-1-flash-us, Paper Instruments' RL-tuned
+#   GLM 5.3 Flash (List Models: kind HF_PEFT_ADDON, public, 1,048,576 context, HF paperinstruments/Ultramarine-1-Flash).
+# Pricing: https://docs.fireworks.ai/serverless/pricing ("Ultramarine 1 Flash (US)" row, accessed 2026-11-24): Standard $0.15 / $0.03 / $0.50,
+#   Priority $0.1875 / $0.0375 / $0.625 per 1M input / cached input / output.
+# Live 2026-11-24 (Chat Completions on api.fireworks.ai): a required tool call returned get_weather({"city": "Paris"}) with service_tier = "priority";
+#   Responses and Messages answered too. Thinking-only like GLM 5.3: reasoning_effort = "none" and thinking.type = disabled return 400
+#   ("GLM-5.3 is a thinking-only model"); low|high|max gave 11 / 12 / 208 reasoning tokens on "Is 391 prime?".
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field (https://docs.fireworks.ai/guides/prompt-caching).
+schema = 2
+base_model = "paperinstruments/ultramarine-1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }

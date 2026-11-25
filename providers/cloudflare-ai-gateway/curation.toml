@@ -815,14 +815,3 @@ note = [
 ]
 reasoning_options = [{ type = "toggle" }]
 
-# Catalog id uses the HuggingFace org (deepseek-ai/); the lab file is models/deepseek/.
-# Cloudflare's own Workers AI entry for this model (@cf/deepseek-ai/deepseek-v4.1-flash-1017,
-# GET /ai/models/search, 2026-11-16) lists supported_efforts none|low|high|max, default high,
-# normalizing minimal -> none, medium -> high and xhigh -> max. Same ladder as the Kilo entry.
-# Prices: provider_details[0] (subconscious), the first upstream.
-[models."deepseek-ai/deepseek-v4.1-flash-1017"]
-base_model = "deepseek/deepseek-v4.1-flash-1017"
-note = [
-  "Off: reasoning_effort = none; effort: low|high|max (default high; minimal -> none, medium -> high, xhigh -> max; POST /ai/v1/chat/completions; ladder from Cloudflare's Workers AI model metadata, not probed live: the gateway balance ran out).",
-]
-reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]

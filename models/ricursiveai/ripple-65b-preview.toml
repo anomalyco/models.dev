@@ -1,0 +1,53 @@
+# Sources (accessed 2026-11-24):
+# - Model card https://huggingface.co/ricursiveAI/Ripple-65B-Preview: 65B dense Transformer pretrained from scratch on 12T
+#   tokens of text and code, up to 1Mi (1,048,576) tokens of context, post-trained for agentic coding; Apache 2.0; BF16 and
+#   NVFP4 checkpoints. Its chat_template.jinja renders tool definitions and <tool_call> blocks and replays
+#   reasoning_content in <think> tags.
+# - Launch post https://www.ricursive.com/ripple; release 2026-11-04 (Hugging Face repo created 2026-11-04,
+#   https://huggingface.co/api/models/ricursiveAI/Ripple-65B-Preview; https://venturebeat.com/technology/ex-googlers-new-apache-2-0-model-ripple-65b-preview-claims-the-u-s-open-coding-lead-on-two-major-benchmarks).
+# Input: text only (the card's pretraining corpus is text-only; no vision or audio encoder).
+# Output limit: Ricursive publishes none. 131,072 is OpenRouter's max_completion_tokens for the PrimeIntellect endpoint,
+#   which serves the full 1,048,576 context (https://openrouter.ai/api/v1/models/ricursiveai/ripple-65b-preview/endpoints).
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host;
+#   generation_config.json sets temperature 1.0 and top_p 0.95.
+# Knowledge cutoff: not published.
+schema = 2
+name = "Ripple 65B Preview"
+description = "Dense 65B open-weight model pretrained from scratch on 12T tokens and post-trained for agentic coding"
+open_weights = true
+release_date = "2026-11-04"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ricursiveAI/Ripple-65B-Preview"
+
+[[weights]]
+label = "Hugging Face (NVFP4)"
+url = "https://huggingface.co/ricursiveAI/Ripple-65B-Preview-NVFP4"
+quantization = "nvfp4"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/ricursiveAI/Ripple-65B-Preview"
+type = "model_card"
+
+[[links]]
+label = "Launch announcement"
+url = "https://www.ricursive.com/ripple"
+type = "announcement"

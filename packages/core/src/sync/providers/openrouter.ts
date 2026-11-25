@@ -30,6 +30,15 @@ const CANONICAL_BASE_MODEL_OVERRIDES = {
   "openai/gpt-5.6-luna-pro": "openai/gpt-5.6-luna",
   "openai/gpt-5.6-sol-pro": "openai/gpt-5.6-sol",
   "openai/gpt-5.6-terra-pro": "openai/gpt-5.6-terra",
+  "openai/gpt-6-astra-pro": "openai/gpt-6-astra",
+  "openai/gpt-6-luna-pro": "openai/gpt-6-luna",
+  "openai/gpt-6-sol-pro": "openai/gpt-6-sol",
+  "openai/gpt-6.1-sol-pro": "openai/gpt-6.1-sol",
+  "openai/gpt-6.1-terra-pro": "openai/gpt-6.1-terra",
+  "openai/gpt-6.2-astra-pro": "openai/gpt-6.2-astra",
+  "openai/gpt-6.2-sol-pro": "openai/gpt-6.2-sol",
+  "meta/muse-ember": "meta/muse-ember-1.0",
+  "meta/muse-wonder": "meta/muse-wonder-1.0",
   "anthropic/claude-opus-4.7-fast": "anthropic/claude-opus-4-7",
   "anthropic/claude-opus-4.8-fast": "anthropic/claude-opus-4-8",
   "typesafe/jev-1.13": "typesafe/jev-1.13.0",
@@ -41,6 +50,16 @@ const DECISION_DESCRIPTION = "Decision model for typed evaluation of shared stat
 const OUTPUT_LIMIT_OVERRIDES: Record<string, number> = {
   "minimax/minimax-01": 40_000,
 };
+
+// OpenRouter fills max_completion_tokens with 90% of the context when a host publishes no
+// output cap (943,718 of 1,048,576; 942,818 of GPT-4.1 Nano's 1,047,576, where OpenAI caps
+// output at 32,768). It isn't a real limit, so the lab's output is used instead.
+export function isPlaceholderOutputLimit(model: OpenRouterModel) {
+  const output = model.top_provider.max_completion_tokens;
+  if (output === null) return false;
+  return [model.context_length, model.top_provider.context_length]
+    .some((context) => context !== null && context > 0 && output === Math.floor((context * 9) / 10));
+}
 
 // OpenRouter's metadata still lists the preview's efforts for these models, but requests
 // are rejected upstream. Mistral Large 4: `none` returns 400 "supported values: high, low,
@@ -254,7 +273,9 @@ export const openrouter = {
   },
   parseModels(raw) {
     // Temporarily skip batch routes (`*:batch`) — they are not catalog targets.
-    return OpenRouterResponse.parse(raw).data.filter((model) => !model.id.endsWith(":batch"));
+    return OpenRouterResponse.parse(raw).data
+      .filter((model) => !model.id.endsWith(":batch"))
+      .map(withStableBasePrice);
   },
   sourceNotices(models) {
     const ids = new Set(models.map((model) => model.id));
@@ -1067,12 +1088,18 @@ export function resolveMediaBaseModel(openrouterID: string) {
   return matches.length === 1 ? `${lab}/${matches[0]!.slice(0, -".toml".length)}` : undefined;
 }
 
-function rawLabModel(modelID: string) {
+export function rawLabModel(modelID: string) {
   try {
     return Bun.TOML.parse(readFileSync(path.join(MODELS_DIR, `${modelID}.toml`), "utf8")) as Record<string, unknown>;
   } catch {
     return undefined;
   }
+}
+
+// The lab's output limit, capped at the context this host serves.
+function labOutputLimit(modelID: string | undefined, context: number) {
+  const output = modelID === undefined ? undefined : (rawLabModel(modelID)?.limit as { output?: unknown } | undefined)?.output;
+  return typeof output === "number" && output > 0 ? Math.min(output, context) : undefined;
 }
 
 function dateFromTimestamp(timestamp: number) {
@@ -1229,6 +1256,48 @@ export function overrideWhen(override: PriceOverride): Record<string, unknown> |
     if (hours.length === 2) when.all = hours;
   }
   return when;
+}
+
+// Whether an override's time window (days and hours) includes a minute of the week,
+// with the same wrap-past-midnight rule as overrideWhen.
+function windowIncludes(override: PriceOverride, day: string, minute: number) {
+  if (override.utc_days !== undefined) {
+    if (!Array.isArray(override.utc_days)) return false;
+    if (!override.utc_days.some((value) => typeof value === "string" && UTC_DAYS[value.toLowerCase()] === day)) return false;
+  }
+  if (override.utc_start === undefined && override.utc_end === undefined) return true;
+  const start = utcTime(override.utc_start);
+  const end = utcTime(override.utc_end);
+  if (start === undefined || end === undefined) return false;
+  const toMinutes = (time: string) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3));
+  const from = toMinutes(start);
+  const until = toMinutes(end);
+  if (until > from) return minute >= from && minute < until;
+  if (until === from) return true;
+  return minute >= from || minute < until;
+}
+
+/**
+ * OpenRouter's top-level prices are the time window live when the catalog is read. When
+ * pricing.overrides price every minute of the week by time alone, the top-level price never
+ * applies, so the base becomes the first window's and stays the same from run to run.
+ * https://openrouter.ai/docs/guides/overview/models#pricing-overrides
+ */
+export function withStableBasePrice(model: OpenRouterModel): OpenRouterModel {
+  const windows = (model.pricing.overrides ?? []).filter((override) =>
+    isTimeWindow(override)
+    && Object.keys(override).every((key) => TIME_WINDOW_KEYS.includes(key) || isPriceKey(key))
+    && typeof overrideWhen(override) !== "string"
+  );
+  const first = windows[0];
+  if (first === undefined) return model;
+  for (const day of Object.values(UTC_DAYS)) {
+    for (let minute = 0; minute < 24 * 60; minute++) {
+      if (!windows.some((override) => windowIncludes(override, day, minute))) return model;
+    }
+  }
+  const prices = Object.fromEntries(Object.entries(first).filter(([key]) => !TIME_WINDOW_KEYS.includes(key)));
+  return { ...model, pricing: { ...model.pricing, ...prices } };
 }
 
 function utcTime(value: unknown) {
@@ -1522,24 +1591,23 @@ export function buildOpenRouterModel(
         tiers: costTiers(model, existing),
       }
     : existing?.cost;
+  const canonical = openRouterBaseModel(model, existing?.base_model, baseModel, resolveCanonicalBaseModel);
+  const catalogOutput = isPlaceholderOutputLimit(model) ? undefined : model.top_provider.max_completion_tokens;
   const limit = {
     context,
     input: existing?.limit?.input,
     // Decision models evaluate state without generating completion tokens.
     output: decision ? 0 : (OUTPUT_LIMIT_OVERRIDES[model.id]
+      ?? catalogOutput
+      ?? labOutputLimit(canonical, Math.min(context, model.top_provider.context_length ?? context))
       ?? model.top_provider.max_completion_tokens
       ?? existing?.limit?.output
       ?? context),
   };
-  const canonical = openRouterBaseModel(model, existing?.base_model, baseModel, resolveCanonicalBaseModel);
   const description = existing?.description ?? (model.id.startsWith("~") ? model.description ?? undefined : undefined);
 
   if (canonical !== undefined) {
     const canonicalOverride = canonicalBaseModelOverride(model.id);
-    // An unspecified completion cap on a rolling route comes from the current lab.
-    const hostLimit = model.id.startsWith("~") && !decision && model.top_provider.max_completion_tokens === null
-      ? { context: limit.context, input: limit.input }
-      : limit;
     return factorBaseModel(
       canonical,
       {
@@ -1569,11 +1637,11 @@ export function buildOpenRouterModel(
         structured_output: decision ? undefined : structuredOutput,
         status: existing?.status,
         interleaved: existing?.interleaved,
-        limit: hostLimit,
+        limit,
         modalities: { input, output },
         cost,
       },
-      hostLimit,
+      limit,
       existing?.base_model === canonical ? existing.base_model_omit : undefined,
     );
   }

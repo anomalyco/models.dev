@@ -7,11 +7,13 @@
 # none -- K2.8 Preview requests with thinking disabled are served by K2.8
 # Preview without thinking, so no separate thinking.type toggle is authored.
 # Not re-measured on this endpoint; adjust if wire probing shows the levels
-# collapsing as they do on kimi-k2.7-code (see that file).
+# collapsing as they did on kimi-k2.7-code (measured 2026-08, see provider.toml).
 # Output limit: the Kimi Code docs only specify context (1M); 32_768 is the
 # value kept by the K2.8-backed kimi-for-coding entries on Kimi's own coding
 # relays (kimi-code-plan-cn / -global). The v1 catalog requires limit.output,
-# so it is overridden here rather than left unset.
+# so it is overridden here rather than left unset. The plan overview's 1024K
+# 最大输出长度 for K2.8 Preview isn't backed by a coding API reference, so it isn't used
+# (https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-plan-overview.md, checked 2026-11-24).
 schema = 2
 base_model = "moonshotai/kimi-k2.8-preview"
 

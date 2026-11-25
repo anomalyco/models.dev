@@ -3,6 +3,7 @@
 # Live on dashscope-intl.aliyuncs.com 2026-10-19: late system message accepted, obeyed and kept the implicit cache.
 # Tools: Function Calling unsupported for role-playing models per https://www.alibabacloud.com/help/en/model-studio/text-generation-model
 # max_tokens_field: ignores max_completion_tokens, max_tokens caps output (live probe 2026-10-24); Model Studio lists it outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions)
+# Cache read: implicit cache hits $0.1 per 1M (catalog API GET https://dashscope-intl.aliyuncs.com/api/v1/models, input_token_cache, accessed 2026-11-24).
 schema = 2
 name = "Qwen Plus Character (Japanese)"
 description = "Qwen instruction model for multilingual chat, reasoning, and tool use"
@@ -34,6 +35,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 
 [cost.text.input]
 price = 0.5
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 1.4

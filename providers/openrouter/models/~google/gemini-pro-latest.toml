@@ -20,9 +20,6 @@ structured_output = true
 temperature = true
 cache = { implicit = true, explicit = { ttl = ["5m"], max_breakpoints = 1 } }
 
-[limit]
-output = 943_718
-
 [api.chat-completions]
 
 [api.responses]
