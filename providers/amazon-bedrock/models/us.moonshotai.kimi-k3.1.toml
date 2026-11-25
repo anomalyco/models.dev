@@ -12,9 +12,14 @@
 # Service tiers: priority|flex (Converse serviceTier.type) per the model card (1.75x/0.5x of Standard); flex answered live 2026-11-09.
 # Modalities: Converse image blocks are png|jpeg|gif|webp (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html); the model card lists text and image input only (no video).
 # Structured outputs: Converse outputConfig.textFormat json_schema and toolSpec.strict both worked live 2026-11-09 (https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html).
+# Runtime APIs: the model card lists Responses, Chat Completions and Converse, and recommends Chat Completions. Converse has known limitations with prior reasoning blocks and attached PDF/HTML documents.
+# Reasoning effort (model card): Responses reasoning.effort and Chat Completions/InvokeModel reasoning_effort = none|low|medium|high|xhigh|max (default max). Converse accepts but does not validate the field.
+# Chat Completions compatibility: reasoning_content and max_tokens are recorded live in anomalyco/opencode#66148 (reasoning and tool-call replay).
+# OpenCode Runtime entrypoints are added by anomalyco/opencode#66148. Converse stays first to preserve the v1 default.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro Highspeed (US)"
+recommended_api = "chat-completions"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
@@ -29,6 +34,17 @@ service_tier = ["flex", "priority"]
 
 [limit]
 output = 1_048_576
+
+[api.converse]
+
+[api.chat-completions]
+base_url = "https://bedrock-runtime.${AWS_REGION}.amazonaws.com/openai/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/amazon-bedrock/chat" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+base_url = "https://bedrock-runtime.${AWS_REGION}.amazonaws.com/openai/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/amazon-bedrock/responses" }
 
 [cost.text.input]
 price = 4.4

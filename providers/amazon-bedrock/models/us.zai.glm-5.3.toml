@@ -11,9 +11,13 @@
 # Mid-conversation (Converse): AWS documents system-role messages and tool changes for Claude only (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html); live 2026-10-19 this model rejects them ("This model doesn't support system messages"). No per-turn effort on Converse.
 # Cache: the model card lists implicit caching for Responses/Chat Completions only; kept implicit because Converse returned cache reads live (2026-10-19).
 # tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html); the model card lists Structured outputs on bedrock-runtime: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5-3.html
+# Runtime APIs: the model card lists Responses, Chat Completions and Converse. Recommend Chat Completions consistently with Kimi on Runtime (anomalyco/opencode#66015).
+# Chat Completions compatibility: reasoning_content and max_tokens match the first-party GLM API and the Runtime wire format exercised by anomalyco/opencode#66148.
+# OpenCode Runtime entrypoints are added by anomalyco/opencode#66148. Converse stays first to preserve the v1 default.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 (US)"
+recommended_api = "chat-completions"
 
 [capabilities]
 tools = { supported = true, strict = true }
@@ -27,6 +31,15 @@ output = 128_000
 
 [api.converse]
 legacy_interleaved = true
+
+[api.chat-completions]
+base_url = "https://bedrock-runtime.${AWS_REGION}.amazonaws.com/openai/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/amazon-bedrock/chat" }
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+base_url = "https://bedrock-runtime.${AWS_REGION}.amazonaws.com/openai/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/amazon-bedrock/responses" }
 
 [cost.text.input]
 price = 1.848
