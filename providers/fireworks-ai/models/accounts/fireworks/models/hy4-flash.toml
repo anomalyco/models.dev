@@ -16,8 +16,9 @@
 #   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
 # Fireworks returns reasoning in reasoning_content (https://docs.fireworks.ai/api-reference/post-chatcompletions; confirmed live 2026-11-24).
 # Mid-conversation, live Chat Completions tests (2026-11-24), ~11k-token prefix, one x-session-affinity key:
-#   system_updates = true: raw_output renders a later system message in place (system, user, assistant, system, user), and
-#   11,136 of 11,196 prompt tokens came from the cache on the turn that added it.
+#   system_updates left out: neither Fireworks nor Tencent documents mid-conversation system messages, and Fireworks renders
+#   its own chat template rather than passing requests through. Untested by docs: raw_output rendered a later system message
+#   in place (system, user, assistant, system, user), and 11,136 of 11,196 prompt tokens came from the cache on that turn.
 #   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
 schema = 2
 base_model = "tencent/hy4-flash"
@@ -27,7 +28,6 @@ base_model_omit = ["limit.input"]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"], budget = {} }
 structured_output = true
-system_updates = true
 cache = { implicit = true }
 
 [limit]

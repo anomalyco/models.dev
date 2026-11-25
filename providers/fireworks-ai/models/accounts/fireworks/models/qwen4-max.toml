@@ -13,8 +13,9 @@
 #   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
 # Fireworks returns reasoning in reasoning_content (https://docs.fireworks.ai/api-reference/post-chatcompletions; confirmed live 2026-11-24).
 # Mid-conversation, live Chat Completions tests (2026-11-24), ~15k-token prefix, one x-session-affinity key:
-#   system_updates = true: raw_output renders a later system message in place (a second system turn after the assistant turn),
-#   and the cache kept the same 12,288 tokens as the control turn (Fireworks caches in blocks).
+#   system_updates left out: Fireworks doesn't document mid-conversation system messages and renders its own chat template
+#   rather than passing requests through to Alibaba's API. Untested by docs: raw_output rendered a later system message in place
+#   (a second system turn after the assistant turn), and the cache kept the same 12,288 tokens as the control turn (Fireworks caches in blocks).
 #   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
 schema = 2
 base_model = "alibaba/qwen4-max"
@@ -27,7 +28,6 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
 structured_output = true
-system_updates = true
 cache = { implicit = true }
 
 [limit]
