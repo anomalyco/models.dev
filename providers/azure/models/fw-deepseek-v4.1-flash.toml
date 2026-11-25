@@ -1,0 +1,35 @@
+# Availability: FW-DeepSeek-V4.1-Flash is GA on Fireworks on Foundry, pay-per-token Global Standard and Data Zone Standard (US): https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/fireworks-model-catalog#pay-per-token (accessed 2026-11-25)
+# Controls, structured output and cache follow Fireworks' own entry for the same weights (providers/fireworks-ai/models/accounts/fireworks/models/deepseek-v4p1-flash.toml); Foundry runs Fireworks' serving.
+# Toggle: thinking.type = enabled|disabled; Effort: reasoning_effort = low|high|max (same file).
+# Pricing: Azure Fireworks Models product, global "FW DS-V4.1-Flash Gl Inp" 0.000375/1K, "Gl Cd Inp" 0.000008/1K, "Gl Opt" 0.0015/1K; US data zone "FW DS V4.1 Flash Inp/Cd Inp/Opt - US DZ" 0.45 / 0.009 / 1.8 per 1M (1.2x input and output, 1.125x cached): https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Fireworks Models' (accessed 2026-11-25)
+# APIs: every Fireworks catalog model takes the OpenAI/v1 Chat Completions and Responses APIs on the Foundry resource
+#   (https://{resource}.services.ai.azure.com/openai/v1/...): https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/enable-fireworks-models
+#   An administrator must first register the Fireworks.EnableDeploy feature on the subscription (same page); Fireworks on Foundry is GA.
+#   Shape copied from this host's Grok files (Chat Completions via the Azure package, then Responses).
+# Mid-conversation flags: left out; Foundry documents none for Fireworks models and they weren't tested through Foundry.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "FW-DeepSeek-V4.1-Flash"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+
+[cost.text.input]
+price = 0.375
+cache = { read = 0.008 }
+
+[cost.text.output]
+price = 1.5
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = { text = { input = { price = 1.2, cache = { read = 1.125 } }, output = 1.2 } }

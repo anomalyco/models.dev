@@ -1,0 +1,39 @@
+# Availability: Kimi-K3.1-Pro is sold by Azure, GA (version 2026-11-04, retires 2027-11-04):
+#   https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-direct-others#moonshot-ai-models-sold-by-azure
+#   https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule#moonshotai (accessed 2026-11-25)
+# Limits: 1,048,576-token context, 262,144 output tokens; text and image input (https://ai.azure.com/catalog/models/Kimi-K3.1-Pro, Quick facts, accessed 2026-11-25).
+# Pricing: Azure Kimi product, global meters "Kimi 3.1 Pro Inp Glbl" 2.3, "Kimi 3.1 Cached Inp Glbl" 0.23, "Kimi 3.1 Pro Outp Glbl" 11.5 per 1M;
+#   data-zone meters 2.53 / 0.253 / 12.65 (1.1x). https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Kimi' (accessed 2026-11-25)
+# API, modalities and controls follow this host's previous Kimi model (kimi-k2.7-code.toml): Foundry models chat completions endpoint, no documented
+#   toggle, effort or budget field. Kimi image formats: https://platform.moonshot.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats
+# Mid-conversation flags: left out. Azure documents no way to change tools or effort mid-conversation for this model and doesn't document mid-conversation system messages.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+output = 262_144
+
+[api.chat-completions]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.3
+cache = { read = 0.23 }
+
+[cost.text.output]
+price = 11.5
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = { text = 1.1 }
