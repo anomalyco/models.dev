@@ -1,0 +1,32 @@
+# Capabilities the catalog doesn't state (capabilities.cache, capabilities.prompt_cache_key) come from hy4-preview, this host's previous model in the family.
+schema = 2
+base_model = "tencent/hy4"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+
+[limit]
+output = 64_000
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.0425
+cache = { read = 0.0525 }
+
+[cost.text.output]
+price = 3.12625
+
+[cost.web_search]
+price = 10
