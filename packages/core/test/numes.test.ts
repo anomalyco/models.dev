@@ -198,6 +198,27 @@ test("assigns -free families to free routes and resolves non-OpenRouter lab slug
   );
   expect(kimiFree).toMatchObject({ family: "kimi-pro-free" });
 
+  const suffixedPro = buildNumesModel(
+    numesModel({ compatible_request_id: "openai/gpt-5.6-luna-pro", name: "GPT-5.6 Luna Pro" }),
+    "openai/gpt-5.6-luna",
+    {},
+  );
+  expect(suffixedPro).toMatchObject({ name: "GPT-5.6 Luna Pro" });
+
+  const datedSnapshot = buildNumesModel(
+    numesModel({ compatible_request_id: "openai/gpt-4o-mini-2024-07-18", name: "GPT-4o-mini (2024-07-18)" }),
+    "openai/gpt-4o-mini",
+    {},
+  );
+  expect(datedSnapshot).toMatchObject({ name: "GPT-4o-mini (2024-07-18)" });
+
+  const plainBase = buildNumesModel(
+    numesModel({ compatible_request_id: "openai/gpt-5.6-luna", name: "GPT-5.6 Luna" }),
+    "openai/gpt-5.6-luna",
+    {},
+  );
+  expect("name" in plainBase).toBe(false);
+
   expect(resolveBaseModel("perplexity/sonar-pro")).toBe("perplexity/sonar-pro");
   expect(resolveBaseModel("bytedance/seed-2.0-pro")).toBe("bytedance-seed/seed-2.0-pro");
   expect(resolveBaseModel("bytedance/seed-1.8")).toBe("bytedance-seed/seed-1-8");

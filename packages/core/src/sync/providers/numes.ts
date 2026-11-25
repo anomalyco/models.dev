@@ -140,6 +140,13 @@ function isChat(model: NumesModel) {
   return model.tasks.includes("chat");
 }
 
+function isVariant(id: string, baseModel: string) {
+  if (qualifiers(id).length > 0) return true;
+  const idSlug = id.slice(id.indexOf("/") + 1).toLowerCase();
+  const baseSlug = baseModel.slice(baseModel.indexOf("/") + 1).toLowerCase();
+  return idSlug.startsWith(`${baseSlug}-`) || idSlug.replaceAll(".", "-").startsWith(`${baseSlug}-`);
+}
+
 function qualifiers(id: string) {
   return id.split(":").slice(1);
 }
@@ -209,13 +216,15 @@ export function buildNumesModel(
       GATEWAY_MAX_OUTPUT,
     ),
   };
-  const variant = qualifiers(model.compatible_request_id).length > 0;
+  const variant = isVariant(model.compatible_request_id, baseModel);
   const freeFamily = freeModelFamily(model.compatible_request_id, lab.family);
   return factorBaseModel(
     baseModel,
     {
-      // Variants (`:free`, `:batch`) keep the catalogue's display name so the
-      // picker can tell them apart; plain IDs inherit the lab's name.
+      // Variants (`:free`, `:batch`, or suffixed slugs like `-pro` / dated
+      // snapshots sharing a sibling's `base_model`) keep the catalogue's
+      // display name so pickers can tell them apart; plain 1:1 IDs inherit the
+      // lab's name.
       name: variant ? model.name : undefined,
       // Free routes use `<lab-family>-free` (matching OpenRouter) so clients
       // that show only the newest model per family don't hide them behind paid models.

@@ -1,10 +1,9 @@
-# Reasoning controls: not declared by Numes; copied from openrouter/deepseek/deepseek-v4-pro (Numes forwards the OpenRouter reasoning object).
-# Effort: reasoning.effort = none|high|xhigh
+# Reasoning controls: always on (Numes /public/v1/models declares mandatory = true with no effort or budget controls).
 schema = 2
 base_model = "deepseek/deepseek-v4-pro"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "high", "xhigh"] }
+reasoning = { supported = true }
 structured_output = true
 cache = { implicit = true }
 
@@ -12,8 +11,8 @@ cache = { implicit = true }
 output = 131_072
 
 [cost.text.input]
-price = 1.3504
-cache = { read = 0.11394 }
+price = 1.6
+cache = { read = 0.135 }
 
 [cost.text.output]
-price = 2.7008
+price = 3.2
