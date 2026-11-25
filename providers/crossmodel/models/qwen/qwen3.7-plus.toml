@@ -6,6 +6,7 @@
 # Cache: catalog context.caching = true; CrossModel documents no mechanism (implicit/explicit, TTL).
 # Mid-conversation flags unset: CrossModel documents none and nothing was tested live.
 # APIs: /v1/chat/completions, /v1/responses, /v1/messages (https://www.crossmodel.ai/docs/models-and-capabilities.md).
+# Output cap: max_output_tokens 64,000 in https://www.crossmodel.ai/api/models (read 2026-11-25), below Alibaba's 131,072.
 schema = 2
 base_model = "alibaba/qwen3.7-plus"
 
@@ -13,6 +14,9 @@ base_model = "alibaba/qwen3.7-plus"
 reasoning = { supported = true, toggle = true }
 structured_output = true
 cache = { implicit = true }
+
+[limit]
+output = 64_000
 
 [cost.text.input]
 price = 0.32
