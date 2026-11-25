@@ -1,0 +1,57 @@
+# Pricing, context and capabilities: https://fireworks.ai/models/fireworks/hy4-flash and GET https://api.fireworks.ai/v1/serverless/models
+#   (accessed 2026-11-24): $0.07 input / $0.003 cached input / $0.281 output per 1M tokens, 524,288 context, image input, function calling.
+#   Priority rows are $0.0875 / $0.00375 / $0.35125, 1.25x standard. List Models names https://huggingface.co/tencent/Hy4-flash as the weights.
+# Limits: Fireworks serves 524,288 context, below the lab's 983,040 max input, so limit.input is dropped; output stays at the lab's 65,536.
+# Effort: reasoning_effort = none|high. Live Chat Completions with raw_output (2026-11-24): omitted and low|medium|high|xhigh|max
+#   (and true, an integer, thinking.type = enabled) all render the system line "reasoning_effort:high"; none, false and
+#   thinking.type = disabled render "reasoning_effort:no_think" and returned 0 reasoning tokens. Same two tiers as Tencent's API
+#   (https://cloud.tencent.com/document/product/1823/131208). Off is effort none, so no separate toggle.
+# Budget: an integer reasoning_effort is a hard thinking-token cap (https://docs.fireworks.ai/api-reference/post-chatcompletions).
+#   Live (2026-11-24) on a counting prompt that otherwise thinks for 1,000+ tokens: 100 -> 111, 200 -> 212, 500 -> 512 reasoning tokens;
+#   thinking.budget_tokens = 1024 -> 1015.
+# Image types: the lab's jpeg, png, webp and gif all decoded in live tests (2026-11-24).
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-11-24).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Fireworks returns reasoning in reasoning_content (https://docs.fireworks.ai/api-reference/post-chatcompletions; confirmed live 2026-11-24).
+# Mid-conversation, live Chat Completions tests (2026-11-24), ~11k-token prefix, one x-session-affinity key:
+#   system_updates = true: raw_output renders a later system message in place (system, user, assistant, system, user), and
+#   11,136 of 11,196 prompt tokens came from the cache on the turn that added it.
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
+schema = 2
+base_model = "tencent/hy4-flash"
+base_model_omit = ["limit.input"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"], budget = {} }
+structured_output = true
+system_updates = true
+cache = { implicit = true }
+
+[limit]
+context = 524_288
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.281
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }

@@ -1,0 +1,57 @@
+# Pricing, context and capabilities: https://fireworks.ai/models/fireworks/qwen4-max and GET https://api.fireworks.ai/v1/serverless/models
+#   (accessed 2026-11-24): $1.50 input / $0.075 cached input / $4.50 output per 1M tokens, 262,144 context, image input, function calling.
+#   Priority rows are $1.875 / $0.09375 / $5.625, 1.25x standard.
+# Effort: reasoning_effort = none|low|high|xhigh, the lab's tiers (models/alibaba/qwen4-max.toml sources). Live Chat Completions with
+#   raw_output (2026-11-24): minimal and low render the same effort system prompt, medium and high another, xhigh and max a third;
+#   omitted adds no effort prompt (the model's default); none, false and thinking.type = disabled close the think block and returned
+#   0 reasoning tokens. Off is effort none, so no separate toggle. Layout follows qwen3p8-max, Fireworks' previous Qwen Max.
+# No budget: an integer reasoning_effort returns 400 "Qwen4 reasoning_effort supports minimal, low, medium, high, xhigh, none, adaptive, or a boolean".
+# Modalities: Fireworks lists text and image input only (no video or PDF). The lab's bmp, jpeg, png, tiff, webp and heic all decoded in live tests (2026-11-24).
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON without being asked for JSON in a live test (2026-11-24).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Fireworks returns reasoning in reasoning_content (https://docs.fireworks.ai/api-reference/post-chatcompletions; confirmed live 2026-11-24).
+# Mid-conversation, live Chat Completions tests (2026-11-24), ~15k-token prefix, one x-session-affinity key:
+#   system_updates = true: raw_output renders a later system message in place (a second system turn after the assistant turn),
+#   and the cache kept the same 12,288 tokens as the control turn (Fireworks caches in blocks).
+#   Fireworks also serves Anthropic Messages (POST /inference/v1/messages) and Responses (POST /inference/v1/responses); only Chat Completions was tested.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
+structured_output = true
+system_updates = true
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 4.5
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }
