@@ -10,6 +10,8 @@
 #   other values, and has no top_k: https://www.volcengine.com/docs/82379/1494384
 # Limits: 256K context, 224K input, 128K output (最大回答) per the model list
 #   (https://ark.volcengine.com/region:cn-beijing/docs/model-list.md, accessed 2026-11-25).
+#   Output stays 128_000: the 131_072 reading used for Seed 2.0 Lite/Mini rests on a max_tokens probe of those
+#   snapshots, and no such probe or exact token count exists for doubao-seed-2-0-pro-260215.
 schema = 2
 name = "Seed 2.0 Pro"
 description = "Flagship ByteDance Seed 2.0 model for complex multimodal reasoning and long-horizon agent workflows"
