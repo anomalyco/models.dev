@@ -1,5 +1,5 @@
 # Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
-# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-17).
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-25).
 # Toggle: chat_template_kwargs.enable_thinking = true|false (false gave 0 reasoning tokens).
 # No budget: thinking_budget = 50, top-level or in chat_template_kwargs, still reasoned 1,956 to
 # 3,000 tokens (live 2026-11-17 on api.saygm.com).
@@ -22,7 +22,7 @@ cache = false
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.242668
+price = 0.204352
 
 [cost.text.output]
-price = 1.4530725
+price = 1.22364

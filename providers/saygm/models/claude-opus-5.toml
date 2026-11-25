@@ -1,5 +1,5 @@
 # Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
-# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-17).
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-25).
 # structured_output: live probe 2026-11-17 on api.saygm.com /v1/messages: output_config.format
 # json_schema {n: integer} returned schema-valid JSON for a prose prompt.
 schema = 2
@@ -15,8 +15,8 @@ base_url = "https://api.saygm.com/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 5
-cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
+price = 4.8925
+cache = { read = 0.48925, write = { "5m" = 6.115625, "1h" = 9.785 } }
 
 [cost.text.output]
-price = 25
+price = 24.4625

@@ -1,5 +1,5 @@
 # Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
-# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-17).
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-25).
 # Routed over the Responses API: OpenAI rejects function tools combined with
 # reasoning_effort on /v1/chat/completions for this model.
 # tools.freeform: live probe 2026-11-17 on api.saygm.com (custom tool, tool_choice=required, asked
@@ -22,17 +22,17 @@ capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 [api.chat-completions]
 
 [cost.text.input]
-price = 0.1751
-cache = { read = 0.01751, write = 0.218875 }
+price = 0.1133
+cache = { read = 0.01133, write = 0.141625 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
-price = 0.3502
-cache = { read = 0.03502, write = 0.43775 }
+price = 0.2266
+cache = { read = 0.02266, write = 0.28325 }
 
 [cost.text.output]
-price = 1.0506
+price = 0.6798
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
-price = 1.5759
+price = 1.0197

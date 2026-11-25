@@ -1,5 +1,5 @@
 # Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
-# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-17).
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-25).
 # tools.freeform: live probe 2026-11-17 on api.saygm.com (custom tool, tool_choice=required, asked
 # for HELLO): regex ZZ[0-9]{3} and the equivalent lark grammar both returned ZZ plus three digits
 # (grammar enforced), and format text returned HELLO, on /v1/chat/completions and /v1/responses.
@@ -19,17 +19,17 @@ base_url = "https://api.saygm.com/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 4.3775
-cache = { read = 0.43775 }
+price = 4.37235
+cache = { read = 0.437235 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 272_000 } }
-price = 8.755
-cache = { read = 0.8755 }
+price = 8.7447
+cache = { read = 0.87447 }
 
 [cost.text.output]
-price = 26.265
+price = 26.2341
 
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
-price = 39.3975
+price = 39.35115

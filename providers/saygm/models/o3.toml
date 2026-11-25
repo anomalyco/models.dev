@@ -1,5 +1,5 @@
 # Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
-# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-17).
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-25).
 schema = 2
 base_model = "openai/o3"
 
@@ -15,8 +15,8 @@ base_url = "https://api.saygm.com/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 1.751
-cache = { read = 0.43775 }
+price = 1.74894
+cache = { read = 0.437235 }
 
 [cost.text.output]
-price = 7.004
+price = 6.99576
