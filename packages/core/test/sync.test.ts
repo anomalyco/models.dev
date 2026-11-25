@@ -8226,6 +8226,23 @@ test("factors OpenRouter video models onto lab files with the videos protocol", 
   });
 });
 
+test("keeps only MP4 among a lab's video outputs on OpenRouter", () => {
+  const doc = buildOpenRouterMediaModel(openRouterVideoModel(
+    { duration_seconds_with_audio: "0.40" },
+    { id: "bytedance/seedance-2.5-flash", name: "ByteDance: Seedance 2.5 Flash" },
+  ), "video", { base_model: "bytedance-seed/seedance-2.5-flash" });
+
+  expect(doc.base_model).toBe("bytedance-seed/seedance-2.5-flash");
+  expect((doc.modalities as { output: string[] }).output).toEqual(["video/mp4", "audio"]);
+
+  // A lab that already lists MP4 only keeps inheriting its modalities.
+  const mp4 = buildOpenRouterMediaModel(openRouterVideoModel(
+    { duration_seconds_with_audio: "0.40" },
+    { id: "bytedance/seedance-2.5", name: "ByteDance: Seedance 2.5" },
+  ), "video", { base_model: "bytedance-seed/seedance-2.5" });
+  expect(mp4).not.toHaveProperty("modalities");
+});
+
 test("OpenRouter text models still sync through v1 fields", () => {
   const translated = openrouter.translateModel(openRouterModel(), {
     existing: () => undefined,

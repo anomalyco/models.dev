@@ -4,9 +4,14 @@
 # generate_audio (true by default for models with audio), mode (text-to-video, image-to-video, reference-to-video)
 # and input_video. No [cost] when a SKU has no CostV2 form (minimum charge per generation, per megapixel-second).
 # https://openrouter.ai/docs/guides/overview/multimodal/video-generation
+# Modalities: the lab's inputs; video jobs download as MP4 (same doc), so the lab's mov output is dropped.
 schema = 2
 v2_only = true
 base_model = "bytedance-seed/seedance-2.5-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
+output = ["video/mp4", "audio"]
 
 [api.videos]
 base_url = "https://openrouter.ai/api/v1"
