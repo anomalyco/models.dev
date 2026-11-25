@@ -1,0 +1,50 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-11-18); prices are USD per token there, per MTok here.
+# Service tiers: catalog <tier>_service_tier_pricing as multipliers of the default prices (flex x0.5, fast x2, ultrafast x6).
+# Web search: catalog web_search = $0.01 per request, so [cost.web_search] price = 10 per 1,000; tier multipliers use the text-only object form so the search fee stays unscaled, as in the lab entries.
+# Effort: reasoning.effort = low|medium|high|xhigh|max
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-11-18): supported_params_details.reasoning enum is exactly none|low|medium|high|xhigh|max.
+#   Baseline: lab providers/openai gpt-6.1-sol = effort low|medium|high|xhigh|max. The catalog enum also lists none, but the lab documents that this model rejects none (live 400, 2026-11-13) and FastRouter maps a level the model rejects to the nearest accepted one (its docs: none on GPT-6 Astra is sent as low), so none does not turn reasoning off and is not authored.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+# Cache write: the catalog lists one write rate for this route (input_cache_write $2.5, $5 above 272k, no 30m/12h split, checked over 24 requests on 2026-11-18), equal to the lab's 30m rate, so a single write rate is authored.
+# Limit: not overridden. The catalog reports context_length 1050000 and max_completion_tokens 128000, the same as the lab (context 1_050_000, input 922_000, output 128_000).
+# Cache: automatic (min 1,024 tokens) plus explicit prompt_cache_breakpoint with ttl 30m on GPT-5.6 and newer, per https://docs.fastrouter.ai/explore-features/prompt-caching (accessed 2026-11-18).
+# Custom tools: no tools.freeform is authored. FastRouter's docs describe function tools only (https://docs.fastrouter.ai/explore-features/function-calling and the chat-completions and responses references mention no custom tools or grammars), and no API key was available for a live regex-grammar probe, so no freeform format is claimed on either API.
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"] } }
+service_tier = ["flex", "fast", "ultrafast"]
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = { text = 2.0 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "ultrafast" } }
+factor = { text = 6.0 }
