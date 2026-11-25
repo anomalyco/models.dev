@@ -3,8 +3,10 @@
 # video and audio requests were held by NVIDIA's content-safety screening, so they weren't confirmed.
 # Context 256,000: the card's "Input Context Length (ISL): 256K".
 # Toggle: chat_template_kwargs.enable_thinking = true|false (https://docs.api.nvidia.com/nim/reference/google-gemma-4-31b-it-infer).
+# NVIDIA API: HTTP 410 Gone, end of life 2026-11-24T09:00:00Z (probed 2026-11-25, POST https://integrate.api.nvidia.com/v1/chat/completions)
 schema = 2
 base_model = "google/gemma-4-31b-it"
+status = "deprecated"
 name = "Gemma-4-31B-IT"
 
 [modalities]
