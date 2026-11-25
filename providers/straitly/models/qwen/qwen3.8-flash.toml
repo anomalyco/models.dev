@@ -1,12 +1,11 @@
-# Toggle: enable_thinking = true|false (lab baseline; note live 2026-11-25 probe on Straitly /v1/chat/completions showed reasoning_effort low|medium|xhigh and reasoning.max_tokens active while enable_thinking returned 0 reasoning tokens)
-# Effort: reasoning_effort = low|medium|xhigh
-# Budget: thinking_budget / reasoning.max_tokens
+# Effort: reasoning_effort = low|medium|xhigh (live-verified 2026-11-25 on Straitly /v1/chat/completions: low -> rtok=35, xhigh -> rtok=78; enable_thinking=true/false and thinking.type=enabled/disabled all returned rtok=0, so toggle is omitted)
+# Budget: reasoning.max_tokens (live-verified 2026-11-25 on Straitly /v1/chat/completions: max_tokens=256/1024 -> rtok=175/224)
 # Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probes on /v1/chat/completions.
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = {} }
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"], budget = {} }
 structured_output = true
 cache = { implicit = true }
 
