@@ -801,14 +801,13 @@ note = [
 reasoning_options = [{ type = "toggle" }]
 
 
-# Kimi K3.1 Pro Highspeed: the same model served 2-3x faster, like providers/moonshotai/models/kimi-k3.1-pro-highspeed.toml
-# (base_model moonshotai/kimi-k3.1-pro, its own name). Cloudflare's page lists the name "Kimi K3.1 Pro Highspeed", a 1M
-# context, Chat Completions, $4 input / $20 output / $0.20 cached per 1M and always-on reasoning
-# (https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3.1-pro-highspeed/). Name and prices come from the catalog.
+# Kimi K3.1 Pro Highspeed: the same model served 2-3x faster. Its lab file (models/moonshotai/kimi-k3.1-pro-highspeed.toml)
+# carries the name, since the text sync doesn't take names from the catalog. Cloudflare's page lists a 1M context, Chat
+# Completions, $4 input / $20 output / $0.20 cached per 1M and always-on reasoning
+# (https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3.1-pro-highspeed/); prices come from the catalog.
 # Effort matches Moonshot's own API for it (low|high|max, default max, no off value); the request schema leaves
 # reasoning_effort an open string. Not checked live.
 [models."moonshotai/kimi-k3.1-pro-highspeed"]
-base_model = "moonshotai/kimi-k3.1-pro"
 note = [
   "Always reasons; effort: reasoning_effort = low|high|max (POST /ai/v1/chat/completions; default max; no off value; not checked live).",
   "Sources: https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3.1-pro-highspeed/ ; https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart",
