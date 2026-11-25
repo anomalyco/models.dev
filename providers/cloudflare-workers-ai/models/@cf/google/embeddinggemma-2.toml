@@ -1,0 +1,19 @@
+# https://developers.cloudflare.com/workers-ai/models/embeddinggemma-2/ (Context Window 8,192 tokens; $0.0017 per M input tokens)
+# Price: https://developers.cloudflare.com/workers-ai/platform/pricing/ (accessed 2026-11-25). Replaces
+#   @cf/google/embeddinggemma-300m, retired 2026-11-20 (https://developers.cloudflare.com/changelog/post/2026-11-05-planned-model-deprecations/).
+# Modalities: the page documents text, image, video and audio inputs, as in the lab file.
+# API: same as the other Workers AI embedding models, POST /accounts/{ACCOUNT_ID}/ai/v1/embeddings
+#   (https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/); not checked live.
+#   Workers AI search's OpenRouter format omits embeddings, so the sync never touches this file.
+schema = 2
+v2_only = true
+base_model = "google/embeddinggemma-2"
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.0017
+
+[cost.text.output]
+price = 0
