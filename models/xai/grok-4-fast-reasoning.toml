@@ -1,18 +1,24 @@
-# Lab metadata carried over from providers/qiniu-ai/models/x-ai/grok-4-fast-reasoning.toml (curated catalogue data already in this repo),
-# with provider-specific fields (cost, reasoning_options, status) stripped.
-# `audio` and `video` stay generic: xAI documents only jpg/jpeg or png image input for its language models
-# (https://docs.x.ai/developers/models, "Image input models") and no audio or video input for Grok 4 Fast, so no
-# format exists for them. They come from the Qiniu catalogue entry above.
+# Sources:
+# - Name, release date (2025-09-19), 2M context: https://x.ai/news/grok-4-fast
+# - Variant label: xAI pairs it with "Grok 4 Fast (Non-Reasoning)" (https://web.archive.org/web/20251118014300/https://docs.x.ai/docs/models/grok-4-fast-non-reasoning); the reasoning page was titled "Grok 4 Fast" (https://web.archive.org/web/20250920125358/https://docs.x.ai/docs/models/grok-4-fast-reasoning).
+# - Input text + image, 2,000,000-token maxPromptLength: xAI's archived model catalog in
+#   https://web.archive.org/web/20251118014300/https://docs.x.ai/docs/models/grok-4-fast-non-reasoning
+#   (grok-4-fast-reasoning and grok-4-fast-non-reasoning: inputModalities TEXT, IMAGE; outputModalities TEXT).
+#   Image formats: jpg/jpeg or png (https://docs.x.ai/developers/models, "Image input models").
+# - Output 30,000: OpenRouter's x-ai/grok-4-fast served by xAI (provider_model_id grok-4-fast-non-reasoning, reasoning toggled per request),
+#   max_completion_tokens 30000: https://web.archive.org/web/20251220195757/https://openrouter.ai/x-ai/grok-4-fast
+#   (Vercel AI Gateway listed 256K max output: https://web.archive.org/web/20260117215158/https://vercel.com/ai-gateway/models/grok-4-fast-reasoning;
+#   OpenRouter's figure is used as it is xAI's own endpoint cap and matches grok-4.1-fast.)
 # Family: Grok, xAI's model line (https://x.ai/news/grok-4-fast); same as the other xAI Grok labs.
 schema = 2
-name = "X-Ai/Grok-4-Fast-Reasoning"
+name = "Grok 4 Fast (Reasoning)"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
 family = "grok"
 open_weights = false
-release_date = "2025-12-18"
+release_date = "2025-09-19"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "audio", "video"]
+input = ["text", "image/jpeg", "image/png"]
 output = ["text"]
 
 [capabilities]
@@ -24,4 +30,4 @@ top_k = true
 
 [limit]
 context = 2_000_000
-output = 2_000_000
+output = 30_000

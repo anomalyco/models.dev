@@ -1,9 +1,14 @@
+# Modalities: GET https://api.kilo.ai/api/gateway/models lists x-ai/grok-4.7 input_modalities text, image, file, pdf (2026-11-25).
 # Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
 # system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
 base_model = "xai/grok-4.7"
 description = "Grok 4.7 is SpaceXAI's smartest model with frontier performance on coding, knowledge work, and STEM."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
 
 [capabilities]
 tools = { supported = true }
