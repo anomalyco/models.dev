@@ -1,13 +1,12 @@
 # Source: https://www.ibm.com/products/watsonx-ai/pricing (accessed 2026-08-08)
 # Model details: https://www.ibm.com/docs/en/watsonx/saas?topic=solutions-supported-foundation-models (accessed 2026-08-08)
+# Context: watsonx foundation_model_specs reports max_sequence_length = 128000, the lab value
+# (https://us-south.ml.cloud.ibm.com/ml/v1/foundation_model_specs?version=2025-01-01, accessed 2026-11-25).
 schema = 2
 base_model = "mistral/mistral-small-3-1-24b-instruct-2503"
 
 [capabilities]
 structured_output = true
-
-[limit]
-context = 131_072
 
 [cost.text.input]
 price = 0.106
