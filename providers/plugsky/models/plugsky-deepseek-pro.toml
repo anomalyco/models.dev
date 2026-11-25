@@ -1,0 +1,21 @@
+# Date source: Plugsky /v1/models created timestamp.
+schema = 2
+name = "Plugsky DeepSeek Pro"
+description = "Plugsky DeepSeek Pro: 550B (activated: ~55B), 262144 token serving context. Equivalent class and context required on failover."
+open_weights = false
+release_date = "2026-11-25"
+last_updated = "2026-11-25"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262144
+output = 16384
