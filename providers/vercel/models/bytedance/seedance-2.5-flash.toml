@@ -2,27 +2,7 @@
 # https://vercel.com/docs/ai-gateway/modalities/video-generation
 schema = 2
 v2_only = true
-type = "video"
-name = "Seedance 2.5 Flash"
-description = "Video model for prompt-guided generation, editing, and motion workflows"
-family = "seedance"
-open_weights = false
-release_date = "2026-11-16"
-
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/mpeg", "audio/wav"]
-output = ["video"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-temperature = false
-top_p = false
-top_k = false
-
-[limit]
-context = 0
-output = 0
+base_model = "bytedance-seed/seedance-2.5-flash"
 
 [api.videos]
 base_url = "https://ai-gateway.vercel.sh/v4/ai"

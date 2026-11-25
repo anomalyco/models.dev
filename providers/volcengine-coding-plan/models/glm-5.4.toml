@@ -1,0 +1,24 @@
+# Coding Plan model name from https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-plan-overview.md
+# (accessed 2026-11-25); released on the Coding Plan 2026-11-25 per
+# https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-model-release.md.
+# Limits: the plan overview lists 1024K context and 128K output, matching the lab file.
+# Subscription tier: no per-token price.
+# Effort levels are copied from glm-5.3 on this endpoint (low|high|max via reasoning_effort on
+# POST /api/coding/v3/chat/completions, measured there 2026-08) and match providers/zai-coding-plan/glm-5.4.
+# They have not been tested for glm-5.4 on this endpoint (no Coding Plan key).
+schema = 2
+base_model = "zhipuai/glm-5.4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

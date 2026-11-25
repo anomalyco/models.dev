@@ -6,23 +6,7 @@
 # https://openrouter.ai/docs/guides/overview/multimodal/video-generation
 schema = 2
 v2_only = true
-type = "video"
-name = "Seedance 2.5 Flash"
-description = "Video generation model"
-open_weights = false
-release_date = "2026-11-17"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "video/mp4", "video/mpeg", "video/quicktime", "video/webm", "audio/wav", "audio/mpeg", "audio/flac", "audio/mp4", "audio/ogg", "audio/webm", "audio/aac"]
-output = ["video/mp4"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-
-[limit]
-context = 0
-output = 0
+base_model = "bytedance-seed/seedance-2.5-flash"
 
 [api.videos]
 base_url = "https://openrouter.ai/api/v1"

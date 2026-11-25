@@ -1,0 +1,53 @@
+# Sources (accessed 2026-11-25):
+# - Ark model release announcement, 202611: doubao-seedance-2-5-flash-261115, new Seedance 2.5 series video model
+#   (text-to-video, first/first+last frame, omni-reference, video editing and extension; no draft mode; 480p and 720p):
+#   https://ark.volcengine.com/region:cn-beijing/docs/model-release-announcement.md
+# - Seedance 2.5 series guide, capability table and input requirements (images jpeg, png, webp, bmp, tiff, gif, heic,
+#   heif; videos mp4 video/mp4 and mov video/quicktime; audio wav and mp3; audio-only reference supported; output
+#   mp4 or mov, 4-30 s, 24 fps; sound generation supported):
+#   https://ark.volcengine.com/region:cn-beijing/docs/seedance-2-5.md
+# - Release date: Volcano Engine launched Seedance 2.5 flash on 2026-11-12
+#   (IT之家 report https://news.qq.com/rain/a/20261112A08SR000; https://www.cnstock.com/commonDetail/827612).
+# Token limits are not applicable to this audio-video generation endpoint.
+# Zero follows existing non-token media catalog entries; it is not a measured token limit.
+# Output keeps a generic audio entry: the synchronized sound is a track inside the generated video, not a
+#   separate file, so no audio MIME type applies.
+# Sampling: the task API has no temperature, top_p or top_k
+#   (https://ark.volcengine.com/region:cn-beijing/docs/create-video-generation-task-api.md).
+schema = 2
+v2_only = true
+type = "video"
+name = "Seedance 2.5 Flash"
+description = "Faster, lower-cost Seedance 2.5 variant for up to 30-second video generation, editing and extension from text, image, video and audio references."
+family = "seedance"
+open_weights = false
+release_date = "2026-11-12"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/gif",
+  "image/heic",
+  "image/heif",
+  "video/mp4",
+  "video/quicktime",
+  "audio/wav",
+  "audio/mpeg",
+]
+output = ["video/mp4", "video/quicktime", "audio"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
