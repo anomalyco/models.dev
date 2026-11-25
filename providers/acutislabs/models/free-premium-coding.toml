@@ -1,0 +1,25 @@
+# Acutis Labs-owned semantic route. The gateway selects from its free premium coding combo while preserving the
+# Anthropic Messages contract.
+schema = 2
+name = "Free Premium Coding (Combo)"
+description = "Text-only coding combo routed across available premium backends"
+family = "model-router"
+open_weights = false
+release_date = "2026-11-24"
+v2_only = true
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 131_072
+input = 131_072
+output = 32_768
