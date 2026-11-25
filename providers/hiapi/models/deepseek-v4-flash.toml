@@ -1,0 +1,19 @@
+# Prices: https://hiapi.ai/en/pricing (accessed 2026-11-25), USD per 1M tokens.
+# Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
+# Verified live 2026-11-25: POST https://api.hiapi.ai/v1/chat/completions returns 200.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.035 }
+
+[cost.text.output]
+price = 0.28

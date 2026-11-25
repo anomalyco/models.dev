@@ -1,0 +1,24 @@
+# Limits: HiAPI model metadata caps output at 131,072 tokens.
+# Prices: https://hiapi.ai/en/pricing (accessed 2026-11-25), USD per 1M tokens.
+# Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
+# Verified live 2026-11-25: POST https://api.hiapi.ai/v1/chat/completions returns 200; same model as kimi-k3.1-pro on a faster serving tier.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro Highspeed"
+
+[limit]
+output = 131_072
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 4.3096
+cache = { read = 0.2156 }
+
+[cost.text.output]
+price = 22.5426

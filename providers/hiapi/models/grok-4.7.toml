@@ -1,0 +1,24 @@
+# Images: live 2026-11-25, 64x64 PNG via image_url returns 200 and is read correctly; very small images (16x16) are rejected upstream with 400.
+# Limits: HiAPI model metadata caps output at 64,000 tokens.
+# Prices: https://hiapi.ai/en/pricing (accessed 2026-11-25), USD per 1M tokens.
+# Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
+# Verified live 2026-11-25: POST https://api.hiapi.ai/v1/chat/completions returns 200; usage reports cached_tokens.
+schema = 2
+base_model = "xai/grok-4.7"
+
+[limit]
+output = 64_000
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.84
+cache = { read = 0.21 }
+
+[cost.text.output]
+price = 2.52

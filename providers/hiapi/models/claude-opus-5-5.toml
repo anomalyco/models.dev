@@ -1,0 +1,16 @@
+# Prices: https://hiapi.ai/en/pricing (accessed 2026-11-25), USD per 1M tokens.
+# Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
+# Verified live 2026-11-25: POST https://api.hiapi.ai/v1/chat/completions returns 200; system content accepts cache_control (explicit cache).
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 2.03523
+cache = { read = 0.10176, write = { "5m" = 2.54403, "1h" = 4.07045 } }
+
+[cost.text.output]
+price = 10.17613

@@ -1,0 +1,9 @@
+# HiAPI relays lab models behind one OpenAI-compatible endpoint (text models only; image/video use a separate async task API).
+# Base URL and protocols: https://hiapi.ai/en/agents/base-url
+# Public catalog: https://hiapi.ai/docs/models.json ; prices: https://hiapi.ai/en/pricing
+name = "HiAPI"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["HIAPI_API_KEY"]
+api = "https://api.hiapi.ai/v1"
+doc = "https://hiapi.ai/docs/"
