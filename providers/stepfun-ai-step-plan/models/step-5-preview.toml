@@ -1,6 +1,16 @@
-# Chat `reasoning_effort` and Messages `output_config.effort` accept
-# low/medium/high (accessed 2026-09-20).
-# https://platform.stepfun.ai/docs/en/step-plan/integrations/reasoning-api
+# Sources (accessed 2026-11-25):
+# - Model card: https://platform.stepfun.ai/docs/en/guides/models/step-5-preview (1M context, 64k max output, JSON Mode and JSON Schema)
+# - Step Plan (credit subscription, no per-token price, so no [cost]): https://platform.stepfun.ai/docs/en/step-plan/overview
+# - Plan endpoints: POST /step_plan/v1/chat/completions and /step_plan/v1/messages (no Responses):
+#   https://platform.stepfun.ai/docs/en/step-plan/integrations/reasoning-api.md
+#   "The endpoint parameters are exactly the same as the open platform."
+# - Structured output (JSON Schema applies to step-5-preview, step-3.7-flash, step-3.5-flash, step-3.5-flash-2603):
+#   https://platform.stepfun.ai/docs/en/guides/developer/json-mode, https://platform.stepfun.com/docs/zh/guides/developer/json-mode
+# - Caching: automatic prefix cache from 256 tokens, no cache_control (https://platform.stepfun.ai/docs/en/guides/developer/prompt-cache,
+#   https://platform.stepfun.com/docs/zh/guides/developer/prompt-cache).
+# Effort: reasoning_effort (Chat) and output_config.effort (Messages) = low|medium|high (https://platform.stepfun.ai/docs/en/step-plan/integrations/reasoning-api.md)
+# Chat Completions returns reasoning in both `reasoning` and `reasoning_content`.
+# Mid-conversation flags (system_updates, effort_updates, tools.updates) unset: undocumented, and no StepFun key to test.
 # max_tokens_field: StepFun's Chat Completions API documents max_tokens and not max_completion_tokens (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create, accessed 2026-10-24)
 schema = 2
 base_model = "stepfun/step-5-preview"
@@ -8,6 +18,10 @@ base_model = "stepfun/step-5-preview"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
+cache = { implicit = { min_tokens = 256 } }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

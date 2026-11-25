@@ -1,13 +1,17 @@
+# Open weights: https://huggingface.co/meituan-longcat/LongCat-2.5 (MIT, public and ungated since 2026-11-04)
 # https://longcat.ai/platform/docs/change-log (2026-11-02: LongCat-2.5, native multimodality with visual understanding)
 # https://longcat.ai/platform/docs/ (1M context window, 256K max output)
 # Sampling: https://longcat.ai/platform/docs/api/model-params fixes temperature and accepts top_p and top_k, as for LongCat-2.5-Preview.
+# Temperature stays false although the weights are open (unlike longcat-2.0): switching it would also change the hosts that
+# inherit this file, and only LongCat's own temperature behavior is documented.
 # Modalities: https://longcat.chat/platform/docs/image-video-understanding lists PNG, JPG/JPEG, WebP and GIF images (SVG,
 # HEIC/HEIF not supported). Video URLs are also accepted, but no video formats are documented, so video stays out.
 schema = 2
 name = "LongCat-2.5"
 description = "Meituan's multimodal reasoning model for long-horizon coding and agent tasks, with visual understanding and a 1M-token context window"
 family = "longcat"
-open_weights = false
+open_weights = true
+license = "MIT"
 release_date = "2026-11-02"
 
 [modalities]
@@ -24,3 +28,7 @@ top_k = true
 [limit]
 context = 1_000_000
 output = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/meituan-longcat/LongCat-2.5"

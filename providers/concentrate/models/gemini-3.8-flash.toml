@@ -8,7 +8,7 @@ output = ["text"]
 [capabilities]
 structured_output = true
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
-cache = { implicit = { min_tokens = 4_096 }, explicit = true }
+cache = { implicit = { min_tokens = 4_096 } }
 
 [cost.text.input]
 price = 0.75

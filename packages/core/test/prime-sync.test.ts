@@ -110,6 +110,9 @@ test("discovery generates an empty provider, updates prices, preserves incomplet
     expect(authored.base_model).toBe("openai/gpt-5.4");
     expect(authored.release_date).toBeUndefined();
     expect(authored.name).toBe(model().display_name);
+    expect((authored.modalities as { input: string[] }).input)
+      .toEqual(["text", "image/jpeg", "image/png", "image/gif", "image/webp"]);
+    expect(await file.text()).toContain("# Input MIME types: the lab's entries");
     const generated = (await generate(path.join(root, "providers"))).prime!.models[model().id]!;
     expect(generated.limit).toEqual({ context: 128_000, output: 8192 });
     expect(generated.cost).toEqual({ input: 0.4, output: 0.8, cache_read: 0 });

@@ -1,7 +1,6 @@
 # Modalities: the router catalog lists ["text","image"]; exact types are the lab's (minimax/MiniMax-M3).
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
-# Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (coreweave): $0.23 input / $0.96 output per MTok, context 262,144.
-# Output: capped at the served context (the lab's output is larger).
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 schema = 2
 base_model = "minimax/MiniMax-M3"
 
@@ -13,10 +12,6 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-
-[limit]
-context = 262_144
-output = 262_144
 
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }

@@ -9,8 +9,7 @@ input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = false }
-structured_output = false
+structured_output = true
 cache = { implicit = true }
 
 [limit]

@@ -3,8 +3,11 @@
 # request controls. https://learn.microsoft.com/en-us/azure/ai-foundry/foundry-models/how-to/use-chat-reasoning
 # Modalities: Kimi image formats https://platform.moonshot.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats (Azure documents text and image input, no video)
 # Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+# Lifecycle: Kimi-K2.5 is Preview on Foundry: https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule#moonshotai (accessed 2026-11-25)
+# Cached input: "K2.5 cached glbl" 0.0001/1K (effective 2026-07-01) in the Azure Kimi product: https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Kimi' (accessed 2026-11-25)
 schema = 2
 base_model = "moonshotai/kimi-k2.5"
+status = "beta"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
@@ -23,6 +26,7 @@ legacy_interleaved = true
 
 [cost.text.input]
 price = 0.6
+cache = { read = 0.1 }
 
 [cost.text.output]
 price = 3

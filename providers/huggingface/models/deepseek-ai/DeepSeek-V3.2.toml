@@ -1,6 +1,7 @@
 # Lab identity: https://huggingface.co/deepseek-ai/DeepSeek-V3.2
 # Context 163,840: max_position_embeddings in https://huggingface.co/deepseek-ai/DeepSeek-V3.2/blob/main/config.json.
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 schema = 2
 base_model = "deepseek/deepseek-v3.2"
 name = "DeepSeek-V3.2"
@@ -21,7 +22,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.28
+price = 0.26
 
 [cost.text.output]
-price = 0.4
+price = 0.38

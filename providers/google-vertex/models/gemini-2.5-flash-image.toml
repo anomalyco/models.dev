@@ -6,8 +6,10 @@
 # Input MIME types ("Supported MIME types" per modality): https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-image
 # The documented text/plain document type is covered by `text`.
 # Output keeps the base model's image/png and image/jpeg (a [modalities] override needs both arrays); Vertex documents no other format.
+# Deprecated: retirement 2027-03-15, replacement gemini-3.1-flash-lite-image: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions
 schema = 2
 base_model = "google/gemini-2.5-flash-image"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "application/pdf"]

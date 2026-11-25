@@ -6,6 +6,8 @@
 # Re-checked live 2026-10-23 (~8k-token first user message): a late system message is accepted (200) but this model didn't follow it in the probe; the control gets no cache hits (implicit or explicit), so system_updates stays.
 # Input MIME types: https://www.alibabacloud.com/help/en/model-studio/vision (images, video) and https://www.alibabacloud.com/help/en/model-studio/qwen-omni (audio).
 # Image input formats (BMP, JPEG, PNG, TIFF, WEBP, HEIC with their MIME types): https://www.alibabacloud.com/help/en/model-studio/qwen-vl-ocr (Image limits, Supported image formats).
+# Limits: context 38,192 and max output 8,192 per the Model Studio catalog API (GET https://dashscope-intl.aliyuncs.com/api/v1/models, model_info, read 2026-11-25);
+#   max_tokens defaults to 4,096 and can be raised to 8,192 (https://www.alibabacloud.com/help/en/model-studio/qwen-vl-ocr, accessed 2026-11-25).
 # max_tokens_field: Model Studio's Chat API lists this model outside max_completion_tokens support (https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions, accessed 2026-10-24)
 schema = 2
 name = "Qwen-VL OCR"
@@ -31,8 +33,8 @@ stream_usage = true
 cache = false
 
 [limit]
-context = 34_096
-output = 4_096
+context = 38_192
+output = 8_192
 
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }

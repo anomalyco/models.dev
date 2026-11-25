@@ -1,4 +1,4 @@
-# Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (novita).
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 # Toggle: reasoning.enabled = true|false (the router's OpenAI-compatible reasoning object, live-tested on this host's
 #   MiMo-V2.5). inclusionAI's own API has an on/off switch only (providers/bailing/models/Ling-3.0-flash.toml).
 schema = 2
@@ -7,6 +7,9 @@ base_model = "inclusionai/ling-3.0-flash"
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 131_072
 
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }

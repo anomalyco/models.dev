@@ -1,0 +1,37 @@
+# Released 2026-10-15 (Daily's Pipecat team): https://www.daily.co/blog/phonellm-alpha-2/
+#   and https://www.pipecat.ai/labs/phonellm-alpha-2
+# Model card: https://huggingface.co/pipecat-ai/phonellm-mini-alpha-2 (full-parameter SFT of NVIDIA Nemotron 3 Nano
+#   30B-A3B for phone voice agents with tool calling; BSD-2-Clause; trained without reasoning, the bundled chat
+#   template defaults enable_thinking to false; recommended temperature 0)
+# Limits: config.json max_position_embeddings 262,144 (https://huggingface.co/pipecat-ai/phonellm-mini-alpha-2/blob/main/config.json);
+#   no separate output ceiling is documented, so output matches the window, as on the base model
+#   (models/nvidia/nemotron-3-nano-30b-a3b.toml).
+# Family: Alpha 2 ships two size tiers, PhoneLLM Mini (30B MoE) and PhoneLLM Max (120B MoE), per the release post above.
+# Knowledge: no cutoff is published for the fine-tune, so it's left out.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "PhoneLLM Mini Alpha 2"
+description = "Fast open-weights Nemotron 3 Nano fine-tune for phone voice agents with tool calling"
+family = "phonellm-mini"
+open_weights = true
+release_date = "2026-10-15"
+license = "BSD-2-Clause"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/pipecat-ai/phonellm-mini-alpha-2"

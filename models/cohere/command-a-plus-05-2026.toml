@@ -1,5 +1,6 @@
 # Image formats: https://docs.cohere.com/docs/image-inputs ("Limitations > File types": PNG, JPEG, WEBP,
 #   non-animated GIF; listed as extensions, so the registered MIME types are used).
+# License: https://huggingface.co/CohereLabs/command-a-plus-05-2026-bf16 (model card metadata: license: apache-2.0).
 schema = 2
 name = "Command A Plus"
 description = "Cohere's stronger command model for multilingual agents and enterprise workflows"
@@ -8,6 +9,7 @@ open_weights = true
 knowledge = "2025-04-01"
 release_date = "2026-05-20"
 last_updated = "2026-06-09"
+license = "Apache-2.0"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]

@@ -12,10 +12,6 @@ schema = 2
 base_model = "xai/grok-4.7"
 status = "beta"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png"]
-output = ["text"]
-
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }

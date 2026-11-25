@@ -1,14 +1,16 @@
 # Thinking: not supported (https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-image; GET v1beta/models/gemini-2.5-flash-image reports no thinking, 2026-10-22).
 # Limits: input 65,536, output 32,768 (https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-image). /v1beta/models reports inputTokenLimit 32,768.
 # Image output formats: https://ai.google.dev/gemini-api/docs/image-generation (response_format mime_type image/png or image/jpeg).
+# Release date: 2025-10-02, the GA release of gemini-2.5-flash-image (https://ai.google.dev/gemini-api/docs/deprecations, Release date column).
+# Knowledge cutoff: June 2025 (https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-image).
 schema = 2
 type = "image"
 name = "Nano Banana"
 description = "Nano Banana image model for fast generation, edits, and character-consistent assets"
 family = "nano-banana"
 open_weights = false
-knowledge = "2024-06"
-release_date = "2025-08-26"
+knowledge = "2025-06"
+release_date = "2025-10-02"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
