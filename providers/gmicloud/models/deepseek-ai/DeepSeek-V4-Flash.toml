@@ -1,3 +1,5 @@
+# GMI Cloud model card (list prices, checked 2026-11-26):
+# https://console.gmicloud.ai/user-console/ie/model-hub/llm/16e9ccd2-84e0-43b4-9d9a-5cb31b3341a2
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
@@ -12,8 +14,8 @@ context = 1_048_575
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.112
-cache = { read = 0.022 }
+price = 0.14
+cache = { read = 0.028 }
 
 [cost.text.output]
-price = 0.224
+price = 0.28
