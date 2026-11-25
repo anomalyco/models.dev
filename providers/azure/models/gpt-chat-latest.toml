@@ -1,5 +1,7 @@
 # tools.choice: tool_choice none/auto/required/named (https://learn.microsoft.com/en-us/azure/foundry/openai/latest); tools.strict: Structured outputs in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure and https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/structured-outputs#supported-models
 # Limits: the latest deployment (2026-10-07) has a 128,000-token context window and 128,000 max output tokens, with no separate input limit (the base model's 272K input is dropped).
+#   Azure caps this alias below OpenAI's own chat-latest (400K context, https://developers.openai.com/api/docs/models/chat-latest): its 2026-05-05 to 2026-06-24 rows list
+#   128,000 context / 111,616 input / 16,384 output. The base model stays gpt-5.5-instant, as on providers/openai/models/chat-latest.toml.
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#gpt-chat-latest
 # Mid-conversation (live, aiden-azury-group, 2026-10-19; probe in notes/azure-mid-conversation-probe.ts): Azure OpenAI Responses and Chat Completions accept
 # system/developer messages in place; Responses accepts `additional_tools` items (https://developers.openai.com/api/docs/guides/tools-tool-search#add-tools-at-a-specific-point-in-the-input);
