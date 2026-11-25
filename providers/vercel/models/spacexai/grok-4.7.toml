@@ -1,11 +1,8 @@
+# Modalities: inherited from the lab (text, image). GET https://ai-gateway.vercel.sh/v1/models lists spacexai/grok-4.7 input text, image, with no file-input tag (2026-11-25).
 # Mid-conversation (@ai-sdk/gateway, live 2026-10-19): system messages stay in place (cache prefix kept). No per-turn effort or tool-change mechanism is forwarded.
 # Per API: system_updates on [api.chat-completions] (@ai-sdk/gateway) only, where it was tested. /v1/responses and /v1/messages are untested for this model or move the message (live 2026-10-23: /v1/responses lost the cache after a mid-conversation system message on Grok 4.3, GLM 5.1 and DeepSeek V4 Pro).
 schema = 2
 base_model = "xai/grok-4.7"
-
-[modalities]
-input = ["text", "image/jpeg", "image/png"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
