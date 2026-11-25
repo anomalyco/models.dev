@@ -1,0 +1,26 @@
+# Price (USD per Mtoken, accessed 2026-11-24): $0.31 input / $1.25 output on
+# https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/deepseek-v4-1-flash-1017/ and the same rates in
+# https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter. OVHcloud publishes USD prices here, so no currency conversion.
+# Effort: Chat `reasoning_effort` / Responses `reasoning.effort` = low|medium|high, the levels
+# OVHcloud documents for reasoning_effort on its AI Endpoints catalog pages
+# (e.g. https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/laguna-xs-2-1/).
+# Limits: catalog context_length 1_048_576, max_output_length 262_144 (https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter).
+# Mid-conversation: OVHcloud AI Endpoints serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/
+# Input MIME types: the lab's image list; OVHcloud's catalog reports image input without formats (https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek-V4.1-Flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[cost.text.input]
+price = 0.31
+
+[cost.text.output]
+price = 1.25
