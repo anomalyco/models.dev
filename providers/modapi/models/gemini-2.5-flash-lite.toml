@@ -1,0 +1,14 @@
+# Price: https://modapi.ai/api/pricing (model gemini-2.5-flash-lite), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+schema = 2
+v2_only = true
+base_model = "google/gemini-2.5-flash-lite"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.4

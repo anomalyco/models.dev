@@ -1,0 +1,13 @@
+# Price: https://modapi.ai/api/pricing (model glm-4.5), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-4.5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.2

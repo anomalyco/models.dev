@@ -1,0 +1,14 @@
+# Price: https://modapi.ai/api/pricing (model gpt-oss-120b), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Reasoning controls copied from the orcarouter entry for openai/gpt-oss-120b (OpenAI-compatible Chat Completions relay) and checked live on ModAPI /v1/chat/completions for this model family.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.2328
+
+[cost.text.output]
+price = 0.931

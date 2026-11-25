@@ -1,0 +1,14 @@
+# Price: https://modapi.ai/api/pricing (model gpt-5-chat-latest), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-5-chat-latest"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2.625
+cache = { read = 0.2625 }
+
+[cost.text.output]
+price = 21

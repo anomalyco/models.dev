@@ -1,0 +1,24 @@
+# Price: https://modapi.ai/api/pricing (model gpt-6.2-astra), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Reasoning controls copied from the requesty entry for openai/gpt-6.2-astra (OpenAI-compatible Chat Completions relay) and checked live on ModAPI /v1/chat/completions for this model family.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16
+cache = { read = 0.8 }
+
+[cost.text.output]
+price = 40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60

@@ -1,0 +1,22 @@
+# Price: https://modapi.ai/api/pricing (model qwen3.5-122b-a10b), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Reasoning controls copied from the orcarouter entry for alibaba/qwen3.5-122b-a10b (OpenAI-compatible Chat Completions relay) and checked live on ModAPI /v1/chat/completions for this model family.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.5-122b-a10b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.84
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 2.1
+
+[cost.text.output]
+price = 6.72
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 16.8

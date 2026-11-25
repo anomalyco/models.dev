@@ -1,0 +1,11 @@
+# Price: https://modapi.ai/api/pricing (model gpt-4o-2024-11-20), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-4o-2024-11-20"
+
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10

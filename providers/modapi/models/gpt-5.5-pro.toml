@@ -1,0 +1,22 @@
+# Price: https://modapi.ai/api/pricing (model gpt-5.5-pro), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Reasoning controls copied from the orcarouter entry for openai/gpt-5.5-pro (OpenAI-compatible Chat Completions relay) and checked live on ModAPI /v1/chat/completions for this model family.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-5.5-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 63
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 126
+
+[cost.text.output]
+price = 378
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 567

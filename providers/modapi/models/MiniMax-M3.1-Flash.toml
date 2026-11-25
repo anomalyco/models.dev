@@ -1,0 +1,14 @@
+# Price: https://modapi.ai/api/pricing (model MiniMax-M3.1-Flash), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

@@ -1,0 +1,14 @@
+# Price: https://modapi.ai/api/pricing (model kimi-k2.5), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+schema = 2
+v2_only = true
+base_model = "moonshotai/kimi-k2.5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.427
+cache = { read = 0.2379 }
+
+[cost.text.output]
+price = 7.494

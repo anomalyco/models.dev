@@ -1,0 +1,14 @@
+# Price: https://modapi.ai/api/pricing (model grok-4.3), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Reasoning controls copied from the 302ai entry for xai/grok-4.3 (OpenAI-compatible Chat Completions relay) and checked live on ModAPI /v1/chat/completions for this model family.
+schema = 2
+v2_only = true
+base_model = "xai/grok-4.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.25
+
+[cost.text.output]
+price = 2.5

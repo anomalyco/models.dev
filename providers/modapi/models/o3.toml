@@ -1,0 +1,15 @@
+# Price: https://modapi.ai/api/pricing (model o3), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Reasoning controls copied from the 302ai entry for openai/o3 (OpenAI-compatible Chat Completions relay) and checked live on ModAPI /v1/chat/completions for this model family.
+schema = 2
+v2_only = true
+base_model = "openai/o3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 8

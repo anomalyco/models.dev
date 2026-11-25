@@ -1,0 +1,15 @@
+# Price: https://modapi.ai/api/pricing (model claude-opus-5-5), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Reasoning controls copied from the 302ai entry for anthropic/claude-opus-5-5 (OpenAI-compatible Chat Completions relay) and checked live on ModAPI /v1/chat/completions for this model family.
+schema = 2
+v2_only = true
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 20
