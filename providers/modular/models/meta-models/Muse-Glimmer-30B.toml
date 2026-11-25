@@ -1,8 +1,8 @@
 # Prices: read from the public catalog, https://console.modular.com/api/v1/docs/models, on 2026-11-25
-# Image: inherited; the public catalog lists image input, and an image_url (png) request is accepted (probe).
-# Reasoning controls: no first-party host file; measured on this host (probe, /v1/chat/completions).
+# Image: inherited; the public catalog lists image input, and image_url (png) input is accepted.
+# Reasoning controls: no first-party host file; as this host behaves (/v1/chat/completions).
 # No toggle: reasoning.enabled = false still returns 1095 reasoning tokens (effort none: 701).
-# Effort: not listed; reasoning.effort does not order reasoning here (none -> 701, minimal -> 830, low -> 879, medium -> 777, high -> 765, xhigh -> 709, max -> 476 reasoning tokens, one run each), and unknown values are accepted (bogus -> 816).
+# Effort: not listed; reasoning.effort does not order reasoning here (none -> 701, minimal -> 830, low -> 879, medium -> 777, high -> 765, xhigh -> 709, max -> 476 reasoning tokens), and unknown values are accepted (bogus -> 816).
 schema = 2
 base_model = "meta/muse-glimmer-30b"
 
