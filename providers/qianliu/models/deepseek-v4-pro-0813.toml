@@ -5,6 +5,10 @@
 # and cached reads = input * 0.03333. These are Qianliu's published group rates.
 # The upstream model version and its reasoning controls are documented at
 # https://api-docs.deepseek.com/quick_start/pricing/ and https://api-docs.deepseek.com/guides/thinking_mode .
+# DeepSeek wire controls for the deepseek-1 route, from the lab's guide above.
+# Toggle: thinking.type = enabled|disabled (default enabled)
+# Effort: reasoning_effort = low|high|max (Chat Completions, default high)
+# Messages uses output_config.effort = low|high|max. These controls are documented upstream.
 # Qianliu's v1 reference documents stream_options.include_usage, tool_choice and response_format:
 # https://docs.plusapi.cn/api/docs/public/specs/platform/v1?locale=zh-CN
 schema = 2
