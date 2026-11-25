@@ -1,0 +1,20 @@
+# Pricing (Singapore, International, USD, accessed 2026-11-25): https://www.alibabacloud.com/help/en/model-studio/model-pricing
+# Billed per input image and per output image; 1K and 2K output are the same price.
+# Also listed with these prices in the Model Studio catalog API (GET https://dashscope-intl.aliyuncs.com/api/v1/models, read 2026-11-25).
+# The free trial quota (10 images) is not recorded.
+# API: POST /api/v1/services/aigc/multimodal-generation/generation (https://www.alibabacloud.com/help/en/model-studio/qwen-image-api)
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen-image-3.0"
+
+[api.images]
+base_url = "https://dashscope-intl.aliyuncs.com/api/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/alibaba/images" }
+
+[cost.image.input]
+unit = "image"
+price = 0.003
+
+[cost.image.output]
+unit = "image"
+price = 0.03

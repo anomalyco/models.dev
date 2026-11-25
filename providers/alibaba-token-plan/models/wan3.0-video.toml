@@ -1,0 +1,19 @@
+# Token Plan lists wan3.0-video as video generation (accessed 2026-11-25):
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-personal-overview
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-team-overview
+# API on Token Plan: async POST https://token-plan.ap-southeast-1.maas.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis
+#   with header `X-DashScope-Async: enable`, then poll GET https://token-plan.ap-southeast-1.maas.aliyuncs.com/api/v1/tasks/{task_id}
+#   (https://www.alibabacloud.com/help/en/model-studio/token-plan-multimodal-gen); base_url is @ai-sdk/alibaba's videoBaseURL, as on the plan's HappyHorse files.
+# Cost is prepaid Credits subscription, so the applicable media-unit cost is 0; marketplace per-second prices
+# are pay-as-you-go and separate from credit debit. Lab metadata is inherited via base_model.
+schema = 2
+v2_only = true
+base_model = "alibaba/wan3.0-video"
+
+[api.videos]
+base_url = "https://token-plan.ap-southeast-1.maas.aliyuncs.com"
+sdk = { aisdk = "@ai-sdk/alibaba", opencodeai = "none" }
+
+[cost.video.output]
+price = 0
+unit = "second"
