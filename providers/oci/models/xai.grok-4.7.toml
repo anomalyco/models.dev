@@ -1,0 +1,41 @@
+# OCI list price, pay as you go, USD per 1M tokens (public price list parts B113303-B113308
+# standard, B113309-B113314 priority, accessed 2026-11-25:
+# https://apexapps.oracle.com/pls/apex/cetools/api/v1/products/?currencyCode=USD). Long-context
+# rates apply once a prompt reaches 200K tokens, as for Grok 4.6 on OCI. Priority rows are exactly 2x
+# the standard rows: the priority multiplier.
+# Model is hosted by xAI and called through OCI. Model page:
+# https://docs.oracle.com/en-us/iaas/Content/generative-ai/x-ai-grok-4-7.htm (500,000-token context,
+# priority processing supported, structured outputs, function calling, "Cached Input Tokens: Yes",
+# reasoning effort low|medium|high (default)|xhigh, reasoning can't be disabled).
+# Effort: reasoning_effort = low|medium|high|xhigh
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+service_tier = ["priority"]
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_000 } }
+price = 12
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2 }
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }

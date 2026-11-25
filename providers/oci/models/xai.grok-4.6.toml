@@ -3,6 +3,8 @@
 # OCI also sells a priority tier (service_tier = priority) at twice these prices: the priority multiplier.
 # Model is hosted by xAI and called through OCI. Limits from
 # https://docs.oracle.com/en-us/iaas/Content/generative-ai/xai-grok-4-6.htm (500K context).
+# Long-context pricing applies "when a prompt reaches 200,000 tokens" (model page), so the overrides use gte.
+# The model page lists "Cached Input Tokens: Yes".
 # Effort: reasoning_effort mirrors xAI's controls for this model.
 schema = 2
 base_model = "xai/grok-4.6"
@@ -10,6 +12,7 @@ base_model = "xai/grok-4.6"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
+cache = { implicit = true }
 service_tier = ["priority"]
 
 [cost.text.input]
@@ -17,7 +20,7 @@ price = 2
 cache = { read = 0.5 }
 
 [[cost.text.input.overrides]]
-when = { context = { gt = 200_000 } }
+when = { context = { gte = 200_000 } }
 price = 4
 cache = { read = 1 }
 
@@ -25,7 +28,7 @@ cache = { read = 1 }
 price = 6
 
 [[cost.text.output.overrides]]
-when = { context = { gt = 200_000 } }
+when = { context = { gte = 200_000 } }
 price = 12
 
 [[cost.multipliers]]
