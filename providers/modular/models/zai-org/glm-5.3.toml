@@ -1,0 +1,23 @@
+# context: the API's own limit, as named in its error for an over-long request.
+# Prices: synced from the public catalog, https://console.modular.com/api/v1/docs/models
+# Reasoning controls: providers/zai/models/glm-5.3.toml, kept where this host honours them (probe, /v1/chat/completions).
+# No toggle: reasoning.enabled = false still returns 179 reasoning tokens (effort none: 35).
+# Effort: not listed; this host does not validate reasoning.effort (an unknown value is accepted).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_560
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

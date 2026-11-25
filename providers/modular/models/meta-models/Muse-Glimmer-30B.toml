@@ -1,0 +1,21 @@
+# Prices: synced from the public catalog, https://console.modular.com/api/v1/docs/models
+# Reasoning: no first-party controls or probe data, so none are listed.
+schema = 2
+base_model = "meta/muse-glimmer-30b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.2
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

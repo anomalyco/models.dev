@@ -1,0 +1,24 @@
+# context: the API's own limit, as named in its error for an over-long request.
+# Prices: synced from the public catalog, https://console.modular.com/api/v1/docs/models
+# Reasoning controls: providers/nvidia/models/nvidia/nemotron-3.5-lightning-30b-a3b.toml, kept where this host honours them (probe, /v1/chat/completions).
+# Toggle: reasoning.enabled = true|false (true -> 770 reasoning tokens, false -> 0; on by default here, 869 with no control)
+# Effort: not listed; this host does not validate reasoning.effort (an unknown value is accepted).
+# tools: the catalog says function_calling=false; the probe got a well-formed tool call.
+schema = 2
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+
+[limit]
+context = 1_048_552
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.16
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
