@@ -27,6 +27,7 @@ const Route = z.object({
   pricing: z.array(Price),
   supports: z.object({
     endpoint: z.object({ chat: z.boolean(), decisions: z.boolean().optional() }).passthrough(),
+    prompt_cache_breakpoint: z.boolean().optional(),
     tools: z.object({ function_calling: z.boolean(), custom_tools: z.boolean().optional() }).passthrough(),
     reasoning: z.object({ effort: z.record(z.boolean()).optional() }).passthrough().optional(),
     input: z.object({ image: Formats, file: Formats }).passthrough(),
@@ -188,7 +189,7 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   doc.capabilities = clean({
     ...doc.capabilities,
     reasoning: thinks ? reasoning(firstParty?.reasoning, efforts, claude) : undefined,
-    cache: chosen?.tokens?.cache?.read === undefined ? undefined : typeof firstParty?.cache === "object" ? firstParty.cache : { implicit: true },
+    cache: chosen?.tokens?.cache?.read === undefined ? undefined : cacheCapability(firstParty?.cache, routes.map(([, route]) => route)),
   });
   // A reasoning model left with no controls where the reference has them needs an always-on probe; until then it's
   // left out rather than published as having no caller control.
@@ -217,6 +218,18 @@ export function buildConcentrateModel(model: ConcentrateModel): SyncedV2Model | 
   return { id: model.id, v2: doc, ...(header ? { header } : {}) };
 }
 
+
+// Concentrate documents explicit caching only for direct OpenAI GPT-5.6 and later (`prompt_cache_breakpoint`) and Claude
+// (`cache_control`): https://concentrate.ai/docs/api-reference/endpoint/prompt-caching. Those are the routes that take
+// breakpoints or bill cache writes; elsewhere only the lab's implicit caching applies.
+function cacheCapability(lab: unknown, routes: Route[]) {
+  if (lab === null || typeof lab !== "object") return { implicit: true };
+  const explicit = routes.some((route) => route.supports.prompt_cache_breakpoint === true
+    || Object.keys(standardPrice(route)?.tokens?.cache?.write ?? {}).length > 0);
+  if (explicit) return lab;
+  const { explicit: _, ...implicit } = lab as Record<string, unknown>;
+  return Object.keys(implicit).length > 0 ? implicit : { implicit: true };
+}
 
 // The lab's controls on the levels this host accepts, never the full list the routes take: a lab toggle becomes
 // `none`, and Claude keeps Anthropic's fields.
