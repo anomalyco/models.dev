@@ -1,10 +1,11 @@
 # Pricing from https://aicraftapi.net/pricing.html (accessed 2026-11-20), USD per million tokens.
 # Model id as published in the AICraft Model Catalog.
+# Toggle: thinking.type = enabled|disabled (default enabled).
 schema = 2
 base_model = "xiaomi/mimo-v2.6-pro"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 0.4804

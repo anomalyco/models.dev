@@ -4,7 +4,7 @@ schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
 price = 0.1601

@@ -4,7 +4,7 @@ schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
 [cost.text.input]
 price = 4.1638

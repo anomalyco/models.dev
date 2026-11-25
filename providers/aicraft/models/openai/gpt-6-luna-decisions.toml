@@ -1,10 +1,15 @@
 # Pricing from https://aicraftapi.net/pricing.html (accessed 2026-11-20), USD per million tokens.
 # Model id as published in the AICraft Model Catalog.
+# Decision surface: POST /v1/decisions takes only model, input and questions (no reasoning or tools).
 schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
-reasoning = { supported = true }
+tools = { supported = false }
+reasoning = { supported = false }
+
+[api.decisions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-decisions" }
 
 [cost.text.input]
 price = 0.1105

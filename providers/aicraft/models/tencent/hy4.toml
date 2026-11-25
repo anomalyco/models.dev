@@ -4,7 +4,7 @@ schema = 2
 base_model = "tencent/hy4"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high"] }
 
 [cost.text.input]
 price = 0.9609
