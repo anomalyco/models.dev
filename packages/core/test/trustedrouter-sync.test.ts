@@ -15,6 +15,7 @@ import {
   labDocumentedKinds,
   labMimeInput,
   trustedrouter,
+  MIN_LIVE_MODELS,
   TrustedRouterResponse,
   type TrustedRouterModel,
 } from "../src/sync/providers/trustedrouter.js";
@@ -36,13 +37,14 @@ function model(overrides: Partial<TrustedRouterModel> = {}): TrustedRouterModel 
 }
 
 const none = { existing: () => undefined, authored: () => undefined };
+const catalog = (count: number) => ({ data: Array.from({ length: count }, (_, i) => model({ id: `lab/model-${i}` })) });
 
 test("TrustedRouter is registered for scheduled sync and fetches its public catalog without credentials", async () => {
   expect(syncProviderMatrix().include.some((entry) => entry.provider === trustedrouter.id)).toBe(true);
   let request: Request | undefined;
   const fetcher = (async (input: string | URL | Request, init?: RequestInit) => {
     request = input instanceof Request ? new Request(input, init) : new Request(input.toString(), init);
-    return Response.json({ data: [model()] });
+    return Response.json(catalog(MIN_LIVE_MODELS));
   }) as unknown as typeof fetch;
   await fetchTrustedRouterModels(fetcher);
   expect(request!.url).toBe("https://api.trustedrouter.com/v1/models");
@@ -55,6 +57,12 @@ test("TrustedRouter is registered for scheduled sync and fetches its public cata
 test("empty and duplicate inventories fail before any catalog writes", () => {
   expect(() => TrustedRouterResponse.parse({ data: [] })).toThrow("empty catalog");
   expect(() => TrustedRouterResponse.parse({ data: [model(), model()] })).toThrow("duplicate model IDs");
+});
+
+test("a catalog under the floor fails before any catalog writes", async () => {
+  const serve = (count: number) => (async () => Response.json(catalog(count))) as unknown as typeof fetch;
+  expect(fetchTrustedRouterModels(serve(MIN_LIVE_MODELS - 1))).rejects.toThrow("truncated response");
+  expect((await fetchTrustedRouterModels(serve(MIN_LIVE_MODELS))).data).toHaveLength(MIN_LIVE_MODELS);
 });
 
 test("only public, tool-capable text chat models with prices are synced", () => {

@@ -50,6 +50,11 @@ export const TrustedRouterModel = z.object({
   }).passthrough().nullish(),
 }).passthrough();
 
+// The public catalog lists about 600 rows (2026-11-25). Absence deletes a
+// generated file, so a response under half that is treated as truncated, not
+// as a mass retirement (the NEAR AI sync guards the same way).
+export const MIN_LIVE_MODELS = 300;
+
 export const TrustedRouterResponse = z.object({
   data: z.array(TrustedRouterModel).min(1, "TrustedRouter returned an empty catalog; refusing to remove local models"),
 }).passthrough().refine(
@@ -447,7 +452,14 @@ export async function fetchTrustedRouterModels(fetcher: typeof fetch = fetch) {
   if (!response.ok) {
     throw new Error(`TrustedRouter catalog request failed: ${response.status} ${response.statusText}`);
   }
-  return TrustedRouterResponse.parse(await response.json());
+  const parsed = TrustedRouterResponse.parse(await response.json());
+  if (parsed.data.length < MIN_LIVE_MODELS) {
+    throw new Error(
+      `TrustedRouter returned ${parsed.data.length} models, below the ${MIN_LIVE_MODELS} needed to`
+        + ` distinguish a retirement from a truncated response`,
+    );
+  }
+  return parsed;
 }
 
 function labDoesNotReason(baseModel: string) {
