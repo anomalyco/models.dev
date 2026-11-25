@@ -1,10 +1,10 @@
 # Price (USD per Mtoken, accessed 2026-11-24): $0.10 input / $0.41 output on
 # https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/gemma-4-26b-a4b/ and the same rates in
 # https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter. OVHcloud publishes USD prices here, so no currency conversion.
-# Effort: Chat `reasoning_effort` / Responses `reasoning.effort` = none|low|medium|high. low|medium|high
-# are the levels OVHcloud documents for reasoning_effort on its catalog pages
-# (e.g. https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/laguna-xs-2-1/); `none` was
-# checked live on 2026-11-24 (reasoning_effort = "none" returned no reasoning_content, 4 completion tokens).
+# Effort: Chat `reasoning_effort` / Responses `reasoning.effort` = none|high. Gemma 4 has thinking
+# on/off only, no graded levels; this model's OpenAPI accepts both values
+# (https://oai.endpoints.kepler.ai.cloud.ovh.net/doc/gemma-4-26b-a4b/openapi.json, accessed 2026-11-24).
+# `none` was checked live on 2026-11-24 (no reasoning_content, 4 completion tokens).
 # Modalities: OVHcloud's catalog lists text-only input for this model (https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter).
 # Limits: catalog context_length 262_144, max_output_length 65_536 (https://catalog.endpoints.ai.ovh.net/rest/v2/openrouter).
 # Mid-conversation: OVHcloud AI Endpoints serves this model on POST /v1/chat/completions; reasoning and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://www.ovhcloud.com/en/public-cloud/ai-endpoints/catalog/
@@ -17,7 +17,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
 
 [limit]
