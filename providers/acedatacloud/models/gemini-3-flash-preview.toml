@@ -1,0 +1,29 @@
+# Public catalog: https://platform.acedata.cloud/models/gemini-3-flash-preview
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/94b49b55-2ea8-4d46-a93c-eb308e1a52d5
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort on the OpenAI-compatible endpoint
+# Input scope: reviewed OpenAI-compatible text/image path, intersected with lab JPEG/PNG/GIF/WebP.
+# No model-specific PDF/audio/video contract is established here; those formats are not advertised.
+# Cached-token usage is conditionally billed and normalized by this API.
+# Cache policy/controls are not documented on this surface: implicit support only, not a hit/TTL guarantee.
+schema = 2
+base_model = "google/gemini-3-flash-preview"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.183966475
+cache = { read = 0.0183967 }
+
+[cost.text.output]
+price = 1.1037985
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/gemini"

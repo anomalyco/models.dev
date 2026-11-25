@@ -1,0 +1,26 @@
+# Ace model catalog and supported protocols: https://platform.acedata.cloud/api/v1/models/?type=chat
+# Exact upstream lab identity supplies baseline model metadata. The catalog does not establish host-specific limits.
+# Host request schema: https://platform.acedata.cloud/api/v1/apis/aff80c74-b190-445b-9124-6422ed763c50
+# Effort: reasoning_effort, using the model baseline in providers/xai/models/grok-4.5.toml.
+# Ace grok-4.7 uses xhigh on the same Chat Completions surface.
+# Billing: https://platform.acedata.cloud/api/v1/apis/aff80c74-b190-445b-9124-6422ed763c50/
+# The first billing rule matches grok-4.5 at all prompt lengths, including 200,000 tokens.
+# USD per million tokens, 2026-11-24: the entry package is $7 per 40 Credits.
+# chat-completions: the API definition publishes /grok/chat/completions (path) and /v1/chat/completions (path2).
+# Cached usage is priced by the host. Caller-set cache policy is undocumented.
+schema = 2
+base_model = "xai/grok-4.5"
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 0.735865725
+cache = { read = 0.11037985 }
+
+[cost.text.output]
+price = 2.207597175
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/v1"

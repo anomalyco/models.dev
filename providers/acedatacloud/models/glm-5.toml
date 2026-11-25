@@ -1,0 +1,25 @@
+# Public catalog: https://platform.acedata.cloud/models/glm-5
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/f0392e69-ad58-40b9-b28b-e1feee258603
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# Toggle: thinking.type = enabled|disabled
+# API billing rechecked 2026-11-16: this endpoint uses a flat model rule with no context surcharge; do not copy the lab host tier.
+# Cached-token usage is conditionally billed and normalized by this API.
+# Cache policy/controls are not documented on this surface: implicit support only, not a hit/TTL guarantee.
+schema = 2
+base_model = "zhipuai/glm-5"
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 1.1037985
+cache = { read = 0.2207597 }
+
+[cost.text.output]
+price = 3.53215555
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/glm"
+compatibility = { reasoning_field = "reasoning_content" }

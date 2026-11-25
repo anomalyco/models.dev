@@ -1,0 +1,31 @@
+# Ace model catalog and supported protocols: https://platform.acedata.cloud/api/v1/models/?type=chat
+# Exact upstream lab identity supplies baseline model metadata. The catalog does not establish host-specific limits.
+# Host request schema: https://platform.acedata.cloud/api/v1/apis/1df39eca-cb1e-5c7c-83d2-e7098c31b67e
+# Toggle: thinking.type = enabled|disabled.
+# Billing: https://platform.acedata.cloud/api/v1/apis/1df39eca-cb1e-5c7c-83d2-e7098c31b67e/
+# USD per million tokens, 2026-11-24: the entry package is $7 per 40 Credits.
+# Input: the host /mimo/chat/completions schema declares messages[].content as a nullable string.
+# chat-completions: the API definition publishes /mimo/chat/completions (path) and /v1/chat/completions (path2).
+# Cached usage is priced by the host. Caller-set cache policy is undocumented.
+# Assistant tool-call history and Chat Completions responses both carry reasoning_content.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.262809225
+cache = { read = 0.005256125 }
+
+[cost.text.output]
+price = 0.52561845
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+base_url = "https://api.acedata.cloud/v1"

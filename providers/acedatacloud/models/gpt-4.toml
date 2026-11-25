@@ -1,0 +1,21 @@
+# Ace model catalog and supported protocols: https://platform.acedata.cloud/api/v1/models/?type=chat
+# Exact upstream lab identity supplies baseline model metadata. The catalog does not establish host-specific limits.
+# Billing: https://platform.acedata.cloud/api/v1/apis/c9969b66-effb-4753-b504-a82c4d16f83f/
+# USD per million tokens, 2026-11-24: the entry package is $7 per 40 Credits.
+# chat-completions: the API definition publishes /openai/chat/completions (path) and /v1/chat/completions (path2).
+# responses: the API definition publishes /openai/responses (path) and /v1/responses (path2).
+schema = 2
+base_model = "openai/gpt-4"
+
+[cost.text.input]
+price = 11.037985875
+
+[cost.text.output]
+price = 22.07597175
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/v1"
+
+[api.responses]
+base_url = "https://api.acedata.cloud/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }

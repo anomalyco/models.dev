@@ -1,0 +1,29 @@
+# Public catalog: https://platform.acedata.cloud/models/claude-3-5-haiku-20241022
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/6b2b437b-b6d5-466c-8750-b16650072593
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# The cache-write rates cover the 5-minute and 1-hour TTL usage fields.
+# Input scope: reviewed OpenAI-compatible text/image path, intersected with lab JPEG/PNG/GIF/WebP.
+# No model-specific PDF/audio/video contract is established here; those formats are not advertised.
+# Cached-token usage is conditionally billed and normalized by this API.
+# Cache policy/controls are not documented on this surface: implicit support only, not a hit/TTL guarantee.
+# Cache-write prices checked against the public API billing rules on 2026-11-24.
+schema = 2
+base_model = "anthropic/claude-3-5-haiku-20241022"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.294346325
+cache = { read = 0.02943465, write = { "5m" = 0.367932775, "1h" = 0.58869265 } }
+
+[cost.text.output]
+price = 1.47173145
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/v1"

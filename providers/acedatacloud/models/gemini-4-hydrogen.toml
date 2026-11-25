@@ -1,0 +1,32 @@
+# Ace model catalog and supported protocols: https://platform.acedata.cloud/api/v1/models/?type=chat
+# Exact upstream lab identity supplies baseline model metadata. The catalog does not establish host-specific limits.
+# Host request schema: https://platform.acedata.cloud/api/v1/apis/94b49b55-2ea8-4d46-a93c-eb308e1a52d5
+# Effort: reasoning_effort, using the model baseline in providers/google/models/gemini-4-hydrogen.toml.
+# Google maps OpenAI-compatible xhigh on gemini-4-hydrogen; Vercel and OpenRouter list the same level.
+# https://ai.google.dev/gemini-api/docs/openai#thinking
+# Billing: https://platform.acedata.cloud/api/v1/apis/94b49b55-2ea8-4d46-a93c-eb308e1a52d5/
+# USD per million tokens, 2026-11-24: the entry package is $7 per 40 Credits.
+# Input: the host catalog lists vision for this ID and Chat Completions accepts image_url parts.
+# Image MIME types follow the reviewed text/image path and the matching lab model.
+# chat-completions: the API definition publishes /gemini/chat/completions (path) and /v1/chat/completions (path2).
+# Cached usage is priced by the host. Caller-set cache policy is undocumented.
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 0.55189925
+cache = { read = 0.02759505 }
+
+[cost.text.output]
+price = 2.759496425
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/v1"
