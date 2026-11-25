@@ -1,9 +1,9 @@
 # context: the API's own limit, as named in its error for an over-long request.
-# Prices: synced from the public catalog, https://console.modular.com/api/v1/docs/models
+# Prices: read from the public catalog, https://console.modular.com/api/v1/docs/models, on 2026-11-25
 # Video: inherited; video_url (mp4) is accepted and billed as input (+23 prompt tokens for a 2 s clip, probe).
 # Reasoning controls: providers/alibaba/models/qwen3.8-27b.toml, kept where this host honours them (probe, /v1/chat/completions).
 # Toggle: reasoning.enabled = true|false (true -> 475 reasoning tokens, false -> 0; on by default here, 273 with no control)
-# Effort: not listed; this host does not validate reasoning.effort (an unknown value is accepted).
+# Effort: not listed; reasoning.effort does not order reasoning here (low -> 185, medium -> 485, xhigh -> 335 reasoning tokens, one run each), and unknown values are accepted (bogus -> 239).
 # tool schemas: rejects JSON Schema keyword(s) `not` (probe: HTTP 400).
 # tools: the catalog says function_calling=false; the probe got a well-formed tool call.
 schema = 2
