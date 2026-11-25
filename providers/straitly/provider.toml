@@ -1,0 +1,12 @@
+name = "Straitly"
+env = ["STRAITLY_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# OpenAI-compatible POST /v1/chat/completions with bearer-key auth.
+# OpenAI Responses (POST /v1/responses) and Anthropic Messages (POST /v1/messages)
+# are also supported at https://api.straitly.ai/v1.
+# Sources (accessed 2026-11-25):
+# - https://straitly.ai/docs/quickstart
+# - https://straitly.ai/api/catalog
+api = "https://api.straitly.ai/v1"
+doc = "https://straitly.ai/models"

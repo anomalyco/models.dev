@@ -1,0 +1,20 @@
+# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probe on /v1/responses.
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 4.8
+cache = { read = 0.24 }
+
+[cost.text.output]
+price = 24

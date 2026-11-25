@@ -1,0 +1,18 @@
+# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probe on /v1/chat/completions.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.03825
+cache = { read = 0.00765 }
+
+[cost.text.output]
+price = 0.1275

@@ -1,0 +1,18 @@
+# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probe on /v1/chat/completions.
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 524_288
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 3.6
