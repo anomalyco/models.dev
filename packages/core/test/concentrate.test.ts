@@ -79,6 +79,17 @@ describe("Concentrate sync", () => {
     expect(v2(model("kimi-k2-5", "moonshot", { moonshot: route() })).capabilities.cache).toBeUndefined();
   });
 
+  test("keeps the reference's explicit caching only on routes that take breakpoints or bill cache writes", () => {
+    const priced = { pricing: [{ tokens: tokens(1, 2, 0.1) }] };
+    // Alibaba's Qwen caching is implicit and explicit; Concentrate's Alibaba route takes no breakpoints and bills no writes.
+    expect(v2(model("qwen4-max", "alibaba", { alibaba: route(priced) })).capabilities.cache).toEqual({ implicit: { min_tokens: 1_024 } });
+    const breakpoints = route(priced);
+    (breakpoints.supports as Record<string, unknown>).prompt_cache_breakpoint = true;
+    expect(v2(model("qwen4-max", "alibaba", { alibaba: breakpoints })).capabilities.cache.explicit).toBeDefined();
+    const writes = route({ pricing: [{ tokens: { ...tokens(1, 2), cache: { read: usd(0.1), write: { ephemeral_5m_input_tokens: usd(1.25) } } } }] });
+    expect(v2(model("qwen4-max", "alibaba", { alibaba: writes })).capabilities.cache.explicit).toBeDefined();
+  });
+
   test("keys cache writes by the TTLs the reference offers, or a plain price when it lists none", () => {
     const write = (key: string, USD: number) => ({ tokens: { ...tokens(1, 2, 0.1), cache: { read: usd(0.1), write: { [key]: usd(USD) } } } });
     // OpenAI caches for 30m/12h; an unnamed write price is the first.
