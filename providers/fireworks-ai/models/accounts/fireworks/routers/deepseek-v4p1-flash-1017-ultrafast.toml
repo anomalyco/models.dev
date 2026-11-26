@@ -1,8 +1,8 @@
 # Ultra-fast (Preview) serving path for DeepSeek V4.1 Flash 1017: same model, 6-8x generation speed, selected by model ID
 #   (no service_tier): https://docs.fireworks.ai/serverless/serverless-modes. Chat completions echo the underlying
 #   accounts/fireworks/models/deepseek-v4p1-flash-1017 (live 2026-11-07).
-# Pricing $2.40 / $0.048 / $9.60 per 1M (input / cached input / output), no Priority: https://docs.fireworks.ai/serverless/pricing
-#   and GET https://api.fireworks.ai/v1/serverless/models (serverless_mode "ultrafast", usage_identifier = this ID, 2026-11-07).
+# Pricing $1.20 / $0.024 / $4.80 per 1M (input / cached input / output), no Priority: https://docs.fireworks.ai/serverless/pricing
+#   and GET https://api.fireworks.ai/v1/serverless/models (serverless_mode "ultrafast", usage_identifier = this ID, 2026-11-24).
 # Lab identity, minor update to V4.1 Flash: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017
 # Toggle: thinking.type = enabled|disabled (reasoning_effort = "none" also disables; live 2026-11-07)
 # Effort: reasoning_effort = low|high|max (same surface as sibling accounts/fireworks/models/deepseek-v4p1-flash-1017; native DeepSeek Flash
@@ -33,8 +33,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 2.4
-cache = { read = 0.048 }
+price = 1.2
+cache = { read = 0.024 }
 
 [cost.text.output]
-price = 9.6
+price = 4.8

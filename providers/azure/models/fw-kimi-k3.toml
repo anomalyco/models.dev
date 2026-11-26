@@ -1,0 +1,38 @@
+# Availability: FW-Kimi-K3 is GA on Fireworks on Foundry, pay-per-token Global Standard and Data Zone Standard (US): https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/fireworks-model-catalog#pay-per-token (accessed 2026-11-25)
+# Controls, structured output and cache follow Fireworks' own entry for the same weights (providers/fireworks-ai/models/accounts/fireworks/models/kimi-k3.toml); Foundry runs Fireworks' serving.
+# Toggle: thinking.type = enabled|disabled; Effort: reasoning_effort = low|medium|high|max (same file). Modalities: Fireworks' image subset (same file).
+# Pricing: Azure Fireworks Models product, global "FW Kimi-K3 Gl Inp" 0.003/1K, "Gl Cd Inp" 0.0003/1K, "Gl Opt" 0.015/1K; US data zone "FW Kimi K3 Inp/Cd Inp/Opt DZ" 0.0033 / 0.00033 / 0.0165 (1.1x): https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Fireworks Models' (accessed 2026-11-25)
+# APIs: every Fireworks catalog model takes the OpenAI/v1 Chat Completions and Responses APIs on the Foundry resource
+#   (https://{resource}.services.ai.azure.com/openai/v1/...): https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/enable-fireworks-models
+#   An administrator must first register the Fireworks.EnableDeploy feature on the subscription (same page); Fireworks on Foundry is GA.
+#   Shape copied from this host's Grok files (Chat Completions via the Azure package, then Responses).
+# Mid-conversation flags: left out; Foundry documents none for Fireworks models and they weren't tested through Foundry.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+name = "FW-Kimi-K3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15
+
+[[cost.multipliers]]
+when = { region = { equals = "us" } }
+factor = { text = 1.1 }

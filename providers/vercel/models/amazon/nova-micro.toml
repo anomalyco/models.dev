@@ -1,1 +1,28 @@
-../../../amazon-bedrock/models/amazon.nova-micro-v1:0.toml
+# Source: https://ai-gateway.vercel.sh/v1/models (accessed 2026-11-24): 128,000 context, 8,192 output.
+schema = 2
+base_model = "amazon/nova-micro"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 8_192
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.035
+cache = { read = 0.0087 }
+
+[cost.text.output]
+price = 0.14

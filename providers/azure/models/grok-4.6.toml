@@ -1,7 +1,9 @@
 # Source: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-grok
 # Pricing: https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/grok/
-# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
-# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+# APIs: Chat Completions and Responses (POST https://<resource>.services.ai.azure.com/openai/v1/chat/completions and /openai/v1/responses), per the API Type column of "Models available in Foundry" in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-grok (accessed 2026-11-25). Chat Completions stays first so v1 keeps its provider.
+# Mid-conversation flags: left out. Azure's Grok guide documents no way to change tools or effort mid-conversation and no mid-conversation system messages on either API, so none of the three flags is marked.
+# Long context: Azure lists a separate rate (meters ending in L); xAI documents it from 200K prompt tokens (https://docs.x.ai/developers/pricing).
+# Data-zone and regional deployments cost 10% more than global (Azure Retail Prices API: the DZ meters are 1.1x the Glbl ones); the global price is the base.
 schema = 2
 base_model = "xai/grok-4.6"
 status = "beta"
@@ -18,9 +20,24 @@ output = 128_000
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
 
+[api.responses]
+
 [cost.text.input]
 price = 2
 cache = { read = 0.5 }
 
+[[cost.text.input.overrides]]
+when = { context = { gte = 200_000 } }
+price = 4
+cache = { read = 1 }
+
 [cost.text.output]
 price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 200_000 } }
+price = 12
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = { text = 1.1 }

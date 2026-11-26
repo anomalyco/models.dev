@@ -1,0 +1,46 @@
+# The OpenAI model (base_model) on a ChatGPT plan through Sign in with ChatGPT. Only what differs or is route-specific
+#   is set here.
+# Availability: listed (visibility "list") by GET https://api.openai.com/v1/models with a Sign in with ChatGPT token
+#   (https://developers.openai.com/siwc/token-sharing-open-source/models-and-inference), 2026-11-22, and a request
+#   completed live. gpt-5.5 is not listed and is rejected with "not supported when using Codex with a ChatGPT account".
+# Reasoning: same Responses API as `openai`, so the same effort values.
+# Tools and other capabilities: the same Responses API at the same base URL as `openai`, so they follow its files,
+#   minus what this route documents as unsupported: hosted tools (tool_search, image generation, file search,
+#   Code Interpreter, computer use, MCP), prompt_cache_retention, and `temperature` / `top_p`
+#   (https://developers.openai.com/siwc/token-sharing-open-source/preview-limitations). Custom tools and
+#   additional_tools are documented as supported there.
+# Fast: the UI guidelines show a Fast mode toggle that "uses your plan or credits faster"
+#   (https://developers.openai.com/siwc/ui-ux-guidelines); it is the `priority` service tier, as on `openai` and
+#   Codex. Service tiers an account can't use fail with subscription_sharing_unsupported_capability.
+# Cost: 0, as the other subscription providers publish it: usage counts against the ChatGPT plan, with no per-token
+#   price.
+# Cache: no lifetime is documented for this route and prompt_cache_retention is rejected, so only `implicit = true` is
+#   set.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"], updates = ["add", "remove", "replace"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+effort_updates = true
+prompt_cache_key = true
+service_tier = ["priority"]
+
+[capabilities.cache]
+implicit = true
+
+[api.responses]
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }

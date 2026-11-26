@@ -1,6 +1,6 @@
 schema = 2
 name = "Clover 2 Thinking"
-description = "Clover 2 is Kitani's 27.8B dense model: a BF16 base with seven LoRA experts and trained per-token routing between them. This variant thinks before answering; tool calling is not available. Its 32,768-token context window is shared by input and output, with up to 8,192 output tokens. Free during its first week, until November 24, 2026 03:33 UTC."
+description = "Clover 2 is Kitani's MoLE (Mixture of LoRA Experts) model: a base model with seven LoRA experts and trained per-token routing between them. This variant thinks before answering. It supports function calling and a 200,000-token context window shared by input and output, with up to 8,192 output tokens."
 open_weights = false
 release_date = "2026-11-17"
 
@@ -9,7 +9,7 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = false }
+tools = { supported = true }
 reasoning = { supported = true }
 structured_output = false
 
@@ -19,7 +19,8 @@ input = 200_000
 output = 8_192
 
 [cost.text.input]
-price = 0
+price = 0.75
+cache = { read = 0.1 }
 
 [cost.text.output]
-price = 0
+price = 1.5

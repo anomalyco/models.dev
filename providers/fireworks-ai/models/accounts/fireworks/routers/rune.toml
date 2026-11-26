@@ -5,6 +5,7 @@
 #   echoed model accounts/fireworks/routers/rune and reported usage.output_tokens = 0.
 # Pricing: Fireworks publishes no rate for the router, so no cost is recorded (Rune itself is $0.042 / $0.0084 / $0,
 #   https://docs.fireworks.ai/serverless/pricing).
+# Responses and Messages return 400 "This model only serves /v1/systemone." for Rune (live 2026-11-24), so only [api.systemone] is listed.
 schema = 2
 v2_only = true
 base_model = "surogate/rune-26b-a4b"
@@ -15,12 +16,6 @@ cache = { implicit = true }
 [api.systemone]
 base_url = "https://api.fireworks.ai/inference/v1"
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
-
-[api.responses]
-sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
-
-[api.messages]
-sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
 price = 0.042

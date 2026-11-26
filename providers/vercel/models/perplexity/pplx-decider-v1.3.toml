@@ -2,6 +2,7 @@ schema = 2
 type = "decision"
 name = "Decider V1.3"
 description = "Perplexity Decider V1.3 is a multimodal decision model for classification, routing, and scoring. It evaluates text, structured JSON, and images against yes/no questions, custom choices, and ordered rubrics, returning typed answers with probabilities. It supports multiple questions over shared content and a 256K context window."
+family = "pplx-decider"
 open_weights = false
 release_date = "2026-11-12"
 
@@ -26,3 +27,6 @@ price = 0.02
 
 [cost.text.output]
 price = 0
+
+[cost.web_search]
+price = 1

@@ -1,9 +1,10 @@
 # Sources (accessed 2026-11-14):
-# - https://router.huggingface.co/v1/models (moonshotai/Kimi-K3.1-Pro: deepinfra live, context_length 1,048,576, $2 input / $10 output per 1M tokens, tools and structured output supported, input text + image)
+# - https://router.huggingface.co/v1/models (moonshotai/Kimi-K3.1-Pro: tools and structured output supported, input text + image)
 # - https://huggingface.co/docs/inference-providers/tasks/chat-completion
 # Reasoning: always-on, effort via top-level reasoning_effort = low|high|max, copied from the lab (Moonshot's K3.1 Pro surface, https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart), the HF Kimi-K3 entry and the Deep Infra Kimi K3.1 Pro entry, which serves this route. No thinking toggle.
 # Modalities: the router catalog lists ["text","image"]; exact types are the lab's (moonshotai/kimi-k3.1-pro).
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -23,7 +24,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 2
+price = 1.24
 
 [cost.text.output]
-price = 10
+price = 6.2

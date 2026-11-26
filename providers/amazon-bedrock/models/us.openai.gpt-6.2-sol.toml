@@ -1,0 +1,38 @@
+# Model IDs, routes, limits and Geo CRIS pricing: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-2-sol.html
+# US cross-Region profile on bedrock-runtime; this entry uses Converse. AWS prices include the 10% regional premium.
+# Service tiers: Standard only, per the model card.
+# Reasoning: additionalModelRequestFields.reasoning.effort = low|medium|high|xhigh|max; effort=none rejected on the Global profile (live 2026-11-17).
+# Converse tools: toolSpec.strict enforces JSON schemas; toolChoice supports auto, any (required), and named tool (Global profile, live 2026-11-17).
+# JSON Schema output requires outputConfig.textFormat.type=json_schema and additionalModelRequestFields.text.format.strict=true; encode the schema as a JSON string. The card covers streaming and non-streaming calls.
+# Converse accepts user text/image blocks and rejects document blocks and images inside toolResult, per the model card. Documents use Runtime Responses input_file.
+# Image formats: https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ImageBlock.html
+# Converse caching is implicit only; native cachePoint is unsupported. The card documents the 1,024-token minimum and 30m cache-write prices.
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+name = "GPT-6.2 Sol (US)"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 2.2
+cache = { read = 0.11, write = { "30m" = 2.75 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4.4
+cache = { read = 0.22, write = { "30m" = 5.5 } }
+
+[cost.text.output]
+price = 11
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16.5

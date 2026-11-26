@@ -5,6 +5,7 @@
 # https://huggingface.co/docs/inference-providers/en/tasks/chat-completion (accessed 2026-10-19)
 # https://api-docs.deepseek.com/guides/thinking_mode/
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
@@ -24,7 +25,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.3
+price = 0.05
 
 [cost.text.output]
-price = 1.2
+price = 0.3

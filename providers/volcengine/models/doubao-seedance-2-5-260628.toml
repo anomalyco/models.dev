@@ -12,8 +12,9 @@
 # CNY->USD rate: 6.685797, 2026-11-12, source: https://open.er-api.com/v6/latest/USD
 # Billed per million tokens; tokens ~= (input video seconds + output seconds) x width x height x fps / 1024,
 # exact count in usage.completion_tokens. With video input there is a minimum token charge, not modelled here.
-# Prices: 480p/720p 70 CNY (42 with input video), 1080p 77 CNY (46 with input video).
-# Output formats mp4 (default) and mov via output_format; mov is listed for Seedance 2.5 only. Keeps the lab's
+# Prices: 480p/720p 70 CNY (42 with input video), 1080p 77 CNY (46 with input video), 4k 31 CNY (19 with input
+# video; 4K added to the model list and price table, re-checked 2026-11-24, same rate).
+# Output formats mp4 (default) and mov via output_format; mov is listed for the Seedance 2.5 series only (2.5 and 2.5 flash). Keeps the lab's
 # generic audio entry for the synchronized sound track. input repeats the lab list only because the schema
 # requires input whenever [modalities] is overridden.
 schema = 2
@@ -50,9 +51,17 @@ when = { resolution = { equals = "1080p" } }
 price = 11.51695
 
 [[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" } }
+price = 4.63669
+
+[[cost.video.output.overrides]]
 when = { resolution = { in = ["480p", "720p"] }, input_video = { equals = true } }
 price = 6.28197
 
 [[cost.video.output.overrides]]
 when = { resolution = { equals = "1080p" }, input_video = { equals = true } }
 price = 6.88026
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4k" }, input_video = { equals = true } }
+price = 2.84185

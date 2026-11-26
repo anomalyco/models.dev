@@ -1,0 +1,31 @@
+# Sources: https://developers.openai.com/api/docs/changelog (Nov 24, 2026: "Released Healthcare model configurations for the Responses API,
+# pairing select OpenAI models with a harness tailored to clinical questions"; web search uses a dedicated index of medical sources),
+# https://developers.openai.com/api/docs/pricing#healthcare-model-configurations (display name "GPT-6.1 Sol Healthcare", long-context band).
+# There is no model page yet (https://developers.openai.com/api/docs/models/gpt-6.1-sol-healthcare returns 404). Knowledge cutoff and limits are
+# those of gpt-6.1-sol (https://developers.openai.com/api/docs/models/gpt-6.1-sol), the model this configuration pairs with: the pricing page
+# prices it with the same >272K long-context band, and live 2026-11-25 it accepts the same request parameters as gpt-6.1-sol.
+# Modalities: live 2026-11-25 on /v1/responses, a PNG input_image and a PDF input_file are both read correctly.
+# Sampling: live 2026-11-25, temperature returns 400 "Unsupported parameter: 'temperature' is not supported with this model."
+schema = 2
+name = "GPT-6.1 Sol Healthcare"
+description = "GPT-6.1 Sol paired with a harness tailored to clinical questions; its web search uses a dedicated index of medical sources."
+family = "gpt-sol"
+open_weights = false
+knowledge = "2026-04-30"
+release_date = "2026-11-24"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_050_000
+input = 922_000
+output = 128_000

@@ -1,3 +1,6 @@
+# Lifecycle: Voxtral TTS (voxtral-mini-tts-2603) was deprecated 2026-10-31 and retires 2027-04-30; replacement Voxtral TTS 3
+#   (https://docs.mistral.ai/models/voxtral-tts-26-03 and the deprecation table at https://docs.mistral.ai/getting-started/models/).
+#   /v1/models (2026-11-23) still maps voxtral-mini-tts-latest -> voxtral-mini-tts-2603.
 # Sources:
 #   https://docs.mistral.ai/models/voxtral-tts-26-03 (Voxtral TTS, API IDs voxtral-mini-tts-2603 and
 #     voxtral-mini-tts-latest, released 2026-03-23; open weights under CC BY-NC 4.0 at
@@ -13,9 +16,10 @@ schema = 2
 type = "speech"
 name = "Voxtral Mini TTS (latest)"
 description = "Multilingual text-to-speech model with zero-shot voice cloning"
-family = "voxtral"
+family = "voxtral-tts"
 open_weights = true
 release_date = "2026-03-23"
+status = "deprecated"
 
 [modalities]
 input = ["text"]

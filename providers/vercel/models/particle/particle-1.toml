@@ -1,6 +1,7 @@
 schema = 2
 name = "Particle-1"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
+family = "particle"
 open_weights = false
 release_date = "2026-10-28"
 
@@ -15,7 +16,7 @@ cache = { implicit = true }
 
 [limit]
 context = 1_048_576
-output = 131_072
+output = 1_048_576
 
 [api.chat-completions]
 

@@ -1,0 +1,29 @@
+# Availability: gpt-oss-120b (version 1) is GA, retires 2027-09-15:
+#   https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule#openai-oss and https://ai.azure.com/catalog/models/gpt-oss-120B
+#   (Lifecycle: Generally available, 131,072 context, 131,072 output; accessed 2026-11-25). It needs a Foundry project to deploy.
+# Capabilities: text in/out, Chat Completions API, streaming, function calling, structured outputs, reasoning:
+#   https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#gpt-oss
+# Effort: reasoning_effort = low|medium|high, gpt-oss's native levels (https://developers.openai.com/api/docs/models/gpt-oss-120b);
+#   same levels as relays of this model (providers/togetherai/models/openai/gpt-oss-120b.toml).
+# Pricing: Azure OpenAI OSS Models product, "gpt-oss-120B Inp glbl" 0.00015/1K and "gpt-oss-120B Outp glbl" 0.0006/1K;
+#   data-zone meters 0.000165 / 0.00066 (1.1x). https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure OpenAI OSS Models' (accessed 2026-11-25)
+# Mid-conversation flags: left out; Azure documents none for this model.
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = { text = 1.1 }

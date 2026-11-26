@@ -1,0 +1,25 @@
+schema = 2
+name = "evolve-beta"
+description = "Kitani trains this model on every conversation sent to it, and you are paid for each completed reply. You earn $0.135 per million input tokens and $2.25 per million output tokens, added to your balance after about a day; using it costs nothing. Spam or abusive requests earn nothing. Don't send private information or other people's personal data. Not available with zero-data-retention settings or Private Mode. Text and up to four images in, tool calling, optional reasoning, 200,000-token context and up to 8,192 output tokens."
+open_weights = false
+release_date = "2026-11-25"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = false
+
+[limit]
+context = 200_000
+input = 200_000
+output = 8_192
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

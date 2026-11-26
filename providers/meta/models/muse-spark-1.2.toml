@@ -8,12 +8,14 @@
 # Tools: tool_choice accepts only "auto" (https://dev.meta.ai/docs/tool-calling#guidelines; "required" returns 400 live 2026-10-24).
 # strict only validates the schema and doesn't constrain arguments (https://dev.meta.ai/docs/tool-calling#strict), so it is left out.
 # Tool search (tool_search + defer_loading) on Responses and Messages, not Chat Completions (https://dev.meta.ai/docs/tool-search); worked live on muse-spark-1.1 and muse-wonder-1.0 (2026-10-24), so search sits on [api.responses] and [api.messages] only.
+# Web search: $2.50 per 1,000 search queries on top of token costs (https://dev.meta.ai/docs/pricing-rate-limits, "Token pricing notes").
+# Default effort: "high" when reasoning_effort is omitted (https://dev.meta.ai/docs/reasoning).
 schema = 2
 base_model = "meta/muse-spark-1.2"
 
 [capabilities]
 tools = { supported = true, choice = ["auto"] }
-reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"] }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"], default = { type = "effort", value = "high" } }
 structured_output = true
 store = true
 stream_usage = true
@@ -36,3 +38,6 @@ cache = { read = 0.15 }
 
 [cost.text.output]
 price = 4.25
+
+[cost.web_search]
+price = 2.5

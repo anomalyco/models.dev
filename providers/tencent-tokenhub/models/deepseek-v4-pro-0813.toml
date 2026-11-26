@@ -1,0 +1,33 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 0.66, output 1.98, cache hit 0.022; doubled at peak).
+#   China list: https://cloud.tencent.com/document/product/1823/130055
+# Peak: Mon-Fri 09:00-12:00 and 14:00-18:00 Beijing time (UTC 01:00-04:00, 06:00-10:00), by request receipt time.
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17)
+# Tencent id deepseek-v4-pro-0813; documented upstream version: DeepSeek-V4-Pro-0813.
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write price is published.
+# Controls (same as the Tencent Token Plan and DeepSeek entries for this model):
+#   Toggle: thinking.type = enabled|disabled (default enabled)
+#   Effort: reasoning_effort = low|high|max
+# Reasoning guide: https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.022 }
+
+[cost.text.output]
+price = 1.98
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

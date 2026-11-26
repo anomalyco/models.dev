@@ -16,10 +16,12 @@
 # non-OpenAI reasoning models:
 # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning (accessed 2026-10-25)
 # Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+# Data-zone and regional deployments cost 10% more than global (Azure Retail Prices API: the DZ meters are 1.1x the Glbl ones); the global price is the base.
+# Deprecated: this Preview retires 2026-12-15 (DeepSeek-V4.1-Flash-1017 is the newer Preview), DeepSeek table in https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule#deepseek (accessed 2026-11-25)
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek-V4.1-Flash"
-status = "beta"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
@@ -39,3 +41,7 @@ cache = { read = 0.006 }
 
 [cost.text.output]
 price = 1.2
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = { text = 1.1 }

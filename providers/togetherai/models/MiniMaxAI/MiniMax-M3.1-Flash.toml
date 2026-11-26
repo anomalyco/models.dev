@@ -1,0 +1,21 @@
+# Price and context: GET https://api.together.xyz/v1/models (accessed 2026-11-23): $0.15 input, $0.015 cached input, $0.60 output per 1M; context 1,048,576.
+# Effort: reasoning_effort = low|medium|high|xhigh|max, MiniMax's own set (providers/minimax/models/MiniMax-M3.1-Flash.toml). This host
+#   has no earlier model in the minimax-m-flash line; flags follow its other serverless models (structured output, implicit cache).
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+structured_output = true
+prompt_cache_key = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6

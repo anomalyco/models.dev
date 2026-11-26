@@ -406,7 +406,7 @@ async function fetchAllDigitalOceanCatalog(fetcher: typeof fetch) {
     if (next) {
       url = new URL(next, url).toString();
     } else if (page.meta !== undefined && page.meta.page < page.meta.pages) {
-      const nextPage = new URL(url);
+      const nextPage: URL = new URL(url);
       nextPage.searchParams.set("page", String(page.meta.page + 1));
       url = nextPage.toString();
     } else {
@@ -817,7 +817,7 @@ export function resolveDigitalOceanBaseModel(id: string) {
   // also normalize dotted versions: anthropic-claude-opus-4.6 → anthropic/claude-opus-4-6
   const anthropicFamily = id.match(/^anthropic-claude-([a-z]+)-(\d+(?:\.\d+)?)$/);
   if (anthropicFamily !== null) {
-    const version = anthropicFamily[2].replaceAll(".", "-");
+    const version = anthropicFamily[2]!.replaceAll(".", "-");
     candidates.push(`anthropic/claude-${anthropicFamily[1]}-${anthropicFamily[2]}`);
     candidates.push(`anthropic/claude-${anthropicFamily[1]}-${version}`);
   }

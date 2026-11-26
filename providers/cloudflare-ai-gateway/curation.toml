@@ -46,33 +46,18 @@ skip = [
   # Ids with no lab file yet (image, video, speech and text). Each needs a lab file with a sourced
   # release date and the upstream API's formats before it can be synced.
   "black-forest-labs/flux-2-pro-preview",
-  "black-forest-labs/flux-3-video",
-  "black-forest-labs/flux-video-upscale",
-  "alibaba/hh1-i2v",
-  "alibaba/hh1-t2v",
-  "alibaba/hh1.1-i2v",
-  "alibaba/hh1.1-r2v",
-  "alibaba/hh1.1-t2v",
   "alibaba/wan-2.6-image",
   "alibaba/wan-2.7-i2v",
   "alibaba/wan-3.0",
   "alibaba/wan-3.0-prime",
-  "bytedance/seedance-2.0-mini",
   "bytedance/seedream-4.0",
   "lightricks/ltx-2-5-fast",
+  # Kling v3 (video) has two lab files, kuaishou/kling-v3.0-std and kling-v3.0-pro, and the catalog row doesn't
+  # say which mode it is (https://developers.cloudflare.com/ai/models/klingai/kling-v3/), so it stays skipped.
   "klingai/kling-v3",
-  "klingai/kling-v3-image",
-  "klingai/kling-v3-omni",
-  "klingai/kling-v4",
-  "klingai/kling-v4-flash",
   "lightricks/ltx-2-3-fast",
   "lightricks/ltx-2-3-pro",
-  "minimax/speech-02-hd",
-  "minimax/speech-02-turbo",
-  "minimax/speech-2.6-hd",
-  "minimax/speech-2.6-turbo",
   "openai/decisions",
-  "particle/particle-1",
   "topaz/gigapixel-high-fidelity-3",
   "topaz/gigapixel-standard-2",
   "veed/fabric-1.0",
@@ -803,6 +788,23 @@ note = [
 ]
 reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
 
+# Gemini 4 Neon is in the gateway catalog (the 2026-11-26 sync reported it, issue
+# https://github.com/anomalyco/models.dev/issues/14639) with no effort enum in its schema, and takes the
+# same Vertex AI REST chat-completions route as Argon, Carbon and Hydrogen. Effort values are Google's own
+# list (providers/google/models/gemini-4-neon.toml: low|medium|high|xhigh, default high), as for Hydrogen,
+# whose none was rejected on this route (code 7003). Not live-probed on the gateway (no working gateway
+# credentials, 2026-11-25). structured_output follows the same-route predecessors (Argon, Carbon and Hydrogen
+# all publish it; json_schema was enforced live on Argon, see the google/gemini-4 prefix note).
+# https://ai.google.dev/gemini-api/docs/whats-new-gemini-4-neon
+# https://ai.google.dev/gemini-api/docs/thinking
+[models."google/gemini-4-neon"]
+structured_output = true
+note = [
+  "Effort: reasoning_effort = low|medium|high|xhigh (maps to Gemini's thinking level; default high; Google's list, not probed on the gateway).",
+  "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/whats-new-gemini-4-neon",
+]
+reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhigh"] }]
+
 # MiMo V2.6 Pro: Xiaomi's only control is thinking on/off (providers/xiaomi/models/mimo-v2.6-pro.toml:
 # "Responses reasoning.effort only maps none -> off, every other level -> on"), and the gateway
 # accepts the generic reasoning_effort none..max enum for it (an invalid value returns that enum from
@@ -815,14 +817,81 @@ note = [
 ]
 reasoning_options = [{ type = "toggle" }]
 
-# Catalog id uses the HuggingFace org (deepseek-ai/); the lab file is models/deepseek/.
-# Cloudflare's own Workers AI entry for this model (@cf/deepseek-ai/deepseek-v4.1-flash-1017,
-# GET /ai/models/search, 2026-11-16) lists supported_efforts none|low|high|max, default high,
-# normalizing minimal -> none, medium -> high and xhigh -> max. Same ladder as the Kilo entry.
-# Prices: provider_details[0] (subconscious), the first upstream.
-[models."deepseek-ai/deepseek-v4.1-flash-1017"]
-base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+# Kimi K3.1 Pro Highspeed: the same model served 2-3x faster. Its lab file (models/moonshotai/kimi-k3.1-pro-highspeed.toml)
+# carries the name, since the text sync doesn't take names from the catalog. Cloudflare's page lists a 1M context, Chat
+# Completions, $4 input / $20 output / $0.20 cached per 1M and always-on reasoning
+# (https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3.1-pro-highspeed/); prices come from the catalog.
+# Effort matches Moonshot's own API for it (low|high|max, default max, no off value); the request schema leaves
+# reasoning_effort an open string. Not checked live.
+[models."moonshotai/kimi-k3.1-pro-highspeed"]
 note = [
-  "Off: reasoning_effort = none; effort: low|high|max (default high; minimal -> none, medium -> high, xhigh -> max; POST /ai/v1/chat/completions; ladder from Cloudflare's Workers AI model metadata, not probed live: the gateway balance ran out).",
+  "Always reasons; effort: reasoning_effort = low|high|max (POST /ai/v1/chat/completions; default max; no off value; not checked live).",
+  "Sources: https://developers.cloudflare.com/ai/models/moonshotai/kimi-k3.1-pro-highspeed/ ; https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart",
+]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+
+# Particle-1 (catalog id particle/particle-1; the lab is particle-ai). Particle's reasoning_effort folds to four
+# levels: none turns thinking off, minimal|low -> low, medium|high|xhigh -> high, max|ultra -> max, default high
+# (https://docs.particle.ai/reasoning). Cloudflare's request schema takes reasoning_effort as an open string
+# (https://developers.cloudflare.com/ai/models/particle/particle-1/). Not checked live; structured_output is left out.
+[models."particle/particle-1"]
+base_model = "particle-ai/particle-1"
+note = [
+  "Off: reasoning_effort = none; effort: low|high|max (POST /ai/v1/chat/completions; default high; minimal -> low, medium/xhigh -> high, ultra -> max; not checked live).",
+  "Source: https://docs.particle.ai/reasoning",
 ]
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+# Video and image ids whose lab file has another name (v2-only files on POST /ai/run). Each catalog page's
+# name and description match the lab model: https://developers.cloudflare.com/ai/models/<id>/
+[models."bytedance/seedance-1-pro"]
+base_model = "bytedance-seed/seedance-1.0-pro"
+
+[models."bytedance/seedance-1-pro-fast"]
+base_model = "bytedance-seed/seedance-1.0-pro-fast"
+
+[models."bytedance/seedance-1.5-pro"]
+base_model = "bytedance-seed/seedance-1.5-pro"
+
+[models."bytedance/seedance-2.0-mini"]
+base_model = "bytedance-seed/seedance-2.0-mini"
+
+[models."kwaivgi/kling-v2.6"]
+base_model = "kuaishou/kling-v2.6"
+
+# Kling ids as Kling's API names them (kling-v3-omni, kling-v4, ...): https://kling.ai/document-api/guides/capability-map/video
+[models."klingai/kling-v3-omni"]
+base_model = "kuaishou/kling-v3.0-omni"
+
+[models."klingai/kling-v4"]
+base_model = "kuaishou/kling-v4.0"
+
+[models."klingai/kling-v4-flash"]
+base_model = "kuaishou/kling-v4.0-flash"
+
+[models."klingai/kling-v3-image"]
+base_model = "kuaishou/kling-image-v3.0"
+
+[models."minimax/h3-image"]
+base_model = "minimax/MiniMax-H3-Image"
+
+[models."minimax/h3-image-highspeed"]
+base_model = "minimax/MiniMax-H3-Image-Highspeed"
+
+# HappyHorse: Cloudflare splits each version by task (t2v, i2v, r2v); Alibaba ships them as one model per version
+# (models/alibaba/happyhorse-1.0.toml, happyhorse-1.1.toml).
+[models."alibaba/hh1-t2v"]
+base_model = "alibaba/happyhorse-1.0"
+
+[models."alibaba/hh1-i2v"]
+base_model = "alibaba/happyhorse-1.0"
+
+[models."alibaba/hh1.1-t2v"]
+base_model = "alibaba/happyhorse-1.1"
+
+[models."alibaba/hh1.1-i2v"]
+base_model = "alibaba/happyhorse-1.1"
+
+[models."alibaba/hh1.1-r2v"]
+base_model = "alibaba/happyhorse-1.1"

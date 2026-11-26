@@ -13,6 +13,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 structured_output = true
 system_updates = true
 cache = { implicit = true }
+service_tier = ["flex", "priority"]
 
 [limit]
 context = 1_000_000
@@ -45,3 +46,14 @@ price = 30
 [[cost.text.output.overrides]]
 when = { context = { gt = 272_000 } }
 price = 45
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 2.5 }
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = { text = 0.5 }

@@ -16,9 +16,6 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
-[limit]
-output = 943_718
-
 [api.chat-completions]
 capabilities = { system_updates = true }
 
@@ -36,4 +33,4 @@ cache = { read = 0.15 }
 price = 4.25
 
 [cost.web_search]
-price = 2.5
+price = 10

@@ -1,3 +1,5 @@
+# Lifecycle: Mistral Medium 3.5 was deprecated 2026-10-31 and retires 2027-04-30; replacement Mistral Large 4
+#   (https://docs.mistral.ai/models/mistral-medium-3-5, released 2026-04-28).
 # Model: https://docs.mistral.ai/models/mistral-medium-3-5-26-04 (Mistral Medium 3.5; /v1/models lists
 # mistral-medium-2604 as an alias of mistral-medium-latest; $1.5 / $7.5).
 # Default: reasoning is off when reasoning_effort is omitted (live: no thinking chunk, 0 reasoning tokens).
@@ -25,7 +27,8 @@ name = "Mistral Medium 3.5"
 description = "Balanced Mistral model for enterprise assistants, multilingual work, and tools"
 family = "mistral-medium"
 open_weights = true
-release_date = "2026-04-29"
+release_date = "2026-04-28"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]

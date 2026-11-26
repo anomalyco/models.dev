@@ -1,0 +1,27 @@
+# Sources:
+# - Model card (launch Oct 5, 2026; speech and text in and out; context 256K tokens, max output 64K):
+#   https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-nova-2-5-sonic.html
+# - Audio is mediaType "audio/lpcm"; sessionStart inferenceConfiguration takes maxTokens, topP and temperature (no topK):
+#   https://docs.aws.amazon.com/nova/latest/nova2-userguide/sonic-input-events.html
+schema = 2
+v2_only = true
+type = "realtime"
+name = "Nova 2.5 Sonic"
+description = "Amazon speech-to-speech model for real-time voice agents, with better tool calling and lower latency than Nova 2 Sonic"
+open_weights = false
+release_date = "2026-10-05"
+
+[modalities]
+input = ["text", "audio/lpcm"]
+output = ["text", "audio/lpcm"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 256_000
+output = 65_536

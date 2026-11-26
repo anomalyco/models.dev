@@ -1,0 +1,20 @@
+# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions
+schema = 2
+base_model = "alibaba/qwen3.5-122b-a10b"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 3.2
+
+[cost.web_search]
+price = 0.573411

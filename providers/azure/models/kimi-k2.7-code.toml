@@ -1,8 +1,12 @@
 # Pricing source: https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/kimi/ (accessed 2026-08-05)
 # Modalities: Kimi image formats https://platform.moonshot.ai/docs/guide/use-kimi-vision-model#supported-image-and-video-formats (Azure documents text and image input, no video)
 # Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+# Lifecycle: Kimi-K2.7-Code is Preview on Foundry: https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule#moonshotai (accessed 2026-11-25)
+# Data-zone deployments: input and cached input cost 1.1x global, output 1.25x (Azure Retail Prices API, Azure Kimi product: "K2.7 Code Inp DZ" 0.001045/1K vs glbl 0.00095, "K2.7 Code cached DZ" 0.000209 vs 0.00019, "K2.7 Code Outp DZ" 0.005 vs 0.004),
+# accessed 2026-11-25: https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Kimi'. The global price is the base.
 schema = 2
 base_model = "moonshotai/kimi-k2.7-code"
+status = "beta"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
@@ -24,3 +28,7 @@ cache = { read = 0.19 }
 
 [cost.text.output]
 price = 4
+
+[[cost.multipliers]]
+when = { region = { in = ["us", "eu"] } }
+factor = { text = { input = 1.1, output = 1.25 } }

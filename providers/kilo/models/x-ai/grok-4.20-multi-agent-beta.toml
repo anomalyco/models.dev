@@ -1,5 +1,5 @@
 schema = 2
-name = "SpaceXAI: Grok 4.20 Multi Agent Beta"
+name = "SpaceXSI: Grok 4.20 Multi Agent Beta"
 description = "Multiple agents collaborate in parallel to perform deep research tasks."
 family = "grok"
 open_weights = false
@@ -25,3 +25,7 @@ cache = { read = 0.2 }
 
 [cost.text.output]
 price = 2.5
+reasoning = 0
+
+[cost.web_search]
+price = 5

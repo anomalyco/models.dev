@@ -1,0 +1,16 @@
+schema = 2
+base_model = "openai/gpt-4.1-nano"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.4

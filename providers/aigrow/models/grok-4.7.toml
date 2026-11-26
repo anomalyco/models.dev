@@ -12,10 +12,6 @@ reasoning = { supported = true, default = { type = "effort", value = "high" }, e
 structured_output = true
 cache = { implicit = true }
 
-[modalities]
-input = ["text", "image/jpeg", "image/png"]
-output = ["text"]
-
 [cost.text.input]
 price = 0.5
 cache = { read = 0.125, write = 0.625 }

@@ -1,0 +1,31 @@
+# Toggle: thinking.type = disabled ("forces reasoning off regardless of output_config"). Tinker type Reasoning models
+#   "Always produce chain-of-thought" by default; no effort control for non-Thinking Machines models.
+# Tinker models.json https://tinker-docs.thinkingmachines.ai/tinker/models.json (accessed 2026-11-24): type Reasoning + Vision, context 256K.
+# Input: text only. "Only Inkling models accept images via the inference APIs" (https://tinker-docs.thinkingmachines.ai/tinker/models/).
+# Tinker Anthropic-compatible API (https://tinker-docs.thinkingmachines.ai/tinker/compatible-apis/anthropic/, accessed
+#   2026-11-24) serves any Tinker model: thinking.type = disabled turns reasoning off; output_config.effort (low|medium|high|
+#   xhigh|max) is documented for Thinking Machines models and "Not all models support effort" (400), so it is listed only
+#   for those; images via base64 only (max 2 MiB), Inkling models only; no audio blocks;
+#   cache_control is ignored, prefill tokens that hit the prompt cache bill at 80% off.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "required", "tool", "none"] }
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 6
+cache = { read = 1.2 }
+
+[cost.text.output]
+price = 25

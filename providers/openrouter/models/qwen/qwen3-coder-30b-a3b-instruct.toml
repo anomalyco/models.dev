@@ -7,10 +7,7 @@ base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
-structured_output = false
-
-[limit]
-output = 235_929
+structured_output = true
 
 [api.chat-completions]
 capabilities = { system_updates = true }
@@ -22,7 +19,7 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.15
+price = 0.07
 
 [cost.text.output]
-price = 0.6
+price = 0.28

@@ -1,3 +1,4 @@
+# Modalities: GET https://openrouter.ai/api/v1/models lists x-ai/grok-4.7 input_modalities text, image, file (2026-11-25); PDF: https://openrouter.ai/docs/guides/overview/multimodal/pdfs
 # Mid-conversation (Chat Completions, probed 2026-10-19): system_updates = true: forwarded to Grok in place (live: cache prefix kept)
 # effort_updates = false: configuration_update is rejected with a 400 for this model (https://openrouter.ai/docs/guides/best-practices/reasoning-tokens#mid-conversation-effort)
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
@@ -7,14 +8,15 @@ schema = 2
 base_model = "xai/grok-4.7"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
 
+[modalities]
+input = ["text", "image/jpeg", "image/png", "application/pdf"]
+output = ["text"]
+
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
 cache = { implicit = true }
-
-[limit]
-output = 450_000
 
 [api.chat-completions]
 capabilities = { system_updates = true }

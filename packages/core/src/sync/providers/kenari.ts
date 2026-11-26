@@ -3,9 +3,12 @@ import path from "node:path";
 import { z } from "zod";
 
 import { ReasoningOption as CatalogReasoningOption } from "../../schema.js";
+
+type CatalogReasoningOption = z.infer<typeof CatalogReasoningOption>;
+type EffortLevel = NonNullable<Extract<CatalogReasoningOption, { type: "effort" }>["values"][number]>;
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
-import { factorBaseModel } from "./openrouter.js";
+import { factorBaseModel, freeFamily } from "./openrouter.js";
 
 const ROOT = path.join(import.meta.dirname, "..", "..", "..", "..", "..");
 const MODELS_DIR = path.join(ROOT, "models");
@@ -56,7 +59,7 @@ const toModalities = (values: string[]): Modality[] =>
     (MODALITIES as readonly string[]).includes(value)))].sort();
 
 /** One unrecognised level fails `SyncedAuthoredModel` and aborts the whole run for every model. */
-function isReasoningEffort(value: string): boolean {
+function isReasoningEffort(value: string): value is EffortLevel {
   return CatalogReasoningOption.safeParse({ type: "effort", values: [value] }).success;
 }
 
@@ -87,7 +90,8 @@ const CatalogModel = z
       .optional(),
     // kenari's own retirement date. Absence of an id is not proof of retirement, which is why
     // `MIN_LIVE_MODELS` exists; this field is the explicit signal when it is populated.
-    sunset_at: z.string().nullable().optional(),
+    // ISO date string, or Unix seconds (qwen4-max:free lists 1795435200).
+    sunset_at: z.union([z.string(), z.number()]).nullable().optional(),
   })
   .passthrough();
 
@@ -331,6 +335,7 @@ export function resolveReasoningOptions(
   baseModel: string,
   levels: string[] | null | undefined,
   reasoning: boolean | null | undefined,
+  toggle?: boolean,
 ): CatalogReasoningOption[] | undefined {
   const source = REASONING_SOURCE[id] ?? baseModel;
   const base = controlFor(source);
@@ -343,21 +348,31 @@ export function resolveReasoningOptions(
   // kenari's own list, restricted to the vocabulary the schema knows.
   const hostLevels = (levels ?? []).filter(isReasoningEffort);
 
+  // kenari's `reasoning_toggle` is its registered off switch (`reasoning = { enabled = false }`). It joins effort
+  // levels as a toggle unless they already include `none`, which is how an effort set says "off".
+  const withToggle = (options: CatalogReasoningOption[]) =>
+    toggle === true && options.length > 0 && !options.some((option) => option.type === "toggle"
+      || (option.type === "effort" && option.values.includes("none")))
+      ? [{ type: "toggle" } as CatalogReasoningOption, ...options]
+      : options;
+
   if (base?.options != null) {
     if (base.options.length === 0) return [];
-    return sortControls(
+    return sortControls(withToggle(
       base.options.map((option) => {
         if (option.type !== "effort" || hostLevels.length === 0) return option;
-        const kept = option.values.filter((value) => hostLevels.includes(value));
+        const kept = option.values.filter((value) => value !== null && hostLevels.includes(value));
         // A disjoint list is not evidence that the model lost a level, so the lab's own set
         // stands rather than the entry claiming "no caller control".
         return kept.length === 0 ? option : { type: "effort", values: kept };
       }),
-    );
+    ));
   }
 
   // No lab entry to start from: kenari's list is then the only evidence there is.
-  if (hostLevels.length > 0) return sortControls([{ type: "effort", values: hostLevels }]);
+  if (hostLevels.length > 0) return sortControls(withToggle([{ type: "effort", values: hostLevels }]));
+  // No levels, but the feed says reasoning can be switched off (`reasoning = { enabled = false }`).
+  if (reasons === true && toggle === true) return [{ type: "toggle" }];
 
   if (reasons === true) {
     throw new MissingReasoningOptionsError(
@@ -403,7 +418,7 @@ export function unitCosts(
   }
   for (const [billable, group] of byBillable) {
     if (group.length !== 1) continue;
-    const line = group[0];
+    const line = group[0]!;
     const micro = line.micro_idr as number;
     if (billable === "input_audio" && line.unit === "second") {
       out["cost.audio.input"] = { unit: "second", price: toUnitUsd(micro, rate) };
@@ -466,9 +481,9 @@ function fileHeader(model: SyncedModel, rate: number): string {
 }
 
 /** An id kenari has already retired; it is dropped so the runner removes the stale file. */
-function isRetired(sunsetAt: string | null | undefined): boolean {
+export function isRetired(sunsetAt: string | number | null | undefined): boolean {
   if (sunsetAt === null || sunsetAt === undefined) return false;
-  const at = Date.parse(sunsetAt);
+  const at = typeof sunsetAt === "number" ? sunsetAt * 1000 : Date.parse(sunsetAt);
   return Number.isFinite(at) && at <= Date.now();
 }
 
@@ -566,6 +581,7 @@ export const kenari = {
       baseModel,
       model.reasoning_options,
       model.reasoning,
+      model.reasoning_toggle,
     );
 
     // A gateway cannot grant more context than the model itself has, so kenari's number is only
@@ -579,7 +595,7 @@ export const kenari = {
       advertised < labContext &&
       (labContext - advertised) / labContext > CONTEXT_TOLERANCE;
 
-    const host: Partial<SyncedFullModel> = {
+    const host: Parameters<typeof factorBaseModel>[1] = {
       ...(cost === undefined ? {} : { cost }),
       ...(reasoningOptions === undefined ? {} : { reasoning_options: reasoningOptions }),
       ...(narrows ? { limit: { context: advertised } } : {}),
@@ -604,6 +620,7 @@ export const kenari = {
       {
         ...host,
         name: deltas?.name,
+        family: freeFamily(baseModel, deltas?.family),
         description: deltas?.description,
         release_date: deltas?.release_date,
         last_updated: deltas?.last_updated,
@@ -621,7 +638,7 @@ export const kenari = {
         // table (v1 `provider`) and a limit it does not narrow stay.
         provider: deltas?.provider,
         ...(narrows || deltas?.limit === undefined ? {} : { limit: deltas.limit }),
-        ...(preservedTiers === undefined ? {} : { cost: { ...host.cost, tiers: preservedTiers } }),
+        ...(preservedTiers === undefined || cost === undefined ? {} : { cost: { ...cost, tiers: preservedTiers } }),
       },
       // The narrowed limit is what lets `factorBaseModel` record that `limit.input` must not be
       // inherited from the lab entry now that `limit.context` no longer matches it.

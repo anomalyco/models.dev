@@ -1,0 +1,35 @@
+# Availability: FW-Nemotron-3-Ultra-NVFP4 is GA on Fireworks on Foundry, pay-per-token Data Zone Standard (US) only: https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/fireworks-model-catalog#pay-per-token (accessed 2026-11-25)
+# Limits: 262,144-token context, text in and out (https://ai.azure.com/catalog/models/FW-Nemotron-3-Ultra-NVFP4, accessed 2026-11-25).
+# Toggle: reasoning on by default; thinking.type = disabled or reasoning_effort = none turns it off. Live on Fireworks' serving
+#   (accounts/fireworks/models/nemotron-3-ultra-nvfp4, Chat Completions, 2026-11-25): 77 (Ultra) / 686 (Lightning) reasoning tokens by default and with low/medium/high/max alike,
+#   0 with either off switch, so there's no graded effort. Foundry runs Fireworks' serving.
+# Pricing: only a US data-zone deployment exists, so its meters are the base price: Azure Fireworks Models product, "FW NVIDIA Nemotron 3U Inp/Cd Inp/Opt DZ" 0.00066 / 0.00013 / 0.00264 per 1K:
+#   https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Fireworks Models' (accessed 2026-11-25)
+# APIs: every Fireworks catalog model takes the OpenAI/v1 Chat Completions and Responses APIs on the Foundry resource
+#   (https://{resource}.services.ai.azure.com/openai/v1/...): https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/enable-fireworks-models
+#   An administrator must first register the Fireworks.EnableDeploy feature on the subscription (same page); Fireworks on Foundry is GA.
+#   Shape copied from this host's Grok files (Chat Completions via the Azure package, then Responses).
+# Mid-conversation flags: left out; Foundry documents none for Fireworks models and they weren't tested through Foundry.
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+name = "FW-Nemotron-3-Ultra-NVFP4"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 2.64

@@ -1,0 +1,16 @@
+# Endpoint (OpenAI Embeddings): POST https://opencode.ai/inference/openai/v1/embeddings, served through Zen's
+#   openai-embeddings endpoint (registry revision 2381) by OpenAI's text-embedding-3-large.
+# Pricing: what Zen bills for this model, OpenAI's list price (https://developers.openai.com/api/docs/models/text-embedding-3-large).
+schema = 2
+v2_only = true
+base_model = "openai/text-embedding-3-large"
+
+[api.embeddings]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/embeddings" }
+
+[cost.text.input]
+price = 0.13
+
+[cost.text.output]
+price = 0

@@ -1,3 +1,6 @@
+# Status: deprecated. Off https://ai.google.dev/gemini-api/docs/pricing since 2026-10-08; the endpoint is not shutting down and routes
+#   API requests to gemini-3.6-flash (https://ai.google.dev/gemini-api/docs/changelog, 2026-10-08; live generateContent returned
+#   modelVersion "gemini-3.6-flash" on 2026-11-23).
 # v2 capabilities and prices:
 # - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash
 # - https://ai.google.dev/gemini-api/docs/image-understanding (and /audio, /video-understanding)
@@ -7,13 +10,16 @@
 # Grounding with Google Search: $14 per 1,000 search queries (each query the model runs is billed). Price: https://ai.google.dev/gemini-api/docs/pricing#pricing-for-tools ("Gemini 3 and newer models"); support ("Search grounding: Supported"): https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash
 # APIs: generateContent, the OpenAI-compatible Chat Completions endpoint (https://ai.google.dev/gemini-api/docs/openai) and Interactions (https://ai.google.dev/gemini-api/docs/interactions-overview); Chat Completions and Interactions confirmed live 2026-10-22.
 # tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
+# recommended_api: Google recommends Interactions for all new projects (https://ai.google.dev/gemini-api/docs/interactions-overview). This model isn't in that page's supported-models table yet, but Interactions answered it live 2026-11-18.
 schema = 2
+recommended_api = "interactions"
 name = "Gemini 3.5 Flash"
 description = "Fast Gemini model balancing multimodal reasoning, tool use, and cost"
 family = "gemini-flash"
 open_weights = false
 knowledge = "2025-01"
 release_date = "2026-05-19"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]

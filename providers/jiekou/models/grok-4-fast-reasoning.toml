@@ -5,10 +5,6 @@ base_model = "xai/grok-4-fast-reasoning"
 name = "grok-4-fast-reasoning"
 status = "deprecated"
 
-[modalities]
-input = ["text", "image/jpeg", "image/png"]
-output = ["text"]
-
 [capabilities]
 reasoning = { supported = true }
 structured_output = true

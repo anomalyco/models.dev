@@ -1,0 +1,19 @@
+schema = 2
+base_model = "mistral/mistral-small-24b-instruct-2501"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 0.08

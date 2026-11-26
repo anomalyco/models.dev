@@ -1,0 +1,17 @@
+schema = 2
+base_model = "mistral/pixtral-large-2502"
+name = "Mistral: Pixtral Large 2502"
+description = "Pixtral Large 2502 is the February 2025 version of Mistral AI's large multimodal model, following [Pixtral Large 2411](https://openrouter.ai/mistralai/pixtral-large-2411). It accepts text and image input, including documents, charts, and natural images,..."
+
+[capabilities]
+tools = { supported = false }
+structured_output = false
+
+[limit]
+output = 102_400
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 6

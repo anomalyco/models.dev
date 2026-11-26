@@ -1,0 +1,22 @@
+# Created by the Hugging Face sync.
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+schema = 2
+base_model = "gryphe/mythomax-l2-13b"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 8_192
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0.11

@@ -1,12 +1,16 @@
-# Lab metadata carried over from providers/qiniu-ai/models/x-ai/grok-code-fast-1.toml (curated catalogue data already in this repo),
-# with provider-specific fields (cost, reasoning_options, status) stripped.
-# family: "grok", as on the other xAI Grok labs; xAI lists this model in its Grok lineup (https://docs.x.ai/developers/models).
+# Sources:
+# - Name "Grok Code Fast 1", release date (2025-08-28): https://x.ai/news/grok-code-fast-1
+# - Input text only, 256,000-token maxPromptLength: xAI's archived model catalog in
+#   https://web.archive.org/web/20251118014300/https://docs.x.ai/docs/models/grok-4-fast-non-reasoning (grok-code-fast-1: inputModalities TEXT)
+# - Output 10,000: OpenRouter's x-ai/grok-code-fast-1 served by xAI, max_completion_tokens 10000:
+#   https://web.archive.org/web/20260106044706/https://openrouter.ai/x-ai/grok-code-fast-1
+# family: "grok-code" (https://x.ai/news/grok-code-fast-1).
 schema = 2
-name = "x-AI/Grok-Code-Fast 1"
+name = "Grok Code Fast 1"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
-family = "grok"
+family = "grok-code"
 open_weights = false
-release_date = "2025-09-02"
+release_date = "2025-08-28"
 
 [modalities]
 input = ["text"]

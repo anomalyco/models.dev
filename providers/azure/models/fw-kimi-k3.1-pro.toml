@@ -1,0 +1,35 @@
+# Availability: FW-Kimi-K3.1-Pro is GA on Fireworks on Foundry, pay-per-token Global Standard only: https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/fireworks-model-catalog#pay-per-token (accessed 2026-11-25)
+# Controls, structured output and cache follow Fireworks' own entry for the same weights (providers/fireworks-ai/models/accounts/fireworks/models/kimi-k3p1-pro.toml); Foundry runs Fireworks' serving.
+# Toggle: thinking.type = enabled|disabled; Effort: reasoning_effort = low|medium|high|max (same file). Modalities: Fireworks' image subset (same file).
+# The catalog notes this model's Foundry Global Standard price sits between Fireworks Direct Standard and Priority.
+# Pricing: Azure Fireworks Models product, "Kimi K3.1 Pro Inp - Global" 2.5, "Cd inp - Global" 0.25, "Opt- Global" 12.5 per 1M (no data-zone deployment per the catalog): https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Fireworks Models' (accessed 2026-11-25)
+# APIs: every Fireworks catalog model takes the OpenAI/v1 Chat Completions and Responses APIs on the Foundry resource
+#   (https://{resource}.services.ai.azure.com/openai/v1/...): https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/enable-fireworks-models
+#   An administrator must first register the Fireworks.EnableDeploy feature on the subscription (same page); Fireworks on Foundry is GA.
+#   Shape copied from this host's Grok files (Chat Completions via the Azure package, then Responses).
+# Mid-conversation flags: left out; Foundry documents none for Fireworks models and they weren't tested through Foundry.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "FW-Kimi-K3.1-Pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 12.5

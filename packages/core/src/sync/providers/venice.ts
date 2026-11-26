@@ -231,7 +231,7 @@ export function buildVeniceModel(
   }
 
   const releaseDate = new Date(model.created * 1000).toISOString().slice(0, 10);
-  const family = inferFamily(model.id, spec.name) ?? existing?.family;
+  const family = existing?.family ?? inferFamily(model.id, spec.name);
   const openWeights = spec.modelSource?.toLowerCase().includes("huggingface")
     ?? existing?.open_weights
     ?? false;
@@ -327,6 +327,6 @@ function inferFamily(id: string, name: string) {
     .find((family) => {
       const value = family.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       if (family === "o") return new RegExp(`(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`).test(target);
-      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(target);
+      return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(target);
     });
 }

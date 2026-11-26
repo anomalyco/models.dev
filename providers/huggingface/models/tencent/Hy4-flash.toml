@@ -1,0 +1,27 @@
+# Effort: reasoning_effort = none|high, Tencent's native set (https://cloud.tencent.com/document/product/1823/131208),
+#   as on the Vercel, Kilo and OpenCode Go entries. none turns reasoning off, so no toggle. Not probed (no HF token).
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+schema = 2
+base_model = "tencent/hy4-flash"
+base_model_omit = ["limit.input"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[limit]
+context = 524_288
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.281
