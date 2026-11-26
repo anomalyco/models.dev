@@ -1,0 +1,19 @@
+schema = 2
+base_model = "writer/palmyra-x5"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 6

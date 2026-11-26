@@ -1,0 +1,17 @@
+schema = 2
+base_model = "mistral/magistral-small-2509"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
+
+[limit]
+context = 128_000
+output = 128_000
+
+[cost.text.input]
+price = 0.5
+
+[cost.text.output]
+price = 1.5

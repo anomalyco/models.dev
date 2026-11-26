@@ -1,0 +1,13 @@
+schema = 2
+base_model = "alibaba/qwen3.5-122b-a10b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.22
+cache = { read = 0.022, write = 0.22 }
+
+[cost.text.output]
+price = 2.2

@@ -1,0 +1,19 @@
+# Capabilities the catalog doesn't state (capabilities.cache) come from deepseek-v4.1-flash, this host's previous model in the family.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 (deepseek-v4.1-flash-1017-fast)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 2.4

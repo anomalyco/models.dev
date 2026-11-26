@@ -1,0 +1,17 @@
+schema = 2
+base_model = "deepseek/deepseek-reasoner"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = false
+
+[limit]
+context = 131_072
+output = 131_072
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6

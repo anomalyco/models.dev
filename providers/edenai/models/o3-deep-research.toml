@@ -1,0 +1,17 @@
+schema = 2
+base_model = "openai/o3-deep-research"
+
+[modalities]
+input = ["image/jpeg", "image/png", "image/gif", "image/webp", "text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 10
+cache = { read = 2.5 }
+
+[cost.text.output]
+price = 40

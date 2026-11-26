@@ -1,0 +1,13 @@
+schema = 2
+base_model = "amazon/nova-2-lite"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.099 }
+
+[cost.text.output]
+price = 2.5
