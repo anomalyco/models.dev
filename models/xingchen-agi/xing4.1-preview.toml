@@ -11,10 +11,23 @@
 # - Context caps: the platform's TeleAgent integration page lists
 #   context 1_024_000 / max output 128_000 for Xing4.1-Preview:
 #   https://www.teleai.com.cn/doc/efishKT14hYeEVR1FvYN/KoM0ZAIbiP6UkC0y1LHA
+# - Limit arithmetic: 896_000 input + 128_000 output = 1_024_000, and the model
+#   card's Quickstart serves the full 1M window on the public API.
 #
 # Open weights: the trained weights are publicly available on Hugging Face
 # (public, ungated) under Apache 2.0, released 2026-11-23:
 #   https://huggingface.co/XingChen-AGI/Xing4.1-Preview
+#
+# top_k = false is a model-level fact, not a host limitation: the model card's
+# Recommended Parameters table documents temperature, top_p and
+# repetition_penalty only, and the published generation_config.json sets no
+# top_k default. The host additionally exposes no top_k request field (see the
+# API reference above); the host flag is restated in the provider file.
+#
+# structured_output, cache and reasoning controls are per-host and live in
+# provider files: Chat Completions supports response_format json_object only
+# (json_schema unsupported), and the reasoning toggle/effort surfaces differ per
+# protocol — see the provider file's leading block.
 schema = 2
 name = "Xing4.1-Preview"
 description = "Xing4.1-Preview is a high-performance, low-activation MoE model from the Xing series (285B total, 17B active). Optimized for agentic coding and long-horizon agent workflows, it delivers deep reasoning, structured output and function calling with a native 1M-token context. Trained on domestic accelerators for enterprise-grade deployment."
@@ -26,20 +39,14 @@ release_date = "2026-11-23"
 input  = ["text"]
 output = ["text"]
 
-# structured_output, cache and reasoning controls are per-host and live in provider files.
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true }
 temperature = true
 top_p = true
-# top_k = false: the provider's request schema has no top_k, and the model card
-# documents no top_k sampling parameter. (Lab files require an explicit value for
-# every capability flag.)
 top_k = false
 
 [limit]
-# Native 1M window, served whole by the public API.
-# 896_000 input + 128_000 output = 1_024_000, so the three values add up.
 context = 1_024_000
 input   = 896_000
 output  = 128_000
