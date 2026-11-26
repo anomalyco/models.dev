@@ -1,5 +1,11 @@
+# Bhajanlal AI Provider
+# Source: https://github.com/anonymousashlee/bhajanlal-docs (public documentation)
+# API base: https://bhajanlal-api-production.up.railway.app/v1
+# Health: https://bhajanlal-api-production.up.railway.app/health
+# Auth: BHAJANLAL_API_KEY (Bearer token, enforced by backend)
 name = "Bhajanlal"
 npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
 env = ["BHAJANLAL_API_KEY"]
 api = "https://bhajanlal-api-production.up.railway.app/v1"
 doc = "https://github.com/anonymousashlee/bhajanlal-docs"
