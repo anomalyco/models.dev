@@ -1,0 +1,16 @@
+# Tapix AI relays this model over the OpenAI-compatible chat-completions API
+# (https://tapixai.com/v1). Reasoning is exposed only through the OpenAI
+# `reasoning_effort` request field; Tapix does not pass through Anthropic-style
+# thinking toggles or budget_tokens, so only the effort range is declared here.
+# Price verified 2026-11-26 against https://tapixai.com/pricing
+schema = 2
+base_model = "openai/gpt-5.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 3.5
+
+[cost.text.output]
+price = 21
