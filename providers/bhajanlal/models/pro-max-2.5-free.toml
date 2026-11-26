@@ -5,21 +5,23 @@
 # API reference: https://bhajanlal-api-production.up.railway.app/v1/models
 # Health: https://bhajanlal-api-production.up.railway.app/health
 #
-# Reasoning: The backend wraps opencode --thinking which produces reasoning_content
-# in responses. There is no caller control (no effort levels, no toggle) — reasoning
-# is always-on when the backend produces it. Wire field: reasoning_content (output only).
+# Reasoning: The fine-tuned model itself does NOT reason natively (Qwen2.5-0.5B
+# is a non-reasoning base). Reasoning content in responses comes from the
+# backend's opencode --thinking wrapper, not from the model. Therefore
+# reasoning = { supported = false }.
 #
 # Sampling: temperature/top_p/top_k are hardcoded server-side (0.0-0.2) and are
-# NOT accepted from client requests. Verified against serve/endpoint.py.
+# NOT accepted from client requests. Verified against serve/endpoint.py (lines
+# 988, 1075: "temperature": 0 hardcoded; no top_p/top_k handling).
 #
 # Limits: 32,768 context / 8,192 output — matches Qwen2.5-0.5B-Instruct base.
-# LoRA fine-tune does not extend context window.
+# LoRA fine-tune does not extend context window (rope_scaling = None).
 #
 # Tools: The backend supports OpenAI function-calling (tools param) via agent mode.
 # Verified against serve/backend.py handle_chat with tools.
 schema = 2
 name = "Bhajanlal Pro Max 2.5 free"
-description = "Free coding assistant fine-tuned from Qwen2.5-0.5B-Instruct with tool calling and reasoning."
+description = "Free coding assistant fine-tuned from Qwen2.5-0.5B-Instruct with tool calling."
 family = "bhajanlal"
 open_weights = false
 release_date = "2026-11-22"
@@ -30,7 +32,7 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true }
+reasoning = { supported = false }
 temperature = false
 top_p = false
 top_k = false
