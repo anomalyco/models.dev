@@ -1,13 +1,15 @@
-# Effort: reasoning_effort = none|low|medium|high|xhigh|max (the router lists `reasoning_effort`; levels are the lab's own set, as on the OpenRouter peer)
+# Reasoning: no caller control on this host. Live 2026-11-26 on chat/completions for `claude-haiku-5.5` (usage.completion_tokens_details.reasoning_tokens): reasoning_effort low, high and max each returned 0 reasoning tokens, so the level does not steer reasoning here. The bare `reasoning = { supported = true }` stays because AGENTS.md requires a relay to author its reasoning controls, and the v1 schema refuses a file whose reasoning resolves true without a `capabilities.reasoning` key (`packages/core/src/schema.ts`, "Must set reasoning_options when reasoning is true").
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true }
+
+cache = { explicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
 price = 0.1
-cache = { write = 0.125 }
+cache = { write = { "5m" = 0.125, "1h" = 0.2 } }
 
 [cost.text.output]
 price = 0.5

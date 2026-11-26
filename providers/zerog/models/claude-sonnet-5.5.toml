@@ -1,15 +1,15 @@
-# Effort: reasoning_effort = low|medium|high|xhigh|max (the router lists `reasoning_effort`; levels are the lab's own set, as on the OpenRouter peer).
-#   No `none`: the lab documents that disabled is rejected for this id, and live on this host 2026-11-25 (chat/completions)
-#   reasoning_effort = none returned 400 "The upstream provider rejected the request" while low returned 200.
+# Reasoning: no caller control on this host. Live 2026-11-26 on chat/completions for `claude-sonnet-5.5` (usage.completion_tokens_details.reasoning_tokens): reasoning_effort low, high and max each returned 0 reasoning tokens, so the level does not steer reasoning here (reasoning_effort = none answers 400, which shows the router validates the parameter, not that it forwards it). The bare `reasoning = { supported = true }` stays because AGENTS.md requires a relay to author its reasoning controls, and the v1 schema refuses a file whose reasoning resolves true without a `capabilities.reasoning` key (`packages/core/src/schema.ts`, "Must set reasoning_options when reasoning is true").
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true }
+
+cache = { explicit = { ttl = ["5m", "1h"] } }
 
 [cost.text.input]
 price = 2
-cache = { write = 2.5 }
+cache = { write = { "5m" = 2.5, "1h" = 4 } }
 
 [cost.text.output]
 price = 10

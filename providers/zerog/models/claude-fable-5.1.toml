@@ -5,9 +5,11 @@ base_model = "anthropic/claude-fable-5-1"
 [capabilities]
 reasoning = { supported = true }
 
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
 [cost.text.input]
 price = 10
-cache = { write = 12.5 }
+cache = { write = { "5m" = 12.5, "1h" = 20 } }
 
 [cost.text.output]
 price = 50

@@ -1,13 +1,15 @@
-# Reasoning: no caller control on this host. Live 2026-11-26 on chat/completions for `claude-opus-4-7` (usage.completion_tokens_details.reasoning_tokens): thinking.type enabled and disabled both returned 0, and reasoning_effort low/high/max also returned 0 reasoning tokens at every level, so neither field steers reasoning here. The lab's `reasoning = { supported = true }` is kept because `bun validate` requires a `capabilities.reasoning` key whenever reasoning resolves true.
+# Reasoning: no caller control on this host. Live 2026-11-26 on chat/completions for `claude-opus-4-7` (usage.completion_tokens_details.reasoning_tokens): thinking.type enabled and disabled both returned 0, and reasoning_effort low/high/max also returned 0 reasoning tokens at every level, so neither field steers reasoning here. The bare `reasoning = { supported = true }` stays because AGENTS.md requires a relay to author its reasoning controls, and the v1 schema refuses a file whose reasoning resolves true without a `capabilities.reasoning` key (`packages/core/src/schema.ts`, "Must set reasoning_options when reasoning is true").
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
 [capabilities]
 reasoning = { supported = true }
 
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
 [cost.text.input]
 price = 5
-cache = { write = 6.25 }
+cache = { write = { "5m" = 6.25, "1h" = 10 } }
 
 [cost.text.output]
 price = 25
