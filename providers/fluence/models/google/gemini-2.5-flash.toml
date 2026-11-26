@@ -1,11 +1,12 @@
 # Source: Fluence Inference public catalog (https://inference.fluence.cloud), snapshot 2026-11-25T13:35Z.
 # Prices are ceilings: Fluence prices float with supply, so each is the snapshot price rounded up to 2 significant figures.
-# Reasoning controls follow the same base model on peer hosts.
+# Reasoning controls: none listed. Fluence documents no request field that turns reasoning on or off for this model, and
+# per-model effort levels are only in the authenticated GET /v1/routing (https://inference.fluence.cloud/docs).
 schema = 2
 base_model = "google/gemini-2.5-flash"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 structured_output = true
 cache = { implicit = true }
 
