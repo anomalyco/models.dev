@@ -12,31 +12,23 @@ const API_ENDPOINT = "https://api.plugsky.com/v1/models";
  * attributed to a lab `base_model`. They are intentionally excluded until the
  * host publishes verifiable per-alias lab attribution.
  */
-const EXCLUDED_ALIASES = new Set([
-  "plugsky-deepseek-flash",
-  "plugsky-deepseek-pro",
-  "plugsky-gemma-4",
-  "plugsky-gemma3-nano-2b",
-  "plugsky-gemma3-nano-4b",
-  "plugsky-gpt-oss",
-  "plugsky-gpt-oss-20b",
-  "plugsky-kimi",
-  "plugsky-llama4",
-  "plugsky-minimax",
-  "plugsky-mistral-medium",
-  "plugsky-mistral-small",
-  "plugsky-phi",
-  "plugsky-qwen-next",
-  "plugsky-qwen-vl",
-]);
+const LAB_ALIAS = /^plugsky-(deepseek|gemma|gpt|kimi|llama|minimax|mistral|phi|qwen|claude|gemini|grok|nova|command|glm|ernie)/;
 
 const MIN_LIVE_MODELS = 18;
 
 const HEADER = [
   "# Description and capability flags come from https://api.plugsky.com/v1/models.",
+  "# Sampling flags follow the documented chat-completions fields at https://plugsky.com/docs:",
+  "# temperature and top_p are accepted; top_k is not documented and is published as false.",
+  "# No reasoning-effort field is documented; reasoning is always-on where the model list reports it.",
   "# release_date is preserved for existing entries; a new entry uses its first catalog date.",
-  "# No documented pool-wide reasoning-effort control: `reasoning` mirrors the host response.",
 ].join("\n");
+
+/** v2-only sampling fields that the v1 AuthoredModel shape cannot carry. */
+const SAMPLING_V2 = {
+  "capabilities.top_p": true,
+  "capabilities.top_k": false,
+} as const;
 
 export const PlugskyModel = z
   .object({
@@ -69,7 +61,7 @@ const INPUT_MODALITIES = new Set(["text", "image", "audio", "video", "pdf"]);
 function isBrandedChatModel(model: PlugskyModel): boolean {
   if (!model.id.startsWith("plugsky-")) return false;
   if (model.id.includes("embed")) return false;
-  return !EXCLUDED_ALIASES.has(model.id);
+  return !LAB_ALIAS.test(model.id);
 }
 
 function descriptionFor(model: PlugskyModel): string {
@@ -94,11 +86,23 @@ export const plugsky = {
   name: "Plugsky",
   modelsDir: "providers/plugsky/models",
   authoritativeHeaders: true,
+  trackMissingModels: false,
+  sourceID(model) {
+    return isBrandedChatModel(model) ? model.id : undefined;
+  },
   async fetchModels() {
     return fetchPlugskyModels();
   },
   parseModels(raw) {
     return PlugskyResponse.parse(raw).data;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} lab-sounding Plugsky aliases are intentionally not published as standalone provider models: `
+        + ids.map((id) => `\`${id}\``).join(", ")
+        + ". The host reports them as aliases of plugsky-lite or plugsky-frontier, so a lab base_model would be false.",
+    ];
   },
   translateModel(model, context) {
     if (!isBrandedChatModel(model)) return undefined;
@@ -122,7 +126,7 @@ export const plugsky = {
       reasoning: model.reasoning,
       tool_call: model.function_calling,
       structured_output: model.json_mode,
-      ...(existing?.temperature === undefined ? {} : { temperature: existing.temperature }),
+      temperature: true,
       release_date: date,
       last_updated: existing?.last_updated ?? date,
       modalities: { input: input as SyncedFullModel["modalities"]["input"], output: ["text"] },
@@ -130,7 +134,7 @@ export const plugsky = {
       limit: { context: contextLimit, output: outputLimit },
     };
 
-    return { id: model.id, header: HEADER, model: translated };
+    return { id: model.id, header: HEADER, model: translated, v2Set: SAMPLING_V2 };
   },
 } satisfies SyncProvider<PlugskyModel>;
 

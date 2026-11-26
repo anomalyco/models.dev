@@ -1,6 +1,8 @@
 # Description and capability flags come from https://api.plugsky.com/v1/models.
+# Sampling flags follow the documented chat-completions fields at https://plugsky.com/docs:
+# temperature and top_p are accepted; top_k is not documented and is published as false.
+# No reasoning-effort field is documented; reasoning is always-on where the model list reports it.
 # release_date is preserved for existing entries; a new entry uses its first catalog date.
-# No documented pool-wide reasoning-effort control: `reasoning` mirrors the host response.
 schema = 2
 name = "Plugsky Plus"
 description = "Plugsky Plus: 30B (activated: ~3B), 262144 token serving context. Equivalent class and context required on failover."
@@ -16,6 +18,8 @@ reasoning = { supported = true }
 structured_output = true
 temperature = true
 tools = { supported = true }
+top_p = true
+top_k = false
 
 [limit]
 context = 262_144
