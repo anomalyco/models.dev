@@ -133,6 +133,15 @@ describe("Concentrate sync", () => {
     expect(v2(decision).modalities).toEqual({ input: ["text", "image/png"], output: ["decision"] });
   });
 
+  test("publishes a chat model listed on decision routes only as a decision model", () => {
+    const entry = { ...model("gpt-6-luna-decisions", "openai", { openai: route({ chat: false, pricing: [{ tokens: tokens(0.1, 0, 0.01) }] }) }), name: "GPT-6 Luna Decisions", max_input_tokens: 600_000 };
+    const doc = v2(entry);
+    expect(doc).toMatchObject({ v2_only: true, base_model: "openai/gpt-6-luna", base_model_omit: ["limit.input"], type: "decision", name: "GPT-6 Luna Decisions", limit: { context: 600_000, output: 0 } });
+    expect(doc.modalities).toEqual({ input: ["text"], output: ["decision"] });
+    expect(doc.capabilities).toMatchObject({ tools: { supported: false }, reasoning: { supported: false }, cache: { implicit: { min_tokens: 1_024 } } });
+    expect(Object.keys(doc.api)).toEqual(["systemone"]);
+  });
+
   test("takes controls that several peers agree on, not one peer's or the first file's", () => {
     // DeepSeek V3.1: five hosts publish a thinking toggle, six leave controls unstated, so the toggle stands.
     expect(v2(model("deepseek-v3-1", "deepseek", { deepinfra: route() })).capabilities.reasoning).toMatchObject({ toggle: true });
