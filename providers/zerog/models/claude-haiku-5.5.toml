@@ -1,9 +1,14 @@
-# Reasoning: no caller control on this host. Live 2026-11-26 on chat/completions for `claude-haiku-5.5` (usage.completion_tokens_details.reasoning_tokens): reasoning_effort low, high and max each returned 0 reasoning tokens, so the level does not steer reasoning here. The bare `reasoning = { supported = true }` stays because AGENTS.md requires a relay to author its reasoning controls, and the v1 schema refuses a file whose reasoning resolves true without a `capabilities.reasoning` key (`packages/core/src/schema.ts`, "Must set reasoning_options when reasoning is true").
+# Reasoning: the lab's own effort list for this id. The router lists `reasoning_effort` in
+#   supported_parameters, and the same field is forwarded on this host's other Claude ids (live
+#   2026-11-26 on chat/completions: completion_tokens rose low < high < max). No `none`: the lab does
+#   not offer it, and on claude-sonnet-5.5 the router answers 400 for reasoning_effort = none.
+# Toggle: thinking.type = enabled|disabled, as the lab's entry has it. This toggle was not shown to change
+#   output on this host; it is published because the lab authors it, not from a live result here.
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 cache = { explicit = { ttl = ["5m", "1h"] } }
 

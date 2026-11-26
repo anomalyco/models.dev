@@ -1,3 +1,4 @@
+# Cache-write prices: 0G catalog `pricing_usd.cache_write` / `cache_write_1h` for this id (GET /v1/models, 2026-11-26). The catalog gives no cache-read price for it, so none is claimed.
 # Freeform: left out on chat completions. Every GPT-5+ relay in this repo that publishes custom
 # tools does so on the Responses API (OpenRouter: /api/v1/chat/completions rejects custom tools
 # with 400 "Missing required parameter: tools[0].name"). This router accepts reasoning_effort and
@@ -13,6 +14,7 @@ reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhig
 
 [cost.text.input]
 price = 1
+cache = { write = { "5m" = 1.25, "1h" = 2.5 } }
 
 [cost.text.output]
 price = 5

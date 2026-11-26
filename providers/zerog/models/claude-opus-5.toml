@@ -1,9 +1,12 @@
-# Reasoning: no caller control on this host. Live 2026-11-26 on chat/completions for `claude-opus-5` (usage.completion_tokens_details.reasoning_tokens): reasoning_effort low, high and max each returned 0 reasoning tokens, so the level does not steer reasoning here. The bare `reasoning = { supported = true }` stays because AGENTS.md requires a relay to author its reasoning controls, and the v1 schema refuses a file whose reasoning resolves true without a `capabilities.reasoning` key (`packages/core/src/schema.ts`, "Must set reasoning_options when reasoning is true").
+# Reasoning: the lab's own effort list for this id. reasoning_effort is forwarded on this host: live
+#   2026-11-26 on chat/completions, a long reasoning prompt returned completion_tokens that rose with the
+#   level (low < high < max, two runs each). The router reports reasoning_tokens = 0 for Claude, which is
+#   why an earlier reading of that field looked like the level was ignored.
 schema = 2
 base_model = "anthropic/claude-opus-5"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 cache = { explicit = { ttl = ["5m", "1h"] } }
 

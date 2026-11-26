@@ -1,9 +1,14 @@
-# Reasoning: no caller control on this host. Live 2026-11-26 on chat/completions for `claude-opus-4-7` (usage.completion_tokens_details.reasoning_tokens): thinking.type enabled and disabled both returned 0, and reasoning_effort low/high/max also returned 0 reasoning tokens at every level, so neither field steers reasoning here. The bare `reasoning = { supported = true }` stays because AGENTS.md requires a relay to author its reasoning controls, and the v1 schema refuses a file whose reasoning resolves true without a `capabilities.reasoning` key (`packages/core/src/schema.ts`, "Must set reasoning_options when reasoning is true").
+# Reasoning: a `thinking` toggle with the lab's own effort levels. The 0G catalog lists `thinking` in supported_parameters for
+#   this id and lists no `reasoning_effort` and no budget field, so the toggle is the control this host
+#   offers; the levels are the lab's set for the id. An earlier version published no caller control because `thinking` enabled/disabled and
+#   `reasoning_effort` low/high/max all returned reasoning_tokens = 0; that field is simply not reported for
+#   Claude on this host, so it could not show whether a field is forwarded. The lab's `budget` is not
+#   carried: the catalog offers no budget field on any Claude id.
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 cache = { explicit = { ttl = ["5m", "1h"] } }
 

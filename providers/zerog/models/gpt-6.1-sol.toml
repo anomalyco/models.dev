@@ -1,18 +1,25 @@
+# Context: the router advertises 900,000 for this id (GET /v1/models, 2026-11-26) while the lab file documents
+# 1,050,000; the host value is the router's own catalog value and is recorded as-is. The lab's
+# 922,000 limit.input cannot fit a 900,000 window, so that inherited ceiling is omitted here
+# (as providers/prime and providers/llmgateway-providers do for the same id).
+# Cache-write prices: 0G catalog `pricing_usd.cache_write` / `cache_write_1h` for this id (GET /v1/models, 2026-11-26). The catalog gives no cache-read price for it, so none is claimed.
 # Freeform: left out on chat completions. Every GPT-5+ relay in this repo that publishes custom
 # tools does so on the Responses API (OpenRouter: /api/v1/chat/completions rejects custom tools
 # with 400 "Missing required parameter: tools[0].name"). This router accepts reasoning_effort and
 # tools on chat completions and documents no custom-tool formats, so none are claimed here.
 schema = 2
 base_model = "openai/gpt-6.1-sol"
+base_model_omit = ["limit.input"]
 
 [limit]
-context = 1_000_000
+context = 900_000
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
 price = 2
+cache = { write = { "5m" = 2.5, "1h" = 5 } }
 
 [cost.text.output]
 price = 10

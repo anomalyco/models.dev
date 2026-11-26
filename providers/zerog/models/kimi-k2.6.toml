@@ -1,4 +1,7 @@
 # Toggle: thinking.type = enabled|disabled
+# Default is off on this host. Live 2026-11-26 on chat/completions, three runs with no thinking field each
+#   returned 0 reasoning characters and 2 completion tokens, while thinking.type = enabled returned reasoning.
+#   This differs from the lab default (enabled) and is recorded as observed.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
