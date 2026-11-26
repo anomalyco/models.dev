@@ -5535,6 +5535,49 @@ test("restores image input when vision returns on mapped resyncs", () => {
   });
 });
 
+test("omits the lab's input on mapped factored resyncs when the served context is smaller", () => {
+  // models/openai/gpt-6-astra.toml has context 1_050_000 and input 922_000; the
+  // resolved file inherits both, and AWS Mantle serves 921_600.
+  const existing = {
+    base_model: "openai/gpt-6-astra",
+    name: "GPT-6 Astra (AWS Mantle)",
+    limit: { context: 1_050_000, input: 922_000, output: 128_000 },
+  };
+  const narrowed = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "aws-mantle/gpt-6-astra",
+    context_length: 921_600,
+    max_output: 128_000,
+  }), existing);
+  expect(narrowed).toMatchObject({ base_model_omit: ["limit.input"], limit: { context: 921_600 } });
+  expect((narrowed as { limit?: { input?: number } }).limit?.input).toBeUndefined();
+
+  // A context at least the lab's input keeps inheriting it.
+  const wide = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "aws-mantle/gpt-6-astra",
+    context_length: 1_000_000,
+    max_output: 128_000,
+  }), existing);
+  expect(wide!.base_model_omit).toBeUndefined();
+
+  // An input of the file's own is kept as authored.
+  const own = buildLLMGatewayMappedModel(llmGatewayMappedModel({
+    id: "aws-mantle/gpt-6-astra",
+    context_length: 921_600,
+    max_output: 128_000,
+  }), { ...existing, limit: { ...existing.limit, input: 800_000 } });
+  expect(own!.base_model_omit).toBeUndefined();
+  expect(own).toMatchObject({ limit: { context: 921_600, input: 800_000 } });
+});
+
+test("omits the lab's input on aggregated factored resyncs when the served context is smaller", () => {
+  const model = buildLLMGatewayModel(llmGatewayModel({ id: "gpt-6-astra", context_length: 921_600 }), {
+    base_model: "openai/gpt-6-astra",
+    limit: { context: 1_050_000, input: 922_000, output: 128_000 },
+  });
+  expect(model).toMatchObject({ base_model_omit: ["limit.input"], limit: { context: 921_600 } });
+  expect((model as { limit?: { input?: number } }).limit?.input).toBeUndefined();
+});
+
 test("never synthesizes a description on mapped factored resyncs", () => {
   const model = buildLLMGatewayMappedModel(llmGatewayMappedModel(), {
     base_model: "anthropic/claude-fable-5",

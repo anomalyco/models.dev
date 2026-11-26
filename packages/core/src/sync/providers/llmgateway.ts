@@ -7,7 +7,7 @@ import { inferKimiFamily, ModelFamilyValues } from "../../family.js";
 import { ReasoningOption } from "../../schema.js";
 import { readProviderModel } from "../../translate.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
+import { factorBaseModel, modelMetadata, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.llmgateway.io/v1/models";
 
@@ -333,6 +333,19 @@ function canonicalOutputLimit(modelID: string) {
   return canonicalOutputLimitByID.get(modelID);
 }
 
+// A factored file's resolved limit carries the lab's input. When the host serves
+// less context than that input, the file omits the lab's input instead of
+// inheriting one larger than its context. An input of the file's own (one that
+// differs from the lab's) is kept as authored.
+function inheritedInput(baseModel: string, existing: ExistingModel, context: number | undefined) {
+  const input = existing.limit?.input;
+  const labInput = (modelMetadata(baseModel).limit as { input?: number } | undefined)?.input;
+  if (input === undefined || input !== labInput || context === undefined || input <= context) {
+    return { input, omit: existing.base_model_omit };
+  }
+  return { input: undefined, omit: [...new Set([...(existing.base_model_omit ?? []), "limit.input"])] };
+}
+
 function resolveLLMGatewayBaseModel(model: LLMGatewayModel, modelID = model.id) {
   const alias = BASE_MODEL_ALIASES[modelID];
   if (alias !== undefined) return alias;
@@ -404,9 +417,10 @@ export function buildLLMGatewayModel(
   // Existing factored model: refresh cost + limit, keep every authored override
   // as-is (undefined fields keep inheriting the base model).
   if (existing?.base_model !== undefined) {
+    const inherited = inheritedInput(existing.base_model, existing, context);
     const factoredLimit = {
       context,
-      input: existing.limit?.input,
+      input: inherited.input,
       output: existing.limit?.output ?? context,
     };
     return factorBaseModel(
@@ -441,7 +455,7 @@ export function buildLLMGatewayModel(
         cost,
       },
       factoredLimit,
-      existing.base_model_omit,
+      inherited.omit,
     );
   }
 
@@ -638,9 +652,10 @@ export function buildLLMGatewayMappedModel(
   if (existing?.base_model !== undefined) {
     // Mirror the brand-new factored path: without a served or authored output,
     // keep inheriting the base's output rather than stamping context over it.
+    const inherited = inheritedInput(existing.base_model, existing, context);
     const factoredLimit = {
       context,
-      input: existing.limit?.input,
+      input: inherited.input,
       output: servedOutput ?? (canonicalOutputLimit(existing.base_model) !== undefined ? undefined : context),
     };
     // Deployment capability flags keep their create-path authority on
@@ -676,7 +691,7 @@ export function buildLLMGatewayMappedModel(
         cost,
       },
       factoredLimit,
-      existing.base_model_omit,
+      inherited.omit,
     );
   }
 
