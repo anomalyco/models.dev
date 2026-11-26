@@ -2,12 +2,15 @@
 # (https://tapixai.com/v1). Reasoning is exposed only through the OpenAI
 # `reasoning_effort` request field; Tapix does not pass through Anthropic-style
 # thinking toggles or budget_tokens, so only the effort range is declared here.
+# Dated probe 2026-11-26: on claude-sonnet-5, POST /v1/chat/completions with
+# reasoning_effort "none" / "low" / "minimal" all returned HTTP 200, so the
+# documented off state (`none`) is accepted on this surface and is listed below.
 # Price verified 2026-11-26 against https://tapixai.com/pricing
 schema = 2
 base_model = "anthropic/claude-opus-4-7"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
 price = 3.5
