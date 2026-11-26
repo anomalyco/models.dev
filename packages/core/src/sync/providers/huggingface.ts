@@ -5,6 +5,7 @@ import path from "node:path";
 import { providerModelToV2 } from "../../model-file-v2.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { weightsIndex, weightsMatch } from "../weights.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://router.huggingface.co/v1/models";
@@ -464,43 +465,6 @@ export function resolveHuggingFaceBaseModel(id: string) {
     if (match !== undefined) return `${dir}/${files.get(match)}`;
   }
   return weightsMatch(id, weightsIndex());
-}
-
-const WEIGHTS_URL = /^https:\/\/huggingface\.co\/([^/?#]+\/[^/?#]+)\/?$/;
-
-// The lab file whose `[[weights]]` url is this router ID's Hugging Face repo, for IDs
-// named after a checkpoint rather than the lab model (`MiMo-V2.6-Flash-RL`,
-// `reka-edge-2603`). Repo names compare case-insensitively, as Hugging Face's do. When
-// several lab files list the repo, the match is the one every other file's ID extends
-// (`mimo-v2.6-pro` over `mimo-v2.6-pro-ultraspeed`, a tier of the same weights);
-// otherwise the repo is ambiguous and nothing matches.
-export function weightsMatch(id: string, index: Map<string, string[]>) {
-  const labs = index.get(id.toLowerCase());
-  if (labs === undefined) return undefined;
-  return labs.find((lab) => labs.every((other) => other === lab || other.startsWith(`${lab}-`)));
-}
-
-let weightsCache: Map<string, string[]> | undefined;
-
-// Hugging Face repos (lowercase `org/name`) to the lab models listing them as weights.
-export function weightsIndex(dir = MODELS_DIR) {
-  if (dir === MODELS_DIR && weightsCache !== undefined) return weightsCache;
-  const index = new Map<string, string[]>();
-  for (const lab of readdirSync(dir, { withFileTypes: true })) {
-    if (!lab.isDirectory()) continue;
-    for (const file of readdirSync(path.join(dir, lab.name))) {
-      if (!file.endsWith(".toml")) continue;
-      const parsed = Bun.TOML.parse(readFileSync(path.join(dir, lab.name, file), "utf8")) as { weights?: { url?: string }[] };
-      for (const weights of parsed.weights ?? []) {
-        const repo = WEIGHTS_URL.exec(weights.url ?? "")?.[1]?.toLowerCase();
-        if (repo === undefined) continue;
-        const model = `${lab.name}/${file.slice(0, -".toml".length)}`;
-        index.set(repo, [...(index.get(repo) ?? []), model]);
-      }
-    }
-  }
-  if (dir === MODELS_DIR) weightsCache = index;
-  return index;
 }
 
 // Lab file IDs a router model may match, most specific first. Each one must equal a

@@ -12,7 +12,7 @@ tools = { supported = true }
 reasoning = { supported = true }
 
 [limit]
-context = 131_072
+context = 163_840
 output = 65_536
 
 [api.chat-completions]
@@ -22,7 +22,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.9
+price = 0.26
 
 [cost.text.output]
-price = 1.6
+price = 0.38

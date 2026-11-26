@@ -23,7 +23,6 @@ import {
   deepinfra,
   deepInfraV2Set,
   resolveDeepInfraBaseModel,
-  weightsMatch,
   type DeepInfraModel,
 } from "../src/sync/providers/deepinfra.js";
 import {
@@ -43,12 +42,12 @@ import {
   type EdenAIModel,
 } from "../src/sync/providers/edenai.js";
 import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
+import { weightsMatch } from "../src/sync/weights.js";
 import {
   buildHuggingFaceModel,
   huggingface,
   huggingFaceCandidates,
   resolveHuggingFaceBaseModel,
-  weightsMatch,
   type HuggingFaceModel,
 } from "../src/sync/providers/huggingface.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";

@@ -1,5 +1,6 @@
 # Created by the Hugging Face sync.
 # Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+# Modalities: the router catalog (https://router.huggingface.co/v1/models, 2026-11-26) lists input_modalities ["text"] and output ["text"], so the lab's image, audio and video input is left out on this host.
 # Reasoning controls copied from Xiaomi's own provider file, providers/xiaomi/models/mimo-v2.6-pro.toml: a toggle,
 #   on by default (thinking.type = enabled|disabled, https://mimo.mi.com/static/docs/api/chat/openai-api.md).
 #   The router serves this checkpoint, the weights of xiaomi/mimo-v2.6-pro (https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL),
