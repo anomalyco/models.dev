@@ -1,0 +1,17 @@
+# Price: https://modapi.ai/api/pricing (model deepseek-v4-pro-0813), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# No caller control. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
+# effort=high 48, effort=max 48, thinking=off 74, thinking=on 138.
+# thinking disabled still reasoned (74) and effort high/max were identical, so no control is listed.
+schema = 2
+v2_only = true
+base_model = "deepseek/deepseek-v4-pro-0813"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.32
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 3.96
