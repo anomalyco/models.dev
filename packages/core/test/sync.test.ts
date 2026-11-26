@@ -48,6 +48,7 @@ import {
   huggingface,
   huggingFaceCandidates,
   resolveHuggingFaceBaseModel,
+  weightsMatch,
   type HuggingFaceModel,
 } from "../src/sync/providers/huggingface.js";
 import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
@@ -9274,6 +9275,28 @@ test("Hugging Face strips precision and MoE parameter suffixes only when a lab f
   ]);
   // No exact lab file after stripping: not created.
   expect(resolveHuggingFaceBaseModel("ibm-granite/granite-4.2-3b")).toBeUndefined();
+});
+
+test("Hugging Face falls back to the lab file whose weights url is the router ID's repo", () => {
+  expect(resolveHuggingFaceBaseModel("RekaAI/reka-edge-2603")).toBe("rekaai/reka-edge");
+  expect(resolveHuggingFaceBaseModel("Sao10K/L3-8B-Lunaris-v1")).toBe("sao10k/l3-lunaris-8b");
+  expect(resolveHuggingFaceBaseModel("XiaomiMiMo/MiMo-V2.6-Flash-RL")).toBe("xiaomi/mimo-v2.6-flash");
+  // Pro and Pro UltraSpeed both list the Pro-RL weights; the tier extends the base ID.
+  expect(resolveHuggingFaceBaseModel("XiaomiMiMo/MiMo-V2.6-Pro-RL")).toBe("xiaomi/mimo-v2.6-pro");
+  // Name matching still wins over the weights url.
+  expect(resolveHuggingFaceBaseModel("deepseek-ai/DeepSeek-V4-Pro")).toBe("deepseek/deepseek-v4-pro");
+  // The repo must equal the ID; no lab lists RadixArk's weights.
+  expect(resolveHuggingFaceBaseModel("RadixArk/DaisyRose-27B")).toBeUndefined();
+});
+
+test("Hugging Face weights matching is exact and refuses repos two unrelated lab files list", () => {
+  const index = new Map([
+    ["org/model-rl", ["lab/model", "lab/model-fast"]],
+    ["org/shared", ["lab/one", "other/two"]],
+  ]);
+  expect(weightsMatch("Org/Model-RL", index)).toBe("lab/model");
+  expect(weightsMatch("org/model", index)).toBeUndefined();
+  expect(weightsMatch("org/shared", index)).toBeUndefined();
 });
 
 test("OpenRouter web search prices become v2 prices per 1,000, by search context size where listed", () => {
