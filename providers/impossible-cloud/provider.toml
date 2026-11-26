@@ -1,0 +1,12 @@
+# Impossible Cloud managed inference: OpenAI-compatible API for open-weight models, hosted in
+# European data centers (Germany and France).
+# Base URL: https://inference.eu-west-3.impossibleapi.net/openai/v1 (confirmed by Impossible Cloud;
+#   model IDs from GET /openai/v1/models, 2026-11-26). Auth (Bearer key) from https://www.impossiblecloud.com/en-us/managed-inference
+#   and https://kb.impossiblecloud.com/en/connect-cline-to-open-weight-models-on-impossible-cloud-inference
+#   (accessed 2026-11-26).
+name = "Impossible Cloud"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["IMPOSSIBLE_CLOUD_API_KEY"]
+api = "https://inference.eu-west-3.impossibleapi.net/openai/v1"
+doc = "https://docs.impossiblecloud.com/beta-api-policy-document/inference-api-beta"
