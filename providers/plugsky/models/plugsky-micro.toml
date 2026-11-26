@@ -7,7 +7,6 @@ schema = 2
 base_model = "nvidia/nemotron-3.5-lightning"
 name = "Plugsky Micro"
 description = "Plugsky Micro: 30B (activated: ~3B), 262144 token serving context. Text-only Lightning engine; no automatic engine fallback."
-release_date = "2026-11-26"
 
 [modalities]
 input = ["text"]
@@ -16,7 +15,6 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-temperature = true
 tools = { supported = true }
 top_p = true
 top_k = false

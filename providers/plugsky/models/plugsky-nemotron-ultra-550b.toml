@@ -7,7 +7,6 @@ schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Plugsky Nemotron Ultra 550B"
 description = "Plugsky Nemotron Ultra 550B: 550B (activated: ~55B), 262144 token serving context. Equivalent class and context required on failover."
-release_date = "2026-11-26"
 
 [modalities]
 input = ["text"]
@@ -17,7 +16,6 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
-temperature = true
 top_p = true
 top_k = false
 

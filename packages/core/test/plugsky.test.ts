@@ -92,12 +92,12 @@ test("skips lab-sounding aliases and embeddings", () => {
   }
 });
 
-test("publishes a branded model with documented sampling flags", () => {
+test("publishes a base_model entry with documented sampling overrides", () => {
   const result = plugsky.translateModel(model(), context() as never);
 
   expect(result).toBeDefined();
   expect(result?.model).toMatchObject({
-    temperature: true,
+    base_model: "nvidia/nemotron-3-ultra-550b-a55b",
     limit: { context: 262_144, output: 16_384 },
   });
   expect(result?.v2Set).toEqual({
@@ -106,10 +106,19 @@ test("publishes a branded model with documented sampling flags", () => {
   });
 });
 
-test("preserves an existing release date and last update", () => {
+test("standalone entries publish documented sampling flags", () => {
+  const result = plugsky.translateModel(model({ id: "plugsky-gpu-27b" }), context() as never);
+
+  expect(result?.model).toMatchObject({
+    temperature: true,
+    limit: { context: 262_144, output: 16_384 },
+  });
+});
+
+test("preserves an existing release date and last update on standalone entries", () => {
   const result = plugsky.translateModel(
-    model(),
-    context({ "plugsky-pro": existing() }) as never,
+    model({ id: "plugsky-gpu-27b" }),
+    context({ "plugsky-gpu-27b": existing() }) as never,
   );
 
   expect(result?.model).toMatchObject({
@@ -118,12 +127,25 @@ test("preserves an existing release date and last update", () => {
   });
 });
 
-test("stamps a new entry with its first catalog date", () => {
+test("stamps a new standalone entry with its first catalog date", () => {
   const today = new Date().toISOString().slice(0, 10);
-  const result = plugsky.translateModel(model(), context() as never);
+  const result = plugsky.translateModel(model({ id: "plugsky-gpu-27b" }), context() as never);
 
   expect(result?.model).toMatchObject({
     release_date: today,
     last_updated: today,
   });
+});
+
+test("base_model entries carry only host deltas, not dates or lab capabilities", () => {
+  const result = plugsky.translateModel(model(), context() as never);
+
+  expect(result?.model).toMatchObject({
+    base_model: "nvidia/nemotron-3-ultra-550b-a55b",
+    limit: { context: 262_144, output: 16_384 },
+  });
+  expect(result?.model).not.toHaveProperty("release_date");
+  expect(result?.model).not.toHaveProperty("last_updated");
+  expect(result?.model).not.toHaveProperty("reasoning");
+  expect(result?.model).not.toHaveProperty("tool_call");
 });

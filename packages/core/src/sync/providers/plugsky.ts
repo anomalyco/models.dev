@@ -142,7 +142,22 @@ export const plugsky = {
     const existing = context.existing(model.id);
     const date = existing?.release_date ?? new Date().toISOString().slice(0, 10);
 
-    const shared = {
+    const baseModel = baseModelFor(model.id);
+    if (baseModel !== null) {
+      // Override-only: dates, open_weights, tools, reasoning controls and the
+      // sampling flags come from the lab file. Keep only host-specific deltas.
+      const translated: SyncedBaseModel = {
+        base_model: baseModel,
+        name: model.name ?? model.id,
+        description: descriptionFor(model),
+        structured_output: model.json_mode,
+        modalities: { input: input as SyncedFullModel["modalities"]["input"], output: ["text"] as SyncedFullModel["modalities"]["output"] },
+        limit: { context: contextLimit, output: outputLimit },
+      };
+      return { id: model.id, header: HEADER, model: translated, v2Set: SAMPLING_V2 };
+    }
+
+    const translated: SyncedFullModel = {
       name: model.name ?? model.id,
       description: descriptionFor(model),
       attachment: input.includes("image"),
@@ -153,16 +168,9 @@ export const plugsky = {
       release_date: date,
       last_updated: existing?.last_updated ?? date,
       modalities: { input: input as SyncedFullModel["modalities"]["input"], output: ["text"] as SyncedFullModel["modalities"]["output"] },
+      open_weights: false,
       limit: { context: contextLimit, output: outputLimit },
     };
-
-    const baseModel = baseModelFor(model.id);
-    if (baseModel !== null) {
-      const translated: SyncedBaseModel = { base_model: baseModel, ...shared };
-      return { id: model.id, header: HEADER, model: translated, v2Set: SAMPLING_V2 };
-    }
-
-    const translated: SyncedFullModel = { ...shared, open_weights: false };
     return { id: model.id, header: HEADER, model: translated, v2Set: SAMPLING_V2 };
   },
 } satisfies SyncProvider<PlugskyModel>;

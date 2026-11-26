@@ -7,7 +7,6 @@ schema = 2
 base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
 name = "Plugsky Nano"
 description = "Plugsky Nano: 30B (activated: ~3B), 262144 token serving context. Equivalent class and context required on failover."
-release_date = "2026-11-26"
 
 [modalities]
 input = ["text", "image"]
@@ -16,7 +15,6 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
-temperature = true
 tools = { supported = true }
 top_p = true
 top_k = false
