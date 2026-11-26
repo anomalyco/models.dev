@@ -2,12 +2,15 @@
 # Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
 # A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
 # Docs: https://docs.modellix.ai/llm/api/api
+# Custom tools: text verified on Modellix Chat Completions on 2026-11-26.
+# The response called only the text tool. Lark and regex remain unverified.
 # Chat Completions field: reasoning_effort (https://docs.modellix.ai/llm/api/api). Levels were not probed on Modellix.
 # Catalog publishes the Modellix customer price. The public list price is higher on at least one component.
 schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
+tools = { supported = true, freeform = ["text"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]

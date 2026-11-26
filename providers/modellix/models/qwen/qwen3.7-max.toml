@@ -2,12 +2,15 @@
 # Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
 # A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
 # Docs: https://docs.modellix.ai/llm/api/api
-# No Modellix Chat Completions evidence for a caller control. Lab toggle/budget fields were removed; reasoning stays supported with no published control.
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget
+# Modellix's DashScope route forwards both fields via the OpenAI-compatible adapter.
+# https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 base_model = "alibaba/qwen3.7-max"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true, budget = {} }
 
 [cost.text.input]
 price = 1.475

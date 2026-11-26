@@ -2,15 +2,15 @@
 # Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
 # A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
 # Docs: https://docs.modellix.ai/llm/api/api
-# Routing is not one snapshot. docs/llm-data.md shows deepseek/deepseek-v4-flash, anthropic/deepseek-v4-flash, and anthropic/deepseek-v4-flash-202605. base_model stays the undated lab id.
-# The Modellix deployments report different support for reasoning_effort.
+# In Chat Completions, reasoning_effort = "none" disables thinking. Omit it for default thinking.
+# One default route maps other values to a single enabled state, so the catalog lists only the off setting.
 # Catalog publishes the Modellix customer price. The public list price is higher on at least one component.
 # Host context 1050000 differs from the lab context 1000000. The public catalog value is used.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none"] }
 
 [limit]
 context = 1_050_000

@@ -2,7 +2,9 @@
 # Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
 # A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
 # Docs: https://docs.modellix.ai/llm/api/api
-# No Modellix Chat Completions evidence for a caller control. Lab toggle/budget fields were removed; reasoning stays supported with no published control.
+# In Chat Completions, the Anthropic-compatible routes forward thinking, while an OpenAI-compatible route drops it.
+# The thinking toggle and budget therefore vary by route.
+# https://platform.claude.com/docs/en/build-with-claude/extended-thinking
 # Catalog publishes the Modellix customer price. The public list price is higher on at least one component.
 schema = 2
 base_model = "anthropic/claude-haiku-4-5"

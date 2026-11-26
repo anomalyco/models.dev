@@ -2,15 +2,15 @@
 # Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
 # A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
 # Docs: https://docs.modellix.ai/llm/api/api
-# Both observed deployments use deepseek-v4-flash-vision-exp (docs/llm-data.md).
-# DeepSeek serves that retired id with DeepSeek-V4.1-Flash-1017 (providers/deepseek/models/deepseek-v4-flash-vision-exp.toml).
-# Chat Completions field: reasoning_effort. Levels low|high|max come from that DeepSeek provider file and were not probed on Modellix.
+# DeepSeek routes the legacy vision model ID to V4.1 Flash 1017.
+# The direct API supports top-level reasoning_effort. The alternate API documents thinking.type, which that route drops in Chat Completions.
+# Surfaces: https://api-docs.deepseek.com/api/create-chat-completion/ and https://www.tencentcloud.com/document/product/1300/80633
 # Published context 1050000 differs from the 1017 lab context 1000000.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true }
 
 [limit]
 context = 1_050_000
