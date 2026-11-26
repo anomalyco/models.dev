@@ -1,0 +1,50 @@
+# Sources (accessed 2026-11-26):
+# - Public catalog, no key needed: https://commentllm.com/api/models for this ID:
+#   context_window 1048576, max_output 32768, modalities text, status preview,
+#   USD per 1M tokens input 3.00 / cached input 0.30 / output 5.00.
+# - Model page: https://commentllm.com/models/deepseek-v4.1-flash-abliterated
+# - API reference: https://commentllm.com/docs (Endpoints, Tool calling):
+#   Chat Completions, Responses and Anthropic Messages on https://api.commentllm.com/v1.
+#   Function tools, tool_choice and parallel tool calls work on all three, with streaming.
+#   response_format (structured output) is refused with HTTP 400, and image input is not available.
+#   Accepted sampling fields are temperature and top_p; top_k is not accepted.
+# CommentLLM hosts an abliterated variant of the shared DeepSeek base model.
+# Reasoning: the model reasons, but the gateway neither accepts reasoning_effort or thinking
+#   controls nor returns reasoning text: always on, no caller control, no reasoning_field.
+# Cached input is billed at the cached rate when the backend reports a cache hit; there is
+#   no charge for cache writes and no cache_control marker.
+# Input: text only, so the lab's image types are left out.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Abliterated"
+description = "Abliterated variant of DeepSeek V4.1 Flash 1017 hosted by CommentLLM for authorized security work."
+status = "beta"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+cache = { implicit = true }
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 5

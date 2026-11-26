@@ -1,0 +1,50 @@
+# Sources (accessed 2026-11-26):
+# - Public catalog, no key needed: https://commentllm.com/api/models for this ID:
+#   context_window 262144, max_output 65536, modalities text, status preview,
+#   USD per 1M tokens input 0.80 / cached input 0.08 / output 2.00.
+# - Model page: https://commentllm.com/models/qwen3.8-27b-abliterated
+# - API reference: https://commentllm.com/docs (Endpoints, Tool calling):
+#   Chat Completions, Responses and Anthropic Messages on https://api.commentllm.com/v1.
+#   Function tools, tool_choice and parallel tool calls work on all three, with streaming.
+#   response_format (structured output) is refused with HTTP 400, and image input is not available.
+#   Accepted sampling fields are temperature and top_p; top_k is not accepted.
+# CommentLLM hosts an abliterated variant of the shared Qwen3.8 27B base model.
+# Reasoning: the model reasons, but the gateway neither accepts reasoning_effort or thinking
+#   controls nor returns reasoning text: always on, no caller control, no reasoning_field.
+# Cached input is billed at the cached rate when the backend reports a cache hit; there is
+#   no charge for cache writes and no cache_control marker.
+# Input: text only, so the lab's image and video types are left out.
+# Output: this host's documented cap (65,536) is higher than the lab file's 32,768.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B Abliterated"
+description = "Abliterated variant of Qwen3.8 27B hosted by CommentLLM for authorized security work."
+status = "beta"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+cache = { implicit = true }
+top_k = false
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 2
