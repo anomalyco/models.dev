@@ -1,6 +1,4 @@
 # Pricing source: https://hostlinku.com/models/gpt-6-sol and https://api.hostlinku.com/api/public/models/gpt-6-sol/pricing
-#   Performance (USD/MTok): input $0.7268, output $3.634, cache_read $0.07268, web_search $15.8/1k, (>=272000 tok: in $5.056, out $18.96, cache_read $0.5056)
-#   Economy (USD/MTok): input $0.125, output $0.625, cache_read $0.0125, web_search $12.5/1k, (>=272000 tok: in $0.25, out $0.9375, cache_read $0.025)
 # Cache note: GET /api/public/models/gpt-6-sol/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
 # Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
 # Freeform probe (2026-11-17, live on https://api.hostlinku.com): /v1/responses and /v1/chat/completions
@@ -24,13 +22,13 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 base_url = "https://api.hostlinku.com/v1"
 
 [cost.text.input]
-price = 0.7268
-cache = { read = 0.07268 }
+price = 0.736
+cache = { read = 0.0736 }
 
 [[cost.text.input.overrides]]
 when = { context = { gte = 272_000 } }
-price = 5.056
-cache = { read = 0.5056 }
+price = 5.12
+cache = { read = 0.512 }
 
 [[cost.text.input.overrides]]
 when = { mode = { equals = "economy" } }
@@ -43,11 +41,11 @@ price = 0.25
 cache = { read = 0.025 }
 
 [cost.text.output]
-price = 3.634
+price = 3.68
 
 [[cost.text.output.overrides]]
 when = { context = { gte = 272_000 } }
-price = 18.96
+price = 19.2
 
 [[cost.text.output.overrides]]
 when = { mode = { equals = "economy" } }
@@ -58,7 +56,7 @@ when = { context = { gte = 272_000 }, mode = { equals = "economy" } }
 price = 0.9375
 
 [cost.web_search]
-price = 15.8
+price = 16
 
 [[cost.web_search.overrides]]
 when = { mode = { equals = "economy" } }

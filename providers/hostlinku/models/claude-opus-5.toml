@@ -1,6 +1,4 @@
 # Pricing source: https://hostlinku.com/models/claude-opus-5 and https://api.hostlinku.com/api/public/models/claude-opus-5/pricing
-#   Performance (USD/MTok): input $2.765, output $13.825, cache_read $0.2765, cache_write_5m $3.45625, cache_write_1h $5.53, web_search $15.8/1k
-#   Economy (USD/MTok): input $0.9375, output $4.6875, cache_read $0.09375, cache_write_5m $1.171875, cache_write_1h $1.875, web_search $12.5/1k
 # Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
 # APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
 # Effort: $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max" on /v1/messages
@@ -20,8 +18,8 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 base_url = "https://api.hostlinku.com/v1"
 
 [cost.text.input]
-price = 2.765
-cache = { read = 0.2765, write = { "5m" = 3.45625, "1h" = 5.53 } }
+price = 2.8
+cache = { read = 0.28, write = { "5m" = 3.5, "1h" = 5.6 } }
 
 [[cost.text.input.overrides]]
 when = { mode = { equals = "economy" } }
@@ -29,14 +27,14 @@ price = 0.9375
 cache = { read = 0.09375, write = { "5m" = 1.171875, "1h" = 1.875 } }
 
 [cost.text.output]
-price = 13.825
+price = 14
 
 [[cost.text.output.overrides]]
 when = { mode = { equals = "economy" } }
 price = 4.6875
 
 [cost.web_search]
-price = 15.8
+price = 16
 
 [[cost.web_search.overrides]]
 when = { mode = { equals = "economy" } }

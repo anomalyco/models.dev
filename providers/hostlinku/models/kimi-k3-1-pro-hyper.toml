@@ -1,5 +1,4 @@
 # Pricing source: https://hostlinku.com/models/kimi-k3-1-pro-hyper and https://api.hostlinku.com/api/public/models/kimi-k3-1-pro-hyper/pricing
-#   Dedicated (USD/MTok): input $6.78, output $33.9, cache_read $0.339
 # Limits source: GET https://api.hostlinku.com/api/public/models/kimi-k3-1-pro-hyper and GET /v1/models (maxOutputTokens / max_output_tokens = 131_072, below the lab default).
 # Cache note: GET /api/public/models/kimi-k3-1-pro-hyper/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
 # Service mode: offered in "dedicated" (runtime pricing & availability via GET /v1/models).
@@ -20,8 +19,8 @@ output = 131_072
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 6.78
-cache = { read = 0.339 }
+price = 7.2
+cache = { read = 0.36 }
 
 [cost.text.output]
-price = 33.9
+price = 36

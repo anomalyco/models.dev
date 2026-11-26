@@ -1,5 +1,4 @@
 # Pricing source: https://hostlinku.com/models/qwen3-8-max and https://api.hostlinku.com/api/public/models/qwen3-8-max/pricing
-#   Performance (USD/MTok): input $1.896, output $5.688, cache_read $0.237, web_search $1.896/1k
 # Cache note: GET /api/public/models/qwen3-8-max/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
 # Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
 # Toggle: $.enable_thinking = true|false
@@ -17,11 +16,11 @@ cache = { implicit = true }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 1.896
-cache = { read = 0.237 }
+price = 1.92
+cache = { read = 0.24 }
 
 [cost.text.output]
-price = 5.688
+price = 5.76
 
 [cost.web_search]
-price = 1.896
+price = 1.92

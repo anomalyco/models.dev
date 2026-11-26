@@ -1,5 +1,4 @@
 # Pricing source: https://hostlinku.com/models/gpt-6-1-terra and https://api.hostlinku.com/api/public/models/gpt-6-1-terra/pricing
-#   Performance (USD/MTok): input $0.3634, output $1.817, cache_read $0.03634, web_search $3.634/1k
 # Cache note: GET /api/public/models/gpt-6-1-terra/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
 # Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
 # Freeform probe (2026-11-17, live on https://api.hostlinku.com): /v1/responses and /v1/chat/completions
@@ -23,11 +22,11 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 base_url = "https://api.hostlinku.com/v1"
 
 [cost.text.input]
-price = 0.3634
-cache = { read = 0.03634 }
+price = 0.368
+cache = { read = 0.0368 }
 
 [cost.text.output]
-price = 1.817
+price = 1.84
 
 [cost.web_search]
-price = 3.634
+price = 3.68

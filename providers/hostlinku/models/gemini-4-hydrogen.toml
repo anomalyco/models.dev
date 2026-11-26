@@ -1,0 +1,25 @@
+# Protocols and limits: https://api.hostlinku.com/api/public/models/gemini-4-hydrogen
+# Per-mode USD prices: https://api.hostlinku.com/api/public/models/gemini-4-hydrogen/pricing
+# Effort baseline: https://ai.google.dev/gemini-api/docs/thinking
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+recommended_api = "chat-completions"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+base_url = "https://api.hostlinku.com/v1"
+
+[api.generate-content]
+base_url = "https://api.hostlinku.com/v1beta"
+sdk = { aisdk = "@ai-sdk/google" }
+
+[cost.text.input]
+price = 0.72
+cache = { read = 0.036 }
+
+[cost.text.output]
+price = 3.6

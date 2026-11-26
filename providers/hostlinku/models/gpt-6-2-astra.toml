@@ -1,0 +1,51 @@
+# Protocols and limits: https://api.hostlinku.com/api/public/models/gpt-6-2-astra
+# Per-mode USD prices: https://api.hostlinku.com/api/public/models/gpt-6-2-astra/pricing
+# Effort baseline: https://developers.openai.com/api/docs/guides/latest-model
+# Prompt cache uses read-only pricing on this gateway.
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.responses]
+base_url = "https://api.hostlinku.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]
+base_url = "https://api.hostlinku.com/v1"
+
+[cost.text.input]
+price = 3.2
+cache = { read = 0.64 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 272_000 } }
+price = 6.4
+
+[[cost.text.input.overrides]]
+when = { mode = { equals = "economy" } }
+price = 0.5
+cache = { read = 0.025 }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 272_000 }, mode = { equals = "economy" } }
+price = 1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 16
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 272_000 } }
+price = 24
+
+[[cost.text.output.overrides]]
+when = { mode = { equals = "economy" } }
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 272_000 }, mode = { equals = "economy" } }
+price = 3.75

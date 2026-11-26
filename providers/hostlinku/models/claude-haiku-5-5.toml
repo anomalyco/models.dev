@@ -1,6 +1,4 @@
 # Pricing source: https://hostlinku.com/models/claude-haiku-5-5 and https://api.hostlinku.com/api/public/models/claude-haiku-5-5/pricing
-#   Performance (USD/MTok): input $0.0553, output $0.2765, cache_read $0.00553, cache_write_5m $0.069125, cache_write_1h $0.1106, web_search $15.8/1k, (>=100000 tok: in $0.632, out $3.16, cache_read $0.0632, cache_write_5m $0.79, cache_write_1h $1.264)
-#   Economy (USD/MTok): input $0.01875, output $0.09375, cache_read $0.001875, cache_write_5m $0.023438, cache_write_1h $0.0375, web_search $12.5/1k, (>=100000 tok: in $0.09375, out $0.46875, cache_read $0.009375, cache_write_5m $0.117188, cache_write_1h $0.1875)
 # Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
 # APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
 # Toggle: $.thinking.type = "adaptive"|"disabled"
@@ -21,13 +19,13 @@ sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthro
 base_url = "https://api.hostlinku.com/v1"
 
 [cost.text.input]
-price = 0.0553
-cache = { read = 0.00553, write = { "5m" = 0.069125, "1h" = 0.1106 } }
+price = 0.056
+cache = { read = 0.0056, write = { "5m" = 0.07, "1h" = 0.112 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gte = 100_000 } }
-price = 0.632
-cache = { read = 0.0632, write = { "5m" = 0.79, "1h" = 1.264 } }
+price = 0.64
+cache = { read = 0.064, write = { "5m" = 0.8, "1h" = 1.28 } }
 
 [[cost.text.input.overrides]]
 when = { mode = { equals = "economy" } }
@@ -40,11 +38,11 @@ price = 0.09375
 cache = { read = 0.009375, write = { "5m" = 0.117188, "1h" = 0.1875 } }
 
 [cost.text.output]
-price = 0.2765
+price = 0.28
 
 [[cost.text.output.overrides]]
 when = { context = { gte = 100_000 } }
-price = 3.16
+price = 3.2
 
 [[cost.text.output.overrides]]
 when = { mode = { equals = "economy" } }
@@ -55,7 +53,7 @@ when = { context = { gte = 100_000 }, mode = { equals = "economy" } }
 price = 0.46875
 
 [cost.web_search]
-price = 15.8
+price = 16
 
 [[cost.web_search.overrides]]
 when = { mode = { equals = "economy" } }
