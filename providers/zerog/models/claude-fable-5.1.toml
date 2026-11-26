@@ -1,6 +1,4 @@
-# Reasoning: the catalog describes extended thinking for this id, and `thinking` is not a working toggle on this host:
-#   live 2026-11-22 and 2026-11-25 (chat/completions), thinking.type enabled and disabled behaved identically (0 reasoning
-#   tokens and no reasoning_content either way on both dates), so no caller control is published.
+# Reasoning: no caller control on this host. Live on this host 2026-11-26 (chat/completions, usage.completion_tokens_details.reasoning_tokens): thinking.type enabled/disabled both returned 0, and reasoning_effort low/high/max also returned 0 reasoning tokens at every level, so neither field steers reasoning here and no caller control is published.
 schema = 2
 base_model = "anthropic/claude-fable-5-1"
 
