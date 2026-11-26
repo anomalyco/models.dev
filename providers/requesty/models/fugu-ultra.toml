@@ -1,3 +1,4 @@
+# Reasoning: always on with no caller control. The route reports supports_reasoning false (takes no reasoning_effort) at https://router.requesty.ai/v1/models/managed (2026-11-25), and Fugu Ultra always reasons (models/sakana/fugu-ultra.toml; Sakana's API takes reasoning effort high|xhigh only, providers/sakana/models/fugu-ultra.toml).
 # system_updates = true: supports_system_mid_conversation on https://router.requesty.ai/v1/models/managed
 # effort_updates = false, tools.updates = false: Chat Completions takes reasoning_effort per request and has no tool-change message (https://docs.requesty.ai/features/reasoning)
 schema = 2
@@ -5,7 +6,7 @@ base_model = "sakana/fugu-ultra"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+reasoning = { supported = true }
 structured_output = false
 system_updates = true
 
