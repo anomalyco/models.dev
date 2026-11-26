@@ -8,8 +8,9 @@
 #               input $0.045 / cache read $0.00225 / output $0.18.
 #   Cache-hit price is 5% of the corresponding input price. Peak/off-peak time
 #   tiers have been retired; one price applies at all hours.
-#   The single-value cost fields below carry the offer price currently in effect;
-#   switch them to the list prices when the offer ends on 2026-12-20.
+#   The single-value cost fields below carry the offer price currently in
+#   effect; the date-conditioned multiplier restores the list prices
+#   automatically from 2026-12-20 (list = 5x the offer for all three values).
 #
 # Toggle: chat_template_kwargs.enable_thinking = true|false (default: true)
 #   Source: provider API reference, request-body table (updated 2026-11-19).
@@ -36,6 +37,10 @@ cache = { read = 0.00225 }
 
 [cost.text.output]
 price = 0.18
+
+[[cost.multipliers]]
+when = { date = { gte = "2026-12-20" } }
+factor = 5
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
