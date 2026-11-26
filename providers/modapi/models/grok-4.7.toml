@@ -1,0 +1,28 @@
+# Price: https://modapi.ai/api/pricing (model grok-4.7), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Effort: reasoning_effort = low|medium|high|xhigh
+# Values from providers/xai/models/grok-4.7.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
+# ModAPI responses report the served model as "grok-4.7-build", the name xAI's backend uses when serving grok-4.7
+# (same model; also seen by developers calling xAI directly), so these results count for grok-4.7.
+schema = 2
+v2_only = true
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200_000 } }
+price = 4
+cache = { read = 1 }
+
+[cost.text.output]
+price = 6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200_000 } }
+price = 12
