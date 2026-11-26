@@ -1,4 +1,5 @@
-# Prices: https://api.uplinkswitch.com/v1/catalog (accessed 2026-11-14), USD per million tokens.
+# Prices: https://api.uplinkswitch.com/v1/catalog (accessed 2026-11-26), USD per million tokens.
+# The catalog price includes this month's 3% co-op volume discount (coop_discount_pct), so it can change when a month starts.
 # Effort: reasoning_effort = low|medium|high on Chat Completions, passed through by the gateway. Levels copied from providers/google for this model.
 schema = 2
 base_model = "google/gemini-4-argon"
@@ -7,8 +8,8 @@ base_model = "google/gemini-4-argon"
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 
 [cost.text.input]
-price = 0.6
-cache = { read = 0.06 }
+price = 1.164
+cache = { read = 0.0625 }
 
 [cost.text.output]
-price = 3
+price = 2.91

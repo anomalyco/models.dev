@@ -1,0 +1,14 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog (accessed 2026-11-26), USD per million tokens.
+# Effort: reasoning_effort = none|low|high|xhigh on Chat Completions, passed through by the gateway. Levels copied from providers/alibaba for this model.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.388236
+cache = { read = 0.048 }
+
+[cost.text.output]
+price = 4.164704

@@ -1,0 +1,14 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog (accessed 2026-11-26), USD per million tokens.
+# Effort: reasoning_effort = minimal|low|medium|high on Chat Completions, passed through by the gateway. Levels copied from providers/google for this model.
+schema = 2
+base_model = "google/gemini-3-flash-preview"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[cost.text.input]
+price = 0.375
+cache = { read = 0.0375 }
+
+[cost.text.output]
+price = 2.25
