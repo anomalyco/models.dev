@@ -1,0 +1,23 @@
+# Bitdeer wire (probed 2026-11-25): POST https://api-inference.bitdeer.ai/v1/chat/completions
+# model = "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B"
+# Reasoning: chat_template_kwargs.enable_thinking = true|false toggles thinking; output in reasoning_content.
+# Image input verified with a base64 PNG; video is not documented by Bitdeer.
+# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25).
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.4
