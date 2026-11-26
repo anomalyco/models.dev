@@ -1,7 +1,7 @@
 # Synap public catalog and unpaid payment gate verified 2026-11-26T02:10:10Z.
 # Live metadata/provenance: https://pool.linkrra.com/v1/models
 # Upstream: https://openrouter.ai/api/v1/models/cognitivecomputations/dolphin-mistral-24b-venice-edition/endpoints
-# Verified 2026-11-26: Venice context 128000, max_completion_tokens 8192.
+# verified 2026-11-26: context 128000, max_completion_tokens 8192.
 # Gateway openrouter-proxy.js FORWARDED_FIELDS preserves temperature/top_p/top_k.
 # Host price/availability: https://pool.linkrra.com/v1/models, verified 2026-11-26.
 # No tools, reasoning controls, caching or JSON-schema output is asserted.
@@ -10,10 +10,6 @@ base_model = "cognitivecomputations/dolphin-mistral-24b-venice-edition"
 
 [capabilities]
 structured_output = false
-
-[limit]
-context = 128000
-output = 8192
 
 [cost.text.input]
 price = 0.34
