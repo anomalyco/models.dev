@@ -1,0 +1,14 @@
+schema = 2
+base_model = "meta/llama-3.2-11b-vision-instruct"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.345
+
+[cost.text.output]
+price = 0.345

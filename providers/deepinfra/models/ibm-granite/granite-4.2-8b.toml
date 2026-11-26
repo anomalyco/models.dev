@@ -8,6 +8,7 @@
 #   reasoning tokens: none 0, enabled=false 0, minimal 15, low 18 / 25, 63, 28, medium 21; default and high ran past the timeout (long full thinking).
 schema = 2
 base_model = "ibm/granite-4.2-8b"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high"] }

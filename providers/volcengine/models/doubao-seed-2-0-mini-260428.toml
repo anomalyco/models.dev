@@ -7,9 +7,8 @@
 # none -> minimal (thinking off) and xhigh/max -> high, so only these four are distinct
 # (兼容映射 table, https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking.md, accessed 2026-11-24).
 # No separate toggle: thinking.type=disabled + a graded effort is rejected.
-# Output limit: the lab default is 32_000, but this host accepts up to 131_072
-# (verified 2026-08-27: max_tokens=131072 -> 200, 132000 -> 400 invalid), matching
-# what openrouter/kilo/nano-gpt already declare for this model. Overridden below.
+# Output limit: 131_072, inherited from the lab file (this host accepts max_tokens=131072 and
+# rejects 132000, verified 2026-08-27).
 # Cache: implicit prefix caching is on by default on the Chat API (no request flag), per
 # https://ark.volcengine.com/region:cn-beijing/docs/context-cache.md and the 上下文缓存能力 table in
 # https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24).
@@ -20,9 +19,6 @@ base_model = "bytedance-seed/seed-2.0-mini"
 reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
 cache = { implicit = true }
 structured_output = true
-
-[limit]
-output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -1,0 +1,27 @@
+# Sources (accessed 2026-11-25):
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-5-transcribe (model IDs, APIs: GenerateContent and Live API; global, us and eu; Standard PayGo only)
+# - https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing (Gemini 3.5 Transcribe, synchronous: $2.00 audio input, $12.00 text output per 1M tokens; one price for every location)
+# The model page lists system instructions, structured output and context caching as not supported, and gives no token
+# limits, so limits come from the base model. Input is audio only; the v1 converter
+# needs a text input price, so text input repeats the audio rate, as in the google provider's file.
+# Synchronous transcription uses generateContent with an audio transcription config, the same request the google
+# provider's file sends through @opencode/ai/protocols/google-transcription; Vertex's TTS files share google-speech the same way.
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.5-transcribe"
+
+[capabilities]
+structured_output = false
+cache = false
+
+[api.transcriptions]
+sdk = { opencodeai = "@opencode/ai/protocols/google-transcription" }
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 12
+
+[cost.audio.input]
+price = 2

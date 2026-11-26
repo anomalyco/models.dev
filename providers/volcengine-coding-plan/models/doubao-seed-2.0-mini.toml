@@ -7,20 +7,15 @@
 # thinking and supports disabling it, which 'none' covers; the pay-as-you-go
 # host (providers/volcengine) measured that none/minimal are the off switch and
 # exposes the full 7-level set on /api/v3.
-# Output limit: the lab default is 32_000, but the Ark model list
-# (https://www.volcengine.com/docs/82379/1330310, accessed 2026-11-10) states
+# Output limit: 131_072, inherited from the lab file (the Ark model list states
 # 最大回答 128k for doubao-seed-2-0-mini-260428, and the pay-as-you-go entry for
-# the same snapshot measured max_tokens=131072 accepted on this backend.
-# Overridden below.
+# the same snapshot measured max_tokens=131072 accepted on this backend).
 schema = 2
 base_model = "bytedance-seed/seed-2.0-mini"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high"] }
 structured_output = true
-
-[limit]
-output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

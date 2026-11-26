@@ -897,7 +897,7 @@ export function buildOpenRouterMediaModel(
     }
     if (current?.status !== undefined) doc.status = current.status;
     // TTS output is always mp3 or pcm on OpenRouter; other types keep the lab's inputs.
-    const routeModalities = route?.modalities ?? (type === "speech" ? modalities : undefined);
+    const routeModalities = route?.modalities ?? (type === "speech" ? modalities : type === "video" ? mp4Only(lab.modalities) : undefined);
     if (routeModalities !== undefined && !sameInheritedValue(routeModalities, lab.modalities)) {
       doc.modalities = routeModalities;
     }
@@ -987,6 +987,15 @@ function routeOverrides(
     // transcription and speech labs.
     limit: { context, output: 0 },
   };
+}
+
+// Video jobs download as MP4, so other video containers a lab lists (mov) are dropped
+// from the host's outputs; a synchronized audio track stays.
+function mp4Only(modalities: unknown) {
+  const { input, output } = (modalities ?? {}) as { input?: string[]; output?: string[] };
+  if (input === undefined || output === undefined) return undefined;
+  const kept = output.filter((value) => !value.startsWith("video/") || value === "video/mp4");
+  return kept.length === output.length ? undefined : { input, output: kept };
 }
 
 function mediaModalities(model: OpenRouterModel, type: MediaType) {

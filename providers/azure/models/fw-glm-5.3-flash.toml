@@ -1,0 +1,38 @@
+# Availability: FW-GLM-5.3-Flash is GA on Fireworks on Foundry, pay-per-token Global Standard only: https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/fireworks-model-catalog#pay-per-token (accessed 2026-11-25)
+# Controls, structured output and cache follow Fireworks' own entry for the same weights (providers/fireworks-ai/models/accounts/fireworks/models/glm-5p3-flash.toml); Foundry runs Fireworks' serving.
+# Modalities: Fireworks' image subset for this model (same file).
+# Pricing: Azure Fireworks Models product, global "FW GLM-5.3-Flash Gl Inp" 0.000188/1K, "Gl Cd Inp" 0.000038/1K, "Gl Opt" 0.000625/1K (no data-zone deployment per the catalog): https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Fireworks Models' (accessed 2026-11-25)
+# APIs: every Fireworks catalog model takes the OpenAI/v1 Chat Completions and Responses APIs on the Foundry resource
+#   (https://{resource}.services.ai.azure.com/openai/v1/...): https://learn.microsoft.com/en-us/azure/foundry/how-to/fireworks/enable-fireworks-models
+#   An administrator must first register the Fireworks.EnableDeploy feature on the subscription (same page); Fireworks on Foundry is GA.
+#   Shape copied from this host's Grok files (Chat Completions via the Azure package, then Responses).
+# Mid-conversation flags: left out; Foundry documents none for Fireworks models and they weren't tested through Foundry.
+# Limits: 1,048,576-token context window (https://ai.azure.com/catalog/models/FW-GLM-5.3-Flash, Quick facts, accessed 2026-11-25); output is the lab's.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "FW-GLM-5.3-Flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+
+[cost.text.input]
+price = 0.188
+cache = { read = 0.038 }
+
+[cost.text.output]
+price = 0.625

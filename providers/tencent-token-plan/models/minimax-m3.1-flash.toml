@@ -1,0 +1,29 @@
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-25.
+# https://cloud.tencent.com/document/product/1823/133811
+# Input/output/cache-read: 20/80/2 points per million tokens.
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.679299.
+# FX: USD 1 = CNY 6.679299, 2026-11-24, https://open.er-api.com/v6/latest/USD
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
+# Availability: General Token Plan > Available models, https://cloud.tencent.com/document/product/1823/130060 (updated 2026-11-25)
+# Specifications: https://cloud.tencent.com/document/product/1823/130051 (1M context, 512K output; no structured output listed).
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write rate published.
+# API: https://cloud.tencent.com/document/product/1823/132246
+# Effort: low|medium|high|xhigh|max (default max); thinking cannot be disabled. Tencent's reasoning guide
+#   (https://cloud.tencent.com/document/product/1823/131208) doesn't list M3.1 Flash yet; controls follow
+#   the tencent-tokenhub and MiniMax entries for this model.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.149716
+cache = { read = 0.014972 }
+
+[cost.text.output]
+price = 0.598865
