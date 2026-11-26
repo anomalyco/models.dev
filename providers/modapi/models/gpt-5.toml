@@ -2,7 +2,7 @@
 # Effort: reasoning_effort = minimal|low|medium|high
 # Values from providers/openai/models/gpt-5.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
 # effect per value not verified.
-# Custom tools (freeform): not supported on ModAPI POST /v1/chat/completions, tested 2026-11-26 (HTTP 400 "Missing required parameter: 'tools[0].custom'").
+# Custom tools (freeform): not confirmed on ModAPI POST /v1/responses (the 2026-11-26 test response ended incomplete before any tool call); not supported on POST /v1/chat/completions (HTTP 400 "Missing required parameter: 'tools[0].custom'").
 schema = 2
 v2_only = true
 base_model = "openai/gpt-5"
