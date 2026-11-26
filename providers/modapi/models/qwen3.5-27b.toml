@@ -1,0 +1,24 @@
+# Price: https://modapi.ai/api/pricing (model qwen3.5-27b), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Toggle: enable_thinking true|false. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
+# enable_thinking=off 3, enable_thinking=on 1024, enable_thinking=on,thinking_budget=128 1024, enable_thinking=on,thinking_budget=2048 1302.
+# thinking_budget=128 did not shorten reasoning, so no budget is listed. Reasoning text arrives in content on this host.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.5-27b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.63
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 1.89
+
+[cost.text.output]
+price = 5.04
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 15.12

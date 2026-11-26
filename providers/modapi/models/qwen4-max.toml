@@ -1,0 +1,17 @@
+# Price: https://modapi.ai/api/pricing (model qwen4-max), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Effort: reasoning_effort = none|low|xhigh. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
+# effort=none 0, effort=low 156, effort=high 141, effort=xhigh 350.
+# high matched low, so it is not listed.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "xhigh"] }
+
+[cost.text.input]
+price = 3.15
+cache = { read = 0.1575 }
+
+[cost.text.output]
+price = 9.45
