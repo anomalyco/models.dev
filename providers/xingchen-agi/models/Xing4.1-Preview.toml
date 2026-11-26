@@ -41,10 +41,13 @@
 #   explicit cache_control markers are not supported. No minimum-token threshold
 #   is published, so the kind is declared bare per AGENTS.md.
 #
-# structured_output is deliberately not set: Chat Completions supports
-#   response_format json_object only and documents json_schema as unsupported
-#   (text.format json_schema is documented on the Responses page only; capability
-#   flags here are per-model, so the narrower Chat Completions behavior governs).
+# structured_output = true: supported on every surface the file lists, with
+#   different breadth — Chat Completions accepts response_format json_object
+#   (json_schema documented as unsupported there), while the Responses API
+#   documents text.format json_schema. Matches the model description's
+#   "structured output" claim and the json_object-only host precedents
+#   (providers/tencent-token-plan/models/mimo-v2.6-flash.toml,
+#   providers/alibaba/models/qwen3.8-omni-flash.toml).
 #
 # APIs (all documented as serving Xing4.1-Preview):
 #   Chat Completions  POST https://api-maas.teleai.com.cn/v1/chat/completions
@@ -55,6 +58,7 @@ base_model = "xingchen-agi/Xing4.1-Preview"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]
