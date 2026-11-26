@@ -3559,30 +3559,51 @@ test("takes Eden AI reasoning options from the model's own lab entry", () => {
   ]);
 });
 
-test("skips new Eden AI models whose reasoning control has no effort equivalent", () => {
-  // The sync does not yet map this model's budget control to Eden AI's API.
-  expect(reasoningOptionsFor("google/gemini-2.5-pro")).toBeUndefined();
-  expect(
-    buildEdenAIModel(edenAIModel({ id: "gemini-2.5-pro", owned_by: "google" })),
-  ).toBeUndefined();
+test("maps a lab's thinking budget to Eden AI's effort levels", () => {
+  // Google's file: a budget from 128 tokens, so reasoning can't be switched off.
+  expect(reasoningOptionsFor("google/gemini-2.5-pro")).toEqual([
+    { type: "effort", values: ["low", "medium", "high"] },
+  ]);
+  // A budget from 0 switches it off.
+  expect(reasoningOptionsFor("google/gemini-2.5-flash")).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high"] },
+  ]);
+  // Anthropic's file: a toggle and a budget from 1,024 tokens.
+  expect(reasoningOptionsFor("anthropic/claude-haiku-4-5")).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high"] },
+  ]);
+  // Alibaba's file: effort levels next to a budget from 0, and thinking can't be
+  // switched off, so the budget adds no `none`.
+  expect(reasoningOptionsFor("alibaba/qwen3.8-2.4t-a95b")).toEqual([
+    { type: "effort", values: ["low", "medium", "xhigh"] },
+  ]);
 });
 
-test("Eden AI preserves authored controls when reasoning mapping is unresolved", () => {
+test("gives Eden AI's default effort levels to a lab model without any", () => {
+  // Google's file: on or off only, with no budget or effort levels.
+  expect(reasoningOptionsFor("google/gemma-4-31b-it")).toEqual([
+    { type: "effort", values: ["none", "low", "medium", "high"] },
+  ]);
+});
+
+test("Eden AI keeps authored controls when the lab documents no effort levels", () => {
   const authored: NonNullable<ExistingModel["reasoning_options"]>[] = [
     [],
     [{ type: "toggle" }],
     [{ type: "effort", values: ["high"] }],
     [{ type: "toggle" }, { type: "budget_tokens" }],
   ];
-  for (const [id, owned_by, base] of [
-    ["glm-5", "zai", "zhipuai/glm-5"],
-    ["kimi-k2.6", "moonshot", "moonshotai/kimi-k2.6"],
-    ["minimax-m3", "minimax", "minimax/MiniMax-M3"],
-    ["nemotron-3-nano-30b-a3b", "nvidia", "nvidia/nemotron-3-nano-30b-a3b"],
-    ["gemini-2.5-pro", "google", "google/gemini-2.5-pro"],
+  const switchable = ["none", "low", "medium", "high"];
+  for (const [id, owned_by, base, defaults] of [
+    ["glm-5", "zai", "zhipuai/glm-5", switchable],
+    ["kimi-k2.6", "moonshot", "moonshotai/kimi-k2.6", switchable],
+    ["minimax-m3", "minimax", "minimax/MiniMax-M3", switchable],
+    ["nemotron-3-nano-30b-a3b", "nvidia", "nvidia/nemotron-3-nano-30b-a3b", ["low", "medium", "high"]],
+    ["gemma-4-31b-it", "google", "google/gemma-4-31b-it", switchable],
   ] as const) {
     const model = edenAIModel({ id, owned_by });
-    expect(buildEdenAIModel(model)).toBeUndefined();
+    // Without a file of its own, a new name starts from the default levels.
+    expect(buildEdenAIModel(model)?.reasoning_options).toEqual([{ type: "effort", values: defaults }]);
     for (const reasoning_options of authored) {
       expect(buildEdenAIModel(model, { base_model: base, reasoning_options })).toMatchObject({
         base_model: base,
@@ -3592,7 +3613,7 @@ test("Eden AI preserves authored controls when reasoning mapping is unresolved",
   }
 });
 
-test("Eden AI sync keeps listed models with unresolved reasoning controls", async () => {
+test("Eden AI sync keeps authored reasoning controls of listed models", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "sync-edenai-"));
   const modelsDir = path.join(root, "providers", "edenai", "models");
   const repo = path.join(import.meta.dirname, "..", "..", "..");
@@ -3632,7 +3653,7 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
     };
 
     const result = await syncProvider(provider);
-    expect(result).toMatchObject({ created: 1, deleted: 1 });
+    expect(result).toMatchObject({ created: 2, deleted: 1 });
     expect(result.files.filter((file) => file.status === "deleted").map((file) => file.path)).toEqual([
       path.join(modelsDir, "retired-model.toml"),
     ]);
@@ -3642,7 +3663,10 @@ test("Eden AI sync keeps listed models with unresolved reasoning controls", asyn
       base_model: "zhipuai/glm-5",
       capabilities: { reasoning: { supported: true, toggle: true } },
     });
-    expect(await Bun.file(path.join(modelsDir, "kimi-k2.6.toml")).exists()).toBe(false);
+    // A new name the lab documents no effort levels for starts from the defaults.
+    expect(Bun.TOML.parse(await readFile(path.join(modelsDir, "kimi-k2.6.toml"), "utf8"))).toMatchObject({
+      capabilities: { reasoning: { supported: true, effort: ["none", "low", "medium", "high"] } },
+    });
     expect(await Bun.file(path.join(modelsDir, "gpt-4.1-mini.toml")).exists()).toBe(true);
   } finally {
     await rm(root, { recursive: true, force: true });

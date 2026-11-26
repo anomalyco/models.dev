@@ -290,39 +290,13 @@ function newFileValues(
 // Reasoning options
 // ========================================
 
-// This sync currently maps only `reasoning_effort`, using the effort list the
-// lab entry documents. Toggle / budget controls
-// need route-specific mappings. Preserve authored controls when unresolved;
-// skip new models rather than inventing an empty control set.
-function effortValues(options: unknown): string[] | "always-on" | undefined {
-  if (!Array.isArray(options)) return undefined;
-  if (options.length === 0) return "always-on";
+// Eden AI's only reasoning control is `reasoning_effort`, which it turns into
+// whatever the lab takes, such as a thinking budget or a toggle. A model whose
+// lab documents no effort levels gets these, unless its file already sets its
+// controls.
+const DEFAULT_EFFORTS = ["low", "medium", "high"];
 
-  let toggled = false;
-  let accepted: string[] | undefined;
-
-  for (const option of options) {
-    if (typeof option !== "object" || option === null) continue;
-    const type = (option as { type?: unknown }).type;
-    if (type === "toggle") toggled = true;
-    if (type !== "effort") continue;
-
-    const values = (option as { values?: unknown }).values;
-    if (!Array.isArray(values)) continue;
-    const filtered = values.filter(
-      (value): value is string =>
-        typeof value === "string" && ACCEPTED_EFFORTS.has(value),
-    );
-    if (filtered.length > 0) accepted = filtered;
-  }
-
-  if (accepted === undefined) return undefined;
-  // Eden AI switches reasoning off with `reasoning_effort=none`, so a lab-side
-  // toggle becomes `none` in the effort list instead of a separate option.
-  return toggled && !accepted.includes("none")
-    ? ["none", ...accepted]
-    : accepted;
-}
+type LabOption = { type?: unknown; values?: unknown; min?: unknown };
 
 function parseToml(filePath: string) {
   try {
@@ -332,19 +306,48 @@ function parseToml(filePath: string) {
   }
 }
 
+// The lab's documented effort levels, else the file's own controls, else the
+// default levels. Lab options of `[]` mean reasoning is always on.
 export function reasoningOptionsFor(
   baseModel: string,
-): SyncedFullModel["reasoning_options"] | undefined {
+  authored?: SyncedFullModel["reasoning_options"],
+): SyncedFullModel["reasoning_options"] {
   const [lab, ...rest] = baseModel.split("/");
-  const derived = effortValues(
-    parseToml(
-      path.join(PROVIDERS_DIR, lab ?? "", "models", `${rest.join("/")}.toml`),
-    )?.reasoning_options,
-  );
+  const options: unknown = parseToml(
+    path.join(PROVIDERS_DIR, lab ?? "", "models", `${rest.join("/")}.toml`),
+  )?.reasoning_options;
+  if (Array.isArray(options) && options.length === 0) return [];
 
-  if (derived === undefined) return undefined;
-  if (derived === "always-on") return [];
-  return [{ type: "effort", values: derived } as ReasoningOption];
+  let toggled = false;
+  let zeroBudget = false;
+  let documented: string[] | undefined;
+  for (const option of Array.isArray(options) ? options : []) {
+    if (typeof option !== "object" || option === null) continue;
+    const { type, values, min } = option as LabOption;
+    if (type === "toggle") toggled = true;
+    if (type === "budget_tokens") zeroBudget = ((min as number | undefined) ?? 1) <= 0;
+    if (type !== "effort" || !Array.isArray(values)) continue;
+
+    const filtered = values.filter(
+      (value): value is string =>
+        typeof value === "string" && ACCEPTED_EFFORTS.has(value),
+    );
+    if (filtered.length > 0) documented = filtered;
+  }
+  if (documented === undefined && authored !== undefined) return authored;
+
+  // Eden AI switches reasoning off with `reasoning_effort=none`, so a lab-side
+  // toggle becomes `none` in the effort list instead of a separate option.
+  // Without effort levels, a budget that can be 0 switches it off too. Next to
+  // them it's a separate control, and a 0 budget may still leave thinking on.
+  const values = documented ?? [...DEFAULT_EFFORTS];
+  const off = toggled || (documented === undefined && zeroBudget);
+  return [
+    {
+      type: "effort",
+      values: off && !values.includes("none") ? ["none", ...values] : values,
+    } as ReasoningOption,
+  ];
 }
 
 // ========================================
@@ -474,9 +477,8 @@ export function buildEdenAIModel(
   // the lab entry owns it and only the effort controls are authored here.
   const reasoning = modelMetadata(baseModel).reasoning === true;
   const reasoningOptions = reasoning
-    ? reasoningOptionsFor(baseModel) ?? existing?.reasoning_options
+    ? reasoningOptionsFor(baseModel, existing?.reasoning_options)
     : undefined;
-  if (reasoning && reasoningOptions === undefined) return undefined;
 
   // The catalog reports no output limit, so a hand-set cap (for a route whose
   // context is below the lab's output) stays.
