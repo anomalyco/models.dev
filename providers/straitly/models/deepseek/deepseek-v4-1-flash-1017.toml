@@ -1,6 +1,7 @@
 # Toggle: thinking.type = enabled|disabled and enable_thinking = true|false (both live-verified 2026-11-25 on Straitly /v1/chat/completions: false/disabled returned reasoning_tokens=0, true/enabled returned 17-18)
 # Effort: reasoning_effort = low|high|max (live-verified 2026-11-25)
 # Reasoning response field: message.reasoning_content (live-verified 2026-11-25 on Straitly /v1/chat/completions)
+# Max tokens: max_completion_tokens=20 enforced finish_reason="length" and completion_tokens=20 live 2026-11-25 (matching max_tokens=20), so max_tokens_field is not needed.
 # Pricing: live Straitly catalog (https://straitly.ai/api/catalog, checked 2026-11-25) intentionally publishes distinct per-model rates for deepseek/deepseek-v4-1-flash-1017 ($0.09/$0.36) vs deepseek/deepseek-v4-1-flash ($0.038169/$0.152946).
 # Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probes on /v1/chat/completions.
 schema = 2
