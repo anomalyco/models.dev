@@ -5,6 +5,7 @@ import path from "node:path";
 import { providerModelToV2 } from "../../model-file-v2.js";
 import type { ExistingModel, SyncProvider, SyncedFullModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { weightsIndex, weightsMatch } from "../weights.js";
 import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://router.huggingface.co/v1/models";
@@ -45,7 +46,9 @@ const LAB_DIRS: Record<string, string> = {
   NousResearch: "nousresearch",
   nvidia: "nvidia",
   Qwen: "alibaba",
+  RekaAI: "rekaai",
   reflection: "reflection",
+  Sao10K: "sao10k",
   "swiss-ai": "swiss-ai",
   Undi95: "undi95",
 };
@@ -456,10 +459,12 @@ export function resolveHuggingFaceBaseModel(id: string) {
   if (canonical !== undefined) return canonical;
 
   const dir = LAB_DIRS[prefix];
-  if (dir === undefined) return undefined;
-  const files = labFileIDs(dir);
-  const match = huggingFaceCandidates(prefix, parts.join("/")).find((candidate) => files.has(candidate));
-  return match === undefined ? undefined : `${dir}/${files.get(match)}`;
+  if (dir !== undefined) {
+    const files = labFileIDs(dir);
+    const match = huggingFaceCandidates(prefix, parts.join("/")).find((candidate) => files.has(candidate));
+    if (match !== undefined) return `${dir}/${files.get(match)}`;
+  }
+  return weightsMatch(id, weightsIndex());
 }
 
 // Lab file IDs a router model may match, most specific first. Each one must equal a
