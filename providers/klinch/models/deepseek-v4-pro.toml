@@ -1,0 +1,15 @@
+# Source: https://klinch.app/en/models/ (accessed 2026-11-26)
+# Reasoning: Klinch documents no caller reasoning control (effort, toggle or budget)
+# on its Chat Completions API (https://klinch.app/en/docs/), so none are listed.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.132
+cache = { read = 0.013 }
+
+[cost.text.output]
+price = 0.396
