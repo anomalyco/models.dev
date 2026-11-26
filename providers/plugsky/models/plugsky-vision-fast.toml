@@ -1,10 +1,10 @@
-# Data source: Plugsky /v1/models created timestamp. Public caller-facing reasoning/structured-output controls are not documented, so those fields are omitted rather than guessed.
+# Description and capability flags come from https://api.plugsky.com/v1/models (checked 2026-11-25).
+# No documented pool-wide reasoning-effort control: `supported` mirrors the host response.
 schema = 2
 name = "Plugsky Vision Fast"
-description = "Plugsky Plugsky Vision Fast — OpenAI-compatible chat model with 131072 context and 4096 max output."
+description = "Plugsky Vision Fast: 131072 token serving context. Equivalent class and context required on failover."
 open_weights = false
 release_date = "2026-11-25"
-last_updated = "2026-11-25"
 
 [modalities]
 input = ["text", "image"]
@@ -12,6 +12,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = false }
+structured_output = true
 tools = { supported = true }
 temperature = true
 

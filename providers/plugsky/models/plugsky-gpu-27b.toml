@@ -1,10 +1,10 @@
-# Data source: Plugsky /v1/models created timestamp. Public caller-facing reasoning/structured-output controls are not documented, so those fields are omitted rather than guessed.
+# Description and capability flags come from https://api.plugsky.com/v1/models (checked 2026-11-25).
+# No documented pool-wide reasoning-effort control: `supported` mirrors the host response.
 schema = 2
 name = "Plugsky GPU 27B"
-description = "Plugsky Plugsky GPU 27B — OpenAI-compatible chat model with 32768 context and 16384 max output."
+description = "Plugsky GPU 27B — 32K context, tools and JSON on verified consumer GPUs. Non-streaming; falls back to Plugsky Pro when no worker is available."
 open_weights = false
 release_date = "2026-11-25"
-last_updated = "2026-11-25"
 
 [modalities]
 input = ["text"]
@@ -12,6 +12,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = false }
+structured_output = true
 tools = { supported = true }
 temperature = true
 

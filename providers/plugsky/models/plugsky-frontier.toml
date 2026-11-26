@@ -1,17 +1,18 @@
-# Data source: Plugsky /v1/models created timestamp. Public caller-facing reasoning/structured-output controls are not documented, so those fields are omitted rather than guessed.
+# Description and capability flags come from https://api.plugsky.com/v1/models (checked 2026-11-25).
+# No documented pool-wide reasoning-effort control: `supported` mirrors the host response.
 schema = 2
 name = "Plugsky Frontier"
-description = "Plugsky Plugsky Frontier — OpenAI-compatible chat model with 262144 context and 8192 max output."
+description = "Plugsky Frontier: 550B (activated: ~55B), 262144 token serving context. Equivalent class and context required on failover."
 open_weights = false
 release_date = "2026-11-25"
-last_updated = "2026-11-25"
 
 [modalities]
 input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true }
+structured_output = true
 tools = { supported = true }
 temperature = true
 
