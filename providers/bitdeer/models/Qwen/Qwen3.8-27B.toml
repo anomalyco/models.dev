@@ -1,0 +1,30 @@
+# Bitdeer wire (probed 2026-11-25): POST https://api-inference.bitdeer.ai/v1/chat/completions
+# model = "Qwen/Qwen3.8-27B"
+# Reasoning: chat_template_kwargs.enable_thinking = true|false toggles thinking; top-level
+# enable_thinking and reasoning_effort are ignored. Output field: reasoning_content.
+# Image input verified with a base64 PNG; video is not accepted through image_url.
+# Bitdeer serves 1,000,000 context tokens (Bitdeer model page for Qwen/Qwen3.8-27B, accessed 2026-11-25).
+# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 2.4
