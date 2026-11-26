@@ -9,7 +9,7 @@ base_model = "openai/gpt-transcribe"
 
 [api.transcriptions]
 base_url = "https://opencode.ai/inference/openai/v1"
-sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
 
 [cost.audio.input]
 unit = "minute"
