@@ -1,0 +1,20 @@
+# Source: Fluence Inference public catalog (https://inference.fluence.cloud), snapshot 2026-11-25T13:35Z.
+# Prices are ceilings: Fluence prices float with supply, so each is the snapshot price rounded up to 2 significant figures.
+# Reasoning controls follow the same base model on peer hosts.
+schema = 2
+base_model = "zhipuai/glm-5"
+
+[limit]
+context = 198_000
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.62
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 2
