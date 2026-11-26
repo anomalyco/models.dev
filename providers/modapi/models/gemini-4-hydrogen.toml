@@ -1,0 +1,17 @@
+# Price: https://modapi.ai/api/pricing (model gemini-4-hydrogen), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Effort: reasoning_effort = low|medium. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
+# effort=none HTTP 503, effort=low 490, effort=medium 1021, effort=high 1021, effort=max 1021.
+# medium/high/max all hit the 1024-token cap, so only low and medium are distinguishable; none failed upstream.
+schema = 2
+v2_only = true
+base_model = "google/gemini-4-hydrogen"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium"] }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 7.5
