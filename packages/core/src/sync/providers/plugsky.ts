@@ -32,15 +32,9 @@ const EXCLUDED_ALIASES = new Set([
 
 const MIN_LIVE_MODELS = 18;
 
-/**
- * The host returns a moving `created` value (it reflects the response time, not
- * a model launch date), so the catalog uses the date this provider entry was
- * reviewed instead of inventing or churning a release date.
- */
-const CATALOG_DATE = "2026-11-26";
-
 const HEADER = [
   "# Description and capability flags come from https://api.plugsky.com/v1/models.",
+  "# release_date is preserved for existing entries; a new entry uses its first catalog date.",
   "# No documented pool-wide reasoning-effort control: `reasoning` mirrors the host response.",
 ].join("\n");
 
@@ -106,15 +100,20 @@ export const plugsky = {
   parseModels(raw) {
     return PlugskyResponse.parse(raw).data;
   },
-  translateModel(model) {
+  translateModel(model, context) {
     if (!isBrandedChatModel(model)) return undefined;
 
     const input = (model.modality ?? ["text"]).filter((modality) => INPUT_MODALITIES.has(modality));
     if (!input.includes("text")) input.unshift("text");
 
-    const date = CATALOG_DATE;
-    const context = model.context_window ?? model.engine_context_window ?? 262_144;
-    const output = model.max_output_tokens ?? model.max_output ?? 8_192;
+    const contextLimit = model.context_window ?? model.engine_context_window;
+    const outputLimit = model.max_output_tokens ?? model.max_output;
+    if (contextLimit == null || outputLimit == null) {
+      throw new Error(`Plugsky model ${model.id} is missing context or output limits`);
+    }
+
+    const existing = context.existing(model.id);
+    const date = existing?.release_date ?? new Date().toISOString().slice(0, 10);
 
     return {
       id: model.id,
@@ -126,11 +125,12 @@ export const plugsky = {
         reasoning: model.reasoning,
         tool_call: model.function_calling,
         structured_output: model.json_mode,
+        ...(existing?.temperature === undefined ? {} : { temperature: existing.temperature }),
         release_date: date,
-        last_updated: date,
+        last_updated: existing?.last_updated ?? date,
         modalities: { input, output: ["text"] },
         open_weights: false,
-        limit: { context, output },
+        limit: { context: contextLimit, output: outputLimit },
       },
     };
   },
