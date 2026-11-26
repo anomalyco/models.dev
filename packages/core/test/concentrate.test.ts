@@ -96,6 +96,11 @@ describe("Concentrate sync", () => {
     expect(v2(model("gpt-5.6-luna", "openai", { openai: route({ pricing: [write("cache_write_tokens", 0.25)] }) })).cost.text.input.cache).toEqual({ read: 0.1, write: { "30m": 0.25 } });
     // MiniMax publishes its write price without a TTL.
     expect(v2(model("minimax-m2-7", "minimax", { minimax: route({ pricing: [write("ephemeral_5m_input_tokens", 0.375)] }) })).cost.text.input.cache).toEqual({ read: 0.1, write: 0.375 });
+    // TTLs follow the reference's order (v1 publishes only the first), even when the catalog lists 1h before 5m.
+    const claude = route({ pricing: [{ tokens: { ...tokens(5, 25), cache: { read: usd(0.5), write: { ephemeral_1h_input_tokens: usd(10), ephemeral_5m_input_tokens: usd(6.25) } } } }] });
+    const cache = v2(model("claude-opus-4-7", "anthropic", { anthropic: claude })).cost.text.input.cache;
+    expect(Object.keys(cache.write)).toEqual(["5m", "1h"]);
+    expect(cache).toEqual({ read: 0.5, write: { "5m": 6.25, "1h": 10 } });
   });
 
   test("leaves out a reasoning model with no controls where the reference has them, unless probed always on", () => {

@@ -317,15 +317,18 @@ const highest = (moneys: (Money | undefined)[]) => moneys.filter((money) => mone
 function cost(standard: z.infer<typeof Price>, bands: (readonly [number, z.infer<typeof Price>])[], ttls?: string[]) {
   const tokens = standard.tokens!;
   // Write prices are keyed by the reference's cache TTLs (an unnamed one takes the first), leaving out TTLs it doesn't
-  // offer; when it lists no TTLs, the write price is a plain price, as the lab publishes it.
+  // offer, in the reference's order: v1 publishes only the first TTL's price, and the catalog may list 1h before 5m.
+  // When it lists no TTLs, the write price is a plain price, as the lab publishes it.
   const cache = (cached: Tokens["cache"]) => {
     const first = Object.values(cached?.write ?? {})[0];
+    const byTTL = new Map(Object.entries(cached?.write ?? {}).flatMap(([key, money]) => {
+      const ttl = key.match(/^ephemeral_(\w+)_input_tokens$/)?.[1] ?? (key === "cache_write_tokens" ? ttls?.[0] : undefined);
+      return ttl === undefined ? [] : [[ttl, money] as const];
+    }));
     return clean({
       read: cached?.read && perMillion(cached.read),
-      write: ttls === undefined ? first && perMillion(first) : clean(Object.fromEntries(Object.entries(cached?.write ?? {}).flatMap(([key, money]) => {
-        const ttl = key.match(/^ephemeral_(\w+)_input_tokens$/)?.[1] ?? (key === "cache_write_tokens" ? ttls?.[0] : undefined);
-        return ttl === undefined || !ttls.includes(ttl) ? [] : [[ttl, perMillion(money)]];
-      }))),
+      write: ttls === undefined ? first && perMillion(first)
+        : clean(Object.fromEntries(ttls.flatMap((ttl) => (byTTL.has(ttl) ? [[ttl, perMillion(byTTL.get(ttl)!)]] : [])))),
     });
   };
   // A band that costs the same as the one below it adds nothing.
