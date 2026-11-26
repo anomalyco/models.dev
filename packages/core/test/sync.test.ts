@@ -23,6 +23,7 @@ import {
   deepinfra,
   deepInfraV2Set,
   resolveDeepInfraBaseModel,
+  weightsMatch,
   type DeepInfraModel,
 } from "../src/sync/providers/deepinfra.js";
 import {
@@ -3939,9 +3940,27 @@ test("DeepInfra matches its own spellings to lab files only when one matches exa
     expect(resolveDeepInfraBaseModel(id)).toBe(base);
   }
   // No lab file matches exactly, so nothing is guessed.
-  expect(resolveDeepInfraBaseModel("nvidia/NVIDIA-Nemotron-3.5-Super-VL")).toBeUndefined();
-  expect(resolveDeepInfraBaseModel("Sao10K/L3.1-70B-Euryale-v2.2")).toBeUndefined();
   expect(resolveDeepInfraBaseModel("Qwen/Qwen3-14B")).toBeUndefined();
+});
+
+test("DeepInfra matches an ID to the lab file listing that Hugging Face repo as its weights", () => {
+  // Real lab files: the repo is the ID, or the ID minus its -Turbo deployment suffix.
+  expect(resolveDeepInfraBaseModel("Sao10K/L3.1-70B-Euryale-v2.2")).toBe("sao10k/l3.1-euryale-70b");
+  expect(resolveDeepInfraBaseModel("Sao10K/L3-8B-Lunaris-v1-Turbo")).toBe("sao10k/l3-lunaris-8b");
+  // Deep Infra drops the size from this repo name, so it's an alias.
+  expect(resolveDeepInfraBaseModel("nvidia/NVIDIA-Nemotron-3.5-Super-VL")).toBe("nvidia/nemotron-3.5-super-vl-120b-a12b");
+
+  const index = new Map([
+    ["acme/widget-7b", ["acme/widget-7b", "acme/widget-7b-fast"]],
+    ["acme/gadget-7b", ["acme/gadget-7b", "acme/other-7b"]],
+  ]);
+  // Repo names compare case-insensitively; a tier of the same weights loses to its base.
+  expect(weightsMatch("ACME/Widget-7B", index)).toBe("acme/widget-7b");
+  // Two unrelated lab files listing one repo is ambiguous.
+  expect(weightsMatch("acme/gadget-7b", index)).toBeUndefined();
+  expect(weightsMatch("acme/missing", index)).toBeUndefined();
+  expect(resolveDeepInfraBaseModel("Unknown-Org/widget-7b-Turbo", index)).toBeUndefined();
+  expect(resolveDeepInfraBaseModel("acme/widget-7b-Turbo", index)).toBe("acme/widget-7b");
 });
 
 test("DeepInfra marks models with a scheduled deprecation and doesn't create them", () => {
