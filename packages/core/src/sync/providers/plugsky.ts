@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { SyncProvider } from "../index.js";
+import type { SyncProvider, SyncedFullModel } from "../index.js";
 
 const API_ENDPOINT = "https://api.plugsky.com/v1/models";
 
@@ -115,24 +115,22 @@ export const plugsky = {
     const existing = context.existing(model.id);
     const date = existing?.release_date ?? new Date().toISOString().slice(0, 10);
 
-    return {
-      id: model.id,
-      header: HEADER,
-      model: {
-        name: model.name ?? model.id,
-        description: descriptionFor(model),
-        attachment: input.includes("image"),
-        reasoning: model.reasoning,
-        tool_call: model.function_calling,
-        structured_output: model.json_mode,
-        ...(existing?.temperature === undefined ? {} : { temperature: existing.temperature }),
-        release_date: date,
-        last_updated: existing?.last_updated ?? date,
-        modalities: { input, output: ["text"] },
-        open_weights: false,
-        limit: { context: contextLimit, output: outputLimit },
-      },
+    const translated: SyncedFullModel = {
+      name: model.name ?? model.id,
+      description: descriptionFor(model),
+      attachment: input.includes("image"),
+      reasoning: model.reasoning,
+      tool_call: model.function_calling,
+      structured_output: model.json_mode,
+      ...(existing?.temperature === undefined ? {} : { temperature: existing.temperature }),
+      release_date: date,
+      last_updated: existing?.last_updated ?? date,
+      modalities: { input: input as SyncedFullModel["modalities"]["input"], output: ["text"] },
+      open_weights: false,
+      limit: { context: contextLimit, output: outputLimit },
     };
+
+    return { id: model.id, header: HEADER, model: translated };
   },
 } satisfies SyncProvider<PlugskyModel>;
 
