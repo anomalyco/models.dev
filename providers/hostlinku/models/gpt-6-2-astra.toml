@@ -2,6 +2,9 @@
 # Per-mode USD prices: https://api.hostlinku.com/api/public/models/gpt-6-2-astra/pricing
 # Effort baseline: https://developers.openai.com/api/docs/guides/latest-model
 # Prompt cache uses read-only pricing on this gateway.
+# Freeform: earlier Hostlinku GPT models on /v1/responses and /v1/chat/completions
+# did not consistently enforce regex or Lark grammar in the 2026-11-17 gateway probes
+# (see gpt-6-astra.toml). No formats are declared based on that gateway evidence.
 schema = 2
 base_model = "openai/gpt-6.2-astra"
 

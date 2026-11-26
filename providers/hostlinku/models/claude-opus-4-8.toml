@@ -1,12 +1,13 @@
 # Pricing source: https://hostlinku.com/models/claude-opus-4-8 and https://api.hostlinku.com/api/public/models/claude-opus-4-8/pricing
 # Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
 # APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
+# Toggle: $.thinking.type = adaptive|disabled on /v1/messages (Anthropic's Models API baseline).
 # Effort: $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max" on /v1/messages
 schema = 2
 base_model = "anthropic/claude-opus-4-8"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
 
