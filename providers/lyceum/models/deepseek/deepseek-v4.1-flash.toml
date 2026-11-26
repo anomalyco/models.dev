@@ -1,5 +1,7 @@
 # Serves the 1017 build: GET https://api.lyceum.technology/openai/v1/models (2026-11-11) reports this ID as "DeepSeek V4.1 Flash 1017" (deepseek-ai/DeepSeek-V4.1-Flash-1017), so it links to that lab file.
-# Limits and prices: the same response gives context_length 1,048,576, max_output_tokens 131,072 and 0.50 / 0.125 / 1.50 USD per million tokens (the models page rounds the cached price to $0.13).
+# Limits: the same response gives context_length 1,048,576 and max_output_tokens 131,072.
+# Prices: GET https://api.lyceum.technology/openai/v1/models (2026-11-26) gives USD unit prices of 0.00000033 input, 0.000000033 cached input and 0.0000013 output,
+#   so 0.33 / 0.033 / 1.30 USD per million tokens. Same prices on https://lyceum.technology/models/ and https://lyceum.technology/models.md.
 # Effort: reasoning_effort none|low|high|max (none = off).
 # Off: reasoning_effort "none", the only switch the docs list for this model. https://docs.lyceum.technology/docs/inference/serverless#controlling-reasoning
 schema = 2
@@ -17,8 +19,8 @@ output = 131_072
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.5
-cache = { read = 0.125 }
+price = 0.33
+cache = { read = 0.033 }
 
 [cost.text.output]
-price = 1.5
+price = 1.3
