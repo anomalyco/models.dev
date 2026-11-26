@@ -12,18 +12,32 @@
 #   effect; the date-conditioned multiplier restores the list prices
 #   automatically from 2026-12-20 (list = 5x the offer for all three values).
 #
-# Toggle: chat_template_kwargs.enable_thinking = true|false (default: true)
-#   Source: provider API reference, request-body table (updated 2026-11-19).
-#   The chain of thought comes back in message.reasoning_content (the endpoint
-#   also mirrors it in message.reasoning). reasoning_effort is documented as
-#   unsupported, so this is a binary toggle with no effort levels.
+# Toggle (Chat Completions / Anthropic Messages): chat_template_kwargs.enable_thinking
+#   = true|false, or thinking.type = enabled|disabled on Messages (default: on).
+#   Source: provider API references, request-body tables (updated 2026-11-24).
+#   The chain of thought comes back in message.reasoning_content (Chat
+#   Completions; the endpoint also mirrors it in message.reasoning) and in
+#   thinking blocks (Messages). reasoning_effort on Chat Completions and
+#   output_config.effort on Messages are documented as unsupported.
+#
+# Responses API effort: reasoning.effort = minimal|low|medium|high|none, where
+#   none turns thinking off. Source: provider Responses API reference
+#   (https://www.teleai.com.cn/doc/kwbjg00Gl0k4e5V3hrFZ/gnAv94SmMlMXptipTp2F,
+#   updated 2026-11-26), request-body section 3.1.5.
 #
 # Caching: usage.prompt_tokens_details.cached_tokens reports implicit cache hits;
 #   explicit cache_control markers are not supported. No minimum-token threshold
 #   is published, so the kind is declared bare per AGENTS.md.
 #
-# structured_output is deliberately not set: the endpoint supports
-#   response_format json_object only, and documents json_schema as unsupported.
+# structured_output is deliberately not set: Chat Completions supports
+#   response_format json_object only and documents json_schema as unsupported
+#   (text.format json_schema is documented on the Responses page only; capability
+#   flags here are per-model, so the narrower Chat Completions behavior governs).
+#
+# APIs (all documented as serving Xing4.1-Preview, updated 2026-11-24/26):
+#   Chat Completions  POST https://api-maas.teleai.com.cn/v1/chat/completions
+#   Anthropic Messages POST https://api-maas.teleai.com.cn/v1/messages (x-api-key)
+#   Responses         POST https://api-maas.teleai.com.cn/v1/responses
 schema = 2
 base_model = "xingchen-agi/xing4.1-preview"
 
@@ -44,3 +58,10 @@ factor = 5
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://api-maas.teleai.com.cn/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
