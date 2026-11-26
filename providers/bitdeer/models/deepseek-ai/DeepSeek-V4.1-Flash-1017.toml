@@ -2,7 +2,8 @@
 # model = "deepseek-ai/DeepSeek-V4.1-Flash-1017"
 # Reasoning: top-level reasoning_effort = none|low|high|max; "none" disables thinking (0 reasoning tokens).
 # Output field: reasoning_content. Image input verified with a base64 PNG.
-# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25).
+# Pricing: list prices from https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25). The page also showed
+# a SALE price with no end date ($0.144 input, $0.576 output, $0.003 cached input); it is not recorded here.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
@@ -15,8 +16,8 @@ cache = { implicit = true }
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.144
-cache = { read = 0.003 }
+price = 0.3
+cache = { read = 0.006 }
 
 [cost.text.output]
-price = 0.576
+price = 1.2

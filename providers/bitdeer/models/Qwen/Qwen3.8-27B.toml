@@ -4,13 +4,17 @@
 # enable_thinking and reasoning_effort are ignored. Output field: reasoning_content.
 # Image input verified with a base64 PNG; video is not accepted through image_url.
 # Bitdeer serves 1,000,000 context tokens (Bitdeer model page for Qwen/Qwen3.8-27B, accessed 2026-11-25).
-# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25).
+# Prompt caching: implicit. Probed 2026-11-25: resending a ~4.9k-token prompt returned
+# usage.prompt_tokens_details.cached_tokens = 4864 with no cache_control. Cached-input price is on the pricing page.
+# Pricing: list prices from https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25). The page also showed
+# a SALE price with no end date ($0.40 input, $2.40 output, $0.08 cached input); it is not recorded here.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -23,8 +27,8 @@ output = ["text"]
 context = 1_000_000
 
 [cost.text.input]
-price = 0.4
-cache = { read = 0.08 }
+price = 0.5
+cache = { read = 0.1 }
 
 [cost.text.output]
-price = 2.4
+price = 3

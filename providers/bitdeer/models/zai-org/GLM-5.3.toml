@@ -2,18 +2,23 @@
 # model = "zai-org/GLM-5.3"
 # Reasoning: top-level reasoning_effort = low|high|max (default max); output in reasoning_content.
 # Text-only at this host; image input is not accepted.
-# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25).
+# Prompt caching: implicit. Probed 2026-11-25: resending a ~4.9k-token prompt returned
+# usage.prompt_tokens_details.cached_tokens = 4864 with no cache_control. Cached-input price is on the pricing page.
+# Pricing: list prices from https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25). The page also showed
+# a SALE price with no end date ($0.63 input, $1.98 output, $0.117 cached input); it is not recorded here.
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.63
+price = 1.4
+cache = { read = 0.26 }
 
 [cost.text.output]
-price = 1.98
+price = 4.4

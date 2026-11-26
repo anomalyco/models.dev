@@ -4,12 +4,16 @@
 # Image input verified live with base64 PNG, JPEG and WebP data URLs: each one was accepted (HTTP 200)
 # and described correctly, so image/webp is listed although the lab documents only jpg/jpeg/png.
 # Bitdeer does not document video or PDF input here.
-# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25).
+# Prompt caching: implicit. Probed 2026-11-25: resending a ~4.9k-token prompt returned
+# usage.prompt_tokens_details.cached_tokens = 4608 with no cache_control. Cached-input price is on the pricing page.
+# Pricing: list prices from https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25). The page also showed
+# a SALE price with no end date ($0.083 input, $0.275 output, $0.017 cached input); it is not recorded here.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
 reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
@@ -19,7 +23,8 @@ input = ["text", "image/jpeg", "image/png", "image/webp"]
 output = ["text"]
 
 [cost.text.input]
-price = 0.083
+price = 0.15
+cache = { read = 0.03 }
 
 [cost.text.output]
-price = 0.275
+price = 0.5
