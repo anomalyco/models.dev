@@ -1,5 +1,6 @@
 # Source: https://router.phase.xyz/v1/models (accessed 2026-11-25): context_window 1048576,
 # phase.input_per_m 936000 / phase.output_per_m 4160000 micro-USD per 1M tokens. Plus $0.001 fixed fee per call.
+# limit.output 65536: phase.max_output in the same listing (accessed 2026-11-26).
 # Served via DeepInfra (zai-org/GLM-5.3), falling back to OpenRouter (z-ai/glm-5.3).
 # Effort: reasoning_effort = low|high|max. The router forwards the OpenAI `reasoning_effort` field to the
 # upstream unchanged (other reasoning fields are not forwarded); both upstreams take low|high|max for this
@@ -13,6 +14,7 @@ structured_output = true
 
 [limit]
 context = 1_048_576
+output = 65_536
 
 [cost.text.input]
 price = 0.936

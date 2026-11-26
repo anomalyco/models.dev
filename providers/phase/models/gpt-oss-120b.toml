@@ -1,4 +1,5 @@
 # Source: https://router.phase.xyz/v1/models (2026-11-12). Plus $0.001 fixed fee per call.
+# limit.output 65536: phase.max_output in https://router.phase.xyz/v1/models (accessed 2026-11-26).
 # Reasoning control: the router forwards the OpenAI `reasoning_effort` request field to the upstream unchanged
 # (low | medium | high); other reasoning fields (`thinking`, `reasoning`) are not forwarded.
 schema = 2
@@ -9,7 +10,7 @@ reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 
 [limit]
-output = 4_096
+output = 65_536
 
 [cost.text.input]
 price = 0.0385

@@ -1,5 +1,6 @@
 # Source: https://router.phase.xyz/v1/models (accessed 2026-11-25): context_window 1048576, vision,
 # phase.input_per_m 131700 / phase.output_per_m 548600 micro-USD per 1M tokens. Plus $0.001 fixed fee per call.
+# limit.output 65536: phase.max_output in the same listing (accessed 2026-11-26).
 # Served via OpenRouter (deepseek/deepseek-v4.1-flash).
 # Effort: reasoning_effort = none|low|high|max; none disables thinking. The router forwards the OpenAI
 # `reasoning_effort` field to OpenRouter unchanged (other reasoning fields are not forwarded); same levels as
@@ -13,6 +14,7 @@ structured_output = true
 
 [limit]
 context = 1_048_576
+output = 65_536
 
 [cost.text.input]
 price = 0.1317
