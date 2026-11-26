@@ -12,7 +12,9 @@
 #   context 1_024_000 / max output 128_000 for Xing4.1-Preview:
 #   https://www.teleai.com.cn/doc/efishKT14hYeEVR1FvYN/KoM0ZAIbiP6UkC0y1LHA
 #
-# Weights open on 2026-11-23; add a [[weights]] entry when the HF repo goes public.
+# Open weights: the trained weights are publicly available on Hugging Face
+# (public, ungated) under Apache 2.0, released 2026-11-23:
+#   https://huggingface.co/XingChen-AGI/Xing4.1-Preview
 schema = 2
 name = "Xing4.1-Preview"
 description = "Xing4.1-Preview is a high-performance, low-activation MoE model from the Xing series (285B total, 17B active). Optimized for agentic coding and long-horizon agent workflows, it delivers deep reasoning, structured output and function calling with a native 1M-token context. Trained on domestic accelerators for enterprise-grade deployment."
@@ -41,3 +43,7 @@ top_k = false
 context = 1_024_000
 input   = 896_000
 output  = 128_000
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/XingChen-AGI/Xing4.1-Preview"
