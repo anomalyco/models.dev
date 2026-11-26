@@ -1,0 +1,17 @@
+# Price: https://modapi.ai/api/pricing (model mimo-v2.6-pro), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Effort: reasoning_effort = none|low. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
+# effort=none 0, effort=low 496, effort=medium 379, effort=high 562, effort=max 561.
+# none turns reasoning off; low/medium/high/max did not increase in order, so only none and low are listed.
+schema = 2
+v2_only = true
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low"] }
+
+[cost.text.input]
+price = 0.435
+cache = { read = 0.0036 }
+
+[cost.text.output]
+price = 0.87
