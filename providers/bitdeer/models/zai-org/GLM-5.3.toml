@@ -1,0 +1,19 @@
+# Bitdeer wire (probed 2026-11-25): POST https://api-inference.bitdeer.ai/v1/chat/completions
+# model = "zai-org/GLM-5.3"
+# Reasoning: top-level reasoning_effort = low|high|max (default max); output in reasoning_content.
+# Text-only at this host; image input is not accepted.
+# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.63
+
+[cost.text.output]
+price = 1.98
