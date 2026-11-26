@@ -76,7 +76,7 @@ type HostlinkuPriceFields = z.infer<typeof HostlinkuPrices>;
 type HostlinkuTierFields = z.infer<typeof HostlinkuTier>;
 
 /**
- * Syncs per-mode USD pricing from Hostlinku's unauthenticated `/api/public/pricing`
+ * Syncs default-mode USD prices and Economy overrides from `/api/public/pricing`
  * endpoint and removes local files that leave `/api/public/models`. Lab `base_model`
  * pointers, API surface blocks, and live-probed reasoning controls stay hand-authored.
  */
