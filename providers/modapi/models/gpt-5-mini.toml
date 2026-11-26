@@ -1,6 +1,8 @@
 # Price: https://modapi.ai/api/pricing (model gpt-5-mini), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
-# Effort: reasoning_effort. Levels tested on ModAPI POST /v1/chat/completions
-# 2026-11-23 with gpt-5.4-mini (none, low, medium, high, xhigh): none returned 0 reasoning tokens, low/medium/high/xhigh returned 65-342.
+# Effort: reasoning_effort = minimal|low|medium|high
+# Values from providers/openai/models/gpt-5-mini.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
+# Custom tools (freeform): not supported on ModAPI POST /v1/chat/completions, tested 2026-11-26 (HTTP 400 "Missing required parameter: 'tools[0].custom'").
 schema = 2
 v2_only = true
 base_model = "openai/gpt-5-mini"

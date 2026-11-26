@@ -1,7 +1,7 @@
 # Price: https://modapi.ai/api/pricing (model kimi-k2.6), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
-# Toggle: thinking.type = enabled|disabled. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
-# thinking=off 1, thinking=on 1023.
-# disabled vs enabled clearly differ.
+# Toggle: thinking.type = enabled|disabled
+# Values from providers/moonshotai/models/kimi-k2.6.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.6"

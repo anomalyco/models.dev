@@ -1,13 +1,15 @@
 # Price: https://modapi.ai/api/pricing (model qwen3.8-max), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
-# Toggle: enable_thinking true|false. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
-# effort=low 369, effort=medium 281, effort=xhigh 134, enable_thinking=off 0, enable_thinking=on 54, enable_thinking=on,thinking_budget=128 89, enable_thinking=on,thinking_budget=2048 99.
-# effort levels did not increase reasoning (low 369 > xhigh 134) and budgets made no clear difference, so neither is listed.
+# Toggle: enable_thinking true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget
+# Values from providers/alibaba/models/qwen3.8-max.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen3.8-max"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"], toggle = true, budget = { min = 0, max = 262_144 } }
 
 [cost.text.input]
 price = 2

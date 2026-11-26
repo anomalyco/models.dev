@@ -1,7 +1,7 @@
 # Price: https://modapi.ai/api/pricing (model glm-5.3), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
-# Effort: reasoning_effort = low|high|max. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
-# effort=low 0, effort=high 44, effort=max 321.
-# each level clearly increases.
+# Effort: reasoning_effort = low|high|max
+# Values from providers/zhipuai/models/glm-5.3.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
 schema = 2
 v2_only = true
 base_model = "zhipuai/glm-5.3"

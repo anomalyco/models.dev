@@ -1,7 +1,8 @@
 # Price: https://modapi.ai/api/pricing (model kimi-k2.7-code), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
-# Effort: reasoning_effort = low|high. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
-# no params 46, effort=low 41, effort=high 137.
-# low and high clearly differ.
+# Effort: reasoning_effort = low|high
+# Levels low|high are not in the baseline; they were tested on this model (see 工程协作/补测记录.md).
+# Values from providers/moonshotai/models/kimi-k2.7-code-highspeed.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
 schema = 2
 v2_only = true
 base_model = "moonshotai/kimi-k2.7-code"

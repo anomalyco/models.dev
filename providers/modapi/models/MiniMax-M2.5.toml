@@ -1,7 +1,5 @@
 # Price: https://modapi.ai/api/pricing (model MiniMax-M2.5), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
-# No caller control. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
-# no params 616, effort=low 773, effort=high 417.
-# reasoning_effort had no consistent effect (low 773, high 417, unset 616).
+# No caller control, matching the vendor's native entry providers/minimax/models/MiniMax-M2.5.toml.
 schema = 2
 v2_only = true
 base_model = "minimax/MiniMax-M2.5"

@@ -1,13 +1,13 @@
 # Price: https://modapi.ai/api/pricing (model MiniMax-M3), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
-# No caller control. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each), reasoning tokens:
-# thinking=off 33, thinking=on 41.
-# thinking disabled still reasoned (33 vs 41 enabled).
+# Toggle: thinking.type = enabled|disabled
+# Values from providers/minimax/models/MiniMax-M3.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
 schema = 2
 v2_only = true
 base_model = "minimax/MiniMax-M3"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, toggle = true }
 
 [cost.text.input]
 price = 0.63
