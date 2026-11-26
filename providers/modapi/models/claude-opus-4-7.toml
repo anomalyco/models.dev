@@ -1,12 +1,15 @@
 # Price: https://modapi.ai/api/pricing (model claude-opus-4-7), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
-# Effort: reasoning_effort = low|high. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each):
-# completion tokens low 31, high 189 (no reasoning_effort: 6). Other levels were not tested.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|xhigh. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each):
+# completion tokens: effort low 31, medium 6, high 189, xhigh 844, max 697 (no reasoning_effort: 6);
+# thinking disabled 5 with no thinking text, enabled (budget_tokens=1024) 58 with thinking text.
+# medium was below low and max did not exceed xhigh, so neither is listed.
 schema = 2
 v2_only = true
 base_model = "anthropic/claude-opus-4-7"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "xhigh"] }
 
 [cost.text.input]
 price = 5

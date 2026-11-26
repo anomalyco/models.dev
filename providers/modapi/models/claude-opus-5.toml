@@ -1,6 +1,7 @@
 # Price: https://modapi.ai/api/pricing (model claude-opus-5), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
 # Effort: reasoning_effort = low|high. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each):
-# completion tokens low 32, high 235 (no reasoning_effort: 42). Other levels were not tested.
+# completion tokens: low 32, medium 46, high 235, max 86 (no reasoning_effort: 42); xhigh got no response.
+# medium was close to low and max was below high, so only low and high are listed.
 schema = 2
 v2_only = true
 base_model = "anthropic/claude-opus-5"
