@@ -6644,6 +6644,31 @@ test("maps Vercel language models tagged video-generation to video output", () =
   expect(buildVercelModel(model!, undefined).modalities?.output).toEqual(["video"]);
 });
 
+test("Vercel attachment follows input modalities when a text-only model gains image and PDF input", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "scaledown/scaledown-classify-1",
+      name: "Classify-1",
+      created: 1_755_815_280,
+      released: 1_791_849_600,
+      context_window: 0,
+      max_tokens: 0,
+      type: "evaluation",
+      tags: ["file-input", "vision"],
+      pricing: { input: "0.00000005", output: "0" },
+    }],
+  });
+
+  const synced = buildVercelModel(model!, {
+    name: "Classify-1",
+    attachment: false,
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(synced.modalities?.input).toEqual(["text", "image", "pdf"]);
+  expect(synced.attachment).toBe(true);
+});
+
 test("uses verified Vercel output limits over catalog metadata", () => {
   const limits = {
     "alibaba/qwen3.6-27b": 65_536,
