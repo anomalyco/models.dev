@@ -1,5 +1,4 @@
 # Pricing source: https://hostlinku.com/models/gpt-5-5 and https://api.hostlinku.com/api/public/models/gpt-5-5/pricing
-# Cache note: GET /api/public/models/gpt-5-5/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
 # Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
 # Freeform probe (2026-11-17, live on https://api.hostlinku.com): /v1/responses and /v1/chat/completions
 # were probed with custom tool grammar (syntax "regex" ZZ[0-9]{3} against prompt "APPLE" and syntax
@@ -23,7 +22,7 @@ base_url = "https://api.hostlinku.com/v1"
 
 [cost.text.input]
 price = 1.84
-cache = { read = 0.184 }
+cache = { read = 0.184, write = { "5m" = 2.3, "1h" = 3.68 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gte = 272_000 } }

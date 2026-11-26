@@ -1,5 +1,4 @@
 # Pricing source: https://hostlinku.com/models/claude-fable-5-2 and https://api.hostlinku.com/api/public/models/claude-fable-5-2/pricing
-# Note: GET /api/public/models/claude-fable-5-2/pricing lists modes.performance.prices.webSearchPer1k = 5.53 (0.553 multiplier on the $10 official rate) and modes.economy.prices.webSearchPer1k = 12.5 (fixed economy web_search rate).
 # Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
 # APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
 # Effort: $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max" on /v1/messages

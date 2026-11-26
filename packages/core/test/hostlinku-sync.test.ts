@@ -133,7 +133,7 @@ test("parseModels rejects truncated catalogs below minimum expected model count"
   ).toThrow("too few models");
 });
 
-test("buildHostlinkuCost updates multi-mode tiers and preserves cache-write policy", () => {
+test("buildHostlinkuCost syncs cache-write prices for each mode and context tier", () => {
   const explicitCost = buildHostlinkuCost(makeModel(), {
     cost: {
       text: {
@@ -210,7 +210,7 @@ test("buildHostlinkuCost updates multi-mode tiers and preserves cache-write poli
     },
   });
 
-  const implicitOnlyCost = buildHostlinkuCost(gptModel, {
+  const refreshedGptCost = buildHostlinkuCost(gptModel, {
     cost: {
       text: {
         input: { price: 1.817, cache: { read: 0.1817 } },
@@ -220,8 +220,12 @@ test("buildHostlinkuCost updates multi-mode tiers and preserves cache-write poli
     },
   });
 
-  expect(implicitOnlyCost?.text.input.cache).toEqual({ read: 0.1817 });
-  expect(implicitOnlyCost?.text.input.overrides?.[1]?.cache).toEqual({ read: 0.03125 });
+  expect(refreshedGptCost?.text.input.cache).toEqual({
+    read: 0.1817,
+    write: { "5m": 2.27125, "1h": 3.634 },
+  });
+  expect(refreshedGptCost?.text.input.overrides?.[0]?.cache).toEqual({ read: 1.264 });
+  expect(refreshedGptCost?.text.input.overrides?.[1]?.cache).toEqual({ read: 0.03125 });
   expect(buildHostlinkuCost(makeModel({ modes: { performance: null, economy: null, dedicated: null } }), {})).toBeUndefined();
 
   const preservedNonOwned = buildHostlinkuCost(makeModel(), {

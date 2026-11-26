@@ -1,8 +1,8 @@
 # Pricing source: https://hostlinku.com/models/kimi-k3-1-pro-hyper and https://api.hostlinku.com/api/public/models/kimi-k3-1-pro-hyper/pricing
 # Limits source: GET https://api.hostlinku.com/api/public/models/kimi-k3-1-pro-hyper and GET /v1/models (maxOutputTokens / max_output_tokens = 131_072, below the lab default).
-# Cache note: GET /api/public/models/kimi-k3-1-pro-hyper/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
 # Service mode: offered in "dedicated" (runtime pricing & availability via GET /v1/models).
 # Effort: reasoning_effort = low|high|max
+# Cache billing: the Dedicated price feed lists cache reads and has no cache-write rate for this model.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro Hyper"

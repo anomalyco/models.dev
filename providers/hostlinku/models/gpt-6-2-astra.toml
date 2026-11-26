@@ -1,7 +1,6 @@
 # Protocols and limits: https://api.hostlinku.com/api/public/models/gpt-6-2-astra
 # Per-mode USD prices: https://api.hostlinku.com/api/public/models/gpt-6-2-astra/pricing
 # Effort baseline: https://developers.openai.com/api/docs/guides/latest-model
-# Prompt cache uses read-only pricing on this gateway.
 # Freeform: earlier Hostlinku GPT models on /v1/responses and /v1/chat/completions
 # did not consistently enforce regex or Lark grammar in the 2026-11-17 gateway probes
 # (see gpt-6-astra.toml). No formats are declared based on that gateway evidence.
@@ -22,7 +21,7 @@ base_url = "https://api.hostlinku.com/v1"
 
 [cost.text.input]
 price = 3.2
-cache = { read = 0.64 }
+cache = { read = 0.64, write = { "5m" = 16, "1h" = 25.6 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gte = 272_000 } }
@@ -31,12 +30,12 @@ price = 6.4
 [[cost.text.input.overrides]]
 when = { mode = { equals = "economy" } }
 price = 0.5
-cache = { read = 0.025 }
+cache = { read = 0.025, write = { "5m" = 0.625 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gte = 272_000 }, mode = { equals = "economy" } }
 price = 1
-cache = { read = 0.05 }
+cache = { read = 0.05, write = { "5m" = 1.25 } }
 
 [cost.text.output]
 price = 16

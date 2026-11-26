@@ -18,7 +18,7 @@ sdk = { aisdk = "@ai-sdk/google" }
 
 [cost.text.input]
 price = 0.72
-cache = { read = 0.036 }
+cache = { read = 0.036, write = { "5m" = 0.9, "1h" = 1.44 } }
 
 [cost.text.output]
 price = 3.6

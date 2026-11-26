@@ -163,7 +163,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function buildCacheEntry(
   prices: HostlinkuPriceFields | HostlinkuTierFields,
-  includeWrite: boolean,
   existingCache?: Record<string, unknown>,
 ) {
   const { read: _existingRead, write: existingWriteRaw, ...restCache } = existingCache ?? {};
@@ -171,9 +170,9 @@ function buildCacheEntry(
   const { "5m": _w5m, "1h": _w1h, ...restWrite } = existingWrite ?? {};
 
   const read = prices.cacheRead ?? undefined;
-  const write5m = includeWrite ? (prices.cacheWrite5m ?? undefined) : undefined;
-  const write1h = includeWrite ? (prices.cacheWrite1h ?? undefined) : undefined;
-  const hasWrite = write5m !== undefined || write1h !== undefined || (includeWrite && Object.keys(restWrite).length > 0);
+  const write5m = prices.cacheWrite5m ?? undefined;
+  const write1h = prices.cacheWrite1h ?? undefined;
+  const hasWrite = write5m !== undefined || write1h !== undefined || Object.keys(restWrite).length > 0;
   const write = hasWrite
     ? {
         ...restWrite,
@@ -235,13 +234,11 @@ function buildInputOverride(
   existingList: unknown,
   when: Record<string, unknown>,
   prices: HostlinkuPriceFields | HostlinkuTierFields,
-  includeWrite: boolean,
 ): Record<string, unknown> {
   const existing = findMatchingOverride(existingList, when);
   const { when: _w, price: _p, cache: existingCacheRaw, ...rest } = existing ?? {};
   const cache = buildCacheEntry(
     prices,
-    includeWrite,
     isRecord(existingCacheRaw) ? existingCacheRaw : undefined,
   );
   return {
@@ -280,7 +277,6 @@ export function buildHostlinkuCost(model: HostlinkuModel, current: Record<string
   const currentOutput = isRecord(currentText?.output) ? currentText.output : undefined;
   const currentWebSearch = isRecord(currentCost?.web_search) ? currentCost.web_search : undefined;
   const currentCache = isRecord(currentInput?.cache) ? currentInput.cache : undefined;
-  const includeWrite = currentCache?.write !== undefined;
 
   const sortedTiers = (tiers: readonly HostlinkuTierFields[]) =>
     [...tiers].sort((a, b) => a.minTokens - b.minTokens);
@@ -290,19 +286,19 @@ export function buildHostlinkuCost(model: HostlinkuModel, current: Record<string
 
   for (const tier of sortedTiers(baseMode.tiers)) {
     const when = { context: { gte: tier.minTokens } };
-    inputOverrides.push(buildInputOverride(currentInput?.overrides, when, tier, includeWrite));
+    inputOverrides.push(buildInputOverride(currentInput?.overrides, when, tier));
     outputOverrides.push(buildOutputOverride(currentOutput?.overrides, when, tier.output));
   }
 
   const economy = model.defaultMode !== "economy" ? (model.modes.economy ?? undefined) : undefined;
   if (economy !== undefined) {
     const modeWhen = { mode: { equals: "economy" } };
-    inputOverrides.push(buildInputOverride(currentInput?.overrides, modeWhen, economy.prices, includeWrite));
+    inputOverrides.push(buildInputOverride(currentInput?.overrides, modeWhen, economy.prices));
     outputOverrides.push(buildOutputOverride(currentOutput?.overrides, modeWhen, economy.prices.output));
 
     for (const tier of sortedTiers(economy.tiers)) {
       const tierModeWhen = { context: { gte: tier.minTokens }, mode: { equals: "economy" } };
-      inputOverrides.push(buildInputOverride(currentInput?.overrides, tierModeWhen, tier, includeWrite));
+      inputOverrides.push(buildInputOverride(currentInput?.overrides, tierModeWhen, tier));
       outputOverrides.push(buildOutputOverride(currentOutput?.overrides, tierModeWhen, tier.output));
     }
   }
@@ -315,7 +311,7 @@ export function buildHostlinkuCost(model: HostlinkuModel, current: Record<string
   const { input: _textIn, output: _textOut, ...restText } = currentText ?? {};
   const { text: _costText, web_search: _costWeb, ...restCost } = currentCost ?? {};
 
-  const baseCache = buildCacheEntry(baseMode.prices, includeWrite, currentCache);
+  const baseCache = buildCacheEntry(baseMode.prices, currentCache);
   const textInput = {
     ...restInput,
     price: baseMode.prices.input,

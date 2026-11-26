@@ -1,6 +1,5 @@
 # Pricing source: https://hostlinku.com/models/gpt-6-luna and https://api.hostlinku.com/api/public/models/gpt-6-luna/pricing
 #   Economy (USD/MTok): input $0.00625, output $0.03125, cache_read $0.000625, web_search $12.5/1k, (>=272000 tok: in $0.0125, out $0.046875, cache_read $0.00125)
-# Cache note: GET /api/public/models/gpt-6-luna/pricing lists generic 5m/1h cacheWrite5m / cacheWrite1h table fields, but this route uses implicit prefix caching (read-only discount; no explicit cache_control write billing).
 # Service mode: offered in "economy" (runtime pricing & availability via GET /v1/models).
 # Freeform probe (2026-11-17, live on https://api.hostlinku.com): /v1/responses and /v1/chat/completions
 # were probed with custom tool grammar (syntax "regex" ZZ[0-9]{3} against prompt "APPLE" and syntax
@@ -24,12 +23,12 @@ base_url = "https://api.hostlinku.com/v1"
 
 [cost.text.input]
 price = 0.00625
-cache = { read = 0.000625 }
+cache = { read = 0.000625, write = { "5m" = 0.007813 } }
 
 [[cost.text.input.overrides]]
 when = { context = { gte = 272_000 } }
 price = 0.0125
-cache = { read = 0.00125 }
+cache = { read = 0.00125, write = { "5m" = 0.015625 } }
 
 [cost.text.output]
 price = 0.03125
