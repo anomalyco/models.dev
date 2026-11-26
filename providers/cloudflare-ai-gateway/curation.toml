@@ -793,10 +793,12 @@ reasoning_options = [{ type = "effort", values = ["low", "medium", "high", "xhig
 # same Vertex AI REST chat-completions route as Argon, Carbon and Hydrogen. Effort values are Google's own
 # list (providers/google/models/gemini-4-neon.toml: low|medium|high|xhigh, default high), as for Hydrogen,
 # whose none was rejected on this route (code 7003). Not live-probed on the gateway (no working gateway
-# credentials, 2026-11-25).
+# credentials, 2026-11-25). structured_output follows the same-route predecessors (Argon, Carbon and Hydrogen
+# all publish it; json_schema was enforced live on Argon, see the google/gemini-4 prefix note).
 # https://ai.google.dev/gemini-api/docs/whats-new-gemini-4-neon
 # https://ai.google.dev/gemini-api/docs/thinking
 [models."google/gemini-4-neon"]
+structured_output = true
 note = [
   "Effort: reasoning_effort = low|medium|high|xhigh (maps to Gemini's thinking level; default high; Google's list, not probed on the gateway).",
   "Sources: https://ai.google.dev/gemini-api/docs/thinking ; https://ai.google.dev/gemini-api/docs/whats-new-gemini-4-neon",
