@@ -1,0 +1,13 @@
+# Prices: https://api.relayswitch.io/v1/catalog (accessed 2026-11-26), USD per million tokens.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 6.08
+cache = { read = 1.216 }
+
+[cost.text.output]
+price = 25.6

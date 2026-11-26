@@ -1,0 +1,10 @@
+# Prices: https://api.relayswitch.io/v1/catalog (accessed 2026-11-26), USD per million tokens.
+schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 1.28
