@@ -2,16 +2,19 @@
 # (https://tapixai.com/v1). Reasoning is exposed only through the OpenAI
 # `reasoning_effort` request field; Tapix does not pass through Anthropic-style
 # thinking toggles or budget_tokens, so only the effort range is declared here.
-# Custom/freeform tool formats (freeform = text/lark/regex on the first-party
-# entry) are NOT supported on Tapix: the chat-completions relay forwards
-# standard `tools` / `tool_choice` JSON only and rejects custom-tool
-# definitions, so `freeform` is intentionally left undeclared.
+# Custom/freeform tools: dated probe 2026-11-26 on gpt-5.5 over
+# POST /v1/chat/completions - tools=[{type:"custom",custom:{format:{type:"text"}}}]
+# returned HTTP 200, and format {type:"grammar",grammar:{syntax:"regex"}} also
+# returned HTTP 200. Both are therefore declared below. The identical request
+# against claude-sonnet-5 returns HTTP 400 "no verified mapping for hosted tool
+# custom", so freeform is OpenAI-model only on this relay.
 # Price verified 2026-11-26 against https://tapixai.com/pricing
 schema = 2
 base_model = "openai/gpt-5.5"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+freeform = ["text", "regex"]
 
 [cost.text.input]
 price = 3.5
