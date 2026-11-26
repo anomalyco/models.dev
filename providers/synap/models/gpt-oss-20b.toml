@@ -1,0 +1,26 @@
+# Source: https://synap402.com/v1/models (verified 2026-11-26).
+# Exact host ID from the feed; included only while available=true and is_ready=true.
+# USD per 1M tokens and host limits are from pricing and top_provider.
+# Supported parameters include tools, tool_choice, structured_outputs and response_format.
+# The host does not advertise top_k in its supported_parameters, so do not inherit it.
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+# Explicit for v1 reasoning_options=[]; no unsupported host effort/toggle claims.
+reasoning = { supported = true }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[limit]
+context = 65536
+output = 65536
+
+[cost.text.input]
+price = 0.017
+cache = { read = 0.008 }
+
+[cost.text.output]
+price = 0.085
+
