@@ -438,6 +438,7 @@ export const ModelFamilyValues = [
   "inkling-small",
   "inkling-mini",
   "ling-tiny",
+  "lingsante",
   "ming-image",
   "ring",
 
