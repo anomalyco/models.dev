@@ -13,9 +13,6 @@ tools = { supported = true }
 reasoning = { supported = true }
 structured_output = true
 
-[limit]
-context = 524_288
-
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }
 
