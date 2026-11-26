@@ -6,6 +6,9 @@
 schema = 2
 base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
 
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
 [capabilities]
 structured_output = true
 top_k = false

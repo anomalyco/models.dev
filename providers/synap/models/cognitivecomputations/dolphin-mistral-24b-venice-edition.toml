@@ -8,6 +8,9 @@
 schema = 2
 base_model = "cognitivecomputations/dolphin-mistral-24b-venice-edition"
 
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
 [capabilities]
 structured_output = false
 
