@@ -266,6 +266,9 @@ export const ModelFamilyValues = [
   "step-tts",
   "step-asr",
 
+  // Xing (XingChen-AGI)
+  "xing",
+
   // Embedding models
   "text-embedding",
   "cohere-embed",

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!--
+    XingChen-AGI / TeleAI provider logo (single-color, currentColor-fillable)
+    Redrawn from the official TeleAI shield mark (China Telecom AI Technology Co., Ltd.).
+    - Single color via currentColor; renders in the active text color.
+    - No Chinese text, no brand palette; compliant with models.dev provider-logo spec.
+  -->
+  <!-- Shield outline (rounded-top, tapering to a pointed bottom) -->
+  <path fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
+        d="M 14 8
+           Q 17 5 21 5
+           L 79 5
+           Q 83 5 86 8
+           L 86 52
+           Q 86 76 67 90
+           Q 55 96 50 97
+           Q 45 96 33 90
+           Q 14 76 14 52
+           Z" />
+  <!-- "TeleAI" text -->
+  <text x="50" y="36" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="currentColor">TeleAI</text>
+  <!-- Divider line -->
+  <line x1="31" y1="45" x2="69" y2="45" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Orbital ring: vertical ellipse -->
+  <ellipse cx="50" cy="73" rx="6.5" ry="18" fill="none" stroke="currentColor" stroke-width="2.5" />
+  <!-- Orbital ring: tilted ellipse (rotated 15 deg, interlocked) -->
+  <ellipse cx="50" cy="73" rx="17" ry="11" fill="none" stroke="currentColor" stroke-width="2.5"
+           transform="rotate(15 50 73)" />
+</svg>

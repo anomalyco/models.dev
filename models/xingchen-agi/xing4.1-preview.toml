@@ -1,0 +1,43 @@
+# Xing4.1-Preview — lab model file. The filename is the model ID (xing4.1-preview),
+# matching the id returned by the provider's /v1/models list.
+#
+# Sources (every fact below is publicly checkable):
+# - Model card: https://huggingface.co/XingChen-AGI/Xing4.1-Preview
+#   (public at the 2026-11-23 release; its Quickstart documents the 1M window as
+#   896K input / 128K output, plus the enable_thinking switch)
+# - API reference: https://www.teleai.com.cn/doc/cQo5DXMRNoHECdaPasOv/hjQ3zhABy0YZFlT3o42b
+#   (updated 2026-11-19: fixed model IDs, sampling defaults, reasoning fields,
+#   no top_k in the request schema, reasoning_effort documented as unsupported)
+# - Context caps: the platform's TeleAgent integration page lists
+#   context 1_024_000 / max output 128_000 for Xing4.1-Preview:
+#   https://www.teleai.com.cn/doc/efishKT14hYeEVR1FvYN/KoM0ZAIbiP6UkC0y1LHA
+#
+# Weights open on 2026-11-23; add a [[weights]] entry when the HF repo goes public.
+schema = 2
+name = "Xing4.1-Preview"
+description = "Xing4.1-Preview is a high-performance, low-activation MoE model from the Xing series (285B total, 17B active). Optimized for agentic coding and long-horizon agent workflows, it delivers deep reasoning, structured output and function calling with a native 1M-token context. Trained on domestic accelerators for enterprise-grade deployment."
+family = "xing"
+open_weights = true
+release_date = "2026-11-23"
+
+[modalities]
+input  = ["text"]
+output = ["text"]
+
+# structured_output, cache and reasoning controls are per-host and live in provider files.
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+# top_k = false: the provider's request schema has no top_k, and the model card
+# documents no top_k sampling parameter. (Lab files require an explicit value for
+# every capability flag.)
+top_k = false
+
+[limit]
+# Native 1M window, served whole by the public API.
+# 896_000 input + 128_000 output = 1_024_000, so the three values add up.
+context = 1_024_000
+input   = 896_000
+output  = 128_000

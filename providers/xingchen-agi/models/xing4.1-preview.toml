@@ -1,0 +1,41 @@
+# Xing4.1-Preview @ XingChen-AGI — provider model file, overrides only
+# (fields identical to the lab file are inherited via base_model).
+#
+# Pricing (USD per 1M tokens) — public price card:
+#   https://xingchen-agi.github.io/pricing/
+#   List price: input $0.225 / cache read $0.01125 / output $0.90.
+#   Limited-time offer (20% of list, through 2026-12-20):
+#               input $0.045 / cache read $0.00225 / output $0.18.
+#   Cache-hit price is 5% of the corresponding input price. Peak/off-peak time
+#   tiers have been retired; one price applies at all hours.
+#   The single-value cost fields below carry the offer price currently in effect;
+#   switch them to the list prices when the offer ends on 2026-12-20.
+#
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default: true)
+#   Source: provider API reference, request-body table (updated 2026-11-19).
+#   The chain of thought comes back in message.reasoning_content (the endpoint
+#   also mirrors it in message.reasoning). reasoning_effort is documented as
+#   unsupported, so this is a binary toggle with no effort levels.
+#
+# Caching: usage.prompt_tokens_details.cached_tokens reports implicit cache hits;
+#   explicit cache_control markers are not supported. No minimum-token threshold
+#   is published, so the kind is declared bare per AGENTS.md.
+#
+# structured_output is deliberately not set: the endpoint supports
+#   response_format json_object only, and documents json_schema as unsupported.
+schema = 2
+base_model = "xingchen-agi/xing4.1-preview"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.045
+cache = { read = 0.00225 }
+
+[cost.text.output]
+price = 0.18
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
