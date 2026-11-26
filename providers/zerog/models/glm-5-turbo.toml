@@ -1,13 +1,17 @@
-# Toggle: thinking.type = enabled|disabled
+# Reasoning: reasoning_effort = low|high|max (default max), the lab's always-on GLM set. Live on this host
+#   2026-11-22 and 2026-11-25 (chat/completions): thinking.type enabled and disabled both returned reasoning
+#   (22 reasoning tokens either way), so `thinking` is not a working toggle here, as the catalog says deep thinking
+#   cannot be turned off on the current provider. reasoning_effort does steer it: low and high returned 1-8 reasoning
+#   tokens against 20-23 for max and for the no-parameter default. `none` is accepted but is not an off level:
+#   it returned the default's 22 reasoning tokens, so it is left out rather than published as "off".
 schema = 2
 base_model = "zhipuai/glm-5-turbo"
-
 
 [limit]
 context = 195_000
 
 [capabilities]
-reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
 
 [cost.text.input]
 price = 1.17

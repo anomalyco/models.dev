@@ -1,4 +1,5 @@
-# Reasoning: always on for this id; the router lists neither `thinking` nor `reasoning_effort` in supported_parameters
+# Reasoning: always on; the catalog says "Thinking is always on" for this id and lists neither `thinking` nor
+#   `reasoning_effort` in supported_parameters, so the lab's `reasoning = { supported = true }` is inherited unchanged.
 schema = 2
 base_model = "anthropic/claude-fable-5-2"
 

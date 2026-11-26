@@ -1,4 +1,5 @@
-# Reasoning: always on for this id; the router lists neither `thinking` nor `reasoning_effort` in supported_parameters
+# Reasoning: no caller control on this host; the router lists neither `thinking` nor `reasoning_effort` in
+#   supported_parameters for this id, so the lab's `reasoning = { supported = true }` is inherited unchanged.
 schema = 2
 base_model = "anthropic/claude-fable-5"
 

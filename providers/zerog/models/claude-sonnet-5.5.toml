@@ -1,9 +1,11 @@
-# Effort: reasoning_effort = none|low|medium|high|xhigh|max (the router lists `reasoning_effort`; levels are the lab's own set, as on the OpenRouter peer)
+# Effort: reasoning_effort = low|medium|high|xhigh|max (the router lists `reasoning_effort`; levels are the lab's own set, as on the OpenRouter peer).
+#   No `none`: the lab documents that disabled is rejected for this id, and live on this host 2026-11-25 (chat/completions)
+#   reasoning_effort = none returned 400 "The upstream provider rejected the request" while low returned 200.
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
 price = 2

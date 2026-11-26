@@ -1,4 +1,6 @@
-# Toggle: thinking = { type: enabled|disabled } (the router lists `thinking` in supported_parameters)
+# Reasoning: the catalog describes extended thinking for this id, and `thinking` is not a working toggle on this host:
+#   live 2026-11-22 and 2026-11-25 (chat/completions), thinking.type enabled and disabled behaved identically (0 reasoning
+#   tokens and no reasoning_content either way on both dates), so no caller control is published.
 # Context: the router advertises 1,000,000 for this id while the lab file documents 200,000; the host value is the router's own catalog value (GET /v1/models, 2026-11-22).
 schema = 2
 base_model = "anthropic/claude-sonnet-4-5"
@@ -7,7 +9,7 @@ base_model = "anthropic/claude-sonnet-4-5"
 context = 1_000_000
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true }
 
 [cost.text.input]
 price = 3
