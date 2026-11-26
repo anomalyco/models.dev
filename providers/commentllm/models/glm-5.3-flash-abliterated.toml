@@ -1,25 +1,24 @@
 # Sources (accessed 2026-11-26):
 # - Public catalog, no key needed: https://commentllm.com/api/models for this ID:
-#   context_window 262144, max_output 65536, modalities text, status preview,
-#   USD per 1M tokens input 0.80 / cached input 0.08 / output 2.00.
-# - Model page: https://commentllm.com/models/qwen3.8-27b-abliterated
+#   context_window 1048576, max_output 32768, modalities text, status ga,
+#   USD per 1M tokens input 0.12 / cached input 0.025 / output 0.50.
+# - Model page: https://commentllm.com/models/glm-5.3-flash-abliterated
 # - API reference: https://commentllm.com/docs (Endpoints, Tool calling):
 #   Chat Completions, Responses and Anthropic Messages on https://api.commentllm.com/v1.
 #   Function tools, tool_choice and parallel tool calls work on all three, with streaming.
 #   response_format (structured output) is refused with HTTP 400, and image input is not available.
 #   Accepted sampling fields are temperature and top_p; top_k is not accepted.
-# CommentLLM hosts an abliterated variant of the shared Qwen3.8 27B base model.
+# CommentLLM hosts an abliterated variant of the shared GLM-5.3-Flash base model.
 # Reasoning: the model reasons, but the gateway neither accepts reasoning_effort or thinking
 #   controls nor returns reasoning text: always on, no caller control, no reasoning_field.
 # Cached input is billed at the cached rate when the backend reports a cache hit; there is
 #   no charge for cache writes and no cache_control marker.
-# Input: text only, so the lab's image and video types are left out.
-# Output: this host's documented cap (65,536) is higher than the lab file's 32,768.
+# Input: text only, so the lab's image, video and file types are left out.
+# Limits: this host's documented context (1,048,576) and output cap (32,768) differ from the lab file's.
 schema = 2
-base_model = "alibaba/qwen3.8-27b"
-name = "Qwen3.8 27B Abliterated"
-description = "Abliterated variant of Qwen3.8 27B hosted by CommentLLM for authorized security work."
-status = "beta"
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3-Flash Abliterated"
+description = "Abliterated variant of GLM-5.3-Flash hosted by CommentLLM for authorized security work."
 
 [modalities]
 input = ["text"]
@@ -32,7 +31,8 @@ cache = { implicit = true }
 top_k = false
 
 [limit]
-output = 65_536
+context = 1_048_576
+output = 32_768
 
 [api.chat-completions]
 
@@ -43,8 +43,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.8
-cache = { read = 0.08 }
+price = 0.12
+cache = { read = 0.025 }
 
 [cost.text.output]
-price = 2
+price = 0.5
