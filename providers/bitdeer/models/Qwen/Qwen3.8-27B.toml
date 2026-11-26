@@ -1,18 +1,24 @@
 # Bitdeer wire (probed 2026-11-25): POST https://api-inference.bitdeer.ai/v1/chat/completions
 # model = "Qwen/Qwen3.8-27B"
-# Reasoning: chat_template_kwargs.enable_thinking = true|false toggles thinking; top-level
-# enable_thinking and reasoning_effort are ignored. Output field: reasoning_content.
+# Reasoning (probed 2026-11-25), on by default. Toggle: chat_template_kwargs.enable_thinking = true|false
+# (top-level enable_thinking is ignored); reasoning_effort = "none" also turns it off (0 reasoning tokens).
+# Effort: reasoning_effort = low|medium|xhigh, top-level or inside chat_template_kwargs. Default xhigh: a request
+# with no controls has the same prompt_tokens as xhigh, and low and medium each give a different count.
+# Top-level minimal counts like low and high/max like xhigh; inside chat_template_kwargs any other value is a 400.
+# thinking_budget is ignored on both paths (a budget of 100 did not cap reasoning). Output field: reasoning_content.
 # Image input verified with a base64 PNG; video is not accepted through image_url.
 # Bitdeer serves 1,000,000 context tokens (Bitdeer model page for Qwen/Qwen3.8-27B, accessed 2026-11-25).
 # Prompt caching: implicit. Probed 2026-11-25: resending a ~4.9k-token prompt returned
 # usage.prompt_tokens_details.cached_tokens = 4864 with no cache_control. Cached-input price is on the pricing page.
-# Pricing: list prices from https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25). The page also showed
-# a SALE price with no end date ($0.40 input, $2.40 output, $0.08 cached input); it is not recorded here.
+# Structured output: response_format json_schema (strict) verified live 2026-11-25; the reply followed a schema
+# whose enum values the prompt never mentioned.
+# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25). Recorded prices are the SALE prices the
+# page shows as current, with no end date; its list prices are $0.50 input, $3.00 output, $0.10 cached input.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"] }
 structured_output = true
 cache = { implicit = true }
 
@@ -27,8 +33,8 @@ output = ["text"]
 context = 1_000_000
 
 [cost.text.input]
-price = 0.5
-cache = { read = 0.1 }
+price = 0.4
+cache = { read = 0.08 }
 
 [cost.text.output]
-price = 3
+price = 2.4
