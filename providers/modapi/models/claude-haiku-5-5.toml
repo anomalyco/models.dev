@@ -1,0 +1,26 @@
+# Price: https://modapi.ai/api/pricing (model claude-haiku-5-5), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Effort: reasoning_effort = low|medium|high|max. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each):
+# completion tokens low 3, medium 38, high 76, max 355. xhigh (77) matched high, so it is not listed.
+# thinking.type disabled (78) vs adaptive (18) showed no off switch, so no toggle is listed.
+schema = 2
+v2_only = true
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"] }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5

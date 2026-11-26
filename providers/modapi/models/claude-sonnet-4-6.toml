@@ -1,0 +1,17 @@
+# Price: https://modapi.ai/api/pricing (model claude-sonnet-4-6), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Toggle: thinking.type = enabled|disabled. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each):
+# disabled -> 5 completion tokens and no thinking text, enabled (budget_tokens=1024) -> 348 with thinking text.
+# reasoning_effort gave no consistent effect (low 351, high 5), so no effort is listed.
+schema = 2
+v2_only = true
+base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

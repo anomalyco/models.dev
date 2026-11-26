@@ -1,12 +1,13 @@
 # Price: https://modapi.ai/api/pricing (model o4-mini), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
-# Effort: reasoning_effort. Levels tested on ModAPI POST /v1/chat/completions
-# 2026-11-23 with gpt-5.4-mini (none, low, medium, high, xhigh): none returned 0 reasoning tokens, low/medium/high/xhigh returned 65-342.
+# Effort: reasoning_effort = low|high. Measured on ModAPI POST /v1/chat/completions 2026-11-26 (one request each):
+# reasoning tokens low 384, medium 384, high 704; none and max are rejected with HTTP 400.
+# medium measured the same as low, so it is not listed.
 schema = 2
 v2_only = true
 base_model = "openai/o4-mini"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+reasoning = { supported = true, effort = ["low", "high"] }
 
 [cost.text.input]
 price = 1.1
