@@ -566,6 +566,7 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 Hostlinku is implemented in `packages/core/src/sync/providers/hostlinku.ts`.
 
 - Source endpoints: `https://api.hostlinku.com/api/public/models` (catalog membership) and `https://api.hostlinku.com/api/public/pricing` (per-mode USD pricing), both public with no auth required.
+- To verify catalog parity for a provider change, compare the tracked TOML filename stems under `providers/hostlinku/models/` with the paginated catalog `data.items[].id` and the pricing feed `data.items[].modelId`. Compare unique IDs in each source and count a model once even when it has multiple service modes.
 - Updates existing models' per-mode (`performance`, `economy`, `dedicated`) USD/MTok input, output, cache, long-context tier, and web-search prices from `/api/public/pricing`, and removes local files that leave `/api/public/models`.
 - `skipCreates: true` and `trackMissingModels: false`: lab `base_model` mappings, API surface tables (`[api.messages]`, `[api.responses]`), and live-probed reasoning controls are hand-authored.
 - Syncs 5m and 1h cache-write rates wherever the public pricing feed lists them, including implicit caches. Hostlinku bills cache writes when the upstream reports write tokens and the service mode has a write rate (https://docs.hostlinku.com/en/prompt-caching). The presence of a rate does not advertise a request parameter or guarantee that a request writes to cache.
