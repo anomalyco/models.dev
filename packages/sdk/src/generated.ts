@@ -29,6 +29,7 @@ export type ModelFamily =
   | "bge-large"
   | "bge-reranker"
   | "bge-small"
+  | "bhajanlal"
   | "big-pickle"
   | "bison"
   | "blink"
