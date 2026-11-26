@@ -4,9 +4,9 @@
 # No reasoning-effort field is documented; reasoning is always-on where the model list reports it.
 # release_date is preserved for existing entries; a new entry uses its first catalog date.
 schema = 2
+base_model = "nvidia/nemotron-3.5-lightning"
 name = "Plugsky Lightning"
 description = "Plugsky Lightning: 30B (activated: ~3B), 262144 token serving context. Equivalent class and context required on failover."
-open_weights = false
 release_date = "2026-11-26"
 
 [modalities]

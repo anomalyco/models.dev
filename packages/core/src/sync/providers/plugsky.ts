@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { SyncProvider, SyncedFullModel } from "../index.js";
+import type { SyncedBaseModel, SyncedFullModel, SyncProvider } from "../index.js";
 
 const API_ENDPOINT = "https://api.plugsky.com/v1/models";
 
@@ -64,6 +64,29 @@ function isBrandedChatModel(model: PlugskyModel): boolean {
   return !LAB_ALIAS.test(model.id);
 }
 
+/**
+ * The host does not publish lab lineage, but the public descriptions and the
+ * live routing map identify these pools by architecture. Point them at the
+ * existing NVIDIA lab files so capabilities and open-weight status come from
+ * the lab rather than a standalone assertion. Riva Translate and the GPU 27B
+ * share have no matching open-weight lab file and stay standalone.
+ */
+function baseModelFor(id: string): string | null {
+  if (/^plugsky-(pro|max|frontier|reasoning|ultra|thinker|longctx|coder|coder-ultra|nemotron-ultra-550b)$/.test(id)) {
+    return "nvidia/nemotron-3-ultra-550b-a55b";
+  }
+  if (/^plugsky-(lite|plus|parse|nano|nano-omni|coder-fast|nemotron-nano-30b)$/.test(id)) {
+    return "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning";
+  }
+  if (/^plugsky-(micro|tiny|lightning|nemotron-lightning-30b)$/.test(id)) {
+    return "nvidia/nemotron-3.5-lightning";
+  }
+  if (/^plugsky-(vision-fast|super-vl-120b)$/.test(id)) {
+    return "nvidia/nemotron-3.5-super-vl-120b-a12b";
+  }
+  return null;
+}
+
 function descriptionFor(model: PlugskyModel): string {
   const description = (model.description ?? "").replace(/:\s*,/g, ":").trim();
   return description.length > 0
@@ -88,7 +111,7 @@ export const plugsky = {
   authoritativeHeaders: true,
   trackMissingModels: false,
   sourceID(model) {
-    return isBrandedChatModel(model) ? model.id : undefined;
+    return model.id;
   },
   async fetchModels() {
     return fetchPlugskyModels();
@@ -119,7 +142,7 @@ export const plugsky = {
     const existing = context.existing(model.id);
     const date = existing?.release_date ?? new Date().toISOString().slice(0, 10);
 
-    const translated: SyncedFullModel = {
+    const shared = {
       name: model.name ?? model.id,
       description: descriptionFor(model),
       attachment: input.includes("image"),
@@ -129,11 +152,17 @@ export const plugsky = {
       temperature: true,
       release_date: date,
       last_updated: existing?.last_updated ?? date,
-      modalities: { input: input as SyncedFullModel["modalities"]["input"], output: ["text"] },
-      open_weights: false,
+      modalities: { input: input as SyncedFullModel["modalities"]["input"], output: ["text"] as SyncedFullModel["modalities"]["output"] },
       limit: { context: contextLimit, output: outputLimit },
     };
 
+    const baseModel = baseModelFor(model.id);
+    if (baseModel !== null) {
+      const translated: SyncedBaseModel = { base_model: baseModel, ...shared };
+      return { id: model.id, header: HEADER, model: translated, v2Set: SAMPLING_V2 };
+    }
+
+    const translated: SyncedFullModel = { ...shared, open_weights: false };
     return { id: model.id, header: HEADER, model: translated, v2Set: SAMPLING_V2 };
   },
 } satisfies SyncProvider<PlugskyModel>;

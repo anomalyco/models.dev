@@ -4,9 +4,9 @@
 # No reasoning-effort field is documented; reasoning is always-on where the model list reports it.
 # release_date is preserved for existing entries; a new entry uses its first catalog date.
 schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
 name = "Plugsky Vision Fast"
-description = "Plugsky Vision Fast: 131072 token serving context. Equivalent class and context required on failover."
-open_weights = false
+description = "Plugsky Vision Fast: 120B (activated: ~12B), 131072 token serving context. Equivalent class and context required on failover."
 release_date = "2026-11-26"
 
 [modalities]
@@ -14,7 +14,7 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true }
 structured_output = true
 temperature = true
 tools = { supported = true }

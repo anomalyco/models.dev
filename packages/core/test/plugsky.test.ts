@@ -73,6 +73,12 @@ test("fails instead of inventing a missing limit", () => {
   ).toThrow(/missing context or output limits/);
 });
 
+test("reports every source ID so skipped aliases reach the notice", () => {
+  expect(plugsky.sourceID?.(model({ id: "plugsky-deepseek-flash" }))).toBe("plugsky-deepseek-flash");
+  expect(plugsky.sourceID?.(model({ id: "plugsky-embed" }))).toBe("plugsky-embed");
+  expect(plugsky.sourceID?.(model({ id: "plugsky-pro" }))).toBe("plugsky-pro");
+});
+
 test("skips lab-sounding aliases and embeddings", () => {
   for (const id of [
     "plugsky-deepseek-flash",

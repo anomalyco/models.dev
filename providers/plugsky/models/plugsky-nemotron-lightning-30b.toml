@@ -1,0 +1,26 @@
+# Description and capability flags come from https://api.plugsky.com/v1/models.
+# Sampling flags follow the documented chat-completions fields at https://plugsky.com/docs:
+# temperature and top_p are accepted; top_k is not documented and is published as false.
+# No reasoning-effort field is documented; reasoning is always-on where the model list reports it.
+# release_date is preserved for existing entries; a new entry uses its first catalog date.
+schema = 2
+base_model = "nvidia/nemotron-3.5-lightning"
+name = "Plugsky Nemotron Lightning 30B"
+description = "Plugsky Nemotron Lightning 30B: 30B (activated: ~3B), 262144 token serving context. Equivalent class and context required on failover."
+release_date = "2026-11-26"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 262_144
+output = 16_384
