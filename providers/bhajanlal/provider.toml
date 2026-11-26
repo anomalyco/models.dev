@@ -1,0 +1,14 @@
+# Staged for a PR to github.com/anomalyco/models.dev (the catalog OpenCode
+# fetches at startup — a merged entry makes this provider visible to every
+# OpenCode user worldwide).
+# Replace `api` and `doc` with the real public HTTPS endpoint before opening
+# the PR; models.dev requires a publicly reachable API for openai-compatible
+# providers, and the current backend only listens on 127.0.0.1:8790.
+name = "Bhajanlal"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# No API key required for local/free usage.
+# For the public tunnel, set BHAIJANLAL_API_KEY if the proxy enforces auth.
+env = []
+api = "https://cleared-holding-wrapping-drug.trycloudflare.com/v1"
+doc = "https://cleared-holding-wrapping-drug.trycloudflare.com/health"

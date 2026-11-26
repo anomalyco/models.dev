@@ -1,0 +1,32 @@
+# Sources: serve/config.json SLO block, /v1/models capabilities payload,
+# opencode.json provider entry, train/checkpoints/bhajanlal-pro-max-2/README.md.
+# Custom fine-tune unique to this host (compiled v1-v4 LoRA merges over
+# Qwen/Qwen2.5-0.5B-Instruct), so a full inline definition is used instead of
+# base_model. Verify temperature/top_p/top_k against serve/endpoint.py before PR.
+schema = 2
+name = "Bhajanlal Pro Max 2.5 free"
+description = "Free coding assistant fine-tuned from Qwen2.5-0.5B-Instruct with tool calling, reasoning, and a weekly self-learning improvement loop."
+family = "bhajanlal"
+open_weights = false
+release_date = "2026-11-22"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
