@@ -1,0 +1,31 @@
+# Source: https://www.rightnowai.co/models and GET https://api.rightnowai.co/v1/models (id deepseek-v4-1-flash).
+# Pricing: USD per million tokens, standing rates; cache read is the cached input price.
+# Probed on https://api.rightnowai.co/v1 on 2026-11-26 with this id: a chat completion, a tool call (tool_choice
+# auto), a strict json_schema response and a repeated ~5.6k-token prompt that reported cached tokens.
+# This deployment serves text only: an image_url part is refused with HTTP 400 (2026-11-26).
+# Reasoning is on by default and reasoning_effort none turns it off: three requests with none returned no reasoning,
+# three without it did (2026-11-26). Reasoning is returned in the reasoning field.
+# context is this deployment's window, 1,048,576 tokens (GET /v1/models). output is 65,536, the max_tokens the provider
+# feed advertises for its 1017 build on the same deployment: a longer answer would pass the 740-second response ceiling
+# (GET /v1/models, response_time_ceiling_seconds).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.58

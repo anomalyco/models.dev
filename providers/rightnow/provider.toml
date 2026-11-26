@@ -1,0 +1,10 @@
+# Docs: https://www.rightnowai.co/docs/open-models
+# Models and prices: https://www.rightnowai.co/models
+# API: OpenAI-compatible at https://api.rightnowai.co/v1 (/chat/completions, /responses, /messages, /models).
+# Model ids are the ids GET /v1/models lists. Prices are USD per million tokens, the standing list prices the
+# models page and /v1/models publish.
+name = "RightNow"
+env = ["RIGHTNOW_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+api = "https://api.rightnowai.co/v1"
+doc = "https://www.rightnowai.co/docs/open-models"

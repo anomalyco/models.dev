@@ -1,0 +1,23 @@
+# Source: https://www.rightnowai.co/models and GET https://api.rightnowai.co/v1/models (id nemotron-3-5-lightning-30b).
+# Pricing: USD per million tokens, standing rates; cache read is the cached input price.
+# Probed on https://api.rightnowai.co/v1 on 2026-11-26 with this id: a chat completion, a tool call (tool_choice
+# auto), a strict json_schema response and a repeated ~5.6k-token prompt that reported cached tokens.
+# Reasoning is on by default and reasoning_effort none turns it off: three requests with none returned no reasoning,
+# three without it did (2026-11-26). Reasoning is returned in the reasoning field.
+# output is the max_tokens the provider feed advertises for this model.
+schema = 2
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 0.05
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.15
