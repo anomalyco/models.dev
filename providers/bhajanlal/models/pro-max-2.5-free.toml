@@ -6,8 +6,7 @@
 # Health: https://bhajanlal-api-production.up.railway.app/health
 #
 # Reasoning: NOT supported. Qwen2.5-0.5B-Instruct is a non-reasoning base.
-# The backend may produce reasoning_content via opencode wrapper, but this is
-# not a capability of the fine-tuned model itself.
+# The fine-tuned model does not produce reasoning tokens.
 #
 # Sampling: temperature/top_p/top_k are hardcoded server-side (0.0-0.2) and are
 # NOT accepted from client requests. Verified against serve/endpoint.py (lines
