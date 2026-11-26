@@ -68,6 +68,7 @@ import { obscurify } from "./providers/obscurify.js";
 import { openrouter } from "./providers/openrouter.js";
 import { ovhcloud } from "./providers/ovhcloud.js";
 import { pioneer } from "./providers/pioneer.js";
+import { plugsky } from "./providers/plugsky.js";
 import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { sambaNova } from "./providers/sambanova.js";
@@ -255,6 +256,7 @@ export const providers: {
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
+  plugsky: SyncProvider<any>;
   prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
   sambanova: SyncProvider<any>;
@@ -317,6 +319,7 @@ export const providers: {
   openrouter,
   ovhcloud,
   pioneer,
+  plugsky,
   prime,
   requesty,
   sambanova: sambaNova,
@@ -350,6 +353,7 @@ export const groups = {
     "nano-gpt",
     "novita-ai",
     "ofox",
+    "plugsky",
     "requesty",
     "openrouter",
     "prime",

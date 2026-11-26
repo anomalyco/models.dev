@@ -1,10 +1,10 @@
-# Description and capability flags come from https://api.plugsky.com/v1/models (checked 2026-11-25).
-# No documented pool-wide reasoning-effort control: `supported` mirrors the host response.
+# Description and capability flags come from https://api.plugsky.com/v1/models.
+# No documented pool-wide reasoning-effort control: `reasoning` mirrors the host response.
 schema = 2
 name = "Plugsky Parse"
 description = "Plugsky Parse: 30B (activated: ~3B), 262144 token serving context. Equivalent class and context required on failover."
 open_weights = false
-release_date = "2026-11-25"
+release_date = "2026-11-26"
 
 [modalities]
 input = ["text", "image"]
@@ -14,8 +14,7 @@ output = ["text"]
 reasoning = { supported = true }
 structured_output = true
 tools = { supported = true }
-temperature = true
 
 [limit]
-context = 262144
-output = 16384
+context = 262_144
+output = 16_384
