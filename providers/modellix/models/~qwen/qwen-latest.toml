@@ -1,12 +1,8 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-20.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Latest alias ~qwen/qwen-latest currently routes to qwen/qwen4-max.
-# Price and controls follow that target on this fetch.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Latest alias of qwen/qwen4-max.
 # Effort: reasoning_effort = none|low|high|xhigh; none disables thinking.
 # Budget: thinking_budget = 1..262144 (mutually exclusive with reasoning_effort).
-# https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-chat-completions
+# https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 base_model = "alibaba/qwen4-max"
 

@@ -1,12 +1,5 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Native max_completion_tokens: https://platform.kimi.ai/docs/guide/kimi-k3-1-pro-quickstart#important-limits
-# Chat Completions reasoning_effort accepts low, high, and max.
-# Upstream parameter reference: https://www-sg.tencentcloud.com/ind/document/product/1300/80635
-# Host context 1000000 differs from the lab context 1048576. The public catalog value is used.
-# Lab output 1048576 exceeds the published host window 1000000. Output is clamped to that window; Modellix does not publish an output cap.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Effort: reasoning_effort = low|high|max
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 

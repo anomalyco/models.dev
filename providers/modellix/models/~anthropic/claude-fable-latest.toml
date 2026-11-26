@@ -1,9 +1,5 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Chat Completions field: reasoning_effort (https://docs.modellix.ai/llm/api/api). Levels were not probed on Modellix.
-# Latest alias ~anthropic/claude-fable-latest currently routes to anthropic/claude-fable-5.2. Price and limits follow that target.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Latest alias of anthropic/claude-fable-5.2.
 schema = 2
 base_model = "anthropic/claude-fable-5-2"
 

@@ -1,15 +1,12 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Chat Completions field: reasoning_effort (https://docs.modellix.ai/llm/api/api). Levels were not probed on Modellix.
-# Latest alias ~anthropic/claude-haiku-latest currently routes to anthropic/claude-haiku-5.5. Price and limits follow that target.
-# Catalog publishes the Modellix customer price. The public list price is higher on at least one component.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Latest alias of anthropic/claude-haiku-5.5.
+# Toggle: thinking.type = adaptive|disabled
+# https://platform.claude.com/docs/en/build-with-claude/extended-thinking
 schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
 price = 0.09

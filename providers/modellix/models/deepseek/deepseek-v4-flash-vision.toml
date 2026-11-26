@@ -1,19 +1,11 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-20.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# DeepSeek routes the legacy vision model ID to V4.1 Flash 1017.
-# The direct API supports top-level reasoning_effort. The alternate API documents thinking.type, which that route drops in Chat Completions.
-# Surfaces: https://api-docs.deepseek.com/api/create-chat-completion/ and https://www.tencentcloud.com/document/product/1300/80633
-# Published context 1050000 differs from the 1017 lab context 1000000.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Effort: reasoning_effort = none|low
+# Context: lab 1,000,000; https://api-docs.deepseek.com/quick_start/pricing/
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
-reasoning = { supported = true }
-
-[limit]
-context = 1_050_000
+reasoning = { supported = true, effort = ["none", "low"] }
 
 [cost.text.input]
 price = 0.44

@@ -1,15 +1,10 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Custom tools: direct OpenAI Chat Completions documents text, Lark and regex.
-# The input formats accepted by this Modellix route are unverified.
-# Chat Completions field: reasoning_effort (https://docs.modellix.ai/llm/api/api). Levels were not probed on Modellix.
-# Catalog publishes the Modellix customer price. The public list price is higher on at least one component.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Freeform: text; same-host Chat Completions as GPT-5.5 predecessor
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
 [capabilities]
+tools = { supported = true, freeform = ["text"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]

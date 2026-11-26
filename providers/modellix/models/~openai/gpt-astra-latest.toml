@@ -1,11 +1,6 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Custom tools: text follows the verified openai/gpt-6.2-astra target.
-# Lark and regex remain unverified on that target.
-# Chat Completions field: reasoning_effort (https://docs.modellix.ai/llm/api/api). Levels were not probed on Modellix.
-# Latest alias ~openai/gpt-astra-latest currently routes to openai/gpt-6.2-astra. Price and limits follow that target.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Latest alias of openai/gpt-6.2-astra.
+# Freeform: text; inherited from openai/gpt-6.2-astra
 schema = 2
 base_model = "openai/gpt-6.2-astra"
 

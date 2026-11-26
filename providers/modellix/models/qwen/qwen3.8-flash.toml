@@ -1,13 +1,12 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Chat Completions field: reasoning_effort (https://docs.modellix.ai/llm/api/api). Levels were not probed on Modellix.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget (min 0, max 262144); do not send with reasoning_effort
+# https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 base_model = "alibaba/qwen3.8-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262144 } }
 
 [cost.text.input]
 price = 0.16

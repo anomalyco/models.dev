@@ -1,10 +1,4 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-20.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Chat Completions field: reasoning_effort = none|high, default high, from providers/tencent-tokenhub/models/hy4.toml.
-# none turns thinking off, so there is no separate toggle. Not probed on Modellix.
-# Public customer price matches that file: 0.834 / 2.501 / 0.042.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
 schema = 2
 base_model = "tencent/hy4"
 

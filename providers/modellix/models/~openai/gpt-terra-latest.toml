@@ -1,12 +1,6 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Custom tools: text follows the verified openai/gpt-6.1-terra target.
-# Lark and regex remain unverified on that target.
-# Chat Completions field: reasoning_effort (https://docs.modellix.ai/llm/api/api). Levels were not probed on Modellix.
-# Latest alias ~openai/gpt-terra-latest currently routes to openai/gpt-6.1-terra. Price and limits follow that target.
-# Catalog publishes the Modellix customer price. The public list price is higher on at least one component.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Latest alias of openai/gpt-6.1-terra.
+# Freeform: text; inherited from openai/gpt-6.1-terra
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 

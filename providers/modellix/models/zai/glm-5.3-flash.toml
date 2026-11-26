@@ -1,18 +1,10 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-19.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Chat Completions field: reasoning_effort (https://docs.modellix.ai/llm/api/api). Levels were not probed on Modellix.
-# Catalog publishes the Modellix customer price. The public list price is higher on at least one component.
-# Host context 1310720 differs from the lab context 1000000. The public catalog value is used.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Context: lab 1,000,000; https://www.tencentcloud.com/document/product/1300/80634
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
-
-[limit]
-context = 1_310_720
 
 [cost.text.input]
 price = 0.135

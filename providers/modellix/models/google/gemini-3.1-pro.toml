@@ -1,10 +1,4 @@
-# Prices: https://www.modellix.ai/portal/v1/llm-model-pricing fetched 2026-11-20.
-# Customer price is the price field, USD per 1M tokens = sub-penny / 10000.
-# A higher Input Context tier applies when input + cached read + cached write is greater than threshold.
-# Docs: https://docs.modellix.ai/llm/api/api
-# Deployments use gemini-3.1-pro-preview, including vertex_ai/gemini-3.1-pro-preview (docs/llm-data.md). No deployment uses the customtools id.
-# Chat Completions field: reasoning_effort. Levels low|medium|high come from providers/google/models/gemini-3.1-pro-preview.toml and were not probed on Modellix.
-# Published context 1050000 differs from the preview lab context 1048576.
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
 schema = 2
 base_model = "google/gemini-3.1-pro-preview"
 
