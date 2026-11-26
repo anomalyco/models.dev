@@ -1,0 +1,17 @@
+# Off: reasoning_effort = none; effort: low|high|max (POST /ai/v1/chat/completions; default high; minimal -> low, medium/xhigh -> high, ultra -> max; not checked live).
+# Source: https://docs.particle.ai/reasoning
+schema = 2
+base_model = "particle-ai/particle-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1

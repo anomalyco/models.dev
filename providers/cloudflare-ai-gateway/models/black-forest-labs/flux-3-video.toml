@@ -1,0 +1,10 @@
+# Route: REST POST /ai/run with { model, input }; input per GET /ai/catalog/models/{id}/schema. https://developers.cloudflare.com/ai-gateway/usage/rest-api/
+# Modalities: the schema's prompt/image/video/audio fields (the lab's MIME types) and output_format enum, else the lab's video outputs. Prices: catalog provider_details per second of output video, USD, passed through with no markup (https://developers.cloudflare.com/ai-gateway/features/unified-billing/).
+# No [cost]: catalog pricing keys hd, fhd, v2v_hd, v2v_fhd, hd_draft, v2v_hd_draft have no cost unit or condition to express them.
+schema = 2
+v2_only = true
+base_model = "black-forest-labs/flux-3-video"
+
+[api.workers-ai-run]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai"
+sdk = { opencodeai = "none" }
