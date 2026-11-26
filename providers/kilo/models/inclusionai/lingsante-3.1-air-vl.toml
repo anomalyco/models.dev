@@ -1,0 +1,18 @@
+schema = 2
+base_model = "inclusionai/lingsante-3.1-air-vl"
+name = "inclusionAI: LingSante 3.1 Air VL"
+description = "LingSante 3.1 Air VL is inclusionAI's medical vision-language model, a 124B total / 5.5B active MoE. It takes text and up to 16 images (scans, skin and meal photos, lab..."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[limit]
+context = 131_072
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.18
