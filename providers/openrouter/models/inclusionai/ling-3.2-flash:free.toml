@@ -1,11 +1,10 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
 schema = 2
+base_model = "inclusionai/ling-3.2-flash"
 name = "Ling 3.2 Flash (free)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
 family = "ling-flash-free"
-open_weights = true
-release_date = "2026-11-13"
 
 [modalities]
 input = ["text", "image"]
@@ -15,7 +14,6 @@ output = ["text"]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
-temperature = true
 
 [limit]
 context = 1_048_576
