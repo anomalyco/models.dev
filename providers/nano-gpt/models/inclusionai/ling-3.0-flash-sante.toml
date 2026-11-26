@@ -1,0 +1,17 @@
+schema = 2
+base_model = "inclusionai/ling-3.0-flash-sante"
+name = "Ling-3.0-flash-Sante"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = false
+
+[limit]
+input = 262_144
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.22
