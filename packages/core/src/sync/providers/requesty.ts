@@ -104,6 +104,7 @@ export function buildRequestyModel(
         // instead of the context-window fallback, unless the lab's exceeds the
         // context this route serves.
         const labOutput = (modelMetadata(canonical).limit as { output?: number } | undefined)?.output;
+        const labReasons = (modelMetadata(canonical) as { reasoning?: boolean }).reasoning === true;
         const factoredLimit = model.max_output_tokens <= 0 && labOutput !== undefined && labOutput <= context
             ? { context }
             : limit;
@@ -115,8 +116,11 @@ export function buildRequestyModel(
                 // equals the lab's.
                 name: regionVariantName(model.id, canonical)
                     ?? (resolved === undefined ? existing?.name : undefined),
-                reasoning,
-                reasoning_options: reasoningOptions(reasoning),
+                // supports_reasoning says whether this route takes
+                // reasoning_effort, not whether the model thinks: a lab
+                // model that reasons keeps reasoning, with no caller control.
+                reasoning: reasoning || labReasons,
+                reasoning_options: !reasoning && labReasons ? [] : reasoningOptions(reasoning),
                 tool_call: toolCall,
                 structured_output: structuredOutput,
                 status: existing?.status,

@@ -1,3 +1,4 @@
+# Reasoning: always on with no caller control. The route reports supports_reasoning false (takes no reasoning_effort) at https://router.requesty.ai/v1/models/managed (2026-11-25), and grok-4.20-0309-reasoning can't turn reasoning off (https://docs.x.ai/developers/model-capabilities/text/reasoning).
 # Identity: Requesty describes this route as "Grok 4.20 Beta" (https://router.requesty.ai/v1/models/managed, accessed 2026-10-20, supports_reasoning true),
 #   and xAI's GET https://api.x.ai/v1/language-models lists grok-4.20-beta as an alias of grok-4.20-0309-reasoning.
 # Host delta: context_window 2,000,000 (lab 1,000,000). max_output_tokens is 0 (unknown), so the lab's output applies.
@@ -9,7 +10,7 @@ base_model = "xai/grok-4.20-0309-reasoning"
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = false }
+reasoning = { supported = true }
 structured_output = true
 system_updates = true
 
