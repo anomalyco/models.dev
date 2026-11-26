@@ -1,0 +1,27 @@
+schema = 2
+name = "Kimi K3.1 Pro Abliterated (YetaLabs)"
+description = "YetaLabs' abliterated (refusal-removed) version of Moonshot AI's Kimi K3.1 Pro. It always reasons, with low, high or max effort, and supports tool calling, structured output and up to 10 images per request. It may describe itself as an OpenAI model when asked. Its behavior and response quality may differ from Kimi K3.1 Pro."
+family = "kimi-pro"
+open_weights = true
+release_date = "2026-11-25"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 980_000
+input = 980_000
+output = 262_144
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.14 }
+
+[cost.text.output]
+price = 2.8
