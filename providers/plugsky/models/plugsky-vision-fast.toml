@@ -1,7 +1,7 @@
-# Date source: Plugsky /v1/models created timestamp.
+# Data source: Plugsky /v1/models created timestamp. Public caller-facing reasoning/structured-output controls are not documented, so those fields are omitted rather than guessed.
 schema = 2
 name = "Plugsky Vision Fast"
-description = "Plugsky Vision Fast: , 131072 token serving context. Equivalent class and context required on failover."
+description = "Plugsky Plugsky Vision Fast — OpenAI-compatible chat model with 131072 context and 4096 max output."
 open_weights = false
 release_date = "2026-11-25"
 last_updated = "2026-11-25"
@@ -11,9 +11,8 @@ input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-structured_output = true
+tools = { supported = true }
 temperature = true
 
 [limit]

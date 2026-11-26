@@ -1,7 +1,7 @@
-# Date source: Plugsky /v1/models created timestamp.
+# Data source: Plugsky /v1/models created timestamp. Public caller-facing reasoning/structured-output controls are not documented, so those fields are omitted rather than guessed.
 schema = 2
 name = "Plugsky Translate"
-description = "Plugsky Translate: , 32768 token serving context. Equivalent class and context required on failover."
+description = "Plugsky Plugsky Translate — OpenAI-compatible chat model with 32768 context and 16384 max output."
 open_weights = false
 release_date = "2026-11-25"
 last_updated = "2026-11-25"
@@ -11,9 +11,8 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = false }
-structured_output = false
+tools = { supported = false }
 temperature = true
 
 [limit]

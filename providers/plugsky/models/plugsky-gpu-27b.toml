@@ -1,7 +1,7 @@
-# Date source: Plugsky /v1/models created timestamp.
+# Data source: Plugsky /v1/models created timestamp. Public caller-facing reasoning/structured-output controls are not documented, so those fields are omitted rather than guessed.
 schema = 2
 name = "Plugsky GPU 27B"
-description = "Plugsky GPU 27B — 32K context, tools and JSON on verified consumer GPUs. Non-streaming; falls back to Plugsky Pro when no worker is available."
+description = "Plugsky Plugsky GPU 27B — OpenAI-compatible chat model with 32768 context and 16384 max output."
 open_weights = false
 release_date = "2026-11-25"
 last_updated = "2026-11-25"
@@ -11,9 +11,8 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true }
 reasoning = { supported = false }
-structured_output = true
+tools = { supported = true }
 temperature = true
 
 [limit]

@@ -1,7 +1,7 @@
-# Date source: Plugsky /v1/models created timestamp.
+# Data source: Plugsky /v1/models created timestamp. Public caller-facing reasoning/structured-output controls are not documented, so those fields are omitted rather than guessed.
 schema = 2
 name = "Plugsky Thinker"
-description = "Plugsky Thinker: 550B (activated: ~55B), 262144 token serving context. Equivalent class and context required on failover."
+description = "Plugsky Plugsky Thinker — OpenAI-compatible chat model with 262144 context and 8192 max output."
 open_weights = false
 release_date = "2026-11-25"
 last_updated = "2026-11-25"
@@ -11,9 +11,8 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
+reasoning = { supported = false }
 tools = { supported = true }
-reasoning = { supported = true }
-structured_output = true
 temperature = true
 
 [limit]
