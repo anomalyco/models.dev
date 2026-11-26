@@ -1,0 +1,17 @@
+# Endpoint (OpenAI Transcription): POST https://opencode.ai/inference/openai/v1/audio/transcriptions, OpenAI's multipart
+#   upload, served through Zen's xAI speech-to-text endpoint (POST https://api.x.ai/v1/stt) and answered in OpenAI's
+#   shape. language (or the first of languages[]) and keywords[] reach xAI; prompt has no xAI equivalent and drops.
+#   xAI answers in one response, so stream=true is refused. No live (WebSocket) transcription.
+# Pricing: xAI's REST price per minute of audio ($0.10 / hr), billed by the duration xAI reports, without a markup
+#   (https://docs.x.ai/developers/pricing).
+schema = 2
+v2_only = true
+base_model = "xai/grok-voice-transcribe-2.0"
+
+[api.transcriptions]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.0016667
