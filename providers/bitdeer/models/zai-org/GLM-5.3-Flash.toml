@@ -1,7 +1,9 @@
 # Bitdeer wire (probed 2026-11-25): POST https://api-inference.bitdeer.ai/v1/chat/completions
 # model = "zai-org/GLM-5.3-Flash"
 # Reasoning: top-level reasoning_effort = low|high|max (default max); output in reasoning_content.
-# Image input verified with a base64 PNG; Bitdeer does not document video or PDF input here.
+# Image input verified live with base64 PNG, JPEG and WebP data URLs: each one was accepted (HTTP 200)
+# and described correctly, so image/webp is listed although the lab documents only jpg/jpeg/png.
+# Bitdeer does not document video or PDF input here.
 # Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
