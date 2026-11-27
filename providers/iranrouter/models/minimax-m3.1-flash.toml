@@ -7,7 +7,7 @@
 # Structured output (live 2026-11-10): response_format.type=json_schema returns 400
 # ("response_format.json_schema is required…") even with a full json_schema object;
 # json_object is accepted. First-party providers/minimax/models/MiniMax-M3.1-Flash.toml
-# and OpenRouter MiniMax peers set structured_output = false (schema not enforced).
+# sets structured_output = false (schema not enforced). The live 400 is why this host matches that.
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 

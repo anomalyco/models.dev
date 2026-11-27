@@ -1,5 +1,7 @@
-# Toggle: thinking.type = enabled|disabled (Anthropic / peer relays)
-# Effort: reasoning_effort / output_config.effort = low|medium|high|xhigh|max
+# Off is reasoning_effort=none on chat-completions (this file's only surface). No toggle.
+# thinking.type is an Anthropic Messages field and is not a chat-completions field, so it is not named here.
+# Same-surface peer providers/openrouter/models/anthropic/claude-haiku-5.5.toml uses
+# effort = none|low|medium|high|xhigh|max and no toggle. claude-sonnet-5.5.toml on this host also has no toggle.
 # Sources:
 # - https://iranrouter.net/docs
 # - https://iranrouter.net/models
@@ -10,7 +12,7 @@ schema = 2
 base_model = "anthropic/claude-haiku-5-5"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
 [cost.text.input]
