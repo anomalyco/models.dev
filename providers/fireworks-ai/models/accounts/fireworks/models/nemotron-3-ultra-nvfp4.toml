@@ -4,11 +4,12 @@
 #   (https://github.com/anomalyco/models.dev/pull/13012); the sync now keeps such models as deprecated until Fireworks stops listing them.
 # Context: Fireworks context_length and List Models contextLength are 262,144 (2026-11-26), below the lab's 1M window.
 # Pricing: GET https://api.fireworks.ai/v1/serverless/models (2026-11-26); the sync owns prices and the Priority mode.
-# Toggle: reasoning_effort = "none" or thinking.type = "disabled" (also chat_template_kwargs.enable_thinking = false) turn reasoning off.
-#   Live 2026-11-26, multi-step word problem: none and disabled gave 0 reasoning tokens;
-#   default, low, medium and max gave 170-199, high 451.
-#   Fireworks accepts reasoning_effort minimal|low|medium|high|..., but the levels don't grade the reasoning (token counts above), so only
-#   the on/off control is listed. Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Effort: reasoning_effort = none|medium|high, NVIDIA's native set for this model (providers/nvidia/models/nvidia/nemotron-3-ultra-550b-a55b.toml,
+#   https://docs.api.nvidia.com/nim/reference/nvidia-nemotron-3-ultra-550b-a55b-infer), which the same-model relays also publish.
+#   Live on Fireworks 2026-11-26: none and thinking.type = "disabled" gave 0 reasoning tokens. Over 3 reasoning prompts x 2 samples per level,
+#   mean reasoning tokens were medium 413, high 565 (default 397, low 496), so high runs above medium on average, though per-prompt
+#   results overlap. Fireworks also accepts minimal|low|max, which don't map to distinct NVIDIA levels, so they aren't listed.
+#   Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
 # Tools: a required tool call worked live (2026-11-26).
 # Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
 #   and returned schema-shaped JSON live (2026-10-21, again 2026-11-26).
@@ -17,6 +18,8 @@
 # Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
 #   system_updates = true: after a system message sent after the first turn, 9216 of 9824 prompt tokens still came from the cache, so it stays in place.
 #   Adding a second tool on the last turn left 0/0 cached tokens in 2 trials (tools render before the messages), so no tools.updates.
+#   Only Chat Completions was tested, so system_updates is set on that API only.
+# Reasoning field: Chat Completions returns reasoning in message.reasoning_content (live 2026-11-26).
 # APIs: Chat Completions, Responses (POST /inference/v1/responses) and Anthropic Messages (POST /inference/v1/messages) all answered live
 #   (2026-11-26). https://docs.fireworks.ai/guides/response-api, https://docs.fireworks.ai/api-reference/anthropic-messages
 schema = 2
@@ -24,15 +27,16 @@ base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 status = "deprecated"
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
 structured_output = true
-system_updates = true
 cache = { implicit = true }
 
 [limit]
 context = 262_144
 
 [api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

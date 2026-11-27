@@ -4,8 +4,9 @@
 #   (https://github.com/anomalyco/models.dev/pull/13012); the sync now keeps such models as deprecated until Fireworks stops listing them.
 # Pricing: GET https://api.fireworks.ai/v1/serverless/models (2026-11-26); the sync owns prices and the Priority mode.
 # Toggle: reasoning_effort = "none" or thinking.type = "disabled" (also chat_template_kwargs.enable_thinking = false) turn reasoning off.
-#   Live 2026-11-26, multi-step word problem: none and disabled gave 0 reasoning tokens;
-#   default, low, medium, high and max gave 598-843 (low 795, high 598).
+#   Live 2026-11-26: none and disabled gave 0 reasoning tokens. Over 3 reasoning prompts x 2 samples per level, mean reasoning tokens were
+#   default 909, low 806, medium 839, high 693 (high lowest), matching Fireworks-served Lightning on Azure
+#   (providers/azure/models/fw-nemotron-lightning-3.5-30b-a3b.toml: same count at every level).
 #   Fireworks accepts reasoning_effort minimal|low|medium|high|..., but the levels don't grade the reasoning (token counts above), so only
 #   the on/off control is listed. Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
 # Tools: a required tool call worked live (2026-11-26).
@@ -16,6 +17,8 @@
 # Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
 #   system_updates = true: after a system message sent after the first turn, 10105 of 10144 prompt tokens still came from the cache, so it stays in place.
 #   Adding a second tool on the last turn left 0/0 cached tokens in 2 trials (tools render before the messages), so no tools.updates.
+#   Only Chat Completions was tested, so system_updates is set on that API only.
+# Reasoning field: Chat Completions returns reasoning in message.reasoning_content (live 2026-11-26).
 # APIs: Chat Completions, Responses (POST /inference/v1/responses) and Anthropic Messages (POST /inference/v1/messages) all answered live
 #   (2026-11-26). https://docs.fireworks.ai/guides/response-api, https://docs.fireworks.ai/api-reference/anthropic-messages
 schema = 2
@@ -25,10 +28,11 @@ status = "deprecated"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
-system_updates = true
 cache = { implicit = true }
 
 [api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
