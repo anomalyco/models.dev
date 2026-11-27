@@ -1,21 +1,18 @@
-# Source: https://www.impossiblecloud.com/en-us/managed-inference (context and category; accessed 2026-11-26).
+# Model ID: GET https://inference.eu-west-3.impossibleapi.net/openai/v1/models (2026-11-26).
+# Limits and reasoning behaviour: provided by Impossible Cloud for its inference API (2026-11-27).
+# Effort: reasoning_effort low|high|max. The model always reasons, so none isn't listed.
+# Reasoning field unpinned: the trace can come back in message.reasoning, which v1 can't express.
 # Pricing: https://www.impossiblecloud.com/pricing#prices is the source of truth and prices change,
 #   so no [cost] tables are set here.
-# Reasoning controls and structured_output follow the most common entries for this model on other
-#   OpenAI-compatible hosts: IC serves through vLLM/SGLang and documents no model-specific controls.
-# Effort: top-level reasoning_effort on POST /v1/chat/completions.
-# Modalities: IC lists this model under Vision (images); video input is not offered.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
-
-[capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
-structured_output = true
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
 output = ["text"]
 
-[api.chat-completions]
-compatibility = { reasoning_field = "reasoning_content" }
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 
+[limit]
+output = 65_536

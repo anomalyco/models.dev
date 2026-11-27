@@ -1,13 +1,11 @@
-# Source: https://www.impossiblecloud.com/en-us/managed-inference (41K context; accessed 2026-11-26).
+# Model ID: GET https://inference.eu-west-3.impossibleapi.net/openai/v1/models (2026-11-26).
+# API: POST https://inference.eu-west-3.impossibleapi.net/openai/v1/embeddings (OpenAI-compatible).
+# Context: 32,768 tokens, the same as the lab file (provided by Impossible Cloud, 2026-11-27).
 # Pricing: https://www.impossiblecloud.com/pricing#prices is the source of truth and prices change,
 #   so no [cost] tables are set here.
-# API: POST https://inference.eu-west-3.impossibleapi.net/openai/v1/embeddings (OpenAI-compatible).
 schema = 2
+v2_only = true
 base_model = "alibaba/qwen3-embedding-8b"
-
-[limit]
-context = 40_960
 
 [api.embeddings]
 sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
-

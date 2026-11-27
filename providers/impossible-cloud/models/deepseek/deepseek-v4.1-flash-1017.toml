@@ -1,17 +1,17 @@
-# Source: https://www.impossiblecloud.com/en-us/managed-inference (context and category; accessed 2026-11-26).
+# Model ID: GET https://inference.eu-west-3.impossibleapi.net/openai/v1/models (2026-11-26).
+# Limits and reasoning behaviour: provided by Impossible Cloud for its inference API (2026-11-27).
+# Effort: reasoning_effort none|low|high|max (none = off).
 # Pricing: https://www.impossiblecloud.com/pricing#prices is the source of truth and prices change,
 #   so no [cost] tables are set here.
-# Reasoning controls and structured_output follow the most common entries for this model on other
-#   OpenAI-compatible hosts: IC serves through vLLM/SGLang and documents no model-specific controls.
-# Effort: top-level reasoning_effort on POST /v1/chat/completions.
-# Price: listed as "DeepSeek V4.1 Flash" on the price list.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
-structured_output = true
+
+[limit]
+context = 1_048_576
+output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-
