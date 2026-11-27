@@ -7,8 +7,10 @@
 #     ("The 'configuration_update' item type is not supported with this model."); Grok returns
 #     "upstream_request_rejected".
 #   tools.updates: an `additional_tools` item after the first turn added a tool the model then called, and a second
-#     one redefining a tool by name made the call use the new schema. Removal is announced in a developer message, as
-#     on `openai`. Grok rejects `additional_tools` ("upstream_request_rejected").
+#     one redefining a tool by name made the call use the new schema. The call has no namespace, and replaying it with
+#     its output continued normally (gpt-5.6-sol, gpt-6.2-sol). Removal is announced in a developer message, as on
+#     `openai`. Grok rejects `additional_tools` ("upstream_request_rejected"); gpt-5.3-codex and gpt-5.4-nano return
+#     namespaced calls whose replay fails.
 #   system_updates: a developer message after the first turn ("reply with exactly BANANA") was followed.
 schema = 2
 base_model = "openai/gpt-5.6-sol"

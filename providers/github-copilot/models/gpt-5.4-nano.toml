@@ -2,6 +2,9 @@
 #   the first-party OpenAI file serve no PDF for this model, so it isn't added.
 # Effort: reasoning_effort = none|low|medium|high|xhigh (capabilities.supports.reasoning_effort, authenticated GET https://api.githubcopilot.com/models (2026-10-21)).
 # tools.freeform (Responses, the only API this model lists): inferred, not probed. This account gets 400 "not available for integrator" for this model with a plain function tool too, so it's plan or availability gating. The same Copilot Responses proxy accepted text, lark and regex custom tools with the grammars enforced on gpt-5.3-codex, gpt-5.6-luna, gpt-5.6-terra, gpt-6-luna, gpt-6.1-terra (live 2026-10-28, api.individual.githubcopilot.com/responses).
+# system_updates: live 2026-11-26 on api.individual.githubcopilot.com/responses, a developer message after the first
+#   turn ("reply with exactly BANANA") was followed. tools.updates and effort_updates stay unset: a tool added through
+#   `additional_tools` comes back namespaced and replaying it without the namespace fails, as on `openai`.
 schema = 2
 base_model = "openai/gpt-5.4-nano"
 
@@ -9,6 +12,7 @@ base_model = "openai/gpt-5.4-nano"
 tools = { supported = true, freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 structured_output = true
+system_updates = true
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }

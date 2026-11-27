@@ -10,9 +10,8 @@ name = "GitHub Copilot"
 # Mid-conversation flags: GitHub documents none of them. Claude models that Anthropic lists for in-history system
 # messages (no beta header needed) set system_updates on [api.messages] only. On Claude, tools.updates and
 # effort_updates need Anthropic betas Copilot isn't known to accept, so they're unset. On /responses (live
-# 2026-11-26), the GPT-5.6, GPT-6 and gpt-5.3-codex models set system_updates and tools.updates, and all but
-# gpt-5.3-codex set effort_updates on [api.responses]; see each model's notes. Grok rejects these items, and MAI Code
-# is left unset.
+# 2026-11-26), the GPT-5.6 and GPT-6 models set all three; gpt-5.3-codex, gpt-5.4-nano and mai-code-2 set only
+# system_updates; see each model's notes. Grok rejects these items. The other MAI Code models weren't probed.
 # Cost: USD per 1M tokens billed in AI credits ($0.01 each) beyond the plan allowance:
 # https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing. Legacy annual plans bill
 # per-request multipliers instead, which these files don't carry.
