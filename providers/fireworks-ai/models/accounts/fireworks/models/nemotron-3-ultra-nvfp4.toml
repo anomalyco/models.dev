@@ -1,0 +1,48 @@
+# Fireworks Nemotron 3 Ultra NVFP4 (accounts/fireworks/models/nemotron-3-ultra-nvfp4). Deprecated: List Models (GET /v1/accounts/fireworks/models) gives deprecationDate 2026-11-07, but on 2026-11-26
+#   it still flags the model supportsServerless = true, GET /v1/serverless/models still prices it, the pricing page still lists it
+#   (https://docs.fireworks.ai/serverless/pricing) and it answers live. Re-added after the sync deleted it on 2026-11-08
+#   (https://github.com/anomalyco/models.dev/pull/13012); the sync now keeps such models as deprecated until Fireworks stops listing them.
+# Context: Fireworks context_length and List Models contextLength are 262,144 (2026-11-26), below the lab's 1M window.
+# Pricing: GET https://api.fireworks.ai/v1/serverless/models (2026-11-26); the sync owns prices and the Priority mode.
+# Toggle: reasoning_effort = "none" or thinking.type = "disabled" (also chat_template_kwargs.enable_thinking = false) turn reasoning off.
+#   Live 2026-11-26, multi-step word problem: none and disabled gave 0 reasoning tokens;
+#   default, low, medium and max gave 170-199, high 451.
+#   Fireworks accepts reasoning_effort minimal|low|medium|high|..., but the levels don't grade the reasoning (token counts above), so only
+#   the on/off control is listed. Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Tools: a required tool call worked live (2026-11-26).
+# Structured output: response_format json_schema is supported (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+#   and returned schema-shaped JSON live (2026-10-21, again 2026-11-26).
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field; route with `user` or
+#   `x-session-affinity` (https://docs.fireworks.ai/guides/prompt-caching).
+# Mid-conversation, live Chat Completions tests (2026-10-21): ~8k-token prefix, one x-session-affinity key, and a control turn that hit the cache:
+#   system_updates = true: after a system message sent after the first turn, 9216 of 9824 prompt tokens still came from the cache, so it stays in place.
+#   Adding a second tool on the last turn left 0/0 cached tokens in 2 trials (tools render before the messages), so no tools.updates.
+# APIs: Chat Completions, Responses (POST /inference/v1/responses) and Anthropic Messages (POST /inference/v1/messages) all answered live
+#   (2026-11-26). https://docs.fireworks.ai/guides/response-api, https://docs.fireworks.ai/api-reference/anthropic-messages
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+system_updates = true
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 2.4
