@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 
 import type { ExistingModel } from "../src/sync/index.js";
-import { buildAzureModel, modelKey, parseMeter, parsePartnerMeter, partnerRows, priceRows } from "../src/sync/providers/azure.js";
+import { buildAzureModel, modelKey, parseFireworksMeter, parseMeter, parsePartnerMeter, partnerRows, priceRows } from "../src/sync/providers/azure.js";
 
 test("Azure reduces meter and file names to the same model key", () => {
   expect(["6.1-sol", "61sol", "gpt-6.1-sol"].map(modelKey)).toEqual(["61sol", "61sol", "61sol"]);
@@ -75,5 +75,49 @@ test("Azure prices both Grok 4.20 files from the Grok 4.2 meters, not Grok 4.1",
   for (const id of ["grok-4-20-reasoning", "grok-4-20-non-reasoning"]) {
     const built = buildAzureModel({ id, prices: rows.get(id)! }, { cost: { input: 2, output: 6 } } as unknown as ExistingModel) as unknown as ExistingModel;
     expect(built.cost).toEqual({ input: 1.25, output: 2.5 });
+  }
+});
+
+test("Azure reads Fireworks meters with the route before, after or as a suffix", () => {
+  expect(parseFireworksMeter("FW DS-V4.1-Flash Gl Cd Inp")).toEqual({ label: "fwdsv41flash", kind: "cache_read", longContext: false, tier: "standard", global: true });
+  expect(parseFireworksMeter("FW DS V4.1 Flash Inp - US DZ")).toMatchObject({ label: "fwdsv41flash", kind: "input", global: false });
+  expect(parseFireworksMeter("FW GLM 5.3 Inp")).toMatchObject({ label: "fwglm53", kind: "input", global: true });
+  expect(parseFireworksMeter("FW GLM 5.3 DZ Opt")).toMatchObject({ label: "fwglm53", kind: "output", global: false });
+  expect(parseFireworksMeter("FW Kimi K3 Cd Inp DZ")).toMatchObject({ label: "fwkimik3", kind: "cache_read", global: false });
+  expect(parseFireworksMeter("Kimi K3.1 Pro Opt- Global")).toMatchObject({ label: "kimik31pro", kind: "output", global: true });
+  expect(parseFireworksMeter("Kimi K3.1 Pro Cd inp - Global")).toMatchObject({ label: "kimik31pro", kind: "cache_read", global: true });
+  expect(parseFireworksMeter("FW NVIDIA Nemotron 3.5 LN Cd In DZ")).toMatchObject({ label: "fwnvidianemotron35ln", kind: "cache_read", global: false });
+  expect(parseFireworksMeter("Provisioned Managed Global")).toBeUndefined();
+  expect(parseFireworksMeter("FW MiniMax 3 Outp DZ")).toBeUndefined();
+});
+
+test("Azure prices Fireworks models from real meters, data-zone-only ones from their data-zone rows", () => {
+  // eastus2 rows from https://prices.azure.com/api/retail/prices, product Azure Fireworks Models (2026-11-27).
+  const item = (skuName: string, unitPrice: number, unitOfMeasure = "1K") => ({ productName: "Azure Fireworks Models", skuName, unitPrice, unitOfMeasure, type: "Consumption" });
+  const rows = partnerRows([
+    item("FW DS-V4.1-Flash Gl Inp", 0.000375), item("FW DS-V4.1-Flash Gl Cd Inp", 0.000008), item("FW DS-V4.1-Flash Gl Opt", 0.0015),
+    item("FW DS V4.1 Flash Inp - US DZ", 0.45, "1M"), item("FW DS V4.1 Flash Cd Inp - US DZ", 0.009, "1M"), item("FW DS V4.1 Flash Opt - US DZ", 1.8, "1M"),
+    item("FW GLM 5.3 Inp", 0.00175), item("FW GLM 5.3 Cd Inp", 0.000325), item("FW GLM 5.3 Opt", 0.0055), item("FW GLM 5.3 DZ Inp", 0.0021),
+    item("FW GLM-5.3-Flash Gl Inp", 0.000188), item("FW GLM-5.3-Flash Gl Cd Inp", 0.000038), item("FW GLM-5.3-Flash Gl Opt", 0.000625),
+    item("GLM 5.3 Flash Inp - US DZ", 0.225, "1M"),
+    item("FW Kimi-K3 Gl Inp", 0.003), item("FW Kimi-K3 Gl Cd Inp", 0.0003), item("FW Kimi-K3 Gl Opt", 0.015), item("FW Kimi K3 Inp DZ", 0.0033),
+    item("Kimi K3.1 Pro Inp - Global", 2.5, "1M"), item("Kimi K3.1 Pro Cd inp - Global", 0.25, "1M"), item("Kimi K3.1 Pro Opt- Global", 12.5, "1M"),
+    item("Kimi K3.1 Pro Inp - US DZ", 3, "1M"),
+    item("FW NVIDIA Nemotron 3U Inp DZ", 0.00066), item("FW NVIDIA Nemotron 3U Cd Inp DZ", 0.00013), item("FW NVIDIA Nemotron 3U Opt DZ", 0.00264),
+    item("FW NVIDIA Nemotron 3.5 LN In DZ", 0.00006), item("FW NVIDIA Nemotron 3.5 LN Cd In DZ", 0.00001), item("FW NVIDIA Nemotron 3.5 LN Opt DZ", 0.00022),
+  ]);
+  const expected: Record<string, { input: number; output: number; cache_read: number }> = {
+    "fw-deepseek-v4.1-flash": { input: 0.375, output: 1.5, cache_read: 0.008 },
+    "fw-glm-5.3": { input: 1.75, output: 5.5, cache_read: 0.325 },
+    "fw-glm-5.3-flash": { input: 0.188, output: 0.625, cache_read: 0.038 },
+    "fw-kimi-k3": { input: 3, output: 15, cache_read: 0.3 },
+    "fw-kimi-k3.1-pro": { input: 2.5, output: 12.5, cache_read: 0.25 },
+    "fw-nemotron-3-ultra-nvfp4": { input: 0.66, output: 2.64, cache_read: 0.13 },
+    "fw-nemotron-lightning-3.5-30b-a3b": { input: 0.06, output: 0.22, cache_read: 0.01 },
+  };
+  for (const [id, cost] of Object.entries(expected)) {
+    const dataZone = id.startsWith("fw-nemotron");
+    const built = buildAzureModel({ id, prices: rows.get(id)!, dataZone }, { cost: { input: 9, output: 9 } } as unknown as ExistingModel) as unknown as ExistingModel;
+    expect(built.cost).toEqual(cost);
   }
 });
