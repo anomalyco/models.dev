@@ -41,6 +41,14 @@ test("only missing hand-set capabilities are copied, never reasoning controls", 
   expect(doc.api.responses.capabilities.tools.freeform).toEqual(["text"]);
 });
 
+test("capabilities the catalog states unsupported are not copied", () => {
+  const doc = { base_model: "openai/gpt-6.2-sol", api: structuredClone(api) } as Record<string, any>;
+  expect(inheritCapabilities(doc, previous, undefined, false, ["capabilities.system_updates"])).toEqual([
+    "capabilities.tools.updates", "api.responses.capabilities.tools.freeform",
+  ]);
+  expect(doc.capabilities.system_updates).toBeUndefined();
+});
+
 test("a new file gets a header line naming where its capabilities came from", () => {
   const content = '# Synced\nschema = 2\nbase_model = "openai/gpt-6.2-sol"\n\n[api.chat-completions]\n\n[api.responses]\n';
   const out = withPredecessorCapabilities(content, existing, labs);
