@@ -1,0 +1,21 @@
+# https://iteracompute.com/models/happyhorse-1-1-t2v/#pricing
+# https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
+schema = 2
+v2_only = true
+base_model = "alibaba/happyhorse-1.1"
+name = "HappyHorse 1.1 T2V"
+
+[modalities]
+input = ["text"]
+output = ["video/mp4"]
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.0756
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" } }
+price = 0.0972

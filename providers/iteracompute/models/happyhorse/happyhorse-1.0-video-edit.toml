@@ -1,0 +1,30 @@
+# https://iteracompute.com/models/happyhorse-1-0-video-edit/#pricing
+# https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
+# The editing meter adds source and generated video seconds at the same resolution rate.
+schema = 2
+v2_only = true
+base_model = "alibaba/happyhorse-1.0"
+name = "HappyHorse 1.0 Video Edit"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/bmp", "image/webp", "video/mp4"]
+output = ["video/mp4"]
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.0756
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" } }
+price = 0.1296
+
+[cost.video.input]
+unit = "second"
+price = 0.0756
+
+[[cost.video.input.overrides]]
+when = { resolution = { equals = "1080P" } }
+price = 0.1296

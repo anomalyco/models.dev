@@ -1,0 +1,37 @@
+# https://iteracompute.com/models/kling-4-0/#pricing
+# https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
+# Prices are per native billable second. With reference video, billable seconds = output + max(input, output).
+# HDR adds USD 0.047 per output second at 1080P, independently of native billable seconds.
+# HDR adds USD 0.078 per output second at 4K, independently of native billable seconds.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v4.0"
+name = "Kling 4.0"
+description = "Generates video from text, images and reference video. With a reference clip, multiply the listed rate by output seconds plus the larger of input and output seconds. HDR adds USD 0.047 per output second at 1080P or USD 0.078 at 4K."
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.157
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" }, input_video = { equals = true } }
+price = 0.094
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" }, input_video = { equals = false } }
+price = 0.235
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" }, input_video = { equals = true } }
+price = 0.141
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4K" }, input_video = { equals = false } }
+price = 0.549
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4K" }, input_video = { equals = true } }
+price = 0.329

@@ -1,10 +1,9 @@
 # https://iteracompute.com/models/auto/
-# https://api.iteracompute.com/v1/models (verified 2026-11-22).
-# Shared Free/Starter context is 128K. Eligible higher tiers can reach 256K.
-# Chat reasoning_effort accepts none, low, medium and xhigh.
+# https://api.iteracompute.com/v1/models (2026-11-27): Auto lists only low effort, no default; temperature and top_p are ignored.
+# Chat Completions, Responses and Messages are listed on https://iteracompute.com/models/auto/#interface-contract
 schema = 2
 name = "Auto"
-description = "IteraCompute router that uses available capacity, with plan-priority and shared free access"
+description = "IteraCompute router that selects available capacity based on demand and cost"
 release_date = "2026-11-10"
 open_weights = false
 
@@ -14,21 +13,27 @@ output = ["text"]
 
 [capabilities]
 tools = { supported = true }
-reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"], default = { type = "effort", value = "xhigh" } }
-temperature = true
-top_p = true
+reasoning = { supported = true, effort = ["low"] }
+temperature = false
+top_p = false
 top_k = false
 structured_output = true
 
 [limit]
-context = 131072
-output = 8192
+context = 1000000
+output = 128000
 
 [api.chat-completions]
 
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
 [cost.text.input]
-price = 0
-cache = { read = 0 }
+price = 0.1
+cache = { read = 0.01 }
 
 [cost.text.output]
-price = 0
+price = 0.5

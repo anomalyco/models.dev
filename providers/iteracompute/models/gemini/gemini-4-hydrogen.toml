@@ -1,3 +1,5 @@
+# The host's configured parameter list has no effort selector; its request contract limits clients to model-specific gateway fields and excludes native generationConfig.
+# Chat Completions, Responses and Messages are listed on https://iteracompute.com/models/gemini-4-hydrogen/#interface-contract
 # https://iteracompute.com/models/gemini-4-hydrogen/
 # https://api.iteracompute.com/v1/models (verified 2026-11-22).
 schema = 2
@@ -8,7 +10,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high"] }
+reasoning = { supported = true }
 structured_output = true
 
 [api.chat-completions]

@@ -1,3 +1,5 @@
+# The API specifies deployment_limits.max_input_tokens=983616, model_specification.context_tokens=1000000, max_output_tokens=262144 and reasoning.default_effort=high.
+# Chat Completions, Responses and Messages are listed on https://iteracompute.com/models/qwen4-max/#interface-contract
 # https://iteracompute.com/models/qwen4-max/
 # https://api.iteracompute.com/v1/models (verified 2026-11-22).
 # Chat reasoning_effort accepts none, low, high and xhigh.
@@ -13,7 +15,7 @@ reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"], defau
 structured_output = true
 
 [limit]
-context = 983616
+input = 983616
 
 [api.chat-completions]
 

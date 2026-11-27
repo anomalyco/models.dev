@@ -1,0 +1,18 @@
+# https://iteracompute.com/models/minimax-hailuo-2-3-fast/#pricing
+# https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
+# The host bills a fixed price per supported clip. Each per-second equivalent is the clip price divided by its duration.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-Hailuo-2.3-Fast"
+name = "MiniMax Hailuo 2.3 Fast"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.02223660087
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" }, duration = { equals = 6 } }
+price = 0.038049294822

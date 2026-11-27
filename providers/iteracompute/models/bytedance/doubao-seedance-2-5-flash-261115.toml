@@ -1,0 +1,26 @@
+# https://iteracompute.com/models/doubao-seedance-2-5-flash-261115/#pricing
+# https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
+# Rates are USD per million native video tokens, conditional on the presence of a reference video.
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/seedance-2.5-flash"
+name = "Seedance 2.5 Flash \u00b7 261115"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
+output = ["video/mp4"]
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "token"
+price = 7.00
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480P" }, input_video = { equals = true } }
+price = 4.30
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" }, input_video = { equals = true } }
+price = 4.30

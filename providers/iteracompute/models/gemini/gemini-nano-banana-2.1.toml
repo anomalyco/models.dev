@@ -1,3 +1,4 @@
+# The host image example uses generationConfig.thinkingConfig.thinkingLevel. The page lists MINIMAL, MEDIUM and HIGH, with LOW as a compatibility spelling.
 # https://iteracompute.com/models/gemini-nano-banana-2-1/
 # https://api.iteracompute.com/v1/models (verified 2026-11-22).
 schema = 2
@@ -9,7 +10,7 @@ input = ["text", "image/png", "image/jpeg", "image/webp"]
 output = ["image/png"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["minimal", "medium", "high"] }
 
 [api.images]
 sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }

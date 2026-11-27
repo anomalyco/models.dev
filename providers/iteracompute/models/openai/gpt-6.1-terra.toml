@@ -1,3 +1,5 @@
+# The model page identifies 922,000 as the input budget of the 1,050,000-token context, with 128,000 output.
+# Chat Completions, Responses and Messages are listed on https://iteracompute.com/models/gpt-6-1-terra/#interface-contract
 # https://iteracompute.com/models/gpt-6-1-terra/
 # https://api.iteracompute.com/v1/models (verified 2026-11-22).
 # Reasoning levels follow the native model and same-host GPT Chat surface. The public host contract documents JSON tools only.
@@ -11,9 +13,6 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
-
-[limit]
-context = 922000
 
 [api.chat-completions]
 
