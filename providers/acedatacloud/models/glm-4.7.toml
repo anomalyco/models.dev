@@ -4,6 +4,9 @@
 # Larger recharge packages and account discounts can lower effective prices.
 # Toggle: thinking.type = enabled|disabled
 # API billing rechecked 2026-11-16: this endpoint uses a flat model rule with no context surcharge; do not copy the lab host tier.
+# The model-specific host billing rule prices every prompt token at 3.679 Credits/MTok
+# and output at 5.519 Credits/MTok. It has no cached-token term or separate read price.
+# The host contract does not establish a per-model cache capability.
 schema = 2
 base_model = "zhipuai/glm-4.7"
 

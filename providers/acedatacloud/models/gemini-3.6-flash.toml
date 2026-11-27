@@ -2,7 +2,8 @@
 # Billing and protocol: https://platform.acedata.cloud/api/v1/apis/94b49b55-2ea8-4d46-a93c-eb308e1a52d5
 # USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
 # Larger recharge packages and account discounts can lower effective prices.
-# reasoning_effort on the OpenAI-compatible endpoint
+# The host Chat Completions reasoning_effort enum includes minimal, low, medium and high.
+# Google declares the same four levels for this model in providers/google/models/gemini-3.6-flash.toml.
 # Input scope: reviewed OpenAI-compatible text/image path, intersected with lab JPEG/PNG/GIF/WebP.
 # No model-specific PDF/audio/video contract is established here; those formats are not advertised.
 # Cached-token usage is conditionally billed and normalized by this API.

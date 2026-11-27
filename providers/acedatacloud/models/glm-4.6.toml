@@ -3,6 +3,9 @@
 # USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
 # Larger recharge packages and account discounts can lower effective prices.
 # Toggle: thinking.type = enabled|disabled
+# The model-specific host billing rule prices every prompt token at 3.679 Credits/MTok
+# and output at 5.519 Credits/MTok. It has no cached-token term or separate read price.
+# The host contract does not establish a per-model cache capability.
 schema = 2
 base_model = "zhipuai/glm-4.6"
 
