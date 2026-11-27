@@ -1306,7 +1306,33 @@ function leadingComments(text: string) {
   return header.length > 0 ? `${header.join("\n")}\n` : "";
 }
 
+const SYNC_FLAGS = ["--dry-run", "--new-only", "--open-issues", "--no-issues", "--list-providers"];
+
+export const SYNC_USAGE = `Usage: bun ./packages/core/script/sync-models.ts [target] [flags]
+
+target    a provider id, or a group (${Object.keys(groups).join(", ")}); default "aggregators"
+
+flags
+  --dry-run         report changes without writing files
+  --new-only        only create models that have no file yet
+  --open-issues     open missing-model issues (default only in GitHub Actions)
+  --no-issues       never open missing-model issues
+  --list-providers  print the provider matrix as JSON
+  -h, --help        print this message`;
+
 export async function main(args = process.argv.slice(2)) {
+  if (args.includes("--help") || args.includes("-h")) {
+    console.log(SYNC_USAGE);
+    return;
+  }
+  // An unknown flag must not fall through to a real sync of the default target.
+  const unknown = args.filter((arg) => arg.startsWith("-") && !SYNC_FLAGS.includes(arg));
+  if (unknown.length > 0) {
+    console.error(`Unknown flag: ${unknown.join(", ")}\n\n${SYNC_USAGE}`);
+    process.exitCode = 1;
+    return;
+  }
+
   if (args.includes("--list-providers")) {
     console.log(JSON.stringify(syncProviderMatrix()));
     return;
