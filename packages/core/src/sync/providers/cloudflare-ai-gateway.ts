@@ -259,6 +259,11 @@ export const cloudflareAiGateway = {
   sourceID(source) {
     return source.catalog.model_id;
   },
+  // Curation skips are filtered out in fetchModels, so every skip that reaches here
+  // is an unmapped model that needs a lab file or a curated base_model.
+  missingModelID(source) {
+    return sourceBase(source) === undefined ? source.catalog.model_id : undefined;
+  },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
@@ -316,9 +321,9 @@ export const cloudflareAiGateway = {
     const id = source.catalog.model_id;
     const curated = curation.models[id] ?? {};
     const isText = source.catalog.task === TEXT_GENERATION;
-    // A new model with no lab file is reported in the PR instead of failing
+    // A new model with no lab file opens a missing-model issue instead of failing
     // the whole sync; an existing file still fails loudly if its lab is gone.
-    const base = curated.base_model ?? (isText ? resolveBaseModel(id) : resolveMediaBaseModel(id));
+    const base = sourceBase(source);
     if (base === undefined && context.authored(id) === undefined) return undefined;
     if (!isText) {
       const catalog = source.catalog as MediaCatalogModel;
@@ -361,6 +366,12 @@ export const cloudflareAiGateway = {
     };
   },
 } satisfies SyncProvider<SourceModel>;
+
+function sourceBase(source: SourceModel) {
+  const id = source.catalog.model_id;
+  return curation.models[id]?.base_model
+    ?? (source.catalog.task === TEXT_GENERATION ? resolveBaseModel(id) : resolveMediaBaseModel(id));
+}
 
 export function buildCloudflareAiGatewayModel(
   catalog: CatalogModel,
