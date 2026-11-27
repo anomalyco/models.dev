@@ -79,12 +79,28 @@ describe("Concentrate sync", () => {
     expect(v2(model("kimi-k2-5", "moonshot", { moonshot: route() })).capabilities.cache).toBeUndefined();
   });
 
+  test("keeps the reference's explicit caching only on routes that take breakpoints or bill cache writes", () => {
+    const priced = { pricing: [{ tokens: tokens(1, 2, 0.1) }] };
+    // Alibaba's Qwen caching is implicit and explicit; Concentrate's Alibaba route takes no breakpoints and bills no writes.
+    expect(v2(model("qwen4-max", "alibaba", { alibaba: route(priced) })).capabilities.cache).toEqual({ implicit: { min_tokens: 1_024 } });
+    const breakpoints = route(priced);
+    (breakpoints.supports as Record<string, unknown>).prompt_cache_breakpoint = true;
+    expect(v2(model("qwen4-max", "alibaba", { alibaba: breakpoints })).capabilities.cache.explicit).toBeDefined();
+    const writes = route({ pricing: [{ tokens: { ...tokens(1, 2), cache: { read: usd(0.1), write: { ephemeral_5m_input_tokens: usd(1.25) } } } }] });
+    expect(v2(model("qwen4-max", "alibaba", { alibaba: writes })).capabilities.cache.explicit).toBeDefined();
+  });
+
   test("keys cache writes by the TTLs the reference offers, or a plain price when it lists none", () => {
     const write = (key: string, USD: number) => ({ tokens: { ...tokens(1, 2, 0.1), cache: { read: usd(0.1), write: { [key]: usd(USD) } } } });
     // OpenAI caches for 30m/12h; an unnamed write price is the first.
     expect(v2(model("gpt-5.6-luna", "openai", { openai: route({ pricing: [write("cache_write_tokens", 0.25)] }) })).cost.text.input.cache).toEqual({ read: 0.1, write: { "30m": 0.25 } });
     // MiniMax publishes its write price without a TTL.
     expect(v2(model("minimax-m2-7", "minimax", { minimax: route({ pricing: [write("ephemeral_5m_input_tokens", 0.375)] }) })).cost.text.input.cache).toEqual({ read: 0.1, write: 0.375 });
+    // TTLs follow the reference's order (v1 publishes only the first), even when the catalog lists 1h before 5m.
+    const claude = route({ pricing: [{ tokens: { ...tokens(5, 25), cache: { read: usd(0.5), write: { ephemeral_1h_input_tokens: usd(10), ephemeral_5m_input_tokens: usd(6.25) } } } }] });
+    const cache = v2(model("claude-opus-4-7", "anthropic", { anthropic: claude })).cost.text.input.cache;
+    expect(Object.keys(cache.write)).toEqual(["5m", "1h"]);
+    expect(cache).toEqual({ read: 0.5, write: { "5m": 6.25, "1h": 10 } });
   });
 
   test("leaves out a reasoning model with no controls where the reference has them, unless probed always on", () => {
@@ -115,6 +131,15 @@ describe("Concentrate sync", () => {
   test("a decision model's narrower image input keeps the lab's decision output", () => {
     const decision = model("gemini-decision-1", "google", { google: { ...route({ chat: false }), supports: { ...route({ chat: false }).supports, input: { image: { png: true }, file: {} } } } });
     expect(v2(decision).modalities).toEqual({ input: ["text", "image/png"], output: ["decision"] });
+  });
+
+  test("publishes a chat model listed on decision routes only as a decision model", () => {
+    const entry = { ...model("gpt-6-luna-decisions", "openai", { openai: route({ chat: false, pricing: [{ tokens: tokens(0.1, 0, 0.01) }] }) }), name: "GPT-6 Luna Decisions", max_input_tokens: 600_000 };
+    const doc = v2(entry);
+    expect(doc).toMatchObject({ v2_only: true, base_model: "openai/gpt-6-luna", base_model_omit: ["limit.input"], type: "decision", name: "GPT-6 Luna Decisions", limit: { context: 600_000, output: 0 } });
+    expect(doc.modalities).toEqual({ input: ["text"], output: ["decision"] });
+    expect(doc.capabilities).toMatchObject({ tools: { supported: false }, reasoning: { supported: false }, cache: { implicit: { min_tokens: 1_024 } } });
+    expect(Object.keys(doc.api)).toEqual(["systemone"]);
   });
 
   test("takes controls that several peers agree on, not one peer's or the first file's", () => {

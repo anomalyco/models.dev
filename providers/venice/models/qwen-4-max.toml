@@ -3,14 +3,15 @@ base_model = "alibaba/qwen4-max"
 name = "Qwen 4 Max"
 
 [modalities]
-input = ["text", "image", "video"]
+input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
 
 [limit]
-output = 393_216
+context = 262_144
+output = 65_536
 
 [api.chat-completions]
 
@@ -20,7 +21,7 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 
 [cost.text.input]
 price = 1.875
-cache = { read = 0.09375, write = 2.34375 }
+cache = { read = 0.09375 }
 
 [cost.text.output]
 price = 5.625

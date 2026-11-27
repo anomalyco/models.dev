@@ -88,6 +88,24 @@ test.each([
   ]);
 });
 
+test("keeps a reasoning lab model reasoning, without controls, where the route takes no reasoning_effort", () => {
+  const model = buildRequestyModel(RequestyModel.parse({
+    id: "fugu-ultra",
+    created: Date.parse("2026-06-15") / 1_000,
+    description: "Fugu Ultra",
+    context_window: 1_048_576,
+    max_output_tokens: 131_072,
+    supports_reasoning: false,
+    supports_tool_calling: true,
+    input_price: 0.000005,
+    output_price: 0.00003,
+  }));
+
+  expect(model).toMatchObject({ base_model: "sakana/fugu-ultra" });
+  expect(model.reasoning).not.toBe(false);
+  expect(model.reasoning_options).toEqual([]);
+});
+
 test("does not advertise controls for non-reasoning models", () => {
   const model = buildRequestyModel(RequestyModel.parse({
     id: "requesty-non-reasoning-model",

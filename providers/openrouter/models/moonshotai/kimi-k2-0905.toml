@@ -1,0 +1,21 @@
+schema = 2
+base_model = "moonshotai/kimi-k2-0905"
+description = "Kimi model for long-context chat, coding, and agentic reasoning"
+
+[capabilities]
+structured_output = true
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.5

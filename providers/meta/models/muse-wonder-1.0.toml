@@ -13,8 +13,10 @@
 # Tool search (tool_search + defer_loading) on Responses and Messages, not Chat Completions (https://dev.meta.ai/docs/tool-search); worked live on muse-spark-1.1 and muse-wonder-1.0 (2026-10-24), so search sits on [api.responses] and [api.messages] only.
 # Web search: $2.50 per 1,000 search queries on top of token costs (https://dev.meta.ai/docs/pricing-rate-limits, "Token pricing notes").
 # Default effort: "max" when reasoning_effort is omitted (https://dev.meta.ai/docs/reasoning).
+# Lifecycle: "Muse Wonder is in preview." (https://dev.meta.ai/docs/muse-wonder, accessed 2026-11-25), so status = "beta".
 schema = 2
 base_model = "meta/muse-wonder-1.0"
+status = "beta"
 
 [capabilities]
 tools = { supported = true, choice = ["auto"] }

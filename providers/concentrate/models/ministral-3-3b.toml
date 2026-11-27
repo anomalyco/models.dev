@@ -8,6 +8,7 @@ output = ["text"]
 
 [capabilities]
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 256_000
@@ -15,9 +16,7 @@ output = 32_000
 
 [cost.text.input]
 price = 0.1
+cache = { read = 0.01 }
 
 [cost.text.output]
 price = 0.1
-
-[cost.web_search]
-price = 30

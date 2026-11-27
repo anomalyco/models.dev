@@ -1,0 +1,23 @@
+# Price and context: https://api.deepinfra.com/models/list?type=text-generation (ibm-granite/granite-4.2-8b, read 2026-11-24): $0.06 input, $0.25 output per 1M tokens,
+#   cached input at 0.25x ($0.015); 131,072-token context; tags tools, json (no structured-output tag).
+# Effort: reasoning_effort = none|low|high; none disables reasoning (https://docs.deepinfra.com/chat/reasoning). The levels are
+#   the model's three thinking modes, full thinking (default), low-effort and non-thinking (https://huggingface.co/ibm-granite/granite-4.2-8b,
+#   also on https://deepinfra.com/ibm-granite/granite-4.2-8b), and match OpenRouter's entry for this model.
+# Reasoning probe (live 2026-11-24, OpenRouter pinned to Deep Infra: provider.only = ["deepinfra"], allow_fallbacks = false;
+#   the account's own Deep Infra balance was empty, so direct calls returned 402):
+#   reasoning tokens: none 0, enabled=false 0, minimal 15, low 18 / 25, 63, 28, medium 21; default and high ran past the timeout (long full thinking).
+schema = 2
+base_model = "ibm/granite-4.2-8b"
+status = "deprecated"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+cache = { implicit = true }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.25

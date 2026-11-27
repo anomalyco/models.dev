@@ -1,0 +1,31 @@
+# Sources (accessed 2026-11-25):
+# - Model ID and output specs: https://ark.volcengine.com/region:cn-beijing/docs/model-list.md#7571da3f
+#   and https://ark.volcengine.com/region:cn-beijing/docs/seedance-2-5.md
+# - CNY list prices (元/M token, online inference; offline inference not offered for this model):
+#   https://ark.volcengine.com/region:cn-beijing/docs/model-pricing.md#2864f00a
+# - API: async POST https://ark.cn-beijing.volces.com/api/v3/contents/generations/tasks, then poll
+#   GET .../tasks/{id}: https://ark.volcengine.com/region:cn-beijing/docs/create-video-generation-task-api.md
+#   @ai-sdk/bytedance (https://www.npmjs.com/package/@ai-sdk/bytedance) posts to contents/generations/tasks
+#   and reads ARK_API_KEY; its default base URL is BytePlus (https://ark.ap-southeast.bytepluses.com/api/v3),
+#   so base_url points at Ark Beijing.
+# - Opening Seedance 2.5 series models needs an account balance over 200 CNY or a savings plan/resource pack:
+#   https://ark.volcengine.com/region:cn-beijing/docs/seedance-2-5.md
+# CNY->USD rate: 6.685797, 2026-11-12, source: https://open.er-api.com/v6/latest/USD (same rate as the other
+#   Seedance files here).
+# Billed per million tokens; tokens ~= (input video seconds + output seconds) x width x height x fps / 1024,
+# exact count in usage.completion_tokens. With video input there is a minimum token charge, not modelled here.
+# Prices: 480p/720p only, 46 CNY (28 with input video).
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/seedance-2.5-flash"
+
+[api.videos]
+base_url = "https://ark.cn-beijing.volces.com/api/v3"
+sdk = { aisdk = "@ai-sdk/bytedance", opencodeai = "@opencode/ai/providers/volcengine/videos" }
+
+[cost.video.output]
+price = 6.88026
+
+[[cost.video.output.overrides]]
+when = { input_video = { equals = true } }
+price = 4.18798

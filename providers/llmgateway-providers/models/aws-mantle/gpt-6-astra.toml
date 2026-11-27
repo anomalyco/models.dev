@@ -1,10 +1,14 @@
 schema = 2
 base_model = "openai/gpt-6-astra"
+base_model_omit = ["limit.input"]
 name = "GPT-6 Astra (AWS Mantle)"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+
+[limit]
+context = 921_600
 
 [cost.text.input]
 price = 10

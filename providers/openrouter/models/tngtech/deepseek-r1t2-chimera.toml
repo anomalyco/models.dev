@@ -1,0 +1,36 @@
+schema = 2
+name = "DeepSeek R1T2 Chimera"
+description = "DeepSeek chat model for instruction following, coding, and analysis"
+family = "deepseek"
+open_weights = true
+knowledge = "2024-07-31"
+release_date = "2025-07-08"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = true
+temperature = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 2.625

@@ -1,0 +1,25 @@
+# Created by the Hugging Face sync.
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+# Modalities: the router catalog (https://router.huggingface.co/v1/models, 2026-11-26) lists input_modalities ["text", "image"] and output ["text"], so the lab's video input is left out on this host.
+schema = 2
+base_model = "rekaai/reka-edge"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.1

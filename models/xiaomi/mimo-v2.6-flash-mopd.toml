@@ -1,0 +1,50 @@
+# Source: Hugging Face model card and repo (https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-MOPD, MIT, repo created 2026-09-27):
+#   MOPD upgrade of MiMo-V2.6-Flash-RL (multi-teacher on-policy distillation; mitigates tool-call repetition),
+#   309B total / 15B active MoE, 1M context (config.json max_position_embeddings = 1_048_576),
+#   modalities text, image, video and audio. Release date = the public weights release.
+# Fallbacks from models/xiaomi/mimo-v2.6-flash.toml (the card is silent): max output (128K, Xiaomi MiMo API model page),
+#   the image/audio/video file formats (Xiaomi MiMo API multimodal guides) and tool support.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host. The checkpoint's
+#   generation_config.json sets temperature 1.0 and top_p 0.95 (also the card's recommended sampling).
+schema = 2
+name = "MiMo-V2.6-Flash-MOPD"
+description = "MiMo Flash checkpoint distilled from domain teachers to cut repeated tool calls in agent workflows"
+family = "mimo-flash"
+open_weights = true
+license = "MIT"
+release_date = "2026-09-27"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+  "audio/mpeg",
+  "audio/wav",
+  "audio/flac",
+  "audio/mp4",
+  "audio/ogg",
+  "video/mp4",
+  "video/quicktime",
+  "video/x-msvideo",
+  "video/x-ms-wmv",
+]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-MOPD"

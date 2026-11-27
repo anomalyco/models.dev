@@ -79,6 +79,7 @@ export const ModelFamilyValues = [
   "glm-flash",
   "glm-flash-legal",
   "cogvideox",
+  "cogview",
   "glmv-flash",
   "autoglm",
   "glm-asr",
@@ -413,6 +414,7 @@ export const ModelFamilyValues = [
   "seed-turbo",
   "seedream-lite",
   "seedance-mini",
+  "seedance-flash",
   "seed-oss",
   "seed-pro",
 
@@ -436,6 +438,7 @@ export const ModelFamilyValues = [
   "inkling-small",
   "inkling-mini",
   "ling-tiny",
+  "lingsante",
   "ming-image",
   "ring",
 
@@ -782,6 +785,7 @@ export const ModelFamilyValues = [
   "perceptron-mk",
   "phi-mini",
   "phocinae-largha",
+  "phonellm-mini",
   "pixtral-large",
   "plamo-embedding",
   "pplx-decider",

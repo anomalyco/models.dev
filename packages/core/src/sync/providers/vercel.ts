@@ -375,6 +375,27 @@ export function buildVercelModel(
     ? context - output
     : undefined;
   const cost = buildCost(model.pricing, existing?.cost);
+  const modalities: NonNullable<SyncedFullModel["modalities"]> = {
+    input: model.type === "transcription"
+      ? ["audio"]
+      : model.type === "realtime"
+      ? ["text", "audio"]
+      : ["text", tags.has("vision") ? "image" : undefined, tags.has("file-input") ? "pdf" : undefined]
+        .filter((value): value is "text" | "image" | "pdf" => value !== undefined),
+    output: model.type === "speech"
+      ? ["audio"]
+      : model.type === "realtime"
+      ? ["text", "audio"]
+      : model.type === "image"
+      ? ["image"]
+      : model.type === "video"
+      ? ["video"]
+      : tags.has("video-generation")
+      ? ["video"]
+      : tags.has("image-generation")
+      ? ["text", "image"]
+      : ["text"],
+  };
 
   // Self-heal bogus `family = "o"` stamps left by the old substring matcher
   // (e.g. cohere rerank, fish-audio, alibaba wan). Same precedent as OpenRouter.
@@ -400,32 +421,14 @@ export function buildVercelModel(
       structured_output: existing?.structured_output,
       open_weights: existing?.open_weights ?? false,
       limit: { context, input, output },
-      modalities: {
-        input: model.type === "transcription"
-          ? ["audio"]
-          : model.type === "realtime"
-          ? ["text", "audio"]
-          : ["text", tags.has("vision") ? "image" : undefined, tags.has("file-input") ? "pdf" : undefined]
-            .filter((value): value is "text" | "image" | "pdf" => value !== undefined),
-        output: model.type === "speech"
-          ? ["audio"]
-          : model.type === "realtime"
-          ? ["text", "audio"]
-          : model.type === "image"
-          ? ["image"]
-          : model.type === "video"
-          ? ["video"]
-          : tags.has("video-generation")
-          ? ["video"]
-          : tags.has("image-generation")
-          ? ["text", "image"]
-          : ["text"],
-      },
+      modalities,
     }),
     family,
     release_date: releaseDate,
     last_updated: existing?.last_updated ?? releaseDate,
-    attachment: existing?.attachment ?? (tags.has("vision") || tags.has("file-input")),
+    // Follows the synced input modalities, so a model that gains image or PDF input
+    // doesn't keep a stale text-only attachment flag the v2 file can't express.
+    attachment: modalities.input.some((value) => value !== "text"),
     reasoning,
     reasoning_options: reasoning ? vercelReasoningOptions(model, existing, base) : undefined,
     temperature: existing?.temperature,
@@ -441,27 +444,7 @@ export function buildVercelModel(
     provider: model.type === "evaluation" ? DECISION_V1_PROVIDER : existing?.provider,
     cost,
     limit: { context, input, output },
-    modalities: {
-      input: model.type === "transcription"
-        ? ["audio"]
-        : model.type === "realtime"
-        ? ["text", "audio"]
-        : ["text", tags.has("vision") ? "image" : undefined, tags.has("file-input") ? "pdf" : undefined]
-          .filter((value): value is "text" | "image" | "pdf" => value !== undefined),
-      output: model.type === "speech"
-        ? ["audio"]
-        : model.type === "realtime"
-        ? ["text", "audio"]
-        : model.type === "image"
-        ? ["image"]
-        : model.type === "video"
-        ? ["video"]
-        : tags.has("video-generation")
-        ? ["video"]
-        : tags.has("image-generation")
-        ? ["text", "image"]
-        : ["text"],
-    },
+    modalities,
   };
 
   const baseModel = existing?.base_model ?? resolveVercelBaseModel(model.id);

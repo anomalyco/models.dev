@@ -1,6 +1,7 @@
 # Mid-conversation: Foundry's partner-model chat API documents no mid-conversation system, per-turn effort or tool-change mechanism
 # (https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-chat-reasoning). Live (2026-10-19) a mid-conversation system message was accepted by Kimi-K2.5 and Llama-3.3-70B-Instruct.
 # API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
+# Limits: input and output tokens from the Microsoft table in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-from-partners#microsoft (accessed 2026-11-25): Phi-4-reasoning: 32,768 in, 32,768 out; https://huggingface.co/microsoft/Phi-4-reasoning lists a 32K context.
 schema = 2
 name = "Phi-4-reasoning"
 description = "Reasoning model for deliberate analysis, multi-step problem solving, and tool use"
@@ -19,8 +20,8 @@ reasoning = { supported = true }
 temperature = true
 
 [limit]
-context = 32_000
-output = 4_096
+context = 32_768
+output = 32_768
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }

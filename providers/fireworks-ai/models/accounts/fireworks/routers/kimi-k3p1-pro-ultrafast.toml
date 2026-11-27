@@ -1,0 +1,41 @@
+# Ultra-fast (Preview) serving path for Kimi K3.1 Pro: same model, 3-6x generation speed, selected by model ID (no service_tier):
+#   https://docs.fireworks.ai/serverless/serverless-modes lists accounts/fireworks/routers/kimi-k3p1-pro-ultrafast. Chat completions
+#   echo the underlying accounts/fireworks/models/kimi-k3p1-pro (live 2026-11-26).
+# Pricing: https://docs.fireworks.ai/serverless/pricing ("Kimi K3.1 Pro Ultra-fast (Preview)" row, accessed 2026-11-26): $5.00 / $0.50 / $25.00
+#   per 1M input / cached input / output, no Priority. GET https://api.fireworks.ai/v1/serverless/models lists the same rates
+#   (serverless_mode "ultrafast", usage_identifier = this ID, 2026-11-26).
+# Toggle: thinking.type = enabled|disabled (disabled and reasoning_effort = "none" both returned 0 reasoning tokens, live 2026-11-26)
+# Effort: reasoning_effort = low|medium|high|max, as the Standard sibling accounts/fireworks/models/kimi-k3p1-pro (all accepted here, live 2026-11-26).
+# Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Live 2026-11-26 on this ID: required tool calls, json_schema response_format, base64 PNG input, Responses and Messages all worked.
+#   Modalities and structured output follow the Standard sibling; it records no mid-conversation flags, so none are set here.
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field
+#   (https://docs.fireworks.ai/guides/prompt-caching).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro Ultra-fast"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5 }
+
+[cost.text.output]
+price = 25

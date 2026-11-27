@@ -5,6 +5,11 @@
 # MIME types: image/video per https://www.alibabacloud.com/help/en/model-studio/vision, audio input AMR/WAV/3GP/3GPP/AAC/MP3 per https://www.alibabacloud.com/help/en/model-studio/qwen-omni; output audio "Only wav is supported" per https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions.
 # Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 # Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+# Pricing (Singapore, per 1M tokens, accessed 2026-11-25): https://www.alibabacloud.com/help/en/model-studio/model-pricing and the catalog API
+#   (GET https://dashscope-intl.aliyuncs.com/api/v1/models: vision_input_token 0.78). Input: text $0.43, audio $3.81, image/video $0.78.
+#   Output: text $1.66 for text-only input, $3.06 when the input includes audio, image or video; text + audio output bills only the audio, $15.11.
+#   The $3.06 multimodal-input text price isn't recorded: cost conditions have input_images and input_video but no audio-input condition,
+#   so it can't be expressed cleanly. The $0.78 rate also applies to video input, which isn't priced here yet.
 schema = 2
 name = "Qwen3-Omni Flash"
 description = "Qwen omni model for text, vision, audio, and multimodal agent tasks"
@@ -45,6 +50,9 @@ price = 1.66
 
 [cost.audio.input]
 price = 3.81
+
+[cost.image.input]
+price = 0.78
 
 [cost.audio.output]
 price = 15.11

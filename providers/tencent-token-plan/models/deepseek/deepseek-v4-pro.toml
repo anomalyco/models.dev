@@ -1,3 +1,5 @@
+# Deprecated: the plan's model list marks DeepSeek-V4-Pro 正式版 原厂直供 (deepseek/deepseek-v4-pro) as going offline
+#   on 2026-12-10 (https://cloud.tencent.com/document/product/1823/130060, updated 2026-11-25).
 # Tier-dependent pricing for the documented ID deepseek/deepseek-v4-pro (checked 2026-11-02).
 # https://cloud.tencent.com/document/product/1823/133811
 # Section III, General plan, uniform subscription-tier pricing table:
@@ -19,6 +21,7 @@
 # Controls: thinking.type = enabled|disabled; reasoning_effort = low|high|max
 schema = 2
 base_model = "deepseek/deepseek-v4-pro-0813"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }

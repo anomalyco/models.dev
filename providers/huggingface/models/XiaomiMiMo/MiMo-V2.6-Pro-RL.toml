@@ -1,0 +1,33 @@
+# Created by the Hugging Face sync.
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+# Modalities: the router catalog (https://router.huggingface.co/v1/models, 2026-11-26) lists input_modalities ["text"] and output ["text"], so the lab's image, audio and video input is left out on this host.
+# Reasoning controls copied from this host's previous MiMo models, providers/huggingface/models/XiaomiMiMo/MiMo-V2.5.toml
+#   and MiMo-V2.5-Pro.toml, live-tested on the router (POST https://router.huggingface.co/v1/chat/completions):
+#   reasoning_effort = "none" | "low" | "medium" | "high" | "xhigh" ("none" turns reasoning off, as does
+#   reasoning = { "enabled": false }), so effort lists "none" and there is no separate toggle. Xiaomi-native
+#   thinking.type is not supported on this route. Not re-probed on this ID (no Hugging Face token).
+#   The router serves the weights of xiaomi/mimo-v2.6-pro (https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL)
+#   through third-party inference providers.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.387
+
+[cost.text.output]
+price = 0.783

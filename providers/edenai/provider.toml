@@ -1,6 +1,8 @@
-# Catalog: https://api.edenai.run/v3/models
-# Reasoning: reasoning_effort = none|minimal|low|medium|high|xhigh|max 
-# Pricing: list_pricing, USD per token; the sibling `pricing` field is discounted
+# Catalog: https://api.edenai.run/v3/models?view=models, one entry per model name. Eden AI
+# routes a name to one of its providers (https://www.edenai.co/docs/v3/llms/provider-routing).
+# Reasoning: reasoning_effort = none|minimal|low|medium|high|xhigh|max
+# Pricing: `pricing`, USD per token: the rates billed on the cheapest provider. A call routed
+# to another provider is billed at that provider's rates.
 # Mid-conversation: models are served on Chat Completions (https://www.edenai.co/docs/v3/llms/chat-completions),
 # which has no per-turn effort or tool-change mechanism, so chat models set effort_updates and
 # tools.updates to false. system_updates is unset: the docs don't say how a mid-conversation

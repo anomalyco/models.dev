@@ -1,6 +1,9 @@
 # Modalities: xAI image inputs are jpg/jpeg or png: https://docs.x.ai/docs/guides/image-understanding
-# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
-# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+# APIs: Chat Completions and Responses (POST https://<resource>.services.ai.azure.com/openai/v1/chat/completions and /openai/v1/responses), per the API Type column of "Models available in Foundry" in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-grok (accessed 2026-11-25). Chat Completions stays first so v1 keeps its provider.
+# Mid-conversation flags: left out. Azure's Grok guide documents no way to change tools or effort mid-conversation and no mid-conversation system messages on either API, so none of the three flags is marked.
+# Limits: input 128,000 and output 128,000 tokens per the SpaceXAI table in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-direct-others (accessed 2026-11-25).
+#   Azure lists output separately for each Grok row (grok-4.3: 8,192; grok-4.6: 128,000 max with a 200,000 window), so 128,000 is its documented cap here.
+#   The lab's 30,000 (models/xai/grok-4.1-fast-reasoning.toml) isn't in its cited xAI or Vertex pages; the non-reasoning lab takes it from a gateway listing.
 schema = 2
 name = "Grok 4.1 Fast (Reasoning)"
 description = "Fast Grok model for responsive chat, reasoning, and tool-assisted work"
@@ -20,10 +23,12 @@ temperature = true
 [limit]
 context = 128_000
 input = 128_000
-output = 8_192
+output = 128_000
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
+
+[api.responses]
 
 [cost.text.input]
 price = 0.2
