@@ -1,25 +1,25 @@
 # Toggle: reasoning.enabled = true|false
 # https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
+# Capabilities the catalog doesn't state (api.chat-completions.capabilities.system_updates) come from inclusionai/ling-3.1-flash, this host's previous model in the family.
 schema = 2
 base_model = "inclusionai/ling-3.2-flash"
-name = "Ling 3.2 Flash (free)"
 description = "Multimodal reasoning model for visual analysis, planning, and tool use"
-family = "ling-flash-free"
 
 [modalities]
 input = ["text", "image"]
 output = ["text"]
 
 [capabilities]
-tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 
 [limit]
 context = 1_048_576
 output = 262_144
 
 [api.chat-completions]
+capabilities = { system_updates = true }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
@@ -28,7 +28,8 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0
+price = 0.3
+cache = { read = 0.06 }
 
 [cost.text.output]
-price = 0
+price = 0.9

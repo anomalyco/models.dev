@@ -8,6 +8,9 @@ description = "Qwen instruction model for multilingual chat, reasoning, and tool
 tools = { supported = true }
 structured_output = true
 
+[limit]
+context = 131_072
+
 [api.chat-completions]
 compatibility = { max_tokens_field = "max_tokens" }
 
@@ -15,7 +18,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.09
+price = 0.14
 
 [cost.text.output]
-price = 0.55
+price = 0.8
