@@ -3,7 +3,8 @@
 # prompt_cache_options, cache_control, and reasoning_content pass through to upstream endpoints
 # unchanged on POST /v1/chat/completions.
 # Hand-authored (thin endpoint per AGENTS.md): /public/model-rates and /api/public/model-rates
-# publish per-token USD prices, context tiers, and off-peak windows only, with no model
+# publish per-token USD prices, context tiers, and off-peak windows only (off-peak windows apply
+# solely to deepseek-v4.1-flash; all other 20 routes carry flat 24/7 rates), with no model
 # capabilities, modalities, output limits, reasoning controls, or canonical lab IDs.
 # Sources (accessed 2026-11-27):
 #   https://proxystacks.com/en/docs/opencode       (documented base URL and env var)

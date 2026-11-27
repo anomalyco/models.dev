@@ -16,7 +16,6 @@ base_model = "anthropic/claude-sonnet-5-5"
 # tools = { supported = true, choice = ["auto", "none"] } inherited from models/anthropic/claude-sonnet-5-5.toml (forced tool use rejected).
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-stream_usage = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
 
 [cost.text.input]
