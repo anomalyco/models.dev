@@ -1,0 +1,18 @@
+# Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
+# Reasoning: reasoning_effort, https://inference.boundless.network/docs/reasoning
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.24
+cache = { read = 0.0048 }
+
+[cost.text.output]
+price = 0.96
