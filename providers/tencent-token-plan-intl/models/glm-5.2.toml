@@ -1,0 +1,26 @@
+# Pricing: Token Plan Personal Edition (international) list credit coefficients, checked 2026-11-27:
+#   Cache-missed input / output / cached input: 154 / 482 / 29 credits per million tokens.
+#   https://intl.cloud.tencent.com/document/product/1300/81316 (updated 2026-11-26); promotions excluded.
+# Cost omitted: a credit has no single USD value. Plans sell 1,000 / 2,600 / 7,900 / 15,900 credits for
+#   USD 7 / 17 / 51 / 103 a month (Lite / Standard / Pro / Max), i.e. USD 0.007 / 0.006538 / 0.006456 /
+#   0.006478 per credit (https://intl.cloud.tencent.com/document/product/1300/81315, updated 2026-11-26), and no per-credit price is published.
+#   Unknown does not mean free.
+# Availability: Token Plan Overview > Available models, https://intl.cloud.tencent.com/document/product/1300/81315
+# Exact documented IDs: glm-5.2 and glm-5-2 (one Model ID cell); only glm-5.2 is listed here.
+# Specifications: https://intl.cloud.tencent.com/document/product/1300/78934 (1M context, 1M input, 128K output).
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write rate published.
+# API: https://cloud.tencent.com/document/product/1823/132061
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = high|max (native lab baseline). Tencent's GLM guide maps low/medium to high
+#   and xhigh to max. https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

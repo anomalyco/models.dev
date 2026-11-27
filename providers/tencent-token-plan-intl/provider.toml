@@ -1,0 +1,13 @@
+# Token Plan Personal Edition (international), Singapore. OpenAI-compatible base URL, dedicated sk-tp- key,
+# available models: Token Plan Overview, https://intl.cloud.tencent.com/document/product/1300/81315 (updated 2026-11-26)
+# Quick start (base URL https://tokenhub-intl.tencentcloudmaas.com/plan/v3):
+#   https://intl.cloud.tencent.com/document/product/1300/81317
+# Credit deduction rules: https://intl.cloud.tencent.com/document/product/1300/81316
+# Reasoning HTTP format: top-level thinking.type (enabled|disabled) and reasoning_effort, reasoning returned at
+#   choices[].message.reasoning_content. https://cloud.tencent.com/document/product/1823/131208
+name = "Tencent Token Plan (International)"
+env = ["TENCENT_TOKEN_PLAN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+doc = "https://intl.cloud.tencent.com/document/product/1300/81315"
+api = "https://tokenhub-intl.tencentcloudmaas.com/plan/v3"
