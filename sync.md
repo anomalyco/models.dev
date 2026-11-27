@@ -30,6 +30,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
+- `bun models:sync openuncensored` syncs only OpenUncensored.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -423,6 +424,14 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - `context_length` only ever lowers the inherited context limit; it can report the lab's window rounded up (1048576 for 1M). Output limits, reasoning controls and other capabilities stay hand-authored.
 - `tools = false` overrides the lab's tool calling. Display names are not synced: the endpoint prefixes the lab name (`Z.ai: GLM 5.3`). Decision models (`decisions = true`) are skipped.
 - New models are not created automatically (`skipCreates`) and open no missing-model issues (`trackMissingModels: false`): the endpoint lists hundreds of models the catalog does not carry. It lists only models serving at that moment, so local files missing from a response are kept (`deleteMissing: false`) and reported.
+
+## OpenUncensored Notes
+
+- OpenUncensored is implemented in `packages/core/src/sync/providers/openuncensored.ts`.
+- Source endpoint: the public `https://api.openuncensored.com/v1/models` (no API key). It lists every chat model the API serves, including ones marked `available: false` while their hosts are down, so a model missing from the list is retired and its file is removed. An empty list fails the sync.
+- Existing models are updated from per-token `pricing.prompt` and `pricing.completion` (decimal strings), scaled to per-1M prices. Cache prices are not listed, so any a file declares stay as authored.
+- `context_length` only ever lowers the inherited context limit, since it can be the lab's window rounded up (1048576 for 1M); `input` and `output` come down with it when they would exceed the new context. Names, output limits, modalities, reasoning controls and `base_model` pointers stay hand-authored.
+- New models are not created automatically (`skipCreates`): the endpoint has no modalities, output limits or reasoning controls, so each remote-only ID opens a missing-model issue.
 
 ## OpenAI Notes
 
