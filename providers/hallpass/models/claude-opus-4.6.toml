@@ -1,0 +1,19 @@
+# Source: https://hallpassai.com/models.json (checked 2026-11-27)
+schema = 2
+base_model = "anthropic/claude-opus-4-6"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], default = { type = "effort", value = "medium" } }
+cache = { explicit = true }
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = 6.25 }
+
+[cost.text.output]
+price = 25

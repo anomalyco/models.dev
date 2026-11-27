@@ -1,0 +1,20 @@
+# Source: https://hallpassai.com/models.json (checked 2026-11-27)
+# Reasoning effort levels and default match HallPass gateway catalog.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], default = { type = "effort", value = "medium" } }
+cache = { explicit = true }
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20

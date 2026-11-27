@@ -1,0 +1,24 @@
+# Source: https://hallpassai.com/models.json (checked 2026-11-27)
+# Reasoning effort levels and default match HallPass gateway catalog.
+# Freeform custom tools: undocumented on HallPass gateway, so freeform is left unset.
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"], default = { type = "effort", value = "medium" } }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10

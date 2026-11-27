@@ -1,0 +1,19 @@
+# Source: https://hallpassai.com/models.json (checked 2026-11-27)
+schema = 2
+base_model = "google/gemini-4-carbon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"], default = { type = "effort", value = "medium" } }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 10

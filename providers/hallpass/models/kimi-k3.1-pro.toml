@@ -1,0 +1,25 @@
+# Source: https://hallpassai.com/models.json (checked 2026-11-27)
+# Reasoning effort levels and default are explicitly defined by HallPass gateway catalog.
+# Chat Completions emits reasoning_content for interleaved reasoning.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"], default = { type = "effort", value = "medium" } }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

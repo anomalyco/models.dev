@@ -1,0 +1,23 @@
+# Source: https://hallpassai.com/models.json (checked 2026-11-27)
+# Reasoning effort levels and flat $2.50/$5.00 + cache read/write rates match HallPass gateway catalog.
+schema = 2
+base_model = "xai/grok-4.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"], default = { type = "effort", value = "medium" } }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.4, write = 2.5 }
+
+[cost.text.output]
+price = 5
