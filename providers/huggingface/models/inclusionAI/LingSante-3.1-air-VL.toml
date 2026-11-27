@@ -1,0 +1,26 @@
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+# Toggle: reasoning.enabled = true|false (the router's OpenAI-compatible reasoning object, live-tested on this host's
+#   MiMo-V2.5). Controls copied from this host's previous Ling VL model, providers/huggingface/models/inclusionAI/Ling-3.0-flash-VL.toml
+#   (on/off switch, no graded effort). Not re-probed on this ID (no Hugging Face token).
+schema = 2
+base_model = "inclusionai/lingsante-3.1-air-vl"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[limit]
+context = 131_072
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.06
+
+[cost.text.output]
+price = 0.18

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
 import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { weightsIndex, weightsMatch } from "../weights.js";
 import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 // Public DeepInfra deploy catalog. Richer than the OpenAI-compatible
@@ -606,13 +607,33 @@ function combinations<T>(items: T[], size: number): T[][] {
     combinations(items.slice(index + 1), size - 1).map((rest) => [item, ...rest]));
 }
 
-export function resolveDeepInfraBaseModel(id: string) {
+// Deep Infra IDs that neither a lab file name nor its weights repo matches.
+const BASE_MODEL_ALIASES: Record<string, string> = {
+  // Deep Infra drops the size from the repo name: its model page describes the
+  // 120B MoE with 12B active (https://api.deepinfra.com/models/nvidia/NVIDIA-Nemotron-3.5-Super-VL).
+  "nvidia/NVIDIA-Nemotron-3.5-Super-VL": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+};
+
+export function resolveDeepInfraBaseModel(id: string, weights = weightsIndex()) {
+  const alias = BASE_MODEL_ALIASES[id];
+  if (alias !== undefined) return alias;
   const [prefix, ...parts] = id.split("/");
   if (prefix === undefined || parts.length === 0) return undefined;
   const canonicalPrefix = DEEPINFRA_PREFIXES[prefix];
-  if (canonicalPrefix === undefined) return resolveCanonicalBaseModel(id);
-  for (const name of nameCandidates(parts.join("/"))) {
-    const match = resolveModelMetadataBaseModel(`${canonicalPrefix}/${name.toLowerCase()}`);
+  const candidates = nameCandidates(parts.join("/"));
+  if (canonicalPrefix === undefined) {
+    const match = resolveCanonicalBaseModel(id);
+    if (match !== undefined) return match;
+  } else {
+    for (const name of candidates) {
+      const match = resolveModelMetadataBaseModel(`${canonicalPrefix}/${name.toLowerCase()}`);
+      if (match !== undefined) return match;
+    }
+  }
+  // Deep Infra IDs are Hugging Face repos, so a lab file listing that repo as its
+  // weights is the model (Sao10K/L3.1-70B-Euryale-v2.2 -> sao10k/l3.1-euryale-70b).
+  for (const name of candidates) {
+    const match = weightsMatch(`${prefix}/${name}`, weights);
     if (match !== undefined) return match;
   }
   return undefined;

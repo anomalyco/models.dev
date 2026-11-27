@@ -18,6 +18,9 @@ reasoning = { supported = true, toggle = true }
 structured_output = true
 temperature = true
 
+[limit]
+output = 131_072
+
 [api.chat-completions]
 capabilities = { system_updates = true }
 compatibility = { reasoning_field = "reasoning_details" }
@@ -29,8 +32,7 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-co
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 0.5
-cache = { read = 0.15 }
+price = 0.6
 
 [cost.text.output]
-price = 2.5
+price = 3

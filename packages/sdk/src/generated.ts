@@ -277,6 +277,7 @@ export type ModelFamily =
   | "ling-flash-free"
   | "ling-tiny"
   | "ling-tiny-free"
+  | "lingsante"
   | "liquid"
   | "liquid-decision"
   | "llama"

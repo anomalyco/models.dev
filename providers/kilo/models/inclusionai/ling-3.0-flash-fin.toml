@@ -1,19 +1,12 @@
 schema = 2
+base_model = "inclusionai/ling-3.0-flash-fin"
 name = "inclusionAI: Ling 3.0 Flash Fin"
 description = "Ling 3.0 Flash Fin is InclusionAI’s finance-enhanced MoE language model, combining 124 billion total parameters with approximately 5.1 billion active parameters for efficient financial reasoning. Its 256K context window, function calling, and support for complex, multi-step investment workflows make it ideal for financial research, analysis, long-horizon planning, and execution, while retaining strong capabilities in coding and mathematics."
-family = "ling-flash"
-open_weights = false
-release_date = "2026-08-27"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = false
-temperature = true
 
 [limit]
 context = 256_000

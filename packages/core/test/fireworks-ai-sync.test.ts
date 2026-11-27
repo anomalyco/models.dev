@@ -197,39 +197,56 @@ test("does not report retired pricing rows or their aliases as missing models", 
   }
 });
 
-test("excludes expired serverless deprecations including fast routes", () => {
-  const retiring = {
-    ...inventoryModel({ name: "accounts/fireworks/models/retiring" }),
+test("keeps models past their deprecation date as deprecated, fast routes included, while Fireworks lists them", () => {
+  const retired = {
+    ...inventoryModel({ name: "accounts/fireworks/models/retired" }),
     deprecationDate: { year: 2026, month: 9, day: 25 },
   };
   const live = inventoryModel({ name: "accounts/fireworks/models/live" });
   const pricing = [
-    fireworksModel({ id: retiring.name }),
+    fireworksModel({ id: retired.name }),
     fireworksModel({
-      id: retiring.name,
+      id: retired.name,
       serverless_mode: "fast",
-      usage_identifier: "accounts/fireworks/routers/retiring-fast",
+      usage_identifier: "accounts/fireworks/routers/retired-fast",
     }),
     fireworksModel({ id: live.name }),
   ];
 
-  expect(mergeFireworksModels(pricing, [retiring, live], new Date("2026-09-28T00:00:00Z"))
-    .map((model) => model.catalogId)).toEqual([live.name]);
-  expect(mergeFireworksModels(pricing, [retiring, live], new Date("2026-09-25T12:00:00Z"))
-    .map((model) => model.catalogId)).toEqual([
-    retiring.name,
-    "accounts/fireworks/routers/retiring-fast",
-    live.name,
+  const models = mergeFireworksModels(pricing, [retired, live]);
+  expect(models.map((model) => [model.catalogId, model.deprecated])).toEqual([
+    [retired.name, true],
+    ["accounts/fireworks/routers/retired-fast", true],
+    [live.name, undefined],
   ]);
+  expect(fireworksAi.translateModel(models[0]!, {
+    existing: () => existingModel(),
+    authored: () => existingModel(),
+  })?.model?.status).toBe("deprecated");
 });
 
-test("honors the documented GLM 5.2 retirement while Fireworks still flags it as serverless", () => {
+test("removes a model past its deprecation date once Fireworks no longer lists it as serverless", () => {
+  const live = inventoryModel({ name: "accounts/fireworks/models/live" });
+  const pricing = [
+    fireworksModel({ id: "accounts/fireworks/models/retired" }),
+    fireworksModel({ id: live.name }),
+  ];
+  const delisted = {
+    ...inventoryModel({ name: "accounts/fireworks/models/retired", supportsServerless: false }),
+    deprecationDate: { year: 2026, month: 9, day: 25 },
+  };
+
+  expect(mergeFireworksModels(pricing, [delisted, live]).map((model) => model.catalogId)).toEqual([live.name]);
+  expect(mergeFireworksModels(pricing, [live]).map((model) => model.catalogId)).toEqual([live.name]);
+});
+
+test("keeps GLM 5.2 deprecated from its documented retirement while Fireworks still flags it as serverless", () => {
   const retired = inventoryModel({ name: "accounts/fireworks/models/glm-5p2" });
   const live = inventoryModel({ name: "accounts/fireworks/models/glm-5p3" });
   const pricing = [fireworksModel({ id: retired.name }), fireworksModel({ id: live.name })];
 
-  expect(mergeFireworksModels(pricing, [retired, live], new Date("2026-09-28T00:00:00Z"))
-    .map((model) => model.catalogId)).toEqual([live.name]);
+  expect(mergeFireworksModels(pricing, [retired, live]).map((model) => [model.catalogId, model.deprecated]))
+    .toEqual([[retired.name, true], [live.name, undefined]]);
 });
 
 test("refuses destructive sync when either Fireworks source is empty", () => {
@@ -425,7 +442,6 @@ test("marks models with a List Models deprecation date as deprecated", () => {
       fireworksModel({ id: live.name }),
     ],
     [retiring, live, inventoryOnly],
-    new Date("2026-10-21T00:00:00Z"),
   );
 
   expect(models.map((model) => [model.catalogId, model.deprecated])).toEqual([

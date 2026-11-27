@@ -1,0 +1,27 @@
+# Price and context: https://api.deepinfra.com/models/nvidia/NVIDIA-Nemotron-3.5-Super-VL (read 2026-11-26): $0.15 input, $0.50 output per 1M tokens,
+#   cached input at 0.1333x ($0.02); 262,144-token context; tags tools, structured-output, multimodal, input-video, reasoning.
+# Effort: reasoning_effort = none|medium|high (reasoning.enabled = false = none); https://docs.deepinfra.com/chat/reasoning
+#   The levels are the model card's three modes: enable_thinking off (none), medium_effort (medium) and full thinking (high, the default)
+#   (https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16). No budget: Deep Infra documents no reasoning-token budget field.
+#   Same layout as this host's NVIDIA-Nemotron-3-Super-120B-A12B, whose card's reduced mode is low_effort instead of medium_effort.
+# Reasoning probe (live 2026-11-26, OpenRouter pinned to Deep Infra: provider.only = ["deepinfra"], allow_fallbacks = false):
+#   reasoning tokens, 3 trials each: enabled=false 0, 0, 0; none 0, 0, 0; default 484, 497, 567; low 405, 474, 658;
+#   medium 438, 535, 613; high 552, 593, 658. Off is clean; the on levels are noisy at this prompt size, so they follow the model card.
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 0.5

@@ -14,7 +14,8 @@ structured_output = false
 tools = { supported = true }
 
 [limit]
-input = 262_144
+context = 256_000
+input = 256_000
 output = 65_536
 
 [cost.text.input]

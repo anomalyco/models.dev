@@ -1,19 +1,12 @@
 schema = 2
+base_model = "inclusionai/ling-3.0-tiny"
 name = "inclusionAI: Ling 3.0 Tiny"
 description = "Ling 3.0 Tiny is a mixture-of-experts model from InclusionAI, with 1.3B active parameters out of 7.9B total. It is designed for responsive agents, instruction following, and multi-turn conversations, with switchable..."
-family = "ling-tiny"
-open_weights = false
-release_date = "2026-08-06"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["none", "high"] }
 structured_output = true
-temperature = true
 
 [limit]
 context = 262_144

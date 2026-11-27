@@ -42,6 +42,7 @@ import {
   type EdenAIModel,
 } from "../src/sync/providers/edenai.js";
 import { buildHyperModel, type HyperModel } from "../src/sync/providers/hyper.js";
+import { weightsMatch } from "../src/sync/weights.js";
 import {
   buildHuggingFaceModel,
   huggingface,
@@ -4009,9 +4010,27 @@ test("DeepInfra matches its own spellings to lab files only when one matches exa
     expect(resolveDeepInfraBaseModel(id)).toBe(base);
   }
   // No lab file matches exactly, so nothing is guessed.
-  expect(resolveDeepInfraBaseModel("nvidia/NVIDIA-Nemotron-3.5-Super-VL")).toBeUndefined();
-  expect(resolveDeepInfraBaseModel("Sao10K/L3.1-70B-Euryale-v2.2")).toBeUndefined();
   expect(resolveDeepInfraBaseModel("Qwen/Qwen3-14B")).toBeUndefined();
+});
+
+test("DeepInfra matches an ID to the lab file listing that Hugging Face repo as its weights", () => {
+  // Real lab files: the repo is the ID, or the ID minus its -Turbo deployment suffix.
+  expect(resolveDeepInfraBaseModel("Sao10K/L3.1-70B-Euryale-v2.2")).toBe("sao10k/l3.1-euryale-70b");
+  expect(resolveDeepInfraBaseModel("Sao10K/L3-8B-Lunaris-v1-Turbo")).toBe("sao10k/l3-lunaris-8b");
+  // Deep Infra drops the size from this repo name, so it's an alias.
+  expect(resolveDeepInfraBaseModel("nvidia/NVIDIA-Nemotron-3.5-Super-VL")).toBe("nvidia/nemotron-3.5-super-vl-120b-a12b");
+
+  const index = new Map([
+    ["acme/widget-7b", ["acme/widget-7b", "acme/widget-7b-fast"]],
+    ["acme/gadget-7b", ["acme/gadget-7b", "acme/other-7b"]],
+  ]);
+  // Repo names compare case-insensitively; a tier of the same weights loses to its base.
+  expect(weightsMatch("ACME/Widget-7B", index)).toBe("acme/widget-7b");
+  // Two unrelated lab files listing one repo is ambiguous.
+  expect(weightsMatch("acme/gadget-7b", index)).toBeUndefined();
+  expect(weightsMatch("acme/missing", index)).toBeUndefined();
+  expect(resolveDeepInfraBaseModel("Unknown-Org/widget-7b-Turbo", index)).toBeUndefined();
+  expect(resolveDeepInfraBaseModel("acme/widget-7b-Turbo", index)).toBe("acme/widget-7b");
 });
 
 test("DeepInfra marks models with a scheduled deprecation and doesn't create them", () => {
@@ -4587,6 +4606,28 @@ function cortecsModel(overrides: Partial<CortecsModel> = {}): CortecsModel {
     ...overrides,
   };
 }
+
+test("Cortecs skips Auto-Update aliases of listed models", () => {
+  const row = (id: string, resolved_model?: string) => ({
+    id,
+    object: "model",
+    created: 1_775_088_000,
+    pricing: { currency: "EUR", input_token: 0.11, output_token: 0.33 },
+    context_size: 32_000,
+    ...(resolved_model === undefined ? {} : { resolved_model }),
+  });
+  const models = cortecs.parseModels({
+    object: "list",
+    data: [
+      row("voxtral-small-2507"),
+      row("voxtral-small:latest", "voxtral-small-2507"),
+      row("gpt-oss-120b"),
+      row("gpt-oss-120b:latest", "gpt-oss-120b"),
+      row("unlisted:latest", "unlisted-2601"),
+    ],
+  });
+  expect(models.map((model) => model.id)).toEqual(["voxtral-small-2507", "gpt-oss-120b", "unlisted:latest"]);
+});
 
 test("Cortecs base_model files leave model facts to the lab", () => {
   const existing: ExistingModel = {
@@ -6712,6 +6753,31 @@ test("maps Vercel language models tagged video-generation to video output", () =
   });
 
   expect(buildVercelModel(model!, undefined).modalities?.output).toEqual(["video"]);
+});
+
+test("Vercel attachment follows input modalities when a text-only model gains image and PDF input", () => {
+  const [model] = vercel.parseModels({
+    data: [{
+      id: "scaledown/scaledown-classify-1",
+      name: "Classify-1",
+      created: 1_755_815_280,
+      released: 1_791_849_600,
+      context_window: 0,
+      max_tokens: 0,
+      type: "evaluation",
+      tags: ["file-input", "vision"],
+      pricing: { input: "0.00000005", output: "0" },
+    }],
+  });
+
+  const synced = buildVercelModel(model!, {
+    name: "Classify-1",
+    attachment: false,
+    modalities: { input: ["text"], output: ["text"] },
+  });
+
+  expect(synced.modalities?.input).toEqual(["text", "image", "pdf"]);
+  expect(synced.attachment).toBe(true);
 });
 
 test("uses verified Vercel output limits over catalog metadata", () => {
@@ -9300,6 +9366,28 @@ test("Hugging Face strips precision and MoE parameter suffixes only when a lab f
   ]);
   // No exact lab file after stripping: not created.
   expect(resolveHuggingFaceBaseModel("ibm-granite/granite-4.2-3b")).toBeUndefined();
+});
+
+test("Hugging Face falls back to the lab file whose weights url is the router ID's repo", () => {
+  expect(resolveHuggingFaceBaseModel("RekaAI/reka-edge-2603")).toBe("rekaai/reka-edge");
+  expect(resolveHuggingFaceBaseModel("Sao10K/L3-8B-Lunaris-v1")).toBe("sao10k/l3-lunaris-8b");
+  expect(resolveHuggingFaceBaseModel("XiaomiMiMo/MiMo-V2.6-Flash-RL")).toBe("xiaomi/mimo-v2.6-flash");
+  // Pro and Pro UltraSpeed both list the Pro-RL weights; the tier extends the base ID.
+  expect(resolveHuggingFaceBaseModel("XiaomiMiMo/MiMo-V2.6-Pro-RL")).toBe("xiaomi/mimo-v2.6-pro");
+  // Name matching still wins over the weights url.
+  expect(resolveHuggingFaceBaseModel("deepseek-ai/DeepSeek-V4-Pro")).toBe("deepseek/deepseek-v4-pro");
+  // The repo must equal the ID; no lab lists RadixArk's weights.
+  expect(resolveHuggingFaceBaseModel("RadixArk/DaisyRose-27B")).toBeUndefined();
+});
+
+test("Hugging Face weights matching is exact and refuses repos two unrelated lab files list", () => {
+  const index = new Map([
+    ["org/model-rl", ["lab/model", "lab/model-fast"]],
+    ["org/shared", ["lab/one", "other/two"]],
+  ]);
+  expect(weightsMatch("Org/Model-RL", index)).toBe("lab/model");
+  expect(weightsMatch("org/model", index)).toBeUndefined();
+  expect(weightsMatch("org/shared", index)).toBeUndefined();
 });
 
 test("OpenRouter web search prices become v2 prices per 1,000, by search context size where listed", () => {

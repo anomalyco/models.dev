@@ -75,6 +75,7 @@ const CANONICAL_PROVIDER_PREFIXES = {
   cohere: { provider: "cohere", metadata: "cohere" },
   deepseek: { provider: "deepseek", metadata: "deepseek" },
   google: { provider: "google", metadata: "google" },
+  inclusionai: { provider: "inclusionai", metadata: "inclusionai" },
   liquid: { provider: "liquid", metadata: "liquid" },
   meta: { provider: "llama", metadata: "meta" },
   "meta-llama": { provider: "llama", metadata: "meta" },

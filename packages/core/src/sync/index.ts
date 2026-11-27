@@ -177,6 +177,12 @@ export interface SyncProvider<SourceModel> {
      * next to context tiers.
      */
     v2Set?: Record<string, unknown>;
+    /**
+     * Capability paths the source states are unsupported (e.g.
+     * `capabilities.system_updates`). A new file doesn't inherit them from
+     * the same host's previous model in the family.
+     */
+    unsupported?: string[];
     /** Source data the module skipped, listed with the sync's notices. */
     notices?: string[];
   } | SyncedV2Model | undefined;
@@ -386,6 +392,7 @@ export async function syncProvider<SourceModel>(
     model: z.infer<typeof SyncedAuthoredModel>;
     header: string;
     v2Set?: Record<string, unknown>;
+    unsupported?: string[];
   }>();
   const desiredV2 = new Map<string, { content: string }>();
   const caseNormalizedDesiredPaths = new Map<string, string>();
@@ -523,6 +530,7 @@ export async function syncProvider<SourceModel>(
       model: parsed.data,
       header,
       v2Set: translated.v2Set,
+      unsupported: translated.unsupported,
     });
   }
 
@@ -554,7 +562,7 @@ export async function syncProvider<SourceModel>(
       if (content === undefined) continue;
       const inherited = provider.inheritPredecessorCapabilities === false
         ? content
-        : withPredecessorCapabilities(content, [...existing].map(([file, entry]) => [file, entry.v2]), modelMetadata, protocol);
+        : withPredecessorCapabilities(content, [...existing].map(([file, entry]) => [file, entry.v2]), modelMetadata, protocol, file.unsupported);
       files.push({ status: "created", path: filePath });
       if (options.dryRun) {
         console.log(`Would create ${relativePath}`);
@@ -1306,7 +1314,33 @@ function leadingComments(text: string) {
   return header.length > 0 ? `${header.join("\n")}\n` : "";
 }
 
+const SYNC_FLAGS = ["--dry-run", "--new-only", "--open-issues", "--no-issues", "--list-providers"];
+
+export const SYNC_USAGE = `Usage: bun ./packages/core/script/sync-models.ts [target] [flags]
+
+target    a provider id, or a group (${Object.keys(groups).join(", ")}); default "aggregators"
+
+flags
+  --dry-run         report changes without writing files
+  --new-only        only create models that have no file yet
+  --open-issues     open missing-model issues (default only in GitHub Actions)
+  --no-issues       never open missing-model issues
+  --list-providers  print the provider matrix as JSON
+  -h, --help        print this message`;
+
 export async function main(args = process.argv.slice(2)) {
+  if (args.includes("--help") || args.includes("-h")) {
+    console.log(SYNC_USAGE);
+    return;
+  }
+  // An unknown flag must not fall through to a real sync of the default target.
+  const unknown = args.filter((arg) => arg.startsWith("-") && !SYNC_FLAGS.includes(arg));
+  if (unknown.length > 0) {
+    console.error(`Unknown flag: ${unknown.join(", ")}\n\n${SYNC_USAGE}`);
+    process.exitCode = 1;
+    return;
+  }
+
   if (args.includes("--list-providers")) {
     console.log(JSON.stringify(syncProviderMatrix()));
     return;
