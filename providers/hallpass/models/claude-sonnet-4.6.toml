@@ -1,0 +1,23 @@
+# Source: https://hallpassai.com/models.json (checked 2026-11-27)
+# Toggle: thinking.type = adaptive|enabled|disabled; budget_tokens >= 1024 on /v1/messages.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+cache = { explicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3, write = 3.75 }
+
+[cost.text.output]
+price = 15
