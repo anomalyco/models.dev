@@ -1,0 +1,10 @@
+# AMD Token Lab: OpenAI-compatible inference on AMD Instinct GPUs for AMD AI Developer Program members.
+# Keys and docs: https://notebooks.amd.com/tokenlab (sign in with the AMD AI Developer Program).
+# Verified live against https://api.tokenlab.amd.com/v1 (accessed 2026-11-27): /v1/models and
+# /v1/chat/completions; invalid keys return OpenAI-style errors ("Invalid Token Lab API key.").
+name = "AMD Token Lab"
+env = ["AMD_TOKENLAB_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.tokenlab.amd.com/v1"
+doc = "https://notebooks.amd.com/tokenlab"
