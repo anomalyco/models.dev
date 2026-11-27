@@ -6,12 +6,11 @@
 # Wire: reasoning_effort (Chat) / reasoning.effort (Responses) = none|low|high|max; default low. Medium is rejected.
 # Effort validation: https://docs.refuseless.com/guides/reasoning explicitly rejects minimal, medium and xhigh with HTTP 400.
 # Off uses the documented effort=none alias, so the catalog has no separate toggle (AGENTS.md none-in-effort rule).
+# Images: docs.refuseless.com/models states every Refuseless model accepts images except glm-5.3-abliterated
+# ("check the vision field"), and /v1/models reports vision=true for this ID, so the base lab modalities
+# (text + JPEG/PNG/GIF/WebP) are inherited rather than narrowed.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "low" } }
