@@ -7,9 +7,11 @@ name = "GitHub Copilot"
 # https://docs.github.com/en/copilot/reference/ai-models/model-comparison
 # APIs (authenticated GET /models `supported_endpoints`, 2026-10-21): POST /chat/completions (Gemini, Kimi),
 # /responses and ws:/responses (GPT, Grok, MAI), /v1/messages and /chat/completions (Claude), plus /embeddings.
-# Mid-conversation flags: GitHub documents none of them and they were not tested live. Claude models that Anthropic
-# lists for in-history system messages (no beta header needed) set system_updates on [api.messages] only.
-# tools.updates and effort_updates need Anthropic betas Copilot isn't known to accept, so they're unset everywhere.
+# Mid-conversation flags: GitHub documents none of them. Claude models that Anthropic lists for in-history system
+# messages (no beta header needed) set system_updates on [api.messages] only. On Claude, tools.updates and
+# effort_updates need Anthropic betas Copilot isn't known to accept, so they're unset. On /responses, the GPT-5.6 and
+# GPT-6 models accepted a Responses `configuration_update` item live (2026-11-26) and set effort_updates on
+# [api.responses]; gpt-5.3-codex, Grok and MAI Code rejected it, so they leave it unset.
 # Cost: USD per 1M tokens billed in AI credits ($0.01 each) beyond the plan allowance:
 # https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing. Legacy annual plans bill
 # per-request multipliers instead, which these files don't carry.
