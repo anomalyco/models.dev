@@ -106,10 +106,6 @@ skip = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
   "Mid-conversation flags not checked.",
 ]
-"z-ai/" = [
-  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
-  "Mid-conversation flags not checked.",
-]
 "fireworks/" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
   "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).",
@@ -865,17 +861,9 @@ note = [
 ]
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
 
-# GLM-5.3 (catalog id z-ai/glm-5.3; the lab is zhipuai). The catalog row has no docs page yet; prices and context come
-# from the catalog. Effort is low|high|max with thinking always on, as on Workers AI's GLM-5.3
-# (providers/cloudflare-workers-ai/models/@cf/zai-org/glm-5.3.toml; https://developers.cloudflare.com/workers-ai/models/glm-5.3/:
-# low, high, max (default)). Not checked live; structured_output is left out.
-[models."z-ai/glm-5.3"]
-base_model = "zhipuai/glm-5.3"
-note = [
-  "Always reasons; effort: reasoning_effort = low|high|max (default max; no off value; not checked live).",
-  "Sources: providers/cloudflare-workers-ai/models/@cf/zai-org/glm-5.3.toml ; https://developers.cloudflare.com/workers-ai/models/glm-5.3/",
-]
-reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
+# z-ai/glm-5.3 (lab file models/zhipuai/glm-5.3.toml) is held until its gateway price is confirmed: it has no gateway docs
+# page, and a mapped row without catalog provider_details pricing or a curated cost fails every cloudflare-ai-gateway sync
+# (see catalogCost). Map it to zhipuai/glm-5.3 with effort low|high|max once the catalog price is confirmed.
 
 # Video and image ids whose lab file has another name (v2-only files on POST /ai/run). Each catalog page's
 # name and description match the lab model: https://developers.cloudflare.com/ai/models/<id>/
