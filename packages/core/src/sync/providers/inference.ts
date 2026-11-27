@@ -101,20 +101,22 @@ export const inference = {
       const authored = context.authored(model.id);
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
-    const v2Set = mimeInput(model);
     const unknown = (model.reasoning_efforts ?? []).filter((effort) => !ReasoningEffort.safeParse(effort).success);
     const notices = unknown.length === 0
       ? undefined
       : [`Inference ${model.id}: dropped reasoning_efforts the schema cannot describe: ${unknown.join(", ")}`];
-    if (existing !== undefined) return { id: model.id, model: buildInferenceModel(model, existing), v2Set, notices };
-    const baseModel = labModelID(model.id);
-    if (!existsSync(path.join(MODELS_DIR, `${baseModel}.toml`))) return undefined;
-    return {
-      id: model.id,
-      model: buildInferenceModel(model, { base_model: baseModel } as ExistingModel),
-      v2Set,
-      notices,
-    };
+    let built: SyncedModel;
+    if (existing !== undefined) {
+      built = buildInferenceModel(model, existing);
+    } else {
+      const baseModel = labModelID(model.id);
+      if (!existsSync(path.join(MODELS_DIR, `${baseModel}.toml`))) return undefined;
+      built = buildInferenceModel(model, { base_model: baseModel } as ExistingModel);
+    }
+    // Input that matches the lab is inherited, MIME list included; only a host
+    // that differs from the lab gets its own documented image formats.
+    const v2Set = "modalities" in built && built.modalities !== undefined ? mimeInput(model) : undefined;
+    return { id: model.id, model: built, v2Set, notices };
   },
 } satisfies SyncProvider<InferenceModel>;
 
