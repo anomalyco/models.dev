@@ -1,0 +1,21 @@
+# Sources (accessed 2026-11-10):
+# - API: POST https://api.minimax.io/v1/images/generations and POST https://api.minimax.io/v1/images/edits
+#   (https://minimax-cac98058-feat-h3image-release.mintlify.site/guides/image-generation)
+# - Pricing: pay-as-you-go USD per 1M tokens — text input $2.3, image input $1.5, image output $3.8
+#   (platform pricing pages still list only image-01 at $0.0035/image as of 2026-11-10)
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-H3-Image"
+
+[api.images]
+base_url = "https://api.minimax.io/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.text.input]
+price = 2.3
+
+[cost.image.input]
+price = 1.5
+
+[cost.image.output]
+price = 3.8

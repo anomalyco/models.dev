@@ -1,0 +1,17 @@
+# Model list and API: https://cloud.tencent.com/document/product/1823/133515 (POST /v1/embeddings, OpenAI-compatible;
+#   the host caps each input text at 2,000 characters). Pricing: https://cloud.tencent.com/document/product/1823/130055
+#   (向量模型: CNY 0.6 per 1M text input tokens), accessed 2026-11-08. Not probed live (no TokenHub key available).
+# USD price: intl list, Kinfra-Text-Embedding-4b text input USD 0.084 per 1M tokens, accessed 2026-11-25:
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (same source as the other TokenHub files).
+schema = 2
+v2_only = true
+base_model = "tencent/kinfra-text-embedding-4b"
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.084
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,9 @@
+# ElevenLabs API: https://elevenlabs.io/docs/api-reference/introduction (xi-api-key header).
+# Requests go to https://api.elevenlabs.io/v1/... ; @ai-sdk/elevenlabs and @opencode/ai/providers/elevenlabs
+# both take https://api.elevenlabs.io as the base URL and add /v1/text-to-speech or /v1/speech-to-text
+# themselves, so each model's [api.*] table sets base_url = "https://api.elevenlabs.io".
+name = "ElevenLabs"
+npm = "@ai-sdk/elevenlabs"
+opencodeai = "@opencode/ai/providers/elevenlabs"
+env = ["ELEVENLABS_API_KEY"]
+doc = "https://elevenlabs.io/docs/overview/models"

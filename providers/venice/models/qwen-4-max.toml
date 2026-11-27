@@ -1,0 +1,30 @@
+schema = 2
+base_model = "alibaba/qwen4-max"
+name = "Qwen 4 Max"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[limit]
+context = 262_144
+output = 65_536
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.venice.ai/api/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.875
+cache = { read = 0.09375 }
+
+[cost.text.output]
+price = 5.625
+
+[cost.web_search]
+price = 10

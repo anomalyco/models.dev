@@ -10,15 +10,13 @@
 # the earlier turns; the tool list is rendered in the developer block before the first user turn.
 schema = 2
 base_model = "openai/gpt-oss-120b"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 system_updates = true
-
-[limit]
-output = 131_072
 
 [cost.text.input]
 price = 0.15

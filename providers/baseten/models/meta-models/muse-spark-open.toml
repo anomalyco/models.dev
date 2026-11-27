@@ -1,0 +1,33 @@
+# Reasoning is always on. Baseten documents top-level reasoning_effort = low | medium | high | xhigh (default);
+# none and minimal run at low. Reasoning is returned in reasoning_content (live, 2026-11-24).
+# https://docs.baseten.co/inference/model-apis/reasoning
+# No structured outputs or JSON mode on this model; sampling temperature, top_p, top_k, stop, presence_penalty,
+# frequency_penalty (https://docs.baseten.co/inference/model-apis/overview). The overview also lists audio input, but
+# GET https://inference.baseten.co/v1/models lists text and image only, which the sync follows.
+# Price: $1.25 input, $0.15 cached input, $4.25 output per 1M tokens (https://www.baseten.co/pricing/, accessed 2026-11-24).
+schema = 2
+base_model = "meta/muse-spark-open"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

@@ -1,5 +1,6 @@
 # Mid-conversation: Cortecs serves this model on POST https://api.cortecs.ai/v1/chat/completions; reasoning_effort and tools are per-request fields with no per-turn effort or tool-change mechanism (effort_updates = false, tools.updates = false). https://docs.cortecs.ai/api/chat-completions
 # Cache: automatic prefix caching on every routed provider (mistral). https://docs.cortecs.ai/routing/prompt-caching
+# Output limit: the catalog's max_output_tokens equals its context_size (32,000), which is not a per-request cap; the lab's 32,768 would exceed the context served here, so output is capped at the context.
 schema = 2
 base_model = "mistral/voxtral-small-24b-2507"
 name = "voxtral-small-2507"

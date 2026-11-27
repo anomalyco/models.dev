@@ -1,0 +1,17 @@
+# Toggle: reasoning.effort = none (off) | omitted (on); reasoning_effort on Chat Completions
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.2
+
+[cost.text.output]
+price = 0.4

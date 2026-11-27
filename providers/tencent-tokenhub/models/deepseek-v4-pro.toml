@@ -1,0 +1,34 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 1.74, output 3.48, cache hit 0.145; no peak pricing).
+#   China list: https://cloud.tencent.com/document/product/1823/130055
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-17)
+# Tencent id deepseek-v4-pro; documented upstream version: DeepSeek-V4-Pro.
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write price is published.
+# This id is Tencent's own DeepSeek-V4-Pro deployment, listed and priced separately from
+#   "DeepSeek-V4-Pro 0813 正式版" (deepseek-v4-pro-0813, deepseek/deepseek-v4-pro): CNY 12 / 24 / 1 vs 4.5 / 13.5 / 0.15,
+#   no peak pricing (https://cloud.tencent.com/document/product/1823/130055). The model list
+#   (https://cloud.tencent.com/document/product/1823/130051, checked 2026-11-24) gives it its own "DeepSeek-V4-Pro"
+#   row with no 0813 mapping, so it maps to the undated lab model.
+# It is also the only DeepSeek id in the reasoning guide's effort table, row "deepseek-v4-pro: 默认 high，
+#   支持 low、high、max、none"; the 0813 ids aren't in that table and copy the DeepSeek/Token Plan controls.
+# Effort: reasoning_effort = low|high|max|none (default high). none turns thinking off, so there is
+#   no separate toggle (thinking.type also exists, default enabled).
+# Reasoning guide: https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.74
+cache = { read = 0.145 }
+
+[cost.text.output]
+price = 3.48

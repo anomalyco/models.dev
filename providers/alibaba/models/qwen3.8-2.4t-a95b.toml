@@ -8,6 +8,7 @@
 # Cache prices (all input bands, same ratios per https://www.alibabacloud.com/help/en/model-studio/context-cache): implicit read 12.5%, explicit creation 125%, explicit read 8.5% of input (https://www.qwencloud.com/models/qwen3.8-2.4t-a95b, accessed 2026-10-23).
 # Per-API flags: system_updates sits on [api.chat-completions] only. The late system message was only checked on Chat Completions (2026-10-23 audit); the Responses and Anthropic-compatible Messages endpoints have no documented or tested in-place system message.
 # Tools: tool_choice auto|none on every API; no strict tool mode (sources in provider.toml).
+# Limits: Model Studio serves 1,000,000 context, 991,808 max input and 131,072 max output (https://www.alibabacloud.com/help/en/model-studio/qwen3-8-2-4t-a95b, https://help.aliyun.com/zh/model-studio/qwen3-8-2-4t-a95b, accessed 2026-11-24); the open weights' native context is 262,144.
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen3.8-2.4t-a95b"
@@ -29,6 +30,10 @@ sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/alibaba/r
 [api.messages]
 base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
+[limit]
+context = 1_000_000
+input = 991_808
 
 [cost.text.input]
 price = 2

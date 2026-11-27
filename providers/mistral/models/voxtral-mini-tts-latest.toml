@@ -1,3 +1,6 @@
+# Lifecycle: Voxtral TTS (voxtral-mini-tts-2603) was deprecated 2026-10-31 and retires 2027-04-30; replacement Voxtral TTS 3
+#   (https://docs.mistral.ai/models/voxtral-tts-26-03 and the deprecation table at https://docs.mistral.ai/getting-started/models/).
+#   /v1/models (2026-11-23) still maps voxtral-mini-tts-latest -> voxtral-mini-tts-2603.
 # Sources:
 #   https://docs.mistral.ai/models/voxtral-tts-26-03 (Voxtral TTS, API IDs voxtral-mini-tts-2603 and
 #     voxtral-mini-tts-latest, released 2026-03-23; open weights under CC BY-NC 4.0 at
@@ -5,15 +8,18 @@
 #   https://docs.mistral.ai/studio/audio/text_to_speech/speech (POST /v1/audio/speech; response_format
 #     pcm|wav|mp3|flac|opus, default mp3; a 2-3 second reference audio clip can clone a voice)
 #   https://mistral.ai/news/voxtral-tts
-# No [cost]: speech is billed per output character ($16 per 1M), left out to keep this model's v1 output unchanged.
+# Pricing (accessed 2026-11-12): https://docs.mistral.ai/models/voxtral-tts-26-03 (Input $16 /M Chars; the page lists voxtral-mini-tts-latest as an alias of 2603,
+# while https://docs.mistral.ai/models/voxtral-mini-tts-3-0 also claims the alias at $13 /M Chars and is not in the catalog yet).
+# GET https://api.mistral.ai/v1/models (2026-11-12) lists voxtral-mini-tts-latest as an alias of voxtral-mini-tts-2603 only (voxtral-mini-tts-3-0 has aliases voxtral-mini-tts-3), so $16 applies.
 # API: POST https://api.mistral.ai/v1/audio/speech (https://docs.mistral.ai/api/endpoint/audio/speech).
 schema = 2
 type = "speech"
 name = "Voxtral Mini TTS (latest)"
 description = "Multilingual text-to-speech model with zero-shot voice cloning"
-family = "voxtral"
+family = "voxtral-tts"
 open_weights = true
 release_date = "2026-03-23"
+status = "deprecated"
 
 [modalities]
 input = ["text"]
@@ -30,3 +36,7 @@ output = 0
 
 [api.speech]
 sdk = { opencodeai = "none" }
+
+[cost.text.input]
+unit = "character"
+price = 16

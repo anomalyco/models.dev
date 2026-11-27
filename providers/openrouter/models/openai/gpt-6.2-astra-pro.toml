@@ -1,0 +1,36 @@
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+name = "GPT-6.2 Astra Pro"
+description = "Frontier GPT model for professional reasoning, coding, and multimodal work"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4, write = 10 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16
+cache = { read = 0.8, write = 20 }
+
+[cost.text.output]
+price = 40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
+
+[cost.web_search]
+price = 10

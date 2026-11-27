@@ -3,6 +3,7 @@ schema = 2
 type = "decision"
 name = "Clef"
 description = "Decision model for typed evaluation of shared state"
+family = "clef"
 open_weights = true
 release_date = "2026-10-01"
 
@@ -25,7 +26,7 @@ sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/open
 compatibility = { media_input = "state" }
 
 [cost.text.input]
-price = 0.24
+price = 0.192
 
 [cost.text.output]
 price = 0

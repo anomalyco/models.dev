@@ -1,7 +1,9 @@
 import { z } from "zod";
 
 import type { ExistingModel, SyncProvider, SyncedFullModel, SyncedModel } from "../index.js";
-import { factorBaseModel, resolveCanonicalBaseModel } from "./openrouter.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
+import { weightsIndex, weightsMatch } from "../weights.js";
+import { factorBaseModel, modelMetadata, resolveCanonicalBaseModel, resolveModelMetadataBaseModel } from "./openrouter.js";
 
 // Public DeepInfra deploy catalog. Richer than the OpenAI-compatible
 // `/v1/openai/models` endpoint: it exposes capability tags (tools,
@@ -58,15 +60,15 @@ export const deepinfra = {
   // DeepInfra rotates served models frequently; never delete local TOMLs
   // automatically — surface them for manual lifecycle review instead.
   deleteMissing: false,
+  // Deprecated models are skipped on purpose, so only real gaps are reported.
   sourceID(model) {
-    return model.model_name;
+    return isDeprecated(model) ? undefined : model.model_name;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
-      `${ids.length} Deep Infra models were not created because they lacked provider-agnostic metadata to inherit (no \`models/\` entry) and the API does not supply the required curated fields, or because they are already deprecated.`,
-      `Skipped remote IDs: ${ids.map((id) => `\`${id}\``).join(", ")}`,
-      "Add a `models/<provider>/<model>.toml` entry (or a full provider TOML) to include them in the next sync.",
+      `${ids.length} Deep Infra models were not created:`,
+      ...ids.map((id) => `\`${id}\`: ${skipReasons.get(id) ?? "skipped"}`),
     ];
   },
   missingNotice(paths) {
@@ -81,13 +83,22 @@ export const deepinfra = {
   },
   parseModels(raw) {
     return DeepInfraResponse.parse(raw).filter((model) =>
-      model.type === "text-generation"
+      (model.type === "text-generation" || model.type === "embeddings")
       && !model.private
       && !isExcluded(model.model_name),
     );
   },
   translateModel(model, context) {
     const id = model.model_name;
+    // Embedding models are hand-authored v2 files: keep them as written, and
+    // report models without a file as skipped instead of retained-but-missing.
+    if (model.type === "embeddings") {
+      const v2 = context.v2?.(id);
+      if (v2 === undefined) return isDeprecated(model) ? undefined : skip(id, "no hand-authored embedding file");
+      const { status, ...rest } = v2;
+      if (isDeprecated(model)) return { id, v2: { ...rest, status: "deprecated" } };
+      return { id, v2: status === "deprecated" ? rest : v2 };
+    }
     const existing = context.existing(id);
     const baseModel = existing === undefined
       ? resolveDeepInfraBaseModel(id)
@@ -96,20 +107,39 @@ export const deepinfra = {
     const inputCost = perMillion(model.pricing?.cents_per_input_token);
     const outputCost = perMillion(model.pricing?.cents_per_output_token);
 
+    // Don't introduce brand-new entries for models that are already deprecated
+    // or scheduled to be; existing entries are kept and marked instead.
+    if (existing === undefined && isDeprecated(model)) return undefined;
     // A brand-new model we can neither inherit nor price has nothing to author.
-    if (existing === undefined && baseModel === undefined) return undefined;
+    if (existing === undefined && baseModel === undefined) {
+      return skip(id, "no `models/` lab file matches this ID; add one, or a full provider TOML");
+    }
     if (
       existing === undefined
       && (inputCost === undefined || outputCost === undefined)
-    ) return undefined;
-    // Don't introduce brand-new entries for models that are already deprecated;
-    // existing entries are kept and marked instead.
-    if (existing === undefined && isDeprecated(model)) return undefined;
+    ) return skip(id, "the catalog lists no token price");
 
-    const built = buildDeepInfraModel(model, existing, baseModel, context.authored(id));
+    // The catalog has no reasoning_effort levels. A new reasoning model takes the
+    // controls of the same model already served here under another ID (a
+    // `-Turbo` or `-Ultra` deployment); otherwise they need researching first.
+    let peer: { id: string; reasoning_options: NonNullable<ExistingModel["reasoning_options"]> } | undefined;
+    if (existing === undefined && deepInfraReasons(model, baseModel)) {
+      peer = reasoningPeer(id, baseModel, context.existing);
+      if (peer === undefined) {
+        throw new MissingReasoningOptionsError(id, "Deep Infra lists no reasoning controls and no peer on this host has them; author them before creating this model");
+      }
+    }
+
+    const built = buildDeepInfraModel(
+      model,
+      existing ?? (peer === undefined ? undefined : { reasoning_options: peer.reasoning_options }),
+      baseModel,
+      context.authored(id),
+    );
     return {
       id,
       model: built,
+      header: peer === undefined ? undefined : peerHeader(peer),
       v2Set: deepInfraV2Set(model, built.cost, context.v2?.(id)),
     };
   },
@@ -179,6 +209,11 @@ export function deepInfraV2Set(
   const set = Object.fromEntries(
     Object.entries(values).filter(([path, value]) => value !== undefined || valueAt(current, path) !== undefined),
   );
+  // With only retention prices, v1's cache_write is the first of them; the patch would otherwise also write it as a
+  // separate plain write price.
+  if (cached && retentionPrices !== undefined && pricing?.rate_per_input_token_cache_write == null) {
+    set["cost.text.input.cache.write"] = undefined;
+  }
   return Object.keys(set).length > 0 ? set : undefined;
 }
 
@@ -202,15 +237,58 @@ export async function fetchDeepInfraModels(
   return DeepInfraResponse.parse(await response.json());
 }
 
+function deepInfraReasons(model: DeepInfraModel, baseModel: string | undefined) {
+  const tags = new Set(model.tags ?? []);
+  if (tags.has("non-reasoning")) return false;
+  if (tags.has("reasoning") || tags.has("can-disable-reasoning")) return true;
+  return baseModel !== undefined && modelMetadata(baseModel).reasoning === true;
+}
+
+// Numeric values are unix (seconds) timestamps, past or scheduled. A scheduled
+// model is still served until then, but marked so clients can move off it.
 function isDeprecated(model: DeepInfraModel) {
   const deprecated = model.deprecated;
   if (deprecated === undefined || deprecated === null || deprecated === false) {
     return false;
   }
-  // Numeric values are unix (seconds) timestamps. A future timestamp is a
-  // scheduled deprecation — the model is still served until then.
-  if (typeof deprecated === "number") return deprecated * 1000 <= Date.now();
   return Boolean(deprecated);
+}
+
+const skipReasons = new Map<string, string>();
+
+function skip(id: string, reason: string) {
+  skipReasons.set(id, reason);
+  console.warn(`Deep Infra: skipped ${id}: ${reason}`);
+  return undefined;
+}
+
+// The same lab model served under the plain ID, when this one is a speed or
+// quantization variant of it.
+function reasoningPeer(
+  id: string,
+  baseModel: string | undefined,
+  existing: (id: string) => ExistingModel | undefined,
+) {
+  const peerID = id.replace(/-(turbo|ultra)$/i, "");
+  if (peerID === id || baseModel === undefined) return undefined;
+  const peer = existing(peerID);
+  if (peer?.base_model !== baseModel || peer.reasoning_options === undefined || peer.reasoning_options.length === 0) {
+    return undefined;
+  }
+  return { id: peerID, reasoning_options: peer.reasoning_options };
+}
+
+function peerHeader(peer: { id: string; reasoning_options: NonNullable<ExistingModel["reasoning_options"]> }) {
+  const lines = [`# Reasoning controls copied from ${peer.id}, the same model on Deep Infra.`];
+  for (const option of peer.reasoning_options) {
+    if (option.type === "toggle") {
+      lines.push(`# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables); https://docs.deepinfra.com/chat/reasoning`);
+    }
+    if (option.type === "effort") {
+      lines.push(`# Effort: reasoning_effort = ${option.values.join("|")}; https://docs.deepinfra.com/chat/reasoning`);
+    }
+  }
+  return lines.join("\n");
 }
 
 // DeepInfra prices in cents per token; the catalog uses USD per million tokens.
@@ -230,6 +308,11 @@ function round(value: number) {
 // cache pricing, so the (possibly stale) curated value is cleared.
 function cacheCost(inputCost: number, rate: number | null | undefined) {
   return rate == null ? undefined : round(inputCost * rate);
+}
+
+function firstRetentionRate(model: DeepInfraModel) {
+  return Object.entries(model.pricing?.rate_per_explicit_cache_write_token ?? {})
+    .find(([ttl, rate]) => /^\d+(ms|s|m|h|d)$/.test(ttl) && Number.isFinite(rate) && rate >= 0)?.[1];
 }
 
 function buildCost(
@@ -266,7 +349,8 @@ function buildCost(
     output: outputCost,
     reasoning: existing?.cost?.reasoning,
     cache_read: cacheCost(inputCost, model.pricing?.rate_per_input_token_cached),
-    cache_write: cacheCost(inputCost, cacheWriteRate),
+    // v1 reads the first retention's write price, so a model priced only by retention reports that one.
+    cache_write: cacheCost(inputCost, cacheWriteRate) ?? cacheCost(inputCost, firstRetentionRate(model)),
     // API pricing is flat (or its tier string was unparseable): clear any stale
     // curated tiers rather than leaving obsolete thresholds active.
     tiers: undefined,
@@ -441,7 +525,14 @@ export function buildDeepInfraModel(
     }
     // Everything except context / cost / capability flags is inherited from the
     // `models/` metadata.
-    return factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+    const factored = factorBaseModel(baseModel, values, limit, existing?.base_model_omit);
+    // A file that authors its own modalities (a narrower MIME list than the lab
+    // file, e.g. Deep Infra's jpg/png/webp) keeps them even when their generic
+    // kinds match the lab file; otherwise the patch drops the override.
+    if (authored?.modalities !== undefined && modalities !== undefined && factored.modalities === undefined) {
+      return { ...factored, modalities };
+    }
+    return factored;
   }
 
   const required = z.object({
@@ -465,7 +556,10 @@ export function buildDeepInfraModel(
 const DEEPINFRA_PREFIXES: Record<string, string> = {
   ByteDance: "bytedance-seed",
   "deepseek-ai": "deepseek",
+  "ibm-granite": "ibm",
+  inclusionAI: "inclusionai",
   "meta-llama": "meta",
+  "meta-models": "meta",
   google: "google",
   microsoft: "microsoft",
   MiniMaxAI: "minimax",
@@ -474,16 +568,75 @@ const DEEPINFRA_PREFIXES: Record<string, string> = {
   nvidia: "nvidia",
   openai: "openai",
   Qwen: "qwen",
+  Sao10K: "sao10k",
   XiaomiMiMo: "xiaomi",
   "zai-org": "zai",
 };
 
-export function resolveDeepInfraBaseModel(id: string) {
+// Deep Infra spellings that differ from the lab file's name. They are tried
+// alone and then together, and a candidate counts only when a lab file matches
+// it exactly.
+const NAME_VARIANTS: Array<(name: string) => string> = [
+  // nvidia/NVIDIA-Nemotron-3-Super-120B-A12B -> nemotron-3-super-120b-a12b
+  (name) => name.replace(/^NVIDIA-/i, ""),
+  // meta-llama/Meta-Llama-3.1-8B-Instruct -> llama-3.1-8b-instruct
+  (name) => name.replace(/^Meta-(?=Llama-)/i, ""),
+  // Speed and quantization deployments of the same model.
+  (name) => name.replace(/-(turbo|ultra)$/i, ""),
+  // YYMM release suffixes: Mistral-Small-3.2-24B-Instruct-2506 -> mistral-small-3.2-24b-instruct
+  (name) => name.replace(/-Instruct-2[3-9](?:0[1-9]|1[0-2])$/i, "-Instruct"),
+  // Mistral-Nemo-Instruct-2407 -> mistral-nemo
+  (name) => name.replace(/-Instruct-2[3-9](?:0[1-9]|1[0-2])$/i, ""),
+  // ByteDance/Seed-1.8 -> seed-1-8
+  (name) => name.replace(/^Seed-(\d+)\.(\d+)$/i, "Seed-$1-$2"),
+];
+
+function nameCandidates(name: string) {
+  const candidates = [name];
+  for (let size = 1; size <= NAME_VARIANTS.length; size++) {
+    for (const variants of combinations(NAME_VARIANTS, size)) {
+      candidates.push(variants.reduce((value, variant) => variant(value), name));
+    }
+  }
+  return [...new Set(candidates)];
+}
+
+function combinations<T>(items: T[], size: number): T[][] {
+  if (size === 0) return [[]];
+  return items.flatMap((item, index) =>
+    combinations(items.slice(index + 1), size - 1).map((rest) => [item, ...rest]));
+}
+
+// Deep Infra IDs that neither a lab file name nor its weights repo matches.
+const BASE_MODEL_ALIASES: Record<string, string> = {
+  // Deep Infra drops the size from the repo name: its model page describes the
+  // 120B MoE with 12B active (https://api.deepinfra.com/models/nvidia/NVIDIA-Nemotron-3.5-Super-VL).
+  "nvidia/NVIDIA-Nemotron-3.5-Super-VL": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+};
+
+export function resolveDeepInfraBaseModel(id: string, weights = weightsIndex()) {
+  const alias = BASE_MODEL_ALIASES[id];
+  if (alias !== undefined) return alias;
   const [prefix, ...parts] = id.split("/");
   if (prefix === undefined || parts.length === 0) return undefined;
   const canonicalPrefix = DEEPINFRA_PREFIXES[prefix];
-  if (canonicalPrefix === undefined) return resolveCanonicalBaseModel(id);
-  return resolveCanonicalBaseModel(`${canonicalPrefix}/${parts.join("/").toLowerCase()}`);
+  const candidates = nameCandidates(parts.join("/"));
+  if (canonicalPrefix === undefined) {
+    const match = resolveCanonicalBaseModel(id);
+    if (match !== undefined) return match;
+  } else {
+    for (const name of candidates) {
+      const match = resolveModelMetadataBaseModel(`${canonicalPrefix}/${name.toLowerCase()}`);
+      if (match !== undefined) return match;
+    }
+  }
+  // Deep Infra IDs are Hugging Face repos, so a lab file listing that repo as its
+  // weights is the model (Sao10K/L3.1-70B-Euryale-v2.2 -> sao10k/l3.1-euryale-70b).
+  for (const name of candidates) {
+    const match = weightsMatch(`${prefix}/${name}`, weights);
+    if (match !== undefined) return match;
+  }
+  return undefined;
 }
 
 function deriveName(id: string) {
@@ -495,8 +648,9 @@ type Modality = "text" | "audio" | "image" | "video" | "pdf";
 
 const ALLOWED_MODALITIES = new Set<Modality>(["text", "audio", "image", "video", "pdf"]);
 
-// DeepInfra currently applies `input-audio` to the whole Gemma 4 family, but
-// its model page limits audio input to the E2B and E4B variants.
+// DeepInfra tags google/gemma-4-31B-it `input-audio`, but its model page limits
+// audio input to the E2B and E4B variants. The -turbo and -Ultra deployments
+// aren't tagged (checked 2026-11-24).
 const UNSUPPORTED_MODALITIES: Record<string, Set<Modality>> = {
   "google/gemma-4-31B-it": new Set(["audio"]),
 };

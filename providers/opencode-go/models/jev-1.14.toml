@@ -1,0 +1,20 @@
+# Same model, route and price as providers/opencode/models/jev-1.14.toml, served on OpenCode Go at
+#   POST https://opencode.ai/inference/go/systemone/v1/systemone (also POST /inference/go/openai/v1/decisions) and billed
+#   against the Go subscription. Decision requests need no x-opencode-session header.
+#   https://opencode.ai/v2/docs/console/go/ (accessed 2026-11-23).
+schema = 2
+v2_only = true
+base_model = "typesafe/jev-1.14.0"
+
+[capabilities]
+structured_output = true
+
+[api.systemone]
+base_url = "https://opencode.ai/inference/go/systemone/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/opencode/decisions" }
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0

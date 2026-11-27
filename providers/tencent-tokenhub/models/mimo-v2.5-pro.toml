@@ -1,0 +1,27 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-26):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 0.435, output 0.87, cache hit 0.0036).
+#   China list: CNY 3 / 6 / 0.025, https://cloud.tencent.com/document/product/1823/130055 (updated 2026-11-26)
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-26): 1M context,
+#   1M input, 128K output; thinking, structured output, function calling, cache; no image or video understanding.
+# API: https://cloud.tencent.com/document/product/1823/138677 (mimo-v2.5-pro: text input / text output, thinking on by
+#   default and can be turned off, 1M / 1M / 128K; no top_k parameter).
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write price is published.
+# Toggle: thinking.type = enabled|disabled (default enabled)
+schema = 2
+base_model = "xiaomi/mimo-v2.5-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.435
+cache = { read = 0.0036 }
+
+[cost.text.output]
+price = 0.87

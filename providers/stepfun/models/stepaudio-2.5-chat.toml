@@ -1,0 +1,22 @@
+# Sources (accessed 2026-11-24):
+# - Pricing (CNY per 1M tokens): 13 input, 3 cache hit, 32 output, from 2026-11-23 12:00 UTC+8:
+#   https://platform.stepfun.com/docs/zh/guides/pricing/details (the model page still shows the old 10 / 2 / 25)
+# CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
+# - Caching: listed with a cache-hit price; StepFun's prefix cache starts at 256 tokens (https://platform.stepfun.com/docs/zh/guides/developer/prompt-cache).
+# - Chat Completions only (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create).
+# max_tokens_field: StepFun's Chat Completions API documents max_tokens and not max_completion_tokens (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create, accessed 2026-10-24)
+schema = 2
+base_model = "stepfun/stepaudio-2.5-chat"
+
+[capabilities]
+cache = { implicit = { min_tokens = 256 } }
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 1.9463
+cache = { read = 0.44915 }
+
+[cost.text.output]
+price = 4.7909

@@ -1,0 +1,22 @@
+# Reasoning field: reasoning_content, the field Inkling's chat template reads back (https://huggingface.co/thinkingmachines/Inkling-2-Small). Kilo routes to Vercel AI Gateway or OpenRouter, and both read reasoning_content back on earlier assistant turns for Inkling 2 Small (live 2026-11-23).
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+name = "Thinking Machines: Inkling 2 Small"
+description = "Inkling 2 Small is an open-weight multimodal mixture-of-experts reasoning model from Thinking Machines Lab, with 17B active parameters out of 594B total. It is the first model in the second..."
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "max"] }
+structured_output = true
+
+[limit]
+output = 943_718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.25

@@ -1,0 +1,29 @@
+schema = 2
+base_model = "meta/muse-ember-1.0"
+description = "Open Llama multimodal model for image understanding and text reasoning"
+
+[modalities]
+input = ["text", "image", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/open-responses", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/responses" }
+
+[api.messages]
+base_url = "https://ai-gateway.vercel.sh/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/vercel-ai-gateway/messages" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.004 }
+
+[cost.text.output]
+price = 0.5

@@ -1,0 +1,28 @@
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-24.
+# https://cloud.tencent.com/document/product/1823/133811
+# Input/output/cache-read: 120/360/6 points per million tokens.
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.679299.
+# FX: USD 1 = CNY 6.679299, 2026-11-24, https://open.er-api.com/v6/latest/USD
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
+# Capabilities (structured output, function calling, caching): https://cloud.tencent.com/document/product/1823/130051
+# Effort: reasoning_effort = high|no_think (default high). no_think turns thinking off, so it is
+#   "none" here with no separate toggle (thinking.type also exists, default enabled).
+#   https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+# Reasoning is returned at choices[].message.reasoning_content (https://cloud.tencent.com/document/product/1823/131208).
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.898298
+cache = { read = 0.044915 }
+
+[cost.text.output]
+price = 2.694894

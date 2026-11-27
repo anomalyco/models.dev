@@ -28,11 +28,11 @@ base_url = "https://api.venice.ai/api/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.625
-cache = { read = 0.1875 }
+price = 0.5
+cache = { read = 0.1 }
 
 [cost.text.output]
-price = 3.125
+price = 2.2
 
 [cost.web_search]
 price = 10

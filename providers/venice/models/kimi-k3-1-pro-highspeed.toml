@@ -1,9 +1,6 @@
 schema = 2
-name = "Kimi K3.1 Pro Highspeed"
+base_model = "moonshotai/kimi-k3.1-pro-highspeed"
 description = "Kimi multimodal agent model for visual understanding, coding, and planning"
-family = "kimi-k3"
-open_weights = false
-release_date = "2026-10-23"
 
 [modalities]
 input = ["text", "image"]
@@ -25,11 +22,11 @@ base_url = "https://api.venice.ai/api/v1"
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 7.5
-cache = { read = 0.75 }
+price = 5
+cache = { read = 0.375 }
 
 [cost.text.output]
-price = 37.5
+price = 25
 
 [cost.web_search]
 price = 10

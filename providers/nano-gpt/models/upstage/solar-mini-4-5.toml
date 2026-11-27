@@ -1,0 +1,27 @@
+schema = 2
+name = "Solar Mini 4.5 Preview"
+description = "Preview of Upstage's next compact model: a 35B-parameter mixture-of-experts with 3B active parameters, a 524K context window and an August 2026 training cutoff. A step up from Solar Mini 4 for agentic work, tool use and structured output, in English, Korean and Japanese. Behaviour may change before the final release."
+family = "solar-mini"
+open_weights = false
+release_date = "2026-11-25"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+context = 524_288
+input = 524_288
+output = 131_072
+
+[cost.text.input]
+price = 0.01
+cache = { read = 0.001 }
+
+[cost.text.output]
+price = 0.04

@@ -1,0 +1,23 @@
+schema = 2
+base_model = "zhipuai/glm-5.3-flashx-legal"
+name = "GLM 5.3 FlashX Legal"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = false
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+
+[cost.text.input]
+price = 0.37
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.25

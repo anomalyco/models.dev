@@ -10,11 +10,12 @@
 # tools.updates: tool_addition/tool_removal system blocks (anthropic-beta inline-tools-2026-09-15; by reference also mid-conversation-tool-changes-2026-07-01) work on Foundry's
 # Messages endpoint even though Microsoft doesn't document them. Live 2026-10-23: both kept the full cache (same as the control) and the model saw the change.
 # Web search: $10 per 1,000 searches; Foundry bills Claude in CCUs at Anthropic's standard per-feature rates: https://platform.claude.com/docs/en/about-claude/pricing#claude-in-microsoft-foundry-pricing
+# tools.updates follows OpenAI's own Responses API (live 2026-11-17 there: add, redefine and removal 3/3 on gpt-6-astra and gpt-5.6-sol); Azure wasn't re-tested (no key here).
 schema = 2
 base_model = "anthropic/claude-sonnet-5-5"
 
 [capabilities]
-tools = { supported = true, strict = true, choice = ["auto", "none"], search = true, updates = true }
+tools = { supported = true, strict = true, choice = ["auto", "none"], search = true, updates = ["add", "remove", "replace"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }

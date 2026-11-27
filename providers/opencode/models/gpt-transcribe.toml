@@ -1,0 +1,16 @@
+# Endpoint (OpenAI Transcription): POST https://opencode.ai/inference/openai/v1/audio/transcriptions, OpenAI's multipart
+#   upload, streaming or not, served through Zen's OpenAI transcription endpoint. Only response_format json is accepted,
+#   since only it reports the audio's duration. No live (Realtime) transcription.
+# Pricing: OpenAI's price per minute of audio, billed by the seconds OpenAI reports, without a markup
+#   (https://developers.openai.com/api/docs/pricing).
+schema = 2
+v2_only = true
+base_model = "openai/gpt-transcribe"
+
+[api.transcriptions]
+base_url = "https://opencode.ai/inference/openai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "minute"
+price = 0.0045

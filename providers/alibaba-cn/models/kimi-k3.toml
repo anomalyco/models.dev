@@ -26,9 +26,6 @@ top_k = false
 stream_usage = true
 cache = { implicit = { min_tokens = 1_024 } }
 
-[limit]
-output = 1_048_576
-
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
 

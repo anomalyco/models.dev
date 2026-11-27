@@ -1,0 +1,54 @@
+# The OpenAI model (base_model) on a ChatGPT plan through Codex. Only what differs or is route-specific is set here.
+# Availability: listed (visibility "list") in the Codex model catalog (GET https://chatgpt.com/backend-api/codex/models,
+#   authenticated, Codex CLI 0.171.0, 2026-11-21), and a request on a ChatGPT plan completed live 2026-11-21.
+# Limits: same as the API. Codex clients default to a smaller working window (`context_window` in the catalog); that is
+#   a client setting.
+# Reasoning: supported_reasoning_levels in the Codex model catalog (2026-11-21): low, medium, high, xhigh, max, ultra. "ultra" is left out
+#   until the effort enum has it. "max" was accepted live 2026-11-21.
+# tools.freeform: live 2026-11-21 on a ChatGPT plan. A custom tool with no format returned the text it was given; with a
+#   regex grammar `ZZ[0-9]{3}` and with the equivalent Lark grammar, a request to send "hello world" came back as
+#   "ZZ" plus three digits (grammar enforced).
+# structured_output: live 2026-11-21: with a json_schema whose only allowed `code` value is "ZZ417" and a prompt asking
+#   for a plain-prose greeting, the reply was {"code":"ZZ417"}.
+# Fast: the catalog lists a "Fast" service tier with id "priority", which Codex sends as `service_tier`; accepted live
+#   2026-11-21.
+# temperature / top_p: not accepted on this route. Live 2026-11-25 on a ChatGPT plan (gpt-6-luna): a request
+#   with `temperature` returned 400 "Unsupported parameter: temperature", one with `top_p` returned 400
+#   "Unsupported parameter: top_p"; the same request without them completed.
+# Cost: 0, as the other subscription providers publish it: usage counts against the ChatGPT plan, with no per-token
+#   price.
+# Cache: Codex sends a prompt_cache_key per conversation; no lifetime is documented for this route, so only
+#   `implicit = true` is set.
+# Status: deprecated. The Codex model catalog (fetched 2026-11-26) gives this model an `upgrade` with
+#   retirement_at 2026-12-23T20:00:00Z and the message "GPT-5.6 Terra retires on December 23, 2026. Switch to GPT-6.1 Terra
+#   to continue working in Codex." Announced 2026-11-23:
+#   https://9to5mac.com/2026/11/23/chatgpt-expands-gpt-6-2-sol-as-openai-sets-retirement-date-for-two-models/
+schema = 2
+v2_only = true
+base_model = "openai/gpt-5.6-terra"
+status = "deprecated"
+
+[capabilities]
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+prompt_cache_key = true
+temperature = false
+top_p = false
+service_tier = ["priority"]
+
+[capabilities.cache]
+implicit = true
+
+[api.responses]
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
+
+[experimental.modes.fast]
+service_tier = "priority"
+body = { service_tier = "priority" }

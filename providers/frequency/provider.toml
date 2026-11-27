@@ -1,0 +1,10 @@
+# Voice-first, India-first, low-latency inference provider. Serves from India
+# (Delhi edge on E2E Networks, GPUs in India). https://scalefrequency.com
+# OpenAI-compatible: POST /chat/completions on the base URL below with a Bearer key.
+# API reference: https://docs.miraiminds.co/v2/llm
+name = "Frequency"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["FREQUENCY_API_KEY"]
+api = "https://llm.scalefrequency.com/v2"
+doc = "https://docs.miraiminds.co/v2/llm"

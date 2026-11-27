@@ -1,5 +1,9 @@
+# Deprecated: no longer in the build.nvidia.com catalog (https://build.nvidia.com/models.md, accessed 2026-11-25),
+# and NVIDIA API: HTTP 404 "page not found" on POST https://integrate.api.nvidia.com/v1/chat/completions (probed
+# 2026-11-25). The card (https://build.nvidia.com/nvidia/nemotron-voicechat) still loads and calls it early access.
 schema = 2
 base_model = "nvidia/nemotron-voicechat"
+status = "deprecated"
 name = "nemotron-voicechat"
 
 [cost.text.input]

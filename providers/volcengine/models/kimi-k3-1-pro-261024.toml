@@ -1,0 +1,27 @@
+# Model ID, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24); not called live (no Ark key).
+# CNY list prices (在线推理（常规）): https://ark.volcengine.com/region:cn-beijing/docs/model-pricing.md (accessed 2026-11-24)
+# CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
+# CNY 13 input / 1.3 cache hit / 68 output per M tokens. The model list's cache table lists implicit
+# caching only (explicit: –).
+# Always thinks: reasoning_effort = low|high|max (default max); low/medium -> low, xhigh/max -> max,
+# and the thinking parameter is not used (兼容映射 table, https://ark.volcengine.com/region:cn-beijing/docs/deep-thinking.md).
+# Cache: implicit prefix caching is on by default on the Chat API, per https://ark.volcengine.com/region:cn-beijing/docs/context-cache.md and the
+# model list's 上下文缓存能力 table.
+# Not modelled: the flex tier (service_tier=flex, half input/output price) and the low-latency tier.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.94631
+cache = { read = 0.19463 }
+
+[cost.text.output]
+price = 10.18071

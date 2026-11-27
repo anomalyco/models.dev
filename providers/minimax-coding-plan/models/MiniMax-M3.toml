@@ -1,3 +1,6 @@
+# Deprecated (checked 2026-11-25): the M Plan includes only MiniMax-M3.1-Flash as its text model on
+#   every tier (https://platform.minimax.io/docs/m-plan/intro, https://platform.minimax.io/docs/token-plan/faq). MiniMax-M3 may still
+#   answer on a plan key, billed from Credits at its API price; no plan key to confirm live.
 # Sources (accessed 2026-10-19):
 # - API: https://platform.minimax.io/docs/api-reference/text-anthropic-api, https://platform.minimax.io/docs/api-reference/text-chat-anthropic
 # - Caching: https://platform.minimax.io/docs/api-reference/text-prompt-caching
@@ -17,10 +20,11 @@
 schema = 2
 name = "MiniMax-M3"
 description = "MiniMax multimodal coding model for long-context reasoning and agent tasks"
-family = "minimax"
+family = "minimax-m"
 open_weights = true
 release_date = "2026-06-01"
 last_updated = "2026-06-25"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "video/x-msvideo", "video/quicktime", "video/x-matroska"]

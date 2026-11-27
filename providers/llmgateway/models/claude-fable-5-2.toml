@@ -1,0 +1,16 @@
+# Capabilities the catalog doesn't state (capabilities.system_updates, capabilities.structured_output, capabilities.cache) come from claude-fable-5-1, this host's previous model in the family.
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+system_updates = true
+structured_output = true
+cache = { implicit = true, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = 10 }
+
+[cost.text.output]
+price = 40

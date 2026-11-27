@@ -1,0 +1,17 @@
+schema = 2
+base_model = "paperinstruments/ultramarine-1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+
+[limit]
+output = 131_000
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5
+reasoning = 0

@@ -1,0 +1,27 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-26):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 4, output 20, cache hit 0.2, cache write 5m 4, 1h 8).
+#   China list: CNY 26 / 136 / 1.3, cache write 5m 26, 1h 52, https://cloud.tencent.com/document/product/1823/130055 (updated 2026-11-26)
+# Availability and limits: https://cloud.tencent.com/document/product/1823/130051 (updated 2026-11-26): 1M context,
+#   1M input, 1M output; thinking, structured output, function calling, cache, image and video understanding.
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# API: https://cloud.tencent.com/document/product/1823/132232
+# Effort: reasoning_effort = low|high|max (default max), always thinks. Tencent's reasoning guide
+#   (https://cloud.tencent.com/document/product/1823/131208) doesn't list K3.1 Pro HighSpeed yet; controls follow
+#   the tencent-tokenhub kimi-k3.1-pro and Moonshot kimi-k3.1-pro-highspeed entries.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro-highspeed"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = { "5m" = 4, "1h" = 8 } }
+
+[cost.text.output]
+price = 20

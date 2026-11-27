@@ -1,12 +1,9 @@
-# Mid-conversation (Kilo Chat Completions; https://kilo.ai/docs/gateway/api-reference): effort_updates = false and tools.updates = false:
-# system messages take string content only, with no per-turn effort or tool addition/removal mechanism.
-# system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 schema = 2
 base_model = "moonshotai/kimi-k2-0905"
-description = "Kimi model for long-context chat, coding, and agentic reasoning"
+name = "MoonshotAI: Kimi K2 0905"
+description = "Kimi K2 0905 is the September update of [Kimi K2 0711](moonshotai/kimi-k2). It is a large-scale Mixture-of-Experts (MoE) language model developed by Moonshot AI, featuring 1 trillion total parameters with 32..."
 
 [capabilities]
-tools = { supported = true }
 structured_output = true
 
 [cost.text.input]

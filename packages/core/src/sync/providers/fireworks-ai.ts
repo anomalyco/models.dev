@@ -87,7 +87,53 @@ export type FireworksInventoryCatalogModel = {
   deprecated?: true;
 };
 
-type FireworksSourceModel = FireworksCatalogModel | FireworksInventoryCatalogModel;
+export type FireworksLegacyEmbeddingModel = {
+  catalogId: string;
+  legacyEmbedding: true;
+};
+
+export type FireworksDocumentedModel = {
+  catalogId: string;
+  documented: true;
+};
+
+type FireworksSourceModel =
+  | FireworksCatalogModel
+  | FireworksInventoryCatalogModel
+  | FireworksLegacyEmbeddingModel
+  | FireworksDocumentedModel;
+
+// Legacy BERT embedding models still serve on serverless under their Hugging
+// Face IDs but are in neither source, so they're listed here to keep their files.
+// https://docs.fireworks.ai/guides/querying-embeddings-models ("BERT-based models (legacy)")
+const LEGACY_EMBEDDING_MODELS = [
+  "BAAI/bge-small-en-v1.5",
+  "thenlper/gte-base",
+  "BAAI/bge-base-en-v1.5",
+  "nomic-ai/nomic-embed-text-v1.5",
+  "nomic-ai/nomic-embed-text-v1",
+  "thenlper/gte-large",
+  "WhereIsAI/UAE-Large-V1",
+  "mixedbread-ai/mxbai-embed-large-v1",
+];
+
+// Routes and variants Fireworks documents and serves that neither source lists:
+// GET /v1/serverless/models leaves them out, and List Models either leaves them
+// out or doesn't flag them as serverless. Their files are kept as authored and
+// never deleted; if a source starts listing one, the normal sync takes over.
+const DOCUMENTED_MODELS = [
+  // Flex mode: https://docs.fireworks.ai/serverless/serverless-modes#flex
+  "accounts/fireworks/routers/deepseek-v4p1-flash-1017-flex",
+  // US-only Serverless: https://docs.fireworks.ai/serverless/us-only-serverless
+  "accounts/fireworks/routers/kimi-k3p1-pro-us",
+  "accounts/fireworks/routers/kimi-k3-us",
+  "accounts/fireworks/routers/deepseek-v4p1-flash-us",
+  "accounts/fireworks/routers/deepseek-v4p1-flash-1017-us",
+  "accounts/fireworks/routers/glm-5p3-us",
+  // Ultramarine 1 Flash (US), a fine-tune List Models flags supportsServerless=false:
+  // https://docs.fireworks.ai/serverless/pricing
+  "accounts/fireworks/models/ultramarine-1-flash-us",
+];
 
 export const fireworksAi = {
   id: "fireworks-ai",
@@ -99,6 +145,11 @@ export const fireworksAi = {
   deleteMissing: true,
   sourceID(model) {
     return supportsCatalogModel(model) ? model.catalogId : undefined;
+  },
+  // Embedding and reranker rows are hand-authored, so one without a file is
+  // reported as missing instead of silently skipped.
+  missingModelID(model) {
+    return isEmbeddingModel(model) && !("legacyEmbedding" in model) ? model.catalogId : undefined;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
@@ -118,13 +169,31 @@ export const fireworksAi = {
   },
   parseModels(raw) {
     const parsed = FireworksSyncResponse.parse(raw);
-    return mergeFireworksModels(parsed.serverless.data, parsed.inventory);
+    const merged = mergeFireworksModels(parsed.serverless.data, parsed.inventory);
+    const listed = new Set(merged.map((model) => model.catalogId));
+    return [
+      ...merged,
+      ...LEGACY_EMBEDDING_MODELS.map((catalogId): FireworksLegacyEmbeddingModel => ({ catalogId, legacyEmbedding: true })),
+      ...DOCUMENTED_MODELS
+        .filter((catalogId) => !listed.has(catalogId))
+        .map((catalogId): FireworksDocumentedModel => ({ catalogId, documented: true })),
+    ];
   },
   translateModel(model, context) {
+    // Embedding models are hand-authored v2 files; keep them as written.
+    if ("legacyEmbedding" in model || ("output_modalities" in model && model.output_modalities.includes("embeddings"))) {
+      const v2 = context.v2?.(model.catalogId);
+      return v2 === undefined ? undefined : { id: model.catalogId, v2 };
+    }
     if (!supportsCatalogModel(model)) return undefined;
     const existing = context.existing(model.catalogId);
     if (existing === undefined) return undefined;
     const authored = context.authored(model.catalogId);
+    if ("documented" in model) {
+      // No source has data for it, so the file stays as written, API tables
+      // included (the US routes point every table at us.api.fireworks.ai).
+      return { id: model.catalogId, model: authored as SyncedModel };
+    }
     if ("inventoryOnly" in model && authored === undefined) {
       throw new Error(`Fireworks AI model ${model.catalogId} has no local TOML to preserve`);
     }
@@ -136,13 +205,47 @@ export const fireworksAi = {
         v2Set: { api: chatApis },
       };
     }
+    const retarget = aliasRetarget(model, existing, context);
     return {
       id: model.catalogId,
-      model: buildFireworksModel(model, existing),
+      model: buildFireworksModel(model, retarget?.existing ?? existing),
       v2Set: { api: chatApis },
+      notices: retarget === undefined ? undefined : [retarget.notice],
     };
   },
 } satisfies SyncProvider<FireworksSourceModel>;
+
+function isEmbeddingModel(model: FireworksSourceModel) {
+  return "legacyEmbedding" in model || ("output_modalities" in model && model.output_modalities.includes("embeddings"));
+}
+
+interface TranslateContext {
+  existing(id: string): ExistingModel | undefined;
+  authored(id: string): ExistingModel | undefined;
+}
+
+// An alias or router follows its catalog row's model. When the row now names a
+// model whose file has another base_model, the alias takes that file's facts
+// (keeping its own display name) so it doesn't keep the old lab's.
+function aliasRetarget(
+  model: FireworksCatalogModel,
+  existing: ExistingModel,
+  context: TranslateContext,
+): { existing: ExistingModel; notice: string } | undefined {
+  if (model.catalogId === model.id || existing.base_model === undefined) return undefined;
+  const target = context.existing(model.id);
+  if (target?.base_model === undefined || target.base_model === existing.base_model) return undefined;
+  const name = context.authored(model.catalogId)?.name;
+  return {
+    existing: {
+      ...target,
+      ...(name === undefined ? {} : { name }),
+      provider: existing.provider,
+      experimental: existing.experimental,
+    } satisfies ExistingModel,
+    notice: `Fireworks AI \`${model.catalogId}\` now serves \`${model.id}\`, so its base_model moved from \`${existing.base_model}\` to \`${target.base_model}\`. Check its header comments and v2-only flags (system_updates, tools.updates), which the sync keeps.`,
+  };
+}
 
 // Serverless text models are also served on the Responses API (POST /inference/v1/responses)
 // and the Anthropic Messages API (POST /inference/v1/messages), under the same model IDs:
@@ -154,16 +257,25 @@ const EXTRA_APIS = {
 };
 
 // A model's APIs: its own first table (what v1 reads; an empty table takes the
-// provider's Chat Completions API), then Responses and Messages.
+// provider's Chat Completions API), then Responses and Messages. Decision
+// models such as Rune only serve System One; Responses and Messages return
+// 400 "This model only serves /v1/systemone" for them.
 export function chatApis(current: unknown): Record<string, unknown> {
-  const { responses: _responses, messages: _messages, ...own } =
+  const { responses, messages, ...own } =
     current !== null && typeof current === "object" && !Array.isArray(current)
       ? current as Record<string, unknown>
       : {};
+  if ("systemone" in own) return own;
+  // Other fields on an existing table, such as the US routes' base_url, stay.
   return {
     ...(Object.keys(own).length > 0 ? own : { "chat-completions": {} }),
-    ...structuredClone(EXTRA_APIS),
+    responses: { ...asTable(responses), ...structuredClone(EXTRA_APIS.responses) },
+    messages: { ...asTable(messages), ...structuredClone(EXTRA_APIS.messages) },
   };
+}
+
+function asTable(value: unknown): Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
 export async function fetchFireworksModels(
@@ -203,7 +315,7 @@ export function mergeFireworksModels(
   serverless: FireworksModel[],
   inventory: FireworksInventoryModel[],
   now = new Date(),
-): FireworksSourceModel[] {
+): Array<FireworksCatalogModel | FireworksInventoryCatalogModel> {
   if (serverless.length === 0 || inventory.length === 0) {
     throw new Error("Fireworks AI returned an empty serverless source; refusing destructive sync");
   }
@@ -272,12 +384,14 @@ export function expandFireworksModels(models: FireworksModel[]): FireworksCatalo
 
 // A deprecation date in List Models marks the model deprecated until it is
 // removed; a model whose date was withdrawn is no longer deprecated.
-function lifecycleStatus(model: FireworksSourceModel, status: ExistingModel["status"]): ExistingModel["status"] {
+function lifecycleStatus(model: FireworksCatalogModel | FireworksInventoryCatalogModel, status: ExistingModel["status"]): ExistingModel["status"] {
   if (model.deprecated === true) return "deprecated";
   return status === "deprecated" ? undefined : status;
 }
 
 function supportsCatalogModel(model: FireworksSourceModel) {
+  if ("legacyEmbedding" in model) return false;
+  if ("documented" in model) return true;
   return "inventoryOnly" in model || model.output_modalities.includes("text");
 }
 

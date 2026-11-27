@@ -25,7 +25,7 @@ cache = { implicit = true }
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
-capabilities = { system_updates = true, tools = { updates = true } }
+capabilities = { system_updates = true, tools = { updates = ["add"] } }
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/moonshot/responses" }

@@ -1,0 +1,30 @@
+# Routing mode, not a fixed model: the router picks a model per request. No [cost]: requests
+# are billed by the chosen model's provider to the caller's own key (BYOK). [limit] is the
+# smallest context/output among the models the router can choose (Kimi K2.7 Code context,
+# Claude Sonnet 4.6 output), so it holds whichever model is picked.
+# temperature is passed on to models that accept it; top_p and top_k are not forwarded.
+# Sources (accessed 2026-10-23): https://aistupidlevel.info/router/docs#strategies (routing
+# modes), https://aistupidlevel.info/router/docs#features (text only, tools, JSON output),
+# https://aistupidlevel.info/terms#router (BYOK billing)
+schema = 2
+name = "Auto Tool Use"
+description = "Routes to the top model on the tool-use benchmark; among statistically tied leaders, the cheapest by default"
+family = "auto"
+open_weights = false
+release_date = "2026-08-08"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 64_000

@@ -1,0 +1,31 @@
+# Pricing: personal Token Plan non-promotional list rates, checked 2026-11-25.
+# https://cloud.tencent.com/document/product/1823/133811
+# Input/output/cache-read: 260/1360/26 points per million tokens.
+# Cache write: 5m 260, 1h 520 points per million tokens.
+# 20 points = CNY 1; USD/MTok = points / 20 / 6.679299.
+# FX: USD 1 = CNY 6.679299, 2026-11-24, https://open.er-api.com/v6/latest/USD
+# Prepaid-credit equivalents, not extra pay-as-you-go fees; promotions excluded.
+# Availability: General Token Plan > Available models, https://cloud.tencent.com/document/product/1823/130060 (updated 2026-11-25)
+# Specifications: https://cloud.tencent.com/document/product/1823/130051 (1M context, 1M output)
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# API: https://cloud.tencent.com/document/product/1823/132232
+# Effort: reasoning_effort = low|high|max (default max), always thinks. Tencent's reasoning guide
+#   (https://cloud.tencent.com/document/product/1823/131208) doesn't list K3.1 Pro yet; controls follow
+#   the tencent-tokenhub and Moonshot entries for this model.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.946312
+cache = { read = 0.194631, write = { "5m" = 1.946312, "1h" = 3.892624 } }
+
+[cost.text.output]
+price = 10.180709

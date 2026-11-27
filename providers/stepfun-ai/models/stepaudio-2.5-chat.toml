@@ -1,0 +1,20 @@
+# Sources (accessed 2026-11-24):
+# - Pricing (USD per 1M tokens): 1.50 input, 0.30 cache hit, 3.50 output: https://platform.stepfun.ai/docs/en/guides/pricing/details
+# - Caching: listed with a cache-hit price; StepFun's prefix cache starts at 256 tokens (https://platform.stepfun.ai/docs/en/guides/developer/prompt-cache).
+# - Chat Completions only (https://platform.stepfun.ai/docs/en/api-reference/chat/chat-completion-create).
+# max_tokens_field: StepFun's Chat Completions API documents max_tokens and not max_completion_tokens (https://platform.stepfun.com/docs/zh/api-reference/chat/chat-completion-create, accessed 2026-10-24)
+schema = 2
+base_model = "stepfun/stepaudio-2.5-chat"
+
+[capabilities]
+cache = { implicit = { min_tokens = 256 } }
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 3.5

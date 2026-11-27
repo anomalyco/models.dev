@@ -1,11 +1,24 @@
+# Status: deprecated, shutdown 2026-12-03 (requests route to gemini-omni-1.2-flash from then):
+#   https://ai.google.dev/gemini-api/docs/deprecations (accessed 2026-11-12)
 # Sources:
 # - https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash
 # - https://ai.google.dev/gemini-api/docs/pricing
 # - https://generativelanguage.googleapis.com/v1beta/models (limits, topP/topK)
-# - Output: $9.00 text, $17.50 video. v1 output carries the video rate, like gemini-omni-flash-preview.
+# - Output: $9.00 text, $17.50 video (https://ai.google.dev/gemini-api/docs/pricing#gemini-omni-1.1-flash, accessed 2026-11-23).
+#   The model is v2_only, so text output takes its own rate instead of repeating the video rate for v1.
+#   The $9 text rate is what Google bills for any text tokens the model returns, thinking tokens included ("Output price
+#   (including thinking tokens)"). The model page lists video as the only output for 1.1
+#   (https://ai.google.dev/gemini-api/docs/models/gemini-omni-flash, "**Output** Video"), so the lab modalities stay video-only.
+# APIs: both run on the Interactions API (https://ai.google.dev/gemini-api/docs/omni). [api.videos] is
+#   @opencode/ai's video entry point, which runs Omni as a background interaction (POST /interactions with
+#   background: true, poll GET /interactions/{id}, cancel POST /interactions/{id}/cancel; see
+#   https://ai.google.dev/gemini-api/docs/background-execution). Added in https://github.com/anomalyco/opencode/pull/63683,
+#   recorded live against gemini-omni-1.2-flash on 2026-11-13. [api.interactions] stays "none" because the
+#   Interactions chat client reads text output only.
 schema = 2
 v2_only = true
 base_model = "google/gemini-omni-1.1-flash"
+status = "deprecated"
 
 [capabilities]
 reasoning = { supported = true }
@@ -15,6 +28,9 @@ temperature = true
 context = 131_072
 output = 65_536
 
+[api.videos]
+sdk = { opencodeai = "@opencode/ai/providers/google/videos" }
+
 [api.interactions]
 sdk = { opencodeai = "none" }
 
@@ -22,7 +38,7 @@ sdk = { opencodeai = "none" }
 price = 1.5
 
 [cost.text.output]
-price = 17.5
+price = 9
 
 [cost.video.output]
 price = 17.5

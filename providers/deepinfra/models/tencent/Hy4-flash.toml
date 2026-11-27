@@ -1,0 +1,20 @@
+# Price: https://api.deepinfra.com/models/list (tencent/Hy4-flash, read 2026-11-24): $0.07 input, $0.003 cached input, $0.281 output per MTok;
+#   1,048,576-token context. Controls and layout follow this host's Hy4 entry.
+# Effort: reasoning_effort = none|high; none disables reasoning (no separate toggle).
+# https://docs.deepinfra.com/chat/reasoning
+# https://cloud.tencent.com/document/product/1823/131208
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+cache = { implicit = true }
+prompt_cache_key = true
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.281

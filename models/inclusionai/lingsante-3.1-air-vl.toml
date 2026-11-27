@@ -1,0 +1,34 @@
+# https://huggingface.co/inclusionAI/LingSante-3.1-air-VL (public, MIT, repo created 2026-11-19)
+# https://openrouter.ai/inclusionai/lingsante-3.1-air-vl
+# Medical fine-tune of Ling 3.0 Flash VL (124B total / 5.5B active MoE), so it gets its own family.
+# Context: 256K from the model card (SGLang --context-length 262144).
+# Output: the card states no cap; 32,768 is OpenRouter's max_completion_tokens (DeepInfra).
+# Input: the card says the model accepts text and images but lists no formats, so input stays generic `image`.
+# Tools and reasoning: the card serves it with the ling3 tool-call and reasoning parsers (enable_thinking).
+# Sampling: the card recommends temperature=1.0, top_p=0.95, top_k=20.
+schema = 2
+name = "LingSante 3.1 Air VL"
+description = "Open multimodal MoE model for medical imaging reports, health assessment, evidence search, and GUI agents"
+family = "lingsante"
+open_weights = true
+release_date = "2026-11-19"
+license = "MIT"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/inclusionAI/LingSante-3.1-air-VL"

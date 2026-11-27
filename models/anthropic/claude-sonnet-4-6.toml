@@ -1,3 +1,4 @@
+# Max output 128K tokens: https://platform.claude.com/docs/en/about-claude/models/overview (All models table); GET https://api.anthropic.com/v1/models reports max_tokens = 128000 (2026-11-24).
 schema = 2
 name = "Claude Sonnet 4.6"
 description = "Claude workhorse for coding agents, careful analysis, and production cost control"
@@ -20,7 +21,7 @@ top_k = true
 
 [limit]
 context = 1_000_000
-output = 64_000
+output = 128_000
 
 [[benchmarks]]
 name = "SWE-Atlas Codebase QnA"

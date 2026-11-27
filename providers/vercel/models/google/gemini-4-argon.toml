@@ -12,10 +12,10 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { implicit = true }
+service_tier = ["priority"]
 
 [limit]
 context = 1_000_000
-output = 1_000_000
 
 [api.chat-completions]
 
@@ -33,3 +33,10 @@ cache = { read = 0.1 }
 
 [cost.text.output]
 price = 10
+
+[cost.web_search]
+price = 14
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = { text = 1.8 }

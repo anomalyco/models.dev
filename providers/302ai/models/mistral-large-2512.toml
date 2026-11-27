@@ -1,3 +1,4 @@
+# Output limit: capped at the 128,000 context; no host cap is documented and the 262,144 from the base model or host listing is larger.
 schema = 2
 base_model = "mistral/mistral-large-2512"
 name = "mistral-large-2512"
@@ -5,6 +6,7 @@ knowledge = "2024-12"
 
 [limit]
 context = 128_000
+output = 128_000
 
 [cost.text.input]
 price = 1.1

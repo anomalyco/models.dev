@@ -1,0 +1,18 @@
+# Source: https://www.sandbase.ai/docs/api-reference/models/get
+# Prices: SandBase model detail API, checked 2026-11-14.
+# Live request check 2026-11-14: Chat Completions accepted each listed reasoning_effort value.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.25998 }
+
+[cost.text.output]
+price = 4.4
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

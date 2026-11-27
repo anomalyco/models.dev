@@ -9,9 +9,6 @@ description = "Open Gemma instruction model for efficient chat and self-hosted d
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 structured_output = true
 
-[limit]
-output = 117_964
-
 [api.chat-completions]
 
 [api.responses]
@@ -25,4 +22,4 @@ price = 0.08
 cache = { read = 0.04 }
 
 [cost.text.output]
-price = 0.35
+price = 0.45

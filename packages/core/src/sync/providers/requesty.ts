@@ -84,7 +84,7 @@ export type RequestyModel = z.infer<typeof RequestyModel>;
 // `retires` date is not synced.
 export function buildRequestyModel(
     model: RequestyModel,
-    existing?: Pick<ExistingModel, "base_model" | "status" | "name">,
+    existing?: Pick<ExistingModel, "base_model" | "status" | "name" | "family">,
 ): SyncedModel {
     const toolCall = model.supports_tool_calling;
     const structuredOutput = model.supports_output_json_schema;
@@ -104,6 +104,7 @@ export function buildRequestyModel(
         // instead of the context-window fallback, unless the lab's exceeds the
         // context this route serves.
         const labOutput = (modelMetadata(canonical).limit as { output?: number } | undefined)?.output;
+        const labReasons = (modelMetadata(canonical) as { reasoning?: boolean }).reasoning === true;
         const factoredLimit = model.max_output_tokens <= 0 && labOutput !== undefined && labOutput <= context
             ? { context }
             : limit;
@@ -115,8 +116,11 @@ export function buildRequestyModel(
                 // equals the lab's.
                 name: regionVariantName(model.id, canonical)
                     ?? (resolved === undefined ? existing?.name : undefined),
-                reasoning,
-                reasoning_options: reasoningOptions(reasoning),
+                // supports_reasoning says whether this route takes
+                // reasoning_effort, not whether the model thinks: a lab
+                // model that reasons keeps reasoning, with no caller control.
+                reasoning: reasoning || labReasons,
+                reasoning_options: !reasoning && labReasons ? [] : reasoningOptions(reasoning),
                 tool_call: toolCall,
                 structured_output: structuredOutput,
                 status: existing?.status,
@@ -135,7 +139,7 @@ export function buildRequestyModel(
     return {
         name: model.id,
         description: model.description,
-        family: inferFamily(model.id, model.id),
+        family: existing?.family ?? inferFamily(model.id, model.id),
         release_date: releaseDate,
         last_updated: releaseDate,
         attachment: input.some((value) => value !== "text"),
@@ -258,7 +262,7 @@ function inferFamily(id: string, name: string) {
                     `(^|[^a-z0-9])${value}(?=\\d|$|[^a-z0-9])`,
                 ).test(target);
             }
-            return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9])`).test(
+            return new RegExp(`(^|[^a-z0-9])${value}(?=$|[^a-z0-9.]|\\.(?!\\d))`).test(
                 target,
             );
         });

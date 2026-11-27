@@ -1,7 +1,9 @@
 # Context 163,840 (lab) is NVIDIA's "Context Length: 163,840 tokens"
 # (https://build.nvidia.com/meta/llama-guard-4-12b).
+# NVIDIA API: HTTP 410 Gone, end of life 2026-11-16T09:00:00Z (probed 2026-11-25, POST https://integrate.api.nvidia.com/v1/chat/completions)
 schema = 2
 base_model = "meta/llama-guard-4-12b"
+status = "deprecated"
 
 [limit]
 output = 16_384

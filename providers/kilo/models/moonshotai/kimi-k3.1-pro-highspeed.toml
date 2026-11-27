@@ -1,0 +1,22 @@
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro-highspeed"
+name = "MoonshotAI: Kimi K3.1 Pro Highspeed"
+description = "Kimi K3.1 Pro Highspeed is the high-speed variant of Moonshot AI’s frontier Kimi K3.1 Pro model for complex reasoning, coding, and agentic workflows, with vision, tool use, structured outputs, and long-context support."
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+temperature = true
+
+[cost.text.input]
+price = 4
+cache = { read = 0.2, write = 5 }
+
+[cost.text.output]
+price = 20
+reasoning = 0

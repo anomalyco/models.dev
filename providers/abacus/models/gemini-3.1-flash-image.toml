@@ -1,4 +1,5 @@
 # Source: https://routellm.abacus.ai/v1/models
+# Image output uses Google's advertised rate; Abacus states proprietary prices have no markup: https://abacus.ai/help/route-llm/
 # RouteLLM input_modalities: ['text', 'image']
 # RouteLLM output_modalities: ['text', 'image']
 # RouteLLM context_length: 1048576
@@ -25,3 +26,6 @@ price = 0.5
 
 [cost.text.output]
 price = 3
+
+[cost.image.output]
+price = 60

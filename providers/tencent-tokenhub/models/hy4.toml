@@ -1,0 +1,26 @@
+# Pricing (USD per million tokens, intl list price, accessed 2026-11-24):
+#   https://intl.cloud.tencent.com/document/product/1300/78937 (input 0.834, output 2.501, cache hit 0.042).
+#   China list: CNY 6 / 18 / 0.3, https://cloud.tencent.com/document/product/1823/130055
+#   A 50% promotion runs until 2026-12-31; list prices are used here.
+# Capabilities (structured output, function calling, caching): https://cloud.tencent.com/document/product/1823/130051
+# Effort: reasoning_effort = high|no_think (default high). no_think turns thinking off, so it is
+#   "none" here with no separate toggle (thinking.type also exists, default enabled).
+#   https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+# Reasoning is returned at choices[].message.reasoning_content (https://cloud.tencent.com/document/product/1823/131208).
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042 }
+
+[cost.text.output]
+price = 2.501

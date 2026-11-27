@@ -1,0 +1,20 @@
+# Sources (checked 2026-11-08):
+# - Foundry models sold by Azure (Cohere-embed-v5-Fast, embeddings, text + image input):
+#   https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure#cohere-models-sold-by-azure
+# - Routes: https://docs.cohere.com/docs/cohere-on-microsoft-azure (Embed v5 on Foundry, OpenAI-shaped v1/embeddings)
+# - Foundry models endpoint: POST https://<resource>.services.ai.azure.com/models/embeddings (as cohere-embed-v-4-0)
+# - Price: $0.08 per 1M text tokens, Global Standard: https://www.azurespeed.com/AzureAiModelPricing/Models/cohere-embed-v-5-fast
+#   (matches https://cohere.com/blog/embed-5); Azure's image token price isn't published, so only text is listed.
+schema = 2
+v2_only = true
+base_model = "cohere/embed-v5.0-fast"
+
+[api.embeddings]
+base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0

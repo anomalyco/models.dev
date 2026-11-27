@@ -9,7 +9,8 @@ structured_output = true
 tools = { supported = true }
 
 [limit]
-output = 65_536
+context = 1_048_576
+input = 1_048_576
 
 [cost.text.input]
 price = 1

@@ -1,0 +1,26 @@
+# Availability (live, 2026-11-09): AWS's Bedrock model list shows anthropic.claude-fable-5-2 ACTIVE (inference profiles only), with global.anthropic.claude-fable-5-2 in every region checked and us.anthropic.claude-fable-5-2 in us-east-1, us-east-2, us-west-2 and ca-central-1, the same IDs as Fable 5.1.
+# Assumed from the pattern: AWS has no Fable 5.2 model card or price yet, so capabilities and the Converse surface follow the Fable 5.1 files, and prices are Anthropic's list price ($8 / $40, $0.20 cache read, $10 5m / $16 1h write; https://platform.claude.com/docs/en/about-claude/pricing#model-pricing), as Bedrock charges for every earlier Claude model here; the us. profile adds the 10% regional premium.
+# v2 cache: cachePoint (ttl "1h" where listed) per https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html; 1h write = 2x input (AmazonBedrockFoundationModels price list). No implicit hits seen live (2026-10-19).
+# Mid-conversation (Converse): role "system" messages (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_Message.html) on Opus 4.8 and the Claude 5 family (https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-mid-conversation-system.html).
+# Per-turn effort: left out. This file only lists Converse, where a per-message output_config is silently dropped and only a top-level effort change exists, which doesn't count. The in-history effort message (a per-turn system message carrying output_config, https://docs.aws.amazon.com/bedrock/latest/userguide/claude-messages-adaptive-thinking.html) needs InvokeModel or Mantle Messages, which this file doesn't list.
+# tools.updates: left out. This file only lists Converse, which has no field for tool_addition/tool_removal; AWS documents mid-conversation tool changes only for the Anthropic Messages body (InvokeModel, Mantle Messages). The 2026-10-19 Converse test only worked by passing the blocks and beta through additionalModelRequestFields, which isn't a documented Converse feature.
+# tools.strict: Converse toolSpec.strict (structured outputs: https://docs.aws.amazon.com/bedrock/latest/userguide/structured-output.html) (the Fable 5.1 model card lists Structured outputs on bedrock-runtime)
+# tools.choice: auto only. Converse toolChoice has auto/any/tool and no none (https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_ToolChoice.html); this model rejects any/tool (https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-forced-tool-use and the Fable 5.1 model card).
+# tools.search: left out. Bedrock offers the tool search tool through InvokeModel only, not Converse: https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-tool-use.html#model-parameters-anthropic-claude-tool-search-tool
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+name = "Claude Fable 5.2 (US)"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[cost.text.input]
+price = 8.8
+cache = { read = 0.22, write = { "5m" = 11, "1h" = 17.6 } }
+
+[cost.text.output]
+price = 44

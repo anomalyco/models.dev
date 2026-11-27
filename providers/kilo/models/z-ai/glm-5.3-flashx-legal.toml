@@ -1,0 +1,23 @@
+schema = 2
+base_model = "zhipuai/glm-5.3-flashx-legal"
+name = "Z.ai: GLM 5.3 FlashX Legal"
+description = "GLM-5.3-FlashX-Legal (GLM-Legal) is Z.ai's legal-domain variant of GLM-5.3-FlashX, a native multimodal model that accepts text, image, and video input and produces text. It adds legal-domain mid-training and post-training with reinforcement..."
+
+[modalities]
+input = ["text", "image", "video"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.37
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.25
