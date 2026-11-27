@@ -1,0 +1,33 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "qwen3-30b-a3b-thinking-2507".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: a new lab entry generated from this catalog row, as models.dev has none for this model.
+# Limit: output = context: neither the catalog (top_provider.max_completion_tokens) nor the lab entry has an output limit, and input and output share the window.
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as no models.dev host of this model lists a cache kind.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/alibaba/qwen3-30b-a3b-thinking-2507/endpoints lists them).
+schema = 2
+base_model = "alibaba/qwen3-30b-a3b-thinking-2507"
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 262_144
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2.4

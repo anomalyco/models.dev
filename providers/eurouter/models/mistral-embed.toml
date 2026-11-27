@@ -1,0 +1,19 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "mistral-embed".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (mistral/mistral-embed).
+# Limit: context_length = 8192, the catalog's model-level window.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/mistral/mistral-embed/endpoints lists them).
+schema = 2
+v2_only = true
+base_model = "mistral/mistral-embed"
+
+[limit]
+context = 8192
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.11

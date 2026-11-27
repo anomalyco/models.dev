@@ -1,0 +1,31 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "mistral-large-2402".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: from the generator's alias list (models.dev names this closed model differently).
+# Limit: context_length = 32000, the catalog's model-level window; top_provider.max_completion_tokens = 8192.
+# tools: the catalog supported_parameters does not list tools.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/mistral/mistral-large-2402/endpoints lists them).
+schema = 2
+base_model = "mistral/mistral-large"
+
+[capabilities]
+tools = { supported = false }
+
+[limit]
+context = 32_000
+output = 8192
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 4.3
+
+[cost.text.output]
+price = 13

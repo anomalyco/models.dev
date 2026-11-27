@@ -1,0 +1,40 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "voxtral-small-24b".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id mistralai/Voxtral-Small-24B-2507 is the Hugging Face weights link of mistral/voxtral-small-24b-2507.
+# Measured (EUrouter live measurement, 2026-11-26): a text request and a PDF request succeeded, and 3 of 3 requests with an audio part were refused with HTTP 503 (no provider available), so input is text and PDF only.
+# Limit: context_length = 32000, the catalog's model-level window; output = context, because models.dev rejects an output limit above the context.
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cost: catalog pricing per token, times 1,000,000; pricing.audio per second, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/mistral/voxtral-small-24b/endpoints lists them).
+schema = 2
+base_model = "mistral/voxtral-small-24b-2507"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 32_000
+output = 32_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.11
+
+[cost.text.output]
+price = 0.44
+
+[cost.audio.input]
+unit = "second"
+price = 0.0000733334

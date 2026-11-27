@@ -1,0 +1,31 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "clef-flash".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (cloudflare/clef-flash).
+# Modalities: the catalog architecture lists input text and output decisions.
+# Limit: context_length = 16384, the catalog's model-level window.
+# Decision API: temperature, top_p, top_k off, as the catalog supported_parameters does not list them; structured_output on, as the answer is typed.
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/cloudflare/clef-flash/endpoints lists them).
+schema = 2
+v2_only = true
+base_model = "cloudflare/clef-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 16_384
+
+[api.systemone]
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.032925

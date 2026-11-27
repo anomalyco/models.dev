@@ -1,0 +1,33 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "qwen3-coder-30b-a3b".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id Qwen/Qwen3-Coder-30B-A3B-Instruct is the Hugging Face weights link of alibaba/qwen3-coder-30b-a3b-instruct.
+# Limit: context_length = 262000, the catalog's model-level window.
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as no models.dev host of this model lists a cache kind.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/alibaba/qwen3-coder-30b-a3b/endpoints lists them).
+schema = 2
+base_model = "alibaba/qwen3-coder-30b-a3b-instruct"
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 262_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.0105 }
+
+[cost.text.output]
+price = 0.28

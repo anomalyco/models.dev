@@ -1,0 +1,20 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "cohere-embed-multilingual-v3".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: from the generator's alias list (models.dev names this closed model differently).
+# Modalities: the catalog architecture lists input text and output embedding.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/cohere/cohere-embed-multilingual-v3/endpoints lists them).
+schema = 2
+v2_only = true
+base_model = "cohere/embed-multilingual-v3.0"
+
+[modalities]
+input = ["text"]
+output = ["embedding"]
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.1

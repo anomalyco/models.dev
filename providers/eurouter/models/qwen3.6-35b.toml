@@ -1,0 +1,36 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "qwen3.6-35b".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id Qwen/Qwen3.6-35B-A3B is the Hugging Face weights link of alibaba/qwen3.6-35b-a3b.
+# Modalities: the catalog architecture lists input text and output text.
+# Reasoning: no caller control written: the catalog lists reasoning.supported_efforts [] and mandatory = false, compared with providers/alibaba/models/qwen3.6-35b-a3b.toml (the lab's own API).
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as no models.dev host of this model lists a cache kind.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/alibaba/qwen3.6-35b/endpoints lists them).
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.95

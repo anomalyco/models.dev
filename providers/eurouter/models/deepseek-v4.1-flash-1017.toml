@@ -1,0 +1,35 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "deepseek-v4.1-flash-1017".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (deepseek/deepseek-v4.1-flash-1017).
+# Limit: context_length = 1048576, the catalog's model-level window.
+# Effort: reasoning_effort = low|high|max: the levels of providers/deepseek/models/deepseek-flash.toml (the lab's own API) that the catalog lists in reasoning.supported_efforts.
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as on providers/deepseek/models/deepseek-flash.toml (the lab's own API).
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/deepseek/deepseek-v4.1-flash-1017/endpoints lists them).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.146626
+cache = { read = 0.00581675 }
+
+[cost.text.output]
+price = 0.5867235

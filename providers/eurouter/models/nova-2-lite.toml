@@ -1,0 +1,39 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "nova-2-lite".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (amazon/nova-2-lite).
+# Input: left out video, which the catalog lists but a request to EUrouter's chat API cannot carry.
+# Modalities: the catalog architecture lists input text, image, video, file and output text.
+# Limit: top_provider.max_completion_tokens = 64000.
+# Reasoning: not offered on EUrouter. The catalog supported_parameters does not list reasoning_effort, and the gateway rejects a request that asks this model to reason.
+# Cache: the catalog lists pricing.input_cache_read; explicit, as on models.dev hosts of amazon/nova-2-lite (the most common setting, 6 of 9).
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/amazon/nova-2-lite/endpoints lists them).
+schema = 2
+base_model = "amazon/nova-2-lite"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/gif", "image/webp", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+cache = { explicit = true }
+
+[limit]
+output = 64_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.429
+cache = { read = 0.10725 }
+
+[cost.text.output]
+price = 3.597

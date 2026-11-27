@@ -1,0 +1,36 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "qwen3.5-9b".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (alibaba/qwen3.5-9b).
+# Modalities: the catalog architecture lists input text and output text.
+# Toggle: reasoning_effort = none turns reasoning off. The catalog lists reasoning.supported_efforts [none], which shares no graded level with models.dev hosts of alibaba/qwen3.5-9b (the most common setting, 8 of 21).
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as no models.dev host of this model lists a cache kind.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/alibaba/qwen3.5-9b/endpoints lists them).
+schema = 2
+base_model = "alibaba/qwen3.5-9b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.15

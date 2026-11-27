@@ -1,0 +1,32 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "intfloat/e5-mistral-7b-instruct".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# models.dev has no lab entry for this model, so this one comes from the catalog fields name, description, release_date,
+#   knowledge_cutoff, license, open_weights, architecture, supported_parameters, context_length,
+#   top_provider.max_completion_tokens and hugging_face_id (https://huggingface.co/intfloat/e5-mistral-7b-instruct).
+schema = 2
+v2_only = true
+type = "embedding"
+name = "E5 Mistral 7B Instruct"
+description = "E5-Mistral-7B-Instruct is intfloat's instruction-tuned text embedding model built on Mistral-7B-v0.1. It produces 4096-dimensional normalized embeddings for retrieval, semantic search, similarity, classification, and RAG. Queries should include a one-sentence task instruction; documents do not require one. The author recommends English-only use."
+open_weights = true
+release_date = "2023-12-20"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 4096
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/intfloat/e5-mistral-7b-instruct"

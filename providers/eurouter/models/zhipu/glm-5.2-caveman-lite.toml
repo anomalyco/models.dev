@@ -1,0 +1,33 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "zhipu/glm-5.2-caveman-lite".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id zai-org/GLM-5.2 is the Hugging Face weights link of zhipuai/glm-5.2.
+# name, description: the catalog name and description, because several EUrouter models share this lab entry.
+# Effort: reasoning_effort = none|high: the levels of providers/zhipuai/models/glm-5.2.toml (the lab's own API) that the catalog lists in reasoning.supported_efforts.
+#   none turns reasoning off: that host has a separate switch, and on EUrouter the switch is this level.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as on providers/zhipuai/models/glm-5.2.toml (the lab's own API).
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/zhipu/glm-5.2-caveman-lite/endpoints lists them).
+schema = 2
+base_model = "zhipuai/glm-5.2"
+name = "GLM 5.2 Caveman Lite"
+description = "GLM-5.2 served by GreenPT with the Caveman-lite prose-compression ruleset: the gentlest tier, which cuts filler only and keeps the explanation intact. Same upstream model and price per token as glm-5.2. Code, commands, error strings, numbers and API names are kept verbatim."
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.701125
+cache = { read = 0.439 }
+
+[cost.text.output]
+price = 5.0485

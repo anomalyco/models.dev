@@ -1,0 +1,38 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "minimax-m3".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (minimax/minimax-m3).
+# Measured (EUrouter live measurement, 2026-11-26): 6 of 6 image requests succeeded, so input keeps image although the catalog's model-level input modalities do not list it.
+# Limit: top_provider.max_completion_tokens = 131072.
+# Toggle: reasoning_effort = none turns reasoning off. The catalog lists reasoning.supported_efforts [none], which shares no graded level with providers/minimax/models/MiniMax-M3.toml (the lab's own API).
+# Cache: the catalog lists pricing.input_cache_read; implicit, as on providers/minimax/models/MiniMax-M3.toml (the lab's own API).
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/minimax/minimax-m3/endpoints lists them).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.4
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2

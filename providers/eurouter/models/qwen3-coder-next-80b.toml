@@ -1,0 +1,26 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "qwen3-coder-next-80b".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id Qwen/Qwen3-Coder-Next is the Hugging Face weights link of alibaba/qwen3-coder-next.
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/alibaba/qwen3-coder-next-80b/endpoints lists them).
+schema = 2
+base_model = "alibaba/qwen3-coder-next"
+
+[capabilities]
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.17
+
+[cost.text.output]
+price = 0.89

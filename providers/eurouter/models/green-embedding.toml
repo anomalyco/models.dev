@@ -1,0 +1,15 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "green-embedding".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: a new lab entry generated from this catalog row, as models.dev has none for this model.
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/greenpt/green-embedding/endpoints lists them).
+schema = 2
+v2_only = true
+base_model = "greenpt/green-embedding"
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.2195

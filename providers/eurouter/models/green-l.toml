@@ -1,0 +1,35 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "green-l".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id mistralai/Mistral-Small-3.2-24B-Instruct-2506 is the Hugging Face weights link of mistral/mistral-small-3.2-24b-instruct.
+# name, description: the catalog name and description, because several EUrouter models share this lab entry.
+# Modalities: the catalog architecture lists input text and output text.
+# Limit: context_length = 128000, the catalog's model-level window; top_provider.max_completion_tokens = 32768.
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/greenpt/green-l/endpoints lists them).
+schema = 2
+base_model = "mistral/mistral-small-3.2-24b-instruct"
+name = "GreenL"
+description = "Large generative model optimized for sustainability. Best for general conversations, content creation, and text analysis. Based on Mistral architecture, hosted entirely in the EU."
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 128_000
+output = 32_768
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.274375
+
+[cost.text.output]
+price = 0.878

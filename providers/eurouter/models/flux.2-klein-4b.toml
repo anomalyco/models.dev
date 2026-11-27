@@ -1,0 +1,22 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "flux.2-klein-4b".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id black-forest-labs/FLUX.2-klein-4B is the Hugging Face weights link of black-forest-labs/flux-2-klein-4b.
+# Modalities: the catalog architecture lists input text and output image.
+# Image price: the catalog lists it for size 512x512, 1024x1024.
+# Cost: catalog usage_prices per image or per pixel (times 1,000,000 per megapixel), in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/black-forest-labs/flux.2-klein-4b/endpoints lists them).
+schema = 2
+v2_only = true
+base_model = "black-forest-labs/flux-2-klein-4b"
+
+[modalities]
+input = ["text"]
+output = ["image/jpeg", "image/png", "image/webp"]
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.0054875

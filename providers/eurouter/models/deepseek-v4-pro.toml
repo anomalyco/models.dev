@@ -1,0 +1,33 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "deepseek-v4-pro".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (deepseek/deepseek-v4-pro).
+# Limit: context_length = 1048576, the catalog's model-level window.
+# Effort: reasoning_effort = high|max: the levels of models.dev hosts of deepseek/deepseek-v4-pro (the most common setting, 15 of 83) that the catalog lists in reasoning.supported_efforts.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as on models.dev hosts of deepseek/deepseek-v4-pro (the most common setting, 15 of 83).
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/deepseek/deepseek-v4-pro/endpoints lists them).
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.4375 }
+
+[cost.text.output]
+price = 3.5

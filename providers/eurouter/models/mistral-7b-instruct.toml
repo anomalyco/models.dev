@@ -1,0 +1,22 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "mistral-7b-instruct".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: a new lab entry generated from this catalog row, as models.dev has none for this model.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/mistral/mistral-7b-instruct/endpoints lists them).
+schema = 2
+base_model = "mistral/mistral-7b-instruct"
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.16
+
+[cost.text.output]
+price = 0.22

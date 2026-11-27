@@ -1,0 +1,16 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "kokoro-82m".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (hexgrad/kokoro-82m).
+# Cost: catalog pricing.audio_char per character, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/hexgrad/kokoro-82m/endpoints lists them).
+schema = 2
+v2_only = true
+base_model = "hexgrad/kokoro-82m"
+
+[api.speech]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-speech" }
+
+[cost.text.input]
+unit = "character"
+price = 0.99

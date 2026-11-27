@@ -1,0 +1,31 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "devstral-2-123b-instruct-2512".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id mistralai/Devstral-2-123B-Instruct-2512 is the Hugging Face weights link of mistral/devstral-2512.
+# Limit: context_length = 200000, the catalog's model-level window; top_provider.max_completion_tokens = 32000.
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/mistral/devstral-2-123b-instruct-2512/endpoints lists them).
+schema = 2
+base_model = "mistral/devstral-2512"
+
+[capabilities]
+structured_output = true
+
+[limit]
+context = 200_000
+output = 32_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.48
+
+[cost.text.output]
+price = 2.4

@@ -1,0 +1,36 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "codestral".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: from the generator's alias list (models.dev names this closed model differently).
+# Modalities: the catalog architecture lists input text, file and output text.
+# Limit: context_length = 131072, the catalog's model-level window.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as on providers/mistral/models/codestral-2508.toml (the lab's own API).
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/mistral/codestral/endpoints lists them).
+schema = 2
+base_model = "mistral/codestral-2508"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+
+[limit]
+context = 131_072
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.33
+cache = { read = 0.033 }
+
+[cost.text.output]
+price = 0.99

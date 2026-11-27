@@ -1,0 +1,26 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "zhipu/glm-ocr".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: a new lab entry generated from this catalog row, as models.dev has none for this model.
+# Limit: output = context: neither the catalog (top_provider.max_completion_tokens) nor the lab entry has an output limit, and input and output share the window.
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/zhipu/glm-ocr/endpoints lists them).
+schema = 2
+base_model = "zhipuai/glm-ocr"
+
+[limit]
+output = 8192
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.142675
+
+[cost.text.output]
+price = 0.6146

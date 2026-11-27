@@ -1,0 +1,26 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "qwen3-coder-480b-a35b-instruct".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (alibaba/qwen3-coder-480b-a35b-instruct).
+# tools: the catalog supported_parameters does not list tools.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/alibaba/qwen3-coder-480b-a35b-instruct/endpoints lists them).
+schema = 2
+base_model = "alibaba/qwen3-coder-480b-a35b-instruct"
+
+[capabilities]
+tools = { supported = false }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.45
+
+[cost.text.output]
+price = 1.8

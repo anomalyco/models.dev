@@ -1,0 +1,32 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "kb-whisper-large".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# models.dev has no lab entry for this model, so this one comes from the catalog fields name, description, release_date,
+#   knowledge_cutoff, license, open_weights, architecture, supported_parameters, context_length,
+#   top_provider.max_completion_tokens and hugging_face_id (https://huggingface.co/KBLab/kb-whisper-large).
+schema = 2
+v2_only = true
+type = "transcription"
+name = "KB-Whisper Large"
+description = "KB-Whisper Large is the National Library of Sweden's Whisper Large v3 fine-tune for Swedish speech recognition."
+open_weights = true
+release_date = "2025-02-14"
+license = "Apache-2.0"
+
+[modalities]
+input = ["audio"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/KBLab/kb-whisper-large"
