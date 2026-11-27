@@ -1,0 +1,17 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.6), read 2026-11-26.
+# Reasoning: Effort follows Tencent TokenHub's first-party entry (none, high). low is accepted on OpenLux but did not reason less than high in live checks on 2026-11-27 (two runs each: similar reasoning length on a short prompt; both used the full token budget on a long one), so it is not listed.
+# Effort: reasoning_effort on /v1/chat/completions, mapped by OpenLux to the upstream native control.
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.042
+cache = { read = 0.0018 }
+
+[cost.text.output]
+price = 0.1686

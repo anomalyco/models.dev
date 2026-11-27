@@ -1,0 +1,19 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.17647), read 2026-11-26.
+# Reasoning: none sends no thinking on OpenLux, so it is listed although the OpenRouter entry starts at low. Live 2026-11-27: none returned no reasoning on claude-fable-5, claude-fable-5-1, claude-fable-5-2 and claude-opus-5-5; low on claude-fable-5 returned reasoning.
+# Cache: cache_control breakpoints on /v1/chat/completions are honored. Live 2026-11-27: a repeated 7k-18k-token
+# system block marked with cache_control was read from cache on the next request on all 15 Claude IDs; ttl 1h was accepted too.
+# Effort: reasoning_effort on /v1/chat/completions, mapped by OpenLux to the upstream native control.
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[cost.text.input]
+price = 1.41176
+cache = { read = 0.035294, write = { "5m" = 1.7647, "1h" = 2.82352 } }
+
+[cost.text.output]
+price = 7.0588

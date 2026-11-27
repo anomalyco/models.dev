@@ -1,0 +1,15 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.3), read 2026-11-26.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.285
+cache = { read = 0.057 }
+
+[cost.text.output]
+price = 1.2

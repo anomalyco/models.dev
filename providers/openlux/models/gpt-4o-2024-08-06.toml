@@ -1,0 +1,15 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.1), read 2026-11-26.
+schema = 2
+base_model = "openai/gpt-4o-2024-08-06"
+
+[capabilities]
+structured_output = true
+cache = { implicit = { min_tokens = 1024 } }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 1

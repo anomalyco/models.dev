@@ -1,0 +1,14 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.3), read 2026-11-26.
+# Reasoning: Served in non-thinking mode; thinking.type=enabled and reasoning_effort do not turn reasoning on (live 2026-11-26).
+schema = 2
+base_model = "deepseek/deepseek-v3.1"
+
+[capabilities]
+reasoning = { supported = false }
+
+[cost.text.input]
+price = 0.17394
+
+[cost.text.output]
+price = 0.52182

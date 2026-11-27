@@ -1,0 +1,16 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.3), read 2026-11-26.
+# Effort: reasoning_effort on /v1/chat/completions, mapped by OpenLux to the upstream native control.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.42
+cache = { read = 0.078 }
+
+[cost.text.output]
+price = 1.32

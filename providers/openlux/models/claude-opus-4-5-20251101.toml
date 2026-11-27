@@ -1,0 +1,20 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.08824), read 2026-11-26.
+# Reasoning: Only none to high are listed (Anthropic's effort levels for Opus 4.5). xhigh and max are accepted but are not stronger than high on OpenLux: live 2026-11-27, high returned 67k reasoning chars, xhigh 23k and max 27k. none returned no reasoning.
+# Budget: not listed. thinking.budget_tokens reaches the upstream, but small budgets are not honored as Anthropic documents: live 2026-11-27, budget 12000 gave 7k-32k reasoning chars on Claude 4.5 haiku/sonnet/opus, while 1024 gave little or none (claude-haiku-4-5-20251001: none at 1024, 2048 and 4096). Use reasoning_effort to set the thinking budget.
+# Cache: cache_control breakpoints on /v1/chat/completions are honored. Live 2026-11-27: a repeated 7k-18k-token
+# system block marked with cache_control was read from cache on the next request on all 15 Claude IDs; ttl 1h was accepted too.
+# Effort: reasoning_effort on /v1/chat/completions, mapped by OpenLux to the upstream native control.
+schema = 2
+base_model = "anthropic/claude-opus-4-5-20251101"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 4096 } }
+
+[cost.text.input]
+price = 0.4412
+cache = { read = 0.04412, write = { "5m" = 0.5515, "1h" = 0.8824 } }
+
+[cost.text.output]
+price = 2.206

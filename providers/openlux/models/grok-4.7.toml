@@ -1,0 +1,17 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.07353), read 2026-11-26.
+# Reasoning: reasoning_effort is not passed through for xAI models on OpenLux (checked on grok-4.3 / grok-4.5, live 2026-11-26).
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.14706
+cache = { read = 0.036765 }
+
+[cost.text.output]
+price = 0.44118
