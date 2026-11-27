@@ -1,0 +1,28 @@
+# Bitdeer wire (probed 2026-11-25): POST https://api-inference.bitdeer.ai/v1/chat/completions
+# model = "deepseek-ai/DeepSeek-V4.1-Flash-1017"
+# Reasoning: top-level reasoning_effort = none|low|high|max; "none" disables thinking (0 reasoning tokens).
+# Output field: reasoning_content. Image input verified with a base64 PNG.
+# Prompt caching: implicit. Probed 2026-11-25: resending a ~5.0k-token prompt three times returned
+# usage.prompt_tokens_details.cached_tokens = 4608 on the third send, with no cache_control. Cached-input price is
+# on the pricing page.
+# Structured output: response_format json_schema (strict) verified live 2026-11-25; the reply followed a schema
+# whose enum values the prompt never mentioned.
+# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25). Recorded prices are the SALE prices the
+# page shows as current, with no end date; its list prices are $0.30 input, $1.20 output, $0.006 cached input.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.144
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.576

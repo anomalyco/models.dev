@@ -1,0 +1,11 @@
+name = "Bitdeer AI"
+env = ["BITDEER_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api-inference.bitdeer.ai/v1"
+doc = "https://developers.bitdeer.ai/docs"
+# Probed 2026-11-25 on api-inference.bitdeer.ai:
+# - POST /v1/chat/completions follows the OpenAI chat schema; GET /v1/models also lists embedding,
+#   rerank and image models, which are not modeled here.
+# - Reasoning is returned in reasoning_content. Controls are host-specific and documented per model file.
+# - Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25).

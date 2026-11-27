@@ -1,0 +1,33 @@
+# Bitdeer wire (probed 2026-11-25): POST https://api-inference.bitdeer.ai/v1/chat/completions
+# model = "zai-org/GLM-5.3-Flash"
+# Reasoning: top-level reasoning_effort = low|high|max (default max); output in reasoning_content.
+# Image input verified live with base64 PNG, JPEG and WebP data URLs: each one was accepted (HTTP 200)
+# and described correctly, so image/webp is listed although the lab documents only jpg/jpeg/png.
+# Bitdeer does not document video or PDF input here.
+# Prompt caching: implicit. Probed 2026-11-25: resending a ~4.9k-token prompt returned
+# usage.prompt_tokens_details.cached_tokens = 4608 with no cache_control. Cached-input price is on the pricing page.
+# Structured output: response_format json_schema (strict) verified live 2026-11-25; the reply followed a schema
+# whose enum values the prompt never mentioned.
+# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25). Recorded prices are the SALE prices the
+# page shows as current, with no end date; its list prices are $0.15 input, $0.50 output, $0.03 cached input.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.083
+cache = { read = 0.017 }
+
+[cost.text.output]
+price = 0.275

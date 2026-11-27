@@ -1,0 +1,30 @@
+# Bitdeer wire (probed 2026-11-25): POST https://api-inference.bitdeer.ai/v1/chat/completions
+# model = "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B"
+# Reasoning: chat_template_kwargs.enable_thinking = true|false toggles thinking; output in reasoning_content.
+# Image input verified with a base64 PNG; video is not documented by Bitdeer.
+# Prompt caching: implicit. Probed 2026-11-25: resending a ~5.1k-token prompt returned
+# usage.prompt_tokens_details.cached_tokens = 2176 with no cache_control. Cached-input price is on the pricing page.
+# Structured output: response_format json_schema (strict) verified live 2026-11-25; the reply followed a schema
+# whose enum values the prompt never mentioned.
+# Pricing: https://www.bitdeer.ai/en/pricing/ai-models (accessed 2026-11-25).
+schema = 2
+base_model = "nvidia/nemotron-3.5-super-vl-120b-a12b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.08 }
+
+[cost.text.output]
+price = 0.4
