@@ -6,7 +6,8 @@
 #   The endpoint is per workspace ("Replace {WorkspaceId} with your workspace ID"), so base_url takes it from
 #   DASHSCOPE_WORKSPACE_ID: the Model Studio workspace ID (业务空间 ID), not the API key. Auth is the usual
 #   Authorization: Bearer $DASHSCOPE_API_KEY. The shared DashScope host has no System One route.
-#   No package of its own, so the TypeSafe decisions entry point is used with the host's base_url (AGENTS.md).
+#   @opencode/ai's alibaba package has no decisions entry point (only chat, responses, messages, images, embeddings),
+#   so the TypeSafe decisions entry point is used with the host's base_url (AGENTS.md).
 # Images: a top-level `image` object or `images` list (URL or Base64 data URL) next to `state`, at most 4 per
 #   question and 16 per request, so media_input = "root".
 schema = 2
