@@ -2,11 +2,13 @@
 # Sources: https://docs.greenpt.ai/pricing and https://docs.greenpt.ai/model-cards
 # reasoning_effort: thinking is enabled by default and "none" disables it.
 # Values verified against the production API. See https://docs.greenpt.ai/chat-completion
+# Input: JPEG, PNG, GIF, WebP, BMP and TIFF images are read; HEIC and HEIF are refused with a 400 (the image cannot be decoded)
+# (checked on api.greenpt.ai 2026-11-19 and 2026-11-20).
 schema = 2
 base_model = "alibaba/qwen3.5-397b-a17b"
 
 [modalities]
-input = ["text"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff"]
 output = ["text"]
 
 [capabilities]

@@ -4,16 +4,19 @@
 # Values verified against the production API. See https://docs.greenpt.ai/chat-completion
 # cache_read: discounted rate for cached prompt tokens. Cache writes are not
 # charged. See https://docs.greenpt.ai/prompt-caching
+# Input: JPEG, PNG, GIF, WebP, BMP and TIFF images are read; HEIC and HEIF are refused with a
+# 400 (the image cannot be decoded). Checked on api.greenpt.ai 2026-11-20.
 schema = 2
 base_model = "moonshotai/kimi-k2.6"
 
 [modalities]
-input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/tiff"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
 structured_output = true
+cache = { implicit = true }
 
 [cost.text.input]
 price = 0.7524
