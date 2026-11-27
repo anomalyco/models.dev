@@ -2,8 +2,10 @@
 # Cache write: the catalog lists the 5m write price (cacheWrite); the 1h write is derived as 2x input (Anthropic multiplier).
 # Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
 # Verified live 2026-11-25 on https://api.hiapi.ai/v1 and again 2026-11-27 on https://api.hiapi.sh/v1: POST /chat/completions returns 200; system content accepts cache_control (explicit cache).
+# Name: HiAPI lists this ID as route "aws" of Claude Opus 5.5 (models.json route field); "(AWS)" distinguishes it from the default route.
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
+name = "Claude Opus 5.5 (AWS)"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
