@@ -1,0 +1,21 @@
+# Price (USD/MTok) = official LongCat price (limited-time discounted rate): https://longcat.chat/platform/docs/pricing/longcat-2.0
+# Toggle: thinking.type = enabled|disabled
+# LongCat served as a direct provider (api.longcat.chat), via SahabatMobile's OpenAI-compatible API.
+schema = 2
+base_model = "meituan/longcat-2.0"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+temperature = false
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 1.2

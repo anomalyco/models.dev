@@ -1,0 +1,21 @@
+# Price (USD/MTok) = official Xiaomi MiMo price; upstream pricing per Xiaomi MiMo API docs:
+# https://mimo.mi.com/static/docs/price/pay-as-you-go.md (MiMo Direct)
+# Toggle: thinking.type = "enabled"|"disabled" (default enabled)
+# Served via SahabatMobile's OpenAI-compatible API over MiMo Direct.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto"] }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+structured_output = true
+top_k = false
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.14
+
+[cost.text.output]
+price = 0.28
