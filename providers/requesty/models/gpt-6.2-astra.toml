@@ -4,6 +4,7 @@ base_model = "openai/gpt-6.2-astra"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
+system_updates = true
 
 [cost.text.input]
 price = 8

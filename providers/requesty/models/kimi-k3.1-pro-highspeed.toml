@@ -4,6 +4,7 @@ base_model = "moonshotai/kimi-k3.1-pro-highspeed"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
+system_updates = true
 
 [cost.text.input]
 price = 4
