@@ -1,0 +1,36 @@
+# Catalog & pricing: https://api.bf16.ai/v1/models and https://bf16.ai/models/kimi-k3-1-pro-uncensored (accessed 2026-11-27).
+# Reasoning: reasoning_effort (Chat) / reasoning.effort (Responses) / output_config.effort (Messages) = low|high|max (always-on, matching Moonshot Kimi K3.1 Pro baseline; bf16 maps medium->high and does not expose off/none).
+# Tools: inherited from base_model (tools.supported = true); strict and per-API tool_choice omitted without per-surface probing.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro (Uncensored)"
+description = "Uncensored variant of Kimi K3.1 Pro hosted by bf16.ai with 1M context window, vision input, and structured outputs."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+stream_usage = true
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.95
+cache = { read = 0.28 }
+
+[cost.text.output]
+price = 6.9
