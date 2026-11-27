@@ -1,0 +1,22 @@
+# Off is reasoning_effort=none on chat-completions (this file's only surface). No toggle.
+# thinking.type is an Anthropic Messages field and is not a chat-completions field, so it is not named here.
+# Same-surface peer providers/openrouter/models/anthropic/claude-haiku-5.5.toml uses
+# effort = none|low|medium|high|xhigh|max and no toggle. claude-sonnet-5.5.toml on this host also has no toggle.
+# Sources:
+# - https://iranrouter.net/docs
+# - https://iranrouter.net/models
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million + per-model context_length)
+# IranRouter is an OpenAI-compatible multi-model relay; reasoning controls follow lab / same-surface peers.
+# Host dump 2026-11-10 GET /api/v1/models id=`claude-haiku-5.5`: context_length=1_000_000; pricing_per_million prompt=0.1 completion=0.5 (USD/MTok).
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.5

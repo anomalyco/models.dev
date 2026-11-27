@@ -1,0 +1,16 @@
+# IranRouter is an OpenAI-compatible multi-model gateway (also exposes Anthropic Messages at /api/v1/messages).
+# Docs: https://iranrouter.net/docs
+# Models: https://iranrouter.net/models
+# Pricing: IranRouter bills at the upstream model's published USD rates (GET /api/v1/models pricing_per_million).
+# Sync: no module in this change. Authenticated GET /api/v1/models does return pricing_per_million,
+# context_length, and the id list (the dump behind these files, used to drop ids the website still listed).
+# Public docs do not publish that JSON shape, and automation has no IRANROUTER_API_KEY, so a module that
+# writes cost, host context, and deletions cannot be dry-run here. Reasoning controls, base_model, and
+# structured_output stay hand-authored; that payload does not carry them. The website catalog
+# (https://iranrouter.net/models) is a different id space (author/slug aliases, 474 rows) and is not the API list.
+name = "IranRouter"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["IRANROUTER_API_KEY"]
+api = "https://iranrouter.net/api/v1"
+doc = "https://iranrouter.net/models"

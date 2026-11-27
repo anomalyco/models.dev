@@ -1,0 +1,28 @@
+# Pareto 26.9 stays live beside 26.10. The undated unbiased/pareto lab entry is the
+# 26.9-era 262,144 window and is left as is (see models/unbiased/pareto-26.10.toml).
+# Sources:
+# - https://unbiased.ai/model-card/ ("Pareto accepts text and image inputs")
+# - https://openrouter.ai/unbiased/pareto-26.9 (release 2026-10-13, context 262,144, output 131,072)
+# Image input: no Unbiased doc lists formats, so the input stays generic `image`
+# (same as unbiased/pareto and unbiased/pareto-26.10).
+schema = 2
+name = "Pareto 26.9"
+family = "pareto"
+description = "Blended multimodal model that runs multiple language models in parallel and returns a synthesized answer"
+open_weights = false
+release_date = "2026-10-13"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 262_144
+output = 131_072

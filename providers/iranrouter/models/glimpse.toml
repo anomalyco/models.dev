@@ -1,0 +1,20 @@
+# Toggle: reasoning.enabled = true|false
+# Same-surface peer: providers/openrouter/models/elorian/glimpse.toml (reasoning.enabled).
+# IranRouter GET /api/v1/models lists reasoning_effort for this id; peer toggle is restored on the relay.
+# Sources:
+# - https://iranrouter.net/docs
+# - https://iranrouter.net/models
+# - GET https://iranrouter.net/api/v1/models (pricing_per_million + context_length)
+# Host dump 2026-11-10 GET /api/v1/models id=`glimpse`: context_length=262_144; pricing_per_million prompt=0.6 completion=3 (USD/MTok).
+schema = 2
+base_model = "elorian/glimpse"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 3
