@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-26):
+# - https://www.alibabacloud.com/help/en/model-studio/decision-model-stable (https://help.aliyun.com/zh/model-studio/decision-model-stable):
+#   structured decision model for classification, yes/no and scoring over text, images or business state; returns
+#   probability distributions and confidence, no generated text. Input text and image, output a structured decision
+#   result. Function calling, structured outputs, caching and tuning unsupported. Context and max input 268,288 tokens,
+#   max output "—".
+# - https://www.alibabacloud.com/help/en/model-studio/decision-model-api: System One protocol; images as a URL or Base64
+#   data URL "using the MIME type of the image file". No image formats are listed, so input is generic "image".
+# - Release: the Model Studio catalog (GET https://dashscope-intl.aliyuncs.com/api/v1/models) has published_time
+#   2026-11-25 21:24:03. Hosted only; no weights published.
+schema = 2
+v2_only = true
+type = "decision"
+name = "Decision Model"
+family = "qwen-decision"
+description = "Alibaba Model Studio decision model that returns probabilities and confidence for typed classification, yes/no and score questions about text and images"
+open_weights = false
+release_date = "2026-11-25"
+
+[modalities]
+input = ["text", "image"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 268_288
+output = 0

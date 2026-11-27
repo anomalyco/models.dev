@@ -132,6 +132,7 @@ export const ModelFamilyValues = [
   "qwen-omni-realtime",
   "qwen-livetranslate",
   "qwen-tts",
+  "qwen-decision",
 
   // DeepReinforce
   "ornith",
