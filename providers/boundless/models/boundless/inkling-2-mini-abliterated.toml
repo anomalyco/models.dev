@@ -1,6 +1,9 @@
 # Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
 # Boundless hosts an abliterated variant of the base model: the same model with its refusal behaviour removed.
-# Reasoning: reasoning_effort, https://inference.boundless.network/docs/reasoning
+# Reasoning: reasoning_effort on Chat Completions (https://inference.boundless.network/docs/reasoning).
+# Values are the ones Boundless's gateway accepts for this model, from its deployed configuration (2026-11-27);
+# any other value gets a 400 `invalid_reasoning_effort` whose message lists the accepted set.
+# Boundless hosts the weights and maps each value onto the model's own levels in the gateway: none turns thinking off; low, medium and high are passed to the chat template as they are.
 schema = 2
 base_model = "thinkingmachines/inkling-2-mini"
 name = "Inkling 2 Mini Abliterated"

@@ -1,5 +1,8 @@
 # Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
-# Reasoning: reasoning_effort, https://inference.boundless.network/docs/reasoning
+# Reasoning: reasoning_effort on Chat Completions (https://inference.boundless.network/docs/reasoning).
+# Values are the ones Boundless's gateway accepts for this model, from its deployed configuration (2026-11-27);
+# any other value gets a 400 `invalid_reasoning_effort` whose message lists the accepted set.
+# Boundless hosts the weights and maps each value onto the model's own levels in the gateway: none turns thinking off in the chat template (self-hosted weights, unlike Moonshot's API); low -> low, medium and high -> high, max -> max. `minimal` (-> low) and `xhigh` (-> max) are also accepted.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -8,7 +11,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bm
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
 
 [cost.text.input]

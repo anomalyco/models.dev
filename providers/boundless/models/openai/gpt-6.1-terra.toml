@@ -1,5 +1,9 @@
 # Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
-# Reasoning: reasoning_effort, https://inference.boundless.network/docs/reasoning
+# Reasoning: reasoning_effort on Chat Completions (https://inference.boundless.network/docs/reasoning).
+# Values are the ones Boundless's gateway accepts for this model, from its deployed configuration (2026-11-27);
+# any other value gets a 400 `invalid_reasoning_effort` whose message lists the accepted set.
+# Boundless serves this model through OpenRouter and forwards the value, so the list is OpenRouter's for this model.
+# Custom (freeform) tools: not documented by Boundless and not probed, so `freeform` is left out.
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 
@@ -8,7 +12,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
 
 [cost.text.input]
