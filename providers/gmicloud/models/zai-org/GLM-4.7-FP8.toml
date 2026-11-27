@@ -1,0 +1,19 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: copied from providers/zhipuai/models/glm-4.7.toml (first-party entry).
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "zhipuai/glm-4.7"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[limit]
+context = 202_752
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.11 }
+
+[cost.text.output]
+price = 2.2

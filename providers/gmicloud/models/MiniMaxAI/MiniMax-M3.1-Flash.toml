@@ -1,0 +1,19 @@
+# Synced from GMI Cloud's model listing (GET https://api.gmi-serving.com/v1/models), fetched 2026-10-30.
+# Context length and list prices (USD per 1M tokens) are GMI's published values; quantization: fp8.
+# Controls: copied from providers/minimax/models/MiniMax-M3.1-Flash.toml (first-party entry).
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.6
