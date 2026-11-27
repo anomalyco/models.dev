@@ -3,6 +3,7 @@
 # Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
 # Verified live 2026-11-25 on https://api.hiapi.ai/v1 and again 2026-11-27 on https://api.hiapi.sh/v1: POST /chat/completions returns 200.
 # Effort: reasoning_effort = low|high|max, passed through; follows providers/deepseek and zenmux. "low" checked live 2026-11-27.
+# Limits: https://hiapi.ai/docs/models.json lists context 1,000,000 / output 384,000 (accessed 2026-11-27); equal to the lab entry, so no [limit] override.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-vision-exp"
 

@@ -3,6 +3,7 @@
 # Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
 # Verified live 2026-11-25 on https://api.hiapi.ai/v1 and again 2026-11-27 on https://api.hiapi.sh/v1: POST /chat/completions returns 200; system content accepts cache_control (explicit cache).
 # Name: HiAPI lists this ID as route "aws" of Claude Opus 5.5 (models.json route field); "(AWS)" distinguishes it from the default route.
+# Limits: https://hiapi.ai/docs/models.json lists context 1,000,000 / output 128,000 (accessed 2026-11-27); equal to the lab entry, so no [limit] override.
 schema = 2
 base_model = "anthropic/claude-opus-5-5"
 name = "Claude Opus 5.5 (AWS)"

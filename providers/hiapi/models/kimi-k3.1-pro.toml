@@ -1,7 +1,7 @@
-# Limits: HiAPI model metadata caps output at 131,072 tokens.
 # Prices: https://hiapi.ai/docs/models.json `pricing` (unit usd_per_1m_tokens, accessed 2026-11-27), copied as listed; no currency conversion.
 # Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
 # Verified live 2026-11-25 on https://api.hiapi.ai/v1 and again 2026-11-27 on https://api.hiapi.sh/v1: POST /chat/completions returns 200.
+# Limits: https://hiapi.ai/docs/models.json lists context 1,048,576 / output 131,072 (accessed 2026-11-27); the [limit] override below sets the values that differ from the lab entry.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 

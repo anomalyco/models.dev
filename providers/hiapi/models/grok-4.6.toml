@@ -2,6 +2,7 @@
 # Prices: https://hiapi.ai/docs/models.json `pricing` (unit usd_per_1m_tokens, accessed 2026-11-27), copied as listed; no currency conversion.
 # Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
 # Verified live 2026-11-25 on https://api.hiapi.ai/v1 and again 2026-11-27 on https://api.hiapi.sh/v1: POST /chat/completions returns 200; usage reports cached_tokens.
+# Limits: https://hiapi.ai/docs/models.json lists context 500,000 / output 500,000 (accessed 2026-11-27); equal to the lab entry, so no [limit] override.
 schema = 2
 base_model = "xai/grok-4.6"
 
