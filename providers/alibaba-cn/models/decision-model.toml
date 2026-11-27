@@ -1,0 +1,26 @@
+# Availability and price: https://www.alibabacloud.com/help/en/model-studio/decision-model-stable (accessed 2026-11-26),
+#   China (Beijing): $0.042 per 1M input tokens, no output charge. That is Alibaba's own published USD figure for the region,
+#   not a conversion made here; the Chinese page lists ¥0.3 per 1M input tokens
+#   (https://help.aliyun.com/zh/model-studio/decision-model-stable).
+# API: System One body ({model, state, questions}) at POST https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1/systemone
+#   (China (Beijing); https://www.alibabacloud.com/help/en/model-studio/decision-model-api, https://help.aliyun.com/zh/model-studio/decision-model-api).
+#   The endpoint is per workspace ("Replace {WorkspaceId} with your workspace ID"), so base_url takes it from
+#   DASHSCOPE_WORKSPACE_ID: the Model Studio workspace ID (业务空间 ID), not the API key. Auth is the usual
+#   Authorization: Bearer $DASHSCOPE_API_KEY. The shared DashScope host has no System One route.
+#   No package of its own, so the TypeSafe decisions entry point is used with the host's base_url (AGENTS.md).
+# Images: a top-level `image` object or `images` list (URL or Base64 data URL) next to `state`, at most 4 per
+#   question and 16 per request, so media_input = "root".
+schema = 2
+v2_only = true
+base_model = "alibaba/decision-model"
+
+[api.systemone]
+base_url = "https://${DASHSCOPE_WORKSPACE_ID}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+compatibility = { media_input = "root" }
+
+[cost.text.input]
+price = 0.042
+
+[cost.text.output]
+price = 0
