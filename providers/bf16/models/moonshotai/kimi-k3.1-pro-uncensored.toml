@@ -2,6 +2,7 @@
 # Reasoning: reasoning_effort (Chat) / reasoning.effort (Responses) / output_config.effort (Messages) = low|high|max (always-on, matching Moonshot Kimi K3.1 Pro baseline; bf16 maps medium->high and does not expose off/none).
 # Tools: inherited from base_model (tools.supported = true); strict and per-API tool_choice omitted without per-surface probing.
 # Output cap: POST /v1/chat/completions accepts OpenAI max_completion_tokens (preferred; takes precedence over legacy max_tokens) per https://raw.githubusercontent.com/BF16-AI/bf16-openapi/main/openapi.yaml (ChatCompletionRequest).
+# Input modalities: bf16.ai vision gateway accepts inline base64 image/jpeg, image/png, image/gif, and image/webp (normalized in memory; video, PDF, BMP, and HEIC/HEIF are not accepted) per https://raw.githubusercontent.com/BF16-AI/bf16-openapi/main/openapi.yaml (ChatMessage).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro (Uncensored)"

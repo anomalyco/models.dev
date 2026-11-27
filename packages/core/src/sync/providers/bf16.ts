@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { ExistingModel, SyncedFullModel, SyncedModel, SyncProvider } from "../index.js";
+import { MissingReasoningOptionsError } from "../missing-reasoning-options.js";
 import { factorBaseModel } from "./openrouter.js";
 
 const API_ENDPOINT = "https://api.bf16.ai/v1/models";
@@ -109,7 +110,7 @@ function isRepresentableModel(model: BF16Model): boolean {
   const pricing = meta?.pricing_usd_per_1m;
   const contextWindow = meta?.context_window ?? model.context_window;
   if (pricing === undefined || contextWindow === undefined) return false;
-  return pricing.input > 0 || pricing.output > 0;
+  return true;
 }
 
 export function buildBF16Model(
@@ -130,7 +131,10 @@ export function buildBF16Model(
 
   const reasoning = meta?.supports_reasoning ?? model.supports_reasoning ?? existing.reasoning ?? false;
   if (reasoning && existing.reasoning_options === undefined) {
-    throw new Error(`bf16.ai model ${model.id} requires hand-authored reasoning_options; the catalog omits effort lists`);
+    throw new MissingReasoningOptionsError(
+      model.id,
+      "catalog omits effort lists; author reasoning_options for this model",
+    );
   }
 
   const { base_model: baseModel, base_model_omit: baseModelOmit, ...current } = existing;

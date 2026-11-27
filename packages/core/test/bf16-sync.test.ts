@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import type { z } from "zod";
 
 import { syncProviderMatrix } from "../src/sync/index.js";
+import { MissingReasoningOptionsError } from "../src/sync/missing-reasoning-options.js";
 import { bf16, BF16Model, BF16Response, buildBF16Model, fetchBF16Models } from "../src/sync/providers/bf16.js";
 
 type BF16ModelInput = z.input<typeof BF16Model>;
@@ -170,4 +171,49 @@ test("translateModel ignores non-active and pricing-less entries even when a loc
 
   expect(bf16.translateModel(entries[0]!, context)).toBeUndefined();
   expect(bf16.translateModel(entries[1]!, context)).toBeUndefined();
+});
+
+test("zero-priced active models remain representable and sync prices", () => {
+  const [freeModel] = BF16Response.parse({
+    object: "list",
+    data: [
+      sampleModel({
+        id: "bf16/free-preview",
+        bf16: {
+          ...sampleModel().bf16,
+          pricing_usd_per_1m: { input: "0", output: "0" },
+        },
+      }),
+    ],
+  }).data;
+
+  expect(bf16.sourceID(freeModel!)).toBe("bf16/free-preview");
+  const existingModel = {
+    name: "Free Preview",
+    reasoning: true,
+    reasoning_options: [{ type: "effort" as const, values: ["low" as const, "high" as const] }],
+    tool_call: true,
+    structured_output: true,
+    cost: { input: 1, output: 2 },
+    limit: { context: 1_048_576, output: 131_072 },
+  };
+  const translated = bf16.translateModel(freeModel!, {
+    existing: () => existingModel,
+    authored: () => existingModel,
+  });
+  expect(translated?.model.cost).toMatchObject({ input: 0, output: 0 });
+});
+
+test("buildBF16Model throws MissingReasoningOptionsError when a reasoner lacks authored controls", () => {
+  const [parsed] = BF16Response.parse({ object: "list", data: [sampleModel()] }).data;
+  expect(() =>
+    buildBF16Model(parsed!, {
+      name: "Kimi K3.1 Pro (Uncensored)",
+      reasoning: true,
+      tool_call: true,
+      structured_output: true,
+      cost: { input: 1.95, output: 6.9, cache_read: 0.28 },
+      limit: { context: 1_048_576, output: 131_072 },
+    }),
+  ).toThrow(MissingReasoningOptionsError);
 });
