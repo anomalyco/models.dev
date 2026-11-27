@@ -3,7 +3,6 @@
 # base_model: same author and model id as the catalog (minimax/minimax-m2.1).
 # Measured (EUrouter live measurement, 2026-11-26): AWS Bedrock, its only provider, rejected 6 of 6 image requests, so input is text only.
 # Limit: context_length = 196608, the catalog's model-level window.
-# tools: the catalog supported_parameters does not list tools.
 # Reasoning: always on. The catalog has reasoning.mandatory = true and supported_parameters does not list reasoning_effort, so the gateway accepts no reasoning setting.
 # Cost: catalog pricing per token, times 1,000,000, in USD.
 #   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
@@ -12,7 +11,6 @@ schema = 2
 base_model = "minimax/MiniMax-M2.1"
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true }
 
 [limit]

@@ -1,8 +1,7 @@
 # Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "claude-opus-4-5-20251101".
 # Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
 # base_model: same author and model id as the catalog (anthropic/claude-opus-4-5-20251101).
-# Limit: top_provider.max_completion_tokens = 8192.
-# Reasoning: not offered on EUrouter. The catalog supported_parameters does not list reasoning_effort, and the gateway rejects a request that asks this model to reason.
+# Effort: reasoning_effort = low|medium|high: the levels of providers/anthropic/models/claude-opus-4-5-20251101.toml (the lab's own API) that the catalog lists in reasoning.supported_efforts.
 # structured_output: the catalog supported_parameters lists structured_outputs.
 # Cache: the catalog lists pricing.input_cache_read; explicit, as on providers/anthropic/models/claude-opus-4-5-20251101.toml (the lab's own API).
 # Cost: catalog pricing per token, times 1,000,000, in USD.
@@ -12,12 +11,9 @@ schema = 2
 base_model = "anthropic/claude-opus-4-5-20251101"
 
 [capabilities]
-reasoning = { supported = false }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
 structured_output = true
 cache = { explicit = true }
-
-[limit]
-output = 8192
 
 [api.chat-completions]
 

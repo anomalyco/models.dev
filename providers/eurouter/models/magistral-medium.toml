@@ -1,8 +1,9 @@
 # Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "magistral-medium".
 # Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
 # base_model: from the generator's alias list (models.dev names this closed model differently).
-# Modalities: the catalog architecture lists input text, file and output text.
-# Limit: context_length = 40000, the catalog's model-level window.
+# Modalities: the catalog architecture lists input text, image, file and output text.
+#   Formats as on providers/mistral/models/magistral-medium-latest.toml (the lab's own API), since the lab entry lists none.
+# Limit: context_length = 262144, the catalog's model-level window.
 # Effort: reasoning_effort = none|high: the levels of providers/mistral/models/magistral-medium-latest.toml (the lab's own API) that the catalog lists in reasoning.supported_efforts.
 # Cost: catalog pricing per token, times 1,000,000, in USD.
 #   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
@@ -11,14 +12,14 @@ schema = 2
 base_model = "mistral/magistral-medium-latest"
 
 [modalities]
-input = ["text", "application/pdf"]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
 output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high"] }
 
 [limit]
-context = 40_000
+context = 262_144
 
 [api.chat-completions]
 

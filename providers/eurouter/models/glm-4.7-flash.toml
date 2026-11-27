@@ -2,7 +2,6 @@
 # Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
 # base_model: the catalog hugging_face_id zai-org/GLM-4.7-Flash is the Hugging Face weights link of zhipuai/glm-4.7-flash.
 # Limit: context_length = 202752, the catalog's model-level window.
-# tools: the catalog supported_parameters does not list tools.
 # Reasoning: not offered on EUrouter. The catalog supported_parameters does not list reasoning_effort, and the gateway rejects a request that asks this model to reason.
 # Cost: catalog pricing per token, times 1,000,000, in USD.
 #   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
@@ -11,7 +10,6 @@ schema = 2
 base_model = "zhipuai/glm-4.7-flash"
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = false }
 
 [limit]

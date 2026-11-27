@@ -1,7 +1,7 @@
 # Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "mistral-nemo-instruct-2407".
 # Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
 # base_model: the catalog hugging_face_id mistralai/Mistral-Nemo-Instruct-2407 is the Hugging Face weights link of mistral/mistral-nemo.
-# Limit: context_length = 32768, the catalog's model-level window; output = context, because models.dev rejects an output limit above the context.
+# Limit: context_length = 131072, the catalog's model-level window.
 # structured_output: the catalog supported_parameters lists structured_outputs.
 # Cache: the catalog lists pricing.input_cache_read; implicit, as no models.dev host of this model lists a cache kind.
 # Cost: catalog pricing per token, times 1,000,000, in USD.
@@ -15,8 +15,7 @@ structured_output = true
 cache = { implicit = true }
 
 [limit]
-context = 32_768
-output = 32_768
+context = 131_072
 
 [api.chat-completions]
 

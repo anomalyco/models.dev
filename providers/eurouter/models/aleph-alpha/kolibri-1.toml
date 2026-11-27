@@ -1,7 +1,7 @@
 # Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "aleph-alpha/kolibri-1".
 # Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
 # base_model: same author and model id as the catalog (aleph-alpha/kolibri-1).
-# Limit: context_length = 262144, the catalog's model-level window; output = context: neither the catalog (top_provider.max_completion_tokens) nor the lab entry has an output limit, and input and output share the window.
+# Limit: context_length = 262144, the catalog's model-level window; top_provider.max_completion_tokens = 81920.
 # Effort: reasoning_effort = none|low|medium|high: the levels of models.dev hosts of aleph-alpha/kolibri-1 (the most common setting, 5 of 5) that the catalog lists in reasoning.supported_efforts.
 # Cache: the catalog lists pricing.input_cache_read; implicit, as no models.dev host of this model lists a cache kind.
 # Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
@@ -16,7 +16,7 @@ cache = { implicit = true }
 
 [limit]
 context = 262_144
-output = 262_144
+output = 81_920
 
 [api.chat-completions]
 

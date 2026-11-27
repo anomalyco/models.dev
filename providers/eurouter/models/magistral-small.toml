@@ -2,7 +2,7 @@
 # Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
 # base_model: the catalog hugging_face_id mistralai/Magistral-Small-2509 is the Hugging Face weights link of mistral/magistral-small-2509.
 # Modalities: the catalog architecture lists input text, image, file and output text.
-# Limit: context_length = 40000, the catalog's model-level window; output = context, because models.dev rejects an output limit above the context.
+# Limit: context_length = 262144, the catalog's model-level window.
 # Reasoning: no caller control written: the catalog lists reasoning.supported_efforts [] and mandatory = false, compared with models.dev hosts of mistral/magistral-small-2509 (the most common setting, 1 of 1).
 # Cost: catalog pricing per token, times 1,000,000, in USD.
 #   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
@@ -18,8 +18,7 @@ output = ["text"]
 reasoning = { supported = true }
 
 [limit]
-context = 40_000
-output = 40_000
+context = 262_144
 
 [api.chat-completions]
 

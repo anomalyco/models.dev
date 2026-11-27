@@ -3,7 +3,6 @@
 # base_model: the catalog hugging_face_id zai-org/GLM-5.2 is the Hugging Face weights link of zhipuai/glm-5.2.
 # name, description: the catalog name and description, because several EUrouter models share this lab entry.
 # Limit: context_length = 1048576, the catalog's model-level window.
-# tools: the catalog supported_parameters does not list tools.
 # Effort: reasoning_effort = none|high: the levels of providers/zhipuai/models/glm-5.2.toml (the lab's own API) that the catalog lists in reasoning.supported_efforts.
 #   none turns reasoning off: that host has a separate switch, and on EUrouter the switch is this level.
 # Cache: the catalog lists pricing.input_cache_read; implicit, as on providers/zhipuai/models/glm-5.2.toml (the lab's own API).
@@ -16,7 +15,6 @@ name = "GLM 5.2 Ponytail Lite"
 description = "GLM-5.2 served by GreenPT with the ponytail-lite output-compression ruleset: a lazy-senior-developer bias for code-heavy answers (YAGNI first, stdlib and platform natives before custom code) at its gentlest intensity, building what you asked and naming the lazier alternative in one line. Same weights, context and price per token as glm-5.2."
 
 [capabilities]
-tools = { supported = false }
 reasoning = { supported = true, effort = ["none", "high"] }
 cache = { implicit = true }
 
