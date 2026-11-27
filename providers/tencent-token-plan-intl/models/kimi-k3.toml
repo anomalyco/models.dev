@@ -1,0 +1,27 @@
+# Pricing: Token Plan Personal Edition (international) list credit coefficients, checked 2026-11-27:
+#   Cache-missed input / output / cached input: 468.75 / 2343.75 / 46.875 credits per million tokens;
+#   cache write 5m 468.75, 1h 937.5.
+#   https://intl.cloud.tencent.com/document/product/1300/81316 (updated 2026-11-26); promotions excluded.
+# Cost omitted: a credit has no single USD value. Plans sell 1,000 / 2,600 / 7,900 / 15,900 credits for
+#   USD 7 / 17 / 51 / 103 a month (Lite / Standard / Pro / Max), i.e. USD 0.007 / 0.006538 / 0.006456 /
+#   0.006478 per credit (https://intl.cloud.tencent.com/document/product/1300/81315, updated 2026-11-26), and no per-credit price is published.
+#   Unknown does not mean free.
+# Availability: Token Plan Overview > Available models, https://intl.cloud.tencent.com/document/product/1300/81315
+# Specifications: https://intl.cloud.tencent.com/document/product/1300/78934 (1M context, 1M input, 1M output).
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410
+# API: https://cloud.tencent.com/document/product/1823/132232
+# Effort: reasoning_effort = low|high|max; thinking cannot be disabled.
+# max_completion_tokens allows 1048576; 131072 is the default, not the maximum.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

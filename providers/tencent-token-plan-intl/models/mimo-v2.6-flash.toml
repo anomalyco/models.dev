@@ -1,0 +1,29 @@
+# Pricing: Token Plan Personal Edition (international) list credit coefficients, checked 2026-11-27:
+#   Cache-missed input / output / cached input: 21.875 / 43.75 / 0.438 credits per million tokens.
+#   https://intl.cloud.tencent.com/document/product/1300/81316 (updated 2026-11-26); promotions excluded.
+# Cost omitted: a credit has no single USD value. Plans sell 1,000 / 2,600 / 7,900 / 15,900 credits for
+#   USD 7 / 17 / 51 / 103 a month (Lite / Standard / Pro / Max), i.e. USD 0.007 / 0.006538 / 0.006456 /
+#   0.006478 per credit (https://intl.cloud.tencent.com/document/product/1300/81315, updated 2026-11-26), and no per-credit price is published.
+#   Unknown does not mean free.
+# Availability: Token Plan Overview > Available models, https://intl.cloud.tencent.com/document/product/1300/81315
+# Specifications: https://intl.cloud.tencent.com/document/product/1300/78934 (1M context, 1M input, 128K output).
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write rate published.
+# API: https://cloud.tencent.com/document/product/1823/138677
+# Toggle: thinking.type = enabled|disabled
+# JSON output: response_format.type = json_object; json_schema is unsupported.
+# The host lists text/image/video input, not audio (same as the tencent-token-plan entry).
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "video/mp4", "video/quicktime", "video/x-msvideo", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
