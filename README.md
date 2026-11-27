@@ -10,9 +10,9 @@
 
 ---
 
-[Models.dev](https://models.dev) is a comprehensive open-source database of AI model specifications, pricing, and capabilities.
+[Models.dev](https://models.dev) is a comprehensive open-source database of AI model specifications, pricing, and capabilities, plus MCP servers from the official Model Context Protocol registry.
 
-There's no single database with information about all the available AI models. We started Models.dev as a community-contributed project to address this. We also use it internally in [opencode](https://opencode.ai).
+There's no single database with information about all the available AI models. We started Models.dev as a community-contributed project to address this. We also use it internally in [opencode](https://opencode.ai). The site has four sections: models, providers, labs, and MCP servers.
 
 ## API
 
@@ -68,6 +68,22 @@ Use this for facts about the model itself, independent of where it is served. If
 curl https://models.dev/catalog.json
 ```
 
+### MCP servers
+
+MCP servers are a separate snapshot, not part of `api.json`, `models.json`, or `catalog.json`. The [MCP page](https://models.dev/mcp) lists the latest version of every server in the [official MCP registry](https://registry.modelcontextprotocol.io). The same snapshot is served as JSON:
+
+```bash
+curl https://models.dev/mcp.json
+```
+
+The file is `mcp/servers.json`. Each server keeps its registry name (`namespace/server`), description, version, status, packages, and remote endpoints. Refresh it from the registry API documented in [modelcontextprotocol/registry](https://github.com/modelcontextprotocol/registry):
+
+```bash
+bun run mcp:sync
+```
+
+The sync reads `https://registry.modelcontextprotocol.io/v0.1/servers?version=latest`. If that host is unreachable, set `MCP_REGISTRY_PROXY` to a prefix such as `https://r.jina.ai/`.
+
 ### Logos
 
 Provider logos are available as SVG files:
@@ -80,7 +96,7 @@ Replace `{provider}` with the **Provider ID** (e.g., `anthropic`, `openai`, `goo
 
 ## Contributing
 
-The data is stored in the repo as TOML files; organized by provider and model. The logo is stored as an SVG. This is used to generate this page and power the API.
+Model and provider data is stored in the repo as TOML files, organized by provider and model. The logo is stored as an SVG. This is used to generate the model pages and power the model API. MCP servers are not edited as TOML; `bun run mcp:sync` rewrites `mcp/servers.json`.
 
 We need your help keeping the data up to date.
 

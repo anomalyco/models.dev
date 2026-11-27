@@ -453,7 +453,7 @@ function renderSearchResults() {
       ? mcpLoading
         ? `${resultLabel} · loading MCP servers`
         : resultLabel
-      : "Recently updated models, providers, and labs";
+      : "Recently updated models, providers, and labs. Type to search MCP servers.";
   searchEmpty.hidden = loading || rankedSearchResults.length > 0;
 
   if (rankedSearchResults.length > 0) {

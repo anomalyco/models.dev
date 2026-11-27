@@ -101,7 +101,7 @@ interface SearchIndexItem {
 const DEFAULT_PAGE_METADATA: PageMetadata = {
   title: "Models.dev - An open-source database of AI models",
   description:
-    "Models.dev is a comprehensive open-source database of AI model specifications, pricing, and features.",
+    "Models.dev is an open-source database of AI model specifications, pricing, and features, plus MCP servers from the official registry.",
 };
 
 const ModelEntries = buildModelEntries();
@@ -1483,8 +1483,9 @@ function HelpDialog() {
       </div>
       <div class="body">
         <p>
-          <a href="/">Models.dev</a> is a comprehensive open-source database of
-          AI model specifications, pricing, and features.
+          <a href="/">Models.dev</a> is an open-source database of AI model
+          specifications, pricing, and features, plus MCP servers from the
+          official registry.
         </p>
         <p>
           The homepage starts with provider-agnostic model metadata. Model pages
@@ -1495,9 +1496,10 @@ function HelpDialog() {
         </p>
         <h2>API</h2>
         <p>
-          You can access provider data, provider-agnostic model metadata, or the
-          combined catalog through JSON endpoints. Specialized model types are
-          omitted by default; the site includes all model types.
+          You can access provider data, provider-agnostic model metadata, the
+          combined catalog, or the MCP server snapshot through JSON endpoints.
+          Specialized model types are omitted by default; the site includes all
+          model types.
         </p>
         <div class="code-block">
           <code>
@@ -1556,7 +1558,9 @@ function HelpDialog() {
           >
             GitHub
           </a>{" "}
-          as TOML files organized by provider and canonical model.
+          as TOML files organized by provider and canonical model. MCP servers
+          are a snapshot of the official registry in <code>mcp/servers.json</code>,
+          refreshed with <code>bun run mcp:sync</code>.
         </p>
       </div>
       <div class="footer">
