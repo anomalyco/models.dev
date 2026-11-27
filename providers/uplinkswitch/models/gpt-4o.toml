@@ -1,0 +1,10 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog (accessed 2026-11-26), USD per million tokens.
+schema = 2
+base_model = "openai/gpt-4o"
+
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10

@@ -1,0 +1,18 @@
+# Prices: https://api.uplinkswitch.com/v1/catalog (accessed 2026-11-26), USD per million tokens.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max on Chat Completions, passed through by the gateway. Levels copied from providers/openai for this model.
+# Limits: the catalog lists a smaller window for this host than the lab file (context_window 1000000).
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.294116
+cache = { read = 0.029412 }
+
+[cost.text.output]
+price = 1.470588
