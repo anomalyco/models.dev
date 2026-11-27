@@ -1,0 +1,34 @@
+# Prices/limits/inputs/efforts: https://docs.refuseless.com/api/models (GET /v1/models entry, 2026-11-27).
+# Lineup, tuning and off default: https://docs.refuseless.com/models
+# ("Creative writing. Gemma 4 26B tuned for storytelling. Reasoning is off by default.")
+# Efforts/default and off alias: https://docs.refuseless.com/guides/reasoning
+# Chat effort, caching and usage: https://docs.refuseless.com/api/chat-completions
+# Responses effort: https://docs.refuseless.com/api/responses
+# Wire: reasoning_effort (Chat) / reasoning.effort (Responses) = none|low|high|max; default none. Medium and xhigh are rejected.
+# Host input surface is text and images, so the lab image MIME list is trimmed to the common formats.
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+name = "Gemma 4 26B Storyteller"
+description = "Gemma 4 26B tuned by Refuseless for creative writing, with reasoning off by default."
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "none" } }
+cache = { implicit = true }
+stream_usage = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.08
+cache = { read = 0.002 }
+
+[cost.text.output]
+price = 0.2

@@ -1,0 +1,35 @@
+# Prices/limits/inputs: https://docs.refuseless.com/api/models (GET /v1/models entry, 2026-11-27).
+# Lineup and input surface: https://docs.refuseless.com/models ("Kimi K3.1 Pro on standard weights", accepts text and images).
+# Efforts/default and off alias: https://docs.refuseless.com/guides/reasoning
+# Chat effort, caching and usage: https://docs.refuseless.com/api/chat-completions
+# Responses effort: https://docs.refuseless.com/api/responses
+# Wire: reasoning_effort (Chat) / reasoning.effort (Responses) = none|low|high|max; default low. Medium and xhigh are rejected.
+# Host input surface is text and images, so the lab video formats are dropped.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "low" } }
+cache = { implicit = true }
+stream_usage = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 2.5
