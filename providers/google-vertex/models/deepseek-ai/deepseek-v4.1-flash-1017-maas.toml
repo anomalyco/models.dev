@@ -1,4 +1,4 @@
-# Toggle: chat_template_kwargs.thinking = true|false (copied from providers/google-vertex/models/deepseek-ai/deepseek-v3.2-maas.toml, not probed on V4.1)
+# Toggle: chat_template_kwargs.thinking = true|false (copied from Vertex's DeepSeek V3.2, deepseek-v3.2-maas, retired 2026-10-21; not probed on V4.1)
 # Sources (accessed 2026-11-27):
 # - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/deepseek/deepseek-v41-flash-1017
 #   (model ID deepseek-v4.1-flash-1017-maas, launch stage Preview, released 2026-11-16, global endpoint only;
@@ -13,7 +13,7 @@
 # Reasoning: the model card lists thinking as supported. https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/capabilities/thinking
 # (accessed 2026-11-27) has sections for GPT OSS, GLM 5.2 and Gemma 4 only, so it documents no field for DeepSeek V4.1.
 # The toggle is copied from the same host's previous DeepSeek model on the same endpoint
-# (providers/google-vertex/models/deepseek-ai/deepseek-v3.2-maas.toml); it has not been probed on V4.1.
+# (deepseek-v3.2-maas, live-tested 2026-10-08, retired 2026-10-21); it has not been probed on V4.1.
 # Limits: the model card's quota (1,048,576 output and context) is a quota, not a model limit, so limits come from the lab file.
 # Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
 # system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
