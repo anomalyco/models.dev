@@ -1,9 +1,10 @@
+# The host lists only t2v and i2v operations. Motion-control rows on the price page are reference tariffs.
 # https://iteracompute.com/models/kling-3-0/#pricing
 # https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
 # IteraCompute exposes one Kling 3.0 ID across resolution tiers.
 schema = 2
 v2_only = true
-base_model = "kuaishou/kling-v3.0"
+base_model = "kuaishou/kling-v3.0-pro"
 name = "Kling 3.0"
 
 [api.videos]
@@ -32,11 +33,3 @@ price = 0.14015796912
 [[cost.video.output.overrides]]
 when = { resolution = { equals = "4K" }, generate_audio = { equals = true }, voice_control = { equals = false } }
 price = 0.3503949228
-
-[[cost.video.output.overrides]]
-when = { resolution = { equals = "720P" }, mode = { equals = "motion_control" } }
-price = 0.10511847684
-
-[[cost.video.output.overrides]]
-when = { resolution = { equals = "1080P" }, mode = { equals = "motion_control" } }
-price = 0.14015796912
