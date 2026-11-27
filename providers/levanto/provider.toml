@@ -1,0 +1,12 @@
+# Sources (accessed 2026-11-27):
+# - Base URL, key and API formats: https://docs.levanto.ai/llms/introduction
+#   (OpenAI Chat Completions at /v1/chat/completions, plus /v1/responses and Anthropic /v1/messages).
+# - Keys start with "lv_live_" and are created at https://platform.levanto.ai.
+# - Model list and prices: GET https://api.levanto.ai/v1/models (needs a key).
+# Chat Completions is the default API. Reasoning: reasoning_effort is passed through to the model.
+name = "Levanto"
+env = ["LEVANTO_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.levanto.ai/v1"
+doc = "https://docs.levanto.ai/llms/introduction"

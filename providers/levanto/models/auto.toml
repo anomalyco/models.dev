@@ -1,0 +1,31 @@
+# Router: Levanto picks an open-weight model per request (https://docs.levanto.ai/llms/routers).
+# The response's `model` field names the model that answered, and the request is billed at its price,
+# so there is no [cost]. Optional body field `target` = economy|balanced|quality (default balanced).
+# Context is the largest window among the models it picks, output the smallest output cap, and
+# effort the levels they all accept (https://docs.levanto.ai/llms/advanced). Accessed 2026-11-27.
+schema = 2
+name = "Auto"
+description = "Router that picks an open-weight model per request"
+family = "auto"
+open_weights = false
+release_date = "2026-11-22"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
+cache = { implicit = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

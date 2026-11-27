@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-27):
+# - Model ID, price and context: GET https://api.levanto.ai/v1/models (needs a key; the
+#   `levanto.ai` block of each entry has `pricing` in USD per 1M tokens and `context_tokens`).
+#   The same prices are on the Models page of https://platform.levanto.ai.
+# - Structured output and tools work as in the OpenAI API: https://docs.levanto.ai/llms/advanced
+#   and https://docs.levanto.ai/integrations/langchain.
+# - Cache: implicit; usage reports prompt_tokens_details.cached_tokens and cached input is billed at
+#   the cache read price. A conversation stays on one model so its cache keeps working
+#   (https://docs.levanto.ai/llms/advanced#conversations).
+# - Live check 2026-11-27: Chat Completions answered with this ID; reasoning comes back in
+#   message.reasoning_content.
+# Effort: reasoning_effort = none|low|high|max, passed through to the model; none turns reasoning off
+#   (checked live). Levels as other hosts of this model list them.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.072
+cache = { read = 0.018 }
+
+[cost.text.output]
+price = 0.216
