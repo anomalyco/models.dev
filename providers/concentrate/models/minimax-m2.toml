@@ -1,3 +1,4 @@
+# Limit: max_input_tokens 204800, max_tokens 8192 at https://api.concentrate.ai/v1/models, capped at the lab's
 schema = 2
 base_model = "minimax/MiniMax-M2"
 
@@ -8,11 +9,12 @@ output = ["text"]
 [capabilities]
 structured_output = true
 reasoning = { supported = true }
-cache = { explicit = true }
+
+[limit]
+output = 8_192
 
 [cost.text.input]
 price = 0.3
-cache = { read = 0.03, write = 0.375 }
 
 [cost.text.output]
 price = 1.2
