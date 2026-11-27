@@ -71,6 +71,7 @@ import { pioneer } from "./providers/pioneer.js";
 import { prime } from "./providers/prime.js";
 import { requesty } from "./providers/requesty.js";
 import { sambaNova } from "./providers/sambanova.js";
+import { straitly } from "./providers/straitly.js";
 import { morph } from "./providers/morph.js";
 import { moonshotai } from "./providers/moonshotai.js";
 import { thinkingmachines } from "./providers/thinkingmachines.js";
@@ -264,6 +265,7 @@ export const providers: {
   prime: SyncProvider<any>;
   requesty: SyncProvider<any>;
   sambanova: SyncProvider<any>;
+  straitly: SyncProvider<any>;
   morph: SyncProvider<any>;
   moonshotai: SyncProvider<any>;
   thinkingmachines: SyncProvider<any>;
@@ -326,6 +328,7 @@ export const providers: {
   prime,
   requesty,
   sambanova: sambaNova,
+  straitly,
   morph,
   moonshotai,
   thinkingmachines,
@@ -359,6 +362,7 @@ export const groups = {
     "requesty",
     "openrouter",
     "prime",
+    "straitly",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],

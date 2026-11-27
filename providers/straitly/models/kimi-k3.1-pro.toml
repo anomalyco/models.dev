@@ -1,0 +1,20 @@
+# Effort: reasoning_effort = none|low|high|max (live-verified 2026-11-25 on Straitly /v1/chat/completions: none -> reasoning_tokens=0 with empty reasoning fields, low -> 32, high -> 46, max -> 82)
+# Reasoning response field: message.reasoning_content (live-verified 2026-11-25 on Straitly /v1/chat/completions)
+# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probes on /v1/chat/completions.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.14
+cache = { read = 0.114 }
+
+[cost.text.output]
+price = 5.7

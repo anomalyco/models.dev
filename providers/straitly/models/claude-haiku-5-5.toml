@@ -1,0 +1,22 @@
+# Toggle: thinking.type = enabled|disabled (Messages)
+# Effort: output_config.effort (Messages) / reasoning_effort (Chat Completions) = low|medium|high|xhigh|max
+# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probe on /v1/messages.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.006, write = { "5m" = 0.075 } }
+
+[cost.text.output]
+price = 0.3

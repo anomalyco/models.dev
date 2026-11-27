@@ -1,0 +1,22 @@
+# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probes on /v1/chat/completions and /v1/responses.
+# tools.freeform: live 2026-11-25 on both /v1/chat/completions and /v1/responses, type="custom" with format.type="text" returned a plain-text custom tool call; restrictive regex (^ZZ[0-9]{3}$) and lark grammars were accepted (HTTP 200) but not enforced (returned unconstrained "hello world"), so only "text" is set.
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+
+[capabilities]
+tools = { supported = true, freeform = ["text"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 6

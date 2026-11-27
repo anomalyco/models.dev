@@ -1,0 +1,21 @@
+# Effort: reasoning_effort = none|low|medium|xhigh (re-probed live 2026-11-25 on Straitly /v1/chat/completions: none -> reasoning_tokens=0 with empty reasoning fields, low -> 11, medium -> 56, xhigh -> 49; enable_thinking=true/false and thinking.type=enabled/disabled are inert and returned reasoning_tokens=0, so toggle is omitted and none is the off switch)
+# Budget: reasoning.max_tokens (live-verified 2026-11-25 on Straitly /v1/chat/completions: max_tokens=256/1024 -> rtok=175/224)
+# Reasoning response field: message.reasoning_content (live-verified 2026-11-25 on Straitly /v1/chat/completions)
+# Sources (accessed 2026-11-25): https://straitly.ai/api/catalog, GET https://api.straitly.ai/v1/models, live probes on /v1/chat/completions.
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"], budget = {} }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.0678
+cache = { read = 0.0084 }
+
+[cost.text.output]
+price = 0.2292
