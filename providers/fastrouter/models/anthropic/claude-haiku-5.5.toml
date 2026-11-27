@@ -1,0 +1,37 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-11-18); prices are USD per token there, per MTok here.
+# Web search: catalog web_search = $0.01 per request, so [cost.web_search] price = 10 per 1,000; tier multipliers use the text-only object form so the search fee stays unscaled, as in the lab entries.
+# Toggle: reasoning.enabled = true|false
+#   The docs list only Claude Fable 5 and Claude Opus 5 as unable to turn reasoning off (https://docs.fastrouter.ai/explore-features/reasoning-tokens, accessed 2026-11-18) and say effort none / enabled = false disables reasoning, so the lab's off switch (providers/anthropic claude-haiku-5-5 toggle = true) is carried over; not live-tested, no API key.
+# Effort: reasoning.effort = low|medium|high
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-11-18): supported_params_details.reasoning enum is exactly low|medium|high (default medium).
+#   xhigh and max are not in this route's enum, so they are not listed; the lab (providers/anthropic claude-haiku-5-5) also has low|medium|high|xhigh|max and a toggle.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+# Long context: prices above 100k input tokens come from the catalog *_more_than_100k_input fields (input 0.5, output 2.5, cache read 0.05, cache write 0.625 and 1 per MTok), the same bands as providers/anthropic claude-haiku-5-5.
+# Limit: not overridden. The catalog reports context_length 1000000 and max_completion_tokens 128000, the same as the lab.
+# Cache: explicit (cache_control, up to 4 breakpoints, 5m or 1h TTL) per https://docs.fastrouter.ai/explore-features/prompt-caching (accessed 2026-11-18).
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01, write = { "5m" = 0.125, "1h" = 0.2 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.5
+cache = { read = 0.05, write = { "5m" = 0.625, "1h" = 1 } }
+
+[cost.text.output]
+price = 0.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.5
+
+[cost.web_search]
+price = 10

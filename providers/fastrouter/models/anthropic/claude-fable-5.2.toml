@@ -1,0 +1,31 @@
+# Source: GET https://go.fastrouter.ai/api/v1/models (public catalog, 2026-11-18); prices are USD per token there, per MTok here.
+# Service tiers: catalog fast_service_tier_pricing as a multiplier of the default prices (x2 on input, output, cache read and cache write).
+# Web search: catalog web_search = $0.01 per request, so [cost.web_search] price = 10 per 1,000; tier multipliers use the text-only object form so the search fee stays unscaled, as in the lab entries.
+# Effort: reasoning.effort = low|medium|high|xhigh|max
+#   Live GET https://api.fastrouter.ai/api/v1/models (2026-11-18): supported_params_details.reasoning enum is exactly low|medium|high|xhigh|max (default high).
+#   Baseline: lab providers/anthropic claude-fable-5-2 = effort low|medium|high|xhigh|max.
+#   https://docs.fastrouter.ai/explore-features/reasoning-tokens (accessed 2026-10-25)
+# Limit: not overridden. The catalog reports context_length 1000000 and max_completion_tokens 128000, the same as the lab.
+# Cache: explicit (cache_control, up to 4 breakpoints, 5m or 1h TTL) per https://docs.fastrouter.ai/explore-features/prompt-caching (accessed 2026-11-18).
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4 } }
+service_tier = ["fast"]
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = { "5m" = 10, "1h" = 16 } }
+
+[cost.text.output]
+price = 40
+
+[cost.web_search]
+price = 10
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "fast" } }
+factor = { text = 2.0 }
