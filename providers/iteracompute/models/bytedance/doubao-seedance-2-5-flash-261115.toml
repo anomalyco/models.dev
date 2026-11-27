@@ -1,4 +1,5 @@
-# The host returns one MP4 asset for the video task, including any generated audio track: https://iteracompute.com/models/doubao-seedance-2-5-flash-261115/#api
+# The local output override narrows the lab's MP4/MOV containers to MP4. Schema v2 requires both arrays in a modalities table.
+# The host returns an MP4; generated sound is an embedded track. See https://iteracompute.com/models/doubao-seedance-2-5-flash-261115/#api
 # https://iteracompute.com/models/doubao-seedance-2-5-flash-261115/#pricing
 # https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
 # Rates are USD per million native video tokens, conditional on the presence of a reference video.
@@ -9,7 +10,7 @@ name = "Seedance 2.5 Flash \u00b7 261115"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
-output = ["video/mp4"]
+output = ["video/mp4", "audio"]
 
 [api.videos]
 sdk = { aisdk = "none", opencodeai = "none" }

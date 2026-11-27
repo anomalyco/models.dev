@@ -1,4 +1,4 @@
-# The host returns one MP4 asset for the video task, including any generated audio track: https://iteracompute.com/models/minimax-h3/#api
+# The host returns an MP4; generated sound is an embedded track. See https://iteracompute.com/models/minimax-h3/#api
 # https://iteracompute.com/models/minimax-h3/#pricing
 # https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
 # Each input image after the fifth costs USD 0.036. The image-count threshold is separate from the video meter.
@@ -6,10 +6,6 @@ schema = 2
 v2_only = true
 base_model = "minimax/MiniMax-H3"
 description = "Generates video from text and reference media. Input and output video seconds are metered separately. Each input image after the fifth adds USD 0.036."
-
-[modalities]
-input = ["text", "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif", "video/mp4", "video/quicktime", "audio/wav", "audio/mpeg"]
-output = ["video/mp4"]
 
 [api.videos]
 sdk = { aisdk = "none", opencodeai = "none" }
