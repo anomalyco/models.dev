@@ -4537,6 +4537,28 @@ function cortecsModel(overrides: Partial<CortecsModel> = {}): CortecsModel {
   };
 }
 
+test("Cortecs skips Auto-Update aliases of listed models", () => {
+  const row = (id: string, resolved_model?: string) => ({
+    id,
+    object: "model",
+    created: 1_775_088_000,
+    pricing: { currency: "EUR", input_token: 0.11, output_token: 0.33 },
+    context_size: 32_000,
+    ...(resolved_model === undefined ? {} : { resolved_model }),
+  });
+  const models = cortecs.parseModels({
+    object: "list",
+    data: [
+      row("voxtral-small-2507"),
+      row("voxtral-small:latest", "voxtral-small-2507"),
+      row("gpt-oss-120b"),
+      row("gpt-oss-120b:latest", "gpt-oss-120b"),
+      row("unlisted:latest", "unlisted-2601"),
+    ],
+  });
+  expect(models.map((model) => model.id)).toEqual(["voxtral-small-2507", "gpt-oss-120b", "unlisted:latest"]);
+});
+
 test("Cortecs base_model files leave model facts to the lab", () => {
   const existing: ExistingModel = {
     base_model: "mistral/voxtral-small-24b-2507",
