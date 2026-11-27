@@ -44,6 +44,7 @@ export const CortecsModel = z.object({
   input_modalities: z.array(z.string()).transform(modalities).default(["text"]),
   output_modalities: z.array(z.string()).transform(modalities).default(["text"]),
   supported_features: z.array(z.string()).default([]),
+  resolved_model: z.string().min(1).optional(),
 }).passthrough();
 
 export const CortecsResponse = z.object({
@@ -66,7 +67,14 @@ export const cortecs = {
     return response.json();
   },
   parseModels(raw) {
-    return CortecsResponse.parse(raw).data;
+    const models = CortecsResponse.parse(raw).data;
+    const ids = new Set(models.map((model) => model.id));
+    // Auto-Update IDs (`<series>:latest`) route to the newest model in their
+    // series, named by resolved_model, and repeat that row; the target is synced
+    // under its own ID. https://docs.cortecs.ai/routing/auto-update
+    return models.filter((model) =>
+      model.resolved_model === undefined || model.resolved_model === model.id || !ids.has(model.resolved_model)
+    );
   },
   translateModel(model, context) {
     const existing = context.existing(model.id);
