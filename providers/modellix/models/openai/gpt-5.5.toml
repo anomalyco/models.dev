@@ -1,4 +1,8 @@
 # Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Each request uses one pricing tier. Input length includes uncached input, cache reads, and cache writes.
+# Up to and including 272,000 input tokens, input, cache read, and output cost $4.50, $0.45, and $27.00 per million tokens.
+# Above 272,000 input tokens, those rates are $9.00, $3.60, and $40.50 per million tokens.
+# The long-tier cache read price converts from the public catalog's cached_read.price of 36,000 by dividing by 10,000.
 # Freeform: text/lark/regex verified on Modellix Chat Completions with tool_choice="required"
 schema = 2
 base_model = "openai/gpt-5.5"

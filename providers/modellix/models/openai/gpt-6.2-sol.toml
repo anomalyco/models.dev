@@ -1,10 +1,10 @@
 # Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
-# Freeform: text; verified on Modellix Chat Completions
+# Freeform follows the OpenAI Chat Completions contract. Modellix probes covered GPT-5.6 Luna and GPT-6.2 Astra.
 schema = 2
 base_model = "openai/gpt-6.2-sol"
 
 [capabilities]
-tools = { supported = true, freeform = ["text"] }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]

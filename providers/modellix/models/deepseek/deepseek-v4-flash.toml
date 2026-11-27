@@ -1,11 +1,15 @@
 # Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
-# Effort: reasoning_effort = none
-# Context: lab 1,000,000; https://api-docs.deepseek.com/quick_start/pricing/
+# Effort: reasoning_effort = none|low|high|max (default high).
+# https://api-docs.deepseek.com/guides/thinking_mode/
+# Context override: public catalog context_window_tokens=1_050_000.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "high" } }
+
+[limit]
+context = 1_050_000
 
 [cost.text.input]
 price = 0.396

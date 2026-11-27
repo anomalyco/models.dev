@@ -1,11 +1,14 @@
 # Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
 # Effort: reasoning_effort = none|high|max; none disables thinking.
-# Context: lab 1,000,000; https://www.tencentcloud.com/document/product/1300/80634
+# Context override: public catalog context_window_tokens=1_050_000.
 schema = 2
 base_model = "zhipuai/glm-5.2"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "high", "max"] }
+
+[limit]
+context = 1_050_000
 
 [cost.text.input]
 price = 0.9

@@ -1,11 +1,10 @@
 # Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
-# Latest alias of openai/gpt-6.1-terra.
-# Freeform: text; inherited from openai/gpt-6.1-terra
+# Latest alias of openai/gpt-6.1-terra. Freeform formats follow the target.
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 
 [capabilities]
-tools = { supported = true, freeform = ["text"] }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]

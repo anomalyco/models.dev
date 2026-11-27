@@ -1,10 +1,10 @@
 # Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
-# Freeform: text; verified on Modellix Chat Completions
+# Required tool calls returned LQ11 under Lark and ZZ000 under regex on Modellix Chat Completions (2026-11-26).
 schema = 2
 base_model = "openai/gpt-6.2-astra"
 
 [capabilities]
-tools = { supported = true, freeform = ["text"] }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]

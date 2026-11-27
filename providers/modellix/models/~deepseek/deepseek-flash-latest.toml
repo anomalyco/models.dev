@@ -1,11 +1,12 @@
 # Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
 # Latest alias of deepseek/deepseek-v4.1-flash.
-# Reasoning is always on in Modellix Chat Completions.
+# Effort: reasoning_effort = none|low|high|max (default high).
+# https://api-docs.deepseek.com/guides/thinking_mode/
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "high" } }
 
 [cost.text.input]
 price = 0.3

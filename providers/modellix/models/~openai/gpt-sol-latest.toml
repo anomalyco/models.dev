@@ -1,11 +1,10 @@
 # Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
-# Latest alias of openai/gpt-6.2-sol.
-# Freeform: text; inherited from openai/gpt-6.2-sol
+# Latest alias of openai/gpt-6.2-sol. Freeform formats follow the target.
 schema = 2
 base_model = "openai/gpt-6.2-sol"
 
 [capabilities]
-tools = { supported = true, freeform = ["text"] }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [cost.text.input]
