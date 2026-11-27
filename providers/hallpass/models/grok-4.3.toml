@@ -1,0 +1,23 @@
+# Source: https://hallpassai.com/models.json (checked 2026-11-27)
+# HallPass forwards reasoning_effort verbatim to upstream xAI; flat $2.50/$5.00 + cache rates from catalog.
+schema = 2
+base_model = "xai/grok-4.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"], default = { type = "effort", value = "low" } }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 0.4, write = 2.5 }
+
+[cost.text.output]
+price = 5

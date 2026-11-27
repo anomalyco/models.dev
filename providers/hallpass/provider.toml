@@ -1,0 +1,13 @@
+# Sources (checked 2026-11-27):
+# - Docs: https://hallpassai.com/docs.html
+# - Live model catalog (IDs, protocols, reasoning effort levels, USD/1M token & cache rates): https://hallpassai.com/models.json
+# - OpenAI-compatible endpoints at https://api.hallpassai.com/v1 (/chat/completions, /responses)
+#   and Anthropic Messages at https://api.hallpassai.com/v1/messages with one API key.
+# - Metered token and prompt-cache rates below are sourced directly from https://hallpassai.com/models.json;
+#   prepaid PAYG packs (50% off) and Pro ($20/mo for $60/mo) apply at credit purchase.
+name = "HallPass"
+env = ["HALLPASS_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.hallpassai.com/v1"
+doc = "https://hallpassai.com/docs.html"
