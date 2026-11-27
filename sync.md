@@ -298,6 +298,7 @@ Cloudflare Workers AI is implemented in `packages/core/src/sync/providers/cloudf
 - The sync manages proxied third-party models. Text-generation rows become normal model files. `Text-to-Speech`, `Automatic Speech Recognition`, image (`Text-to-Image`, `Image-to-Image`) and video (`Text-to-Video`, `Image-to-Video`, `video-to-video`) rows become v2-only files (`v2_only = true`) on the REST API's `POST /ai/run` route, with per-character, per-minute, per-image, per-megapixel, per-second or per-token costs. Music generation, image-to-document and `websocket` rows are left out on purpose, and image/video ids without a lab file stay in `skip`. Workers AI `@cf/...` models remain under `providers/cloudflare-workers-ai`.
 - `providers/cloudflare-ai-gateway/curation.toml` supplies base-model mappings, live-tested reasoning controls, structured-output support, limit overrides, and intentional skips that the catalog cannot express authoritatively.
 - New catalog entries without canonical lab metadata or required reasoning controls fail closed instead of generating incomplete TOMLs.
+- New catalog entries with no lab file and no curated `base_model` are not created and open missing-model issues. IDs in curation's `skip` list are deliberate and never open issues.
 
 ## Google Notes
 

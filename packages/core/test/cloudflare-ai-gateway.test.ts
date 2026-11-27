@@ -839,7 +839,51 @@ test("skips a new catalog model with no lab file instead of failing the sync", (
     catalog: { model_id, task: "Text Generation" as const, provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }) },
   }, { authored: () => authored as never, existing: () => undefined });
   expect(translate("example/unknown-model")).toBeUndefined();
+  const source = (model_id: string) => ({
+    catalog: { model_id, task: "Text Generation" as const, provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }) },
+  });
+  expect(cloudflareAiGateway.missingModelID(source("example/unknown-model"))).toBe("example/unknown-model");
+  expect(cloudflareAiGateway.missingModelID(source("openai/gpt-4.1"))).toBeUndefined();
   expect(() => translate("example/unknown-model", { base_model: "example/gone" })).toThrow("no lab file and no curated base_model");
+});
+
+test("opens missing-model issues for unmapped catalog models but not curated skips", async () => {
+  const originalFetch = globalThis.fetch;
+  const originalToken = process.env.CLOUDFLARE_API_TOKEN;
+  const originalAccount = process.env.CLOUDFLARE_ACCOUNT_ID;
+  process.env.CLOUDFLARE_API_TOKEN = "test";
+  process.env.CLOUDFLARE_ACCOUNT_ID = "test";
+  globalThis.fetch = async (input) => {
+    if (String(input).endsWith("/schema")) return new Response(null, { status: 404 });
+    return new Response(JSON.stringify(catalogPage([
+      { model_id: "openai/gpt-4.1", task: "Text Generation", provider_details: providerDetails({ input_tokens: 2, output_tokens: 8 }) },
+      { model_id: "example/unmapped-chat", task: "Text Generation", provider_details: providerDetails({ input_tokens: 1, output_tokens: 2 }) },
+      { model_id: "example/unmapped-voice", task: "Text-to-Speech", provider_details: providerDetails({ input_characters: 0.0001 }) },
+      { model_id: "xai/grok-4.20-multi-agent-0309", task: "Text Generation", provider_details: providerDetails({ input_tokens: 2, output_tokens: 6 }) },
+    ])));
+  };
+  const dir = await mkdtemp(path.join(import.meta.dirname, "../../../providers/.gateway-missing-"));
+  const modelsDir = path.join(dir, "models");
+  await mkdir(modelsDir, { recursive: true });
+  await writeFile(path.join(dir, "provider.toml"), 'name = "Test"\nnpm = "ai-gateway-provider"\nenv = []\n');
+  const issues = spyOn(missingIssues, "openMissingModelIssues").mockResolvedValue([]);
+  const warn = spyOn(console, "warn").mockImplementation(() => {});
+  try {
+    const result = await syncProvider({ ...cloudflareAiGateway, modelsDir }, { openIssues: true });
+    expect(result).toMatchObject({ created: 1, updated: 0, deleted: 0 });
+    expect(await Bun.file(path.join(modelsDir, "openai/gpt-4.1.toml")).exists()).toBe(true);
+    expect(await Bun.file(path.join(modelsDir, "example/unmapped-chat.toml")).exists()).toBe(false);
+    expect(issues).toHaveBeenCalledTimes(1);
+    expect(issues.mock.calls[0]?.[1]).toEqual(["example/unmapped-chat", "example/unmapped-voice"]);
+    expect(result.notices).toContain("Skipped catalog IDs: `example/unmapped-chat`, `example/unmapped-voice`");
+  } finally {
+    issues.mockRestore();
+    warn.mockRestore();
+    globalThis.fetch = originalFetch;
+    restoreEnv("CLOUDFLARE_API_TOKEN", originalToken);
+    restoreEnv("CLOUDFLARE_ACCOUNT_ID", originalAccount);
+    await rm(dir, { recursive: true, force: true });
+  }
 });
 
 test("reads route modalities from the media request schema", () => {
