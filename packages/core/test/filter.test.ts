@@ -4,7 +4,10 @@ import {
   filterCatalogByModelType,
   generateCatalog,
   InvalidModelTypeError,
+  MODEL_TYPES,
   parseModelTypes,
+  PREBUILT_TYPE_SETS,
+  prebuiltTypeSetSuffix,
 } from "../src/index.js";
 import type { ModelMetadata, Provider } from "../src/index.js";
 import path from "node:path";
@@ -15,6 +18,16 @@ describe("model type filtering", () => {
     expect(parseModelTypes("")).toBe("default");
     expect(parseModelTypes("decision")).toEqual(["decision"]);
     expect(parseModelTypes("all")).toBe("all");
+  });
+
+  test("names a prebuilt file for the combinations clients request, in any order", () => {
+    expect(prebuiltTypeSetSuffix(["image", "chat", "decision"])).toBe("-chat-decision-image");
+    expect(prebuiltTypeSetSuffix(["chat", "decision"])).toBeUndefined();
+    for (const set of PREBUILT_TYPE_SETS) {
+      expect(set.length).toBeGreaterThan(1);
+      expect(set.every((type) => MODEL_TYPES.includes(type))).toBe(true);
+      expect(prebuiltTypeSetSuffix(set)).toBeDefined();
+    }
   });
 
   test("rejects unknown types and combining all with a type", () => {

@@ -21,6 +21,29 @@ interface TypedProvider {
   models: Record<string, TypedModel>;
 }
 
+// The type combinations opencode clients ask the v2 API for. Each is built as its own file, so the Worker
+// serves it directly instead of parsing and filtering the whole catalog on every request. A released client
+// keeps asking for its combination, so only add to this list.
+export const PREBUILT_TYPE_SETS: readonly (readonly ModelTypeValue[])[] = [
+  ["chat", "decision", "image"],
+  ["chat", "decision", "image", "video"],
+  ["chat", "decision", "image", "video", "realtime"],
+  ["chat", "decision", "image", "video", "realtime", "embedding", "transcription"],
+];
+
+// The file suffix for a set of types, whatever order a request names them in.
+export function typeSetSuffix(types: readonly ModelTypeValue[]) {
+  return `-${[...types].sort().join("-")}`;
+}
+
+// The suffix of the prebuilt v2 file for several types, when there is one.
+export function prebuiltTypeSetSuffix(types: readonly ModelTypeValue[]) {
+  const suffix = typeSetSuffix(types);
+  return PREBUILT_TYPE_SETS.some((set) => typeSetSuffix(set) === suffix)
+    ? suffix
+    : undefined;
+}
+
 export class InvalidModelTypeError extends Error {
   constructor(value: string) {
     super(`Invalid type value: ${value}`);
