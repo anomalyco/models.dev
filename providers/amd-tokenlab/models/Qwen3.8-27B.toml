@@ -7,8 +7,9 @@
 #   a request with tools/tool_choice returned finish_reason "tool_calls".
 # - An image_url (PNG) message was answered correctly ("Red"). No video input is listed. Responses carry
 #   reasoning in a separate `reasoning` field.
-# - Pricing: no per-token charge. Usage draws on a free weekly allowance per AMD AI Developer Program
-#   key (x-ratelimit-limit-user-budget-usd: 10, x-ratelimit-limit-user-rpm: 20), so every price is 0.
+# - Pricing: no per-token charge. Each AMD AI Developer Program key comes with 10 usage points, and
+#   requests deduct points based on the model and how much it is used (details:
+#   https://notebooks.amd.com/tokenlab), so every price is 0.
 # Reasoning controls follow the same models on providers/amd (AMD Token Factory), whose API applies
 # the same reasoning_effort validation.
 schema = 2
