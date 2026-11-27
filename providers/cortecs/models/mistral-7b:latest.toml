@@ -1,0 +1,25 @@
+schema = 2
+name = "mistral-7b:latest"
+description = "Mistral 7B Instruct is a compact, 7B parameter model optimized for fast and efficient text and code generation with a 32K token context window."
+open_weights = false
+release_date = "2025-05-26"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = false
+temperature = false
+
+[limit]
+context = 32_000
+output = 8_192
+
+[cost.text.input]
+price = 0.159
+
+[cost.text.output]
+price = 0.219

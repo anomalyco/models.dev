@@ -1,0 +1,25 @@
+schema = 2
+name = "qwen-3-coder-next:latest"
+description = "Qwen3 Coder Next 80B is a high-performance coding model optimized for complex software development, agentic workflows, and multi-language programming."
+open_weights = false
+release_date = "2026-04-02"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 256_000
+output = 256_000
+
+[cost.text.input]
+price = 0.167
+
+[cost.text.output]
+price = 0.891

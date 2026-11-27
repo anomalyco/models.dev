@@ -1,0 +1,25 @@
+schema = 2
+name = "qwen-3-coder-30b:latest"
+description = "Qwen3 Coder 30b a3b Instruct is a 30.5B parameter open-source Mixture-of-Experts model specialized for coding, tool use, and complex multi-step programming workflows."
+open_weights = false
+release_date = "2025-04-28"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 262_144
+output = 262_144
+
+[cost.text.input]
+price = 0.179
+
+[cost.text.output]
+price = 0.697

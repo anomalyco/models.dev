@@ -1,0 +1,25 @@
+schema = 2
+name = "mixtral-8x7b:latest"
+description = "Mixtral-8x7B is a sparse mixture-of-experts model with open weights, delivering fast, high-performance inference that outperforms Llama 2 70B and rivals GPT-3.5."
+open_weights = false
+release_date = "2023-12-11"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 32_000
+output = 4_096
+
+[cost.text.input]
+price = 0.488
+
+[cost.text.output]
+price = 0.758

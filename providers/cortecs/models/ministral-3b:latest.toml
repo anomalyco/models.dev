@@ -1,0 +1,26 @@
+schema = 2
+name = "ministral-3b:latest"
+description = "Ministral 3 3B is a compact, efficient multimodal model with strong language, vision capabilities, and ideal for custom fine-tuning."
+open_weights = false
+release_date = "2025-12-03"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 256_000
+output = 256_000
+
+[cost.text.input]
+price = 0.123
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.123

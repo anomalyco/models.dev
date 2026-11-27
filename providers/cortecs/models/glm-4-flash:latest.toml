@@ -1,0 +1,25 @@
+schema = 2
+name = "glm-4-flash:latest"
+description = "GLM-4.7-Flash is a fast, resource-efficient variant of GLM-4.7 optimized for low-latency text and code generation."
+open_weights = false
+release_date = "2026-02-19"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 203_000
+output = 203_000
+
+[cost.text.input]
+price = 0.08
+
+[cost.text.output]
+price = 0.478

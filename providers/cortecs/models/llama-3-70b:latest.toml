@@ -1,0 +1,25 @@
+schema = 2
+name = "llama-3-70b:latest"
+description = "With 70 billion parameters, this cutting-edge multilingual model excels in generating high-quality, safe, and helpful text across eight languages, making it stand out from other chat models."
+open_weights = false
+release_date = "2024-12-10"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 131_000
+output = 131_000
+
+[cost.text.input]
+price = 0.724
+
+[cost.text.output]
+price = 0.724

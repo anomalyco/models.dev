@@ -1,0 +1,25 @@
+schema = 2
+name = "qwen-3-32b:latest"
+description = "Qwen3 delivers cutting-edge advancements in reasoning, agent capabilities, and multilingual support, with seamless mode switching for optimized performance across tasks."
+open_weights = false
+release_date = "2025-04-28"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 16_384
+output = 16_384
+
+[cost.text.input]
+price = 0.179
+
+[cost.text.output]
+price = 0.697

@@ -1,0 +1,25 @@
+schema = 2
+name = "devstral:latest"
+description = "Devstral 2 2512 is an enterprise-grade text model designed for advanced coding agents and software engineering workflows."
+open_weights = false
+release_date = "2025-12-10"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 256_000
+output = 256_000
+
+[cost.text.input]
+price = 0.478
+
+[cost.text.output]
+price = 2.392

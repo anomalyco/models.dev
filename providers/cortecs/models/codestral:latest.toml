@@ -1,0 +1,26 @@
+schema = 2
+name = "codestral:latest"
+description = "Codestral-2508 is a cutting-edge coding model optimized for low-latency, high-frequency tasks like FIM, code correction, and test generation."
+open_weights = false
+release_date = "2025-01-13"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 256_000
+output = 256_000
+
+[cost.text.input]
+price = 0.368
+cache = { read = 0.037 }
+
+[cost.text.output]
+price = 1.103

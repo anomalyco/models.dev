@@ -1,0 +1,25 @@
+schema = 2
+name = "hermes-4-405b:latest"
+description = "Hermes 4 405B is a frontier hybrid-mode reasoning model built on Llama 3.1, optimized for advanced logic, math, coding, and structured output generation."
+open_weights = false
+release_date = "2024-08-13"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 128_000
+output = 128_000
+
+[cost.text.input]
+price = 0.996
+
+[cost.text.output]
+price = 2.989

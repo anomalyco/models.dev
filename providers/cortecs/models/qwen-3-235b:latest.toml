@@ -1,0 +1,25 @@
+schema = 2
+name = "qwen-3-235b:latest"
+description = "Qwen3-235B-A22B-Instruct-2507 is a large non-thinking mode model with major improvements in reasoning, instruction following, knowledge coverage, and long-context understanding up to 256K tokens."
+open_weights = false
+release_date = "2025-04-28"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+temperature = false
+
+[limit]
+context = 262_000
+output = 262_000
+
+[cost.text.input]
+price = 0.199
+
+[cost.text.output]
+price = 0.598
