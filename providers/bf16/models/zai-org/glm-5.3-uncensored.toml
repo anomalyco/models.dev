@@ -1,6 +1,7 @@
 # Catalog & pricing: https://api.bf16.ai/v1/models and https://bf16.ai/models/glm-5-3-uncensored (accessed 2026-11-19).
 # Reasoning: reasoning_effort (Chat) / reasoning.effort (Responses) / output_config.effort (Messages) = low|high|max (matching Z.AI GLM-5.3 and relay peer baseline).
 # Tools: inherited from base_model (tools.supported = true); strict and per-API tool_choice omitted without per-surface probing.
+# Output cap: POST /v1/chat/completions accepts OpenAI max_completion_tokens (preferred; takes precedence over legacy max_tokens) per https://raw.githubusercontent.com/BF16-AI/bf16-openapi/main/openapi.yaml (ChatCompletionRequest).
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 Flagship (Uncensored)"

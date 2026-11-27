@@ -1,6 +1,7 @@
 # Catalog & pricing: https://api.bf16.ai/v1/models and https://bf16.ai/pricing (verified 2026-11-27: $1.95 in / $0.28 cached / $6.90 out per 1M).
 # Reasoning: reasoning_effort (Chat) / reasoning.effort (Responses) / output_config.effort (Messages) = low|high|max (always-on, matching Moonshot Kimi K3.1 Pro baseline; bf16 maps medium->high and does not expose off/none).
 # Tools: inherited from base_model (tools.supported = true); strict and per-API tool_choice omitted without per-surface probing.
+# Output cap: POST /v1/chat/completions accepts OpenAI max_completion_tokens (preferred; takes precedence over legacy max_tokens) per https://raw.githubusercontent.com/BF16-AI/bf16-openapi/main/openapi.yaml (ChatCompletionRequest).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 name = "Kimi K3.1 Pro (Uncensored)"

@@ -84,6 +84,7 @@ export const bf16 = {
     return BF16Response.parse(raw).data;
   },
   translateModel(model, context) {
+    if (!isRepresentableModel(model)) return undefined;
     const existing = context.existing(model.id);
     if (existing === undefined) return undefined;
     return {
@@ -137,7 +138,7 @@ export function buildBF16Model(
     ...existing.cost,
     input: pricing.input,
     output: pricing.output,
-    ...(pricing.cached_input !== undefined ? { cache_read: pricing.cached_input } : {}),
+    cache_read: pricing.cached_input,
   };
   const limit = {
     ...existing.limit,

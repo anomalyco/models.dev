@@ -113,3 +113,61 @@ test("buildBF16Model updates pricing and limits while preserving hand-authored r
     reasoning_options: [{ type: "effort", values: ["low", "high", "max"] }],
   });
 });
+
+test("buildBF16Model strips stale cache_read when cached_input is absent from the catalog", () => {
+  const [parsed] = BF16Response.parse({
+    object: "list",
+    data: [
+      sampleModel({
+        bf16: {
+          ...sampleModel().bf16,
+          pricing_usd_per_1m: { input: "1.95", output: "6.90" },
+        },
+      }),
+    ],
+  }).data;
+
+  const synced = buildBF16Model(parsed!, {
+    name: "Kimi K3.1 Pro (Uncensored)",
+    base_model: "moonshotai/kimi-k3.1-pro",
+    reasoning: true,
+    reasoning_options: [{ type: "effort", values: ["low", "high", "max"] }],
+    tool_call: true,
+    structured_output: true,
+    cost: { input: 2.9, output: 9.9, cache_read: 0.45 },
+    limit: { context: 1_048_576, output: 131_072 },
+  });
+
+  expect(synced.cost?.cache_read).toBeUndefined();
+});
+
+test("translateModel ignores non-active and pricing-less entries even when a local file exists", () => {
+  const existingModel = {
+    name: "Kimi K3.1 Pro (Uncensored)",
+    base_model: "moonshotai/kimi-k3.1-pro",
+    reasoning: true,
+    reasoning_options: [{ type: "effort" as const, values: ["low" as const, "high" as const, "max" as const] }],
+    tool_call: true,
+    structured_output: true,
+    cost: { input: 1.95, output: 6.9, cache_read: 0.28 },
+    limit: { context: 1_048_576, output: 131_072 },
+  };
+  const context = {
+    existing: () => existingModel,
+    authored: () => existingModel,
+  };
+
+  const entries = BF16Response.parse({
+    object: "list",
+    data: [
+      sampleModel({ bf16: { ...sampleModel().bf16, status: "deprecated" } }),
+      sampleModel({
+        id: "moonshotai/kimi-k3.1-pro-uncensored-no-price",
+        bf16: { ...sampleModel().bf16, pricing_usd_per_1m: undefined },
+      }),
+    ],
+  }).data;
+
+  expect(bf16.translateModel(entries[0]!, context)).toBeUndefined();
+  expect(bf16.translateModel(entries[1]!, context)).toBeUndefined();
+});

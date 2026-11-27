@@ -2,6 +2,7 @@
 # Base weights: operator-confirmed DeepSeek-V4.1-Flash-1017 (October 17 build; catalog entry created 2026-11-14 in https://api.bf16.ai/v1/models). Because this unpinned wire id tracks the latest build, update base_model if DeepSeek ships a newer release.
 # Reasoning: reasoning_effort (Chat) / reasoning.effort (Responses) = none|low|high|max (matching DeepSeek V4.1 Flash relay peer baseline; effort=none disables thinking).
 # Tools: inherited from base_model (tools.supported = true); strict and per-API tool_choice omitted without per-surface probing.
+# Output cap: POST /v1/chat/completions accepts OpenAI max_completion_tokens (preferred; takes precedence over legacy max_tokens) per https://raw.githubusercontent.com/BF16-AI/bf16-openapi/main/openapi.yaml (ChatCompletionRequest).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash (Uncensored Fast)"
