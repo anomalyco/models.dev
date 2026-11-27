@@ -102,6 +102,14 @@ skip = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
   "system_updates unset: every request returned 500 (code 2002) on 2026-10-19, so it could not be checked live.",
 ]
+"deepseek-ai/" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
+  "Mid-conversation flags not checked.",
+]
+"z-ai/" = [
+  "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
+  "Mid-conversation flags not checked.",
+]
 "fireworks/" = [
   "Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.",
   "Live 2026-10-19: a mid-conversation system message keeps the cached prefix (in place).",
@@ -842,6 +850,32 @@ note = [
   "Source: https://docs.particle.ai/reasoning",
 ]
 reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+# DeepSeek V4.1 Flash (catalog id deepseek-ai/deepseek-v4.1-flash-1017; the lab is deepseek). Cloudflare's page lists
+# Chat Completions and Responses, $0.30 input / $0.007 cached / $1.20 output per 1M, served by Workers AI and Subconscious
+# (https://developers.cloudflare.com/ai/models/deepseek-ai/deepseek-v4.1-flash-1017/); prices come from the catalog.
+# Effort is none|low|high|max, as on this host's DeepSeek V4 Pro and on Workers AI's page for the same model
+# (https://developers.cloudflare.com/workers-ai/models/deepseek-v4.1-flash-1017/: none, low, high (default), max).
+# Not checked live; structured_output is left out.
+[models."deepseek-ai/deepseek-v4.1-flash-1017"]
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+note = [
+  "Off: reasoning_effort = none; effort: low|high|max (default high; not checked live).",
+  "Sources: https://developers.cloudflare.com/ai/models/deepseek-ai/deepseek-v4.1-flash-1017/ ; https://developers.cloudflare.com/workers-ai/models/deepseek-v4.1-flash-1017/ ; providers/cloudflare-ai-gateway/models/deepseek/deepseek-v4-pro.toml",
+]
+reasoning_options = [{ type = "effort", values = ["none", "low", "high", "max"] }]
+
+# GLM-5.3 (catalog id z-ai/glm-5.3; the lab is zhipuai). The catalog row has no docs page yet; prices and context come
+# from the catalog. Effort is low|high|max with thinking always on, as on Workers AI's GLM-5.3
+# (providers/cloudflare-workers-ai/models/@cf/zai-org/glm-5.3.toml; https://developers.cloudflare.com/workers-ai/models/glm-5.3/:
+# low, high, max (default)). Not checked live; structured_output is left out.
+[models."z-ai/glm-5.3"]
+base_model = "zhipuai/glm-5.3"
+note = [
+  "Always reasons; effort: reasoning_effort = low|high|max (default max; no off value; not checked live).",
+  "Sources: providers/cloudflare-workers-ai/models/@cf/zai-org/glm-5.3.toml ; https://developers.cloudflare.com/workers-ai/models/glm-5.3/",
+]
+reasoning_options = [{ type = "effort", values = ["low", "high", "max"] }]
 
 # Video and image ids whose lab file has another name (v2-only files on POST /ai/run). Each catalog page's
 # name and description match the lab model: https://developers.cloudflare.com/ai/models/<id>/
