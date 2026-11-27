@@ -8,6 +8,10 @@
 #   low|medium|high|xhigh|max, structured_outputs, supported_endpoints /responses only.
 # Live 2026-11-18: /responses 200; /chat/completions 400 "unsupported_api_for_model". On /responses, custom tools with
 #   text, lark and regex formats returned a custom_tool_call matching the grammar.
+# effort_updates (on [api.responses]): live 2026-11-26 on api.individual.githubcopilot.com, a request with a
+#   `configuration_update` item between turns returned 200. Copilot's GET /models has no field for it. gpt-5.3-codex
+#   and MAI Code reject the item ("The 'configuration_update' item type is not supported with this model."), and Grok
+#   returns "upstream_request_rejected".
 schema = 2
 base_model = "openai/gpt-6.2-astra"
 
@@ -18,6 +22,7 @@ structured_output = true
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+capabilities = { effort_updates = true }
 
 [cost.text.input]
 price = 8

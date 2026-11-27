@@ -5,6 +5,10 @@
 #   https://developers.openai.com/api/docs/models/gpt-6.1-terra
 # Effort: GPT-6.1 Terra's native none|low|medium|high|xhigh|max (as on the OpenAI provider entry).
 # tools.freeform (Responses, the only API this model lists): custom tools accepted with text, lark and regex formats and the grammars enforced (tool_choice required; regex ZZ[0-9]{3} and the equivalent lark grammar returned ZZ plus three digits) on this model, live 2026-10-28 via api.individual.githubcopilot.com/responses. Also probed: gpt-5.3-codex, gpt-5.6-luna, gpt-5.6-terra, gpt-6-luna.
+# effort_updates (on [api.responses]): live 2026-11-26 on api.individual.githubcopilot.com, a request with a
+#   `configuration_update` item between turns returned 200. Copilot's GET /models has no field for it. gpt-5.3-codex
+#   and MAI Code reject the item ("The 'configuration_update' item type is not supported with this model."), and Grok
+#   returns "upstream_request_rejected".
 schema = 2
 base_model = "openai/gpt-6.1-terra"
 
@@ -15,6 +19,7 @@ structured_output = true
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+capabilities = { effort_updates = true }
 
 [cost.text.input]
 price = 1
