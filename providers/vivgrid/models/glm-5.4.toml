@@ -1,0 +1,29 @@
+# Vivgrid pricing, 128,000-token output limit, and text/image inputs on Chat Completions:
+# https://vivgrid.com/docs/models/glm-5.4 (accessed 2026-11-26).
+# Effort: reasoning_effort = low|high|max, matching the Zhipu AI Coding Plan entry.
+# The OpenAI-compatible route uses reasoning_content and keeps GLM-5.3 structured output support.
+schema = 2
+base_model = "zhipuai/glm-5.4"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+output = 128_000
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 4.2
