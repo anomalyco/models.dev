@@ -1,15 +1,20 @@
 # Effort: reasoning_effort is passed through to the lab; values follow providers/zhipuai (Zhipu first-party).
-# Prices: https://hiapi.ai/en/pricing (accessed 2026-11-25), USD per 1M tokens.
+# Prices: https://hiapi.ai/docs/models.json `pricing` (unit usd_per_1m_tokens, accessed 2026-11-27), copied as listed; no currency conversion.
 # Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
-# Verified live 2026-11-25: POST https://api.hiapi.sh/v1/chat/completions returns 200; tool calls returned.
+# Verified live 2026-11-25 on https://api.hiapi.ai/v1 and again 2026-11-27 on https://api.hiapi.sh/v1: POST /chat/completions returns 200; tool calls returned.
+# Cache: the HiAPI catalog lists no cached-input price for GLM-5.3, so no cache is published (unlike the Zhipu first-party entry).
+# Response: chat-completions returns reasoning_content (checked live 2026-11-27 on api.hiapi.sh).
 schema = 2
 base_model = "zhipuai/glm-5.3"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
 [cost.text.input]
-price = 0.85479
+price = 0.854794
 
 [cost.text.output]
 price = 2.99178

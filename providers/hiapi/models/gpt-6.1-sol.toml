@@ -1,7 +1,7 @@
 # Effort: live probe 2026-11-25, reasoning_effort low|medium|high|xhigh|max return 200; none and minimal are rejected with 400.
-# Prices: https://hiapi.ai/en/pricing (accessed 2026-11-25), USD per 1M tokens.
+# Prices: https://hiapi.ai/docs/models.json `pricing` (unit usd_per_1m_tokens, accessed 2026-11-27), copied as listed; no currency conversion.
 # Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
-# Verified live 2026-11-25: POST https://api.hiapi.sh/v1/chat/completions returns 200; usage reports cached_tokens.
+# Verified live 2026-11-25 on https://api.hiapi.ai/v1 and again 2026-11-27 on https://api.hiapi.sh/v1: POST /chat/completions returns 200; usage reports cached_tokens.
 schema = 2
 base_model = "openai/gpt-6.1-sol"
 
