@@ -1,0 +1,26 @@
+# IDs, limits, and prices (2026-11-27): https://api.openinference.ai/v1/models
+# Live Chat Completions (2026-11-27): reasoning_effort=low|high|max.
+# GLM keeps reasoning enabled when reasoning_effort=none is requested.
+# Reasoning is returned in message.reasoning, outside the v1 interleaved-field enum.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+stream_usage = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.033 }
+
+[cost.text.output]
+price = 0.4
