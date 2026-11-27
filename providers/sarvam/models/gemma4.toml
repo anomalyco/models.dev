@@ -5,6 +5,7 @@
 # Reasoning: https://docs.sarvam.ai/api/token-factory/models/gemma-4-31b (accessed 2026-11-18): reasoning_effort = low|high|max, omitted or "none" = no reasoning.
 # Image cap: GET https://api.sarvam.ai/v2/models publishes input_media.image.max_per_request = 30 (accessed 2026-11-17).
 # Context: GET https://api.sarvam.ai/v2/models publishes context_length 262144 (accessed 2026-11-17).
+# Structured output: https://docs.sarvam.ai/api/token-factory/models says every chat model supports response_format (accessed 2026-11-27); json_schema (strict) and json_object verified on POST https://api.sarvam.ai/v2/chat/completions (2026-11-27).
 schema = 2
 base_model = "google/gemma-4-31b-it"
 
@@ -14,6 +15,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "none" } }
+structured_output = true
 cache = { implicit = true }
 
 [limit]

@@ -7,6 +7,7 @@
 # Context: GET https://api.sarvam.ai/v2/models publishes context_length 1048576 (accessed 2026-11-17).
 # Images: GET https://api.sarvam.ai/v2/models publishes input_media.image.mime_types = png, jpeg, gif, webp; no max_per_request is published (accessed 2026-11-17).
 # Images only: the host reads png, jpeg, gif and webp; video and PDF are not served.
+# Structured output: https://docs.sarvam.ai/api/token-factory/models says every chat model supports response_format (accessed 2026-11-27); json_schema (strict) and json_object verified on POST https://api.sarvam.ai/v2/chat/completions (2026-11-27).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -16,6 +17,7 @@ output = ["text"]
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "high" } }
+structured_output = true
 cache = { implicit = true }
 
 [limit]

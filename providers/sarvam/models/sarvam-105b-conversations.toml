@@ -5,12 +5,14 @@
 # https://docs.sarvam.ai/api-reference-docs/chat/chat-completions (accessed 2026-11-17)
 # Context: GET https://api.sarvam.ai/v2/models publishes context_length 32000 for this host.
 # max_completion_tokens: the host accepts it up to the 32,000 window, so no max_tokens override is needed.
+# Structured output: https://docs.sarvam.ai/api/token-factory/models says every chat model supports response_format (accessed 2026-11-27); json_schema (strict) and json_object verified on POST https://api.sarvam.ai/v2/chat/completions (2026-11-27).
 schema = 2
 base_model = "sarvam/sarvam-105b"
 name = "Sarvam-105B Conversations"
 
 [capabilities]
 reasoning = { supported = false }
+structured_output = true
 cache = { implicit = true }
 
 [limit]
