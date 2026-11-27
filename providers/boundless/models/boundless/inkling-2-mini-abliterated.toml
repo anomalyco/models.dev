@@ -1,0 +1,22 @@
+# Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
+# Boundless hosts an abliterated variant of the base model: the same model with its refusal behaviour removed.
+# Reasoning: reasoning_effort, https://inference.boundless.network/docs/reasoning
+schema = 2
+base_model = "thinkingmachines/inkling-2-mini"
+name = "Inkling 2 Mini Abliterated"
+description = "Abliterated variant of Inkling 2 Mini hosted by Boundless"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.18
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 0.45

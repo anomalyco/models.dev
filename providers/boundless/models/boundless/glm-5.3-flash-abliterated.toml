@@ -1,0 +1,25 @@
+# Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
+# Boundless hosts an abliterated variant of the base model: the same model with its refusal behaviour removed.
+# Reasoning: reasoning_effort, https://inference.boundless.network/docs/reasoning
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM-5.3 Flash Abliterated"
+description = "Abliterated variant of GLM-5.3 Flash hosted by Boundless"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "video/mp4", "video/x-matroska", "video/quicktime"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.5

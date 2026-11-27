@@ -1,0 +1,21 @@
+# Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
+# Boundless hosts an abliterated variant of the base model: the same model with its refusal behaviour removed.
+# Reasoning: reasoning_effort, https://inference.boundless.network/docs/reasoning
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash 1017 Abliterated"
+description = "Abliterated variant of DeepSeek V4.1 Flash 1017 hosted by Boundless"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.24
+cache = { read = 0.012 }
+
+[cost.text.output]
+price = 0.96

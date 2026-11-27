@@ -1,0 +1,22 @@
+# Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
+# Boundless hosts an abliterated variant of the base model: the same model with its refusal behaviour removed.
+# Reasoning: reasoning_effort, https://inference.boundless.network/docs/reasoning
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro Abliterated"
+description = "Abliterated variant of Kimi K3.1 Pro hosted by Boundless"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 3
+cache = { read = 2 }
+
+[cost.text.output]
+price = 12

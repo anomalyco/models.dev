@@ -11,6 +11,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
 - `bun models:sync aiand` syncs only ai&.
 - `bun models:sync openrouter` syncs only OpenRouter.
+- `bun models:sync boundless` syncs Boundless prices and context windows and removes models Boundless has retired.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
@@ -562,3 +563,11 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - Update-only for priced text models that already have a file: prices, the `input_cache_read` rate, `context_window` and `max_completion_tokens` come from the list. Reasoning efforts, service tiers, the Responses API and web search fees stay hand-authored, and new remote IDs open missing-model issues.
 - The list gives every model a cache rate at half its input price, even models Groq's [prompt caching page](https://console.groq.com/docs/prompt-caching) doesn't support, so the sync only updates a cache price the file already has.
 - Speech, transcription and unpriced models are left alone, and nothing is deleted when a model drops out of the list; mark it `status = "deprecated"` by hand.
+
+## Boundless Notes
+
+- Source: `GET https://inference.boundless.network/api/catalog`, public, no key. It is the data behind https://inference.boundless.network/models.
+- A model is listed while its row has `serving: true`, prices, tool calling and no `retiresAt`. Boundless sets `retiresAt` when it announces a retirement, so the file is removed ahead of the cutoff.
+- The sync updates token prices (input, cached input, output) and `limit.context` on existing files. Reasoning controls, modalities and display names stay hand-written.
+- New models are not created (`skipCreates`): they need reasoning controls and MIME modalities the catalog doesn't state, so they go through the missing-model issue flow.
+- `deleteMissing` is on, and `parseModels` throws when the catalog lists nothing, so an empty or broken response can't remove the provider's files.
