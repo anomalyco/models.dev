@@ -4,6 +4,7 @@ base_model = "openai/gpt-6.1-terra"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
+system_updates = true
 
 [cost.text.input]
 price = 1

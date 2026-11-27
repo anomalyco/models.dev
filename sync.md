@@ -509,6 +509,7 @@ Requesty is implemented in `packages/core/src/sync/providers/requesty.ts`.
 - Anthropic files `.0` releases with an explicit `-0` (`claude-sonnet-4-0.toml`) while later point releases drop it, so bare `claude-<tier>-<major>` IDs retry against the `-0` filename.
 - Region variants are written as separate models: `gpt-5.4` and `gpt-5.4@eu` are distinct files that share a `base_model` and differ only in served pricing and limits.
 - Prices are per-token USD and are converted to per-1M-token numbers. `pricing[]` bands become `cost.tiers`, with the first band as the flat `cost`. Price fields are nullable upstream, so a route quoting no prices gets no `[cost]` section rather than a fabricated zero.
+- `supports_system_mid_conversation` owns `capabilities.system_updates`: `true` writes it, `false` removes it (and a new file doesn't inherit it from its predecessor), and a row without the field leaves the file's value.
 
 ## Venice Notes
 

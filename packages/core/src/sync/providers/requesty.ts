@@ -292,12 +292,18 @@ export const requesty = {
         return RequestyResponse.parse(raw).data;
     },
     translateModel(model, context) {
+        const systemUpdates = model.supports_system_mid_conversation;
         return {
             id: model.id,
             model: buildRequestyModel(model, context.existing(model.id)),
+            // The catalog owns system_updates: true is written, false removes
+            // it, and a row without the field leaves the file's value.
+            v2Set: systemUpdates == null
+                ? undefined
+                : { "capabilities.system_updates": systemUpdates ? true : undefined },
             // A route can sit on another backend than its predecessor (Qwen4
             // Max is served via Fireworks), so a stated false isn't inherited.
-            unsupported: model.supports_system_mid_conversation === false
+            unsupported: systemUpdates === false
                 ? ["capabilities.system_updates"]
                 : undefined,
         };

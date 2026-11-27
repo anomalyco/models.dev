@@ -4,6 +4,7 @@ base_model = "google/gemini-4-neon"
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
 structured_output = true
+system_updates = true
 
 [cost.text.input]
 price = 3
