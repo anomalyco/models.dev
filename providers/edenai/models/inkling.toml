@@ -7,6 +7,10 @@ base_model = "thinkingmachines/inkling"
 reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
 structured_output = true
 
+[limit]
+context = 524_288
+output = 524_288
+
 [cost.text.input]
 price = 0.95
 cache = { read = 0.16 }
