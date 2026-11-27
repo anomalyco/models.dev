@@ -1,0 +1,42 @@
+# Byte-passthrough relay of the OpenAI GPT-6 Astra Chat Completions endpoint; reasoning_effort,
+# prompt_cache_key, and function/custom tools pass through unchanged; reasoning tokens are billed
+# at the output rate.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (effort none is rejected by GPT-6 Astra,
+# matching providers/openai/models/gpt-6-astra.toml).
+# Tools: function calling (choice auto|none|required|tool; strict omitted on Chat Completions
+# per providers/openai/models/gpt-6-astra.toml) and ChatCompletionCustomTool freeform =
+# text|lark|regex forwarded unchanged on POST /v1/chat/completions.
+# Cost (retrieved 2026-11-25): https://proxystacks.com/public/model-rates ,
+# https://proxystacks.com/api/public/model-rates , https://proxystacks.com/en/pricing
+# (<=272K context: input $7.00, output $35.00, cache read $0.70, cache write $8.75 per MTok;
+# >272K context: input $14.00, output $52.50, cache read $1.40, cache write $17.50 per MTok;
+# explicit cache_control breakpoints on Chat Completions honor the 30m TTL, up to 4 breakpoints,
+# 1,024-token minimum — 12h is Responses-only upstream, matching the rate card's single 30m write rate).
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 7
+cache = { read = 0.7, write = { "30m" = 8.75 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 14
+cache = { read = 1.4, write = { "30m" = 17.5 } }
+
+[cost.text.output]
+price = 35
+reasoning = 35
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 52.5
+reasoning = 52.5

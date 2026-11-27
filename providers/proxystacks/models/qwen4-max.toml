@@ -1,0 +1,37 @@
+# Byte-passthrough relay of the Alibaba Qwen4 Max Chat Completions endpoint: reasoning_effort,
+# thinking_budget, prompt_cache_options, cache_control, and reasoning_content pass through
+# unchanged; reasoning tokens billed at the output rate.
+# Effort: reasoning_effort = none|low|high|xhigh (default high); off is effort none, so no
+# separate toggle.
+# Budget: thinking_budget 1..262144 (positive integer, forwarded unchanged; cannot be combined
+# with reasoning_effort), matching first-party providers/alibaba/models/qwen4-max.toml.
+# Cache: implicit (1,024-token minimum) and explicit via prompt_cache_options or cache_control
+# ephemeral (TTL 5m or 1h, up to 4 breakpoints on system/messages, 1,024-token minimum),
+# forwarded unchanged; follows https://www.alibabacloud.com/help/en/model-studio/explicit-cache-qwen4
+# and providers/alibaba/models/qwen4-max.toml.
+# Tools: tool_choice auto|none|named (`tool`), no strict tool mode (follows Alibaba Model Studio
+# Chat Completions: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions).
+# Cost (retrieved 2026-11-25): https://proxystacks.com/public/model-rates ,
+# https://proxystacks.com/api/public/model-rates , https://proxystacks.com/en/pricing
+# (input $1.20, output $3.60, cache read $0.06, explicit cache write 5m $1.50 / 1h $2.40 per MTok).
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "xhigh"], budget = { min = 1, max = 262_144 } }
+structured_output = true
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[cost.text.input]
+price = 1.2
+cache = { read = 0.06, explicit = { read = 0.06, write = { "5m" = 1.5, "1h" = 2.4 } } }
+
+[cost.text.output]
+price = 3.6
+reasoning = 3.6

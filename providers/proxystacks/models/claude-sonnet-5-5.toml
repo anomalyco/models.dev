@@ -1,0 +1,27 @@
+# ProxyStacks Relay route `claude-sonnet-5-5` (Claude Sonnet 5.5 on POST /v1/chat/completions at
+# 50% off official USD list pricing; see https://proxystacks.com/en/models/claude-sonnet-5-5).
+# Effort: reasoning_effort = low|medium|high|xhigh|max (default high; always-on adaptive thinking,
+# no off toggle; matches providers/anthropic/models/claude-sonnet-5-5.toml and same-surface Chat
+# Completions peers).
+# Cache: explicit cache_control breakpoints (5m and 1h TTLs, up to 4 breakpoints, 512-token
+# minimum) forwarded unchanged; reasoning tokens are billed at the output rate.
+# Cost (retrieved 2026-11-27): https://proxystacks.com/public/model-rates ,
+# https://proxystacks.com/api/public/model-rates , https://proxystacks.com/en/pricing
+# (input $1.00, output $5.00, cache read $0.05, cache write 5m $1.25 / 1h $2.00 per MTok).
+# Tools: choice = auto|none inherited from models/anthropic/claude-sonnet-5-5.toml (forced tool use rejected).
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+# tools = { supported = true, choice = ["auto", "none"] } inherited from models/anthropic/claude-sonnet-5-5.toml (forced tool use rejected).
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = { "5m" = 1.25, "1h" = 2 } }
+
+[cost.text.output]
+price = 5
+reasoning = 5

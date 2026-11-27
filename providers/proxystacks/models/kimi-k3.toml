@@ -1,0 +1,33 @@
+# Relay of the Moonshot Kimi K3 endpoint: reasoning_effort and reasoning_content pass through
+# unchanged; reasoning tokens billed at the output rate.
+# Effort: reasoning_effort = low|high|max (default max; always thinks upstream, no off toggle;
+# matches providers/moonshotai/models/kimi-k3.toml).
+# Cost (retrieved 2026-11-25): https://proxystacks.com/public/model-rates ,
+# https://proxystacks.com/api/public/model-rates , https://proxystacks.com/en/pricing
+# (input $2.10, output $10.50, cache read $0.21, cache write $2.10 per MTok; 5m and 1h cache
+# writes priced the same).
+# Context/output limits (1,048,576 / 1,048,576) inherit from models/moonshotai/kimi-k3.toml;
+# tool strictness and choice follow providers/moonshotai/models/kimi-k3.toml.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required"] }
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+stream_usage = true
+prompt_cache_key = true
+cache = { implicit = { ttl = ["5m", "1h"] } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { tools = { updates = ["add"] } }
+
+[cost.text.input]
+price = 2.1
+cache = { read = 0.21, write = { "5m" = 2.1, "1h" = 2.1 } }
+
+[cost.text.output]
+price = 10.5
+reasoning = 10.5

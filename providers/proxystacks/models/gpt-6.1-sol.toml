@@ -1,0 +1,43 @@
+# Byte-passthrough relay of the OpenAI GPT-6.1 Sol Chat Completions endpoint; reasoning_effort,
+# prompt_cache_key, and function/custom tools pass through unchanged; reasoning tokens are billed
+# at the output rate.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (effort none is rejected by GPT-6.1 Sol,
+# matching providers/openai/models/gpt-6.1-sol.toml).
+# Tools: function calling (choice auto|none|required|tool; strict omitted on Chat Completions
+# because GPT-6.1 Sol rejects function tools with reasoning_effort when strict is set there, per
+# providers/openai/models/gpt-6.1-sol.toml) and ChatCompletionCustomTool freeform = text|lark|regex
+# forwarded unchanged on POST /v1/chat/completions.
+# Cost (retrieved 2026-11-25): https://proxystacks.com/public/model-rates ,
+# https://proxystacks.com/api/public/model-rates , https://proxystacks.com/en/pricing
+# (<=272K context: input $1.40, output $7.00, cache read $0.07, cache write $1.75 per MTok;
+# >272K context: input $2.80, output $10.50, cache read $0.14, cache write $3.50 per MTok;
+# explicit cache_control breakpoints on Chat Completions honor the 30m TTL, up to 4 breakpoints,
+# 1,024-token minimum — 12h is Responses-only upstream, matching the rate card's single 30m write rate).
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.07, write = { "30m" = 1.75 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 2.8
+cache = { read = 0.14, write = { "30m" = 3.5 } }
+
+[cost.text.output]
+price = 7
+reasoning = 7
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 10.5
+reasoning = 10.5

@@ -1,0 +1,41 @@
+# Byte-passthrough relay of the OpenAI GPT-6 Luna Chat Completions endpoint; reasoning_effort,
+# prompt_cache_key, and function/custom tools pass through unchanged; reasoning tokens are billed
+# at the output rate.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (off is effort none, no separate
+# toggle; matches providers/openai/models/gpt-6-luna.toml).
+# Tools: strict function calling (choice auto|none|required|tool) and ChatCompletionCustomTool
+# freeform = text|lark|regex forwarded unchanged on POST /v1/chat/completions.
+# Cost (retrieved 2026-11-25): https://proxystacks.com/public/model-rates ,
+# https://proxystacks.com/api/public/model-rates , https://proxystacks.com/en/pricing
+# (<=272K context: input $0.07, output $0.35, cache read $0.007, cache write $0.0875 per MTok;
+# >272K context: input $0.14, output $0.525, cache read $0.014, cache write $0.175 per MTok;
+# explicit cache_control breakpoints on Chat Completions honor the 30m TTL, up to 4 breakpoints,
+# 1,024-token minimum — 12h is Responses-only upstream, matching the rate card's single 30m write rate).
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+tools = { supported = true, strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+system_updates = true
+prompt_cache_key = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], max_breakpoints = 4, min_tokens = 1_024 } }
+
+[cost.text.input]
+price = 0.07
+cache = { read = 0.007, write = { "30m" = 0.0875 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.14
+cache = { read = 0.014, write = { "30m" = 0.175 } }
+
+[cost.text.output]
+price = 0.35
+reasoning = 0.35
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.525
+reasoning = 0.525
