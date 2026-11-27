@@ -1150,3 +1150,77 @@ dialog .footer a {
     padding: 0.75rem;
   }
 }
+
+.mcp-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mcp-toolbar input {
+  flex: 1 1 16rem;
+  max-width: 28rem;
+  height: 2rem;
+  padding: 0 0.625rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.mcp-toolbar input:focus {
+  outline: 2px solid var(--color-text);
+  outline-offset: 1px;
+}
+
+.mcp-toolbar p,
+.mcp-loading {
+  color: var(--color-text-tertiary);
+  font-size: 0.8125rem;
+}
+
+.mcp-loading {
+  padding: 1.5rem 0.75rem;
+}
+
+td.mcp-description {
+  white-space: normal;
+  min-width: 16rem;
+  max-width: 32rem;
+  line-height: 1.35;
+}
+
+.mcp-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+}
+
+.mcp-pager-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mcp-pager button {
+  height: 2rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.mcp-pager button:disabled {
+  color: var(--color-text-tertiary);
+  cursor: default;
+}

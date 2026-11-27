@@ -122,6 +122,16 @@ Bun.serve({
           "Cache-Control": "public, max-age=3600",
         },
       }),
+    "/mcp.json": () =>
+      new Response(
+        Bun.file(path.join(import.meta.dir, "..", "..", "..", "mcp", "servers.json")),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "public, max-age=3600",
+          },
+        },
+      ),
     "/api.json": (req) => catalogResponse(req, "api"),
     "/models.json": (req) => catalogResponse(req, "models"),
     "/catalog.json": (req) => catalogResponse(req, "catalog"),

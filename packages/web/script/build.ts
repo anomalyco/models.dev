@@ -84,6 +84,12 @@ for (const [route, rendered] of RenderedPages) {
 
 await Bun.write("./dist/search-index.json", SearchIndexJson);
 
+const mcpCatalog = Bun.file(path.join(import.meta.dir, "..", "..", "..", "mcp", "servers.json"));
+if (!(await mcpCatalog.exists())) {
+  throw new Error("mcp/servers.json is missing. Run bun run mcp:sync.");
+}
+await Bun.write("./dist/mcp.json", mcpCatalog);
+
 const catalog = { models: Models, providers: Providers };
 const variants: Array<[suffix: string, filter: ModelTypeFilter]> = [
   ["", "default"],

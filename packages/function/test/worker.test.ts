@@ -1,6 +1,6 @@
 import { describe, expect, spyOn, test } from "bun:test";
 
-import worker, { type Env } from "../src/worker.js";
+import worker, { htmlAssetPath, type Env } from "../src/worker.js";
 
 const textModel = {
   id: "text-model",
@@ -26,6 +26,20 @@ const expandedProviders = {
   ...v2Providers,
   "openai-codex": { id: "openai-codex", models: { text: textModel } },
 };
+
+describe("html asset paths", () => {
+  test("serves mcp server urls from one detail shell", () => {
+    expect(htmlAssetPath("/mcp")).toBe("/mcp/index.html");
+    expect(htmlAssetPath("/mcp/")).toBe("/mcp/index.html");
+    expect(htmlAssetPath("/mcp/io.github.example/weather")).toBe(
+      "/mcp/server/index.html",
+    );
+    expect(htmlAssetPath("/models/openai/gpt-5")).toBe(
+      "/models/openai/gpt-5/index.html",
+    );
+    expect(htmlAssetPath("/mcp.json")).toBeUndefined();
+  });
+});
 
 describe("catalog API model type filtering", () => {
   test("omits typed models from api.json by default", async () => {
