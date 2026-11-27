@@ -1,0 +1,36 @@
+# Baidu announced the Preview on 2026-11-11: https://ernie.baidu.com/release/ernie-5-5-flash-preview/
+# Baidu released the Preview weights on 2026-11-24: https://x.com/Baidu_ERNIE/status/2125072735336546546
+# The model card documents the modalities, context, reasoning and tool calling.
+# It does not specify a separate output cap for the released weights.
+# Sampling: https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview/blob/main/generation_config.json
+# The model card's vLLM deployment supports top_k: https://docs.vllm.ai/en/stable/serving/online_serving/openai_compatible_server/
+schema = 2
+name = "ERNIE 5.5 Flash Preview"
+description = "Intermediate ERNIE 5.5 Flash checkpoint for coding, tool-using agents, and knowledge work, with 280B total and 14B active parameters"
+family = "ernie"
+open_weights = true
+release_date = "2026-11-11"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+
+[[links]]
+label = "Baidu announcement"
+url = "https://ernie.baidu.com/release/ernie-5-5-flash-preview/"
+type = "announcement"
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview"

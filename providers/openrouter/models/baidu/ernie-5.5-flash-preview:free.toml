@@ -1,19 +1,15 @@
+# Host limits, free pricing and supported parameters:
+# https://openrouter.ai/api/v1/models/baidu/ernie-5.5-flash-preview:free/endpoints (2026-11-27)
 schema = 2
+base_model = "baidu/ernie-5.5-flash-preview"
 name = "ERNIE-5.5-Flash-Preview (free)"
-description = "Flagship model for demanding analysis, coding, and production agent workflows"
 family = "ernie-free"
-open_weights = true
-release_date = "2026-11-10"
-
-[modalities]
-input = ["text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["high"] }
 structured_output = true
-temperature = true
+top_k = false
 
 [limit]
 context = 1_024_000
