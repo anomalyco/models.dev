@@ -9,8 +9,11 @@
 # https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/use-open-models#context-caching
 # The cache-hit price is the published $0.006 (2% of input). The caching page promises a 90% discount on cached tokens
 # ($0.03, which is what the pricing page lists for DeepSeek-V4.1-Flash), so the two Google pages disagree for this model.
-# Reasoning: thinking is supported, but https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/capabilities/thinking
-# documents no toggle, effort or budget field (or reasoning output field) for DeepSeek V4.1, so no controls are listed.
+# Reasoning: the model card lists thinking as supported. https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/capabilities/thinking
+# (accessed 2026-11-27) has sections for GPT OSS, GLM 5.2 and Gemma 4 only, so Vertex documents no toggle, effort, budget or
+# reasoning output field for DeepSeek V4.1. The lab API has thinking.type and reasoning_effort, and Vertex's DeepSeek V3.x took
+# chat_template_kwargs.thinking, but neither is documented or verified for this model on Vertex (no live probe: no credentials
+# with predict access), so no controls are listed. Add them once the host documents one or a probe confirms it.
 # Limits: the model card's quota (1,048,576 output and context) is a quota, not a model limit, so limits come from the lab file.
 # Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
 # system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
