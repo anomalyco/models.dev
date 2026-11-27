@@ -3,6 +3,7 @@
 # Values are the ones Boundless's gateway accepts for this model, from its deployed configuration (2026-11-27);
 # any other value gets a 400 `invalid_reasoning_effort` whose message lists the accepted set.
 # Boundless hosts the weights and maps each value onto the model's own levels in the gateway: none turns thinking off in the chat template (self-hosted weights, unlike Moonshot's API); low -> low, medium and high -> high, max -> max. `minimal` (-> low) and `xhigh` (-> max) are also accepted.
+# Live 2026-11-27 on /v1/chat/completions: every listed value returns 200, and a function tool call works with reasoning_effort low.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 

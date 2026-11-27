@@ -3,8 +3,14 @@
 # Values are the ones Boundless's gateway accepts for this model, from its deployed configuration (2026-11-27);
 # any other value gets a 400 `invalid_reasoning_effort` whose message lists the accepted set.
 # Boundless serves this model through OpenRouter and forwards the value, so the list is OpenRouter's for this model (no `none`: the model rejects it).
-# Custom (freeform) tools: not documented by Boundless and not probed, so `freeform` is left out.
+# Live 2026-11-27 on /v1/chat/completions: low, medium, high, xhigh and max each return 200; none returns 400; an unknown value returns 400 `invalid_reasoning_effort`.
+# Tools per API (live 2026-11-27):
+#   /v1/responses: function tools work with reasoning.effort set; custom tools work in all three formats, and the grammar is enforced
+#   (regex `ZZ[0-9]{3}` and the same grammar in lark returned ZZ001 or ZZ123 for a prompt asking for an English greeting), so freeform sits on [api.responses].
+#   /v1/chat/completions: function tools work only with reasoning_effort unset (400 with any other effort), and custom tools are rejected (400) in every format.
+#   Responses is therefore the recommended API. Chat Completions stays first for v1 compatibility.
 schema = 2
+recommended_api = "responses"
 base_model = "openai/gpt-6.2-astra"
 
 [modalities]
@@ -14,6 +20,12 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
 
 [cost.text.input]
 price = 8
