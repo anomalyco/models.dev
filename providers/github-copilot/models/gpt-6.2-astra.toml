@@ -8,6 +8,17 @@
 #   low|medium|high|xhigh|max, structured_outputs, supported_endpoints /responses only.
 # Live 2026-11-18: /responses 200; /chat/completions 400 "unsupported_api_for_model". On /responses, custom tools with
 #   text, lark and regex formats returned a custom_tool_call matching the grammar.
+# Mid-conversation flags, live 2026-11-26 on api.individual.githubcopilot.com/responses (Copilot's GET /models has no
+#   field for any of them):
+#   effort_updates: a `configuration_update` item between turns returned 200. gpt-5.3-codex and MAI Code reject it
+#     ("The 'configuration_update' item type is not supported with this model."); Grok returns
+#     "upstream_request_rejected".
+#   tools.updates: an `additional_tools` item after the first turn added a tool the model then called, and a second
+#     one redefining a tool by name made the call use the new schema. The call has no namespace, and replaying it with
+#     its output continued normally (gpt-5.6-sol, gpt-6.2-sol). Removal is announced in a developer message, as on
+#     `openai`. Grok rejects `additional_tools` ("upstream_request_rejected"); gpt-5.3-codex and gpt-5.4-nano return
+#     namespaced calls whose replay fails.
+#   system_updates: a developer message after the first turn ("reply with exactly BANANA") was followed.
 schema = 2
 base_model = "openai/gpt-6.2-astra"
 
@@ -15,9 +26,11 @@ base_model = "openai/gpt-6.2-astra"
 tools = { supported = true, freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+system_updates = true
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }
+capabilities = { effort_updates = true, tools = { updates = ["add", "remove", "replace"] } }
 
 [cost.text.input]
 price = 8
