@@ -5,6 +5,7 @@ import {
   InvalidModelTypeError,
   MODEL_TYPES,
   parseModelTypes,
+  prebuiltTypeSetSuffix,
 } from "@models.dev/core/src/filter.js";
 import type { ModelTypeValue } from "@models.dev/core/src/filter.js";
 import { hitEvent } from "@models.dev/core/src/hit.js";
@@ -206,7 +207,9 @@ async function catalogResponse(
       ? "-all"
       : filter.length === 1
         ? `-${filter[0]}`
-        : undefined;
+        : endpoint === "experimental_v2.0_api"
+          ? prebuiltTypeSetSuffix(filter)
+          : undefined;
   const view = endpoint === "experimental_v2.0_api"
     ? optInSuffix(includedOptIn(url.searchParams))
     : "";

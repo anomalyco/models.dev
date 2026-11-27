@@ -127,6 +127,40 @@ describe("catalog API model type filtering", () => {
     expect(response.headers.get("etag")).toBe('"v2-decision"');
     expect(Object.keys(body.example.models)).toEqual(["decision"]);
   });
+
+  test("serves the type combinations clients request from their prebuilt files", async () => {
+    // In any order, and for each set of opt-in providers.
+    const response = await request("/experimental/v2.0/api.json?type=image,chat,decision");
+    const included = await request(
+      "/experimental/v2.0/api.json?type=chat,decision,image,video,realtime,embedding,transcription&include=openai-codex",
+    );
+
+    expect(response.headers.get("etag")).toBe('"v2-chat-decision-image"');
+    expect(await response.json()).toEqual({ prebuilt: "-chat-decision-image" });
+    expect(included.headers.get("etag")).toBe(
+      '"v2-openai-codex-chat-decision-embedding-image-realtime-transcription-video"',
+    );
+
+    const again = await request("/experimental/v2.0/api.json?type=chat,decision,image", {
+      "user-agent": "test",
+      "if-none-match": '"v2-chat-decision-image"',
+    });
+    expect(again.status).toBe(304);
+  });
+
+  test("filters other experimental v2.0 type combinations from the complete file", async () => {
+    const response = await request("/experimental/v2.0/api.json?type=chat,decision");
+    const body = await response.json();
+
+    expect(response.headers.get("etag")).toBe('"v2-all;type=chat,decision"');
+    expect(Object.keys(body.example.models)).toEqual(["text", "decision"]);
+  });
+
+  test("does not look for prebuilt combinations on the v1 endpoints", async () => {
+    const response = await request("/models.json?type=chat,decision,image");
+
+    expect(response.headers.get("etag")).toBe('W/"all;type=chat,decision,image"');
+  });
 });
 
 describe("experimental provider opt-in", () => {
@@ -392,6 +426,8 @@ function asset(input: Request) {
     if (input.headers.get("if-none-match")?.includes(etag)) {
       return new Response(null, { status: 304, headers });
     }
+    // A file for several types: single types have no hyphen after the leading one.
+    if (type.lastIndexOf("-") > 0) return Response.json({ prebuilt: type }, { headers });
     return Response.json(value, { headers });
   }
   if (pathname === "/_api.json") {

@@ -8,7 +8,9 @@ import {
   MODEL_TYPES,
   optInSets,
   optInSuffix,
+  PREBUILT_TYPE_SETS,
   providerView,
+  typeSetSuffix,
   type ModelTypeFilter,
 } from "@models.dev/core";
 import fs from "fs/promises";
@@ -109,6 +111,18 @@ for (const [suffix, filter] of variants) {
           providerView(providersV2, included),
           filter === "default" ? "all" : filter,
         ),
+      ),
+    );
+  }
+}
+
+// The combinations opencode clients request, so the Worker never filters the catalog for them.
+for (const types of PREBUILT_TYPE_SETS) {
+  for (const included of optInSets()) {
+    await Bun.write(
+      `./dist/_experimental_v2.0_api${optInSuffix(included)}${typeSetSuffix(types)}.json`,
+      JSON.stringify(
+        filterProvidersByModelType(providerView(providersV2, included), [...types]),
       ),
     );
   }
