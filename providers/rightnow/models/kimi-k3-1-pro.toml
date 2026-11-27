@@ -7,6 +7,10 @@
 # 37 to 52 at high and 78 to 129 at max. Reasoning is returned in the reasoning field.
 # Image input: an inline data URL in png, jpeg, webp or gif, each answered on 2026-11-26; bmp and tiff are refused
 # with HTTP 400 naming those four.
+# Every other input is refused by the API before the model (HTTP 400 hosted_parameter_not_supported, 2026-11-27):
+# a video_url part and a file part (application/pdf), the message naming the part to remove, and an image/heic
+# data URL, the message naming png, jpeg, webp and gif. The provider's docs list the same four image types
+# (https://www.rightnowai.co/docs/open-models/messages).
 # output is the max_tokens the provider feed advertises for this model.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
@@ -18,6 +22,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 32_768

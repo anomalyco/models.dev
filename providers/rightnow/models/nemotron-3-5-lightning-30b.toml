@@ -11,6 +11,7 @@ base_model = "nvidia/nemotron-3.5-lightning"
 [capabilities]
 reasoning = { supported = true, toggle = true }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 output = 65_536

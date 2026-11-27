@@ -6,6 +6,10 @@
 # reasoning_efforts). Reasoning is returned in the reasoning field.
 # Image input: an inline data URL in png, jpeg, webp or gif, each answered on 2026-11-26; bmp and tiff are refused
 # with HTTP 400 naming those four.
+# Every other input is refused by the API before the model (HTTP 400 hosted_parameter_not_supported, 2026-11-27):
+# a video_url part and a file part (application/pdf), the message naming the part to remove, and an image/heic
+# data URL, the message naming png, jpeg, webp and gif. The provider's docs list the same four image types
+# (https://www.rightnowai.co/docs/open-models/messages).
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 
@@ -16,6 +20,7 @@ output = ["text"]
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576

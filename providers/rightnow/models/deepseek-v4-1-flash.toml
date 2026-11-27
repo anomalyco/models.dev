@@ -3,11 +3,14 @@
 # Probed on https://api.rightnowai.co/v1 on 2026-11-26 with this id: a chat completion, a tool call (tool_choice
 # auto), a strict json_schema response and a repeated ~5.6k-token prompt that reported cached tokens.
 # This deployment serves text only: an image_url part is refused with HTTP 400 (2026-11-26).
-# Reasoning is on by default and reasoning_effort none turns it off: three requests with none returned no reasoning,
-# three without it did (2026-11-26). Reasoning is returned in the reasoning field.
-# context is this deployment's window, 1,048,576 tokens (GET /v1/models). output is 65,536, the max_tokens the provider
-# feed advertises for its 1017 build on the same deployment: a longer answer would pass the 740-second response ceiling
-# (GET /v1/models, response_time_ceiling_seconds).
+# Reasoning is on by default (high) and reasoning_effort sets it: GET /v1/models lists none, low, high, xhigh and
+# max for this id. Each was answered with HTTP 200 on 2026-11-27, three requests each: none returned no reasoning
+# (0 reasoning tokens); low, high, xhigh and max returned it. On a harder question, one request each, max reasoned
+# longest (152 reasoning tokens, against 113 at low and 119 at high). Reasoning is returned in the reasoning field.
+# context is this deployment's window, 1,048,576 tokens (GET /v1/models). output is an estimate: GET /v1/models
+# accepts max_tokens up to the full window for this id, but every answer must finish inside its 740-second response
+# ceiling (response_time_ceiling_seconds), and the provider's partner feed, which lists only the 1017 build on the
+# same deployment, advertises 65,536 for that build. 65,536 is set here as a cap a full-length answer finishes under.
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
@@ -16,8 +19,9 @@ input = ["text"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true, toggle = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
 structured_output = true
+cache = { implicit = true }
 
 [limit]
 context = 1_048_576
