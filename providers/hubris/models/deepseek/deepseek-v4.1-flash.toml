@@ -1,8 +1,8 @@
-# FX: Hubris bills in RUB. USD/MTok below = public RUB price (https://hubris.pw/models, read 2026-11-21) / Bank of Russia official rate 82.1911 RUB/USD (2026-11-21), rounded to 4 decimals.
+# FX: Hubris bills in RUB. USD/MTok below = public RUB price (https://hubris.pro/models, read 2026-11-21) / Bank of Russia official rate 82.1911 RUB/USD (2026-11-21), rounded to 4 decimals.
 # RUB/MTok: input 37.87, output 151.48, cache read 0.76.
-# Reasoning controls: as providers/openrouter/models/deepseek/deepseek-v4.1-flash.toml where it exists; Hubris takes the OpenRouter-style reasoning object and normalises reasoning_effort (https://hubris.pw/docs/features/reasoning).
+# Reasoning controls: as providers/openrouter/models/deepseek/deepseek-v4.1-flash.toml where it exists; Hubris takes the OpenRouter-style reasoning object and normalises reasoning_effort (https://hubris.pro/docs/features/reasoning).
 # Reasoning side channel: message.reasoning / delta.reasoning. reasoning_field is left out on purpose: v2 allows "reasoning" but v1 interleaved.field does not.
-# Cache: automatic, no cache_control markers (https://hubris.pw/docs/features/prompt-caching).
+# Cache: automatic, no cache_control markers (https://hubris.pro/docs/features/prompt-caching).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
