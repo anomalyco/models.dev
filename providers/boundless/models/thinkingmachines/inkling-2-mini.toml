@@ -3,7 +3,7 @@
 # Values are the ones Boundless's gateway accepts for this model, from its deployed configuration (2026-11-27);
 # any other value gets a 400 `invalid_reasoning_effort` whose message lists the accepted set.
 # Boundless hosts the weights and maps each value onto the model's own levels in the gateway: low, medium and high are passed to the chat template as they are.
-# `none` is accepted but does not turn thinking off (live 2026-11-27: 200 with 37 reasoning tokens and reasoning text), so it is not listed.
+# The model always reasons, so `none` returns a 400 `thinking_off_unsupported` and is not listed.
 # Live 2026-11-27 on /v1/chat/completions: low, medium and high return 200; minimal, xhigh and max return 400; a function tool call works with reasoning_effort low.
 schema = 2
 base_model = "thinkingmachines/inkling-2-mini"
