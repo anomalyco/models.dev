@@ -1,12 +1,13 @@
 # Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
 # Latest alias of deepseek/deepseek-v4.1-flash.
-# Effort: reasoning_effort = none|low|high|max (default high).
+# Toggle: thinking.type = enabled|disabled. reasoning_effort = "none" also disables thinking.
+# Effort: reasoning_effort = low|high|max (default high).
 # https://api-docs.deepseek.com/guides/thinking_mode/
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 
 [capabilities]
-reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "high" } }
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"], default = { type = "effort", value = "high" } }
 
 [cost.text.input]
 price = 0.3
