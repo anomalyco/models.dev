@@ -1,0 +1,38 @@
+# Toggle: chat_template_kwargs.thinking = true|false (copied from providers/google-vertex/models/deepseek-ai/deepseek-v3.2-maas.toml, not probed on V4.1)
+# Sources (accessed 2026-11-27):
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/deepseek/deepseek-v41-flash-1017
+#   (model ID deepseek-v4.1-flash-1017-maas, launch stage Preview, released 2026-11-16, global endpoint only;
+#   text and image input, text output; function calling, structured output and thinking supported; Standard PayGo only.
+#   "Available until at least December 31, 2026", extendable based on usage and demand.)
+# - https://docs.cloud.google.com/gemini-enterprise-agent-platform/release-notes (DeepSeek-V4.1-Flash-1017 in Public Preview)
+# - https://cloud.google.com/model-garden/partner-models/pricing (DeepSeek-V4.1-Flash-1017: $0.30 input, $1.20 output, $0.006 cache hit per 1M tokens)
+# Cache: implicit, 4,096-token minimum; the model is in the supported list:
+# https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/use-open-models#context-caching
+# The cache-hit price is the published $0.006 (2% of input). The caching page promises a 90% discount on cached tokens
+# ($0.03, which is what the pricing page lists for DeepSeek-V4.1-Flash), so the two Google pages disagree for this model.
+# Reasoning: the model card lists thinking as supported. https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/capabilities/thinking
+# (accessed 2026-11-27) has sections for GPT OSS, GLM 5.2 and Gemma 4 only, so it documents no field for DeepSeek V4.1.
+# The toggle is copied from the same host's previous DeepSeek model on the same endpoint
+# (providers/google-vertex/models/deepseek-ai/deepseek-v3.2-maas.toml); it has not been probed on V4.1.
+# Limits: the model card's quota (1,048,576 output and context) is a quota, not a model limit, so limits come from the lab file.
+# Mid-conversation updates: false. The Vertex OpenAI-compatible endpoint (endpoints/openapi) documents no in-place
+# system message, per-turn effort, or tool-change mechanism: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/maas/call-open-model-apis
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = { min_tokens = 4_096 } }
+
+[api.chat-completions]
+base_url = "https://${GOOGLE_VERTEX_ENDPOINT}/v1/projects/${GOOGLE_VERTEX_PROJECT}/locations/${GOOGLE_VERTEX_LOCATION}/endpoints/openapi"
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/google-vertex/chat" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.006 }
+
+[cost.text.output]
+price = 1.2

@@ -7,8 +7,8 @@
 # Mid-conversation updates follow the per-model lists in Anthropic's docs, which cover Google Cloud:
 # - https://platform.claude.com/docs/en/build-with-claude/mid-conversation-system-messages (system messages; tool changes by reference)
 # - https://platform.claude.com/docs/en/build-with-claude/effort#change-effort-mid-conversation-beta (per-message effort)
-# status = "deprecated": Vertex publishes a retirement date of "not sooner than September 29, 2026", which has passed
-# (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/sonnet-4-5).
+# status = "deprecated": deprecated 2026-09-29, shutdown 2026-11-30
+# (https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/deprecations/partner-models).
 # Web search: $10 per 1,000 searches: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (supported models: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/web-search)
 # Token-only multipliers (object factor, so cost.web_search is unscaled): non-global regional premium: Vertex lists one web search price ($10 per 1,000 searches) for every endpoint, a separate SKU the regional premium doesn't scale (https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models).
 # tools.strict: strict tool use on Claude 4.5 and later: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/structured-outputs
