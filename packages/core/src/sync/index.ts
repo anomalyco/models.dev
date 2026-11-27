@@ -177,6 +177,12 @@ export interface SyncProvider<SourceModel> {
      * next to context tiers.
      */
     v2Set?: Record<string, unknown>;
+    /**
+     * Capability paths the source states are unsupported (e.g.
+     * `capabilities.system_updates`). A new file doesn't inherit them from
+     * the same host's previous model in the family.
+     */
+    unsupported?: string[];
     /** Source data the module skipped, listed with the sync's notices. */
     notices?: string[];
   } | SyncedV2Model | undefined;
@@ -386,6 +392,7 @@ export async function syncProvider<SourceModel>(
     model: z.infer<typeof SyncedAuthoredModel>;
     header: string;
     v2Set?: Record<string, unknown>;
+    unsupported?: string[];
   }>();
   const desiredV2 = new Map<string, { content: string }>();
   const caseNormalizedDesiredPaths = new Map<string, string>();
@@ -523,6 +530,7 @@ export async function syncProvider<SourceModel>(
       model: parsed.data,
       header,
       v2Set: translated.v2Set,
+      unsupported: translated.unsupported,
     });
   }
 
@@ -554,7 +562,7 @@ export async function syncProvider<SourceModel>(
       if (content === undefined) continue;
       const inherited = provider.inheritPredecessorCapabilities === false
         ? content
-        : withPredecessorCapabilities(content, [...existing].map(([file, entry]) => [file, entry.v2]), modelMetadata, protocol);
+        : withPredecessorCapabilities(content, [...existing].map(([file, entry]) => [file, entry.v2]), modelMetadata, protocol, file.unsupported);
       files.push({ status: "created", path: filePath });
       if (options.dryRun) {
         console.log(`Would create ${relativePath}`);

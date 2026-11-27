@@ -63,6 +63,7 @@ export const RequestyModel = z
         supports_reasoning: z.boolean().default(false),
         supports_tool_calling: z.boolean().default(false),
         supports_output_json_schema: z.boolean().default(false),
+        supports_system_mid_conversation: z.boolean().nullish(),
     })
     .passthrough();
 
@@ -294,6 +295,11 @@ export const requesty = {
         return {
             id: model.id,
             model: buildRequestyModel(model, context.existing(model.id)),
+            // A route can sit on another backend than its predecessor (Qwen4
+            // Max is served via Fireworks), so a stated false isn't inherited.
+            unsupported: model.supports_system_mid_conversation === false
+                ? ["capabilities.system_updates"]
+                : undefined,
         };
     },
 } satisfies SyncProvider<RequestyModel>;

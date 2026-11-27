@@ -57,12 +57,19 @@ export function findPredecessor(
 
 /** Copies the predecessor's hand-set capabilities the new file doesn't state. Returns the keys it added. */
 /** `reasons`: the new model's resolved reasoning; only a reasoning model takes the predecessor's reasoning field. */
-export function inheritCapabilities(doc: Doc, predecessor: Doc, defaultProtocol?: string, reasons = false): string[] {
+/** `unsupported`: capability paths the catalog states the new model lacks, which are never copied. */
+export function inheritCapabilities(
+  doc: Doc,
+  predecessor: Doc,
+  defaultProtocol?: string,
+  reasons = false,
+  unsupported: string[] = [],
+): string[] {
   const added: string[] = [];
   const from = isRecord(predecessor.capabilities) ? predecessor.capabilities : {};
   const to = (isRecord(doc.capabilities) ? doc.capabilities : (doc.capabilities = {})) as Doc;
   for (const key of CAPABILITY_KEYS) {
-    if (from[key] !== undefined && to[key] === undefined) {
+    if (from[key] !== undefined && to[key] === undefined && !unsupported.includes(`capabilities.${key}`)) {
       to[key] = structuredClone(from[key]);
       added.push(`capabilities.${key}`);
     }
@@ -123,6 +130,7 @@ export function withPredecessorCapabilities(
   existing: Iterable<[string, Doc]>,
   labs: Record<string, Lab>,
   defaultProtocol?: string,
+  unsupported?: string[],
 ): string {
   const lines = content.split("\n");
   let i = 0;
@@ -133,7 +141,7 @@ export function withPredecessorCapabilities(
   if (predecessor === undefined) return content;
   const reasoning = isRecord(doc.capabilities) && isRecord(doc.capabilities.reasoning) ? doc.capabilities.reasoning.supported : undefined;
   const lab = typeof doc.base_model === "string" ? labs[doc.base_model] : undefined;
-  const added = inheritCapabilities(doc, predecessor.doc, defaultProtocol, (reasoning ?? lab?.reasoning) === true);
+  const added = inheritCapabilities(doc, predecessor.doc, defaultProtocol, (reasoning ?? lab?.reasoning) === true, unsupported);
   if (added.length === 0) return content;
   const source = predecessor.path.replace(/\.toml$/, "");
   header.push(`${INHERITED_NOTE} (${added.join(", ")}) come from ${source}, this host's previous model in the family.`);
