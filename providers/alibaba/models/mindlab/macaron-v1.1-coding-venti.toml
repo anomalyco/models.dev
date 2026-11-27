@@ -1,0 +1,43 @@
+# Sources (accessed 2026-11-27):
+# Catalog API GET https://dashscope-intl.aliyuncs.com/api/v1/models (prices, limits, request modalities, features)
+# https://www.alibabacloud.com/help/en/model-studio/macaron-mindlab (APIs, reasoning_effort low|medium|high|xhigh|max, parameter support)
+# https://www.alibabacloud.com/help/en/model-studio/context-cache (Macaron is on the Singapore explicit-cache list)
+# https://www.alibabacloud.com/help/en/model-studio/newly-released-models
+# Access: Singapore only. Calling it needs a one-time, self-serve "Activate Now" on the MindLab Macaron model card in the
+# Model Studio console; before that the API returns "The product is not activated".
+# Alibaba variant of Macaron-V1.1 ("deeply optimized for coding scenarios"), so base_model is the V1.1 lab file.
+# Catalog: $1.19 input, $3.74 output, $0.22 implicit cache read, $0.22 explicit cache read and 5-minute creation per 1M;
+# context 1,048,576, max output 131,072; request modalities text and image (no image formats are documented).
+# Effort: reasoning_effort = low|medium|high|xhigh|max (Alibaba's Macaron doc). Not probed live (not activated on our key),
+# so enable_thinking/thinking_budget aren't authored and system_updates/effort_updates/tools.updates are left unset.
+# Tools: tool_choice auto|none|named (parameter table). top_k isn't supported (parameter table). response_format json_schema is.
+# Cache: implicit and explicit (cache_control ephemeral, 5-minute TTL, up to 4 markers, 1,024-token minimum; context-cache doc).
+schema = 2
+base_model = "mindlab/macaron-v1.1-venti"
+name = "Macaron V1.1 Coding Venti"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+top_k = false
+stream_usage = true
+cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["5m"], max_breakpoints = 4, targets = ["system", "messages"], min_tokens = 1_024 } }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+base_url = "https://dashscope-intl.aliyuncs.com/apps/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/alibaba/messages" }
+
+[cost.text.input]
+price = 1.19
+cache = { read = 0.22, explicit = { read = 0.22, write = 0.22 } }
+
+[cost.text.output]
+price = 3.74

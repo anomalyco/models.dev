@@ -1,0 +1,34 @@
+# https://www.mindlab.im/updates/introducing-macaron-v1-1-and-mint-recursive (published 2026-09-22)
+# https://huggingface.co/mindlab-research/Macaron-V1.1 (MIT; 752B: GLM-5.3 744B base + four 2B LoRA specialists)
+# Context: config.json max_position_embeddings 1,048,576. Output: max_tokens up to 131,072
+# (https://mint-doc.macaron.im/model-api/parameters). Input: text only (the chat template replaces image, video and audio
+# parts with a "no multi-modal input ability" reminder).
+# Reasoning: always on; reasoning_effort low|high|max (parameters doc).
+# Sampling: open weights; generation_config.json sets temperature 1.0 and top_p 0.95
+# (https://huggingface.co/mindlab-research/Macaron-V1.1/blob/main/generation_config.json).
+schema = 2
+name = "Macaron V1.1 Venti"
+family = "macaron-venti"
+description = "GLM-5.3-based Mixture-of-LoRA model with specialists for chat, personal agents, coding, and generative UI"
+open_weights = true
+release_date = "2026-09-22"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/mindlab-research/Macaron-V1.1"
