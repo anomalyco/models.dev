@@ -71,6 +71,9 @@ export const bf16 = {
   sourceID(model) {
     return isRepresentableModel(model) ? model.id : undefined;
   },
+  missingModelID(model) {
+    return isRouterAlias(model) ? undefined : model.id;
+  },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
     return [
@@ -103,9 +106,14 @@ export async function fetchBF16Models(fetcher: typeof fetch = fetch) {
   return BF16Response.parse(await response.json());
 }
 
-function isRepresentableModel(model: BF16Model): boolean {
+function isRouterAlias(model: BF16Model): boolean {
   const meta = model.bf16;
-  if (meta?.family === "router" || meta?.modification_method === "smart_router") return false;
+  return meta?.family === "router" || meta?.modification_method === "smart_router";
+}
+
+function isRepresentableModel(model: BF16Model): boolean {
+  if (isRouterAlias(model)) return false;
+  const meta = model.bf16;
   if (meta?.status !== undefined && meta.status !== "active") return false;
   const pricing = meta?.pricing_usd_per_1m;
   const contextWindow = meta?.context_window ?? model.context_window;

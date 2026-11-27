@@ -365,7 +365,8 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - bf16.ai is implemented in `packages/core/src/sync/providers/bf16.ts`.
 - Source endpoint: `https://api.bf16.ai/v1/models` (public, no authentication required).
 - Existing bf16.ai models are updated from API-authoritative `bf16.pricing_usd_per_1m` (`input`, `cached_input`, `output`), `context_window`, `max_output_tokens`, `supports_reasoning`, `supports_tools`, `supports_json_schema`, and catalog availability.
-- Smart router aliases (`bf16.family === "router"` / `bf16/auto*`) and non-active models are ignored.
+- Smart router aliases (`bf16.family === "router"` / `bf16/auto*`) are ignored silently.
+- Listed non-router models with non-active status (e.g., `degraded`) or incomplete pricing/context metadata are skipped by `translateModel` and reported via `missingModelID`, preserving any existing local file and opening a deduped issue for manual review instead of deleting hand-authored metadata or blocking removals of dropped models.
 - Hand-authored metadata that the public endpoint does not publish (`base_model`, exact image MIME lists, per-surface reasoning effort controls, and multi-protocol `[api.*]` entries) is preserved via `factorBaseModel`.
 - New active models are not created automatically (`skipCreates`); each missing ID opens a deduped missing-model issue for manual authoring.
 

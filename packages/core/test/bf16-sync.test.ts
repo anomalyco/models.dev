@@ -91,7 +91,9 @@ test("router aliases and inactive entries are excluded by sourceID", () => {
   }).data;
 
   expect(bf16.sourceID(router[0]!)).toBeUndefined();
+  expect(bf16.missingModelID(router[0]!)).toBeUndefined();
   expect(bf16.sourceID(router[1]!)).toBeUndefined();
+  expect(bf16.missingModelID(router[1]!)).toBe("bf16/inactive");
   expect(bf16.sourceID(router[2]!)).toBe("moonshotai/kimi-k3.1-pro-uncensored");
 });
 
@@ -142,7 +144,7 @@ test("buildBF16Model strips stale cache_read when cached_input is absent from th
   expect(synced.cost?.cache_read).toBeUndefined();
 });
 
-test("translateModel ignores non-active and pricing-less entries even when a local file exists", () => {
+test("non-active and pricing-less listed models are skipped and preserved via missingModelID", () => {
   const existingModel = {
     name: "Kimi K3.1 Pro (Uncensored)",
     base_model: "moonshotai/kimi-k3.1-pro",
@@ -170,7 +172,9 @@ test("translateModel ignores non-active and pricing-less entries even when a loc
   }).data;
 
   expect(bf16.translateModel(entries[0]!, context)).toBeUndefined();
+  expect(bf16.missingModelID(entries[0]!)).toBe("moonshotai/kimi-k3.1-pro-uncensored");
   expect(bf16.translateModel(entries[1]!, context)).toBeUndefined();
+  expect(bf16.missingModelID(entries[1]!)).toBe("moonshotai/kimi-k3.1-pro-uncensored-no-price");
 });
 
 test("zero-priced active models remain representable and sync prices", () => {
