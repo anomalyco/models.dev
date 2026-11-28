@@ -1,0 +1,9 @@
+# Atlara is an OpenAI-compatible inference API: one key for open and proprietary models, plus "auto",
+# which picks a model per request. Catalogue: https://api.atlara.ai/v1/model-catalogue (public, no key).
+# API reference: https://cloud.atlara.ai/docs (accessed 2026-11-27)
+name = "Atlara Cloud"
+env = ["ATLARA_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.atlara.ai/v1"
+doc = "https://cloud.atlara.ai/docs"

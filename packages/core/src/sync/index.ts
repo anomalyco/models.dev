@@ -24,6 +24,7 @@ import { aiand } from "./providers/aiand.js";
 import { alibaba } from "./providers/alibaba.js";
 import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
+import { atlaraCloud } from "./providers/atlara-cloud.js";
 import { amazonBedrock } from "./providers/amazon-bedrock.js";
 import { cerebras } from "./providers/cerebras.js";
 import { anthropic } from "./providers/anthropic.js";
@@ -216,6 +217,7 @@ export const providers: {
   alibaba: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
+  "atlara-cloud": SyncProvider<any>;
   "amazon-bedrock": SyncProvider<any>;
   azure: SyncProvider<any>;
   cerebras: SyncProvider<any>;
@@ -278,6 +280,7 @@ export const providers: {
   alibaba,
   aimlapi,
   ambient,
+  "atlara-cloud": atlaraCloud,
   "amazon-bedrock": amazonBedrock,
   azure,
   cerebras,
@@ -340,6 +343,7 @@ export const providers: {
 export const groups = {
   aggregators: [
     "aimlapi",
+    "atlara-cloud",
     "concentrate",
     "crossmodel",
     "edenai",
