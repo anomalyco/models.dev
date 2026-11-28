@@ -1,0 +1,38 @@
+# Host-unique: Divyam is a model router that answers each request with a backing model it picks from Claude Opus, Sonnet and Haiku 5.5, so this entry has no base_model.
+# Catalog: https://console.preview.divyam.ai/api/v1/catalog/models?available_only=true lists a 1,000,000 context window (checked 2026-11-22).
+# Pricing: "50% of that model's price" (https://docs.divyam.ai/self-serve/models/, checked 2026-11-22), applied to providers/anthropic/models/claude-opus-5-5.toml.
+# Output: 128,000, the cap Claude Opus, Sonnet and Haiku 5.5 share.
+# Release date: the model's first listing in Divyam's docs catalog.
+# Tools: "Streaming and tool calls follow the OpenAI format" (https://docs.divyam.ai/self-serve/api-reference/)
+# Effort: reasoning_effort = none|low|medium|high (https://docs.divyam.ai/self-serve/api-reference/create-chat-completion/, checked 2026-11-27).
+# Sampling: temperature, top_p and top_k as in the Claude Opus, Sonnet and Haiku 5.5 lab files.
+# Modalities: Chat Completions takes image_url parts (same reference) in the image formats of the Claude 5.5 lab files.
+schema = 2
+name = "Claude Opus 5.5 Router"
+description = "Model router for Opus-grade answers, routing each prompt to Sonnet or Haiku when the evidence allows it"
+family = "model-router"
+open_weights = false
+release_date = "2026-11-13"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+temperature = false
+top_p = false
+top_k = false
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+output = 128_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 2.5 }
+
+[cost.text.output]
+price = 10
