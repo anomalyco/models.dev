@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-27):
+# - API: POST https://api.levanto.ai/v1/systemone with the System One {model, state, questions} body
+#   (https://docs.levanto.ai/systemone.md); model levanto-sage-2 or sage-latest.
+# - Price: https://docs.levanto.ai/pricing and https://api-dashboard.levanto.ai/v1/public/plans. Rates depend
+#   on the plan (input 0.038 to 0.05 USD per 1M); this lists the Free and Developer rate. Output is
+#   extraction, streaming and reasoning tokens; a decision's answer is free.
+# - Reasoning: provider.options.levanto.reasoning = off|auto|on (https://docs.levanto.ai/decision-model/reasoning.md).
+# Text only: images are taken on POST /decide, not System One.
+schema = 2
+v2_only = true
+base_model = "levanto/levanto-sage-2"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.systemone]
+base_url = "https://api.levanto.ai/v1"
+sdk = { aisdk = "@levanto/ai-sdk-provider", opencodeai = "@opencode/ai/providers/typesafe-ai/decisions" }
+
+[cost.text.input]
+price = 0.05
+
+[cost.text.output]
+price = 1
