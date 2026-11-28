@@ -414,6 +414,7 @@ export type ModelFamily =
   | "opengvlab"
   | "ornith"
   | "orpheus"
+  | "oruk-fourier"
   | "osmosis"
   | "oswe"
   | "paddleocr"

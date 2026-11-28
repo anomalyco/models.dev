@@ -777,6 +777,7 @@ export const ModelFamilyValues = [
   "olmocr",
   "omnivoice",
   "orpheus",
+  "oruk-fourier",
   "paddleocr",
   "pangu-flash",
   "pangu-pro",
