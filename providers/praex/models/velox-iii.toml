@@ -1,0 +1,20 @@
+# Sources (accessed 2026-11-28):
+# - Price and limits: GET https://api.praex.ai/v1/pricing (velox-iii: $0.15 input, $1.50 output per million tokens;
+#   context_length 131072, max_output_length 8192; supported_features tools, reasoning)
+# - API reference: https://praex.ai/console/docs (images as image_url content parts; thinking is off unless the
+#   request sends reasoning_effort low, medium or high, "none" keeps it off; the thinking text arrives in
+#   reasoning_content)
+schema = 2
+base_model = "praex/velox-iii"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "medium", "high"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 1.5

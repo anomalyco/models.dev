@@ -1,0 +1,38 @@
+# Sources (accessed 2026-11-28):
+# - Model card: https://huggingface.co/praex/Lucia-III (base zai-org/GLM-5.3, base_model_relation finetune, license
+#   "other" under the GLM-5.3 licence; post-trained for coding and terminal agents; served in the card's example with
+#   --max-model-len 262144). Repo created 2026-10-29 (https://huggingface.co/api/models/praex/Lucia-III).
+# - Output room and capabilities follow its base model, GLM-5.3 (models/zhipuai/glm-5.3.toml), whose chat template it keeps.
+# No provider file: Praex serves Lucia III to its app plans, and API keys cannot call it while its box is not serving
+# (GET https://api.praex.ai/v1/pricing lists lucia-iii with is_ready false).
+schema = 2
+name = "Lucia III"
+description = "Open-weight agent model from Praex, post-trained from GLM-5.3 for coding and terminal agents"
+open_weights = true
+release_date = "2026-10-29"
+license = "other"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/praex/Lucia-III"
+format = "safetensors"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/praex/Lucia-III"
+type = "model_card"
