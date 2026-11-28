@@ -6,6 +6,18 @@ import { tmpdir } from "node:os";
 
 import { generate, generateCatalog, generateV2 } from "../src/index.js";
 
+const PROVIDER_RETENTION_DAYS = 30;
+const MODEL_RETENTION_DAYS = 0;
+const NEGATIVE_RETENTION_DAYS = -1;
+const FRACTIONAL_RETENTION_DAYS = 0.5;
+const PROVIDER_NAME = "Provider";
+const PROVIDERS_DIRECTORY = "providers";
+const PROVIDER_TOML_PATH = "providers/provider/provider.toml";
+const PROVIDER_MODEL_TOML_PATH = "providers/provider/models/model.toml";
+const LAB_MODEL_ID = "lab/model";
+const LAB_MODEL_TOML_PATH = "models/lab/model.toml";
+const MODEL_SCHEMA_VERSION = 2;
+
 async function withFixture<T>(callback: (root: string) => Promise<T>) {
   const root = await mkdtemp(path.join(tmpdir(), "models-dev-test-"));
   try {
@@ -35,6 +47,100 @@ function stable(value: unknown): string {
 }
 
 describe("catalog generation", () => {
+  test("publishes provider and model privacy metadata only in v2", async () => {
+    console.log("[privacy metadata] exercising provider defaults and model overrides");
+
+    await withFixture(async (root) => {
+      await write(
+        root,
+        PROVIDER_TOML_PATH,
+        `${providerToml(PROVIDER_NAME)}
+[privacy]
+data_retention_days = ${PROVIDER_RETENTION_DAYS}
+trains_on_data = false
+`,
+      );
+      await write(
+        root,
+        PROVIDER_MODEL_TOML_PATH,
+        `${providerFieldsToml()}
+[privacy]
+data_retention_days = ${MODEL_RETENTION_DAYS}
+trains_on_data = true
+`,
+      );
+
+      const providersV2 = await generateV2(path.join(root, PROVIDERS_DIRECTORY));
+      const providersV1 = await generate(path.join(root, PROVIDERS_DIRECTORY));
+
+      expect(providersV2.provider?.privacy).toEqual({
+        data_retention_days: PROVIDER_RETENTION_DAYS,
+        trains_on_data: false,
+      });
+      expect(providersV2.provider?.models.model?.privacy).toEqual({
+        data_retention_days: MODEL_RETENTION_DAYS,
+        trains_on_data: true,
+      });
+      expect(providersV1.provider).not.toHaveProperty("privacy");
+      expect(providersV1.provider?.models.model).not.toHaveProperty("privacy");
+
+      console.log(
+        `[privacy metadata] v2 provider=${PROVIDER_RETENTION_DAYS}d model=${MODEL_RETENTION_DAYS}d; v1 unchanged`,
+      );
+    });
+  });
+
+  test("rejects invalid provider and model privacy retention", async () => {
+    await withFixture(async (root) => {
+      await write(
+        root,
+        PROVIDER_TOML_PATH,
+        `${providerToml(PROVIDER_NAME)}
+[privacy]
+data_retention_days = ${NEGATIVE_RETENTION_DAYS}
+`,
+      );
+      await write(root, PROVIDER_MODEL_TOML_PATH, providerFieldsToml());
+
+      await expect(generateV2(path.join(root, PROVIDERS_DIRECTORY))).rejects.toThrow();
+
+      await write(root, PROVIDER_TOML_PATH, providerToml(PROVIDER_NAME));
+      await write(
+        root,
+        PROVIDER_MODEL_TOML_PATH,
+        `${providerFieldsToml()}
+[privacy]
+data_retention_days = ${FRACTIONAL_RETENTION_DAYS}
+`,
+      );
+
+      await expect(generateV2(path.join(root, PROVIDERS_DIRECTORY))).rejects.toThrow();
+    });
+  });
+
+  test("rejects privacy metadata in lab model files", async () => {
+    await withFixture(async (root) => {
+      await write(root, PROVIDER_TOML_PATH, providerToml(PROVIDER_NAME));
+      await write(
+        root,
+        PROVIDER_MODEL_TOML_PATH,
+        `schema = ${MODEL_SCHEMA_VERSION}
+base_model = "${LAB_MODEL_ID}"
+`,
+      );
+      await write(
+        root,
+        LAB_MODEL_TOML_PATH,
+        `${modelMetadataToml()}
+[privacy]
+data_retention_days = ${MODEL_RETENTION_DAYS}
+`,
+      );
+
+      await expect(generateV2(path.join(root, PROVIDERS_DIRECTORY))).rejects.toThrow("privacy");
+    });
+  });
+
   test("rejects providers with no models", async () => {
     await withFixture(async (root) => {
       await write(root, "providers/empty/provider.toml", providerToml("Empty"));
