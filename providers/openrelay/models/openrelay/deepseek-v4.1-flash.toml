@@ -1,0 +1,49 @@
+# Serves deepseek-ai/DeepSeek-V4.1-Flash-1017 on OpenRelay's own MI355X fleet
+# (FP8 weights with FP4 routed experts, the deepseek_v41 reasoning and tool-call
+# parsers).
+# Toggle: chat_template_kwargs.thinking = true|false
+# Effort: reasoning_effort = low|high|max
+# Sources (accessed 2026-11-24):
+# - Catalog row (GET https://api.openrelay.inc/v1/models): status "available",
+#   supported_apis ["chat_completions", "messages"], modalities
+#   ["text", "image"] -> ["text"]. The catalog publishes the generic `image`
+#   value; the image formats inherited from the lab entry are the ones DeepSeek
+#   documents for this checkpoint, so they are left as they are.
+# - Window: "384K tokens (393,216) on this endpoint, prompt and completion
+#   combined" (https://openrelay.inc/models/deepseek-v4.1-flash); the checkpoint
+#   itself supports up to 1M. Chat Completions and Messages, per
+#   https://docs.openrelay.inc/docs/inference/models.
+# - Reasoning: the lane's own launch checks ran reasoning_effort=low and
+#   chat_template_kwargs.thinking=false against this deployment; the three
+#   distinct levels (low, high, max) are the ones DeepSeek documents for this
+#   checkpoint (https://api-docs.deepseek.com/guides/thinking_mode). Reasoning
+#   comes back in reasoning_content on Chat Completions and as thinking blocks
+#   on Messages.
+# - Prompt caching is automatic: the engines' prefix cache applies without the
+#   request asking for it, and the catalog prices cached input. Cache writes are
+#   reported on the Messages shape only.
+# - Prices: GET https://api.openrelay.inc/v1/public/pricing, per 1M tokens:
+#   input 0.035, cached input 0.01, cache write 0.035, output 0.33.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 393_216
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.035
+cache = { read = 0.01, write = 0.035 }
+
+[cost.text.output]
+price = 0.33

@@ -1,0 +1,19 @@
+# OpenRelay serves open-weight models on its own GPU fleet, behind an
+# OpenAI-compatible API (Chat Completions, Embeddings) plus an
+# Anthropic-compatible Messages API and a typed decisions API.
+# Sources (accessed 2026-11-24):
+# - API reference and base URL: https://docs.openrelay.inc/docs/inference
+# - Model ids, per-model API list and modalities: https://docs.openrelay.inc/docs/inference/models,
+#   live at GET https://api.openrelay.inc/v1/models (model discovery runs on
+#   api.openrelay.inc; inference runs on inference.openrelay.inc).
+# - List prices: GET https://api.openrelay.inc/v1/public/pricing (public, no key)
+#   and https://openrelay.inc/inference-pricing
+# Only the catalog's `status: "available"` models are listed here. The catalog
+# also carries `request_access` entries, which answer 403 model_access_required
+# until a model is enabled for the org.
+name = "OpenRelay"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["OPENRELAY_API_KEY"]
+api = "https://inference.openrelay.inc/v1"
+doc = "https://docs.openrelay.inc/docs/inference"

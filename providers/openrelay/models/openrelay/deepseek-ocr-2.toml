@@ -1,0 +1,18 @@
+# Catalog row (GET https://api.openrelay.inc/v1/models, 2026-11-24): status
+# "available", supported_apis ["chat_completions"], modalities
+# ["text", "image"] -> ["text"], the same generic image value the lab entry
+# carries, so no modality override.
+# Price: GET https://api.openrelay.inc/v1/public/pricing, 0.039 in and 0.039 out
+# per 1M tokens.
+# Limit: 8K context (https://docs.openrelay.inc/docs/inference/models), the same
+# window as the lab entry.
+# The catalog prices no cached input for this model, so prompt caching is not
+# published for it.
+schema = 2
+base_model = "deepseek/deepseek-ocr-2"
+
+[cost.text.input]
+price = 0.039
+
+[cost.text.output]
+price = 0.039

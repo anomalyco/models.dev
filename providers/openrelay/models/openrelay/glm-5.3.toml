@@ -1,0 +1,37 @@
+# Serves Z.ai's GLM-5.3 on OpenRelay's own fleet (SGLang, reasoning and tool-call
+# parsers on).
+# Effort: reasoning_effort = low|high|max. Thinking cannot be turned off on
+# GLM-5.3, so no toggle is published.
+# Sources (accessed 2026-11-24):
+# - Catalog row (GET https://api.openrelay.inc/v1/models): status "available",
+#   supported_apis ["chat_completions"], modalities ["text"] -> ["text"], so the
+#   text-only input of the lab entry is inherited.
+# - Window: "256K tokens (262,144) on this endpoint, prompt and completion
+#   combined" (https://openrelay.inc/models/glm-5.3). The inherited 131,072-token
+#   output cap is unchanged.
+# - Effort vocabulary: the three levels Z.ai documents for these weights
+#   (https://docs.z.ai/guides/llm/glm-5.3), which other hosts of the same
+#   checkpoint publish as well. Reasoning comes back in reasoning_content.
+# - Prompt caching is automatic: the engines' prefix cache applies without the
+#   request asking for it, and the catalog prices cached input.
+# - Prices: GET https://api.openrelay.inc/v1/public/pricing, per 1M tokens:
+#   input 0.079, cached input 0.062, output 3.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.079
+cache = { read = 0.062 }
+
+[cost.text.output]
+price = 3

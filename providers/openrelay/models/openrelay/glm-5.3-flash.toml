@@ -1,0 +1,51 @@
+# Serves Z.ai's GLM-5.3-Flash on OpenRelay's own fleet, in MXFP4 weights (vLLM
+# with the glm45 reasoning parser).
+# Effort: reasoning_effort = low|high|max. Thinking cannot be turned off on the
+# GLM-5.3 series, so no toggle is published.
+# Sources (accessed 2026-11-24):
+# - Catalog row (GET https://api.openrelay.inc/v1/models): status "available",
+#   supported_apis ["chat_completions", "messages"], modalities
+#   ["text", "image"] -> ["text"]. The catalog publishes the generic `image`
+#   value; the lane takes no video or PDF input, so the lab entry's video and
+#   application/pdf values are dropped and its two image formats, the ones Z.ai
+#   documents for these weights, are kept.
+# - Window: "256K tokens (262,144), prompt and completion combined"
+#   (https://openrelay.inc/models/glm-5.3-flash). The inherited 131,072-token
+#   output cap is unchanged.
+# - Effort vocabulary: the three levels Z.ai documents for these weights
+#   (https://docs.z.ai/guides/llm/glm-5.3), and the lane's own launch checks ran
+#   reasoning_effort=low against this deployment. Reasoning comes back in
+#   reasoning_content on Chat Completions and as thinking blocks on Messages.
+# - Prompt caching is automatic: the engines' prefix cache applies without the
+#   request asking for it, and the catalog prices cached input.
+# - Prices: GET https://api.openrelay.inc/v1/public/pricing, per 1M tokens:
+#   input 0.045, cached input 0.009, output 0.18. OpenRelay also sells this model
+#   through a separate async API at a discount (the catalog row carries
+#   asyncWindows 1h and 24h); that is another API, not a service tier of this
+#   one, so only the online rates are published here.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.045
+cache = { read = 0.009 }
+
+[cost.text.output]
+price = 0.18

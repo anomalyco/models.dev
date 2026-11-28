@@ -446,6 +446,7 @@ export type ModelFamily =
   | "qwen-coder"
   | "qwen-coder-flash"
   | "qwen-coder-plus"
+  | "qwen-decision"
   | "qwen-embedding"
   | "qwen-embedding-flash"
   | "qwen-flash"
