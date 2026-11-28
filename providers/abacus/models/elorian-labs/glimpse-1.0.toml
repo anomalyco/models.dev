@@ -1,0 +1,30 @@
+# Source: https://routellm.abacus.ai/v1/models
+# RouteLLM reasoning: /v1/models exposes only `thinking`; the provider API has no
+# toggle, effort or budget request field (provider.toml audit, 2026-06-25).
+# RouteLLM input_modalities: ["text","image"]
+# RouteLLM output_modalities: ["text"]
+# RouteLLM context_length: 262144
+# RouteLLM max_completion_tokens: 131072
+# RouteLLM input_token_rate: 0.0000006
+# RouteLLM output_token_rate: 0.000003
+# RouteLLM cached_input_token_rate: 0.00000006
+# RouteLLM thinking: None
+schema = 2
+base_model = "elorian-labs/glimpse-1.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 3

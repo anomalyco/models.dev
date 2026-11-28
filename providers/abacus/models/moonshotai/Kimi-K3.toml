@@ -6,12 +6,18 @@
 # RouteLLM input_token_rate: 0.000003
 # RouteLLM output_token_rate: 0.000015
 # RouteLLM cached_input_token_rate: 0.0000003
+# Output limit: the lab documents a 131,072 default and 1,048,576 maximum; RouteLLM's
+# /v1/models advertises max_completion_tokens 131,072 (live 2026-11-15), treated as the
+# host's request ceiling. No ABACUS_API_KEY was available to probe a larger request.
 schema = 2
 base_model = "moonshotai/kimi-k3"
 
 [capabilities]
 reasoning = { supported = true }
 structured_output = true
+
+[limit]
+output = 131_072
 
 [cost.text.input]
 price = 3
