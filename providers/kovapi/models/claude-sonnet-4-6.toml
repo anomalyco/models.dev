@@ -1,0 +1,39 @@
+# KovAPI docs for this model: https://docs.kovapi.com/claude-sonnet-4-6 (read 2026-11-21).
+# Prices, USD per 1M tokens: input 1.50, output 7.50, cache hit 0.15 (https://kovapi.com/llms.txt,
+#   https://kovapi.com/api/pricing, 2026-11-21); cache write 1.875 from the price table on the docs page.
+# API: KovAPI serves this model on the OpenAI-compatible API and on an Anthropic Messages endpoint
+#   (docs page: "Served on the OpenAI-compatible API and the native Anthropic API"); Messages is at
+#   https://kovapi.com/anthropic/v1/messages. Only Messages is listed: thinking is available there and not on
+#   KovAPI's Chat Completions endpoint (docs page, "Thinking"), and top-level capabilities must hold on every
+#   listed API.
+# Reasoning: the controls of providers/anthropic. Checked on KovAPI's Messages endpoint on 2026-11-25: thinking
+#   with budget_tokens = 1024 returns a thinking block, and output_config.effort = "low" is accepted and
+#   shortens it.
+# Cache: explicit cache_control breakpoints. Checked 2026-11-25: the first call wrote 6,310 tokens
+#   (ephemeral_5m), the second read them. Writes bill at the cache-write rate below.
+# Limit: KovAPI documents a ~200K-token context window for this model (docs page, "At a glance").
+# Input: text and images (docs page, "At a glance").
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+cache = { explicit = true }
+
+[limit]
+context = 200_000
+
+[api.messages]
+base_url = "https://kovapi.com/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15, write = 1.875 }
+
+[cost.text.output]
+price = 7.5

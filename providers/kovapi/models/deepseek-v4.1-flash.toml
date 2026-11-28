@@ -1,0 +1,30 @@
+# KovAPI docs for this model: https://docs.kovapi.com/deepseek-v4.1-flash (read 2026-11-21).
+# Prices, USD per 1M tokens, from 2026-11-22 04:00 UTC: input 0.11, output 0.44, cache hit 0.0022
+#   (https://kovapi.com/announcements#2026-11-20-deepseek-v41-flash-price-1122). One rate at all hours.
+# Toggle: thinking.type = enabled|disabled; thinking is on by default and comes back in
+#   reasoning_content (docs page, "Thinking").
+# Effort: reasoning_effort = low|high|max, the same levels as providers/deepseek. Checked through KovAPI's
+#   Chat Completions on 2026-11-25: one prompt used 87 / 143 / 174 reasoning tokens at low / high / max.
+# Max tokens: the docs page documents max_tokens as the output cap, the same field as providers/deepseek.
+# Input: text only on KovAPI (docs page, "At a glance").
+# Cache: automatic prefix caching, no write charge (docs page, "Prompt caching").
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.0022 }
+
+[cost.text.output]
+price = 0.44

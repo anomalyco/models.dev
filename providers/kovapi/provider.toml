@@ -1,0 +1,11 @@
+# KovAPI is a pay-as-you-go, OpenAI-compatible multi-model gateway: it serves models made by
+# Anthropic, OpenAI, Google, xAI and others behind one API key, and does not make models of its own.
+# Base URL https://kovapi.com/v1, auth "Authorization: Bearer <key>": https://docs.kovapi.com/
+# Prices in each model file: USD per 1M tokens from https://kovapi.com/llms.txt and
+#   https://kovapi.com/api/pricing (read 2026-11-21); per-model parameters from https://docs.kovapi.com/<model-id>.
+name = "KovAPI"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["KOVAPI_API_KEY"]
+api = "https://kovapi.com/v1"
+doc = "https://docs.kovapi.com/"

@@ -1,0 +1,27 @@
+# KovAPI docs for this model: https://docs.kovapi.com/gpt-6-astra (read 2026-11-21).
+# Prices, USD per 1M tokens: input 3.00, output 15.00, cache hit 0.30 (https://kovapi.com/llms.txt,
+#   https://kovapi.com/api/pricing, 2026-11-21). The price list has no long-context tier.
+# Effort: reasoning_effort = low|medium|high|xhigh|max on Chat Completions, medium when unset
+#   (docs page, "Thinking"); the same levels as providers/openai for this model.
+# Input: text and images on Chat Completions (docs page, "At a glance"); PDF input is not offered.
+# Tools: the docs page documents function tools (OpenAI tools format) only. Custom (freeform) tools are
+#   not documented on KovAPI, so freeform is left out.
+# Cache: automatic prefix caching, no write charge; hits are reported in
+#   usage.prompt_tokens_details.cached_tokens (docs page, "Prompt caching").
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

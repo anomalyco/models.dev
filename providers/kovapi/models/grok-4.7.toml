@@ -1,0 +1,24 @@
+# KovAPI docs for this model: https://docs.kovapi.com/grok-4.7 (read 2026-11-21).
+# Prices, USD per 1M tokens: input 0.30, output 0.90, cache hit 0.075 (https://kovapi.com/llms.txt,
+#   https://kovapi.com/api/pricing, 2026-11-21). The price list has no long-context tier.
+# Reasoning: always on. On KovAPI's Chat Completions endpoint reasoning_effort and thinking have no
+#   effect (docs page, "Thinking"), so no caller control is listed.
+# Input: text and images on Chat Completions (docs page, "At a glance"); PDF input is not offered.
+# Cache: automatic prefix caching, no write charge (docs page, "Prompt caching").
+schema = 2
+base_model = "xai/grok-4.7"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 0.9
