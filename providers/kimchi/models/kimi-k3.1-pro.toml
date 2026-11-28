@@ -1,0 +1,27 @@
+# Sync: https://api.cast.ai/ai-optimizer/v1beta/model-prices; prices are USD per million tokens.
+# Feed owns roster, cap bounds, tool/reasoning support and image input kinds.
+# Effort: top-level reasoning_effort=low|high|max; side channel: reasoning_content.
+# Model-specific controls verified 2026-11-25.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

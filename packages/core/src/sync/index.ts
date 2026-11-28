@@ -52,6 +52,7 @@ import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
 import { keln } from "./providers/keln.js";
 import { kenari } from "./providers/kenari.js";
+import { kimchi } from "./providers/kimchi.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
@@ -157,6 +158,8 @@ export interface SyncProvider<SourceModel> {
       v2?(id: string): Record<string, unknown> | undefined;
       /** The existing file's leading comment block. */
       header?(id: string): string | undefined;
+      /** Catalog root for providers that resolve raw lab TOMLs. */
+      catalogRoot?: string;
     },
   ): {
     id: string;
@@ -244,6 +247,7 @@ export const providers: {
   inceptron: SyncProvider<any>;
   keln: SyncProvider<any>;
   kenari: SyncProvider<any>;
+  kimchi: SyncProvider<any>;
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "llmgateway-providers": SyncProvider<any>;
@@ -306,6 +310,7 @@ export const providers: {
   inceptron,
   keln,
   kenari,
+  kimchi,
   kilo,
   llmgateway,
   "llmgateway-providers": llmgatewayProviders,
@@ -349,6 +354,7 @@ export const groups = {
     "inceptron",
     "keln",
     "kenari",
+    "kimchi",
     "kilo",
     "llmgateway",
     "llmgateway-providers",
@@ -371,6 +377,8 @@ interface SyncOptions {
   dryRun?: boolean;
   openIssues?: boolean;
   newOnly?: boolean;
+  /** Catalog root used to resolve raw lab TOMLs (default: current directory). */
+  dir?: string;
 }
 
 export async function syncProviderByID(id: ProviderID, options: SyncOptions = {}) {
@@ -412,6 +420,7 @@ export async function syncProvider<SourceModel>(
     let translated: ReturnType<typeof provider.translateModel>;
     try {
       translated = provider.translateModel(sourceModel, {
+        catalogRoot: options.dir ?? ".",
         existing(id) {
           return existing.get(`${id}.toml`)?.toml;
         },
