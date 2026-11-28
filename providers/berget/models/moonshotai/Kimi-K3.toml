@@ -5,11 +5,13 @@
 # Reasoning is returned in message.reasoning_content, the answer in
 # message.content.
 # https://api.berget.ai/openapi.json
+# Deprecated: no longer listed by https://api.berget.ai/v1/models (checked 2026-11-17).
 # Prices: https://api.berget.ai/v1/models lists EUR per 1M tokens (public, checked 2026-10-21);
 # EUR 3 input / 0.90 cached input / 15 output; they were stored as unconverted EUR values.
 # converted to USD at the ECB reference rate of 1.1215 USD/EUR (2026-10-20).
 schema = 2
 base_model = "moonshotai/kimi-k3"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]

@@ -1,0 +1,39 @@
+# Kimi K3.1 Pro always thinks and cannot disable it; reasoning_effort only controls
+# depth. K3.1 Pro's native levels are low/high/max (default max). The Berget API also
+# accepts the other OpenAI effort levels for compatibility and clamps them onto
+# these three, but only the three distinct levels are advertised here.
+# Reasoning is returned in message.reasoning_content, the answer in
+# message.content.
+# https://api.berget.ai/openapi.json
+# Served limits and modalities: https://api.berget.ai/v1/openrouter/models
+# (checked 2026-11-25) reports context_length = 327680,
+# max_output_length = 32768, input_modalities = ["text", "image"], and
+# output_modalities = ["text"] for moonshotai/Kimi-K3.1-Pro. The image MIME
+# formats come from the lab model; Berget advertises no video input.
+# Prices: https://api.berget.ai/v1/models lists EUR per 1M tokens (public, checked 2026-11-17);
+# EUR 3 input / 0.90 cached input / 10 output,
+# converted to USD at the ECB reference rate of 1.0989 USD/EUR (2026-11-17).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 327_680
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 3.2967
+cache = { read = 0.98901 }
+
+[cost.text.output]
+price = 10.989
