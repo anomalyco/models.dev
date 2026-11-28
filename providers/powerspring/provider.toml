@@ -5,9 +5,11 @@ opencodeai = "@opencode/ai/providers/openai-compatible"
 # POST /v1/messages with the same capabilities; Chat Completions is the default.
 # Chat Completions: reasoning_effort = none|minimal|low|medium|high|xhigh (other
 # values return 400). "none" turns thinking off; the other values are passed to
-# the server that runs the request. Per-model controls are in each model's header.
-# Messages: thinking = {"type": "disabled"} turns thinking off; key in x-api-key
-# or Authorization: Bearer. Responses is stateless: previous_response_id and
+# the server that runs the request. Since 2026-11-15 a model returns 400 for a
+# level it can't honour: gpt-oss for minimal and xhigh, glm-5.3-flash for none.
+# Per-model controls are in each model's header.
+# Messages: thinking = {"type": "disabled"} turns thinking off, except on
+# glm-5.3-flash (400); key in x-api-key or Authorization: Bearer. Responses is stateless: previous_response_id and
 # store: true return 400, so it is not listed as a model API.
 # https://powerspring.eu/docs/chat-completions
 # https://powerspring.eu/docs/messages
