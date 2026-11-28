@@ -3,11 +3,8 @@
 # effort_updates = false: no per-turn effort control
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 schema = 2
-name = "Qwen3 VL 8B Instruct"
+base_model = "alibaba/qwen3-vl-8b-instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen-vl"
-open_weights = true
-release_date = "2025-10-14"
 
 [modalities]
 input = ["image/png", "image/jpeg", "image/webp", "image/gif", "text"]
@@ -17,11 +14,6 @@ output = ["text"]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
-
-[limit]
-context = 262_144
-output = 235_929
 
 [api.chat-completions]
 
