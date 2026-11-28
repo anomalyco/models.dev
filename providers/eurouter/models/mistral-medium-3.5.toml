@@ -1,0 +1,38 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "mistral-medium-3.5".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id mistralai/Mistral-Medium-3.5-128B is the Hugging Face weights link of mistral/mistral-medium-3-5.
+# Modalities: the catalog architecture lists input text, image and output text.
+# Limit: context_length = 180000, the catalog's model-level window; top_provider.max_completion_tokens = 16384.
+# Effort: reasoning_effort = none|high: the levels of models.dev hosts of mistral/mistral-medium-3-5 (the most common setting, 4 of 8) that the catalog lists in reasoning.supported_efforts.
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/mistral/mistral-medium-3.5/endpoints lists them).
+schema = 2
+base_model = "mistral/mistral-medium-3-5"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[limit]
+context = 180_000
+output = 16_384
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.64625
+
+[cost.text.output]
+price = 8.23125

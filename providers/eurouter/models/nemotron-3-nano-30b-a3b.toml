@@ -1,0 +1,31 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "nemotron-3-nano-30b-a3b".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (nvidia/nemotron-3-nano-30b-a3b).
+# Toggle: reasoning_effort = none turns reasoning off. The catalog lists reasoning.supported_efforts [none], which shares no graded level with models.dev hosts of nvidia/nemotron-3-nano-30b-a3b (the most common setting, 7 of 14).
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as on models.dev hosts of nvidia/nemotron-3-nano-30b-a3b (the most common setting, 7 of 14).
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/nvidia/nemotron-3-nano-30b-a3b/endpoints lists them).
+schema = 2
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.0975
+cache = { read = 0.54875 }
+
+[cost.text.output]
+price = 3.2925

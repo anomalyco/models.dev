@@ -1,0 +1,10 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "cohere-rerank-4.0-fast".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: from the generator's alias list (models.dev names this closed model differently).
+# Cost: none written. The catalog bills pricing.request = 0.0022 USD per request, which the models.dev cost schema has no unit for.
+schema = 2
+v2_only = true
+base_model = "cohere/rerank-v4.0-fast"
+
+[api.rerank]
+sdk = { aisdk = "none", opencodeai = "none" }

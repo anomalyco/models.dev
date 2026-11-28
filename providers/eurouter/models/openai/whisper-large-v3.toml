@@ -1,0 +1,19 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "openai/whisper-large-v3".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (openai/whisper-large-v3).
+# name, description: the catalog name and description, because several EUrouter models share this lab entry.
+# Cost: catalog pricing.audio per second, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/openai/whisper-large-v3/endpoints lists them).
+schema = 2
+v2_only = true
+base_model = "openai/whisper-large-v3"
+name = "Whisper Large v3"
+description = "OpenAI Whisper Large v3 is an open-weight multilingual encoder-decoder model for automatic speech recognition and audio transcription."
+
+[api.transcriptions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/protocols/openai-transcription" }
+
+[cost.audio.input]
+unit = "second"
+price = 0.0000448109

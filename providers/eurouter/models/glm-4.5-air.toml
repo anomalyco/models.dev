@@ -1,0 +1,35 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "glm-4.5-air".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id zai-org/GLM-4.5-Air is the Hugging Face weights link of zhipuai/glm-4.5-air.
+# Limit: context_length = 128000, the catalog's model-level window.
+# Reasoning: not offered on EUrouter. The catalog supported_parameters does not list reasoning_effort, and the gateway rejects a request that asks this model to reason.
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as on providers/zhipuai/models/glm-4.5-air.toml (the lab's own API).
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/zhipu/glm-4.5-air/endpoints lists them).
+schema = 2
+base_model = "zhipuai/glm-4.5-air"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 128_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.021 }
+
+[cost.text.output]
+price = 0.86

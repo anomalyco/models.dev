@@ -1,0 +1,36 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "kimi-k3.1-pro".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id moonshotai/Kimi-K3.1-Pro is the Hugging Face weights link of moonshotai/kimi-k3.1-pro.
+# Modalities: the catalog architecture lists input text, image and output text.
+# Effort: reasoning_effort = low|high|max: the levels of providers/moonshotai/models/kimi-k3.1-pro-highspeed.toml (the lab's own API) that the catalog lists in reasoning.supported_efforts.
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as on providers/moonshotai/models/kimi-k3.1-pro-highspeed.toml (the lab's own API).
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/moonshot/kimi-k3.1-pro/endpoints lists them).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.964525
+cache = { read = 0.19755 }
+
+[cost.text.output]
+price = 9.822625

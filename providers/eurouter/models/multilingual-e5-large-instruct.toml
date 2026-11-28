@@ -1,0 +1,18 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "multilingual-e5-large-instruct".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (intfloat/multilingual-e5-large-instruct).
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/intfloat/multilingual-e5-large-instruct/endpoints lists them).
+schema = 2
+v2_only = true
+base_model = "intfloat/multilingual-e5-large-instruct"
+
+[api.embeddings]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/embeddings" }
+
+[cost.text.input]
+price = 0.032925
+
+[cost.text.output]
+price = 0.02195

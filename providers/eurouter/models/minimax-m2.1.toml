@@ -1,0 +1,31 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "minimax-m2.1".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (minimax/minimax-m2.1).
+# Measured (EUrouter live measurement, 2026-11-26): AWS Bedrock, its only provider, rejected 6 of 6 image requests, so input is text only.
+# Limit: context_length = 196608, the catalog's model-level window.
+# Reasoning: always on. The catalog has reasoning.mandatory = true and supported_parameters does not list reasoning_effort, so the gateway accepts no reasoning setting.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/minimax/minimax-m2.1/endpoints lists them).
+schema = 2
+base_model = "minimax/MiniMax-M2.1"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 196_608
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.36
+
+[cost.text.output]
+price = 1.44

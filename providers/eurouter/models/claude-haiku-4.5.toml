@@ -1,0 +1,31 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "claude-haiku-4.5".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: from the generator's alias list (models.dev names this closed model differently).
+# Effort: reasoning_effort = low|medium|high: the levels the catalog lists in reasoning.supported_efforts. providers/anthropic/models/claude-haiku-4-5.toml (the lab's own API) sets a thinking budget instead of a level.
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cache: the catalog lists pricing.input_cache_read; explicit, as on providers/anthropic/models/claude-haiku-4-5.toml (the lab's own API).
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/anthropic/claude-haiku-4.5/endpoints lists them).
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { explicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.11, write = 1.375 }
+
+[cost.text.output]
+price = 5.5

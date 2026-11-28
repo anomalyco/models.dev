@@ -1,0 +1,14 @@
+# Sources: the EUrouter API reference, https://www.eurouter.ai/docs, and the public catalog GET https://api.eurouter.ai/v1/models.
+# OpenAI-compatible POST /v1/chat/completions with bearer-key auth. The same model ids are served on /v1/responses (OpenAI
+#   Responses) and /v1/messages (Anthropic Messages); other model types on /v1/embeddings, /v1/rerank, /v1/audio/transcriptions,
+#   /v1/audio/speech, /v1/images/generations and /v1/systemone (System One decisions).
+# Reasoning: reasoning_effort selects the effort, and reasoning_effort = none turns reasoning off on a model that lists it.
+# Reasoning is returned in message.reasoning on Chat Completions. reasoning_field = "reasoning" is valid in v2, but v1's
+#   interleaved.field only allows reasoning_content|reasoning_details, so no reasoning_field is set.
+# Every model file is generated from the catalog: a fix goes into the catalog or the generator, not into a file.
+name = "EUrouter"
+env = ["EUROUTER_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.eurouter.ai/v1"
+doc = "https://www.eurouter.ai/docs"

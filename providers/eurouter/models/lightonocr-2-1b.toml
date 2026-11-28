@@ -1,0 +1,31 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "lightonocr-2-1b".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id lightonai/LightOnOCR-2-1B is the Hugging Face weights link of lightonai/lightonocr-2-1b.
+# Modalities: the catalog architecture lists input image and output text.
+# Limit: output = context: neither the catalog (top_provider.max_completion_tokens) nor the lab entry has an output limit, and input and output share the window.
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/lighton/lightonocr-2-1b/endpoints lists them).
+schema = 2
+base_model = "lightonai/lightonocr-2-1b"
+
+[modalities]
+input = ["image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[limit]
+output = 16_384
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.164625
+
+[cost.text.output]
+price = 0.32925

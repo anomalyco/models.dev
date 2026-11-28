@@ -1,0 +1,35 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "google/gemma-4-26b-a4b-it".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (google/gemma-4-26b-a4b-it).
+# Limit: context_length = 256000, the catalog's model-level window.
+# Reasoning: no caller control written: the catalog lists reasoning.supported_efforts [] and mandatory = false, compared with providers/google/models/gemma-4-26b-a4b-it.toml (the lab's own API).
+# structured_output: the catalog supported_parameters lists structured_outputs.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as no models.dev host of this model lists a cache kind.
+# Cost: catalog pricing per token, times 1,000,000, in USD.
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/google/gemma-4-26b-a4b-it/endpoints lists them).
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 256_000
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.067
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.29

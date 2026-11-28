@@ -1,0 +1,38 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "nemotron-3-nano-omni".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: the catalog hugging_face_id nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16 is the Hugging Face weights link of nvidia/nemotron-3-nano-omni-30b-a3b-reasoning.
+# Modalities: the catalog architecture lists input text and output text.
+# Limit: context_length = 65536, the catalog's model-level window.
+# Toggle: reasoning_effort = none turns reasoning off. The catalog lists reasoning.supported_efforts [none], which shares no graded level with providers/nvidia/models/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning.toml (the lab's own API).
+# Cache: the catalog lists pricing.input_cache_read; implicit, as no models.dev host of this model lists a cache kind.
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/nvidia/nemotron-3-nano-omni/endpoints lists them).
+schema = 2
+base_model = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[limit]
+context = 65_536
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.1756
+cache = { read = 0.054875 }
+
+[cost.text.output]
+price = 1.152375

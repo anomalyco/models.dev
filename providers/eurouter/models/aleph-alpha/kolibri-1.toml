@@ -1,0 +1,34 @@
+# Generated from EUrouter's public catalog, GET https://api.eurouter.ai/v1/models, model "aleph-alpha/kolibri-1".
+# Fix a wrong value in the catalog or in the generator (apps/core/scripts/modelsdev-generate.ts in the EUrouter repository), never in this file.
+# base_model: same author and model id as the catalog (aleph-alpha/kolibri-1).
+# Limit: context_length = 262144, the catalog's model-level window; top_provider.max_completion_tokens = 81920.
+# Effort: reasoning_effort = none|low|medium|high: the levels of models.dev hosts of aleph-alpha/kolibri-1 (the most common setting, 5 of 5) that the catalog lists in reasoning.supported_efforts.
+# Cache: the catalog lists pricing.input_cache_read; implicit, as no models.dev host of this model lists a cache kind.
+# Cost: catalog pricing per token, times 1,000,000, in EUR, converted at 1 EUR = 1.0975 USD (ECB euro reference rate of 2026-11-26, https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml).
+#   The model price is its cheapest provider's; a request routed to another provider is billed at that provider's price
+#   (GET https://api.eurouter.ai/api/v1/models/aleph-alpha/kolibri-1/endpoints lists them).
+schema = 2
+base_model = "aleph-alpha/kolibri-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+output = 81_920
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.164625
+cache = { read = 0.0823125 }
+
+[cost.text.output]
+price = 0.603625
