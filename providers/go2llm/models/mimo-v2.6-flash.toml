@@ -1,0 +1,20 @@
+# Prices: https://go2llm.tech/api/pricing (catalog version 54, generated 2026-11-27T03:24:20.081Z), USD per 1M tokens.
+# Input modalities follow https://go2llm.tech/errors/400-unsupported-content-type: images only where modalities.input in
+# GET https://api.go2llm.tech/v1/models lists image; PDF, file, audio and video blocks are rejected for every model.
+# Reasoning: go2llm documents no reasoning request controls, so none are declared.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.042
+cache = { read = 0.00084, write = 0.0525 }
+
+[cost.text.output]
+price = 0.084
