@@ -6,6 +6,8 @@
 # Boundless hosts the weights and maps each value onto the model's own levels in the gateway: low, medium and high are passed to the chat template as they are.
 # The model always reasons, so `none` returns a 400 `thinking_off_unsupported` and is not listed.
 # Same serving configuration as thinkingmachines/inkling-2-mini on this host, where this was checked live.
+# Input: text only on this host. The catalog row's `supports` is ["text", "reasoning", "tool-use", "abliterated"] (2026-11-28), without the
+# `image input` and `vision` labels the catalog gives the host's image models (z-ai/glm-5.3-flash, xiaomi/mimo-v2.6-flash), so the lab's image input is not carried over.
 schema = 2
 base_model = "thinkingmachines/inkling-2-mini"
 name = "Inkling 2 Mini Abliterated"
