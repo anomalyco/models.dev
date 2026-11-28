@@ -10,27 +10,6 @@ import {
 } from "./mcp-shared.js";
 
 const PAGE_SIZE = 100;
-const MCP_LOGO =
-  "data:image/svg+xml," +
-  encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M8.2 11.2 16 7.2M8.2 12.8 16 16.8M8.2 12h6"/></svg>`,
-  );
-
-export interface McpSearchHit {
-  item: {
-    type: "mcp";
-    title: string;
-    id: string;
-    href: string;
-    logo: string;
-    tokens: string[];
-    description?: string;
-    updated?: string;
-    version?: string;
-    transport?: string;
-  };
-  score: number;
-}
 
 let catalog: McpCatalog | undefined;
 let catalogError: string | undefined;
@@ -39,10 +18,6 @@ const listeners = new Set<() => void>();
 
 type SortKey = "name" | "version" | "updated";
 type SortDirection = "asc" | "desc";
-
-export function mcpCatalogReady() {
-  return catalog !== undefined || catalogError !== undefined;
-}
 
 export function onMcpCatalog(listener: () => void) {
   listeners.add(listener);
@@ -69,40 +44,6 @@ export function loadMcpCatalog() {
       for (const listener of listeners) listener();
     });
   return loading;
-}
-
-export function searchMcp(query: string): McpSearchHit[] {
-  const terms = normalize(query).split(/\s+/).filter(Boolean);
-  if (terms.length === 0) return [];
-  if (!catalog) {
-    void loadMcpCatalog();
-    return [];
-  }
-
-  const hits: McpSearchHit[] = [];
-  for (const server of catalog.servers) {
-    const score = scoreServer(server, terms);
-    if (score <= 0) continue;
-    const title = mcpDisplayName(server);
-    hits.push({
-      score,
-      item: {
-        type: "mcp",
-        title,
-        id: server.name,
-        href: mcpServerHref(server.name),
-        logo: MCP_LOGO,
-        description: server.description,
-        updated: server.updatedAt,
-        version: server.version,
-        transport: mcpTransports(server).join(", "),
-        tokens: [title, server.name, server.description],
-      },
-    });
-  }
-
-  hits.sort((a, b) => b.score - a.score || a.item.title.localeCompare(b.item.title));
-  return hits.slice(0, 40);
 }
 
 export function installMcpBrowser() {
@@ -145,12 +86,9 @@ function installDirectory(root: HTMLElement) {
 
     if (synced) {
       const when = catalog.syncedAt?.slice(0, 10);
-      const iranrouter = catalog.iranrouter?.count
-        ? ` and ${formatNumber(catalog.iranrouter.count)} from the IranRouter marketplace`
-        : "";
       synced.textContent = when
-        ? `Latest versions from the official MCP registry${iranrouter}, synced ${when}.`
-        : `Latest versions from the official MCP registry${iranrouter}.`;
+        ? `Snapshot of the official MCP registry (${when}). Refresh with bun run mcp:sync.`
+        : "Snapshot of the official MCP registry. Refresh with bun run mcp:sync.";
     }
 
     const query = normalize(filter.value);
@@ -253,17 +191,9 @@ function serverRow(server: McpServerRecord) {
   const name = document.createElement("th");
   name.scope = "row";
   const link = document.createElement("a");
-  link.className = "primary-link provider-link";
+  link.className = "primary-link";
   link.href = mcpServerHref(server.name);
-  const icon = safeHttpUrl(server.icon);
-  if (icon) {
-    const image = document.createElement("img");
-    image.className = "mcp-icon";
-    image.alt = "";
-    image.src = icon;
-    link.append(image);
-  }
-  link.append(mcpDisplayName(server));
+  link.textContent = mcpDisplayName(server);
   name.append(link);
   const id = document.createElement("span");
   id.className = "subtle mono";
@@ -299,20 +229,9 @@ function detailView(server: McpServerRecord) {
   crumbs.append(back);
   header.append(crumbs);
 
-  const titleRow = document.createElement("div");
-  titleRow.className = "provider-link";
-  const icon = safeHttpUrl(server.icon);
-  if (icon) {
-    const image = document.createElement("img");
-    image.className = "mcp-icon";
-    image.alt = "";
-    image.src = icon;
-    titleRow.append(image);
-  }
   const title = document.createElement("h2");
   title.textContent = mcpDisplayName(server);
-  titleRow.append(title);
-  header.append(titleRow);
+  header.append(title);
 
   if (server.description) {
     const description = document.createElement("p");
@@ -341,12 +260,8 @@ function detailView(server: McpServerRecord) {
   appendFact(facts, "Updated", server.updatedAt?.slice(0, 10) || "—");
   appendLinkFact(facts, "Website", safeHttpUrl(server.website), "Website");
   appendLinkFact(facts, "Repository", safeHttpUrl(server.repository), "Repository");
-  if (server.listing) {
-    appendLinkFact(facts, "Marketplace", safeHttpUrl(server.listing), "Marketplace entry");
-  } else {
-    const registryUrl = `https://registry.modelcontextprotocol.io/v0.1/servers/${encodeURIComponent(server.name)}/versions/${encodeURIComponent(server.version || "latest")}`;
-    appendLinkFact(facts, "Registry", registryUrl, "Registry entry");
-  }
+  const registryUrl = `https://registry.modelcontextprotocol.io/v0.1/servers/${encodeURIComponent(server.name)}/versions/${encodeURIComponent(server.version || "latest")}`;
+  appendLinkFact(facts, "Registry", registryUrl, "Registry entry");
   fragment.append(facts);
 
   const packages = server.packages ?? [];
@@ -363,18 +278,6 @@ function detailView(server: McpServerRecord) {
           item.runtimeHint || "—",
           item.transport || "—",
         ]),
-      ),
-    );
-  }
-
-  const tools = server.tools ?? [];
-  if (tools.length > 0) {
-    fragment.append(
-      tableSection(
-        "Tools",
-        tools.length,
-        ["Name", "Title", "Description"],
-        tools.map((tool) => [tool.name, tool.title || "—", tool.description || "—"]),
       ),
     );
   }
@@ -438,14 +341,10 @@ function tableSection(
         anchor.rel = "noopener noreferrer";
         anchor.textContent = value;
         cell.append(anchor);
-      } else if (
-        (index === 1 && title === "Packages") ||
-        (index === 0 && title === "Tools")
-      ) {
+      } else if (index === 1 && title === "Packages") {
         cell.className = "mono";
         cell.textContent = value;
       } else {
-        if (title === "Tools" && index === 2) cell.className = "mcp-description";
         cell.textContent = value;
       }
       row.append(cell);
@@ -585,8 +484,6 @@ function scoreServer(server: McpServerRecord, terms: string[]) {
     server.title ?? "",
     server.name,
     server.description,
-    ...(server.aliases ?? []),
-    ...(server.tools ?? []).flatMap((tool) => [tool.name, tool.title ?? "", tool.description ?? ""]),
     ...(server.packages ?? []).map((item) => item.identifier),
   ];
   let score = 0;
@@ -617,7 +514,7 @@ function scoreField(field: string, term: string) {
 }
 
 function normalize(value: string) {
-  return value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
 function formatNumber(value: number) {

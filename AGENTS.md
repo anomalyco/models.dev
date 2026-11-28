@@ -2,8 +2,6 @@
 
 Catalog-only. This file is how to add and maintain **models** and **providers**. Nothing else.
 
-MCP servers are separate from this catalog. They live in `mcp/servers.json`, are shown on `/mcp`, and are refreshed with `bun run mcp:sync` from the official registry and the IranRouter marketplace (`https://iranrouter.net/api/v1/mcp/catalog`). Do not add them under `models/` or `providers/`, and do not put them in the v1 API.
-
 ## Validate
 
 ```bash

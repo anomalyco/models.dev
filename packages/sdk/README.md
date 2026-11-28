@@ -22,8 +22,6 @@ models["anthropic/claude-opus-4-6"]?.knowledge // provider-agnostic metadata
 const catalog = await client.catalog() // GET /catalog.json — both in one request
 ```
 
-MCP servers are not part of this client. The latest registry snapshot is `GET /mcp.json`.
-
 Options:
 
 ```ts

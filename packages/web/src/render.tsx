@@ -101,7 +101,7 @@ interface SearchIndexItem {
 const DEFAULT_PAGE_METADATA: PageMetadata = {
   title: "Models.dev - An open-source database of AI models",
   description:
-    "Models.dev is an open-source database of AI model specifications, pricing, and features, plus MCP servers from the official registry.",
+    "Models.dev is a comprehensive open-source database of AI model specifications, pricing, and features.",
 };
 
 const ModelEntries = buildModelEntries();
@@ -1433,7 +1433,7 @@ function SearchDialog() {
         <input
           id="search-input"
           type="text"
-          placeholder="Search models, providers, labs, and MCP servers"
+          placeholder="Search models, providers, and labs"
           autocomplete="off"
           spellcheck="false"
           role="combobox"
@@ -1483,16 +1483,15 @@ function HelpDialog() {
       </div>
       <div class="body">
         <p>
-          <a href="/">Models.dev</a> is an open-source database of AI model
-          specifications, pricing, and features, plus MCP servers from the
-          official registry and the IranRouter marketplace.
+          <a href="/">Models.dev</a> is a comprehensive open-source database of
+          AI model specifications, pricing, and features.
         </p>
         <p>
           The homepage starts with provider-agnostic model metadata. Model pages
           list the providers serving that model; provider pages list every model
           available from that provider; lab pages group canonical models by
           author. The MCP section lists servers from the official Model Context
-          Protocol registry and the IranRouter marketplace.
+          Protocol registry.
         </p>
         <h2>API</h2>
         <p>
@@ -1558,9 +1557,7 @@ function HelpDialog() {
           >
             GitHub
           </a>{" "}
-          as TOML files organized by provider and canonical model. MCP servers
-          are a snapshot of the official registry in <code>mcp/servers.json</code>,
-          refreshed with <code>bun run mcp:sync</code>.
+          as TOML files organized by provider and canonical model.
         </p>
       </div>
       <div class="footer">

@@ -1,15 +1,10 @@
-import {
-  installMcpBrowser,
-  mcpCatalogReady,
-  onMcpCatalog,
-  searchMcp,
-} from "./mcp-browser.js";
+import { installMcpBrowser } from "./mcp-browser.js";
 import { costSummary } from "./shared.js";
 
 type SortDirection = "asc" | "desc";
 
 interface SearchIndexItem {
-  type: "model" | "provider" | "lab" | "mcp";
+  type: "model" | "provider" | "lab";
   title: string;
   id: string;
   href: string;
@@ -26,8 +21,6 @@ interface SearchIndexItem {
   npm?: string;
   api?: string;
   updated?: string;
-  version?: string;
-  transport?: string;
 }
 
 interface SearchResult {
@@ -288,12 +281,6 @@ function appendHighlightedText(
 }
 
 function resultMeta(item: SearchIndexItem) {
-  if (item.type === "mcp") {
-    return [item.version, item.transport, item.updated?.slice(0, 10)].filter(
-      (value): value is string => Boolean(value),
-    );
-  }
-
   if (item.type === "model") {
     return [
       item.lab,
@@ -326,9 +313,6 @@ function resultMeta(item: SearchIndexItem) {
 }
 
 function resultSubtitle(item: SearchIndexItem) {
-  if (item.type === "mcp" && item.description && item.title === item.id) {
-    return item.description;
-  }
   return item.id;
 }
 
@@ -418,23 +402,6 @@ function renderSearchResults() {
   const query = searchInput.value;
   rankedSearchResults = rankSearchItems(query);
   const normalizedQuery = normalizeSearchText(query);
-  if (normalizedQuery) {
-    rankedSearchResults = rankedSearchResults
-      .concat(searchMcp(query))
-      .sort((a, b) => {
-        if (b.score !== a.score) return b.score - a.score;
-        const dateComparison = compareSearchDates(
-          searchSortDate(a.item),
-          searchSortDate(b.item),
-        );
-        if (dateComparison !== 0) return dateComparison;
-        return a.item.title.localeCompare(b.item.title, undefined, {
-          numeric: true,
-          sensitivity: "base",
-        });
-      })
-      .slice(0, 40);
-  }
   activeSearchIndex = rankedSearchResults.length > 0 ? 0 : -1;
   searchResults.replaceChildren();
 
@@ -445,15 +412,12 @@ function renderSearchResults() {
   searchResults.append(fragment);
 
   const loading = !searchIndexLoaded && searchIndexLoading;
-  const mcpLoading = Boolean(normalizedQuery) && !mcpCatalogReady();
   const resultLabel = `${rankedSearchResults.length} result${rankedSearchResults.length === 1 ? "" : "s"}`;
   searchCount.textContent = loading
     ? "Loading…"
     : normalizedQuery
-      ? mcpLoading
-        ? `${resultLabel} · loading MCP servers`
-        : resultLabel
-      : "Recently updated models, providers, and labs. Type to search MCP servers.";
+      ? resultLabel
+      : "Recently updated models, providers, and labs";
   searchEmpty.hidden = loading || rankedSearchResults.length > 0;
 
   if (rankedSearchResults.length > 0) {
@@ -830,9 +794,6 @@ document.addEventListener("click", (event) => {
   void copyValue(copy.button, copy.value);
 });
 
-onMcpCatalog(() => {
-  if (searchModal?.open) renderSearchResults();
-});
 installMcpBrowser();
 
 document.addEventListener("keydown", (event) => {

@@ -18,7 +18,7 @@ export function McpDirectoryPage() {
           aria-label="Filter MCP servers"
         />
         <p id="mcp-synced">
-          Latest versions from the official MCP registry and the IranRouter marketplace.
+          Snapshot of the official MCP registry. Refresh with bun run mcp:sync.
         </p>
       </div>
       <div class="table-wrap">

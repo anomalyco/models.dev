@@ -7,16 +7,10 @@
  * API from https://github.com/modelcontextprotocol/registry. `limit` cannot
  * exceed 100.
  *
- * The registry host is fetched directly. When that connection fails, set
- * MCP_REGISTRY_PROXY to a prefix such as https://r.jina.ai/ (the reader
+ * The registry host is fetched directly. Set MCP_REGISTRY_PROXY to a prefix
+ * such as https://r.jina.ai/ only when the host is unreachable (that reader
  * allows about 20 requests a minute). The script remembers its cursor in
  * MCP_SYNC_STATE (default /tmp/mcp-sync) and can be resumed.
- *
- * IranRouter's marketplace is a second source. Each provider becomes
- * net.iranrouter/<slug> and calls https://iranrouter.net/mcp. The public
- * catalog is https://iranrouter.net/api/v1/mcp/catalog (the HTML marketplace
- * can be closed while this API stays open). MCP_SYNC_ONLY=iranrouter refreshes
- * just those records inside an existing mcp/servers.json.
  */
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "fs";
@@ -67,63 +61,20 @@ interface RegistryEntry {
   };
 }
 
-interface IranRouterTool {
-  name?: string;
-  title?: string;
-  title_en?: string;
-  description?: string;
-  description_en?: string;
-}
-
-interface IranRouterProvider {
-  slug?: string;
-  name?: string;
-  name_en?: string;
-  description?: string;
-  description_en?: string;
-  website_url?: string;
-  tools?: IranRouterTool[];
-}
-
-interface IranRouterCatalog {
-  mcp_url?: string;
-  data?: IranRouterProvider[];
-}
-
-interface CatalogServer {
-  name?: string;
-  origin?: string;
-  updatedAt?: string;
-}
-
-const iranRouterCatalogUrl =
-  process.env.IRANROUTER_MCP_CATALOG ?? "https://iranrouter.net/api/v1/mcp/catalog";
-const iranRouterOrigin = "iranrouter";
-let proxy = "";
+const proxy = process.env.MCP_REGISTRY_PROXY ?? "";
 const stamps: number[] = [];
 
-if (import.meta.main) {
-  if (process.env.MCP_SYNC_ONLY === "iranrouter") {
-    const existing = JSON.parse(readFileSync(output, "utf8")) as {
-      source?: string;
-      servers?: CatalogServer[];
-    };
-    const kept = (existing.servers ?? []).filter((server) => server.origin !== iranRouterOrigin);
-    await writeCatalog(kept, existing.source);
-  } else {
-    await syncOfficial();
-  }
+mkdirSync(stateDir, { recursive: true });
+if (proxy) {
+  console.log(`mcp-sync using MCP_REGISTRY_PROXY ${proxy}`);
+} else {
+  console.log("mcp-sync using the registry directly");
 }
 
-async function syncOfficial() {
-mkdirSync(stateDir, { recursive: true });
-
-proxy = await detectProxy();
 let cursor = existsSync(cursorPath) ? readFileSync(cursorPath, "utf8").trim() : "";
 if (cursor === "DONE") cursor = "";
 if (!cursor && existsSync(jsonlPath)) rmSync(jsonlPath);
 
-stamps.length = 0;
 let pages = 0;
 let kept = 0;
 
@@ -165,149 +116,21 @@ if (existsSync(jsonlPath)) {
   }
 }
 
-const servers = [...byName.values()];
+const servers = [...byName.values()].sort((a, b) =>
+  String(a.name).localeCompare(String(b.name)),
+);
+mkdirSync(path.dirname(output), { recursive: true });
+const catalog = {
+  source: `${registryOrigin}/v0.1/servers?version=latest`,
+  syncedAt: new Date().toISOString(),
+  count: servers.length,
+  servers,
+};
+const temporary = `${output}.tmp`;
+writeFileSync(temporary, JSON.stringify(catalog));
+renameSync(temporary, output);
 writeFileSync(cursorPath, "DONE");
-await writeCatalog(servers, `${registryOrigin}/v0.1/servers?version=latest`);
-}
-
-async function writeCatalog(servers: CatalogServer[], source: string | undefined) {
-  const iranrouter = await fetchIranRouter();
-  const names = new Set(servers.map((server) => server.name));
-  const added = iranrouter.servers.filter((server) => {
-    if (!server.name || !names.has(server.name)) return true;
-    console.log(`mcp-sync skipped IranRouter name already in the registry: ${server.name}`);
-    return false;
-  });
-  const merged = [...servers, ...added].sort((a, b) =>
-    String(a.name).localeCompare(String(b.name)),
-  );
-  mkdirSync(path.dirname(output), { recursive: true });
-  const catalog = {
-    source: source || `${registryOrigin}/v0.1/servers?version=latest`,
-    syncedAt: new Date().toISOString(),
-    count: merged.length,
-    iranrouter: {
-      source: iranRouterCatalogUrl,
-      mcpUrl: iranrouter.mcpUrl,
-      count: added.length,
-    },
-    servers: merged,
-  };
-  const temporary = `${output}.tmp`;
-  writeFileSync(temporary, JSON.stringify(catalog));
-  renameSync(temporary, output);
-  console.log(
-    `mcp-sync wrote ${merged.length} servers (${added.length} from IranRouter) to ${output}`,
-  );
-}
-
-export function iranRouterServer(provider: IranRouterProvider, mcpUrl: string, icon?: string) {
-  const slug = provider.slug ?? "";
-  if (!/^[a-z0-9]+(?:[_-][a-z0-9]+)*$/.test(slug)) return undefined;
-  let hub: URL;
-  try {
-    hub = new URL(mcpUrl);
-  } catch {
-    return undefined;
-  }
-  if (hub.protocol !== "https:") return undefined;
-
-  const title = text(provider.name_en) || text(provider.name);
-  const description = text(provider.description_en) || text(provider.description);
-  if (!title || !description) return undefined;
-
-  const aliases = unique([
-    text(provider.name),
-    text(provider.name_en),
-    text(provider.description),
-    text(provider.description_en),
-  ]).filter((value) => value !== title && value !== description);
-
-  const tools = (provider.tools ?? [])
-    .map((tool) => {
-      const name = text(tool.name);
-      if (!name) return undefined;
-      const toolTitle = text(tool.title_en) || text(tool.title);
-      const toolDescription = text(tool.description_en) || text(tool.description);
-      return {
-        name,
-        ...(toolTitle ? { title: toolTitle } : {}),
-        ...(toolDescription ? { description: toolDescription } : {}),
-      };
-    })
-    .filter((tool) => tool !== undefined);
-
-  const record: Record<string, unknown> = {
-    name: `net.iranrouter/${slug}`,
-    title,
-    description,
-    version: "",
-    origin: iranRouterOrigin,
-    listing: `https://iranrouter.net/marketplace/${slug}`,
-    remotes: [{ type: "streamable-http", url: hub.toString() }],
-    statusMessage:
-      "Served by the IranRouter MCP hub. Requests need an IranRouter API key in Authorization: Bearer ir-….",
-  };
-  if (aliases.length > 0) record.aliases = aliases;
-  if (icon) record.icon = icon;
-  const website = text(provider.website_url);
-  if (website.startsWith("https://") || website.startsWith("http://")) record.website = website;
-  if (tools.length > 0) record.tools = tools;
-  return record;
-}
-
-async function fetchIranRouter() {
-  const response = await fetch(iranRouterCatalogUrl, {
-    headers: { accept: "application/json", "user-agent": "models.dev-mcp-sync" },
-    signal: AbortSignal.timeout(60_000),
-  });
-  if (!response.ok) {
-    throw new Error(`IranRouter catalog ${response.status}`);
-  }
-  const payload = (await response.json()) as IranRouterCatalog;
-  const mcpUrl = payload.mcp_url || "https://iranrouter.net/mcp";
-  const icons = await iranRouterIcons();
-  const servers = (payload.data ?? [])
-    .map((provider) =>
-      iranRouterServer(
-        provider,
-        mcpUrl,
-        provider.slug && icons.has(provider.slug)
-          ? `https://iranrouter.net/images/mcp/${provider.slug}.png`
-          : undefined,
-      ),
-    )
-    .filter((server) => server !== undefined);
-  if (servers.length === 0) throw new Error("IranRouter catalog returned no servers");
-  return { mcpUrl, servers };
-}
-
-async function iranRouterIcons() {
-  const icons = new Set<string>();
-  try {
-    const response = await fetch("https://iranrouter.net/marketplace", {
-      headers: { accept: "text/html", "user-agent": "models.dev-mcp-sync" },
-      signal: AbortSignal.timeout(60_000),
-    });
-    if (!response.ok) return icons;
-    const html = await response.text();
-    for (const match of html.matchAll(/\/images\/mcp\/([a-z0-9_-]+)\.png/g)) {
-      const slug = match[1];
-      if (slug) icons.add(slug);
-    }
-  } catch {
-    // Icons are optional. The catalog API is the source of the server list.
-  }
-  return icons;
-}
-
-function text(value: string | undefined) {
-  return (value ?? "").replace(/\s+/g, " ").trim();
-}
-
-function unique(values: string[]) {
-  return [...new Set(values.filter(Boolean))];
-}
+console.log(`mcp-sync wrote ${servers.length} servers to ${output}`);
 
 function compact(entry: RegistryEntry) {
   const server = entry.server;
@@ -349,24 +172,6 @@ function compact(entry: RegistryEntry) {
   if (remotes.length > 0) record.remotes = remotes;
 
   return record;
-}
-
-async function detectProxy() {
-  if (process.env.MCP_REGISTRY_PROXY) return process.env.MCP_REGISTRY_PROXY;
-  try {
-    const response = await fetch(`${registryOrigin}/v0.1/ping`, {
-      signal: AbortSignal.timeout(8_000),
-    });
-    if (response.ok) {
-      console.log("mcp-sync using the registry directly");
-      return "";
-    }
-  } catch {
-    // The registry host is unreachable from this network.
-  }
-  const fallback = "https://r.jina.ai/";
-  console.log(`mcp-sync registry unreachable, using ${fallback}`);
-  return fallback;
 }
 
 async function fetchPage(cursor: string): Promise<RegistryList> {
