@@ -1,0 +1,17 @@
+# Prices: https://portal.wylon.cn/zh/pricing.html (accessed 2026-11-15).
+# CNY -> USD: divide by 6.689676 CNY/USD, dated 2026-11-15,
+# source: https://open.er-api.com/v6/latest/USD; rounded to six decimals.
+# CNY 0.30 per output image.
+# API and PNG output: https://portal.wylon.cn/zh/api-image-generations.html
+# One image per request; supported sizes: 1328x1328, 1664x928, 928x1664,
+# 1104x1472 and 1584x1056. These are output dimensions, not input-image limits.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen-image-2512"
+
+[api.images]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.044845

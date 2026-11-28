@@ -1,0 +1,23 @@
+# Prices: https://portal.wylon.cn/zh/pricing.html (accessed 2026-11-15).
+# CNY -> USD: divide by 6.689676 CNY/USD, dated 2026-11-15,
+# source: https://open.er-api.com/v6/latest/USD; rounded to six decimals.
+# API: https://portal.wylon.cn/zh/api-video-generation-tasks.html
+# Wylon's async content tasks use an Ark-compatible JSON body, not OpenAI Videos.
+# No verified SDK adapter for this host's task lifecycle; both SDKs are explicitly none.
+# Availability/specs: https://portal.wylon.cn/zh/models.html
+# Fixed five-second output: CNY 0.20/sec at 480p, CNY 0.40/sec at 720p.
+schema = 2
+v2_only = true
+base_model = "alibaba/wan2.2-t2v-a14b"
+
+[api.videos]
+path = "/contents/generations/tasks"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.029897
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720p" } }
+price = 0.059794

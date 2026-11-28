@@ -1,0 +1,32 @@
+# Model card: https://huggingface.co/Qwen/Qwen-Image-2512/blob/main/README.md
+# December 2025 text-to-image update; the model card dates the release to 2025-12-31.
+# The example saves PNG. This diffusion pipeline has no temperature/top_p/top_k.
+# Token-window limits are not specified; zero follows the non-token media convention.
+schema = 2
+v2_only = true
+type = "image"
+name = "Qwen-Image-2512"
+description = "December update of Qwen-Image with improved human realism, natural detail, and text rendering"
+family = "qwen"
+open_weights = true
+release_date = "2025-12-31"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["image/png"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen-Image-2512"
