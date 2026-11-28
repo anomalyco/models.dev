@@ -1,0 +1,14 @@
+# GET https://cloudgpu.app/v1/models checked 2026-11-11: input_modalities ["text"], output_modalities ["text"], context_length 131072. No output token cap is published.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
