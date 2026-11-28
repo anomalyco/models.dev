@@ -12,6 +12,7 @@
 #   unsupported_reasoning_effort (https://usemodellane.com/docs/api/chat-completions,
 #   https://usemodellane.com/docs/guides/responses-api#reasoning, https://usemodellane.com/docs/guides/anthropic-api#thinking);
 #   reasoning cannot be turned off (none is rejected); no budget (Messages thinking only chooses whether reasoning is returned).
+# Output limit equals the base_model value, so it is inherited and not restated.
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 name = "MiniMax M3.1 Flash"
@@ -27,7 +28,6 @@ cache = { implicit = true }
 
 [limit]
 context = 1_048_576
-output = 512_000
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
