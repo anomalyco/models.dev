@@ -1,0 +1,11 @@
+# One BetterToken API key reaches Claude, GPT, Gemini, DeepSeek, Kimi, GLM, Qwen, and MiniMax.
+# Claude uses the native Anthropic Messages API (see each model's [api.messages] table).
+# Other models use the OpenAI-compatible Chat Completions API.
+# Prices from https://bettertoken.ai/api/pricing, checked 2026-11-28. USD per 1M tokens.
+# Rates include group_ratio for each model's first enabled group.
+name = "BetterToken"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["BETTERTOKEN_API_KEY"]
+api = "https://bettertoken.ai/v1"
+doc = "https://bettertoken.ai/en/pricing/"

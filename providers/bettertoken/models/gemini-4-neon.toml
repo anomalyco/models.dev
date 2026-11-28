@@ -1,0 +1,17 @@
+# Prices from https://bettertoken.ai/api/pricing, checked 2026-11-28. USD per 1M tokens.
+# OpenAI-compatible Chat Completions: POST https://bettertoken.ai/v1/chat/completions
+# Reasoning and structured output follow providers/google/models/gemini-4-neon.toml.
+schema = 2
+base_model = "google/gemini-4-neon"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2.04
+cache = { read = 0.102 }
+
+[cost.text.output]
+price = 10.2

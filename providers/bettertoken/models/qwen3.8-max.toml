@@ -1,0 +1,21 @@
+# Prices from https://bettertoken.ai/api/pricing, checked 2026-11-28. USD per 1M tokens.
+# OpenAI-compatible Chat Completions: POST https://bettertoken.ai/v1/chat/completions
+# Reasoning and structured output follow providers/alibaba/models/qwen3.8-max.toml.
+# Toggle: enable_thinking = true|false
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.44
+cache = { read = 0.18 }
+
+[cost.text.output]
+price = 4.32
