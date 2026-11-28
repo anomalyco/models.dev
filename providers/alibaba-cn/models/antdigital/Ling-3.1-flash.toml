@@ -1,0 +1,40 @@
+# Ling-3.1-flash served by Ant Digital (蚂蚁数科) on Model Studio, China (Beijing) only. Sources (accessed 2026-11-28):
+# - Model page: https://help.aliyun.com/zh/model-studio/ling-3-1-flash-by-antdigital (text in/out, function calling,
+#   context cache; context 1,048,576, max output 262,144 in both modes; list price ¥2 input, ¥6 output, ¥0.4 cache hit per 1M).
+# - API guide: https://help.aliyun.com/zh/model-studio/antdigital (OpenAI Chat Completions only; enable_thinking true|false,
+#   default true, reasoning_content; stream_options.include_usage must be true; implicit cache, hits billed at 20% of input;
+#   response_format json_object only, no json_schema; thinking_budget, reasoning_effort and parallel_tool_calls unsupported).
+# - Price list: https://help.aliyun.com/zh/model-studio/model-pricing (原价 ¥2 / ¥6, 限时 2.5 折).
+# - Release: https://help.aliyun.com/zh/model-studio/newly-released-models (2026-10-29).
+# List price; the limited-time 75% discount (¥0.5 / ¥1.5 / ¥0.1 cache hit) has no published end date, so it is not recorded,
+#   as on wan3.0-video.
+# CNY→USD rate: 6.670928, 2026-11-28, source: https://open.er-api.com/v6/latest/USD
+# Toggle: enable_thinking = true|false (default true). No effort or budget control.
+# structured_output is left out: only json_object, not JSON Schema.
+# Base URL: the docs show the workspace domain https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com, and the Chat API reference
+#   says the existing https://dashscope.aliyuncs.com domain still works
+#   (https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-chat-completions), so the provider default is kept.
+# Tools: tool_choice auto|none, as for other Chat Completions-only models (sources in provider.toml).
+# Not probed live (the available key is international-only), so system_updates and effort_updates are left unset.
+schema = 2
+base_model = "inclusionai/ling-3.1-flash"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none"] }
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.299808
+cache = { read = 0.059962 }
+
+[cost.text.output]
+price = 0.899425
