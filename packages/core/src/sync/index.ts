@@ -76,6 +76,7 @@ import { moonshotai } from "./providers/moonshotai.js";
 import { thinkingmachines } from "./providers/thinkingmachines.js";
 import { tinfoil } from "./providers/tinfoil.js";
 import { togetherai } from "./providers/togetherai.js";
+import { trustedrouter } from "./providers/trustedrouter.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
@@ -167,6 +168,11 @@ export interface SyncProvider<SourceModel> {
      * authoritativeHeaders is enabled.
      */
     header?: string;
+    /**
+     * Keep the existing file's leading comments even when authoritativeHeaders
+     * is enabled, for files the module keeps as written (hand-authored aliases).
+     */
+    keepHeader?: boolean;
     /**
      * v2 values the source states that v1 fields can't carry (e.g. a price per
      * cache TTL), keyed by dotted path as in `base_model_omit`. Each replaces
@@ -269,6 +275,7 @@ export const providers: {
   thinkingmachines: SyncProvider<any>;
   tinfoil: SyncProvider<any>;
   togetherai: SyncProvider<any>;
+  trustedrouter: SyncProvider<any>;
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
@@ -331,6 +338,7 @@ export const providers: {
   thinkingmachines,
   tinfoil,
   togetherai,
+  trustedrouter,
   vercel,
   venice,
   wandb,
@@ -359,6 +367,7 @@ export const groups = {
     "requesty",
     "openrouter",
     "prime",
+    "trustedrouter",
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
@@ -523,7 +532,7 @@ export async function syncProvider<SourceModel>(
     const translatedHeader = translated.header === undefined
       ? undefined
       : leadingComments(translated.header);
-    const header = provider.authoritativeHeaders
+    const header = provider.authoritativeHeaders && translated.keepHeader !== true
       ? keepInheritedNote(existing.get(relativePath)?.header, translatedHeader ?? "")
       : (existing.get(relativePath)?.header || translatedHeader) ?? "";
     desired.set(relativePath, {
