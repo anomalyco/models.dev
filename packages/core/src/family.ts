@@ -419,6 +419,8 @@ export const ModelFamilyValues = [
   "seed-oss",
   "ui-tars",
   "seed-pro",
+  "seed-translation",
+  "seed-embedding",
 
   // Ray
   "ray",

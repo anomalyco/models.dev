@@ -1,0 +1,21 @@
+# Model ID and limits: https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-28);
+#   not called live (no Ark key).
+# API: POST https://ark.cn-beijing.volces.com/api/v3/embeddings/multimodal, whose input is a list of typed
+#   text / image_url / video_url items rather than OpenAI's string input, so no SDK package is named:
+#   https://ark.volcengine.com/region:cn-beijing/docs/multimodal-vectorization-api.md
+# CNY list prices (向量模型): https://ark.volcengine.com/region:cn-beijing/docs/model-pricing.md (accessed 2026-11-28):
+#   CNY 0.70 per M text tokens, CNY 1.80 per M image tokens. No separate video price is listed.
+# CNY→USD rate: 6.670928, 2026-11-28, source: https://open.er-api.com/v6/latest/USD
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/doubao-embedding-vision"
+
+[api.embeddings]
+path = "/embeddings/multimodal"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.text.input]
+price = 0.10493
+
+[cost.image.input]
+price = 0.26983

@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-28):
+# - Model card: https://ark.volcengine.com/models/doubao-seed-translation.md (ByteDance in-house multilingual
+#   translation model, 28 languages, 4K context, up to 3K output tokens; called through the Responses API
+#   with input_text.translation_options.target_language)
+# - Release: listed as 新发布 under 202509 in https://ark.volcengine.com/region:cn-beijing/docs/model-release-announcement-2025.md
+#   (doubao-seed-translation-250915, "基座是一个从零开始训练的7b 多语言文本大模型"); the day is the 250915 version suffix.
+# - Limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list.md lists
+#   doubao-seed-translation-250915 as 文本生成 (翻译增强) only, no tool calling or 深度思考, with
+#   上下文窗口 4K, 最大输入 1K, 最大回答 3K, 最大思维链 -.
+# Sampling: the Ark Responses API takes temperature and top_p (no exception listed for this model) and has no top_k:
+#   https://ark.volcengine.com/region:cn-beijing/docs/create-model-responses-api.md
+schema = 2
+name = "Seed Translation"
+description = "ByteDance Seed 7B multilingual translation model covering 28 languages, with 4K context"
+family = "seed-translation"
+open_weights = false
+release_date = "2025-09-15"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 4_000
+input = 1_000
+output = 3_000
