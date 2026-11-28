@@ -1,0 +1,36 @@
+# Lab metadata for xtools-at's model, hosted by NanoGPT and OpenUncensored.
+# Source: https://huggingface.co/xtools-at/DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic (accessed 2026-11-24):
+#   Apache-2.0, repo created 2026-10-30, base model Jackrong/DeepSeek-V4-Pro-Qwen3.5-9B, pipeline_tag text-generation.
+#   The card calls it "a compact 9B reasoning model distilled from DeepSeek-V4-Pro" and reports small gains in tool
+#   calling; its tags include reasoning and tool-use.
+# Context: config.json text_config.max_position_embeddings = 262,144; output as the base family's lab,
+#   models/alibaba/qwen3.5-9b.toml. Hosts with smaller windows override them.
+# Description and family as NanoGPT's curated entry,
+#   providers/nano-gpt/models/xtools-at/deepseek-v4-pro-qwen3.5-9b-uncensored-heretic.toml.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
+name = "DeepSeek V4 Pro Qwen3.5 9B Uncensored Heretic"
+description = "xtools-at's uncensored Heretic version of Jackrong's DeepSeek V4 Pro Qwen3.5 9B, a Qwen3.5 9B model distilled from DeepSeek V4 Pro on about 250,000 math and STEM samples"
+family = "deepseek-pro"
+open_weights = true
+release_date = "2026-10-30"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/xtools-at/DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic"

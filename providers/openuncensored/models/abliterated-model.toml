@@ -1,0 +1,21 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/abliterated-model
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# Name, dates, limits and image types come from the lab, models/abliteration-ai/abliterated-model.toml. Limits are the
+# maker's (262,144-token context, up to 262,134 output, https://docs.abliteration.ai/models); abliteration.ai serves
+# this model first, so they hold on this route. Reasoning controls follow the maker's entry,
+# providers/abliteration-ai/models/abliterated-model.toml.
+# Accepts image input: the router passes images through for this model.
+# Reasoning: off is reasoning_effort=none; graded levels, no toggle (probed live through
+# https://openuncensored.com/api/v1 on 2026-11-08: none returns no reasoning, low/high do).
+schema = 2
+base_model = "abliteration-ai/abliterated-model"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = false
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3

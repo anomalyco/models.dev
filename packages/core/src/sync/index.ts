@@ -63,6 +63,7 @@ import { nebius } from "./providers/nebius.js";
 import { novitaAi } from "./providers/novita-ai.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
+import { openuncensored } from "./providers/openuncensored.js";
 import { ofox } from "./providers/ofox.js";
 import { obscurify } from "./providers/obscurify.js";
 import { openrouter } from "./providers/openrouter.js";
@@ -258,6 +259,7 @@ export const providers: {
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
   openai: SyncProvider<any>;
+  openuncensored: SyncProvider<any>;
   openrouter: SyncProvider<any>;
   ovhcloud: SyncProvider<any>;
   pioneer: SyncProvider<any>;
@@ -320,6 +322,7 @@ export const providers: {
   ofox,
   "ollama-cloud": ollamaCloud,
   openai,
+  openuncensored,
   openrouter,
   ovhcloud,
   pioneer,
@@ -358,6 +361,7 @@ export const groups = {
     "ofox",
     "requesty",
     "openrouter",
+    "openuncensored",
     "prime",
     "vercel",
   ],

@@ -1,0 +1,21 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/gemma-4-31b-cognitive-unshackled
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/Gemma-4-31B-Cognitive-Unshackled.toml
+# Input is text only: the router replaces image parts with a note for text models.
+schema = 2
+base_model = "aifeifei798/gemma-4-31b-cognitive-unshackled"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = false
+
+[cost.text.input]
+price = 0.306
+
+[cost.text.output]
+price = 0.306

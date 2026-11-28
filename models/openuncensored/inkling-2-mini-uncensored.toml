@@ -1,0 +1,32 @@
+# Lab metadata for OpenUncensored's own uncensored build of Inkling 2 Mini (OpenUncensored made these weights).
+# Source: https://huggingface.co/OpenUncensored/Inkling-2-Mini-Uncensored (accessed 2026-11-24): Apache-2.0, uploaded
+#   2026-11-20, base model thinkingmachines/Inkling-2-Mini, refusal direction removed from the attention weights.
+# Architecture, modalities, capabilities and limits are unchanged from the base model's lab,
+#   models/thinkingmachines/inkling-2-mini.toml.
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
+name = "Inkling 2 Mini Uncensored"
+description = "OpenUncensored's uncensored build of Inkling 2 Mini, a looped MoE reasoning model (26.4B total, 3.4B active) for agentic coding, vision, and knowledge work"
+family = "inkling-mini"
+open_weights = true
+release_date = "2026-11-20"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/OpenUncensored/Inkling-2-Mini-Uncensored"

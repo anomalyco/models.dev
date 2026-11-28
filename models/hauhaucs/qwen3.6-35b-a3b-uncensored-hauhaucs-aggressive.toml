@@ -1,0 +1,32 @@
+# Lab metadata for HauhauCS's uncensored Qwen3.6 35B-A3B, hosted by OpenUncensored.
+# Source: https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive (accessed 2026-11-24):
+#   Apache-2.0, repo created 2026-04-17, base model Qwen/Qwen3.6-35B-A3B, GGUF quantizations plus an mmproj vision file.
+#   The card: "No changes to datasets or capabilities", "262K native context", "Natively multimodal (text, image,
+#   video)", thinking mode by default.
+# So modalities, capabilities and limits are the base model's lab, models/alibaba/qwen3.6-35b-a3b.toml.
+schema = 2
+name = "Qwen3.6 35B-A3B Uncensored HauhauCS Aggressive"
+description = "HauhauCS's uncensored Aggressive build of Qwen3.6 35B-A3B, an open multimodal MoE with thinking mode, tools, and a 262K context"
+family = "qwen"
+open_weights = true
+release_date = "2026-04-17"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[[weights]]
+label = "Hugging Face (GGUF)"
+url = "https://huggingface.co/HauhauCS/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive"

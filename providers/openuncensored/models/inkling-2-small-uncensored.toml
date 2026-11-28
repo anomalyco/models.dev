@@ -1,0 +1,23 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/inkling-2-small-uncensored
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# OpenUncensored made these weights and hosts them itself with vLLM (--max-model-len 262144), the Inkling reasoning and
+# tool-call parsers, and the repo's chat template. Limits: a 262,144-token context on this host.
+# Accepts image input: the router passes images through for this model.
+# Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max, passed to the chat template, whose effort_map
+# takes exactly these (none is level 0.0, the lowest, so no separate toggle; xhigh and max both map to 0.99; no value
+# means 0.9):
+# https://huggingface.co/OpenUncensored/Inkling-2-Small-Uncensored/blob/main/chat_template.jinja
+schema = 2
+base_model = "openuncensored/inkling-2-small-uncensored"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+
+[limit]
+context = 262_144
+
+[cost.text.input]
+price = 0.6
+
+[cost.text.output]
+price = 2.4

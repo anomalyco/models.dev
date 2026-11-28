@@ -1,0 +1,16 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/magnum-v4-72b
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# Relayed from OpenRouter, the only upstream for this model, so tools, structured output and limits follow
+# models.dev's OpenRouter entry: providers/openrouter/models/anthracite-org/magnum-v4-72b.toml
+# Input is text only, as the lab lists.
+schema = 2
+base_model = "anthracite-org/magnum-v4-72b"
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 2.5
+
+[cost.text.output]
+price = 5

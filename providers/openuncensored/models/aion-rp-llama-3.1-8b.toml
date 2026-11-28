@@ -1,0 +1,23 @@
+# Served by OpenUncensored. Price as listed on https://openuncensored.com/models/aion-rp-llama-3.1-8b
+# and in https://api.openuncensored.com/v1/models (USD per token there, per million here; 2026-11-24).
+# Model facts (dates, limits, reasoning controls) follow models.dev's entry for the host we
+# measure it on: providers/nano-gpt/models/aion-labs/aion-rp-llama-3.1-8b.toml
+# Input is text only: the router replaces image parts with a note for text models.
+# No tool calls: tools are inherited from the lab (false). OpenRouter serves this model first, and its
+# supported_parameters for it are max_tokens, temperature and top_p only (https://openrouter.ai/api/v1/models, 2026-11-26).
+schema = 2
+base_model = "aion-labs/aion-rp-llama-3.1-8b"
+name = "Llama 3.1 8b (uncensored)"
+
+[capabilities]
+structured_output = false
+
+[limit]
+input = 32_768
+output = 16_384
+
+[cost.text.input]
+price = 0.8
+
+[cost.text.output]
+price = 1.6
