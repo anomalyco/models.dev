@@ -90,6 +90,20 @@ const BASE_MODEL_ALIASES: Record<string, string> = {
   "openai-gpt-56-terra-pro": "openai/gpt-5.6-terra",
 };
 
+const E2EE_PREFIX = "e2ee-";
+const E2EE_SUFFIX = /-p$/;
+
+// Venice's E2EE routes add an `e2ee-` prefix and sometimes a `-p` suffix; neither is part of the
+// lab model id.
+function stripE2EEMarker(id: string) {
+  const stripped = id.startsWith(E2EE_PREFIX) ? id.slice(E2EE_PREFIX.length) : id;
+  return stripped === id ? id : stripped.replace(E2EE_SUFFIX, "");
+}
+
+function isE2EE(model: VeniceModel) {
+  return model.model_spec.capabilities.supportsE2EE === true;
+}
+
 export const venice = {
   id: "venice",
   name: "Venice",
@@ -109,7 +123,6 @@ export const venice = {
     return VeniceResponse.parse(raw).data;
   },
   translateModel(model, context) {
-    if (model.model_spec.capabilities.supportsE2EE === true) return undefined;
     const id = model.id.replaceAll("/", "-");
     const existing = context.existing(id);
     const existingBase = existing?.base_model?.startsWith("venice/") === false ? existing.base_model : undefined;
@@ -123,7 +136,7 @@ export const venice = {
 } satisfies SyncProvider<VeniceModel>;
 
 // POST /responses serves every Venice text model (OpenAI models natively, the rest translated
-// through Chat Completions), statelessly; E2EE models, which the sync skips, need Chat.
+// through Chat Completions), statelessly; E2EE models need Chat.
 // https://docs.venice.ai/guides/features/responses-api
 const RESPONSES_API = {
   base_url: "https://api.venice.ai/api/v1",
@@ -135,7 +148,7 @@ const WEB_SEARCH_PRICE = 10;
 
 export function veniceV2Set(model: VeniceModel): Record<string, unknown> {
   return {
-    api: withResponsesApi,
+    ...(isE2EE(model) ? {} : { api: withResponsesApi }),
     "cost.web_search": model.model_spec.capabilities.supportsWebSearch === true
       ? { price: WEB_SEARCH_PRICE }
       : undefined,
@@ -207,7 +220,7 @@ export function buildVeniceModel(
   // Venice lists a scheduled removal as model_spec.deprecation.
   const status = spec.deprecation != null ? "deprecated" as const : existing?.status;
   const authoritative = {
-    name: spec.name,
+    name: isE2EE(model) ? `${spec.name} E2EE` : spec.name,
     attachment: input.some((value) => value !== "text"),
     reasoning: capabilities.supportsReasoning === true,
     reasoning_options: reasoningOptions,
@@ -263,7 +276,8 @@ export function buildVeniceModel(
 // the same fine-tune.
 const FINE_TUNE_MARKER = /uncensored|abliterated|heretic/i;
 
-export function resolveVeniceBaseModel(id: string, name: string) {
+export function resolveVeniceBaseModel(rawID: string, name: string) {
+  const id = stripE2EEMarker(rawID);
   const alias = BASE_MODEL_ALIASES[id];
   if (alias !== undefined) return alias;
   const marker = `${id} ${name}`.match(FINE_TUNE_MARKER)?.[0].toLowerCase();
