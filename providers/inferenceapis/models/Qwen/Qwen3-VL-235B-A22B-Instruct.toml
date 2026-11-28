@@ -1,8 +1,15 @@
-# Instruct (non-reasoning) vision model. Measured on this gateway 2026-09-18: image_url parts, tool calls and response_format json_object work.
+# Instruct (non-reasoning) vision model, served by this host since 2026-09-17 (the other four models in this change arrived 2026-11-18).
+# Measured on this gateway 2026-09-18: image_url parts and tool calls work.
+# Structured output, measured on this gateway 2026-11-28 (two runs each): response_format json_object returned valid JSON, and
+#   json_schema with strict = true returned objects with exactly the required keys and types.
+# No cache read price on this host, so capabilities.cache is not authored.
 # Context on this host is 262,144 tokens.
-# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-11-20)
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-11-28)
 schema = 2
 base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+
+[capabilities]
+structured_output = true
 
 [limit]
 context = 262_144

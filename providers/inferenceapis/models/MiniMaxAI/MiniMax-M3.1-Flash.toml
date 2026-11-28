@@ -1,12 +1,25 @@
-# Toggle: reasoning_effort = "none" switches thinking off on this gateway (forwarded to the host as thinking.type = "disabled");
-#   reasoning.enabled = false and thinking.type = "disabled" are accepted too. reasoning_effort levels other than "none" are ignored by the host.
-# Measured on this gateway 2026-11-18: 146 tokens per second, tool call and response_format json_object answered correctly.
-# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-11-20)
+# This host serves the model through Together, not MiniMax's first-party API, so the controls differ from the lab file:
+# Toggle: reasoning_effort = "none" (and reasoning.enabled = false, thinking.type = "disabled") switches thinking off. The gateway
+#   forwards all three spellings to Together as thinking.type = "disabled", which Together accepts on this model (MiniMax's own API
+#   rejects it). Measured on this gateway 2026-11-28 on a multi-step word problem, two runs each: no field 118/186 reasoning tokens,
+#   reasoning_effort "none" 0/0 (no reasoning_content), thinking.type "disabled" 0, reasoning.enabled = false 0.
+# Effort: the graded levels do nothing on this host. Same prompt, same day: low 86/57, medium 115/118, high 100/99, max 105/83 reasoning
+#   tokens; on a harder number-theory prompt, three runs each: low 581/524/493, max 390/622/407. That is run-to-run noise, so no effort
+#   ladder (and no default effort) is authored; only the toggle is real here.
+# Measured on this gateway 2026-11-18: 146 tokens per second, tool call answered correctly.
+# Structured output, measured on this gateway 2026-11-28 (two runs each): response_format json_object returned valid JSON, and
+#   json_schema with strict = true returned objects with exactly the required keys and types (one run filled a string array with
+#   poor content, but the shape was enforced).
+# Cache: implicit prefix cache, measured 2026-11-28: the same 5,892-token prompt sent three times reported cached_tokens 0, 5,632, 5,632,
+#   and cached tokens are billed at the read price below.
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-11-28)
 schema = 2
 base_model = "minimax/MiniMax-M3.1-Flash"
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+structured_output = true
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
