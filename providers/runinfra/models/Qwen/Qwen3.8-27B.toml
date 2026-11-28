@@ -16,11 +16,13 @@
 # change. "max" is still rejected and is still not published. enable_thinking /
 # chat_template_kwargs / thinking_budget are accepted but have no effect.
 # cache_read is the cached input price, verified live on 2026-08-16
+# Image formats re-read live on 2026-11-26: the gateway takes an image as an inline data URL in png, jpeg, webp or
+# gif, and refuses bmp and tiff with HTTP 400 naming those four, so the list is those four.
 schema = 2
 base_model = "alibaba/qwen3.8-27b"
 
 [modalities]
-input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
