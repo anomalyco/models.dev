@@ -1,0 +1,27 @@
+# Augure (Toronto) builds this model. Lab facts only; hosts set reasoning controls, prices and APIs.
+# Sources (accessed 2026-11-04): https://augureai.ca/docs/models (256K context, 32,768 output cap),
+#   https://augureai.ca/docs/api (image_url PNG/JPEG/WebP/GIF and PDF file parts on every model;
+#   temperature and top_p, no top_k; tools), https://augureai.ca/docs/changelog (on the API 2026-08-13),
+#   and https://carouter.ai/llms-full.txt ("post-trained from Qwen 3.8", 26B).
+# Facts cross-checked against Augure's own provider files in models.dev PR #11786.
+# Knowledge cutoff is not published by Augure.
+schema = 2
+name = "Ossington 5"
+description = "Augure's flagship reasoning model: fast, strong at code, structured output and bilingual work, trained and served in Canada"
+open_weights = false
+release_date = "2026-08-13"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 262_144
+output = 32_768

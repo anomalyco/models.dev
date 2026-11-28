@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-04):
+# - https://huggingface.co/jaredpalmer/kev-0.8b (Apache-2.0; LoRA adapter + pointer head on
+#   Qwen/Qwen3.5-0.8B-Base; implements TypeSafe's System One API; Kev 1.0 first published
+#   2026-09-24; validated context length 8,192 tokens)
+# - https://github.com/jaredpalmer/kev
+# Output: probabilities over the options of each typed question, no generated text, so there
+#   is nothing to sample (temperature/top_p/top_k false).
+schema = 2
+type = "decision"
+name = "Kev 0.8B"
+description = "Smallest Kev decision model: typed answers with calibrated probabilities, sized for laptops and 4 GB GPUs"
+open_weights = true
+release_date = "2026-09-24"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 8_192
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/jaredpalmer/kev-0.8b"

@@ -1,0 +1,28 @@
+# CARouter routes this model to OVHcloud AI Endpoints (Gravelines, FR; foreign-owned, off by default).
+# Other live routes: scaleway (used only when the account enables them).
+# Price: Free plan CAD 1.1101 in / 6.6608 out per 1M tokens (https://carouter.ai/llms-full.txt,
+#   https://carouter.ai/api/public/models, accessed 2026-11-04), converted at 1.3961 CAD per USD
+#   (Bank of Canada, 2026-11-04).
+# Effort: both upstreams take reasoning_effort none|low|medium|high
+#   (providers/ovhcloud/models/qwen3.5-397b-a17b.toml,
+#   providers/scaleway/models/qwen3.5-397b-a17b.toml); both charge the same price. Context 250,000
+#   per CARouter's catalog. CARouter documents image input, not video.
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 250_000
+
+[cost.text.input]
+price = 0.7951
+
+[cost.text.output]
+price = 4.771
