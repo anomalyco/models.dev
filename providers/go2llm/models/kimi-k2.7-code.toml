@@ -1,0 +1,20 @@
+# Prices: https://go2llm.tech/api/pricing (catalog version 54, generated 2026-11-27T03:24:20.081Z), USD per 1M tokens. Cache mechanism is undocumented, so implicit; cached tokens are billed at the cache rates.
+# Input: https://go2llm.tech/errors/400-unsupported-content-type (images only where GET https://api.go2llm.tech/v1/models lists image; PDF, file, audio and video are rejected for every model).
+# Reasoning: always on with no caller control, same as providers/moonshotai/models/kimi-k2.7-code.toml (validate needs the explicit line).
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.09548
+cache = { read = 0.0191, write = 0.119 }
+
+[cost.text.output]
+price = 0.402

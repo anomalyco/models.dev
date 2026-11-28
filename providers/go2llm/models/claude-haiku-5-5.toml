@@ -1,0 +1,25 @@
+# Prices: https://go2llm.tech/api/pricing (catalog version 54, generated 2026-11-27T03:24:20.081Z), USD per 1M tokens. Cache mechanism is undocumented, so implicit; cached tokens are billed at the cache rates.
+# Input: https://go2llm.tech/errors/400-unsupported-content-type (images only where GET https://api.go2llm.tech/v1/models lists image; PDF, file, audio and video are rejected for every model).
+# Reasoning: chat.completions forwards the request body unchanged, so the controls are copied from providers/anthropic/models/claude-haiku-5-5.toml.
+# Toggle: thinking.type = adaptive|disabled (adaptive by default; disabled is rejected at xhigh and max effort)
+# Prompt limit: max_prompt_tokens = 100000 in GET https://api.go2llm.tech/v1/models.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "medium" } }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.006, write = 0.075 }
+
+[cost.text.output]
+price = 0.3
+
+[limit]
+input = 100_000

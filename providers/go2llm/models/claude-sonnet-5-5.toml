@@ -1,0 +1,20 @@
+# Prices: https://go2llm.tech/api/pricing (catalog version 54, generated 2026-11-27T03:24:20.081Z), USD per 1M tokens. Cache mechanism is undocumented, so implicit; cached tokens are billed at the cache rates.
+# Input: https://go2llm.tech/errors/400-unsupported-content-type (images only where GET https://api.go2llm.tech/v1/models lists image; PDF, file, audio and video are rejected for every model).
+# Reasoning: chat.completions forwards the request body unchanged, so the controls are copied from providers/anthropic/models/claude-sonnet-5-5.toml.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "high" } }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, write = 1.875 }
+
+[cost.text.output]
+price = 7.5

@@ -1,0 +1,20 @@
+# Prices: https://go2llm.tech/api/pricing (catalog version 54, generated 2026-11-27T03:24:20.081Z), USD per 1M tokens. Cache mechanism is undocumented, so implicit; cached tokens are billed at the cache rates.
+# Input: https://go2llm.tech/errors/400-unsupported-content-type (images only where GET https://api.go2llm.tech/v1/models lists image; PDF, file, audio and video are rejected for every model).
+# Reasoning: served by the native Anthropic route, which rebuilds chat.completions from a fixed field list (model, messages, stream, max_tokens, system, temperature, top_p, stop, tools, tool_choice), so the model reasons at the lab default with no caller control.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2.57
+cache = { read = 0.15, write = 3.21 }
+
+[cost.text.output]
+price = 12.85
