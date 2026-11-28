@@ -1,0 +1,35 @@
+# Source: https://tchavi.com/api/model-tiers (public, no key; accessed 2026-11-19).
+# Prices there are credits per 1K tokens; converted at Tchavi's rate of
+# 1 credit = 0.3333 XOF and 600 XOF per USD, so USD per 1M = credits per 1K x 0.5555.
+# 4.39 / 21.95 credits per 1K in / out (list), cache read 0.439.
+# EFFECTIVE price: a 10% promotion runs until 2027-12-31, and the prices below
+# are list less 10%. List is $2.4386 / $12.1932 per 1M, cache read $0.2439; the
+# file returns to those when the promotion ends.
+# Limit: output 943,718 is Tchavi's served ceiling (maxOutput on the same
+# endpoint), lower than the publisher's. The context window is inherited.
+# Reasoning: Tchavi serves `none` and `max` only, a Tchavi restriction rather
+# than the publisher's. Measured 2026-10-23: minimal, low, medium and high each
+# wrote reasoning until max_tokens and returned no answer, billed in full, so
+# Tchavi refuses them with a 400 before the call. `none` and the default `max`
+# answered normally. xhigh is refused too.
+# Structured output: probed live on Tchavi on 2026-11-19 (reasoning_effort none):
+# a strict json_schema response_format returned conforming JSON with a 200.
+# Cache: Moonshot's automatic prompt caching; cached tokens bill at the cache
+# read price.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "max"], default = { type = "effort", value = "max" } }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2.1948
+cache = { read = 0.2195 }
+
+[cost.text.output]
+price = 10.9739
+
+[limit]
+output = 943_718

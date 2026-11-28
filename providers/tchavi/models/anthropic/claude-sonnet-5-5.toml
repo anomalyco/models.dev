@@ -1,0 +1,29 @@
+# Source: https://tchavi.com/api/model-tiers (public, no key; accessed 2026-11-19).
+# Prices there are credits per 1K tokens; converted at Tchavi's rate of
+# 1 credit = 0.3333 XOF and 600 XOF per USD, so USD per 1M = credits per 1K x 0.5555.
+# 4.4 / 22 credits per 1K in / out. No promotion runs on this model.
+# Reasoning: Tchavi forwards the effort to Anthropic's Messages API, refusing no
+# value on this row, so the effort set is the publisher's. No `none`: Tchavi maps
+# OpenAI's `none` and `minimal` to `low`, and this model rejects thinking being
+# turned off anyway.
+# Tools: forced tool use (required or a named tool) is refused with a 400, as on
+# Anthropic's own API; the inherited choice = auto/none already says so.
+# Structured output: a json_schema response_format is translated to Anthropic's
+# output_config.format (Tchavi, verified on every Claude row 2026-10-23).
+# json_object has no Anthropic equivalent and is refused with a 400.
+# Cache: false. Tchavi builds the Messages body field by field and does not
+# forward cache_control markers, so no prompt is cached and no cache price is
+# charged; Tchavi's catalogue cache rates for this row never apply.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = false
+
+[cost.text.input]
+price = 2.4442
+
+[cost.text.output]
+price = 12.221

@@ -1,0 +1,29 @@
+# Source: https://tchavi.com/api/model-tiers (public, no key; accessed 2026-11-19).
+# Prices there are credits per 1K tokens; converted at Tchavi's rate of
+# 1 credit = 0.3333 XOF and 600 XOF per USD, so USD per 1M = credits per 1K x 0.5555.
+# 0.22 / 1.1 credits per 1K in / out. No promotion runs on this model.
+# Reasoning: Tchavi forwards the effort to Anthropic's Messages API, refusing no
+# value on this row, so the effort set is the publisher's. There is no off state
+# through Tchavi: Anthropic accepts thinking.type=disabled on this model at high
+# effort or below, but Tchavi's Chat Completions translator sends no `thinking`
+# field and maps OpenAI's `none` and `minimal` to `low`. So no `toggle` and no
+# `none`.
+# Structured output: a json_schema response_format is translated to Anthropic's
+# output_config.format (Tchavi, verified on every Claude row 2026-10-23).
+# json_object has no Anthropic equivalent and is refused with a 400.
+# Cache: false. Tchavi builds the Messages body field by field and does not
+# forward cache_control markers, so no prompt is cached and no cache price is
+# charged; Tchavi's catalogue cache rates for this row never apply.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = false
+
+[cost.text.input]
+price = 0.1222
+
+[cost.text.output]
+price = 0.6111
