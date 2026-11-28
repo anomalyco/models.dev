@@ -1,0 +1,35 @@
+# Pricing: https://jzstoken.com/model-pricing/deepseek-v4.1-flash-1017 (checked 2026-11-15).
+# The billing row was last updated 2026-11-10 07:20 UTC. The previous id's page,
+# https://jzstoken.com/model-pricing/deepseek-v4.1-flash, is a 404 ("Model not found").
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# The displayed base prices are off-peak. The cited page says: "During
+# Mon-Fri 09:00-12:00 x2, Mon-Fri 14:00-18:00 x2 (Asia/Shanghai) every rate
+# above is multiplied by the peak factor." Asia/Shanghai is UTC+8 with no DST,
+# and these windows stay on the same UTC weekday, so the multiplier is
+# Monday-Friday 01:00-04:00 and 06:00-10:00 UTC. The page states no holiday
+# restriction.
+# Image input: the page says "Not supported". The 1017 lab model accepts images,
+# so this host overrides input to text.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0683
+cache = { read = 0.0014, write = 0.0683 }
+
+[cost.text.output]
+price = 0.2730
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
