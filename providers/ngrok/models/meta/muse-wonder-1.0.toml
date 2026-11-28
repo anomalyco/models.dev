@@ -1,0 +1,34 @@
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max (per the API's validation error, verified 2026-10-12 in providers/meta)
+# Source: ngrok.ai catalog, provider `meta` (default route for this ID), accessed 2026-11-12.
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# APIs: the surfaces the ngrok catalog lists for this route (chat-completions, responses, messages):
+# https://ngrok.com/docs/ai-gateway/reference/model-catalog#meta
+# Reasoning, cache and compatibility markers from providers/meta (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
+schema = 2
+base_model = "meta/muse-wonder-1.0"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 4.05
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 20.05
+
+[cost.audio.input]
+price = 4.05

@@ -1,0 +1,28 @@
+# Source: ngrok.ai catalog, provider `openai` (default route for this ID), accessed 2026-11-12.
+# Prices = catalog list price + $0.05/M processing fee on all request and response tokens:
+# https://ngrok.com/docs/ai-gateway/concepts/credits#processing-fee
+# APIs: the surfaces the ngrok catalog lists for this route (chat-completions, responses):
+# https://ngrok.com/docs/ai-gateway/reference/model-catalog#openai
+# Reasoning, cache and compatibility markers from providers/openai (the lab's own provider entry). The gateway
+# forwards requests minus unsupported params and returns responses unchanged:
+# https://ngrok.com/docs/ai-gateway/how-it-works
+# tools.freeform not authored: custom-tool grammars have not been live-probed through the gateway yet.
+schema = 2
+base_model = "openai/gpt-5-nano"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1_024 } }
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.055 }
+
+[cost.text.output]
+price = 0.45
