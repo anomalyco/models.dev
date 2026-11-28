@@ -1,0 +1,13 @@
+# WorldRouter is a WorldClaw product ("© 2026 WorldRouter. All rights reserved. · A WorldClaw product").
+# https://worldrouter.ai permanently redirects (HTTP 308) to https://router.worldclaw.ai/, which hosts
+# the official WorldRouter branding, model catalog, pricing, and documentation.
+# The quickstart Base URL section and every model page's curl snippet on router.worldclaw.ai
+# specify https://inference-api.worldrouter.ai/v1 as the API endpoint for the same service.
+# Sources: https://router.worldclaw.ai/docs/quickstart#base-url
+# https://router.worldclaw.ai/docs/api (reviewed 2026-11-25)
+name = "WorldRouter"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["WORLDROUTER_API_KEY"]
+api = "https://inference-api.worldrouter.ai/v1"
+doc = "https://router.worldclaw.ai/docs/quickstart"

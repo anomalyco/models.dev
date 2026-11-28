@@ -1,0 +1,34 @@
+# Pricing: https://router.worldclaw.ai/models/gpt-6.1-terra
+# https://router.worldclaw.ai/models — reviewed 2026-11-19.
+# Prices converted from credits: 100 credits = USD 1; all costs USD / 1M tokens.
+# API: https://router.worldclaw.ai/docs/api (Chat Completions).
+# Reasoning baseline: native openai and OpenRouter provider entries at
+# models.dev fcb75c2d2c177ab3c8ba2af750b138b6610e4ef8, per relay policy.
+# Cache prices are public; the host does not document cache-control details.
+# OpenCode 2.3.0 smoke test: function-tool call and text reply with medium selected.
+# Chat Completions rejected custom tools for text, Lark, and regex with HTTP 400
+# in authenticated probes (2026-11-19).
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 0.7
+cache = { read = 0.035, write = 0.875 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.4
+cache = { read = 0.07, write = 1.75 }
+
+[cost.text.output]
+price = 3.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 5.25

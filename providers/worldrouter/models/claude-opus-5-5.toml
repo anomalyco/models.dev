@@ -1,0 +1,23 @@
+# Pricing: https://router.worldclaw.ai/models/claude-opus-5-5
+# https://router.worldclaw.ai/models — reviewed 2026-11-19.
+# Prices converted from credits: 100 credits = USD 1; all costs USD / 1M tokens.
+# API: https://router.worldclaw.ai/docs/api (Chat Completions).
+# Reasoning baseline: native anthropic and OpenRouter provider entries at
+# models.dev fcb75c2d2c177ab3c8ba2af750b138b6610e4ef8, per relay policy.
+# Cache prices are public; the host does not document cache-control details.
+# OpenCode 2.3.0 smoke test: function-tool call and text reply with medium selected.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 2.8
+cache = { read = 0.14, write = 3.5 }
+
+[cost.text.output]
+price = 14
