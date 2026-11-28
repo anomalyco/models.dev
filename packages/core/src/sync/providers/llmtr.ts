@@ -168,10 +168,11 @@ function chatRoute(model: LLMTRModel) {
     && !SKIPPED_MODELS.has(model.id);
 }
 
-// LLMTR's own deployments are served as `llmtr/<id>` and also answer to the
-// bare id, which is what the catalog has always published.
+// Turkey-hosted deployments are listed as `llmtr/<name>`. Clients must send
+// that prefixed id, so the catalog publishes it as-is. The bare name also
+// answers on the API, but it is not the id the listing returns.
 export function modelID(id: string) {
-  return id.startsWith("llmtr/") ? id.slice("llmtr/".length) : id;
+  return id;
 }
 
 export function resolveLLMTRBaseModel(id: string) {
@@ -313,8 +314,9 @@ function displayName(id: string, baseModel: string) {
 // effort outside `supported_efforts` is rejected with the supported list, and
 // an effort on a route without a ladder with the control that route does have.
 // Other body fields reach the upstream unchanged, so a reasoning route the list
-// says nothing about may still have a control, and the Alibaba relay (`qwen/`)
-// and DeepSeek routes take their lab's own thinking fields (`enable_thinking`,
+// says nothing about may still have a control, and Alibaba-based routes
+// (`qwen/` and host-namespace relays whose lab entry is `alibaba/...`) and
+// DeepSeek routes take their lab's own thinking fields (`enable_thinking`,
 // `thinking_budget`, `thinking.type`) on top of what the list shows. Those
 // routes are measured and hand-authored instead.
 function reasoningControls(model: LLMTRModel, id: string, baseModel: string) {
@@ -372,5 +374,7 @@ function reasoningControls(model: LLMTRModel, id: string, baseModel: string) {
 }
 
 function forwardsLabThinking(sourceID: string, baseModel: string) {
-  return sourceID.startsWith("qwen/") || baseModel.startsWith("deepseek/");
+  // Alibaba-based routes on host namespaces (greenpt/, heabsy/, tensorx/, ...)
+  // also forward lab thinking fields; the list is not the whole story there.
+  return sourceID.startsWith("qwen/") || baseModel.startsWith("deepseek/") || baseModel.startsWith("alibaba/");
 }

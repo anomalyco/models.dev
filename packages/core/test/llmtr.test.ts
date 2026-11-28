@@ -92,6 +92,7 @@ test("leaves a reasoning route with no listed control to be measured", () => {
 test("leaves routes that forward the lab's own thinking fields to be measured", () => {
   expect(() => translate(row({ id: "qwen/qwen3.7-max" }))).toThrow(MissingReasoningOptionsError);
   expect(() => translate(row({ id: "greenpt/deepseek-v4.1-flash" }))).toThrow(MissingReasoningOptionsError);
+  expect(() => translate(row({ id: "heabsy/qwen3.8-27b-heabsy" }))).toThrow(MissingReasoningOptionsError);
 });
 
 test("creates a non-reasoning route the list says nothing about", () => {
@@ -175,7 +176,8 @@ test("skips routes the catalog cannot describe", () => {
 test("resolves host, region and free routes to the lab entry", () => {
   expect(resolveLLMTRBaseModel("greenpt/glm-5.3-flash-eu")).toBe("zhipuai/glm-5.3-flash");
   expect(resolveLLMTRBaseModel("moonshot/kimi-k3")).toBe("moonshotai/kimi-k3");
-  expect(modelID("llmtr/gemma-4")).toBe("gemma-4");
+  expect(modelID("llmtr/gemma-4")).toBe("llmtr/gemma-4");
+  expect(modelID("qwen/qwen3.8-flash")).toBe("qwen/qwen3.8-flash");
 });
 
 test("refuses a list too short to tell a retirement from truncation", async () => {
