@@ -1,0 +1,18 @@
+# The retail price cells on the linked host page publish exact USD per output second in HTML data[value].
+# https://iteracompute.com/models/kling-3-0-turbo/#pricing
+# https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v3.0-turbo"
+name = "Kling 3.0 Turbo"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.09343864608
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" }, generate_audio = { equals = true } }
+price = 0.1167983076

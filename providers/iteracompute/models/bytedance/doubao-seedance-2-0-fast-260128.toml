@@ -1,0 +1,23 @@
+# The host returns an MP4; generated sound is an embedded track. See https://iteracompute.com/models/doubao-seedance-2-0-fast-260128/#api
+# https://iteracompute.com/models/doubao-seedance-2-0-fast-260128/#pricing
+# https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
+# Rates are USD per million native video tokens, conditional on the presence of a reference video.
+schema = 2
+v2_only = true
+base_model = "bytedance-seed/seedance-2.0-fast"
+name = "Seedance 2.0 Fast \u00b7 260128"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "token"
+price = 5.60
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480P" }, input_video = { equals = true } }
+price = 3.30
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" }, input_video = { equals = true } }
+price = 3.30

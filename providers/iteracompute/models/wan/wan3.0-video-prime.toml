@@ -1,0 +1,33 @@
+# https://iteracompute.com/models/wan3-0-video-prime/
+# https://api.iteracompute.com/v1/models (verified 2026-11-22).
+# Resolution determines the USD price per second of reference and generated video.
+schema = 2
+v2_only = true
+base_model = "alibaba/wan3.0-video-prime"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.input]
+price = 0.2016
+unit = "second"
+
+[[cost.video.input.overrides]]
+when = { resolution = { equals = "480P" } }
+price = 0.04896
+
+[[cost.video.input.overrides]]
+when = { resolution = { equals = "720P" } }
+price = 0.1008
+
+[cost.video.output]
+price = 0.2016
+unit = "second"
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "480P" } }
+price = 0.04896
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" } }
+price = 0.1008

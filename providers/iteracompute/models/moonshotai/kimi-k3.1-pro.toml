@@ -1,0 +1,36 @@
+# The exact host contract lists no thinking.type toggle: https://iteracompute.com/models/kimi-k3-1-pro/#parameters
+# The recorded rejection concerns reasoning_effort. Runtime behavior of thinking.type=disabled has not been established on this route.
+# The model page's usage limits document rejection of reasoning_effort=low; the API's deployment_limits specify 917504 input and 131072 output.
+# Chat Completions, Responses and Messages are listed on https://iteracompute.com/models/kimi-k3-1-pro/#interface-contract
+# https://iteracompute.com/models/kimi-k3-1-pro/
+# https://api.iteracompute.com/v1/models (verified 2026-11-22).
+# The host documents default reasoning and rejects an explicit effort selector.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+output = 131072
+input = 917504
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.6
+cache = { read = 0.16, write = 1.6 }
+
+[cost.text.output]
+price = 8

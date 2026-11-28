@@ -1,0 +1,23 @@
+# Source currency is USD. Each unrounded clip tariff comes from the linked retail price cell (HTML data[value] where present).
+# https://iteracompute.com/models/minimax-hailuo-2-3/#pricing
+# https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
+# The host bills a fixed price per supported clip. Each per-second equivalent is the clip price divided by its duration.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-Hailuo-2.3"
+name = "MiniMax Hailuo 2.3"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.0329431124
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "768P" }, duration = { equals = 10 } }
+price = 0.03953173488
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" }, duration = { equals = 6 } }
+price = 0.0576504467

@@ -1,0 +1,21 @@
+# https://iteracompute.com/models/qwen-image-3-0-pro/
+# https://api.iteracompute.com/v1/models (verified 2026-11-22).
+# Input and output are billed per image. Resolution determines the output price.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen-image-3.0-pro"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.input]
+price = 0.00252
+unit = "image"
+
+[cost.image.output]
+price = 0.0336
+unit = "image"
+
+[[cost.image.output.overrides]]
+when = { resolution = { equals = "2K" } }
+price = 0.063

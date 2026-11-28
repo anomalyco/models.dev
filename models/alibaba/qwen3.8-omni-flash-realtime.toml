@@ -1,0 +1,28 @@
+# https://www.alibabacloud.com/help/en/model-studio/qwen3-8-omni-flash-realtime
+# https://help.aliyun.com/zh/model-studio/newly-released-models
+# https://www.alibabacloud.com/help/en/model-studio/client-events
+# https://qwen.ai/blog?id=qwen3.8-omni-flash
+schema = 2
+v2_only = true
+type = "realtime"
+name = "Qwen3.8 Omni Flash Realtime"
+description = "Streaming voice and video-frame conversation with text and audio responses"
+family = "qwen-omni-realtime-flash"
+open_weights = false
+release_date = "2026-09-18"
+
+[modalities]
+input = ["text", "audio/pcm", "image/jpeg"]
+output = ["text", "audio/pcm"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262144
+input = 196608
+output = 65536

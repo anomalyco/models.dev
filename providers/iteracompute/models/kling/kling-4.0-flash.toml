@@ -1,0 +1,19 @@
+# https://iteracompute.com/models/kling-4-0-flash/#pricing
+# https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
+# Prices are per native billable second. With reference video, billable seconds = output + max(input, output).
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v4.0-flash"
+name = "Kling 4.0 Flash"
+description = "Generates video from text, images and reference video. With a reference clip, multiply the listed rate by output seconds plus the larger of input and output seconds."
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.094
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" }, input_video = { equals = true } }
+price = 0.063

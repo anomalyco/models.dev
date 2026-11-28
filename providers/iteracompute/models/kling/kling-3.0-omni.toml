@@ -1,0 +1,47 @@
+# The retail price cells on the linked host page publish exact USD per output second in HTML data[value].
+# The host overview lists video references for the omni operation. Inherit the lab's MP4 and MOV inputs.
+# https://iteracompute.com/models/kling-3-0-omni/#pricing
+# https://api.iteracompute.com/v1/models lists this exact ID on /v1/videos.
+schema = 2
+v2_only = true
+base_model = "kuaishou/kling-v3.0-omni"
+name = "Kling 3.0 Omni"
+
+[api.videos]
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.video.output]
+unit = "second"
+price = 0.07007898456
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" }, input_video = { equals = false }, generate_audio = { equals = false } }
+price = 0.09343864608
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4K" }, input_video = { equals = false }, generate_audio = { equals = false } }
+price = 0.3503949228
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" }, input_video = { equals = false }, generate_audio = { equals = true } }
+price = 0.09343864608
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" }, input_video = { equals = false }, generate_audio = { equals = true } }
+price = 0.1167983076
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4K" }, input_video = { equals = false }, generate_audio = { equals = true } }
+price = 0.3503949228
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "720P" }, input_video = { equals = true }, generate_audio = { equals = false } }
+price = 0.10511847684
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "1080P" }, input_video = { equals = true }, generate_audio = { equals = false } }
+price = 0.14015796912
+
+[[cost.video.output.overrides]]
+when = { resolution = { equals = "4K" }, input_video = { equals = true }, generate_audio = { equals = false } }
+price = 0.3503949228

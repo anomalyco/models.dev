@@ -127,6 +127,7 @@ export const ModelFamilyValues = [
   "qwen-math-turbo",
   "qwen-math-plus",
   "qwen-omni-realtime-flash",
+  "qwen-audio-realtime-plus",
   "qwen-mt-turbo",
   "tongyi",
   "qwen-omni-realtime",

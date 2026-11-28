@@ -1,3 +1,4 @@
+# Current route output cap: https://api.iteracompute.com/v1/models (2026-11-22).
 # Prices rechecked 2026-10-28 against the exact /v1/models pricing object:
 # $0.14 input, $0.006 cache read, $0.55 output per 1M tokens.
 # Sources (accessed 2026-10-22):
@@ -20,7 +21,7 @@ structured_output = true
 
 [limit]
 context = 1_048_576
-output = 393_216
+output = 390_000
 
 [cost.text.input]
 price = 0.14

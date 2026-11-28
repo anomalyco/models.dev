@@ -1,0 +1,33 @@
+# The API specifies deployment_limits.max_input_tokens=983616, model_specification.context_tokens=1000000, max_output_tokens=262144 and reasoning.default_effort=high.
+# Chat Completions, Responses and Messages are listed on https://iteracompute.com/models/qwen4-max/#interface-contract
+# https://iteracompute.com/models/qwen4-max/
+# https://api.iteracompute.com/v1/models (verified 2026-11-22).
+# Chat reasoning_effort accepts none, low, high and xhigh.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"], default = { type = "effort", value = "high" } }
+structured_output = true
+
+[limit]
+input = 983616
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, write = { "5m" = 1.875, "1h" = 3 } }
+
+[cost.text.output]
+price = 4.5
