@@ -1,0 +1,19 @@
+# Effort: live probe 2026-11-25, reasoning_effort low|medium|high|xhigh|max return 200; none and minimal are rejected with 400.
+# Prices: https://hiapi.ai/docs/models.json `pricing` (unit usd_per_1m_tokens, accessed 2026-11-27), copied as listed; no currency conversion.
+# Request controls: https://hiapi.ai/docs/models.json (accessed 2026-11-25).
+# Verified live 2026-11-25 on https://api.hiapi.ai/v1 and again 2026-11-27 on https://api.hiapi.sh/v1: POST /chat/completions returns 200; usage reports cached_tokens.
+# Tools: custom (freeform) tools are rejected on this host, so freeform is left out. Probed 2026-11-27 on api.hiapi.sh Chat Completions with one custom tool per format (text, regex ZZ[0-9]{3}, the same grammar in lark) and tool_choice "required": each returned 400 invalid_request. The same request with a function tool returned 200 with a tool call.
+# Limits: https://hiapi.ai/docs/models.json lists context 1,050,000 / output 128,000 (accessed 2026-11-27); equal to the lab entry, so no [limit] override.
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 2.5
