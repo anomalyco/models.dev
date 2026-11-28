@@ -1,0 +1,17 @@
+# Price: https://modapi.ai/api/pricing (model gemini-3.7-flash), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Effort: reasoning_effort = low|medium|high
+# Values from providers/google/models/gemini-3.7-flash.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.7-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.575
+cache = { read = 0.1575 }
+
+[cost.text.output]
+price = 7.875

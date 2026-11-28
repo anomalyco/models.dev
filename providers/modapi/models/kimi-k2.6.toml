@@ -1,0 +1,17 @@
+# Price: https://modapi.ai/api/pricing (model kimi-k2.6), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Toggle: thinking.type = enabled|disabled
+# Values from providers/moonshotai/models/kimi-k2.6.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
+schema = 2
+v2_only = true
+base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 4

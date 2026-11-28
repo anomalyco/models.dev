@@ -1,0 +1,17 @@
+# Price: https://modapi.ai/api/pricing (model mimo-v2.6-flash), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Toggle: thinking.type = enabled|disabled
+# Values from providers/xiaomi/models/mimo-v2.6-flash.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
+schema = 2
+v2_only = true
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

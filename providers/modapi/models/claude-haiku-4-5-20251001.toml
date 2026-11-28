@@ -1,0 +1,18 @@
+# Price: https://modapi.ai/api/pricing (model claude-haiku-4-5-20251001), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking.budget_tokens
+# Values from providers/anthropic/models/claude-haiku-4-5-20251001.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
+schema = 2
+v2_only = true
+base_model = "anthropic/claude-haiku-4-5-20251001"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1024 } }
+
+[cost.text.input]
+price = 1
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 5
