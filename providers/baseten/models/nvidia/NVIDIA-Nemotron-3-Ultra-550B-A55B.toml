@@ -1,3 +1,5 @@
+# Status: deprecated. Baseten shuts nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B down on 2026-12-18 at 5 PM PT; requests return an error after that.
+# Recommended replacement: Nemotron 3.5 Super VL (nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B). Source: https://docs.baseten.co/inference/model-apis/deprecation (accessed 2026-11-28).
 # Reasoning is off by default. Baseten documents reasoning_effort = none | high:
 # none turns reasoning off, high turns it on (chat_template_args.enable_thinking
 # also works). No reasoning-token budget is documented.
@@ -10,6 +12,7 @@
 schema = 2
 base_model = "nvidia/nemotron-3-ultra-550b-a55b"
 name = "Nemotron 3 Ultra"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true }

@@ -1,3 +1,5 @@
+# Status: deprecated. Baseten shuts zai-org/GLM-5.2-Fast down on 2026-12-18 at 5 PM PT; requests return an error after that.
+# Recommended replacement: GLM 5.3 Fast (zai-org/GLM-5.3-Fast). Source: https://docs.baseten.co/inference/model-apis/deprecation (accessed 2026-11-28).
 # Fast tier of GLM 5.2: same weights/API as zai-org/GLM-5.2, dedicated
 # higher-throughput capacity. Reasoning is on by default. Baseten documents
 # reasoning_effort = none | low | high | max for GLM 5.2 Fast, each run as sent.
@@ -12,6 +14,7 @@
 schema = 2
 base_model = "zhipuai/glm-5.2"
 name = "GLM 5.2 Fast"
+status = "deprecated"
 
 [modalities]
 input = ["text", "image"]
