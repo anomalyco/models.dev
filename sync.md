@@ -19,6 +19,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync digitalocean` syncs only DigitalOcean.
 - `bun models:sync xai` syncs only xAI.
 - `bun models:sync kilo` syncs only Kilo.
+- `bun models:sync lowrouter` syncs prices and lifecycle for existing LowRouter models.
 - `bun models:sync merge-gateway` syncs only Merge Gateway.
 - `bun models:sync mistral` syncs only Mistral.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
@@ -390,6 +391,16 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - New models are created as `base_model` overlays carrying the price, context, `structured_output` from the docs' "Structured outputs" column, and `tools = false` when "Function calling" says no. Hugging Face organisations map to lab directories in `LAB_PREFIXES`. A model without a lab file opens a missing-model issue. A reasoning model is never created: neither source states how a route turns reasoning on, off or up, so it opens an issue for its controls to be probed and authored.
 - Reasoning controls, modalities (exact MIME types), tools, `structured_output`, mid-conversation flags, limits other than context, display names and header comments are hand-authored and kept.
 - Image, video, audio, transcription, embedding, rerank and base (`language`, `code`) rows are ignored. `/v1/models` labels their types clearly, but their prices are estimates or free text (`example_price`, "0.006 - 0.165 per image"), and the catalog has no Together media models.
+
+## LowRouter Notes
+
+- LowRouter is implemented in `packages/core/src/sync/providers/lowrouter.ts`.
+- Source endpoint: the public `https://api.lowrouter.ai/v1/models?currency=usd`; no authentication. EUR-billed routes are converted by LowRouter at the ECB rate the pinned entry states in `fx`.
+- Only files already in `providers/lowrouter` are updated. New IDs are not created and do not open issues (`trackMissingModels: false`); they are added by hand-authored PRs.
+- Each file takes the input, output, cache-read and cache-write prices of the route in `auto_routing.default_routes`, the route a plain request resolves to. A route without cache prices drops them.
+- `lifecycle = "deprecated"` sets `status = "deprecated"`; otherwise an authored status is kept. Deprecated IDs stay listed until their `retires_on` date, and an ID LowRouter no longer lists is removed. Fewer than 100 auto IDs fails the run as a truncated response.
+- IDs LowRouter renamed are listed in `RENAMED`; the old file moves to the new ID with its authored fields.
+- Reasoning controls, limits, modalities, API tables and every other field stay as authored. The cost lines of a header are rewritten when the price changes; the evidence lines from the first `# Effort:`, `# Reasoning:`, `# Limit:` or similar label on are kept.
 
 ## Morph Notes
 
