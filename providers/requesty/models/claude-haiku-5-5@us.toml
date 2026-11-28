@@ -1,0 +1,24 @@
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+name = "Claude Haiku 5.5 (US)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.011, write = 0.1375 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.55
+cache = { read = 0.055, write = 0.6875 }
+
+[cost.text.output]
+price = 0.55
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.75
