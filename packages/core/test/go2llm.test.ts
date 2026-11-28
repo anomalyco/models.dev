@@ -54,8 +54,9 @@ function catalog(ids = Object.keys(SHIPPED)): Catalog {
 }
 
 // Image generation models are listed with a per-image price.
+const PER_IMAGE = { unit: "image", variants: { "size=1024x1024;quality=standard": { usdPerImage: 0.04 } } };
 const IMAGE_MODEL = {
-  pricing: { id: "gpt-image-2", lifecycle: "published", prices: { unit: "image", variants: [{ size: "1024x1024", price: 0.04 }] } },
+  pricing: { id: "gpt-image-2", lifecycle: "published", prices: PER_IMAGE },
   served: { id: "gpt-image-2", object: "model", modalities: { input: ["text", "image"], output: ["image"] } },
 };
 
@@ -107,14 +108,28 @@ test("joins the price list with /v1/models and keeps only published models", () 
   expect(models[1]!.maxPromptTokens).toBeUndefined();
 });
 
-test("skips models without token prices silently", () => {
+test("skips per-unit models without a notice and keeps their files", () => {
   const source = catalog(["kimi-k2.6"]);
   source.pricing.models.push(IMAGE_MODEL.pricing);
   source.models.data.push(IMAGE_MODEL.served);
   const image = go2llm.parseModels(source).find((model) => model.id === "gpt-image-2")!;
   expect(image.prices).toBeUndefined();
   expect(go2llm.sourceID(image)).toBeUndefined();
+  expect(go2llm.missingModelID(image)).toBe("gpt-image-2");
   expect(go2llm.translateModel(image, { existing: () => undefined, authored: () => undefined })).toBeUndefined();
+  const kimi = go2llm.parseModels(source).find((model) => model.id === "kimi-k2.6")!;
+  expect(go2llm.missingModelID(kimi)).toBeUndefined();
+});
+
+test("a published model priced per unit keeps its file instead of losing it", async () => {
+  await inRoot(async (modelsDir) => {
+    const source = catalog();
+    row(source, "pricing", "kimi-k2.6").prices = PER_IMAGE;
+    const result = await syncProvider(go2llmAt(modelsDir, () => source));
+    expect(result).toMatchObject({ created: 0, updated: 0, deleted: 0 });
+    expect(result.notices).toEqual([]);
+    expect(await read(modelsDir, "kimi-k2.6")).toBe(SHIPPED["kimi-k2.6"]!.text);
+  });
 });
 
 test("fails closed on a catalog it cannot trust", () => {
@@ -132,6 +147,13 @@ test("fails closed on a catalog it cannot trust", () => {
   const badPrice = catalog(["kimi-k2.6"]);
   row(badPrice, "pricing", "kimi-k2.6").prices.input = -1;
   expect(() => go2llm.parseModels(badPrice)).toThrow("prices for kimi-k2.6 are not valid");
+
+  // Neither a token price nor a per-unit price: a bad row, not an image model.
+  for (const prices of [{}, { output: 1 }, { unit: "image" }]) {
+    const degenerate = catalog(["kimi-k2.6"]);
+    row(degenerate, "pricing", "kimi-k2.6").prices = prices;
+    expect(() => go2llm.parseModels(degenerate)).toThrow("prices for kimi-k2.6 are not valid");
+  }
 });
 
 test("rejects an input modality it cannot map", () => {

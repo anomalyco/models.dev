@@ -8,14 +8,23 @@ const MODELS_ENDPOINT = "https://api.go2llm.tech/v1/models";
 
 const Price = z.number().finite().nonnegative();
 
-// Token-priced models. Image generation models quote `{ unit, variants }`
-// instead and are skipped.
+// Token-priced models.
 const TokenPrices = z
   .object({
     input: Price,
     output: Price,
     cacheRead: Price.optional(),
     cacheWrite: Price.optional(),
+  })
+  .passthrough();
+
+// Image generation models quote a price per unit instead, e.g.
+// `{ unit: "image", variants: { "size=1024x1024;quality=standard": { usdPerImage } } }`.
+// They are not synced.
+const PerUnitPrices = z
+  .object({
+    unit: z.string().min(1),
+    variants: z.record(z.object({}).passthrough()),
   })
   .passthrough();
 
@@ -68,8 +77,13 @@ export const go2llm = {
   skipCreates: true,
   trackMissingModels: false,
   sourceID(model) {
-    // Models without token prices are skipped on purpose and not reported.
+    // Models priced per unit are skipped on purpose and not reported.
     return model.prices === undefined ? undefined : model.id;
+  },
+  missingModelID(model) {
+    // A per-unit model is still published, so the runner keeps an existing
+    // hand-authored file for it. trackMissingModels is false: no issue opens.
+    return model.prices === undefined ? model.id : undefined;
   },
   skippedNotice(ids) {
     if (ids.length === 0) return [];
@@ -140,8 +154,9 @@ export function parseGo2llmModels(raw: unknown): Go2llmModel[] {
   return published.map((model) => {
     const row = served.get(model.id)!;
     const prices = TokenPrices.safeParse(model.prices);
-    if (!prices.success && "input" in model.prices) {
-      // A token price that doesn't parse is a bad row, not an image model.
+    // A row that is neither a token price nor a per-unit price is a bad row:
+    // treating it as an image model would hide it.
+    if (!prices.success && !PerUnitPrices.safeParse(model.prices).success) {
       throw new Error(`go2llm prices for ${model.id} are not valid: ${prices.error.message}`);
     }
     return {

@@ -552,8 +552,9 @@ go2llm is implemented in `packages/core/src/sync/providers/go2llm.ts`.
 - The catalog owns `cost.input`, `cost.output`, `cost.cache_read` and `cost.cache_write` (the cache prices while quoted), the input modalities, `limit.input` and removals. Everything else in a file is kept: `base_model`, reasoning controls, `cache`, output modalities and the header comments.
 - `limit.input` is `max_prompt_tokens` when it is below the served context; without it the file inherits the lab's. Values that match the lab are factored out, so a file whose input list equals the lab's has no `[modalities]` table.
 - A kind the catalog adds (a model that newly takes images) is written with the lab's MIME types for that kind, so PDF, audio and video don't come along with images.
-- `skipCreates` is set and `trackMissingModels` is `false`: the catalog has go2llm-specific variants (`*-tiered`, `*-low`) and service models with no lab model of their own, and a new file needs reasoning controls the catalog doesn't state. Remote-only ids are listed in the report. Models priced per image (no token prices) are skipped silently.
-- A local file whose id is no longer published is removed. The run fails instead when the price list has no published models, when a published id is missing from `/v1/models`, when the units are not USD per 1M tokens, or when a token price is not a non-negative number.
+- `skipCreates` is set and `trackMissingModels` is `false`: the catalog has go2llm-specific variants (`*-tiered`, `*-low`) and service models with no lab model of their own, and a new file needs reasoning controls the catalog doesn't state. Remote-only ids are listed in the report.
+- Models priced per unit (image generation, `prices = { unit, variants }`) are not synced and get no notice. They are still published, so an existing file for one is kept (`missingModelID`); with `trackMissingModels = false` no issue opens.
+- A local file whose id is no longer published is removed. The run fails instead when the price list has no published models, when a published id is missing from `/v1/models`, when the units are not USD per 1M tokens, when a token price is not a non-negative number, or when a price row is neither a token price nor a per-unit price.
 
 ## Standalone Generators
 
