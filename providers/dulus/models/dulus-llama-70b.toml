@@ -1,0 +1,14 @@
+# Llama 3.3 70B does not reason: the OVHcloud upstream rejects `reasoning_effort`, so
+# Dulus sends none. Tools (incl. required/named tool_choice) measured 2026-11-28.
+schema = 2
+v2_only = true
+base_model = "meta/llama-3.3-70b-instruct"
+name = "Dulus Llama 70B (Llama 3.3 70B Instruct)"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+context = 131_072
