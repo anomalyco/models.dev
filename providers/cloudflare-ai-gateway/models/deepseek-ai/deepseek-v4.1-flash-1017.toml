@@ -1,0 +1,22 @@
+# Route: REST API POST /ai/v1/chat/completions (https://developers.cloudflare.com/ai-gateway/usage/rest-api/): no per-turn effort or tool-change mechanism.
+# Mid-conversation flags not checked.
+# Off: reasoning_effort = none; effort: low|high|max (default high; not checked live).
+# Sources: https://developers.cloudflare.com/ai/models/deepseek-ai/deepseek-v4.1-flash-1017/ ; https://developers.cloudflare.com/workers-ai/models/deepseek-v4.1-flash-1017/ ; providers/cloudflare-ai-gateway/models/deepseek/deepseek-v4-pro.toml
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[api.chat-completions]
+
+[api.responses]
+base_url = "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/cloudflare-ai-gateway" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 1.2
