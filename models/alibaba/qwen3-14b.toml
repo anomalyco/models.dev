@@ -1,0 +1,32 @@
+# Model card (https://huggingface.co/Qwen/Qwen3-14B, accessed 2026-11-28): dense 14.8B, thinking and non-thinking
+#   modes (enable_thinking), tool calling in both modes, "Context Length: 32,768 natively and 131,072 tokens with
+#   YaRN", "We recommend using an output length of 32,768 tokens for most queries", Apache-2.0.
+# Release: Qwen3 blog, published 2025-04-29 04:00 +08:00 (2025-04-28 UTC): https://qwenlm.github.io/blog/qwen3/
+#   (same date as qwen3-32b).
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
+name = "Qwen3 14B"
+description = "Dense 14B Qwen3 model with switchable thinking for chat, reasoning, and tool use"
+family = "qwen"
+open_weights = true
+release_date = "2025-04-28"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-14B"

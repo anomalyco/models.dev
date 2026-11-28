@@ -1,0 +1,32 @@
+# Model card (https://huggingface.co/LiquidAI/LFM2.5-24B-A2B) and docs (https://docs.liquid.ai/lfm/models/lfm25-24b-a2b),
+#   accessed 2026-11-28: 24B MoE with 2B active, text-only, "a pure reasoning model that always thinks before it
+#   answers" ("Reasoning is enabled by default and can't be switched off"), function calling, 131,072-token context,
+#   LFM Open License v1.0. No separate output cap is published, so output = context.
+# Release: https://www.liquid.ai/blog/lfm2-5-24b-a2b (OCT 13, 2026).
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "LFM2.5 24B A2B"
+description = "Efficient open Liquid MoE reasoning model for on-device agents and tool calling"
+family = "lfm"
+open_weights = true
+release_date = "2026-10-13"
+license = "LFM Open License v1.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 131_072
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LiquidAI/LFM2.5-24B-A2B"
