@@ -1,0 +1,46 @@
+# Sources (accessed 2026-11-28):
+# - Model card: https://ark.volcengine.com/models/doubao-embedding-vision.md (Doubao-embedding-vision, built on
+#   Seed1.6-Embedding; 1215 version adds multi-vector output; text, image and video input; 2048 dims, 1024 by
+#   the dimensions parameter; 128k context; video audio is not understood)
+# - Release: doubao-embedding-vision-251215 listed as 新发布 under 202512 in
+#   https://ark.volcengine.com/region:cn-beijing/docs/model-release-announcement-2025.md; the day is the 251215 version suffix.
+# - Limits: https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (向量化能力: 128K, 2048 dims, 支持 视频、文本、图片输入).
+# Image formats: the model card's 图像限制 (JPEG, PNG, WEBP, BMP, TIFF, ICO, DIB, ICNS, SGI, JPEG2000; DIB is image/bmp).
+# Video formats: MP4, AVI and MOV per the model card and https://ark.volcengine.com/region:cn-beijing/docs/multimodal-vectorization-api.md.
+schema = 2
+v2_only = true
+type = "embedding"
+name = "Seed Embedding Vision"
+description = "ByteDance Seed1.6-Embedding multimodal embedding model for mixed text, image, and video input, with 2,048 or 1,024 dimensions and multi-vector output"
+family = "seed"
+open_weights = false
+release_date = "2025-12-15"
+
+[modalities]
+input = [
+  "text",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/bmp",
+  "image/tiff",
+  "image/x-icon",
+  "image/x-icns",
+  "image/sgi",
+  "image/jp2",
+  "video/mp4",
+  "video/x-msvideo",
+  "video/quicktime",
+]
+output = ["embedding"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 128_000
+output = 0

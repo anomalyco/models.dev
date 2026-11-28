@@ -1,0 +1,19 @@
+# Model ID, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-28);
+#   not called live (no Ark key).
+# API: Responses only. The model card and the release note both point to POST /api/v3/responses, with the
+#   languages passed as input_text.translation_options (target_language required, source_language optional):
+#   https://ark.volcengine.com/models/doubao-seed-translation.md
+# CNY list prices (在线推理（常规）): https://ark.volcengine.com/region:cn-beijing/docs/model-pricing.md (accessed 2026-11-28):
+#   CNY 1.20 input / 3.60 output per M tokens, no online cache price.
+# CNY→USD rate: 6.670928, 2026-11-28, source: https://open.er-api.com/v6/latest/USD
+schema = 2
+base_model = "bytedance-seed/seed-translation"
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.17989
+
+[cost.text.output]
+price = 0.53966
