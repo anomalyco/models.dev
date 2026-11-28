@@ -1,0 +1,30 @@
+# Pricing and host limits: https://quicksilverpro.io/models/kimi-k3.1-pro/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/moonshotai/models/kimi-k3.1-pro.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
+# Effort: reasoning_effort = low|high|max
+# Verified host output limit: machinefi/qspro-backend@d4e49f456f5e5ff53a40fc597b387cf52d3b443e
+# catalog/models.json:1058-1060 sets max_output_tokens = 943718 (not the lab limit).
+# Video probe 2026-11-21 (PST): chat video_url identified the red clip; inherit lab inputs.
+# Probe endpoint: https://api.quicksilverpro.io/v1 (tiny inline media, max_tokens = 32).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 943718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

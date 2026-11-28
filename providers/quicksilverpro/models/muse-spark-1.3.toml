@@ -1,0 +1,29 @@
+# Pricing and host limits: https://quicksilverpro.io/models/muse-spark-1.3/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/meta/models/muse-spark-1.3.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
+# Effort: reasoning_effort = minimal|low|medium|high|xhigh|max
+# Media probes 2026-11-21 (PST): chat file (PDF) and video_url accepted (HTTP 200, 32-token cap).
+# chat input_audio (WAV) returned HTTP 400 model_not_found; retain audio exclusion.
+# Probe endpoint: https://api.quicksilverpro.io/v1 (tiny inline media, max_tokens = 32).
+schema = 2
+base_model = "meta/muse-spark-1.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "video/mp4", "application/pdf"]
+output = ["text"]
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 1.0
+cache = { read = 0.12 }
+
+[cost.text.output]
+price = 3.4

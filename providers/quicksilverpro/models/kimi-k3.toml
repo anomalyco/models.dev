@@ -1,0 +1,29 @@
+# Pricing and host limits: https://quicksilverpro.io/models/kimi-k3/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/moonshotai/models/kimi-k3.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
+# Effort: reasoning_effort = low|high|max
+# Video probe 2026-11-21 (PST): chat video_url returned HTTP 400 model_not_found; retain image-only media inputs.
+# Probe endpoint: https://api.quicksilverpro.io/v1 (tiny inline media, max_tokens = 32).
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.55
+cache = { read = 0.255 }
+
+[cost.text.output]
+price = 12.75

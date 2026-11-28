@@ -1,0 +1,36 @@
+# Pricing and host limits: https://quicksilverpro.io/models/qwen3.8-max/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/alibaba/models/qwen3.8-max.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
+# Toggle: enable_thinking = true|false
+# Effort: reasoning_effort = low|medium|xhigh
+# Budget: thinking_budget (reasoning tokens)
+# Context inherits the lab's 1000000: the model page documents 1M; the catalog's
+# rounded 1048576 is not evidence of a larger host window.
+# Media probes 2026-11-21 (PST): /v1/responses input_file read CEDAR731; chat file failed (500).
+# chat video_url returned HTTP 400 invalid_request; retain video exclusion. Use Responses for PDF.
+# Probe endpoint: https://api.quicksilverpro.io/v1 (tiny inline media, max_tokens = 32).
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262144 } }
+structured_output = true
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
+output = ["text"]
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+
+[cost.text.input]
+price = 2.0
+cache = { read = 0.25, write = 2.5 }
+
+[cost.text.output]
+price = 6.0

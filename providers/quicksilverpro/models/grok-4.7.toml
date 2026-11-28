@@ -1,0 +1,36 @@
+# Pricing and host limits: https://quicksilverpro.io/models/grok-4.7/
+# Canonical catalog: https://quicksilverpro.io/model-catalog.json (version 70, 2026-11-04)
+# Pricing: https://quicksilverpro.io/pricing.json
+# Reasoning baseline: providers/xai/models/grok-4.7.toml
+# Relay controls: https://quicksilverpro.io/docs/quickstart/
+# Effort: reasoning_effort = low|medium|high|xhigh
+# Verified host billing: machinefi/qspro-backend@d4e49f456f5e5ff53a40fc597b387cf52d3b443e
+# catalog/models.json:2644-2654 sets prompt_tokens_over = 200000; the model-page FAQ says
+# base rates apply up to 200000 tokens and the long-context tier applies strictly above it.
+# PDF probe 2026-11-21 (PST): chat file and /v1/responses input_file read CEDAR731; inherit lab inputs.
+# Probe endpoint: https://api.quicksilverpro.io/v1 (tiny inline media, max_tokens = 32).
+schema = 2
+base_model = "xai/grok-4.7"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 2.0
+cache = { read = 0.5 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 200000 } }
+price = 4.0
+cache = { read = 1.0 }
+
+[cost.text.output]
+price = 6.0
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 200000 } }
+price = 12.0
