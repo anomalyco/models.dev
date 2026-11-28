@@ -1,0 +1,26 @@
+# Description and capability flags come from https://api.plugsky.com/v1/models.
+# Sampling flags follow the documented chat-completions fields at https://plugsky.com/docs:
+# temperature and top_p are accepted; top_k is not documented and is published as false.
+# No reasoning-effort field is documented; reasoning is always-on where the model list reports it.
+# release_date is preserved for existing entries; a new entry uses its first catalog date.
+schema = 2
+name = "Plugsky GPU 27B"
+description = "Plugsky GPU 27B — 32K context, tools and JSON on verified consumer GPUs. Non-streaming; exact engine, returns 503 when no worker is available."
+open_weights = false
+release_date = "2026-11-26"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+temperature = true
+tools = { supported = true }
+top_p = true
+top_k = false
+
+[limit]
+context = 32_768
+output = 16_384
