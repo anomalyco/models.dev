@@ -1,12 +1,13 @@
 # Synced from https://ai-gateway.vercel.sh/v1/models (type transcription)
 # https://vercel.com/docs/ai-gateway/modalities/speech-to-text
+# release_date: AssemblyAI announced STT-3.7 on 2026-11-18 (https://www.assemblyai.com/blog/introducing-assemblyai-stt-3-7), not on Vercel's launch date.
 schema = 2
 v2_only = true
 type = "transcription"
 name = "STT-3.7"
 description = "Speech transcription model for accurate audio-to-text and captioning workflows"
 open_weights = false
-release_date = "2026-11-27"
+release_date = "2026-11-18"
 
 [modalities]
 input = ["audio"]
