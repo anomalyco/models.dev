@@ -1,0 +1,17 @@
+# freeform: regex grammar ZZ[0-9]{3} was enforced on chat-completions in a live probe (2026-11-19); lark/text follow the first-party OpenAI entry.
+# Pricing is per account: the effective per-token price depends on the account's plan and is
+# only shown in the console after sign-in (https://platform.closeai-asia.com/pricing).
+# Cost is intentionally omitted.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+store = true
+cache = { implicit = { min_tokens = 1024 }, explicit = { ttl = ["30m", "12h"], max_breakpoints = 4, min_tokens = 1024 } }
+prompt_cache_key = true
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible" }
+capabilities = { system_updates = true, tools = { strict = true, choice = ["auto", "none", "required", "tool"], freeform = ["text", "lark", "regex"] } }

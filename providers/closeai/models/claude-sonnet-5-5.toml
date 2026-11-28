@@ -1,0 +1,15 @@
+# Pricing is per account: the effective per-token price depends on the account's plan and is
+# only shown in the console after sign-in (https://platform.closeai-asia.com/pricing).
+# Cost is intentionally omitted.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.messages]
+base_url = "https://api.openai-proxy.org/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+capabilities = { system_updates = true, effort_updates = true, tools = { updates = ["add", "remove", "replace"], strict = true, search = true } }
