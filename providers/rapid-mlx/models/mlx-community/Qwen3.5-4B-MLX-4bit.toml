@@ -1,0 +1,36 @@
+# Local checkpoint: https://huggingface.co/mlx-community/Qwen3.5-4B-MLX-4bit
+# Text and tool-call smoke: https://github.com/raullenchai/Rapid-MLX/blob/62f78a767/docs/engineering/community/pr-revival-2026-11-06.md
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+# Live 2026-11-22, Rapid-MLX 1.0.4 /v1/chat/completions, temperature 0,
+# max_tokens 2048, fixed prompt, three runs per setting; counts are reported reasoning tokens.
+# reasoning_effort none: no reasoning_content; low: 415 (1281 characters);
+# medium/high: 964 each (4624 characters). Second fixed prompt, three runs each:
+# medium/high both 1024; indistinguishable within the output cap, so retain toggle.
+# Top-level enable_thinking=true, budget unset: 1928 (4624 characters) each run.
+# thinking_budget=64, top-level or chat_template_kwargs: unchanged in all three runs each.
+# Invalid thinking_budget="invalid" at either location: HTTP 200, unchanged; no budget control observed.
+# All probes above stopped at the request max_tokens (2048), not a server cap.
+# Top-level enable_thinking also toggles thinking (verified 2026-11-19).
+# Limits: /v1/models reports context_window = max_model_len = 262144; the server only caps output
+#   at the request max_tokens (32768 when omitted). Live 2026-11-22: max_tokens 6000, thinking off
+#   -> 6000 completion tokens, finish_reason length. Base [limit] values are inherited.
+schema = 2
+base_model = "alibaba/qwen3.5-4b"
+name = "Qwen3.5 4B MLX 4-bit"
+description = "Small Qwen3.5 model for text chat, reasoning, and tool use"
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[modalities]
+input = ["text"]
+output = ["text"]
