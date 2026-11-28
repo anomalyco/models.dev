@@ -52,6 +52,7 @@ import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
 import { keln } from "./providers/keln.js";
 import { kenari } from "./providers/kenari.js";
+import { crowllm } from "./providers/crowllm.js";
 import { kilo } from "./providers/kilo.js";
 import { llmgateway, llmgatewayProviders } from "./providers/llmgateway.js";
 import { mergeGateway } from "./providers/merge-gateway.js";
@@ -244,6 +245,7 @@ export const providers: {
   inceptron: SyncProvider<any>;
   keln: SyncProvider<any>;
   kenari: SyncProvider<any>;
+  crowllm: SyncProvider<any>;
   kilo: SyncProvider<any>;
   llmgateway: SyncProvider<any>;
   "llmgateway-providers": SyncProvider<any>;
@@ -306,6 +308,7 @@ export const providers: {
   inceptron,
   keln,
   kenari,
+  crowllm,
   kilo,
   llmgateway,
   "llmgateway-providers": llmgatewayProviders,
