@@ -1,5 +1,7 @@
-# API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
-# Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+# APIs: Chat Completions and Responses (POST https://<resource>.services.ai.azure.com/openai/v1/chat/completions and /openai/v1/responses), per the API Type column of "Models available in Foundry" in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-grok (accessed 2026-11-25). Chat Completions stays first so v1 keeps its provider.
+# Mid-conversation flags: left out. Azure's Grok guide documents no way to change tools or effort mid-conversation and no mid-conversation system messages on either API, so none of the three flags is marked.
+# Pricing: Azure Retail Prices API, Azure Grok Models product, "Grok 4.2 Inp glbl" 0.00125/1K and "Grok 4.2 Outp glbl" 0.0025/1K (effective 2026-05-01; no cached or long-context meter),
+# accessed 2026-11-25: https://prices.azure.com/api/retail/prices?$filter=productName eq 'Azure Grok Models'. Matches xAI's own grok-4.20 rate (providers/xai).
 schema = 2
 name = "Grok 4.20 (Non-Reasoning)"
 description = "Grok model for agentic tool use, reasoning, coding, and live assistance"
@@ -25,8 +27,10 @@ output = 8_192
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }
 
+[api.responses]
+
 [cost.text.input]
-price = 2
+price = 1.25
 
 [cost.text.output]
-price = 6
+price = 2.5

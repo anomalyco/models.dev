@@ -1,0 +1,27 @@
+schema = 2
+name = "TNG: DeepSeek R1T2 Chimera"
+description = "DeepSeek-TNG-R1T2-Chimera is the second-generation Chimera model from TNG Tech. It is a 671 B-parameter mixture-of-experts text-generation model assembled from DeepSeek-AI’s R1-0528, R1, and V3-0324 checkpoints with an Assembly-of-Experts merge. The..."
+family = "deepseek"
+open_weights = false
+release_date = "2025-07-08"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 131_072
+output = 32_768
+
+[cost.text.input]
+price = 1
+cache = { read = 0.02 }
+
+[cost.text.output]
+price = 2.625

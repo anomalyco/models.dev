@@ -16,13 +16,14 @@
 # tools.strict/choice: functionCallingConfig modes AUTO, ANY, NONE and VALIDATED (constrained decoding of function calls, which strict tools map to); ANY with one allowedFunctionNames entry forces that tool: https://ai.google.dev/api/caching#FunctionCallingConfig, https://ai.google.dev/gemini-api/docs/function-calling#function_calling_modes (Interactions tool_choice has the same modes). Chat Completions accepted tool_choice required/named and strict tools live on Gemini 3.8 Flash 2026-10-24.
 # tools: ANY with allowedFunctionNames, VALIDATED and NONE also verified live on this model 2026-10-24.
 # recommended_api: not set. Interactions has no thinking budget and accepts few thinking levels for Gemini 2.5 (live probe 2026-11-20: Pro and Flash accept low/high, Flash-Lite only high, and `minimal` is rejected, so thinking can't be turned off), so generate-content keeps the full budget and toggle controls.
+# Release date: 2025-07-22, the GA release of gemini-2.5-flash-lite (https://ai.google.dev/gemini-api/docs/deprecations, Release date column).
 schema = 2
 name = "Gemini 2.5 Flash-Lite"
 description = "Lean Gemini 2.5 lane for cheap multimodal traffic and quick agents"
 family = "gemini-flash-lite"
 open_weights = false
 knowledge = "2025-01"
-release_date = "2025-06-17"
+release_date = "2025-07-22"
 
 [modalities]
 input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "video/mp4", "video/mpeg", "video/mov", "video/avi", "video/x-flv", "video/mpg", "video/webm", "video/wmv", "video/3gpp", "application/pdf"]

@@ -1,0 +1,33 @@
+# Sources (accessed 2026-11-25):
+# - Model (text in, image out): https://docs.z.ai/guides/image/cogview-4, https://docs.bigmodel.cn/cn/guide/models/image-generation/cogview-4
+# - Weights and license (Apache 2.0): https://huggingface.co/zai-org/CogView4-6B
+# - Open-sourced 2025-03-04 and prompt limit of 1024 tokens: https://github.com/zai-org/CogView4
+# Output stays generic: the image API returns a URL with no documented format.
+schema = 2
+v2_only = true
+type = "image"
+name = "CogView-4"
+description = "Open text-to-image model with bilingual Chinese and English prompts, in-image Chinese text rendering and any resolution from 512 to 2048 px"
+family = "cogview"
+open_weights = true
+release_date = "2025-03-04"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_024
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/zai-org/CogView4-6B"

@@ -1,0 +1,36 @@
+# Tongyi-MAI (Alibaba Group) model card: https://huggingface.co/Tongyi-MAI/Z-Image-Turbo (license apache-2.0,
+#   pipeline text-to-image): 6B single-stream diffusion transformer, distilled from Z-Image to 8 NFEs.
+# Released 2025-11-26: https://github.com/Tongyi-MAI/Z-Image ("[2025-11-26] Z-Image-Turbo is released!")
+# Output stays generic `image`: the open weights produce pixels and the format is chosen by the host.
+schema = 2
+v2_only = true
+type = "image"
+name = "Z-Image-Turbo"
+description = "Distilled 6B text-to-image model with 8-step generation and bilingual English and Chinese text rendering"
+family = "z-image-turbo"
+open_weights = true
+release_date = "2025-11-26"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+url = "https://tongyi-mai.github.io/Z-Image-blog/"
+type = "docs"
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Tongyi-MAI/Z-Image-Turbo"

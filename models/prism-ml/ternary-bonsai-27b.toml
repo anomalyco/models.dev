@@ -1,0 +1,45 @@
+# Sources (accessed 2026-11-24):
+# - Model card https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf: ternary ({-1, 0, +1}) build of Qwen3.6-27B
+#   ("architecture unchanged"), 262K-token context, a vision tower for image input, thinking mode and agentic tool use;
+#   Apache 2.0. Suggested sampling: temperature 0.7, top_p 0.95, top_k 20.
+# - https://docs.prismml.com/introduction: the first-generation Ternary-Bonsai 27B, superseded by Bonsai 2 and 2.5; its
+#   weights stay on Hugging Face.
+# Release: 2026-07-04, when the Hugging Face repos were created (https://huggingface.co/api/models?author=prism-ml&search=Ternary-Bonsai-27B).
+# Input: the card names image input but no formats, so the generic kind is used.
+# Limits: context 262,144 (the card's 262K; Together's GET /v1/models context_length). PrismML publishes no output cap;
+#   65,536 is the base model's (models/alibaba/qwen3.6-27b.toml), which this build keeps unchanged.
+# Knowledge cutoff: not published.
+schema = 2
+name = "Ternary Bonsai 27B"
+description = "Ternary-weight build of Qwen3.6 27B for reasoning, image understanding and tool use on local hardware"
+open_weights = true
+release_date = "2026-07-04"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 65_536
+
+[[weights]]
+label = "Hugging Face (GGUF)"
+url = "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf"
+
+[[weights]]
+label = "Hugging Face (MLX)"
+url = "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-mlx-2bit"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/prism-ml/Ternary-Bonsai-27B-gguf"
+type = "model_card"

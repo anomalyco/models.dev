@@ -1,0 +1,16 @@
+# Output limit: capped at the 4,096 context; no host cap is documented and the 8,192 from the base model or host listing is larger.
+schema = 2
+base_model = "alibaba/qwen-mt-plus"
+
+[capabilities]
+structured_output = false
+
+[limit]
+context = 4_096
+output = 4_096
+
+[cost.text.input]
+price = 1.599
+
+[cost.text.output]
+price = 4.7905

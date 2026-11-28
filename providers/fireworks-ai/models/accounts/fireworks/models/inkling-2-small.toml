@@ -1,0 +1,58 @@
+# Fireworks Inkling 2 Small (accounts/fireworks/models/inkling-2-small):
+# - Model card (accessed 2026-11-26): https://fireworks.ai/models/fireworks/inkling-2-small — Serverless $0.30 / $0.03 / $1.00 per 1M
+#   input / cached input / output, Context Length 1040k tokens, Function Calling and image input Supported, Huggingface
+#   thinkingmachines/Inkling-2-Small. GET /v1/accounts/fireworks/models/inkling-2-small: contextLength 1048576 (the lab's window, so no
+#   limit override), supportsServerless true, no deprecationDate (2026-11-26).
+# - Pricing table, Inkling 2 Small row: https://docs.fireworks.ai/serverless/pricing (accessed 2026-11-26) — Standard $0.30 / $0.03 / $1.00,
+#   Priority $0.375 / $0.0375 / $1.25 (1.25x) per 1M input / cached input / output. Priority uses service_tier = "priority"
+#   (https://docs.fireworks.ai/serverless/serverless-modes); a priority request answered live (2026-11-26).
+# - Not in GET /v1/serverless/models yet (like inkling-2-mini when it was added), but listed in /inference/v1/models and answering live.
+# - Tools and images: live Chat Completions on this ID (2026-11-26) returned a required tool call, and named both colors of a base64 PNG
+#   split red/blue. Thinking Machines documents PNG and JPEG (https://tinker-docs.thinkingmachines.ai/cookbook/inkling/images/), which
+#   Fireworks also accepts (https://docs.fireworks.ai/guides/querying-vision-language-models#known-limitations), so input lists those two.
+# - Effort: reasoning_effort = none|minimal|low|medium|high|xhigh|max. With raw_output = true each renders a "Thinking effort level"
+#   system line: none 0, minimal 0.1, low 0.2, medium 0.7, high 0.9 (also the default when unset), xhigh and max 0.99, live 2026-11-26.
+#   Unknown values are a 400. Unlike inkling-2-mini on this host, "none" turns reasoning off: reasoning_effort = "none" (and
+#   thinking.type = "disabled", which renders the same level 0) returned 0 reasoning tokens and no reasoning_content on a multi-step
+#   word problem (2 runs each), where low gave 194-254 and max 255-345. Off is effort none, so no separate toggle.
+#   Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# - Structured output: response_format json_schema returned schema-shaped JSON live (2026-11-26);
+#   https://docs.fireworks.ai/structured-responses/structured-response-formatting
+# - Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field
+#   (https://docs.fireworks.ai/guides/prompt-caching).
+# - APIs: Chat Completions, Responses (POST /inference/v1/responses) and Anthropic Messages (POST /inference/v1/messages) all answered on
+#   this ID live (2026-11-26). https://docs.fireworks.ai/guides/response-api, https://docs.fireworks.ai/api-reference/anthropic-messages
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "priority" } }
+factor = 1.25
+
+[experimental.modes.priority]
+body = { service_tier = "priority" }

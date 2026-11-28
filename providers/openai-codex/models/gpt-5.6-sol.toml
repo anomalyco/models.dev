@@ -12,19 +12,29 @@
 #   for a plain-prose greeting, the reply was {"code":"ZZ417"}.
 # Fast: the catalog lists a "Fast" service tier with id "priority", which Codex sends as `service_tier`; accepted live
 #   2026-11-21.
+# temperature / top_p: not accepted on this route. Live 2026-11-25 on a ChatGPT plan (gpt-6-luna): a request
+#   with `temperature` returned 400 "Unsupported parameter: temperature", one with `top_p` returned 400
+#   "Unsupported parameter: top_p"; the same request without them completed.
 # Cost: 0, as the other subscription providers publish it: usage counts against the ChatGPT plan, with no per-token
 #   price.
 # Cache: Codex sends a prompt_cache_key per conversation; no lifetime is documented for this route, so only
 #   `implicit = true` is set.
+# Status: deprecated. The Codex model catalog (fetched 2026-11-26) gives this model an `upgrade` with
+#   retirement_at 2026-12-23T20:00:00Z and the message "GPT-5.6 Sol retires on December 23, 2026. Switch to GPT-6.2 Sol
+#   to continue working in Codex." Announced 2026-11-23:
+#   https://9to5mac.com/2026/11/23/chatgpt-expands-gpt-6-2-sol-as-openai-sets-retirement-date-for-two-models/
 schema = 2
 v2_only = true
 base_model = "openai/gpt-5.6-sol"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true, freeform = ["text", "lark", "regex"] }
 structured_output = true
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 prompt_cache_key = true
+temperature = false
+top_p = false
 service_tier = ["priority"]
 
 [capabilities.cache]

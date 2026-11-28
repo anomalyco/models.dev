@@ -1,0 +1,18 @@
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+base_model_omit = ["limit.input"]
+name = "GPT-6.2 Astra (AWS Bedrock (OpenAI))"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 921_600
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4, write = 10 }
+
+[cost.text.output]
+price = 40

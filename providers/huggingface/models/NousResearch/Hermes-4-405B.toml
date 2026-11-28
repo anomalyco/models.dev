@@ -1,0 +1,28 @@
+# Router catalog https://router.huggingface.co/v1/models (accessed 2026-11-24): one live provider, nebius
+#   (context_length 131072, $1 in / $3 out, supports_tools false, supports_structured_output true).
+# Tools: the only live provider reports supports_tools = false (OpenRouter, which also routes to Nebius,
+#   lists tools as unsupported too: providers/openrouter/models/nousresearch/hermes-4-405b.toml).
+# Reasoning: Hermes 4 is hybrid, with thinking turned on by system prompt or chat template
+#   (https://huggingface.co/NousResearch/Hermes-4-405B). The router sends it to Nebius, which has no verified
+#   request-time control (providers/nebius/models/NousResearch/Hermes-4-405B.toml), so no controls are authored.
+# max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
+schema = 2
+base_model = "nousresearch/hermes-4-405b"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3

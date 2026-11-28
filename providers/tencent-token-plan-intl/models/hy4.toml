@@ -1,0 +1,23 @@
+# Pricing: Token Plan Personal Edition (international) list credit coefficients, checked 2026-11-27:
+#   Cache-missed input / output / cached input: 130.313 / 390.781 / 6.563 credits per million tokens.
+#   https://intl.cloud.tencent.com/document/product/1300/81316 (updated 2026-11-26); promotions excluded.
+# Cost omitted: a credit has no single USD value. Plans sell 1,000 / 2,600 / 7,900 / 15,900 credits for
+#   USD 7 / 17 / 51 / 103 a month (Lite / Standard / Pro / Max), i.e. USD 0.007 / 0.006538 / 0.006456 /
+#   0.006478 per credit (https://intl.cloud.tencent.com/document/product/1300/81315, updated 2026-11-26), and no per-credit price is published.
+#   Unknown does not mean free.
+# Availability: Token Plan Overview > Available models, https://intl.cloud.tencent.com/document/product/1300/81315
+# Specifications: https://intl.cloud.tencent.com/document/product/1300/78934 (1M context, 960K input, 64K output; structured output, function calling, caching, image understanding).
+# Effort: reasoning_effort = high|no_think (default high). no_think turns thinking off, so it is
+#   "none" here with no separate toggle (thinking.type also exists, default enabled).
+#   https://cloud.tencent.com/document/product/1823/131208 (updated 2026-11-16)
+# Reasoning is returned at choices[].message.reasoning_content (https://cloud.tencent.com/document/product/1823/131208).
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

@@ -3,12 +3,16 @@
 # Effort: low|medium|high|xhigh|max, the model card's set. Copilot's other entries carry their vendor's full effort set, so this follows the card.
 #   VS Code's Copilot extension reads effort levels from Copilot's per-model metadata and hardcodes none per model.
 #   The API layout and structured_output follow MAI-Code-1.1-Flash on this host.
+# system_updates: live 2026-11-26 on api.individual.githubcopilot.com/responses, a developer message after the first
+#   turn ("reply with exactly BANANA") was followed. tools.updates and effort_updates stay unset: it didn't call a tool added
+#   through `additional_tools`, and it rejects `configuration_update`.
 schema = 2
 base_model = "microsoft/mai-code-2"
 
 [capabilities]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
+system_updates = true
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }

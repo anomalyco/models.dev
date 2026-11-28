@@ -1,0 +1,15 @@
+# Pricing (China (Beijing), accessed 2026-11-25): https://www.alibabacloud.com/help/en/model-studio/model-pricing
+# These are Alibaba's own published USD figures for the Beijing region (not a conversion made here).
+# Billed per output image.
+# API: POST /api/v1/services/aigc/multimodal-generation/generation (https://www.alibabacloud.com/help/en/model-studio/qwen-image-api)
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen-image-2.1-pro"
+
+[api.images]
+base_url = "https://dashscope.aliyuncs.com/api/v1"
+sdk = { aisdk = "none", opencodeai = "@opencode/ai/providers/alibaba/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.035333

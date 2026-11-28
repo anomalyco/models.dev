@@ -6,19 +6,35 @@ import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 // Azure Retail Prices API, no key: https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices
 const API_BASE = "https://prices.azure.com/api/retail/prices";
 // GPT-5.6 and later share one meter format. Other recent models are listed in PARTNER_MODELS below.
-const PRODUCTS = ["Azure OpenAI GPT6", "Azure OpenAI GPT5", "Azure Grok Models", "Azure Kimi", "Azure Deepseek Models"];
+const PRODUCTS = ["Azure OpenAI GPT6", "Azure OpenAI GPT5", "Azure Grok Models", "Azure Kimi", "Azure Deepseek Models", "Azure Fireworks Models"];
+const FIREWORKS = "Azure Fireworks Models";
 
 // Partner models name their meters by a display label (`4.7 Inp glbl L`, `K2.7 Code cached DZ`, `V4.1 Flash Output Glbl`)
 // with no model ID, so each local file lists the labels its meters use. Only models from the last few months are here;
 // older ones keep hand-written prices.
-export const PARTNER_MODELS: Record<string, { product: string; labels: string[] }> = {
+// `dataZone` marks a model sold only in the US data zone, whose file publishes the data-zone meters as its base rate.
+export const PARTNER_MODELS: Record<string, { product: string; labels: string[]; dataZone?: boolean }> = {
+  "grok-4-20-reasoning": { product: "Azure Grok Models", labels: ["Grok 4.2"] },
+  "grok-4-20-non-reasoning": { product: "Azure Grok Models", labels: ["Grok 4.2"] },
   "grok-4.6": { product: "Azure Grok Models", labels: ["4.6"] },
   "grok-4.7": { product: "Azure Grok Models", labels: ["4.7"] },
+  "kimi-k2.5": { product: "Azure Kimi", labels: ["K2.5 Thinking", "K2.5"] },
   "kimi-k2.6": { product: "Azure Kimi", labels: ["K2.6 Thinking", "K2.6"] },
   "kimi-k2.7-code": { product: "Azure Kimi", labels: ["K2.7 Code"] },
+  // Its cached-input meter drops "Pro": "Kimi 3.1 Cached Inp Glbl".
+  "kimi-k3.1-pro": { product: "Azure Kimi", labels: ["Kimi 3.1 Pro", "Kimi 3.1"] },
   "deepseek-v4-flash": { product: "Azure Deepseek Models", labels: ["V4 Flash"] },
   "deepseek-v4-pro": { product: "Azure Deepseek Models", labels: ["V4 Pro"] },
   "deepseek-v4.1-flash": { product: "Azure Deepseek Models", labels: ["V4.1 Flash"] },
+  // Fireworks labels are compared without spaces, dashes or dots, so `FW Kimi-K3 Gl Inp` and `FW Kimi K3 Inp DZ` share one label.
+  "fw-deepseek-v4.1-flash": { product: FIREWORKS, labels: ["FW DS V4.1 Flash"] },
+  "fw-glm-5.3": { product: FIREWORKS, labels: ["FW GLM 5.3"] },
+  "fw-glm-5.3-flash": { product: FIREWORKS, labels: ["FW GLM 5.3 Flash"] },
+  "fw-kimi-k3": { product: FIREWORKS, labels: ["FW Kimi K3"] },
+  // Its meters drop the FW prefix: `Kimi K3.1 Pro Inp - Global`.
+  "fw-kimi-k3.1-pro": { product: FIREWORKS, labels: ["Kimi K3.1 Pro"] },
+  "fw-nemotron-3-ultra-nvfp4": { product: FIREWORKS, labels: ["FW NVIDIA Nemotron 3U"], dataZone: true },
+  "fw-nemotron-lightning-3.5-30b-a3b": { product: FIREWORKS, labels: ["FW NVIDIA Nemotron 3.5 LN"], dataZone: true },
 };
 const REGION = "eastus2";
 const MODELS_DIR = path.resolve(import.meta.dir, "../../../../../providers/azure/models");
@@ -48,10 +64,13 @@ export interface AzureModel {
   // The local file ID, e.g. `gpt-6.1-sol`.
   id: string;
   prices: AzurePrice[];
+  // The file's base rate is the data-zone meter instead of the global one.
+  dataZone?: boolean;
 }
 
-// `6.1-sol LongCo Cd Inp Std Gl`, `61 terra ShortCo Opt std Gl`, `5.6 luna ShortCo Cd Wr PP DZ`.
-const METER = /^(.+?) (ShortCo|LongCo) (Cd Inp|Cd Wr|Inp|Opt) (Std|Flex|PP) (Gl|DZ)$/i;
+// `6.1-sol LongCo Cd Inp Std Gl`, `61 terra ShortCo Opt std Gl`, `5.6 luna ShortCo Cd Wr PP DZ`; GPT-6.2 shortens the band to
+// ShCo/LoCo (`6.2-sol LoCo Cd Inp Std Gl`).
+const METER = /^(.+?) (ShortCo|LongCo|ShCo|LoCo) (Cd Inp|Cd Wr|Inp|Opt) (Std|Flex|PP) (Gl|DZ)$/i;
 const KINDS: Record<string, AzurePrice["kind"]> = { "cd inp": "cache_read", "cd wr": "cache_write", inp: "input", opt: "output" };
 const TIERS: Record<string, AzurePrice["tier"]> = { std: "standard", flex: "flex", pp: "priority" };
 
@@ -64,7 +83,7 @@ export function parseMeter(skuName: string): ({ key: string } & Omit<AzurePrice,
   return {
     key: modelKey(match[1]!),
     kind: KINDS[match[3]!.toLowerCase()]!,
-    longContext: match[2]!.toLowerCase() === "longco",
+    longContext: ["longco", "loco"].includes(match[2]!.toLowerCase()),
     tier: TIERS[match[4]!.toLowerCase()]!,
     global: match[5]!.toLowerCase() === "gl",
   };
@@ -85,6 +104,30 @@ export function parsePartnerMeter(skuName: string): ({ label: string } & Omit<Az
     longContext: match[4] !== undefined,
     tier: "standard",
     global: match[3]!.toLowerCase() === "glbl",
+  };
+}
+
+// Fireworks meters put the route before the kind, after it, or as a `- Global` / `- US DZ` suffix, and a meter with no route
+// is global: `FW DS-V4.1-Flash Gl Cd Inp`, `FW GLM 5.3 DZ Opt`, `FW GLM 5.3 Inp`, `FW Kimi K3 Cd Inp DZ`, `FW NVIDIA Nemotron 3.5 LN In DZ`,
+// `Kimi K3.1 Pro Opt- Global`, `FW DS V4.1 Flash Inp - US DZ`.
+const FIREWORKS_METER = /^(.+?)(?: (gl|dz))? (cd inp|cd in|inp|in|opt)(?: (dz))?$/i;
+const FIREWORKS_SUFFIX = / ?- ?(global|us dz)$/i;
+const FIREWORKS_KINDS: Record<string, AzurePrice["kind"]> = { "cd inp": "cache_read", "cd in": "cache_read", inp: "input", in: "input", opt: "output" };
+const fireworksLabel = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+export function parseFireworksMeter(skuName: string): ({ label: string } & Omit<AzurePrice, "usd">) | undefined {
+  const trimmed = skuName.trim();
+  const suffix = FIREWORKS_SUFFIX.exec(trimmed);
+  const match = FIREWORKS_METER.exec(suffix === null ? trimmed : trimmed.slice(0, suffix.index));
+  if (match === null) return undefined;
+  const routes = [suffix?.[1], match[2], match[4]].filter((route) => route !== undefined).map((route) => route.toLowerCase());
+  if (routes.length > 1) return undefined;
+  return {
+    label: fireworksLabel(match[1]!),
+    kind: FIREWORKS_KINDS[match[3]!.toLowerCase()]!,
+    longContext: false,
+    tier: "standard",
+    global: routes.length === 0 || routes[0] === "gl" || routes[0] === "global",
   };
 }
 
@@ -109,12 +152,13 @@ export function priceRows(items: z.infer<typeof PriceItem>[]) {
 export function partnerRows(items: z.infer<typeof PriceItem>[]) {
   const byID = new Map<string, AzurePrice[]>();
   for (const [id, { product, labels }] of Object.entries(PARTNER_MODELS)) {
-    const wanted = new Set(labels.map((label) => label.toLowerCase()));
+    const fireworks = product === FIREWORKS;
+    const wanted = new Set(labels.map((label) => fireworks ? fireworksLabel(label) : label.toLowerCase()));
     const rows: AzurePrice[] = [];
     for (const item of items) {
       if (item.productName !== product || item.type !== "Consumption") continue;
       const usd = perMillion(item);
-      const meter = usd === undefined ? undefined : parsePartnerMeter(item.skuName);
+      const meter = usd === undefined ? undefined : fireworks ? parseFireworksMeter(item.skuName) : parsePartnerMeter(item.skuName);
       if (meter === undefined || !wanted.has(meter.label)) continue;
       const { label: _label, ...row } = meter;
       rows.push({ ...row, usd: usd! });
@@ -124,12 +168,12 @@ export function partnerRows(items: z.infer<typeof PriceItem>[]) {
   return byID;
 }
 
-// Global standard-tier prices, which the files publish as their base rate. Flex, priority and the data-zone uplift
-// stay as hand-written multipliers, and the 12h cache write (its own meter) isn't read.
+// Global standard-tier prices, which the files publish as their base rate (data-zone ones for data-zone-only models). Flex,
+// priority and the data-zone uplift stay as hand-written multipliers, and the 12h cache write (its own meter) isn't read.
 export function buildAzureModel(model: AzureModel, authored: ExistingModel): SyncedModel | undefined {
   const pick = (kind: AzurePrice["kind"], longContext: boolean) => {
     const values = [...new Set(model.prices
-      .filter((row) => row.kind === kind && row.longContext === longContext && row.tier === "standard" && row.global)
+      .filter((row) => row.kind === kind && row.longContext === longContext && row.tier === "standard" && row.global !== (model.dataZone === true))
       .map((row) => row.usd))];
     return values.length === 1 ? values[0] : undefined;
   };
@@ -222,7 +266,7 @@ export const azure = {
     const partners = partnerRows(items);
     return files.flatMap((id) => {
       const prices = partners.get(id) ?? (id.startsWith("gpt-") ? rows.get(modelKey(id)) : undefined);
-      return prices === undefined ? [] : [{ id, prices }];
+      return prices === undefined ? [] : [{ id, prices, ...(PARTNER_MODELS[id]?.dataZone ? { dataZone: true } : {}) }];
     });
   },
   translateModel(model, context) {

@@ -6,7 +6,8 @@ import { factorBaseModel } from "./openrouter.js";
 const API_ENDPOINT = "https://api.fireworks.ai/v1/serverless/models";
 const INVENTORY_ENDPOINT = "https://api.fireworks.ai/v1/accounts/fireworks/models";
 // Fireworks announced GLM 5.2 serverless retirement for 2026-09-25, but on
-// 2026-09-28 List Models still returns supportsServerless=true and no date.
+// 2026-09-28 List Models still returns supportsServerless=true and no date, so
+// this date marks it deprecated while it stays listed.
 // https://docs.fireworks.ai/updates/changelog (2026-09-12)
 const DEPRECATION_DATE_FALLBACK: Record<string, string> = {
   "accounts/fireworks/models/glm-5p2": "2026-09-25",
@@ -314,24 +315,19 @@ export async function fetchFireworksInventory(
 export function mergeFireworksModels(
   serverless: FireworksModel[],
   inventory: FireworksInventoryModel[],
-  now = new Date(),
 ): Array<FireworksCatalogModel | FireworksInventoryCatalogModel> {
   if (serverless.length === 0 || inventory.length === 0) {
     throw new Error("Fireworks AI returned an empty serverless source; refusing destructive sync");
   }
-  const today = now.toISOString().slice(0, 10);
-  const deprecated = new Set<string>();
-  const available = inventory.filter((model) => {
-    if (!model.supportsServerless) return false;
-    const date = model.deprecationDate;
-    // A date has no time zone. Keep the model through that UTC day rather than
-    // removing it prematurely on the announced deprecation day.
-    const lastDay = date == null
-      ? DEPRECATION_DATE_FALLBACK[model.name]
-      : `${date.year}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
-    if (lastDay !== undefined) deprecated.add(model.name);
-    return lastDay === undefined || lastDay >= today;
-  });
+  // A model with a deprecation date stays deprecated, even past that date, for
+  // as long as List Models still flags it as serverless; it is removed only
+  // once Fireworks stops listing it.
+  const available = inventory.filter((model) => model.supportsServerless);
+  const deprecated = new Set(
+    available
+      .filter((model) => model.deprecationDate != null || DEPRECATION_DATE_FALLBACK[model.name] !== undefined)
+      .map((model) => model.name),
+  );
   // Pricing rows can outlive serverless deployments. Only expand modes and
   // aliases for models that the availability inventory still lists.
   const availableIds = new Set(available.map((model) => model.name));

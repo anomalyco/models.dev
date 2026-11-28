@@ -1,0 +1,40 @@
+# Flex serving mode for GLM 5.3: same model at 50% off Standard, for workloads that can wait. Selected by model ID
+#   (https://docs.fireworks.ai/serverless/serverless-modes#flex lists accounts/fireworks/routers/glm-5p3-flex).
+# Pricing: https://docs.fireworks.ai/serverless/pricing ("GLM 5.3 Flex" row, accessed 2026-11-25): $0.70 / $0.13 / $2.20
+#   per 1M input / cached input / output, no Priority. GET https://api.fireworks.ai/v1/serverless/models lists the same rates
+#   (serverless_mode "flex", usage_identifier = this ID, 2026-11-25).
+# Live 2026-11-25: Chat Completions, Responses and Messages all answered on this ID with reasoning output.
+# Reasoning, limits, structured output and system_updates follow the Standard sibling accounts/fireworks/models/glm-5p3
+#   (thinking-only, effort low|high|max, no toggle; not re-tested on this route, same host and API).
+# Reasoning API: https://docs.fireworks.ai/api-reference/post-chatcompletions
+# Structured output: response_format json_schema (https://docs.fireworks.ai/structured-responses/structured-response-formatting)
+# Cache: prompt caching is on by default for every Serverless model, prefix-based, no request field (https://docs.fireworks.ai/guides/prompt-caching).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+name = "GLM 5.3 Flex"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+system_updates = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_573
+output = 262_144
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.7
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 2.2

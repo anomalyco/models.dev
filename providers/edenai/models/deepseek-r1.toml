@@ -1,0 +1,15 @@
+schema = 2
+base_model = "deepseek/deepseek-r1"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+
+[limit]
+context = 163_840
+
+[cost.text.input]
+price = 0.7
+
+[cost.text.output]
+price = 2.4

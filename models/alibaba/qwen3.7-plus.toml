@@ -1,4 +1,6 @@
 # Input MIME types: images and video per https://www.alibabacloud.com/help/en/model-studio/vision (Image limits, Video limits; video lists extensions, registered MIME types used)
+# Output: 131,072 tokens in both modes per the Model Studio catalog API (GET https://dashscope-intl.aliyuncs.com/api/v1/models, model_info max_output_tokens
+#   and reasoning_max_output_tokens, read 2026-11-25) and the model table at https://www.alibabacloud.com/help/en/model-studio/text-generation-model/ ("qwen3.7-plus 1M 128k").
 # Sampling: temperature, top_p and top_k are request parameters on Model Studio: https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
 schema = 2
 name = "Qwen3.7 Plus"
@@ -21,4 +23,4 @@ top_k = true
 
 [limit]
 context = 1_000_000
-output = 64_000
+output = 131_072

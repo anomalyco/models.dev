@@ -1,5 +1,6 @@
 # API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
 # Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+# Limits: input 128,000 and output 8,192 tokens per the Meta table in https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-direct-others (accessed 2026-11-25).
 schema = 2
 name = "Llama-3.3-70B-Instruct"
 description = "Open Llama instruction model for multilingual chat, reasoning, and coding"
@@ -19,7 +20,7 @@ temperature = true
 
 [limit]
 context = 128_000
-output = 32_768
+output = 8_192
 
 [api.chat-completions]
 sdk = { opencodeai = "@opencode/ai/providers/azure/chat" }

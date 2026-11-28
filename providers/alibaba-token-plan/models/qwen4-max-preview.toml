@@ -31,9 +31,15 @@
 # worked with max_tokens > budget_tokens.
 # Cost: Token Plan Credits subscription; no public USD per-token rate.
 # Added as v2-only: Token Plan preview; v1 stays unchanged.
+# Deprecated: retired on both Token Plans at 2026-11-25 10:00 UTC+8. The ID still
+# answers but routes to qwen4-max and is billed as qwen4-max (accessed 2026-11-25:
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-product-updates,
+# https://www.alibabacloud.com/help/en/model-studio/token-plan-personal-overview).
+# The controls below are from the preview; routed requests may follow qwen4-max's.
 schema = 2
 v2_only = true
 base_model = "alibaba/qwen4-max-preview"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "tool"] }

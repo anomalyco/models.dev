@@ -1,0 +1,19 @@
+# Pricing (Singapore, International, USD, accessed 2026-11-25): $0.000035 per second of input audio,
+#   https://www.alibabacloud.com/help/en/model-studio/model-pricing; also in the Model Studio catalog API
+#   (GET https://dashscope-intl.aliyuncs.com/api/v1/models, content_duration 0.000035 per second, read 2026-11-25).
+#   v1 has no per-second price, so v1 shows no cost (v2_only, as for the lab file).
+# Native route is DashScope sync POST /api/v1/services/aigc/multimodal-generation/generation with input_audio, not OpenAI chat:
+#   only the Qwen3-ASR-Flash series supports OpenAI-compatible chat
+#   (https://www.alibabacloud.com/help/en/model-studio/non-realtime-speech-recognition-user-guide).
+# API layout follows providers/alibaba-token-plan/models/qwen-audio-3.0-asr-flash.toml.
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen-audio-3.0-asr-flash"
+
+[api.transcriptions]
+base_url = "https://dashscope-intl.aliyuncs.com/api/v1"
+sdk = { aisdk = "none", opencodeai = "none" }
+
+[cost.audio.input]
+unit = "second"
+price = 0.000035

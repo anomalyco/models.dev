@@ -63,6 +63,7 @@ export const RequestyModel = z
         supports_reasoning: z.boolean().default(false),
         supports_tool_calling: z.boolean().default(false),
         supports_output_json_schema: z.boolean().default(false),
+        supports_system_mid_conversation: z.boolean().nullish(),
     })
     .passthrough();
 
@@ -104,6 +105,7 @@ export function buildRequestyModel(
         // instead of the context-window fallback, unless the lab's exceeds the
         // context this route serves.
         const labOutput = (modelMetadata(canonical).limit as { output?: number } | undefined)?.output;
+        const labReasons = (modelMetadata(canonical) as { reasoning?: boolean }).reasoning === true;
         const factoredLimit = model.max_output_tokens <= 0 && labOutput !== undefined && labOutput <= context
             ? { context }
             : limit;
@@ -115,8 +117,11 @@ export function buildRequestyModel(
                 // equals the lab's.
                 name: regionVariantName(model.id, canonical)
                     ?? (resolved === undefined ? existing?.name : undefined),
-                reasoning,
-                reasoning_options: reasoningOptions(reasoning),
+                // supports_reasoning says whether this route takes
+                // reasoning_effort, not whether the model thinks: a lab
+                // model that reasons keeps reasoning, with no caller control.
+                reasoning: reasoning || labReasons,
+                reasoning_options: !reasoning && labReasons ? [] : reasoningOptions(reasoning),
                 tool_call: toolCall,
                 structured_output: structuredOutput,
                 status: existing?.status,
@@ -287,9 +292,20 @@ export const requesty = {
         return RequestyResponse.parse(raw).data;
     },
     translateModel(model, context) {
+        const systemUpdates = model.supports_system_mid_conversation;
         return {
             id: model.id,
             model: buildRequestyModel(model, context.existing(model.id)),
+            // The catalog owns system_updates: true is written, false removes
+            // it, and a row without the field leaves the file's value.
+            v2Set: systemUpdates == null
+                ? undefined
+                : { "capabilities.system_updates": systemUpdates ? true : undefined },
+            // A route can sit on another backend than its predecessor (Qwen4
+            // Max is served via Fireworks), so a stated false isn't inherited.
+            unsupported: systemUpdates === false
+                ? ["capabilities.system_updates"]
+                : undefined,
         };
     },
 } satisfies SyncProvider<RequestyModel>;

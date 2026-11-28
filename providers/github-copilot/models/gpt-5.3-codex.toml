@@ -1,4 +1,12 @@
 # tools.freeform (Responses, the only API this model lists): custom tools accepted with text, lark and regex formats and the grammars enforced (tool_choice required; regex ZZ[0-9]{3} and the equivalent lark grammar returned ZZ plus three digits) on this model, live 2026-10-28 via api.individual.githubcopilot.com/responses. Also probed: gpt-5.6-luna, gpt-5.6-terra, gpt-6-luna, gpt-6.1-terra.
+# Mid-conversation flags, live 2026-11-26 on api.individual.githubcopilot.com/responses (Copilot's GET /models has no
+#   field for any of them):
+#   effort_updates: unset. A `configuration_update` item is rejected ("The 'configuration_update' item type is not
+#     supported with this model.").
+#   tools.updates: unset. A tool added through `additional_tools` is called, but the call comes back with
+#     `namespace: "get_weather"`, and replaying it without the namespace fails ("Missing namespace for function_call
+#     'get_weather'. It does not exist in the default namespace."), as on `openai` for GPT-5.5 and earlier.
+#   system_updates: a developer message after the first turn ("reply with exactly BANANA") was followed.
 schema = 2
 base_model = "openai/gpt-5.3-codex"
 
@@ -6,6 +14,7 @@ base_model = "openai/gpt-5.3-codex"
 tools = { supported = true, freeform = ["text", "lark", "regex"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
 structured_output = true
+system_updates = true
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }

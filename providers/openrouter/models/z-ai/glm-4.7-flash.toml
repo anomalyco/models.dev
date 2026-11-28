@@ -11,6 +11,9 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 
+[limit]
+context = 131_072
+
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_details" }
 

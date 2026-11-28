@@ -2,7 +2,7 @@
 # Output: inherits the lab's 32,768. Novita, an upstream, caps max_output_tokens at 32,768 (https://api.novita.ai/openai/v1/models, 2026-10-20).
 # knowledge: kept from the earlier Hugging Face file; unsourced (no cutoff in the model card or lab docs, checked 2026-10-20).
 # max_tokens_field: the router's Chat Completion API documents max_tokens and not max_completion_tokens (https://huggingface.co/docs/inference-providers/tasks/chat-completion, accessed 2026-10-24)
-# Price: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (deepinfra): $0.5 input / $2.15 output per MTok.
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 schema = 2
 base_model = "deepseek/deepseek-r1-0528"
 name = "DeepSeek-R1-0528"

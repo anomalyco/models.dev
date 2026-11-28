@@ -1,4 +1,4 @@
-# Price and context: https://router.huggingface.co/v1/models (2026-11-24), highest-throughput live provider (baseten).
+# Price and context: synced from https://router.huggingface.co/v1/models (cheapest live provider's price, largest live context).
 # Effort: reasoning_effort = low|medium|high|xhigh|max, as on OpenRouter, Vercel and Cloudflare AI Gateway.
 schema = 2
 base_model = "reflection/beam-1.0-501b-a23b"
@@ -15,7 +15,7 @@ compatibility = { max_tokens_field = "max_tokens" }
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
 
 [cost.text.input]
-price = 0.4
+price = 0.25
 
 [cost.text.output]
-price = 1.2
+price = 1

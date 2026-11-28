@@ -66,7 +66,12 @@ export default {
     }
 
     if (url.pathname === "/model-schema.json") {
-      const apiResponse = await catalogResponse(url, request, env, "api");
+      const apiResponse = await catalogResponse(
+        url,
+        assetRequest(url, request, "GET"),
+        env,
+        "api",
+      );
       if (!apiResponse.ok) return apiResponse;
       const providers = (await apiResponse.json()) as Record<
         string,
@@ -92,7 +97,8 @@ export default {
         },
       };
 
-      return new Response(JSON.stringify(schema, null, 2), {
+      const body = request.method === "HEAD" ? null : JSON.stringify(schema, null, 2);
+      return new Response(body, {
         headers: {
           "Content-Type": "application/json",
           "Cache-Control": "public, max-age=3600",
@@ -118,25 +124,19 @@ export default {
       url.pathname = htmlRouteAssetPath(url.pathname);
     } else if (url.pathname.startsWith("/logos/")) {
       // Check if the specific provider logo exists in static assets
-      const logoResponse = await env.ASSETS.fetch(
-        new Request(url.toString(), request),
-      );
+      const logoResponse = await env.ASSETS.fetch(assetRequest(url, request));
 
       if (logoResponse.status === 404) {
         // Fallback to default logo
         const defaultUrl = new URL(url);
         defaultUrl.pathname = "/logos/default.svg";
-        return await env.ASSETS.fetch(
-          new Request(defaultUrl.toString(), request),
-        );
+        return await env.ASSETS.fetch(assetRequest(defaultUrl, request));
       }
 
       return logoResponse;
     }
 
-    const response = await env.ASSETS.fetch(
-      new Request(url.toString(), request),
-    );
+    const response = await env.ASSETS.fetch(assetRequest(url, request));
     if (response.status !== 404) return response;
 
     return new Response(null, {
@@ -145,6 +145,11 @@ export default {
     });
   },
 };
+
+// Assets never need the request body, and reusing it fails once it is consumed.
+function assetRequest(url: URL, request: Request, method = request.method) {
+  return new Request(url.toString(), { method, headers: request.headers });
+}
 
 async function sendHit(endpoint: string, token: string, body: string) {
   for (let attempt = 0; attempt < 3; attempt++) {
@@ -210,12 +215,18 @@ async function catalogResponse(
   // A filtered body depends only on the full file and the types, so its ETag is
   // the file's ETag plus the types, and revalidation is passed to the file.
   const tag = suffix === undefined ? `;type=${[...filter].sort().join(",")}` : "";
-  const assetRequest = new Request(assetUrl.toString(), request);
+  // A filtered HEAD response needs the full file to build its headers.
+  const head = request.method === "HEAD";
+  const forwarded = assetRequest(
+    assetUrl,
+    request,
+    head && suffix === undefined ? "GET" : request.method,
+  );
   const conditional = request.headers.get("If-None-Match");
   if (tag && conditional) {
-    assetRequest.headers.set("If-None-Match", conditional.replaceAll(`${tag}"`, '"'));
+    forwarded.headers.set("If-None-Match", conditional.replaceAll(`${tag}"`, '"'));
   }
-  const assetResponse = await env.ASSETS.fetch(assetRequest);
+  const assetResponse = await env.ASSETS.fetch(forwarded);
   if (suffix !== undefined) return assetResponse;
   const etag = assetResponse.headers.get("ETag")?.replace(/"$/, `${tag}"`);
   if (assetResponse.status === 304) {
@@ -249,7 +260,7 @@ async function catalogResponse(
   if (etag) headers.set("ETag", etag);
   headers.set("Content-Type", "application/json");
   headers.set("Cache-Control", "public, max-age=3600");
-  return new Response(JSON.stringify(filtered), { headers });
+  return new Response(head ? null : JSON.stringify(filtered), { headers });
 }
 
 interface CatalogModel {

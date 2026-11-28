@@ -1,0 +1,16 @@
+# Modalities: Eden AI's catalog (https://api.edenai.run/v3/models, read 2026-11-24) lists mistral/mistral-medium-2604@eu with
+#   input_modalities ["text", "image"], no "file", which matches the lab file (no PDF), so nothing is overridden.
+#   The same model under mistral/mistral-medium-3-5 and mistral/mistral-medium-3.5 lists ["text", "image", "file"].
+schema = 2
+base_model = "mistral/mistral-medium-2604"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 7.5

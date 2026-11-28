@@ -1,0 +1,25 @@
+# Pricing: Token Plan Personal Edition (international) list credit coefficients, checked 2026-11-27:
+#   Off-peak cache-missed input / output / cached input: 21.429 / 85.714 / 0.429 credits per million
+#   tokens; peak (Mon-Fri 09:00-12:00 and 14:00-18:00 Beijing time) 42.857 / 171.429 / 0.857.
+#   https://intl.cloud.tencent.com/document/product/1300/81316 (updated 2026-11-26); promotions excluded.
+# Cost omitted: a credit has no single USD value. Plans sell 1,000 / 2,600 / 7,900 / 15,900 credits for
+#   USD 7 / 17 / 51 / 103 a month (Lite / Standard / Pro / Max), i.e. USD 0.007 / 0.006538 / 0.006456 /
+#   0.006478 per credit (https://intl.cloud.tencent.com/document/product/1300/81315, updated 2026-11-26), and no per-credit price is published.
+#   Unknown does not mean free.
+# Availability: Token Plan Overview > Available models, https://intl.cloud.tencent.com/document/product/1300/81315
+# Tencent id deepseek/deepseek-flash (DeepSeek vendor direct); documented upstream version: DeepSeek-V4.1-Flash-1017.
+# Specifications: https://intl.cloud.tencent.com/document/product/1300/78934 (1M context, 1M input, 384K output).
+# Implicit cache: https://cloud.tencent.com/document/product/1823/131410; no cache-write rate published.
+# API: https://cloud.tencent.com/document/product/1823/132248
+# Controls (same as the tencent-token-plan entry): thinking.type = enabled|disabled; reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

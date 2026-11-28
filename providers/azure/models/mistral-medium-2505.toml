@@ -1,8 +1,10 @@
 # Modalities: Mistral vision accepts PNG, JPEG, WEBP, non-animated GIF: https://docs.mistral.ai/capabilities/vision/
 # API: Chat Completions only. Azure's Responses API lists OpenAI models only (https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/responses, Supported models).
 # Mid-conversation flags: left out. This model is only on Azure's Chat Completions API, which has no documented way to change tools or effort mid-conversation and doesn't document mid-conversation system messages, so none of the three flags is marked.
+# Deprecated: retires 2026-12-09 (replacement mistral-medium-3-5), Mistral AI partner table in https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule (accessed 2026-11-25)
 schema = 2
 name = "Mistral Medium 3"
+status = "deprecated"
 description = "Mistral model for multilingual chat, reasoning, and tool-assisted workflows"
 family = "mistral-medium"
 open_weights = false

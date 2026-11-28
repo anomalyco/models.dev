@@ -6,9 +6,12 @@
 # - Foundry models endpoint: POST https://<resource>.services.ai.azure.com/models/embeddings (as cohere-embed-v-4-0)
 # - Price: $0.12 per 1M text tokens (https://cohere.com/blog/embed-5; Azure AI Foundry listing via
 #   https://models.litellm.ai/models/cohere-embed-v5-pro); Azure's image token price isn't published, so only text is listed.
+# - Status: beta. The retirement schedule lists Cohere-Embed-V5-Pro (version 1) as "Preview", retiring 2027-01-23 (Foundry Models sold by Azure, Cohere; accessed 2026-11-27):
+#   https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule
 schema = 2
 v2_only = true
 base_model = "cohere/embed-v5.0-pro"
+status = "beta"
 
 [api.embeddings]
 base_url = "https://${AZURE_RESOURCE_NAME}.services.ai.azure.com/models"
