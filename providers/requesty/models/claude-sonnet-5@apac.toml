@@ -1,0 +1,15 @@
+schema = 2
+base_model = "anthropic/claude-sonnet-5"
+name = "Claude Sonnet 5 (APAC)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
+
+[cost.text.input]
+price = 2.2
+cache = { read = 0.22, write = 2.75 }
+
+[cost.text.output]
+price = 11

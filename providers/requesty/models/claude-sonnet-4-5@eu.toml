@@ -14,7 +14,7 @@ context = 1_000_000
 
 [cost.text.input]
 price = 3.3
-cache = { read = 0.3, write = 4.125 }
+cache = { read = 0.33, write = 4.125 }
 
 [[cost.text.input.overrides]]
 when = { context = { gt = 200_000 } }
