@@ -44,6 +44,7 @@ import { engy } from "./providers/engy.js";
 import { fireworksAi } from "./providers/fireworks-ai.js";
 import { friendli } from "./providers/friendli.js";
 import { githubCopilot } from "./providers/github-copilot.js";
+import { go2llm } from "./providers/go2llm.js";
 import { google } from "./providers/google.js";
 import { groq } from "./providers/groq.js";
 import { hyper } from "./providers/hyper.js";
@@ -236,6 +237,7 @@ export const providers: {
   "fireworks-ai": SyncProvider<any>;
   friendli: SyncProvider<any>;
   "github-copilot": SyncProvider<any>;
+  go2llm: SyncProvider<any>;
   google: SyncProvider<any>;
   groq: SyncProvider<any>;
   hyper: SyncProvider<any>;
@@ -298,6 +300,7 @@ export const providers: {
   "fireworks-ai": fireworksAi,
   friendli,
   "github-copilot": githubCopilot,
+  go2llm,
   google,
   groq,
   hyper,
@@ -344,6 +347,7 @@ export const groups = {
     "crossmodel",
     "edenai",
     "empiriolabs",
+    "go2llm",
     "hostinger-router",
     "huggingface",
     "inceptron",
