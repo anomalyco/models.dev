@@ -1,0 +1,25 @@
+# Pricing: https://lazu.ai/api/pricing (`channel_group = "direct"`, USD per MTok, accessed 2026-11-18).
+# Text, image and audio input are $0.75/MTok, cache read $0.075/MTok, text output $3.75/MTok.
+# Effort: reasoning_effort = low|medium|high on Chat Completions (https://api.lazu.ai/v1/models; providers/google and relay peer 302ai).
+# Cache: Google implicit context caching.
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75
+
+[cost.image.input]
+price = 0.75
+
+[cost.audio.input]
+price = 0.75
+cache = { read = 0.075 }

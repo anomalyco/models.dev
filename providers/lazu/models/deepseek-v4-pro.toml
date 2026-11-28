@@ -1,0 +1,33 @@
+# Pricing: https://lazu.ai/api/pricing (`channel_group = "direct"`, USD per MTok, accessed 2026-11-18).
+# `deepseek-v4-pro` serves DeepSeek-V4-Pro-0813 (same alias as DeepSeek's API).
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max (https://api.lazu.ai/v1/models; providers/deepseek and relay peer teamorouter)
+# Peak/off-peak: base prices below are off-peak; `peak_hours_utc = "1-4,6-10"` on weekdays excluding Chinese public holidays (`peak_calendar` in https://lazu.ai/api/pricing) bills 2x (`peak_multiplier = 2`).
+# Reasoning tokens are billed at the output rate.
+# Structured output: `supports_response_schema = true` in https://api.lazu.ai/v1/models (supported on /v1/responses, and routed there from /v1/chat/completions when `response_format.type = "json_schema"` is requested).
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.825
+cache = { read = 0.0275 }
+
+[cost.text.output]
+price = 2.475
+reasoning = 2.475
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, not = { holiday = { equals = "CN" } }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

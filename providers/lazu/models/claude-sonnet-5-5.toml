@@ -1,0 +1,24 @@
+# Pricing: https://lazu.ai/api/pricing (`channel_group = "direct"`, USD per MTok, accessed 2026-11-18).
+# APIs: Anthropic Messages at https://api.lazu.ai/v1/messages and OpenAI-compatible Chat Completions (https://api.lazu.ai/v1/models).
+# Effort: output_config.effort (Messages) / reasoning_effort (Chat Completions) = low|medium|high|xhigh|max,
+# passed through to Anthropic as on providers/anthropic and relay peers (teamorouter, openrouter).
+# Cache: Anthropic cache_control passed through with 5m and 1h TTLs (direct lane: read $0.10, 5m write $2.50, 1h write $4.00 per MTok).
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "5m" = 2.5, "1h" = 4 } }
+
+[cost.text.output]
+price = 10

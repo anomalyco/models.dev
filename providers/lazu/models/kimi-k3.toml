@@ -1,0 +1,27 @@
+# Pricing: https://lazu.ai/api/pricing (`channel_group = "direct"`, USD per MTok, accessed 2026-11-18).
+# Limits: https://api.lazu.ai/v1/models reports `max_output_tokens = 131072` on this host (vs 1,048,576 in models/moonshotai/kimi-k3.toml).
+# Effort: reasoning_effort = low|high|max (https://api.lazu.ai/v1/models; providers/moonshotai and relay peer uplinkswitch).
+# Cache: automatic prefix caching (`cache_read_per_mtok = 0.3` in https://lazu.ai/api/pricing).
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.3 }
+
+[cost.text.output]
+price = 15

@@ -1,0 +1,27 @@
+# Pricing: https://lazu.ai/api/pricing (`channel_group = "direct"`, USD per MTok, published directly in USD, accessed 2026-11-18).
+# Limits: https://api.lazu.ai/v1/models reports `context_length = 1048576` on this host (vs 1,000,000 in models/zhipuai/glm-5.3.toml).
+# Effort: reasoning_effort = low|high|max (https://api.lazu.ai/v1/models; providers/zhipuai and relay peers teamorouter, openrouter).
+# Cache: automatic prefix caching (`cache_read_per_mtok = 0.26` in https://lazu.ai/api/pricing).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4
