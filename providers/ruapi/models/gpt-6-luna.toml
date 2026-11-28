@@ -1,0 +1,31 @@
+# Prices from https://www.ruapi.ai/pricing (standard rate), checked 2026-11-24. USD per 1M tokens.
+# A prompt over 272,000 tokens (cached tokens included) is billed entirely at the higher tier, as at OpenAI.
+# OpenAI-compatible POST https://www.ruapi.ai/v1/chat/completions; RuAPI converts chat requests for this model to the
+# Responses API upstream, so function tools work together with reasoning effort. Prompt caching is automatic.
+# Cache writes are billed at the listed write price only when the upstream response reports cache-write tokens;
+# otherwise only reads are discounted.
+# Function tools only (no custom/freeform tools) through chat completions on this host.
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (forwarded unchanged)
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.12
+cache = { read = 0.012, write = 0.15 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.24
+cache = { read = 0.024, write = 0.3 }
+
+[cost.text.output]
+price = 0.6
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.9
