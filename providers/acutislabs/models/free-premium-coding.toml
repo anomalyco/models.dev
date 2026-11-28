@@ -1,0 +1,32 @@
+# Source: https://acutislabs.org/api/ (accessed 2026-11-24). Acutis Labs owns this zero-cost combo route and selects
+# verified free backends; it fails closed rather than using a metered fallback.
+# Authenticated production GET /v1/models verified 2026-11-24: id="free-premium-coding", owned_by="combo".
+# Reasoning is router-selected with no caller control. Sampling fields are accepted but not guaranteed to be honored.
+schema = 2
+name = "Free Premium Coding (Combo)"
+description = "Text-only coding combo routed across available premium backends"
+family = "model-router"
+open_weights = false
+release_date = "2026-11-24"
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 131_072
+input = 131_072
+output = 65_536
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
+reasoning = 0
