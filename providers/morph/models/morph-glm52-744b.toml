@@ -26,11 +26,11 @@ compatibility = { reasoning_field = "reasoning_content" }
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
 
 [cost.text.input]
-price = 1.19
-cache = { read = 0.1955 }
+price = 1.68
+cache = { read = 0.312 }
 
 [cost.text.output]
-price = 6
+price = 5.28
 
 [[cost.multipliers]]
 when = { service_tier = { equals = "standby" } }
