@@ -418,6 +418,8 @@ export const ModelFamilyValues = [
   "seedance-flash",
   "seed-oss",
   "seed-pro",
+  "seed-translation",
+  "seed-embedding",
 
   // Ray
   "ray",
