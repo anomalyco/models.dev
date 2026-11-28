@@ -1,0 +1,31 @@
+# API model id: qwen/qwen3.6-35b-a3b (exactly as GET https://api.tokenwatt.io/v1/models lists it). Weights:
+# Qwen/Qwen3.6-35B-A3B-FP8, served with vLLM on one H200 in the US (shared with Qwen3.8-27B since 2026-11-19), text only
+# (the engine runs with --language-model-only, so no image or video input).
+# Toggle: thinking is on by default; reasoning_effort = "none" or chat_template_kwargs.enable_thinking = false turns
+# it off per request. Other reasoning_effort values don't grade the thinking, so no effort list. Reasoning is returned
+# in message.reasoning; reasoning_field = "reasoning" is v2-only (v1 allows reasoning_content|reasoning_details), so
+# none is set. Checked live on POST https://api.tokenwatt.io/v1/chat/completions, 2026-11-18: default reasoned (338
+# reasoning tokens), reasoning_effort "none" and enable_thinking false returned 0 reasoning tokens; response_format
+# json_schema (strict) and tool_choice "required" worked.
+# Cache: automatic vLLM prefix caching, no cache_control. Checked live 2026-11-18: the same 8,206-token prompt sent
+# twice, the second reported usage.prompt_tokens_details.cached_tokens = 7,616, billed at the cache read rate.
+# Prices from https://api.tokenwatt.io/v1/models and https://www.tokenwatt.io/api.html (accessed 2026-11-18; rechecked
+# 2026-11-24: cache read lowered from $0.08 to $0.03 per 1M that day, input $0.10 and output $0.90 unchanged).
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, default = { type = "toggle", value = true } }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.9

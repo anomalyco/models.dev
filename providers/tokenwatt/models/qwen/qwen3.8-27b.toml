@@ -1,0 +1,34 @@
+# API model id: qwen/qwen3.8-27b (exactly as GET https://api.tokenwatt.io/v1/models lists it; live since 2026-11-19).
+# Weights: Qwen/Qwen3.8-27B-FP8, served with vLLM on one H200 in the US (shared with Qwen3.6-35B-A3B), text only: the
+# engine runs with --language-model-only and /v1/models lists no image or video sources.
+# Limits (/v1/models): 262,144-token context, max_tokens up to 65,536 (the lab file has 32,768 output).
+# Effort: reasoning_effort = none|low|medium|xhigh, the values the model's chat template takes; thinking is on by default
+# at xhigh (the template's default), "none" turns it off (as does chat_template_kwargs.enable_thinking = false). The
+# template rejects "high" and "minimal" (HTTP 400 from vLLM, engine check 2026-11-19, which also gave 0 reasoning tokens
+# for "none" and enable_thinking false); the gateway rewrites high -> xhigh and minimal -> low, so they aren't separate
+# levels. Same ladder as the Qwen3.8 entries on OpenRouter, Vercel and other hosts. Reasoning is returned in
+# message.reasoning; reasoning_field = "reasoning" is v2-only, so it's left unset (as on qwen/qwen3.6-35b-a3b).
+# Tools and structured output (response_format json_schema): /v1/models supported_parameters and api.html.
+# Cache: automatic vLLM prefix caching, no cache_control; cached input tokens are billed at the cache read price.
+# Prices from https://api.tokenwatt.io/v1/models and https://www.tokenwatt.io/api.html (accessed 2026-11-21).
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2

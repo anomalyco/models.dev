@@ -1,0 +1,34 @@
+# API model id: harness-hub/qwen3.8-27b-pi-adapted (exactly as GET https://api.tokenwatt.io/v1/models lists it; live since
+# 2026-11-21). harness-hub's LoRA adapter (https://huggingface.co/harness-hub/Qwen3.8-27B-pi-adapted, rank 32, the same
+# adapter weights as the repo's main branch) served with vLLM --enable-lora on the same Qwen/Qwen3.8-27B-FP8 engine as
+# qwen/qwen3.8-27b, on one H200 in the US. Text only: the engine runs with --language-model-only and /v1/models lists no
+# image or video sources. Same limits (262,144-token context, max_tokens up to 65,536) and prices as qwen/qwen3.8-27b.
+# Effort: reasoning_effort = none|low|medium|xhigh, as on qwen/qwen3.8-27b (base model's chat template; the gateway rewrites
+# high -> xhigh and minimal -> low). Default: thinking off. The adapter was trained and evaluated with thinking off, so when
+# a request sets neither reasoning_effort nor chat_template_kwargs.enable_thinking, the gateway sends enable_thinking =
+# false; a request that sets either one (e.g. reasoning_effort = "xhigh" or enable_thinking = true) gets thinking.
+# Tools and structured output (response_format json_schema): /v1/models supported_parameters and api.html.
+# Cache: automatic vLLM prefix caching, no cache_control; cached input tokens are billed at the cache read price.
+# Sources: https://api.tokenwatt.io/v1/models, https://www.tokenwatt.io/api.html and
+# https://www.tokenwatt.io/blog/qwen38-27b-pi-adapter-fp8-terminal-bench.html (accessed 2026-11-21).
+schema = 2
+base_model = "harness-hub/qwen3.8-27b-pi-adapted"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "none" }, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 2

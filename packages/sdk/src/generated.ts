@@ -214,6 +214,7 @@ export type ModelFamily =
   | "gte"
   | "hailuo"
   | "happyhorse"
+  | "harness-adapter"
   | "hermes"
   | "heygen-avatar"
   | "heygen-video"
