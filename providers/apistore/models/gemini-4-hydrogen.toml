@@ -1,0 +1,26 @@
+# Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
+# Relayed over Chat Completions. Effort: reasoning_effort, levels as on Google's API ("none" returns 400).
+# Live 2026-11-24: every Google level was accepted on gemini-4-hydrogen (incl. xhigh) and gemini-3.5-flash-lite
+# (incl. minimal); on gemini-3.5-flash-lite minimal/low/medium gave 0 and high 2,467 reasoning_tokens.
+# Live 2026-11-24, same prompt: gemini-3.8-flash low / medium / high -> 0 / 1,122 / 2,350 reasoning_tokens;
+# gemini-4-carbon low / high -> 1,510 / 2,184. Thinking text is not returned, so no reasoning_field.
+# Input: text, images, PDF and WAV audio (input_audio WAV checked live 2026-11-24 on gemini-3.8-flash).
+# Other audio formats and video are not listed because they were not verified on this host.
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "application/pdf"]
+output = ["text"]
+
+[cost.text.input]
+price = 1.05
+cache = { read = 0.0525 }
+
+[cost.text.output]
+price = 5.25

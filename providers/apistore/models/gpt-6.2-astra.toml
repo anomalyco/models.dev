@@ -1,0 +1,30 @@
+# Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
+# Effort: reasoning_effort (levels as on OpenAI's API). Requests that carry tools are served on OpenAI's
+# Responses API upstream, so function tools work with every reasoning level.
+# Custom tools: live 2026-11-24, regex ZZ[0-9]{3} returned ZZ417 on every GPT model listed here; lark and
+# text also on gpt-6-sol and gpt-5.5.
+# Long prompts: above 272,000 input tokens the whole request is billed at the catalog's `long_prompt` prices.
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 5.6
+cache = { read = 0.28 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 11.2
+cache = { read = 0.56 }
+
+[cost.text.output]
+price = 28
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 42

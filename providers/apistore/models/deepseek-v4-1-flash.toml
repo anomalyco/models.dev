@@ -1,0 +1,30 @@
+# Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
+# Relays BytePlus ModelArk deepseek-v4-1-flash-261017; API Store sends
+# thinking.type = disabled unless the request sets it.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# top_k: the Ark Chat API takes only temperature and top_p (as in the byteplus entries).
+# Off-peak prices are the base; the standard prices (exactly 2x) apply Mon-Fri (UTC+8) 09:00-12:00 and
+# 14:00-18:00, i.e. UTC 01:00-04:00 and 06:00-10:00 (catalog `peak_hours`).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.105
+cache = { read = 0.0021 }
+
+[cost.text.output]
+price = 0.42
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2

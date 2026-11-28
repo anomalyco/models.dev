@@ -1,0 +1,28 @@
+# Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
+# Effort: reasoning_effort (levels as on OpenAI's API). Requests that carry tools are served on OpenAI's
+# Responses API upstream, so function tools work with every reasoning level.
+# Custom tools: left out. Live 2026-11-24 the call came back without its input on 1 of 3 regex probes.
+# Long prompts: above 272,000 input tokens the whole request is billed at the catalog's `long_prompt` prices.
+schema = 2
+base_model = "openai/gpt-5.6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.014 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.28
+cache = { read = 0.028 }
+
+[cost.text.output]
+price = 0.84
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.26

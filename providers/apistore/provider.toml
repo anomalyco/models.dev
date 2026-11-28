@@ -1,0 +1,8 @@
+# API Store serves Claude, GPT, Gemini and DeepSeek models on one OpenAI-compatible Chat Completions
+# endpoint with one key. Model list and prices: https://apistore.cloud/api/public/models
+name = "API Store"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["APISTORE_API_KEY"]
+api = "https://api.apistore.cloud/v1"
+doc = "https://apistore.cloud/docs"

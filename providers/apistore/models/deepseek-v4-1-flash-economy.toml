@@ -1,0 +1,38 @@
+# Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
+# Relays BytePlus ModelArk deepseek-v4-1-flash-economy-261017; API Store sends
+# thinking.type = disabled unless the request sets it.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+# top_k: the Ark Chat API takes only temperature and top_p (as in the byteplus entries).
+# Economy tier: BytePlus documents the same weights and capabilities as the standard
+# model, cheaper and slower.
+# Off-peak prices are the base; the standard prices apply Mon-Fri (UTC+8) 09:00-12:00 and
+# 14:00-18:00, i.e. UTC 01:00-04:00 and 06:00-10:00 (catalog `peak_hours`).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek V4.1 Flash Economy"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.084
+cache = { read = 0.0014 }
+
+[[cost.text.input.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+price = 0.168
+cache = { read = 0.0035 }
+
+[cost.text.output]
+price = 0.336
+
+[[cost.text.output.overrides]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+price = 0.672

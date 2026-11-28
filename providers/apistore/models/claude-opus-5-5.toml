@@ -1,0 +1,26 @@
+# Prices: API Store public catalog GET https://apistore.cloud/api/public/models (2026-11-24), USD per million tokens.
+# Served on Anthropic's Messages API upstream and translated from Chat Completions: reasoning_effort becomes
+# output_config.effort (a thinking budget on 4.5 models), and Anthropic's own `thinking` and
+# `output_config` fields are passed through. Without either the model does not think.
+# Live 2026-11-24: claude-haiku-4-5 thinking enabled/budget 3000 -> 1,433 chars of reasoning_content;
+# claude-opus-4-7 adaptive -> 475 chars, disabled -> none; claude-haiku-4-5 reasoning_effort low/medium/high
+# -> 970/1,657/1,667 chars; json_schema output parsed on claude-opus/sonnet/haiku-5-5.
+# Cache: cache_control; live 2026-11-24 on claude-sonnet-5-5 a ~4k-token system prompt wrote 4,052 tokens
+# and read them back on the second call. Writes are billed at 1.25x input (5m) and 2x input (1h).
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.8
+cache = { read = 0.14, write = { "5m" = 3.5, "1h" = 5.6 } }
+
+[cost.text.output]
+price = 14
