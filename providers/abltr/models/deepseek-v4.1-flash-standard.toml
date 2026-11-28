@@ -1,0 +1,24 @@
+# Reasoning: toggle via thinking.type = enabled|disabled; reasoning_effort = low|high|max. Forwarded by abltr's OpenAI-compatible endpoint.
+# Sources: https://abltr.ai/models and https://abltr.ai/src/js/data/models.js (accessed 2026-11-22)
+schema = 2
+v2_only = true
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash · Standard"
+description = "DeepSeek V4.1 Flash · Standard serves a published checkpoint behind abltr's OpenAI-compatible endpoint. It accepts tools, json, reasoning. Context is 1M. Rates are $0.4 per 1M input tokens and $1.61 per 1M output tokens."
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 1.61
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
