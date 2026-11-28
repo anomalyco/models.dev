@@ -1,5 +1,5 @@
 # Sources (accessed 2026-11-28):
-# - https://usemodellane.com/v1/public/models for this ID: contextWindowTokens 1048576, maxOutputTokens 1000000,
+# - https://usemodellane.com/v1/public/models for this ID: contextWindowTokens 1048576, maxOutputTokens 131072,
 #   inputModalities text, features streaming, tools, json_mode, reasoning;
 #   USD per 1M tokens input 2 / cached input 0.3 / output 4 (same table on https://usemodellane.com/docs/models-pricing).
 # - https://usemodellane.com/docs/api/chat-completions: reasoning arrives in reasoning_content; response_format takes text|json_object only;
@@ -24,7 +24,7 @@ cache = { implicit = true }
 
 [limit]
 context = 1_048_576
-output = 1_000_000
+output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

@@ -15,13 +15,13 @@ function modellaneModel(overrides: Partial<ModellaneModel> = {}): ModellaneModel
     id: "modellane-glm-5.3-flash-abliterated",
     name: "GLM-5.3 Flash Abliterated",
     contextWindowTokens: 1_048_576,
-    maxOutputTokens: 1_000_000,
+    maxOutputTokens: 131_072,
     inputModalities: ["text", "image"],
     features: ["streaming", "tools", "json_mode", "vision", "reasoning"],
     reasoningEfforts: ["low", "high", "max"],
     pricing: {
       inputPicoUsdPerToken: "240000",
-      cachedInputPicoUsdPerToken: "80000",
+      cachedInputPicoUsdPerToken: "50000",
       outputPicoUsdPerToken: "1000000",
     },
     ...overrides,
@@ -33,14 +33,14 @@ function authored(overrides: Record<string, unknown> = {}): ExistingModel {
     base_model: "zhipuai/glm-5.3-flash",
     name: "GLM-5.3 Flash Abliterated",
     reasoning: true,
-    cost: { input: 0.24, output: 1, cache_read: 0.08 },
-    limit: { context: 1_048_576, output: 1_000_000 },
+    cost: { input: 0.24, output: 1, cache_read: 0.05 },
+    limit: { context: 1_048_576, output: 131_072 },
     ...overrides,
   } as ExistingModel;
 }
 
 const resolved = {
-  limit: { context: 1_048_576, output: 1_000_000 },
+  limit: { context: 1_048_576, output: 131_072 },
   modalities: { input: ["text", "image"], output: ["text"] },
 } as ExistingModel;
 
