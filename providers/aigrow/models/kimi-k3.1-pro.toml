@@ -1,0 +1,29 @@
+# Prices: https://aigrow.gg/ai-api, price table "US dollars per million input / output tokens", row "Kimi K3.1 Pro", column "With AIGROW credit" (read 2026-11-16): input $1.00, output $5.00. These are the USD a buyer pays per 1M tokens, copied with no conversion. One flat rate at every context length. The row lists no cache rates; it reads "No prompt cache: repeated context bills as input".
+# API: OpenAI Chat Completions only (POST /v1/chat/completions); the Messages endpoint does not serve this model (404, probed 2026-11-16).
+# Effort: reasoning_effort; levels as on providers/moonshotai; low, high and max each returned 200 (2026-11-16). medium returned 200 too, but it is not one of Moonshot's levels, so it is left out. The reasoning comes back in reasoning_content, while the usage reports 0 reasoning tokens, and an assistant turn sent back with its reasoning_content was accepted (200). No default is stated: this host's default was not confirmed.
+# Cache: none. A second identical 3,550-token prompt reported 0 cached tokens (probed 2026-11-16), as the price page says.
+# Structured output: a JSON schema response_format returned bare JSON when the prompt asked for those fields, and plain prose when it did not (probed 2026-11-16), so the schema is not enforced and the flag is false.
+# Input: a PNG image was read (probed 2026-11-16). Video is left out because it was not tested on this host. A PDF file part, which providers/moonshotai does not list either, was not read.
+# Tools: a function tool returned a tool call with the right arguments on Chat Completions with tool_choice "auto" (probed 2026-11-16).
+# Streaming: with stream_options.include_usage the last chunk before [DONE] carried the usage (probed 2026-11-16).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = false
+stream_usage = true
+cache = false
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 5
