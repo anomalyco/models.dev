@@ -30,6 +30,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
+- `bun models:sync modellane` syncs only Modellane.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
 - `bun models:sync <provider> --open-issues` opens GitHub issues for missing models (on by default only when `GITHUB_ACTIONS=true`).
@@ -424,6 +425,14 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - `context_length` only ever lowers the inherited context limit; it can report the lab's window rounded up (1048576 for 1M). Output limits, reasoning controls and other capabilities stay hand-authored.
 - `tools = false` overrides the lab's tool calling. Display names are not synced: the endpoint prefixes the lab name (`Z.ai: GLM 5.3`). Decision models (`decisions = true`) are skipped.
 - New models are not created automatically (`skipCreates`) and open no missing-model issues (`trackMissingModels: false`): the endpoint lists hundreds of models the catalog does not carry. It lists only models serving at that moment, so local files missing from a response are kept (`deleteMissing: false`) and reported.
+
+## Modellane Notes
+
+- Modellane is implemented in `packages/core/src/sync/providers/modellane.ts`.
+- Source endpoint: the public `https://usemodellane.com/v1/public/models` (no API key). It lists every model Modellane serves.
+- Owned fields: `contextWindowTokens` and `maxOutputTokens` (limits), `inputModalities` (input modalities), and `inputPicoUsdPerToken`, `cachedInputPicoUsdPerToken`, `outputPicoUsdPerToken` (prices). Prices are integer pico-USD per token, so USD per 1M tokens is the value / 1e6. A limit or input list a file inherits through `base_model` stays inherited while the catalog agrees with it.
+- `reasoningEfforts` becomes the effort list, sorted low to high. It is the host's only reasoning control (`reasoning_effort`, `reasoning.effort`, `output_config.effort`), with `none` as the off switch where listed, so no toggle or budget is written. A missing list or a level the schema doesn't know keeps the file's authored controls; an empty list means no caller control.
+- `base_model`, display names, descriptions and `[api.*]` tables stay hand-authored. IDs don't name a lab entry, so new models are not created automatically (`skipCreates`) and open missing-model issues; files absent from the catalog are removed. Empty, malformed and duplicate-ID inventories fail before writes.
 
 ## OpenAI Notes
 
