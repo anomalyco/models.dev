@@ -1,0 +1,18 @@
+# Context: the router advertises 206,848 for this id while the lab file documents 200,000; the host value is the router's own catalog value (GET /v1/models, 2026-11-22).
+# Toggle: thinking.type = enabled|disabled
+# Live on this host 2026-11-26 (chat/completions): thinking.type disabled returned 0 reasoning characters and enabled returned reasoning, so `thinking` is a working toggle here.
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+
+[limit]
+context = 206_848
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+
+[cost.text.input]
+price = 2.1
+
+[cost.text.output]
+price = 6.6

@@ -1,0 +1,18 @@
+# Reasoning: no caller control on this host. Live 2026-11-26 on chat/completions for `claude-fable-5` (usage.completion_tokens_details.reasoning_tokens): thinking.type enabled and disabled both returned 0, and reasoning_effort low/high/max also returned 0 reasoning tokens at every level, so neither field steers reasoning here. The bare `reasoning = { supported = true }` stays because AGENTS.md requires a relay to author its reasoning controls, and the v1 schema refuses a file whose reasoning resolves true without a `capabilities.reasoning` key (`packages/core/src/schema.ts`, "Must set reasoning_options when reasoning is true").
+schema = 2
+base_model = "anthropic/claude-fable-5"
+
+[limit]
+output = 131_072
+
+[capabilities]
+reasoning = { supported = true }
+
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 10
+cache = { write = { "5m" = 12.5, "1h" = 20 } }
+
+[cost.text.output]
+price = 50

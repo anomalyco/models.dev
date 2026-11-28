@@ -1,0 +1,19 @@
+# Effort: reasoning_effort = none|low|high. Source: the OpenRouter entry for the same id,
+#   providers/openrouter/models/tencent/hy3.toml; there is no first-party Tencent provider entry to copy.
+# Context: the router advertises 262,144 for this id while the lab file documents 256,000; the host value is the router's own catalog value (GET /v1/models, 2026-11-22).
+schema = 2
+base_model = "tencent/hy3"
+
+
+[limit]
+context = 262_144
+output = 32_768
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+
+[cost.text.input]
+price = 0.198
+
+[cost.text.output]
+price = 0.792

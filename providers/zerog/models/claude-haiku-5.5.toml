@@ -1,0 +1,20 @@
+# Reasoning: the lab's own effort list for this id. The router lists `reasoning_effort` in
+#   supported_parameters, and the same field is forwarded on this host's other Claude ids (live
+#   2026-11-26 on chat/completions: completion_tokens rose low < high < max). No `none`: the lab does
+#   not offer it, and on claude-sonnet-5.5 the router answers 400 for reasoning_effort = none.
+# Toggle: thinking.type = enabled|disabled, as the lab's entry has it. This toggle was not shown to change
+#   output on this host; it is published because the lab authors it, not from a live result here.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 0.1
+cache = { write = { "5m" = 0.125, "1h" = 0.2 } }
+
+[cost.text.output]
+price = 0.5

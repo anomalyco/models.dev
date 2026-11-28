@@ -1,0 +1,16 @@
+# Context: the router advertises 1,179,648 for this id while the lab file documents 1,000,000; the host value is the router's own catalog value (GET /v1/models, 2026-11-22).
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+
+[limit]
+context = 1_179_648
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 1.4
+
+[cost.text.output]
+price = 4.4

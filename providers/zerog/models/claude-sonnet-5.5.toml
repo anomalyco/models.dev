@@ -1,0 +1,18 @@
+# Reasoning: the lab's own effort list for this id. The router lists `reasoning_effort` in
+#   supported_parameters, and the same field is forwarded on this host's other Claude ids (live
+#   2026-11-26 on chat/completions: completion_tokens rose low < high < max). No `none`: the lab does
+#   not offer it, and on claude-sonnet-5.5 the router answers 400 for reasoning_effort = none.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 2
+cache = { write = { "5m" = 2.5, "1h" = 4 } }
+
+[cost.text.output]
+price = 10

@@ -1,0 +1,19 @@
+# Context: the router advertises 1,441,792 for this id while the lab file documents 1,000,000; the host value is the router's own catalog value (GET /v1/models, 2026-11-22).
+# Toggle: thinking.type = enabled|disabled
+# Live on this host 2026-11-26 (chat/completions): thinking.type disabled returned 0 reasoning characters and enabled returned reasoning, so `thinking` is a working toggle here.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+
+[limit]
+context = 1_441_792
+output = 393_216
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 1.98
+
+[cost.text.output]
+price = 3.96

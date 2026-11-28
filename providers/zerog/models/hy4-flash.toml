@@ -1,0 +1,15 @@
+# Toggle: thinking.type = enabled|disabled. Live on this host 2026-11-26 (chat/completions): disabled returned 0 reasoning characters and enabled returned reasoning. `reasoning.enabled` also toggles here; `enable_thinking` is accepted but ignored (it returned reasoning on false).
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[limit]
+context = 1_000_000
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.0525
+
+[cost.text.output]
+price = 0.21075

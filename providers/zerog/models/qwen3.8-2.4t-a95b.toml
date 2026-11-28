@@ -1,0 +1,16 @@
+# Context: the router advertises 1,000,000 for this id while the lab file documents 262,144; the host value is the router's own catalog value (GET /v1/models, 2026-11-22) and is recorded as-is.
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+
+[limit]
+context = 1_000_000
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 9

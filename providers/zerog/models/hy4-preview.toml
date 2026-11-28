@@ -1,0 +1,16 @@
+schema = 2
+base_model = "tencent/hy4-preview"
+
+
+[limit]
+context = 1_000_000
+output = 65_536
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+
+[cost.text.input]
+price = 1.251
+
+[cost.text.output]
+price = 3.7515

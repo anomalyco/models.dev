@@ -1,0 +1,19 @@
+# Modalities: video input is dropped here. The lab file lists video formats, but this router rejects
+#   them for this id (live 2026-11-26, chat/completions: "does not accept video input"), and the
+#   0G catalog `architecture.input_modalities` for it is image, text.
+schema = 2
+base_model = "google/gemini-3.1-pro-preview"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif", "audio/wav", "audio/mp3", "audio/aiff", "audio/aac", "audio/ogg", "audio/flac", "audio/mpeg", "audio/m4a", "audio/l16", "audio/opus", "audio/alaw", "audio/mulaw", "audio/webm", "application/pdf"]
+output = ["text"]
+
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 2
+
+[cost.text.output]
+price = 12

@@ -1,0 +1,24 @@
+# Modalities: video input is dropped here. The lab file lists video formats, but this router rejects
+#   them for this id (live 2026-11-26, chat/completions: "does not accept video input"), and the
+#   0G catalog `architecture.input_modalities` for it is image, text.
+# Cache-write prices: 0G catalog `pricing_usd.cache_write` / `cache_write_1h` for this id (GET /v1/models, 2026-11-26). The catalog gives no cache-read price for it, so none is claimed.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "application/pdf"]
+output = ["text"]
+
+
+[limit]
+output = 131_072
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"] }
+
+[cost.text.input]
+price = 2.25
+cache = { write = { "5m" = 2.8125, "1h" = 4.5 } }
+
+[cost.text.output]
+price = 6.75

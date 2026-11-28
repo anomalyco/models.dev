@@ -1,0 +1,14 @@
+# Toggle: thinking.type = enabled|disabled
+# Live on this host 2026-11-26 (chat/completions): thinking.type disabled returned 0 reasoning characters and enabled returned reasoning, so `thinking` is a working toggle here.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
+
+[cost.text.input]
+price = 1.26
+
+[cost.text.output]
+price = 3.96

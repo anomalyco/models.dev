@@ -1,0 +1,14 @@
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[limit]
+output = 524_288
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.15
+
+[cost.text.output]
+price = 0.6

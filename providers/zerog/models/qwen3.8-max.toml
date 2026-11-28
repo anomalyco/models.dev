@@ -1,0 +1,12 @@
+# Toggle: enable_thinking true|false
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[cost.text.input]
+price = 2.55
+
+[cost.text.output]
+price = 7.65

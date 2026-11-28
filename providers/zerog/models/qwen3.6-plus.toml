@@ -1,0 +1,16 @@
+# Toggle: enable_thinking true|false
+schema = 2
+base_model = "alibaba/qwen3.6-plus"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {} }
+
+[cost.text.input]
+price = 0.291667
+
+[cost.text.output]
+price = 1.75

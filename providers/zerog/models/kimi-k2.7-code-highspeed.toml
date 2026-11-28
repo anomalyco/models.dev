@@ -1,0 +1,19 @@
+# Modalities: video input is dropped here. The lab file lists video formats, but this router rejects
+#   them for this id (live 2026-11-26, chat/completions: "does not accept video input"), and the
+#   0G catalog `architecture.input_modalities` for it is image, text.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code-highspeed"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 2.4225
+
+[cost.text.output]
+price = 10.2

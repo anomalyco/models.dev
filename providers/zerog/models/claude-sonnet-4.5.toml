@@ -1,0 +1,23 @@
+# Reasoning: a `thinking` toggle. The 0G catalog lists `thinking` in supported_parameters for
+#   this id and lists no `reasoning_effort` and no budget field, so the toggle is the control this host
+#   offers. An earlier version published no caller control because `thinking` enabled/disabled and
+#   `reasoning_effort` low/high/max all returned reasoning_tokens = 0; that field is simply not reported for
+#   Claude on this host, so it could not show whether a field is forwarded. The lab's `budget` is not
+#   carried: the catalog offers no budget field on any Claude id.
+schema = 2
+base_model = "anthropic/claude-sonnet-4-5"
+
+[limit]
+context = 1_000_000
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 3
+cache = { write = { "5m" = 3.75, "1h" = 6 } }
+
+[cost.text.output]
+price = 15
