@@ -1,0 +1,22 @@
+# IDs, limits, and prices (2026-11-27): https://api.openinference.ai/v1/models
+# Live Chat Completions (2026-11-27): reasoning_effort=none|low|high|max.
+# reasoning_effort=none returned zero reasoning tokens.
+# Reasoning is returned in message.reasoning, outside the v1 interleaved-field enum.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+stream_usage = true
+
+[limit]
+context = 1_048_576
+output = 1_048_576
+
+[cost.text.input]
+price = 0.06
+cache = { read = 0.025 }
+
+[cost.text.output]
+price = 0.6
