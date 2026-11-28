@@ -1,0 +1,15 @@
+# Pricing: https://bettertoken.ai/api/pricing (fetched 2026-11-15).
+# Effective USD per 1M tokens: official list price × Qwen group ratio 0.72.
+# Chat Completions: POST https://bettertoken.ai/v1/chat/completions.
+schema = 2
+base_model = "alibaba/qwen3.8-max"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+
+[cost.text.input]
+price = 1.44
+cache = { read = 0.18, write = 1.8 }
+
+[cost.text.output]
+price = 4.32
