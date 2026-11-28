@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = low|high|max
+# Cost, limits, input parts and reasoning levels: PopNow model table https://popnow.ai/docs/chat and the model schema from GET https://api.popnow.ai/api/v1/models/{model} (retrieved 2026-11-05).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 2 }
+
+[cost.text.output]
+price = 10
