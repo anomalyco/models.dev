@@ -1,0 +1,11 @@
+﻿# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
+# Reasoning: not offered by this model on this host; the base model's reasoning.supported = false carries over.
+schema = 2
+base_model = "mistral/ministral-3-14b-instruct-2512"
+
+[cost.text.input]
+price = 0.4
+
+[cost.text.output]
+price = 0.4
+

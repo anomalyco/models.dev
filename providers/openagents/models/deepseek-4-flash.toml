@@ -1,0 +1,14 @@
+# Price source: OpenAgents gateway price table, GET /v1/models (https://api-gateway.openagents.org/v1/models, checked 2026-11-05), USD per 1M tokens.
+# Toggle: Messages `thinking.type = enabled|disabled`; effort: `output_config.effort = low|high|max`.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.224
+
+[cost.text.output]
+price = 0.448
+
