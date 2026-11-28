@@ -13,6 +13,9 @@ output = ["text"]
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "medium" } }
 cache = { implicit = true }
 
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
 [cost.text.input]
 price = 2.57
 cache = { read = 0.15, write = 3.21 }
