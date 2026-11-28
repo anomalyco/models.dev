@@ -1,7 +1,7 @@
 # Source: model card https://huggingface.co/tencent/Hy-MT3-30B-A3B (accessed 2026-11-28).
 # Release: News section, "2026.11.24 We open-sourced Hy-MT3-1.8B/Hy-MT3-7B/Hy-MT3-30B-A3B"; also
 #   https://x.com/TencentHunyuan/status/2125170622049485093 (2026-11-24). License: card metadata, apache-2.0.
-# Description: card Model Introduction (third-generation Hy translation family, 102 languages, up from 38 in Hy-MT2)
+# Description: card Model Introduction (third-generation Hy translation family, 102 languages: the 38 Hy-MT2 supports, i.e. 33 languages plus 5 Chinese minority languages/dialects, and 64 new ones)
 #   and model table ("Hy 30B-A3B translation model"); report https://arxiv.org/abs/2611.27673.
 # Limits: card "Inference and Deployment" section states max_context: 8192 and recommends max_tokens 4096.
 #   config.json's max_position_embeddings (262,144) is the architecture's position limit, not the supported context.
