@@ -1,0 +1,19 @@
+# Source: https://api.helping.io/models, our public model list: prices, limits, reasoning efforts,
+# input types and structured output. Limits and input types are stated where they differ from the lab file.
+# Prices are list prices in US dollars per million tokens (https://docs.helping.io/billing/credits/).
+# Cache: our API caches prompts itself, and a caller sends no cache markers.
+# Custom tools: refused, this endpoint takes function tools only, and a request that offers a custom (freeform) tool is a 400.
+# Shutdown: GET /models states it stops being served on 2027-01-14.
+schema = 2
+base_model = "openai/gpt-4o"
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2.5
+cache = { read = 1.25 }
+
+[cost.text.output]
+price = 10
