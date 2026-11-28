@@ -1,0 +1,23 @@
+# Ollama tag qwen2.5-coder:7b on c0mpute nodes. https://ollama.com/library/qwen2.5-coder
+# No [cost]: c0mpute has no rate card. Each request is a sealed-bid auction among nodes under the
+# caller's cap (lowest bid wins, 5% market fee), billed to a prepaid balance, so there is no fixed
+# per-token price to publish. Same approach as providers/aistupidlevel (routing modes with no fixed price).
+# [limit]: GPU nodes load models with num_ctx 16,384 or 32,768 depending on VRAM
+# (ctx_cap_for_vram in node/crates/c0mpute-core/src/inference_gpu.rs), so 16,384 is the window every
+# node holds; max_tokens is clamped to 8,192 (max_completion_tokens is mapped to it).
+# Only temperature is forwarded among sampling parameters; top_p and top_k are dropped.
+# Tool calling: OpenAI tools / tool_choice / tool_calls (streamed as delta.tool_calls), since 2026-11-22
+# (https://c0mpute.com/docs#api, profullstack/c0mpute#462).
+schema = 2
+base_model = "alibaba/qwen2.5-coder-7b-instruct"
+
+[capabilities]
+tools = { supported = true }
+top_p = false
+top_k = false
+
+[limit]
+context = 16_384
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }

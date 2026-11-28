@@ -1,0 +1,13 @@
+# c0mpute: a decentralized peer-to-peer network of everyday computers running open-weight models.
+# OpenAI-compatible Chat Completions at https://c0mpute.com/v1 (GET /v1/models needs no auth).
+# Keys (c0k_...) come from the "keys" tab at https://c0mpute.com/chat. Streaming works (standard SSE).
+# The API honours model, messages, stream, temperature and max_tokens (1 to 8,192); tools, tool
+# messages and array content parts are not accepted yet, so models here set tools = false.
+# Sources (accessed 2026-11-22): https://c0mpute.com/docs, https://c0mpute.com/llms.txt,
+# https://github.com/profullstack/c0mpute
+name = "c0mpute"
+env = ["C0MPUTE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://c0mpute.com/v1"
+doc = "https://c0mpute.com/docs"

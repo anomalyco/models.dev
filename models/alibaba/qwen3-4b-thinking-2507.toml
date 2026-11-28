@@ -1,0 +1,31 @@
+# Model card: https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507 (Apache 2.0; Hugging Face repo created 2025-08-05).
+# Dense 4.0B, thinking mode only, tool calling; 262,144-token native context.
+# Output 81,920: the model card's Best Practices suggest 32,768 for most queries and 81,920 for highly
+# complex problems; 81,920 is the largest output the lab documents. https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507#best-practices
+# Sampling: open weights, so temperature, top_p and top_k are runtime sampler settings on any host.
+schema = 2
+name = "Qwen3 4B Thinking 2507"
+description = "Small dense Qwen3 thinking model for on-device reasoning, math, coding, and tool use"
+family = "qwen"
+open_weights = true
+release_date = "2025-08-05"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 81_920
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507"
