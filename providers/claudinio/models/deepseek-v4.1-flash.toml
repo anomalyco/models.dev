@@ -1,0 +1,55 @@
+# Raw DeepSeek V4.1 Flash, sold on the Claudinio DeepSeek plans (DeepSeek Pro and
+# DeepSeek Ultra). Served without the Claudinio system prompt and without routing,
+# on the same base URL and key as the other Claudinio models.
+# A DeepSeek-plan key is always served this model: a request naming `claudinio`,
+# `claudius` or any other alias from such a key is answered by DeepSeek V4.1 Flash
+# and billed at the prices below. `claudinio` and `claudius` keep their own entries
+# for the other plans.
+# Pricing, from Claudinio's own price table and FAQ at https://claudin.io (accessed 2026-11-25):
+#   "DeepSeek V4.1 Flash · deepseek-v4.1-flash. Per 1M tokens, in USD. Off-peak / Peak:
+#    Input (cache miss) $0.15 / $0.3, Input (cache hit) $0.003 / $0.006, Output $0.6 / $1.2.
+#    Peak is Monday to Friday, 01:00–04:00, 06:00–10:00 UTC."
+#   "Chinese public holidays included: we bill on our provider's calendar, so a weekday that
+#    is a Chinese public holiday keeps its peak hours". This differs from DeepSeek's own
+#   entry, which excludes CN holidays, so the multiplier below has no holiday clause.
+#   These are DeepSeek's own prices at 1.00x (https://api-docs.deepseek.com/quick_start/pricing).
+# Upstream: Novita's `deepseek/deepseek-v4.1-flash` (the 2026-09-10 build, not the -1017 one;
+#   both are listed separately in https://api.novita.ai/openai/v1/models), hence this base.
+# Input: text and images (inherited); audio, video and other files are refused.
+# APIs: POST /v1/chat/completions and POST /v1/messages on the provider's base URL. A
+#   DeepSeek-plan key gets 400 unsupported_endpoint on /v1/responses, so it is not listed.
+# Effort: reasoning_effort = none|low|high|max on Chat Completions, forwarded to the upstream
+#   as sent, in the body or in extra_body. `none` turns thinking off: probed 2026-11-25 on the
+#   upstream, 0 reasoning tokens with `none` against 18 with `high` on the same prompt.
+# No toggle: Claudinio strips `thinking` from a Chat Completions request, top-level and in
+#   extra_body, so `thinking.type = disabled` never reaches the upstream there. On Messages, a
+#   `thinking` block with type = enabled is translated to an effort level by its budget_tokens;
+#   type = disabled is dropped, and thinking stays at the upstream default.
+# system_updates (Chat Completions only): a system message sent mid-conversation is forwarded
+#   in place. Probed 2026-11-25 on the upstream: a late "begin every reply with BANANA" was
+#   obeyed ("BANANA 35") and 12416 of 12502 prompt tokens stayed cached. Not checked on Messages.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+capabilities = { system_updates = true }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.6
+reasoning = 0.6
+
+[[cost.multipliers]]
+when = { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] }, any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] }
+factor = 2
