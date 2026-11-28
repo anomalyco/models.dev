@@ -1,0 +1,14 @@
+# Relay provider: QCode.cc, a multi-model gateway for coding tools (Claude Code, Codex CLI,
+# OpenCode). One key works on an OpenAI-compatible base (/openai/v1: Responses and Chat
+# Completions) and an Anthropic Messages base (/api). This entry lists the GPT models served
+# on the Responses API at the official per-token prices shown on the public model page.
+# Sources (accessed 2026-11-27):
+#   https://docs.qcode.cc/en/docs/getting-started/endpoints-and-api-paths (base URLs, protocols)
+#   https://qcode.cc/en/models (per-model prices, context, cache read/write rates)
+# Hostnames: api.qcode.cc (global routing); asia.qcode.cc and us.qcode.cc serve the same API.
+name = "QCode"
+npm = "@ai-sdk/openai"
+opencodeai = "@opencode/ai/providers/openai-compatible/responses"
+env = ["QCODE_API_KEY"]
+api = "https://api.qcode.cc/openai/v1"
+doc = "https://docs.qcode.cc/en/docs/getting-started/endpoints-and-api-paths"

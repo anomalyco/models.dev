@@ -1,0 +1,34 @@
+# Relay of the OpenAI Responses API: reasoning controls are copied from the first-party
+# openai/gpt-6.1-sol entry (relay pass-through). Limits follow the lab file; qcode.cc/en/models lists
+# 922K input / 128K output for this model, matching it.
+# Cost (retrieved 2026-11-27): https://qcode.cc/en/models (input, output, cache write, cache
+# read per MTok; requests above 272K input tokens bill input and cache at 2x, output at 1.5x).
+# Custom tools (freeform text/lark/regex): lab function-calling docs
+# (https://developers.openai.com/api/docs/guides/function-calling) plus same-surface
+# peer relay providers/concentrate/models/gpt-6.1-sol.toml (probed).
+# tools.supported matches the lab file and is required by the schema
+# discriminator when a tools table is present.
+schema = 2
+base_model = "openai/gpt-6.1-sol"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = { min_tokens = 1_024 } }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = { "30m" = 2.5 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 4
+cache = { read = 0.2, write = { "30m" = 5 } }
+
+[cost.text.output]
+price = 10
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 15
