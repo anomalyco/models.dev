@@ -1,0 +1,9 @@
+# Praex API: https://praex.ai/console/docs (accessed 2026-11-28). OpenAI-compatible POST /v1/chat/completions and
+# GET /v1/models, bearer key (`Authorization: Bearer praex-sk-...`), keys made at https://praex.ai/console/keys and
+# billed per token from prepaid credits. The console shows the key as PRAEX_API_KEY.
+name = "Praex"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.praex.ai/v1"
+env = ["PRAEX_API_KEY"]
+doc = "https://praex.ai/console/docs"

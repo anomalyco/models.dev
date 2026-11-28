@@ -1,0 +1,29 @@
+# Sources (accessed 2026-11-28):
+# - https://praex.ai/console/docs and GET https://api.praex.ai/v1/pricing: Velox III, Praex's own model, post-trained
+#   from an open 27B model for coding-agent work; live since 2026-10-22; text and images in (PNG, JPEG, WebP, GIF);
+#   tools and thinking; 131,072-token context, 8,192 output tokens. Weights are not published.
+schema = 2
+name = "Velox III"
+description = "Praex's fast model for coding-agent work, post-trained from an open 27B model; the free tier of the Praex agent"
+open_weights = false
+release_date = "2026-10-22"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 8_192
+
+[[links]]
+label = "API reference"
+url = "https://praex.ai/console/docs"
+type = "docs"
