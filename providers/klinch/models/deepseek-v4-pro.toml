@@ -1,0 +1,26 @@
+# Price: https://klinch.app/en/models/deepseek-v4-pro/ (read 2026-11-27), USD per 1M tokens.
+# Cache: Klinch adds cache_control breakpoints itself when a request has none
+# and the prefix is likely re-sent, and keeps a client's own cache_control on
+# the Messages API; cached reads are billed at the published cache-read price.
+# Reasoning: Chat Completions reasoning_effort (and Messages output_config.effort)
+# is forwarded as low | medium | high; none and minimal map to low, xhigh and max
+# to high, so only the three levels that reach the model are listed.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+
+[api.messages]
+base_url = "https://api.klinch.cloud/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.132
+cache = { read = 0.013 }
+
+[cost.text.output]
+price = 0.396
