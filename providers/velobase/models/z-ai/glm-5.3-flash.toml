@@ -1,0 +1,29 @@
+# Prices and limits: https://velobase.io/api/v1/models (accessed 2026-11-11), USD per token x 1e6
+# Reasoning controls follow the underlying model on other OpenAI-compatible relays
+# Effort: reasoning.effort or reasoning_effort on Chat Completions
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.0399
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.0784
