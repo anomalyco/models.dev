@@ -1,0 +1,26 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+output = 65536
+
+[capabilities]
+reasoning = { supported = true, effort = ["low","high","max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.25
+cache = { read = 0.0067265, write = 0.25 }
+
+[cost.text.output]
+price = 1

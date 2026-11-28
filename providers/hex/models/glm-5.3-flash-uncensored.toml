@@ -1,0 +1,30 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "GLM 5.3 Flash Uncensored"
+description = "GLM 5.3 Flash Uncensored served by HEX."
+base_model_omit = ["weights","benchmarks"]
+open_weights = false
+
+[modalities]
+input = ["text","image/jpeg","image/png","image/webp"]
+output = ["text"]
+
+[limit]
+output = 65536
+
+[capabilities]
+reasoning = { supported = true, effort = ["low","high","max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.375
+cache = { read = 0.0336325, write = 0.375 }
+
+[cost.text.output]
+price = 1.25

@@ -1,0 +1,27 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+# Effort: reasoning_effort = low|medium|high
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+context = 1000000
+output = 16384
+
+[capabilities]
+reasoning = { supported = true, effort = ["low","medium","high"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.625
+cache = { read = 0.03125, write = 0.625 }
+
+[cost.text.output]
+price = 3.125

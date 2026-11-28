@@ -1,0 +1,26 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+# Effort: output_config.effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[modalities]
+input = ["text","image/jpeg","image/png","image/webp"]
+output = ["text"]
+
+[limit]
+output = 64000
+
+[capabilities]
+reasoning = { supported = true, effort = ["low","medium","high","xhigh","max"] }
+cache = { explicit = true }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.89686125
+cache = { read = 0.089686125, write = 1.1210765625 }
+
+[cost.text.output]
+price = 4.48430625

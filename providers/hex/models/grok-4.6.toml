@@ -1,0 +1,23 @@
+# HEX prices (USD per million tokens): https://hexapi.io/api/models
+# API: https://hexapi.io/docs | Client limits and attachments: https://api.hexapi.io/v1/setup/model-limits.json
+schema = 2
+base_model = "xai/grok-4.6"
+
+[modalities]
+input = ["text","image/jpeg","image/png","image/webp"]
+output = ["text"]
+
+[limit]
+output = 65536
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.1793725
+cache = { read = 0.044843125, write = 0.1793725 }
+
+[cost.text.output]
+price = 0.5381175
