@@ -1,0 +1,26 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (alibaba, GLOBAL).
+schema = 2
+base_model = "alibaba/qwen3.6-plus"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {  } }
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05, write = 0.625 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 2
+cache = { read = 0.2, write = 2.5 }
+
+[cost.text.output]
+price = 3
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 6

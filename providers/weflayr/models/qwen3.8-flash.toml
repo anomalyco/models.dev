@@ -1,0 +1,19 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (alibaba, GLOBAL).
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, toggle = true, effort = ["low", "medium", "xhigh"], budget = { max = 262_144 } }
+structured_output = true
+
+[limit]
+context = 991_000
+output = 128_000
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.016, write = 0.2 }
+
+[cost.text.output]
+price = 0.47

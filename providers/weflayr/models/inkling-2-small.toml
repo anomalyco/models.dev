@@ -1,0 +1,15 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (together, GLOBAL).
+schema = 2
+base_model = "thinkingmachines/inkling-2-small"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 1

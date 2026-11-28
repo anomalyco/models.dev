@@ -1,0 +1,19 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (alibaba, GLOBAL).
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_000_000
+output = 262_144
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

@@ -1,0 +1,19 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (vertex, GLOBAL).
+schema = 2
+base_model = "openai/gpt-oss-120b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 128_000
+output = 128_000
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.009 }
+
+[cost.text.output]
+price = 0.36

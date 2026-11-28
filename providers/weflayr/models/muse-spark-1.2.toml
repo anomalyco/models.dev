@@ -1,0 +1,15 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (meta, GLOBAL).
+schema = 2
+base_model = "meta/muse-spark-1.2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high", "xhigh"], default = { type = "effort", value = "high" } }
+structured_output = true
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

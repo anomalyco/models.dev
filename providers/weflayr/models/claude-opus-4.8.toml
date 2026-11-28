@@ -1,0 +1,15 @@
+# Prices: Weflayr catalog (GET https://gateway.weflayr.com/v1/models, accessed 2026-11-25),
+# lowest-priced deployment (anthropic, GLOBAL).
+schema = 2
+base_model = "anthropic/claude-opus-4-8"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 5
+cache = { read = 0.5, write = { "5m" = 6.25, "1h" = 10 } }
+
+[cost.text.output]
+price = 25
