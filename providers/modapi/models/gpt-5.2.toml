@@ -1,0 +1,18 @@
+# Price: https://modapi.ai/api/pricing (model gpt-5.2), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Effort: reasoning_effort = none|low|medium|high|xhigh
+# Values from providers/openai/models/gpt-5.2.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified.
+# Custom tools (freeform): supported on ModAPI POST /v1/responses (tested 2026-11-26: a regex-grammar custom tool was called and its input matched); not supported on POST /v1/chat/completions (HTTP 400 "Missing required parameter: 'tools[0].custom'").
+schema = 2
+v2_only = true
+base_model = "openai/gpt-5.2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.75
+cache = { read = 0.175 }
+
+[cost.text.output]
+price = 14

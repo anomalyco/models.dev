@@ -1,0 +1,15 @@
+# Price: https://modapi.ai/api/pricing (model MiniMax-M2.5), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# No caller control, matching the vendor's native entry providers/minimax/models/MiniMax-M2.5.toml.
+schema = 2
+v2_only = true
+base_model = "minimax/MiniMax-M2.5"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.63
+cache = { read = 0.063 }
+
+[cost.text.output]
+price = 2.52

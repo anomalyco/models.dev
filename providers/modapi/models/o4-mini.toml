@@ -1,0 +1,17 @@
+# Price: https://modapi.ai/api/pricing (model o4-mini), USD per 1M tokens, lowest-priced LLM channel group, accessed by generate.py.
+# Effort: reasoning_effort = low|medium|high
+# Values from providers/requesty/models/o4-mini@eu.toml; each value accepted (HTTP 200) by ModAPI POST /v1/chat/completions on or before 2026-11-26;
+# effect per value not verified. none rejected (HTTP 400); max rejected (HTTP 400).
+schema = 2
+v2_only = true
+base_model = "openai/o4-mini"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.1
+cache = { read = 0.275 }
+
+[cost.text.output]
+price = 4.4
