@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (top-level field on /v1/chat/completions). Off is effort=none; no toggle.
+# The catalog row lists reasoning_effort (GET https://api.surplusintelligence.ai/v1/models, 2026-11-19) and Surplus forwards it to the seller as sent (https://www.surplusintelligence.ai/docs/reference/reasoning). Levels mirror providers/openrouter/models/anthropic/claude-haiku-5.5.toml.
+# Live 2026-11-19, one request per level: every level above accepted; reasoning_content returned at medium|high|xhigh|max, none at none|low.
+# reasoning_field: reasoning comes back in reasoning_content, and Surplus accepted it back on an assistant tool-call turn (live 2026-11-19).
+# Host deltas: limit is the catalog row's context_length / max_completion_tokens where smaller than the lab's.
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 100_000
+output = 50_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

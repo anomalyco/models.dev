@@ -1,0 +1,13 @@
+# Effort: reasoning_effort = low|medium|high (top-level field on /v1/chat/completions).
+# The catalog row lists reasoning_effort (GET https://api.surplusintelligence.ai/v1/models, 2026-11-19) and Surplus forwards it to the seller as sent (https://www.surplusintelligence.ai/docs/reference/reasoning). Levels mirror providers/openrouter/models/google/gemini-4-carbon.toml.
+# Live 2026-11-19, one request per level: every level above accepted; reasoning_content returned at high, none at low|medium; Surplus rewrites the field for Google sellers (X-SI-Adapted-Params: reasoning_effort).
+# reasoning_field: reasoning comes back in reasoning_content, and Surplus accepted it back on an assistant tool-call turn (live 2026-11-19 on gemini-3.8-flash).
+schema = 2
+base_model = "google/gemini-4-carbon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
