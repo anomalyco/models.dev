@@ -1,0 +1,17 @@
+# Price: Anthropic's list price, https://docs.anthropic.com/en/docs/about-claude/pricing; Respan bills the
+# upstream list price.
+# Effort: reasoning_effort = low|medium|high|xhigh|max (thinking is always on)
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.2, write = { "5m" = 10, "1h" = 16 } }
+
+[cost.text.output]
+price = 40

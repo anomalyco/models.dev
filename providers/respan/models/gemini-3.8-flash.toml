@@ -1,0 +1,24 @@
+# Price: Google's Gemini API list price, https://ai.google.dev/gemini-api/docs/pricing; Respan bills the
+# upstream list price, which doubles from 2027-01-01. Explicit cachedContents is not exposed, so only implicit caching is listed.
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = { min_tokens = 4_096 } }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.audio.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75
+
+[[cost.multipliers]]
+when = { date = { gte = "2027-01-01" } }
+factor = { text = 2, audio = 2 }

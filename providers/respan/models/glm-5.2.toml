@@ -1,0 +1,20 @@
+# Price: Z.ai's USD list price, https://docs.z.ai/guides/overview/pricing (cache reads automatic,
+# no write price: https://docs.z.ai/guides/capabilities/cache); Respan bills the upstream list price.
+# Off is reasoning_effort=none; graded levels high|max (low/medium map to high,
+# xhigh to max). thinking.type is not forwarded on this route (live 2026-11-23).
+# This route returns no reasoning text: usage counts reasoning_tokens but the message has no
+# reasoning_content (live 2026-11-24), so compatibility.reasoning_field is left out.
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.4
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 4.4
