@@ -1,0 +1,20 @@
+# Price: USD per 1M tokens, https://cysuo.ai/model-market/gpt-5.5?region=singapore (accessed 2026-11-23).
+# Reasoning: reasoning_effort, the host's documented levels (low|medium|high) that the lab's own API also takes; see provider.toml.
+# Structured output: the model page's structured-output capability tag, and response_format in https://cysuo.ai/en/docs/api-reference/chat/openai/chatcompletions
+# Freeform: Cysuo's Chat Completions reference lists `tools` with no custom tool type or grammar format
+#   (https://cysuo.ai/en/docs/api-reference/chat/openai/chatcompletions, 2026-11-23); not probed live (no key), so `freeform` is left out.
+schema = 2
+base_model = "openai/gpt-5.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 5
+
+[cost.text.output]
+price = 30

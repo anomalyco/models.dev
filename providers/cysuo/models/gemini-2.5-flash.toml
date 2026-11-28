@@ -1,0 +1,19 @@
+# Price: USD per 1M tokens, https://cysuo.ai/model-market/gemini-2.5-flash?region=singapore (accessed 2026-11-23).
+# Reasoning: reasoning_effort, the host's documented levels (low|medium|high) that Google's API also takes for this model
+#   (low/high; live probe 2026-11-20 in providers/google/models/gemini-2.5-flash.toml).
+# Structured output: the model page's structured-output capability tag, and response_format in https://cysuo.ai/en/docs/api-reference/chat/openai/chatcompletions
+schema = 2
+base_model = "google/gemini-2.5-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+
+[cost.text.output]
+price = 2.5

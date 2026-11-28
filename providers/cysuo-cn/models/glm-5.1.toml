@@ -1,0 +1,23 @@
+# Price: lowest of 3 supplier resource(s) on https://cysuo.com/model-market/glm-5.1?region=guangzhou
+# (accessed 2026-11-23); the API key's resource configuration picks the supplier. Cheapest: supplier 1061.
+# CNY per 1M tokens: input 2.58, output 10.32, cache read 0.258.
+# CNY→USD rate: 6.681345, 2026-11-23, source: https://open.er-api.com/v6/latest/USD
+# Reasoning: no effort level both the host documents (low|medium|high) and the lab's own API takes; no caller control listed.
+# Structured output: the model page's structured-output capability tag, and response_format in https://cysuo.com/docs/api-reference/chat/openai/chatcompletions
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.38615
+cache = { read = 0.038615 }
+
+[cost.text.output]
+price = 1.544599

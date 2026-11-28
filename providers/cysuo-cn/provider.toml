@@ -1,0 +1,20 @@
+# Cysuo China site, run by Baidu AI Cloud. Prices are listed in CNY; model files convert to USD.
+# OpenAI-compatible POST /v1/chat/completions with `Authorization: Bearer <API_KEY>`.
+# Guangzhou https://api.cysuo.com serves the synchronous Chat and Images APIs; video is async on
+# https://vod.bj.baidubce.com with a separate Beijing key and isn't listed here.
+# https://cysuo.com/docs/api-reference/guide (accessed 2026-11-23)
+# Keys are managed per region (Guangzhou, Beijing) and must match the region called; use a Guangzhou key.
+# The international site (cysuo.ai) has its own accounts and keys.
+# One model ID can be served by several supplier resources; the key's resource configuration (priority and
+# weight) picks them. Model files price the cheapest resource, the "from" price the market shows.
+# https://cysuo.com/docs/userguide/apikey (accessed 2026-11-23)
+# Raw Chat: $.reasoning_effort = "low"|"medium"|"high"; responses carry message.reasoning_content.
+# Model files list the levels the lab's own API also takes (DeepSeek V4: low|high; GLM-5.2: high).
+# https://cysuo.com/docs/api-reference/chat/openai/chatcompletions (accessed 2026-11-23)
+# Models and prices: GET https://cysuo.com/kog/v1/te/market/model/list and the /model-market/<id> pages.
+name = "Cysuo (China)"
+env = ["CYSUO_CN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.cysuo.com/v1"
+doc = "https://cysuo.com/docs"
