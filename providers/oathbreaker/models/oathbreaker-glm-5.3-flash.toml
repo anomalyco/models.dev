@@ -14,7 +14,12 @@
 # Effort: reasoning_effort = low|high|max (default low); no off toggle or reasoning budget.
 # max_tokens and max_completion_tokens are supported; output includes reasoning.
 # Cache reads are implicit and billed only when reported by upstream usage.
-# Chat Completions only; no image input, Responses, Messages or strict tool schemas.
+# No image input or strict tool schemas.
+# Only Chat Completions is listed. The gateway's /v1/responses and /v1/messages routes are
+# compatibility shims over the same Chat Completions pipeline, not native APIs: Responses is
+# stateless (previous_response_id and stored items are rejected, so clients send store: false
+# and the whole conversation) and Messages translates Anthropic-format requests. They are
+# left out of the API list on purpose.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 name = "Oathbreaker GLM-5.3 Flash Abliterated"
@@ -42,8 +47,8 @@ output = 32_768
 compatibility = { reasoning_field = "reasoning_content" }
 
 [cost.text.input]
-price = 0.50
+price = 0.40
 cache = { read = 0.05 }
 
 [cost.text.output]
-price = 1.50
+price = 1.20
