@@ -23,6 +23,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync mistral` syncs only Mistral.
 - `bun models:sync openai` syncs only OpenAI catalog availability.
 - `bun models:sync ollama-cloud` syncs Ollama Cloud catalog availability.
+- `bun models:sync nvidia` reports NVIDIA models missing from the local catalog.
 - `bun models:sync groq` syncs Groq prices and limits for existing text models.
 - `bun models:sync github-copilot` syncs GitHub Copilot pricing and removes models GitHub has retired.
 - `bun models:sync tinfoil` syncs only Tinfoil.
@@ -80,6 +81,8 @@ The first Actions run may open a batch of issues per provider, including remote 
 Pioneer and Ofox track remote-only chat models as missing-model issues. Their APIs are not authoritative enough to create complete TOMLs directly, so the issue-fixer agent researches the missing canonical and provider-specific metadata before opening a PR.
 
 Ollama Cloud tracks every remote-only ID from its public `/v1/models` endpoint as a missing-model issue. Existing provider TOMLs and entries absent from the endpoint are preserved because the inventory does not provide enough metadata to author complete entries or determine removals safely.
+
+NVIDIA tracks remote-only IDs from its public `/v1/models` endpoint as missing-model issues, but only those the public catalog page (`https://build.nvidia.com/models.md`) also lists: the endpoint alone keeps retired IDs and omits live ones (see `providers/nvidia/provider.toml`). Existing provider TOMLs and entries absent from the endpoint are preserved.
 
 OpenAI also sets `trackMissingModels: false`: `/v1/models` is scoped to the automation account and mixes public models with legacy, internal experiment, dated snapshot, and non-catalog IDs without lifecycle metadata. Existing OpenAI TOMLs are still preserved by the availability sync.
 
