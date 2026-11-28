@@ -1,0 +1,17 @@
+# Pricing source: https://hostlinku.com/models/gemini-4-carbon and https://api.hostlinku.com/api/public/models/gemini-4-carbon/pricing
+# Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
+# Effort: reasoning_effort = low|medium|high
+schema = 2
+base_model = "google/gemini-4-carbon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.96
+cache = { read = 0.048, write = { "5m" = 1.2, "1h" = 1.92 } }
+
+[cost.text.output]
+price = 4.8

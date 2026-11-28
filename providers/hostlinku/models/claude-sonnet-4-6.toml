@@ -1,0 +1,31 @@
+# Pricing source: https://hostlinku.com/models/claude-sonnet-4-6 and https://api.hostlinku.com/api/public/models/claude-sonnet-4-6/pricing
+#   Economy (USD/MTok): input $0.5625, output $2.8125, cache_read $0.05625, cache_write_5m $0.703125, cache_write_1h $1.125, web_search $12.5/1k
+# Service mode: offered in "economy" (runtime pricing & availability via GET /v1/models).
+# APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
+# Toggle: $.thinking.type = adaptive|enabled|disabled on /v1/messages (Anthropic's Models API baseline).
+# Effort: $.output_config.effort = "low"|"medium"|"high"|"max"
+# Budget: integer $.thinking.budget_tokens (min 1024)
+schema = 2
+base_model = "anthropic/claude-sonnet-4-6"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "max"], budget = { min = 1_024 } }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1_024 } }
+
+[api.messages]
+base_url = "https://api.hostlinku.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+base_url = "https://api.hostlinku.com/v1"
+
+[cost.text.input]
+price = 0.5625
+cache = { read = 0.05625, write = { "5m" = 0.703125, "1h" = 1.125 } }
+
+[cost.text.output]
+price = 2.8125
+
+[cost.web_search]
+price = 12.5

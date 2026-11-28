@@ -1,0 +1,30 @@
+# Pricing source: https://hostlinku.com/models/claude-opus-4-7 and https://api.hostlinku.com/api/public/models/claude-opus-4-7/pricing
+#   Economy (USD/MTok): input $0.9375, output $4.6875, cache_read $0.09375, cache_write_5m $1.171875, cache_write_1h $1.875, web_search $12.5/1k
+# Service mode: offered in "economy" (runtime pricing & availability via GET /v1/models).
+# APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
+# Toggle: $.thinking.type = adaptive|disabled on /v1/messages (Anthropic's Models API baseline).
+# Effort: $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max" on /v1/messages
+schema = 2
+base_model = "anthropic/claude-opus-4-7"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 2_048 } }
+
+[api.messages]
+base_url = "https://api.hostlinku.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+base_url = "https://api.hostlinku.com/v1"
+
+[cost.text.input]
+price = 0.9375
+cache = { read = 0.09375, write = { "5m" = 1.171875, "1h" = 1.875 } }
+
+[cost.text.output]
+price = 4.6875
+
+[cost.web_search]
+price = 12.5

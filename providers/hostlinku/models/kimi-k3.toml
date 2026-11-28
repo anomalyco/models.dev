@@ -1,0 +1,29 @@
+# Pricing source: https://hostlinku.com/models/kimi-k3 and https://api.hostlinku.com/api/public/models/kimi-k3/pricing
+# Limits source: GET https://api.hostlinku.com/api/public/models/kimi-k3 and GET /v1/models (maxOutputTokens / max_output_tokens = 131_072, below the lab default).
+# Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
+# Effort: reasoning_effort = low|high|max
+# Cache billing: Hostlinku Performance lists 5m and 1h cache-write rates. The gateway bills write tokens when reported by the upstream.
+# See https://docs.hostlinku.com/en/prompt-caching and the model pricing endpoint above.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = { ttl = ["5m", "1h"] } }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.88
+cache = { read = 0.288, write = { "5m" = 3.6, "1h" = 5.76 } }
+
+[cost.text.output]
+price = 14.4
+
+[cost.web_search]
+price = 7.0592

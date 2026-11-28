@@ -1,0 +1,26 @@
+# Pricing source: https://hostlinku.com/models/kimi-k3-1-pro-hyper and https://api.hostlinku.com/api/public/models/kimi-k3-1-pro-hyper/pricing
+# Limits source: GET https://api.hostlinku.com/api/public/models/kimi-k3-1-pro-hyper and GET /v1/models (maxOutputTokens / max_output_tokens = 131_072, below the lab default).
+# Service mode: offered in "dedicated" (runtime pricing & availability via GET /v1/models).
+# Effort: reasoning_effort = low|high|max
+# Cache billing: the Dedicated price feed lists cache reads and has no cache-write rate for this model.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro Hyper"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 7.2
+cache = { read = 0.36 }
+
+[cost.text.output]
+price = 36

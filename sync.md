@@ -564,3 +564,14 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - Update-only for priced text models that already have a file: prices, the `input_cache_read` rate, `context_window` and `max_completion_tokens` come from the list. Reasoning efforts, service tiers, the Responses API and web search fees stay hand-authored, and new remote IDs open missing-model issues.
 - The list gives every model a cache rate at half its input price, even models Groq's [prompt caching page](https://console.groq.com/docs/prompt-caching) doesn't support, so the sync only updates a cache price the file already has.
 - Speech, transcription and unpriced models are left alone, and nothing is deleted when a model drops out of the list; mark it `status = "deprecated"` by hand.
+
+## Hostlinku Notes
+
+Hostlinku is implemented in `packages/core/src/sync/providers/hostlinku.ts`.
+
+- Source endpoints: `https://api.hostlinku.com/api/public/models` (catalog membership) and `https://api.hostlinku.com/api/public/pricing` (per-mode USD pricing), both public with no auth required.
+- To verify catalog parity for a provider change, compare the tracked TOML filename stems under `providers/hostlinku/models/` with the paginated catalog `data.items[].id` and the pricing feed `data.items[].modelId`. Compare unique IDs in each source and count a model once even when it has multiple service modes.
+- Updates existing models' default-mode prices and Economy overrides from `/api/public/pricing`, including text, cache, long-context tiers, and web search. In the catalog verified on 2026-11-26, all 16 multi-mode models default to Performance with Economy as the secondary mode, and all seven Dedicated models are Dedicated-only. Removes local files that leave `/api/public/models`.
+- `skipCreates: true` and `trackMissingModels: false`: lab `base_model` mappings, API surface tables (`[api.messages]`, `[api.responses]`), and live-probed reasoning controls are hand-authored.
+- Syncs 5m and 1h cache-write rates wherever the public pricing feed lists them, including implicit caches. Hostlinku bills cache writes when the upstream reports write tokens and the service mode has a write rate (https://docs.hostlinku.com/en/prompt-caching). The presence of a rate does not advertise a request parameter or guarantee that a request writes to cache.
+- Listed catalog entries in `/api/public/models` that are absent from `/api/public/pricing` or lack any priceable mode retain their existing TOML unchanged and emit a notice instead of deleting the local file.

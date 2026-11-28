@@ -1,0 +1,53 @@
+# Protocols and limits: https://api.hostlinku.com/api/public/models/gpt-6-2-sol
+# Per-mode USD prices: https://api.hostlinku.com/api/public/models/gpt-6-2-sol/pricing
+# Effort baseline: https://developers.openai.com/api/docs/guides/latest-model
+# Freeform: earlier Hostlinku GPT models on /v1/responses and /v1/chat/completions
+# did not consistently enforce regex or Lark grammar in the 2026-11-17 gateway probes
+# (see gpt-6-astra.toml). No formats are declared based on that gateway evidence.
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.responses]
+base_url = "https://api.hostlinku.com/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.chat-completions]
+base_url = "https://api.hostlinku.com/v1"
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.16, write = { "5m" = 4, "1h" = 6.4 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 272_000 } }
+price = 1.6
+
+[[cost.text.input.overrides]]
+when = { mode = { equals = "economy" } }
+price = 0.125
+cache = { read = 0.00625, write = { "5m" = 0.15625 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 272_000 }, mode = { equals = "economy" } }
+price = 0.25
+cache = { read = 0.0125, write = { "5m" = 0.3125 } }
+
+[cost.text.output]
+price = 4
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 272_000 } }
+price = 6
+
+[[cost.text.output.overrides]]
+when = { mode = { equals = "economy" } }
+price = 0.625
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 272_000 }, mode = { equals = "economy" } }
+price = 0.9375

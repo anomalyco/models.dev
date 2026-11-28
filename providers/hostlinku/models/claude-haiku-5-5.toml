@@ -1,0 +1,60 @@
+# Pricing source: https://hostlinku.com/models/claude-haiku-5-5 and https://api.hostlinku.com/api/public/models/claude-haiku-5-5/pricing
+# Multi-mode catalog: default cost matches service mode "performance"; economy overrides use when.mode.
+# APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
+# Toggle: $.thinking.type = "adaptive"|"disabled"
+# Effort: $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max"
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.messages]
+base_url = "https://api.hostlinku.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+base_url = "https://api.hostlinku.com/v1"
+
+[cost.text.input]
+price = 0.056
+cache = { read = 0.0056, write = { "5m" = 0.07, "1h" = 0.112 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 100_000 } }
+price = 0.64
+cache = { read = 0.064, write = { "5m" = 0.8, "1h" = 1.28 } }
+
+[[cost.text.input.overrides]]
+when = { mode = { equals = "economy" } }
+price = 0.01875
+cache = { read = 0.001875, write = { "5m" = 0.023438, "1h" = 0.0375 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gte = 100_000 }, mode = { equals = "economy" } }
+price = 0.09375
+cache = { read = 0.009375, write = { "5m" = 0.117188, "1h" = 0.1875 } }
+
+[cost.text.output]
+price = 0.28
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 100_000 } }
+price = 3.2
+
+[[cost.text.output.overrides]]
+when = { mode = { equals = "economy" } }
+price = 0.09375
+
+[[cost.text.output.overrides]]
+when = { context = { gte = 100_000 }, mode = { equals = "economy" } }
+price = 0.46875
+
+[cost.web_search]
+price = 16
+
+[[cost.web_search.overrides]]
+when = { mode = { equals = "economy" } }
+price = 12.5

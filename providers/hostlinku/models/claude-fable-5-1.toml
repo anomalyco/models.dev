@@ -1,0 +1,28 @@
+# Pricing source: https://hostlinku.com/models/claude-fable-5-1 and https://api.hostlinku.com/api/public/models/claude-fable-5-1/pricing
+# Service mode: offered in "performance" (runtime pricing & availability via GET /v1/models).
+# APIs: /v1/messages (native Anthropic Messages) and /v1/chat/completions; cache breakpoints follow Anthropic explicit caching.
+# Effort: $.output_config.effort = "low"|"medium"|"high"|"xhigh"|"max" on /v1/messages
+schema = 2
+base_model = "anthropic/claude-fable-5-1"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 512 } }
+
+[api.messages]
+base_url = "https://api.hostlinku.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.chat-completions]
+base_url = "https://api.hostlinku.com/v1"
+
+[cost.text.input]
+price = 5.6
+cache = { read = 0.14, write = { "5m" = 7, "1h" = 11.2 } }
+
+[cost.text.output]
+price = 28
+
+[cost.web_search]
+price = 5.6
