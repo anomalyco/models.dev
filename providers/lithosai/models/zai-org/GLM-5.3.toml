@@ -1,0 +1,27 @@
+# LithosAI Chat Completions (https://api.lithosai.cloud/v1), model "zai-org/GLM-5.3".
+# Model docs: https://docs.lithosai.com/models/glm-5-3
+# Thinking is always on. reasoning_effort defaults to max and maps minimal, medium and xhigh to max.
+# Pricing (https://www.lithosai.com/pricing, accessed 2026-11-17): standard rates in USD per 1M tokens; the
+# early-access output discount shown on the page is not used. Cached input is implicit, with no write price.
+# API reference: https://docs.lithosai.com/openapi.yaml
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+capabilities = { tools = { choice = ["auto", "none", "required", "tool"] } }
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.05
+cache = { read = 0.195 }
+
+[cost.text.output]
+price = 4.4
