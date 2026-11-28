@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { ReasoningOption as CatalogReasoningOption } from "../../schema.js";
 import type { ExistingModel, SyncProvider, SyncedModel } from "../index.js";
 
 const API_ENDPOINT = "https://usemodellane.com/v1/public/models";
@@ -17,6 +18,10 @@ export const ModellaneModel = z
     maxOutputTokens: z.number().int().positive(),
     inputModalities: z.array(z.string()).min(1),
     features: z.array(z.string()).default([]),
+    // The levels this model accepts on reasoning_effort / reasoning.effort /
+    // output_config.effort; "none" turns reasoning off where listed. Other
+    // values are rejected with HTTP 400 unsupported_reasoning_effort.
+    reasoningEfforts: z.array(z.string()).optional(),
     pricing: z
       .object({
         inputPicoUsdPerToken: PicoUsd,
@@ -40,7 +45,8 @@ const V1_MODALITIES = new Set<string>(["text", "audio", "image", "video", "pdf"]
 
 /**
  * Modellane's public catalog lists every model it serves, so it owns the model
- * list, context and output limits, input modalities and token prices. IDs don't
+ * list, context and output limits, input modalities, reasoning effort levels and
+ * token prices. IDs don't
  * name a lab entry, so new models are not created automatically (`skipCreates`):
  * each opens a missing-model issue for its `base_model`, reasoning field and
  * `[api.*]` tables to be authored. Files absent from the catalog are removed.
@@ -91,6 +97,34 @@ export function modellaneInput(model: ModellaneModel): V1Modality[] {
   return input;
 }
 
+type EffortValue = NonNullable<Extract<z.infer<typeof CatalogReasoningOption>, { type: "effort" }>["values"][number]>;
+type ReasoningOptions = NonNullable<ExistingModel["reasoning_options"]>;
+
+const EFFORT_ORDER = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"];
+
+function isEffort(value: string): value is EffortValue {
+  return CatalogReasoningOption.safeParse({ type: "effort", values: [value] }).success;
+}
+
+/**
+ * Modellane has one reasoning control, an effort level, with "none" as the off
+ * switch where a model allows it; there is no separate toggle or token budget.
+ * A catalog without the field, or with a level this schema doesn't know yet,
+ * keeps the file's authored controls instead of publishing a partial set.
+ */
+export function modellaneReasoningOptions(
+  model: ModellaneModel,
+  authored: ExistingModel,
+): ReasoningOptions | undefined {
+  const efforts = model.reasoningEfforts;
+  if (authored.reasoning !== true || efforts === undefined || !efforts.every(isEffort)) {
+    return authored.reasoning_options;
+  }
+  if (efforts.length === 0) return [];
+  const values = [...new Set(efforts)].sort((a, b) => EFFORT_ORDER.indexOf(a) - EFFORT_ORDER.indexOf(b));
+  return [{ type: "effort", values }] as ReasoningOptions;
+}
+
 function sameKinds(a: readonly string[] | undefined, b: readonly string[]) {
   return a !== undefined && a.length === b.length && [...a].sort().join() === [...b].sort().join();
 }
@@ -124,8 +158,11 @@ export function buildModellaneModel(
     ? undefined
     : { input, output: authored.modalities?.output ?? existing.modalities?.output ?? ["text"] };
 
+  const reasoningOptions = modellaneReasoningOptions(model, authored);
+
   return {
     ...preserved,
+    ...(reasoningOptions === undefined ? {} : { reasoning_options: reasoningOptions }),
     cost,
     ...(Object.keys(limit).length === 0 ? {} : { limit }),
     ...(modalities === undefined ? {} : { modalities }),

@@ -6,15 +6,18 @@
 #   stream_options.include_usage adds a final usage chunk; unlisted fields (top_k included) are accepted and ignored.
 # - https://usemodellane.com/docs/guides/context-caching: caching is automatic, no parameter.
 # - Same key and models on https://usemodellane.com/docs/guides/responses-api and https://usemodellane.com/docs/guides/anthropic-api.
-# Reasoning: always on, no caller control. reasoning_effort is not a Chat Completions field, reasoning.effort has no effect on
-#   Responses, and Messages thinking only chooses whether reasoning is returned (https://usemodellane.com/docs/integrations/codex).
+# Effort: reasoning_effort (Chat Completions), reasoning.effort (Responses), output_config.effort (Messages) = low|high|max;
+#   per-model set is reasoningEfforts in https://usemodellane.com/v1/public/models, other values fail with HTTP 400
+#   unsupported_reasoning_effort (https://usemodellane.com/docs/api/chat-completions,
+#   https://usemodellane.com/docs/guides/responses-api#reasoning, https://usemodellane.com/docs/guides/anthropic-api#thinking);
+#   reasoning cannot be turned off (none is rejected); no budget (Messages thinking only chooses whether reasoning is returned).
 schema = 2
 base_model = "zhipuai/glm-5.3"
 name = "GLM-5.3 Abliterated"
 description = "Abliterated variant of GLM-5.3"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 top_k = false
 stream_usage = true
 cache = { implicit = true }

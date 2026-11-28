@@ -7,15 +7,18 @@
 # - https://usemodellane.com/docs/guides/context-caching: caching is automatic, no parameter.
 # - https://usemodellane.com/docs/guides/vision: PNG, JPEG, WebP and GIF as base64 data URLs; no video or file parts.
 # - Same key and models on https://usemodellane.com/docs/guides/responses-api and https://usemodellane.com/docs/guides/anthropic-api.
-# Reasoning: always on, no caller control. reasoning_effort is not a Chat Completions field, reasoning.effort has no effect on
-#   Responses, and Messages thinking only chooses whether reasoning is returned (https://usemodellane.com/docs/integrations/codex).
+# Effort: reasoning_effort (Chat Completions), reasoning.effort (Responses), output_config.effort (Messages) = none|low|high|max;
+#   per-model set is reasoningEfforts in https://usemodellane.com/v1/public/models, other values fail with HTTP 400
+#   unsupported_reasoning_effort (https://usemodellane.com/docs/api/chat-completions,
+#   https://usemodellane.com/docs/guides/responses-api#reasoning, https://usemodellane.com/docs/guides/anthropic-api#thinking);
+#   none turns reasoning off; no separate toggle and no budget (Messages thinking only chooses whether reasoning is returned).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash Abliterated"
 description = "Abliterated variant of DeepSeek V4.1 Flash"
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 top_k = false
 stream_usage = true
 cache = { implicit = true }

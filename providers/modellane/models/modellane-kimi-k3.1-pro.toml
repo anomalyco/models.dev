@@ -7,8 +7,11 @@
 # - https://usemodellane.com/docs/guides/context-caching: caching is automatic, no parameter.
 # - https://usemodellane.com/docs/guides/vision: PNG, JPEG, WebP and GIF as base64 data URLs; no video or file parts.
 # - Same key and models on https://usemodellane.com/docs/guides/responses-api and https://usemodellane.com/docs/guides/anthropic-api.
-# Reasoning: always on, no caller control. reasoning_effort is not a Chat Completions field, reasoning.effort has no effect on
-#   Responses, and Messages thinking only chooses whether reasoning is returned (https://usemodellane.com/docs/integrations/codex).
+# Effort: reasoning_effort (Chat Completions), reasoning.effort (Responses), output_config.effort (Messages) = low|high|max;
+#   per-model set is reasoningEfforts in https://usemodellane.com/v1/public/models, other values fail with HTTP 400
+#   unsupported_reasoning_effort (https://usemodellane.com/docs/api/chat-completions,
+#   https://usemodellane.com/docs/guides/responses-api#reasoning, https://usemodellane.com/docs/guides/anthropic-api#thinking);
+#   reasoning cannot be turned off (none is rejected); no budget (Messages thinking only chooses whether reasoning is returned).
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
 
@@ -17,7 +20,7 @@ input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
 output = ["text"]
 
 [capabilities]
-reasoning = { supported = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
 stream_usage = true
 cache = { implicit = true }
 

@@ -431,7 +431,8 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - Modellane is implemented in `packages/core/src/sync/providers/modellane.ts`.
 - Source endpoint: the public `https://usemodellane.com/v1/public/models` (no API key). It lists every model Modellane serves.
 - Owned fields: `contextWindowTokens` and `maxOutputTokens` (limits), `inputModalities` (input modalities), and `inputPicoUsdPerToken`, `cachedInputPicoUsdPerToken`, `outputPicoUsdPerToken` (prices). Prices are integer pico-USD per token, so USD per 1M tokens is the value / 1e6. A limit or input list a file inherits through `base_model` stays inherited while the catalog agrees with it.
-- `base_model`, display names, descriptions, reasoning controls and `[api.*]` tables stay hand-authored. IDs don't name a lab entry, so new models are not created automatically (`skipCreates`) and open missing-model issues; files absent from the catalog are removed. Empty, malformed and duplicate-ID inventories fail before writes.
+- `reasoningEfforts` becomes the effort list, sorted low to high. It is the host's only reasoning control (`reasoning_effort`, `reasoning.effort`, `output_config.effort`), with `none` as the off switch where listed, so no toggle or budget is written. A missing list or a level the schema doesn't know keeps the file's authored controls; an empty list means no caller control.
+- `base_model`, display names, descriptions and `[api.*]` tables stay hand-authored. IDs don't name a lab entry, so new models are not created automatically (`skipCreates`) and open missing-model issues; files absent from the catalog are removed. Empty, malformed and duplicate-ID inventories fail before writes.
 
 ## OpenAI Notes
 

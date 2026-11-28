@@ -4,6 +4,7 @@ import type { ExistingModel } from "../src/sync/index.js";
 import {
   buildModellaneModel,
   modellane,
+  modellaneReasoningOptions,
   picoUsdToPerMillion,
   type ModellaneModel,
 } from "../src/sync/providers/modellane.js";
@@ -17,6 +18,7 @@ function modellaneModel(overrides: Partial<ModellaneModel> = {}): ModellaneModel
     maxOutputTokens: 1_000_000,
     inputModalities: ["text", "image"],
     features: ["streaming", "tools", "json_mode", "vision", "reasoning"],
+    reasoningEfforts: ["low", "high", "max"],
     pricing: {
       inputPicoUsdPerToken: "240000",
       cachedInputPicoUsdPerToken: "80000",
@@ -87,4 +89,26 @@ test("skips models without a file and fails on malformed inventories", () => {
   expect(() => modellane.parseModels({ models: [] })).toThrow();
   expect(() => modellane.parseModels({ models: [modellaneModel(), modellaneModel()] })).toThrow(/twice/);
   expect(() => modellane.parseModels({ models: [modellaneModel({ pricing: { inputPicoUsdPerToken: "0.24", outputPicoUsdPerToken: "1" } })] })).toThrow();
+});
+
+test("writes the catalog's effort levels low to high, none included", () => {
+  expect(buildModellaneModel(modellaneModel(), authored(), resolved).reasoning_options).toEqual([
+    { type: "effort", values: ["low", "high", "max"] },
+  ]);
+  expect(
+    modellaneReasoningOptions(modellaneModel({ reasoningEfforts: ["max", "none", "high", "low"] }), authored()),
+  ).toEqual([{ type: "effort", values: ["none", "low", "high", "max"] }]);
+});
+
+test("keeps authored reasoning controls when the catalog has none to give", () => {
+  const kept = [{ type: "effort", values: ["low", "high"] }] as NonNullable<ExistingModel["reasoning_options"]>;
+  const file = authored({ reasoning_options: kept });
+
+  expect(modellaneReasoningOptions(modellaneModel({ reasoningEfforts: undefined }), file)).toEqual(kept);
+  expect(modellaneReasoningOptions(modellaneModel({ reasoningEfforts: ["low", "turbo"] }), file)).toEqual(kept);
+  expect(modellaneReasoningOptions(modellaneModel(), authored({ reasoning: false }))).toBeUndefined();
+});
+
+test("an empty effort list means no caller control", () => {
+  expect(modellaneReasoningOptions(modellaneModel({ reasoningEfforts: [] }), authored())).toEqual([]);
 });
