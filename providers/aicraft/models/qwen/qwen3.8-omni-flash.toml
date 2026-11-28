@@ -1,0 +1,13 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-11-20), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+schema = 2
+base_model = "alibaba/qwen3.8-omni-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 0.1281
+
+[cost.text.output]
+price = 0.4324

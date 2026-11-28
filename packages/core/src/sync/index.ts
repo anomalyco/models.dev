@@ -21,6 +21,7 @@ import { keepInheritedNote, withPredecessorCapabilities } from "./inherit.js";
 import { openMissingModelIssues } from "./missing-issues.js";
 import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
+import { aicraft } from "./providers/aicraft.js";
 import { alibaba } from "./providers/alibaba.js";
 import { aimlapi } from "./providers/aimlapi.js";
 import { ambient } from "./providers/ambient.js";
@@ -213,6 +214,7 @@ export interface SyncResult {
 
 export const providers: {
   aiand: SyncProvider<any>;
+  aicraft: SyncProvider<any>;
   alibaba: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
   ambient: SyncProvider<any>;
@@ -275,6 +277,7 @@ export const providers: {
   xai: SyncProvider<any>;
 } = {
   aiand,
+  aicraft,
   alibaba,
   aimlapi,
   ambient,
@@ -339,6 +342,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "aicraft",
     "aimlapi",
     "concentrate",
     "crossmodel",

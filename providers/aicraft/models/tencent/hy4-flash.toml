@@ -1,0 +1,14 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-11-25), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+# Effort: reasoning_effort = none|high (no_think turns thinking off).
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[cost.text.input]
+price = 0.0801
+
+[cost.text.output]
+price = 0.3203

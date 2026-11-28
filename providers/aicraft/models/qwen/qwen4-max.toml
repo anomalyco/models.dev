@@ -1,0 +1,15 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-11-20), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+# Effort: reasoning_effort = none|low|high|xhigh
+# Budget: thinking_budget (1..262144 reasoning tokens)
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh"], budget = { min = 1, max = 262_144 } }
+
+[cost.text.input]
+price = 1.6015
+
+[cost.text.output]
+price = 4.8044

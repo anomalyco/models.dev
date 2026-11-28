@@ -1,0 +1,23 @@
+# Pricing from https://aicraftapi.net/pricing.html (accessed 2026-10-16), USD per million tokens.
+# Model id as published in the AICraft Model Catalog.
+# Toggle: enable_thinking true|false.
+# Budget: thinking_budget (integer reasoning tokens).
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+
+[cost.text.input]
+price = 0.1922
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 128_000 } }
+price = 0.4804
+
+[cost.text.output]
+price = 1.153
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 128_000 } }
+price = 2.8826
