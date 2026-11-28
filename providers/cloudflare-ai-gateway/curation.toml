@@ -896,8 +896,11 @@ base_model = "bytedance-seed/seedance-2.0-mini"
 base_model = "kuaishou/kling-v2.6"
 
 # Motion control is a Kling 2.6 capability (https://kling.ai/document-api/guides/capability-map/video), covered by the lab file.
+# Modalities: the schema's media fields are image_url (JPG or PNG) and video_url (MP4 or MOV), which the sync doesn't read
+# (https://developers.cloudflare.com/ai/models/klingai/kling-v2-6-motion-control/schema-input.json); same list as models/kuaishou/kling-v2.6.toml.
 [models."klingai/kling-v2-6-motion-control"]
 base_model = "kuaishou/kling-v2.6"
+modalities = { input = ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime"], output = ["video/mp4"] }
 
 # Kling ids as Kling's API names them (kling-v3-omni, kling-v4, ...): https://kling.ai/document-api/guides/capability-map/video
 [models."klingai/kling-v3-omni"]

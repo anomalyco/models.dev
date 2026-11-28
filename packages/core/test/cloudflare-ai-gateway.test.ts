@@ -1114,6 +1114,29 @@ test("reads image and video route modalities from the request schema", () => {
   expect(routeModalities("video", { properties: { content: {}, duration: {} } }, lab)).toBeUndefined();
 });
 
+test("doesn't read an enum field named like a media input as one", () => {
+  const lab = { modalities: { input: ["text", "image/jpeg", "image/png", "video/mp4", "video/quicktime"], output: ["video/mp4"] } };
+  // klingai/kling-v2-6-motion-control: https://developers.cloudflare.com/ai/models/klingai/kling-v2-6-motion-control/schema-input.json
+  const schema = {
+    type: "object",
+    properties: {
+      prompt: { description: "Optional prompt for scene and background details", type: "string", maxLength: 2500 },
+      image_url: { type: "string", format: "uri", description: "Public URL of the character image (JPG or PNG)" },
+      video_url: { type: "string", format: "uri", description: "Public URL of the motion reference video (MP4 or MOV)" },
+      character_orientation: { default: "video", description: "Match character orientation to the reference video or image", type: "string", enum: ["video", "image"] },
+      audio: { default: "original", description: "Keep the reference video audio or omit audio", type: "string", enum: ["original", "off"] },
+      resolution: { default: "720p", description: "Generated video resolution", type: "string", enum: ["720p", "1080p"] },
+    },
+  };
+  // No throw; image_url and video_url aren't read as media fields, so only the prompt counts.
+  expect(routeModalities("video", schema, lab)).toEqual({ input: ["text"], output: ["video/mp4"] });
+  // google/gemini-omni-flash's audio field is a real reference input: still needs curated modalities.
+  // https://developers.cloudflare.com/ai/models/google/gemini-omni-flash/schema-input.json
+  expect(() => routeModalities("video", {
+    properties: { text: { type: "string" }, video: { type: "string" }, audio: { description: "Reference audio input", type: "string" } },
+  }, lab)).toThrow("the route takes audio input but the lab lists no audio MIME types");
+});
+
 test("reads image output formats including gif", () => {
   const lab = { modalities: { input: ["text"], output: ["image/png", "image/gif"] } };
   expect(routeModalities("image", {
