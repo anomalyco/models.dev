@@ -8,6 +8,9 @@
 # https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-plan-overview.md (accessed 2026-11-24)
 # Deprecated: closed to new users 2026-11-11, shuts down 2026-11-25 14:00 UTC+8 (migrate to
 # kimi-k3.1-pro): https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-model-deprecation.md
+# Output limit: the Coding Plan overview's 支持模型 table lists kimi-k3 (即将下线) with
+# 上下文窗口 1024K and 最大输出 128K, so output is 131_072 instead of the lab's 1_048_576
+# (https://ark.volcengine.com/region:cn-beijing/docs/coding-plan-personal-plan-overview.md, checked 2026-11-28).
 schema = 2
 base_model = "moonshotai/kimi-k3"
 status = "deprecated"
@@ -15,6 +18,9 @@ status = "deprecated"
 [capabilities]
 reasoning = { supported = true, effort = ["low", "high", "max"] }
 structured_output = true
+
+[limit]
+output = 131_072
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }
