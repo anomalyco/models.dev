@@ -21,14 +21,6 @@ function modalities(values: string[] | null | undefined): Modality[] {
   return result.length > 0 ? [...new Set(result)] : ["text"];
 }
 
-const EFFORT_VALUES = ["none", "minimal", "low", "medium", "high", "xhigh", "max", "default"] as const;
-type EffortValue = (typeof EFFORT_VALUES)[number];
-
-function effortValues(values: unknown[]): EffortValue[] {
-  const allowed = new Set<string>(EFFORT_VALUES);
-  return values.filter((value): value is EffortValue => typeof value === "string" && allowed.has(value));
-}
-
 const CHAT_ENDPOINTS = ["/v1/chat/completions", "/v1/responses", "/v1/messages"];
 const EMBEDDING_ENDPOINT = "/v1/embeddings";
 const REGION_PIN = /-(eu|us)$/;
@@ -73,10 +65,6 @@ export const hostingerRouter = {
   id: "hostinger-router",
   name: "Hostinger Router",
   modelsDir: "providers/hostinger-router/models",
-  // New models are curated by hand: reasoning controls need host-specific
-  // verification, so mass creation from the flat catalog would invent data
-  skipCreates: true,
-  trackMissingModels: false,
   deleteMissing: true,
   async fetchModels() {
     const response = await fetch(API_ENDPOINT);
@@ -108,9 +96,26 @@ export const hostingerRouter = {
   sourceID(model) {
     return skippable(model) ? undefined : model.id;
   },
+  // Creates skipped below (no lab base to factor, embedding-only) need manual
+  // authoring, so each one opens a deduped missing-model issue.
+  missingModelID(model) {
+    return skippable(model) ? undefined : model.id;
+  },
+  skippedNotice(ids) {
+    if (ids.length === 0) return [];
+    return [
+      `${ids.length} Hostinger Router models need manual authoring (no lab base or embedding-only): `
+        + ids.map((id) => `\`${id}\``).join(", "),
+    ];
+  },
 } satisfies SyncProvider<HostingerModel>;
 
+// Aliases whatever model Hostinger currently designates as the default; a
+// static file would duplicate its moving target, so skip rather than report
+const ALIAS_MODELS = new Set(["default-hostinger"]);
+
 function skippable(model: HostingerModel): boolean {
+  if (ALIAS_MODELS.has(model.id)) return true;
   // Region-pinned variants duplicate the base model at a markup
   if (REGION_PIN.test(model.id)) return true;
   const endpoints = model.supported_endpoints ?? [];
@@ -131,22 +136,34 @@ export function buildHostingerModel(
   if (embeddingOnly && existing === undefined && authored === undefined) return undefined;
 
   const canonical = existing?.base_model ?? resolveHostingerBaseModel(model.id);
+  // A create with no lab base would invent capabilities from the flat catalog;
+  // skip it so missingModelID reports it for manual authoring
+  if (canonical === undefined && existing === undefined && authored === undefined) return undefined;
+
   const base = canonical === undefined ? undefined : modelMetadata(canonical);
   const sourceReasoning = params.has("reasoning") || params.has("reasoning_effort");
   const reasoning = canonical === undefined ? sourceReasoning : existing?.reasoning ?? sourceReasoning;
 
-  // Reasoning controls come from authored files first, then the lab baseline
-  // intersected with the catalog's supported_parameters; when a reasoning model
-  // has neither, fail closed so the authored file survives and the gap is reported
-  let reasoningOptions = existing?.reasoning_options ?? labReasoningOptions(base, params);
-  if (reasoningOptions === undefined && sourceReasoning && !embeddingOnly) {
-    if (reasoning) {
+  // Reasoning controls come from authored files only (lab entries carry no
+  // reasoning_options); a reasoning model without them fails closed so the gap
+  // is reported for manual authoring instead of publishing guessed controls
+  const reasoningOptions = existing?.reasoning_options;
+  if (reasoningOptions === undefined && !embeddingOnly) {
+    if (sourceReasoning && reasoning) {
       throw new MissingReasoningOptionsError(
         model.id,
-        "catalog lists reasoning parameters but no authored or lab controls resolve",
+        "catalog lists reasoning parameters but no authored reasoning_options exist; verify the router's controls by hand",
       );
     }
-    reasoningOptions = undefined;
+    // The catalog omits reasoning parameters for some reasoning-capable models
+    // (claude-sonnet-4.6 precedent), so a silent row is not proof of
+    // supported = false on a create
+    if (!sourceReasoning && existing === undefined && base?.reasoning === true) {
+      throw new MissingReasoningOptionsError(
+        model.id,
+        "lab model is reasoning-capable but the catalog row lists no reasoning parameters; verify the router's controls by hand",
+      );
+    }
   }
 
   // Rows with max_output_tokens equal to the context window carry a catalog
@@ -248,26 +265,6 @@ export function buildHostingerModel(
     ...(existing?.status !== undefined && { status: existing.status }),
     ...(existing?.interleaved !== undefined && { interleaved: existing.interleaved }),
   } satisfies SyncedFullModel;
-}
-
-type LabModel = ReturnType<typeof modelMetadata>;
-
-function labReasoningOptions(
-  base: LabModel | undefined,
-  params: Set<string>,
-): SyncedFullModel["reasoning_options"] {
-  if (base === undefined) return undefined;
-  const lab = (base as Record<string, unknown>).reasoning_options;
-  if (!Array.isArray(lab)) return undefined;
-  const options: NonNullable<SyncedFullModel["reasoning_options"]> = [];
-  for (const option of lab as Array<Record<string, unknown>>) {
-    if (option?.type === "toggle" && params.has("reasoning")) options.push({ type: "toggle" });
-    if (option?.type === "effort" && params.has("reasoning_effort") && Array.isArray(option.values)) {
-      const values = effortValues(option.values);
-      if (values.length > 0) options.push({ type: "effort", values });
-    }
-  }
-  return options.length > 0 ? options : undefined;
 }
 
 function resolveHostingerBaseModel(modelID: string) {
