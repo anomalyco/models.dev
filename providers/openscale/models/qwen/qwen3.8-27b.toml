@@ -1,0 +1,39 @@
+# Sources (accessed 2026-11-23):
+# - GET https://api.openscale.so/v1/models (public; prices in USD per token, max_context_length, max_length,
+#   supported_parameters incl. reasoning_effort values)
+# - https://openscale.so/models/qwen3.8-27b and https://openscale.so/docs/models (limits, image input)
+# Effort: reasoning_effort = none|low|medium|xhigh (none = thinking off, so no toggle).
+# Limit: output 131_072 per request (the lab entry's 32_768 is lower); context 262_144 is inherited.
+# Modalities: text plus JPEG, PNG and WebP images (the lab's image types that the API accepts); no video.
+# Cache: automatic prefix cache; the cached-input rate is the published price per 1M tokens.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.openscale.so/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.04
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 1.25

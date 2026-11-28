@@ -1,0 +1,41 @@
+# Sources (accessed 2026-11-23):
+# - GET https://api.openscale.so/v1/models (public; prices in USD per token, max_context_length, max_length,
+#   supported_parameters incl. reasoning_effort values)
+# - https://openscale.so/models/kimi-k3.1-pro and https://openscale.so/docs/models (limits, image input)
+# Effort: reasoning_effort = none|low|medium|high as the API accepts them (none = thinking off, so no toggle).
+#   Moonshot's own API documents low|high|max; reviewers may prefer the lab's levels.
+# Limit: output 943_718 per request (below the lab's 1_048_576); context 1_048_576 is inherited.
+# Modalities: text plus JPEG, PNG, GIF and WebP images (the lab's image types that the API accepts); no video.
+# Sampling: the lab's fixed-sampling flags are kept.
+# Cache: automatic prefix cache; the cached-input rate is the published price per 1M tokens.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 943_718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.openscale.so/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 9

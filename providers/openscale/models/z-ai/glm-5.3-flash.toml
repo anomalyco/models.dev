@@ -1,0 +1,39 @@
+# Sources (accessed 2026-11-23):
+# - GET https://api.openscale.so/v1/models (public; prices in USD per token, max_context_length, max_length,
+#   supported_parameters incl. reasoning_effort values; reasoning defaults on)
+# - https://openscale.so/models/glm-5.3-flash and https://openscale.so/docs/models (limits, image input)
+# Effort: reasoning_effort = low|high|max; "none" is not accepted, so no toggle is authored.
+# Structured output: the catalog lists response_format but not structured_outputs, so it is not authored.
+# Limit: context 1_048_576; output 131_072 is inherited.
+# Modalities: text plus JPEG and PNG images (the lab's image types that the API accepts); no video or PDF.
+# Cache: automatic prefix cache; the cached-input rate is the published price per 1M tokens.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+base_url = "https://api.openscale.so/anthropic/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.12
+cache = { read = 0.024 }
+
+[cost.text.output]
+price = 0.4

@@ -1,0 +1,13 @@
+name = "OpenScale"
+env = ["OPENSCALE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+# One key across three request formats, bearer-key auth (accessed 2026-11-23):
+# OpenAI Chat Completions: POST https://api.openscale.so/v1/chat/completions
+# OpenAI Responses: POST https://api.openscale.so/v1/responses
+# Anthropic Messages: POST https://api.openscale.so/anthropic/v1/messages (the model files'
+# [api.messages] tables set that base URL for @ai-sdk/anthropic).
+# Public catalog with prices, limits and accepted parameters: GET https://api.openscale.so/v1/models
+# https://openscale.so/docs
+api = "https://api.openscale.so/v1"
+doc = "https://openscale.so/docs/models"
