@@ -1,4 +1,4 @@
-# Prices read from https://korouter.ai/models/claude-haiku-4-5 on 2026-10-30 (the same catalog that bills requests).
+# Prices read from https://korouter.ai/models/claude-haiku-4-5 on 2026-11-16 (the same catalog that bills requests).
 # Host surface: OpenAI-compatible chat completions at https://korouter.ai/v1.
 # No reasoning on this surface: reasoning_effort becomes output_config.effort, which the upstream rejects ("This model does not support the effort parameter"), and the thinking object is dropped.
 # No toggle: the /v1 chat-completions parser reads only reasoning_effort; the thinking object and reasoning.enabled are dropped before the upstream call.
@@ -13,8 +13,8 @@ reasoning = { supported = false }
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.65
-cache = { read = 0.065, write = 0.8125 }
+price = 0.57
+cache = { read = 0.057, write = 0.7125 }
 
 [cost.text.output]
-price = 3.25
+price = 2.85
