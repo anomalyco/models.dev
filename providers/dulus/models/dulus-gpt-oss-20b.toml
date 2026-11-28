@@ -1,0 +1,16 @@
+# Reasoning on Dulus's Chat Completions API (https://control.dulus.ai/v1): top-level
+# `reasoning_effort = low|medium|high`, relayed to the OVHcloud AI Endpoints upstream.
+# gpt-oss cannot turn reasoning off: "none" is rejected upstream, and
+# `enable_thinking = false` is mapped to "low", so no toggle is published.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-oss-20b"
+name = "gpt-oss-20b"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[limit]
+context = 131_072
