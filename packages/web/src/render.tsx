@@ -7,6 +7,8 @@ import { Fragment } from "hono/jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import { existsSync, readFileSync, readdirSync } from "fs";
 import path from "path";
+import { McpDetailPage, McpDirectoryPage } from "./mcp.js";
+import { mcpServerName } from "./mcp-shared.js";
 import {
   booleanText,
   capabilitySummary,
@@ -34,7 +36,7 @@ const LabLogoSvgs = new Map<string, string>();
 type CatalogModel = ModelMetadata;
 type CatalogProvider = Provider;
 type CatalogProviderModel = Model;
-type ActiveSection = "models" | "providers" | "labs";
+type ActiveSection = "models" | "providers" | "labs" | "mcp";
 
 interface PageMetadata {
   title: string;
@@ -77,7 +79,7 @@ interface LabEntry {
 }
 
 interface SearchIndexItem {
-  type: "model" | "provider" | "lab";
+  type: "model" | "provider" | "lab" | "mcp";
   title: string;
   id: string;
   href: string;
@@ -124,7 +126,11 @@ export function normalizeRoute(pathname: string) {
 }
 
 export function getRenderedPage(pathname: string) {
-  return RenderedPages.get(normalizeRoute(pathname));
+  return RenderedPages.get(normalizeRoute(pathname)) ?? mcpPage(pathname);
+}
+
+export function mcpPage(pathname: string) {
+  return mcpServerName(pathname) ? RenderedPages.get("/mcp/server") : undefined;
 }
 
 export function renderDocument(template: string, page: RenderedPage) {
@@ -388,6 +394,22 @@ function buildPages() {
     renderPage("providers", <ProvidersPage providers={providerList} />),
   );
   addPage("/labs", renderPage("labs", <LabsPage labs={LabEntries} />));
+  addPage(
+    "/mcp",
+    renderPage("mcp", <McpDirectoryPage />, {
+      title: "MCP servers | Models.dev",
+      description:
+        "Browse MCP servers published to the official Model Context Protocol registry, including packages, remote endpoints, and versions.",
+    }),
+  );
+  addPage(
+    "/mcp/server",
+    renderPage("mcp", <McpDetailPage />, {
+      title: "MCP server | Models.dev",
+      description:
+        "MCP server details from the official Model Context Protocol registry.",
+    }),
+  );
 
   for (const model of modelList) {
     addPage(
@@ -595,6 +617,9 @@ function Header(props: { active: ActiveSection }) {
           </a>
           <a class={props.active === "labs" ? "active" : ""} href="/labs">
             Labs
+          </a>
+          <a class={props.active === "mcp" ? "active" : ""} href="/mcp">
+            MCP
           </a>
         </nav>
         <a
@@ -1315,7 +1340,7 @@ function CopyButton(props: { value: string; label: string }) {
   );
 }
 
-function MobileMenu(props: { active: "models" | "providers" | "labs" }) {
+function MobileMenu(props: { active: ActiveSection }) {
   return (
     <dialog
       id="mobile-menu"
@@ -1359,6 +1384,9 @@ function MobileMenu(props: { active: "models" | "providers" | "labs" }) {
         </a>
         <a class={props.active === "labs" ? "active" : ""} href="/labs">
           Labs
+        </a>
+        <a class={props.active === "mcp" ? "active" : ""} href="/mcp">
+          MCP
         </a>
         <button type="button" id="mobile-search-trigger">
           Search
@@ -1462,13 +1490,15 @@ function HelpDialog() {
           The homepage starts with provider-agnostic model metadata. Model pages
           list the providers serving that model; provider pages list every model
           available from that provider; lab pages group canonical models by
-          author.
+          author. The MCP section lists servers from the official Model Context
+          Protocol registry.
         </p>
         <h2>API</h2>
         <p>
-          You can access provider data, provider-agnostic model metadata, or the
-          combined catalog through JSON endpoints. Specialized model types are
-          omitted by default; the site includes all model types.
+          You can access provider data, provider-agnostic model metadata, the
+          combined catalog, or the MCP server snapshot through JSON endpoints.
+          Specialized model types are omitted by default; the site includes all
+          model types.
         </p>
         <div class="code-block">
           <code>
@@ -1483,6 +1513,11 @@ function HelpDialog() {
         <div class="code-block">
           <code>
             curl <a href="/catalog.json?type=all">https://models.dev/catalog.json?type=all</a>
+          </code>
+        </div>
+        <div class="code-block">
+          <code>
+            curl <a href="/mcp.json">https://models.dev/mcp.json</a>
           </code>
         </div>
         <h2>Logos</h2>

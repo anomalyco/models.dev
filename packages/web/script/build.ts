@@ -86,6 +86,25 @@ for (const [route, rendered] of RenderedPages) {
 
 await Bun.write("./dist/search-index.json", SearchIndexJson);
 
+const mcpCatalogPath = path.join(import.meta.dir, "..", "..", "..", "mcp", "servers.json");
+const mcpCatalogFile = Bun.file(mcpCatalogPath);
+if (!(await mcpCatalogFile.exists())) {
+  throw new Error("mcp/servers.json is missing. Run bun run mcp:sync.");
+}
+await Bun.write("./dist/mcp.json", mcpCatalogFile);
+
+const { compactMcpDetailShards, compactMcpWebCatalog } = await import("../src/mcp-compact.js");
+const mcpCatalog = JSON.parse(await mcpCatalogFile.text()) as import("../src/mcp-shared.js").McpCatalog;
+const webCatalog = compactMcpWebCatalog(mcpCatalog);
+await Bun.write("./dist/mcp.web.json", JSON.stringify(webCatalog));
+await fs.mkdir("./dist/mcp/detail", { recursive: true });
+const detailShards = compactMcpDetailShards(mcpCatalog);
+await Promise.all(
+  detailShards.map((shard, index) =>
+    Bun.write(`./dist/mcp/detail/${index}.json`, JSON.stringify(shard)),
+  ),
+);
+
 const catalog = { models: Models, providers: Providers };
 const variants: Array<[suffix: string, filter: ModelTypeFilter]> = [
   ["", "default"],

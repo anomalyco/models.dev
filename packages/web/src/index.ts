@@ -1,3 +1,4 @@
+import { installMcpBrowser } from "./mcp-browser.js";
 import { costSummary } from "./shared.js";
 
 type SortDirection = "asc" | "desc";
@@ -312,8 +313,6 @@ function resultMeta(item: SearchIndexItem) {
 }
 
 function resultSubtitle(item: SearchIndexItem) {
-  if (item.type === "model") return item.id;
-  if (item.type === "provider") return item.id;
   return item.id;
 }
 
@@ -402,6 +401,7 @@ function renderSearchResults() {
 
   const query = searchInput.value;
   rankedSearchResults = rankSearchItems(query);
+  const normalizedQuery = normalizeSearchText(query);
   activeSearchIndex = rankedSearchResults.length > 0 ? 0 : -1;
   searchResults.replaceChildren();
 
@@ -411,12 +411,12 @@ function renderSearchResults() {
   });
   searchResults.append(fragment);
 
-  const normalizedQuery = normalizeSearchText(query);
   const loading = !searchIndexLoaded && searchIndexLoading;
+  const resultLabel = `${rankedSearchResults.length} result${rankedSearchResults.length === 1 ? "" : "s"}`;
   searchCount.textContent = loading
     ? "Loading…"
     : normalizedQuery
-      ? `${rankedSearchResults.length} result${rankedSearchResults.length === 1 ? "" : "s"}`
+      ? resultLabel
       : "Recently updated models, providers, and labs";
   searchEmpty.hidden = loading || rankedSearchResults.length > 0;
 
@@ -793,6 +793,8 @@ document.addEventListener("click", (event) => {
 
   void copyValue(copy.button, copy.value);
 });
+
+installMcpBrowser();
 
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Enter" && event.key !== " ") return;

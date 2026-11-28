@@ -120,8 +120,8 @@ export default {
       url.pathname === "/index"
     ) {
       url.pathname = "/_index";
-    } else if (isHtmlRoute(url.pathname)) {
-      url.pathname = htmlRouteAssetPath(url.pathname);
+    } else if (htmlAssetPath(url.pathname)) {
+      url.pathname = htmlAssetPath(url.pathname)!;
     } else if (url.pathname.startsWith("/logos/")) {
       // Check if the specific provider logo exists in static assets
       const logoResponse = await env.ASSETS.fetch(assetRequest(url, request));
@@ -271,21 +271,23 @@ interface CatalogProvider {
   models: Record<string, CatalogModel>;
 }
 
-function isHtmlRoute(pathname: string) {
-  return (
-    pathname === "/models" ||
-    pathname === "/providers" ||
-    pathname === "/labs" ||
-    pathname.startsWith("/models/") ||
-    pathname.startsWith("/providers/") ||
-    pathname.startsWith("/labs/")
-  );
-}
-
-function htmlRouteAssetPath(pathname: string) {
+export function htmlAssetPath(pathname: string) {
   const normalized =
     pathname !== "/" && pathname.endsWith("/")
       ? pathname.slice(0, -1)
       : pathname;
-  return `${normalized}/index.html`;
+  if (
+    normalized === "/models" ||
+    normalized === "/providers" ||
+    normalized === "/labs" ||
+    normalized.startsWith("/models/") ||
+    normalized.startsWith("/providers/") ||
+    normalized.startsWith("/labs/")
+  ) {
+    return `${normalized}/index.html`;
+  }
+  if (normalized === "/mcp") return "/mcp/index.html";
+  if (normalized.startsWith("/mcp/detail/")) return undefined;
+  if (normalized.startsWith("/mcp/")) return "/mcp/server/index.html";
+  return undefined;
 }

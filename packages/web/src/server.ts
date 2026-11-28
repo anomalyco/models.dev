@@ -1,6 +1,11 @@
 import Index from "../index.html";
 import { getRenderedPage, Models, Providers, SearchIndexJson, renderDocument } from "./render";
 import {
+  compactMcpDetailShards,
+  compactMcpWebCatalog,
+} from "./mcp-compact.js";
+import type { McpCatalog } from "./mcp-shared.js";
+import {
   filterCatalogByModelType,
   filterModelsByModelType,
   filterProvidersByModelType,
@@ -14,6 +19,14 @@ import path from "path";
 
 const ProvidersV2 = await generateV2(
   path.join(import.meta.dir, "..", "..", "..", "providers"),
+);
+
+const mcpServersPath = path.join(import.meta.dir, "..", "..", "..", "mcp", "servers.json");
+const McpServersJson = await Bun.file(mcpServersPath).text();
+const mcpCatalog = JSON.parse(McpServersJson) as McpCatalog;
+const McpWebJson = JSON.stringify(compactMcpWebCatalog(mcpCatalog));
+const McpDetailShards = compactMcpDetailShards(mcpCatalog).map((shard) =>
+  JSON.stringify(shard),
 );
 
 const assetPort = Number(Bun.env.ASSET_PORT ?? 16000);
@@ -122,6 +135,32 @@ Bun.serve({
           "Cache-Control": "public, max-age=3600",
         },
       }),
+    "/mcp.json": () =>
+      new Response(McpServersJson, {
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "public, max-age=3600",
+        },
+      }),
+    "/mcp.web.json": () =>
+      new Response(McpWebJson, {
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "public, max-age=3600",
+        },
+      }),
+    "/mcp/detail/:bucket": (req) => {
+      const bucket = Number(new URL(req.url).pathname.split("/").pop()?.replace(/\.json$/, ""));
+      if (!Number.isInteger(bucket) || bucket < 0 || bucket >= McpDetailShards.length) {
+        return new Response("Not found", { status: 404 });
+      }
+      return new Response(McpDetailShards[bucket], {
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "public, max-age=3600",
+        },
+      });
+    },
     "/api.json": (req) => catalogResponse(req, "api"),
     "/models.json": (req) => catalogResponse(req, "models"),
     "/catalog.json": (req) => catalogResponse(req, "catalog"),
