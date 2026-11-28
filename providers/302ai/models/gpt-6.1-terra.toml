@@ -1,0 +1,15 @@
+# Effort: reasoning_effort = none|low|medium|high|xhigh|max (minimal rejected). none is a real off switch here (0 reasoning tokens) and matches the lab and peer baseline. Measured reasoning tokens: low 516, medium 424, high/xhigh 516, max 1552; the mid levels collapse, which is the upstream mapping rather than a host cap.
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (2026-11-20): $1/$5, cache read $0.05, cache write $1.25.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 1
+cache = { read = 0.05, write = 1.25 }
+
+[cost.text.output]
+price = 5

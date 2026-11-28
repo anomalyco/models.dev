@@ -1,0 +1,21 @@
+# Effort: generationConfig.thinkingConfig.thinkingLevel = low|medium|high on the native Gemini API — the lab and every peer stop at high for Carbon, and the host rejects xhigh, none and invalid values (400). Measured thoughtsTokenCount: low 0, medium 65, high 101. Chat Completions reports no reasoning tokens at any level, so the control is only published off the native API.
+# structured_output is not published: response_format json_schema returns 200 but the body ignores the schema.
+# Cost: 302.AI price list https://dash-api.302.ai/products/price?page_size=2000 (2026-11-20): input $2, output $10, cache read $0.1, cache write $0.185. The catalog lists the upstream list price ($4/$20) here, but the dashboard rate 302.AI actually charges is half.
+schema = 2
+base_model = "google/gemini-4-carbon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]
+
+[api.generate-content]
+base_url = "https://api.302.ai/v1beta"
+sdk = { aisdk = "@ai-sdk/google", opencodeai = "@opencode/ai/providers/google" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 0.185 }
+
+[cost.text.output]
+price = 10
