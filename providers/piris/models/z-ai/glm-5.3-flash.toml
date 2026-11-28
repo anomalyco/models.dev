@@ -1,0 +1,25 @@
+# Prices: https://api.pirislabs.io/v1/models (verified 2026-10-27).
+# Serving behavior verified live 2026-10-27: text-only, 1_048_576-token context;
+# output limit inherited from the base model.
+# The host returns reasoning in `reasoning`, which v1 cannot represent; omit the mapping.
+# Cached input pricing is published, but cache hits were not observed on this deployment.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.50
