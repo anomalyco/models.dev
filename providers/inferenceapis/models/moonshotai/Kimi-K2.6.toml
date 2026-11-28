@@ -1,0 +1,22 @@
+# Toggle: reasoning_effort = "none" switches thinking off on this gateway; reasoning.enabled = false and thinking.type = "disabled"
+#   map onto the same switch, but reasoning_effort is the canonical field.
+# Measured on this gateway 2026-11-18: tool call and an image_url part answered correctly.
+# Structured output, measured on this gateway 2026-11-28 (two runs each): response_format json_object returned valid JSON, and
+#   json_schema with strict = true returned objects with exactly the required keys and types.
+# No cache read price on this host, so capabilities.cache is not authored.
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-11-28)
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.98
+
+[cost.text.output]
+price = 4.55

@@ -1,0 +1,29 @@
+# Toggle: reasoning_effort = "none" switches thinking off on this gateway (the lab serves it always-on); reasoning.enabled = false and
+#   thinking.type = "disabled" map onto the same switch, but reasoning_effort is the canonical field.
+# Effort: reasoning_effort = low|high|max is forwarded to the host. Measured on this gateway 2026-11-20 on a multi-step word problem
+#   (two runs each): "low" produced 74 and 93 reasoning tokens, "max" 252 and 254, so the graded levels are real here; "high" is
+#   forwarded unchanged and sits between them (not measured separately). On a one-line arithmetic prompt all three gave ~30 tokens.
+# Measured on this gateway 2026-11-18: default request returned reasoning_content; a tool call and an image_url part answered correctly
+#   (tools and modalities come from the lab file).
+# Structured output, measured on this gateway 2026-11-28 (two runs each): response_format json_object returned valid JSON, and
+#   json_schema with strict = true returned objects with exactly the required keys and types.
+# Cache: implicit prefix cache, measured 2026-11-28: the same 5,762-token prompt sent three times reported cached_tokens 0, 5,696, 5,696
+#   (prompt_tokens_details.cached_tokens), and cached tokens are billed at the read price below.
+# Prices and limits: https://inferenceapis.com/pricing and https://inferenceapis.com/models (accessed 2026-11-28)
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.6
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 13
