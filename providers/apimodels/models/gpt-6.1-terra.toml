@@ -1,0 +1,28 @@
+# Sources (accessed 2026-11-05):
+# - Pricing: https://apimodels.app/models/gpt-6.1-terra and https://apimodels.app/pricing
+#   ($0.50 input / $2.50 output / $0.025 cache read per 1M tokens)
+#   Input above 272K tokens bills the whole request at 2x input and cache read, 1.5x output.
+# - Model ID: https://api.apimodels.app/v1/models ("gpt-6.1-terra")
+# Served on Chat Completions; reasoning_effort is forwarded unchanged.
+# tools.freeform left out: custom tools do not work for this model on this host. Live probe on POST https://api.apimodels.app/v1/chat/completions (2026-11-28): one custom tool with tool_choice = "required", formats text, regex `ZZ[0-9]{3}` and the equivalent lark grammar; all three returned HTTP 503.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.025 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 2.5
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 3.75
