@@ -594,5 +594,6 @@ export type ModelFamily =
   | "weaver"
   | "whisper"
   | "wizardlm"
+  | "xing"
   | "yi"
   | "zephyr"
