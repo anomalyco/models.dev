@@ -1,0 +1,39 @@
+# Source: BlazeInfer console model card (2026-11-21) and https://blazeinfer.ai/docs.
+# Pricing and limits: 2.00/0.20/10.00 credits per 1M tokens (1 credit = 1 USD, matching the
+# public catalog); context 1,048,576 and output 943,718.
+# APIs: Chat Completions, Responses and Messages returned valid responses (live probes 2026-11-21).
+# Effort: reasoning_effort = none|low|high|max (default max). Live probes on 2026-11-21
+# accepted all four; none returned no reasoning and the graded levels returned a trace.
+# Chat returns the trace in `reasoning_content`.
+# Input: PNG, JPEG, GIF and WebP data URIs were accepted (live probes 2026-11-21);
+# video is not advertised by the host and is excluded.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 943_718
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

@@ -1,0 +1,41 @@
+# Source: https://blazeinfer.ai/models and https://blazeinfer.ai/docs (accessed 2026-11-21).
+# Pricing and limits: host catalog, USD per 1M tokens; context 1,310,720.
+# Output inherits the lab's 131,072 limit.
+# APIs: Chat Completions, Responses and Messages returned valid responses (live probes 2026-11-21).
+# Effort: reasoning_effort = low|high|max (default max). Live probes on 2026-11-21
+# accepted all three. The docs' chat_template_kwargs.enable_thinking=false did not
+# reliably disable reasoning, so no toggle is published.
+# Chat returns the trace in `reasoning`. reasoning_field = "reasoning" is valid in v2,
+# but v1's interleaved.field only allows reasoning_content|reasoning_details, so no
+# reasoning_field is set rather than a wrong one.
+# Input: PNG, JPEG, GIF and WebP data URIs were accepted (live probes 2026-11-21);
+# video and PDF are not advertised by the host and are excluded.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_310_720
+
+[api.chat-completions]
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.25
