@@ -1,0 +1,18 @@
+# https://docs.exaone.ai/en/docs/k-exaone-2.5
+# https://docs.exaone.ai/en/docs/agent-start
+# https://docs.exaone.ai/en/docs/changelog
+schema = 2
+base_model = "lgai-exaone/k-exaone-2.5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "max"], default = { type = "effort", value = "max" } }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

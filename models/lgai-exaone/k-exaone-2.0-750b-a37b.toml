@@ -1,0 +1,26 @@
+# https://github.com/LG-AI-EXAONE/K-EXAONE-2.0
+# https://huggingface.co/LGAI-EXAONE/K-EXAONE-2.0-750B-A37B
+schema = 2
+name = "K-EXAONE 2.0 750B A37B"
+description = "Multilingual mixture-of-experts language model with reasoning and tool use"
+open_weights = true
+release_date = "2026-07-31"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LGAI-EXAONE/K-EXAONE-2.0-750B-A37B"

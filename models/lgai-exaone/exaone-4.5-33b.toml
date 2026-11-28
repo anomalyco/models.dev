@@ -1,0 +1,27 @@
+# https://github.com/LG-AI-EXAONE/EXAONE-4.5
+# https://huggingface.co/LGAI-EXAONE/EXAONE-4.5-33B
+schema = 2
+name = "EXAONE 4.5 33B"
+description = "Vision-language model with reasoning and tool use"
+open_weights = true
+knowledge = "2024-12"
+release_date = "2026-04-09"
+license = "EXAONE AI Model License Agreement 1.2 - NC"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/LGAI-EXAONE/EXAONE-4.5-33B"
