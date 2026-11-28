@@ -1,0 +1,18 @@
+# Synced from Atlara's public catalogue, https://api.atlara.ai/v1/model-catalogue (accessed 2026-11-27):
+# hosted prices (price_in_hosted / price_out_hosted, USD per 1M tokens), context window, reasoning efforts.
+# Reasoning: Atlara accepts reasoning_effort and forwards only the levels listed for the model
+# (supported_reasoning_efforts); with none listed it drops the field, so the caller has no control.
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 2.08
+
+[cost.text.output]
+price = 10.4

@@ -1,0 +1,15 @@
+# Synced from Atlara's public catalogue, https://api.atlara.ai/v1/model-catalogue (accessed 2026-11-27):
+# hosted prices (price_in_hosted / price_out_hosted, USD per 1M tokens), context window, reasoning efforts.
+# Reasoning: Atlara accepts reasoning_effort and forwards only the levels listed for the model
+# (supported_reasoning_efforts); with none listed it drops the field, so the caller has no control.
+schema = 2
+base_model = "alibaba/qwen3.5-122b-a10b"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.312
+
+[cost.text.output]
+price = 1.248

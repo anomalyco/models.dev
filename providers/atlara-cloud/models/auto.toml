@@ -1,0 +1,22 @@
+# Atlara's router: "auto" picks a model per request from the workspace's enabled models, so tools,
+# images and reasoning depend on the model it picks (https://cloud.atlara.ai/docs, accessed 2026-11-27).
+# Billed at the picked model's hosted price; no price of its own.
+schema = 2
+name = "Atlara Auto"
+description = "Router that picks an Atlara model for each request"
+family = "auto"
+open_weights = false
+release_date = "2026-06-19"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+
+[limit]
+context = 200_000
+output = 32_000
