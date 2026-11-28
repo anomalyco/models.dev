@@ -1,0 +1,17 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 0.3/2.5, cache read 0.03, cache write 0.08333 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "google/gemini-3.5-flash-lite"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "minimal" }, effort = ["minimal", "low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.03, write = 0.08333 }
+
+[cost.text.output]
+price = 2.5

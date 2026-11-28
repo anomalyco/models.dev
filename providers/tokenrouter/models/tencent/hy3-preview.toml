@@ -1,0 +1,16 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 0.066/0.26, cache read 0.029 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "tencent/hy3-preview"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.066
+cache = { read = 0.029 }
+
+[cost.text.output]
+price = 0.26

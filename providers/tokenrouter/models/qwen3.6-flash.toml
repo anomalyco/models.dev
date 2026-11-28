@@ -1,0 +1,17 @@
+# Pricing (USD/MTok, TokenRouter console pricing API, accessed 2026-11-12):
+# sell price 0.171/1.029, cache read 0.017, cache write 0.214 (input = model_ratio x 2; output/cache scale off input)
+
+schema = 2
+v2_only = true
+base_model = "alibaba/qwen3.6-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, budget = {  } }
+structured_output = true
+
+[cost.text.input]
+price = 0.171
+cache = { read = 0.017, write = 0.214 }
+
+[cost.text.output]
+price = 1.029
