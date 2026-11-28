@@ -1,0 +1,21 @@
+# Hetzner Inference API (https://inference.hetzner.com/v1, OpenAI Chat Completions).
+# Verified against GET /v1/models with an API key (2026-11-11): id "Aleph-Alpha/Kolibri-1",
+#   max_model_len 262144. Hetzner serves the native 262,144-token context, not the 1M extrapolation.
+# Probed with an API key (2026-11-12): tool calling, json_object and strict json_schema response
+#   formats, reasoning output and reasoning_effort all accepted; image input is rejected (text only).
+# Pricing is not published yet and is left out on purpose; it will be added in a follow-up PR.
+# limit.output = the deployment's shared prompt+output window (max_model_len 262144); no separate output cap is set.
+# Reasoning (2026-11-13): responses carry it in `reasoning`; prior turns' reasoning is not read back from the history
+#   (prompt_tokens unchanged with `reasoning_content` or `reasoning`), so no reasoning_field is declared.
+schema = 2
+base_model = "aleph-alpha/kolibri-1"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+
+[limit]
+context = 262_144
+output = 262_144
+
+
