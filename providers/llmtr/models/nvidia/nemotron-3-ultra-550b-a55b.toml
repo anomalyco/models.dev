@@ -1,0 +1,17 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-11-28, max_tokens 32).
+# Reasoning is always on; LLMTR exposes no control for this route.
+# Measured: default returns reasoning_content; reasoning = false is rejected by the
+# provider with a 400 provider error. supported_parameters lists no reasoning control.
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0

@@ -1,0 +1,26 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-11-28, max_tokens 32).
+# Reasoning is always on; LLMTR exposes no control for this route.
+# Measured: default returns reasoning_content; enable_thinking = false left reasoning
+# on with the same 17/32 token profile and the same visible reasoning text.
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+name = "Qwen3.6 35B-A3B (GreenPT, EU)"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = false
+
+[limit]
+context = 256_000
+output = 32_768
+
+[cost.text.input]
+price = 0.369457
+
+[cost.text.output]
+price = 2.216743

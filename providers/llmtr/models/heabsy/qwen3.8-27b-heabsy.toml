@@ -1,0 +1,27 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-11-28, max_tokens 32).
+# Reasoning: LLMTR serves this route with reasoning off and exposes no control.
+# Measured: default has no reasoning_content and 0 reasoning tokens; enable_thinking = true
+# produced the same 19/2 token profile and no reasoning_content. This host does not
+# match the TensorX relay of the same weights, which returns reasoning by default.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B (Heabsy)"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 1
+cache = { read = 0.0761 }
+
+[cost.text.output]
+price = 3

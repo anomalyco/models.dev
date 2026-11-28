@@ -1,0 +1,21 @@
+# Prices and limits from https://llmtr.com/v1/models; lab facts are inherited via base_model.
+# Reasoning measured against POST https://llmtr.com/v1/chat/completions (2026-11-28, max_tokens 32).
+# Reasoning: LLMTR serves this route with reasoning off and exposes no control.
+# Measured: default has no reasoning_content and 0 reasoning tokens; reasoning = true
+# produced the same 69/2 token profile and no reasoning_content.
+schema = 2
+base_model = "swiss-ai/apertus-v1.5-70b"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = false
+
+[cost.text.input]
+price = 0.82
+
+[cost.text.output]
+price = 2.92
