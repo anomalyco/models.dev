@@ -1,0 +1,20 @@
+# Prices: https://go2llm.tech/api/pricing (catalog version 54, generated 2026-11-27T03:24:20.081Z), USD per 1M tokens. Cache mechanism is undocumented, so implicit; cached tokens are billed at the cache rates.
+# Input: https://go2llm.tech/errors/400-unsupported-content-type (images only where GET https://api.go2llm.tech/v1/models lists image; PDF, file, audio and video are rejected for every model).
+# Reasoning: chat.completions forwards the request body unchanged, so the controls are copied from providers/google/models/gemini-4-argon.toml.
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "medium" }, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.84
+cache = { read = 0.05, write = 1.05 }
+
+[cost.text.output]
+price = 4.4

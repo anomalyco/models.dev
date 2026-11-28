@@ -1,0 +1,24 @@
+# Prices: https://go2llm.tech/api/pricing (catalog version 54, generated 2026-11-27T03:24:20.081Z), USD per 1M tokens. Cache mechanism is undocumented, so implicit; cached tokens are billed at the cache rates.
+# Input: https://go2llm.tech/errors/400-unsupported-content-type (images only where GET https://api.go2llm.tech/v1/models lists image; PDF, file, audio and video are rejected for every model).
+# Reasoning: served by the native Anthropic route, which maps reasoning_effort (or reasoning.effort) to output_config.effort and returns summarized thinking as reasoning_content, so the levels and default are copied from providers/anthropic/models/claude-opus-5-5.toml. No toggle: Opus 5.5 rejects thinking.type = disabled.
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "medium" } }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 2.57
+cache = { read = 0.15, write = 3.21 }
+
+[cost.text.output]
+price = 12.85
