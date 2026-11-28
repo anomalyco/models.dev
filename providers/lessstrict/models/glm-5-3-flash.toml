@@ -1,0 +1,29 @@
+# Prices (USD per 1M tokens), limits and effort levels: https://lessstrict.com/v1/models (the host's public catalog API, accessed 2026-11-26).
+# API reference: https://lessstrict.com/docs
+# Effort: reasoning_effort = low|high|max on Chat Completions. These are the effort_levels the catalog returns for this id, read per id (default_effort = low). The level names are the host's own: the gateway turns each into the upstream request fields that set this model's reasoning depth, so they are not the lab's native names, and any other value is refused with 400 invalid_reasoning_effort (https://lessstrict.com/docs, Errors).
+# Reasoning comes back as reasoning_content. Cached input is billed at the catalog's cached_input_per_1m without cache markers in the request.
+# Input is what the host serves, not what the lab lists: the lab also lists video and PDF input, which the host does not take, and the host takes GIF and WebP images as well. The gateway's Chat Completions messages take text parts and image_url parts only (no video, audio or file parts), with PNG, JPEG, WebP or GIF images, on every id its catalog marks capabilities.vision, which this id is (https://lessstrict.com/docs, Chat Completions, messages). The schema requires both modality keys, so output is restated.
+# [limit] is exactly what the host's catalog returns for this API id (context_length, max_output_tokens): the caps the host has set.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "low" } }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+output = 66_000
+
+[cost.text.input]
+price = 0.16
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 0.6
