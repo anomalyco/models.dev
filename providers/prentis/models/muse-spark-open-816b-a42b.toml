@@ -1,0 +1,20 @@
+# Prices: Prentis rate card, USD per 1M tokens (as of 2026-11-13).
+# Effort: reasoning_effort = none|low|medium|high|xhigh
+# Reasoning controls copied from providers/togetherai/models/meta-models/Muse-Spark-Open-816B-A42B.toml.
+schema = 2
+base_model = "meta/muse-spark-open"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 4.25

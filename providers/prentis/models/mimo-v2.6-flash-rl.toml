@@ -1,0 +1,20 @@
+# Prices: Prentis rate card, USD per 1M tokens (as of 2026-11-13).
+# Toggle: reasoning.enabled = true|false
+# Reasoning controls copied from providers/deepinfra/models/XiaomiMiMo/MiMo-V2.6-Flash.toml.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

@@ -1,0 +1,22 @@
+# Prices: Prentis rate card, USD per 1M tokens (as of 2026-11-13).
+# Reasoning controls copied from providers/deepinfra/models/Qwen/Qwen3.6-35B-A3B.toml.
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[limit]
+context = 65_536
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 0.95

@@ -1,0 +1,20 @@
+# Prices: Prentis rate card, USD per 1M tokens (as of 2026-11-13).
+# Toggle: reasoning.enabled = true|false (reasoning_effort = "none" also disables)
+# Reasoning controls copied from providers/deepinfra/models/moonshotai/Kimi-K2.7-Code.toml.
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.9
+cache = { read = 0.38 }
+
+[cost.text.output]
+price = 8
