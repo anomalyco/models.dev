@@ -1,0 +1,10 @@
+# OpenDesign Cloud API: https://open-design.ai/help/cloud-api/ (accessed 2026-11-20).
+# The Cloud API serves Chat Completions, Responses and Messages formats.
+# Base URL probed live 2026-11-20: GET /v1/models answers 401 missing_api_key
+# with an OpenAI-compatible error body. Env var per the help page examples.
+name = "OpenDesign"
+env = ["OPENDESIGN_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://amr-link.open-design.ai/v1"
+doc = "https://open-design.ai/help/cloud-api/"
