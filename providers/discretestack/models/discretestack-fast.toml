@@ -1,0 +1,39 @@
+# DiscreteStack's low-latency tier, serving the same GLM-5.3-Flash with
+# reasoning_effort pinned to `low` on every request. GLM-5.3-Flash has no off
+# switch (its chat template always thinks), so effort is always low rather than
+# absent, and callers get no level to choose.
+# Sources (accessed 2026-11-16):
+# - https://setup.discretestack.eu: the host's published model catalog, which lists
+#   this tier at context 1,000,000 / output 64,000 with `low` as its only offered
+#   reasoning level and text+image input, and its API table for
+#   /v1/chat/completions, /v1/responses and /v1/messages.
+# - https://discretestack.com
+# The one-value effort list is deliberate: the API accepts exactly `low` here.
+# Input: the host serves text and images only, not the lab's video or PDF parts.
+# Prompt caching is automatic: the engine serving this model runs vLLM prefix caching.
+# Flat-rate licensed host: no per-token price is published, so no cost fields.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+name = "DiscreteStack Fast"
+description = "Lowest-latency tier for high-volume coding and chat"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

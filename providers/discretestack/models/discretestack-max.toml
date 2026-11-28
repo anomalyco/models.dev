@@ -1,0 +1,34 @@
+# DiscreteStack's maximum-capability tier, serving DeepSeek's V4.1 Flash 1017.
+# Sources (accessed 2026-11-16):
+# - https://setup.discretestack.eu: the host's published model catalog, which lists
+#   this tier at context 1,000,000 / output 64,000, effort low|high|max, and
+#   text+image input, and its API table for /v1/chat/completions, /v1/responses
+#   and /v1/messages.
+# - https://discretestack.com
+# Toggle: chat_template_kwargs.thinking = true|false (a separate off switch from
+# the graded levels below; the parser also reads chat_template_kwargs.enable_thinking).
+# Effort: reasoning_effort = low|high|max. The host publishes and offers these three
+# levels; the served node also accepts `xhigh`, which is therefore left out.
+# Prompt caching is automatic: the engine serving this model runs vLLM prefix caching.
+# Flat-rate licensed host: no per-token price is published, so no cost fields.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DiscreteStack Max"
+description = "Maximum-capability tier for the hardest coding and long-horizon agent work"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
