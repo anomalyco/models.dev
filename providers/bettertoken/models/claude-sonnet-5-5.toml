@@ -1,0 +1,21 @@
+# Prices from https://bettertoken.ai/api/pricing, checked 2026-11-28. USD per 1M tokens.
+# Anthropic Messages: POST https://bettertoken.ai/v1/messages
+# Reasoning and structured output follow providers/anthropic/models/claude-sonnet-5-5.toml.
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "high" } }
+structured_output = true
+cache = { explicit = { ttl = ["5m"] } }
+
+[api.messages]
+base_url = "https://bettertoken.ai/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 1.36
+cache = { read = 0.068, write = { "5m" = 1.7 } }
+
+[cost.text.output]
+price = 6.8

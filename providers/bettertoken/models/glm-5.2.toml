@@ -1,0 +1,21 @@
+# Prices from https://bettertoken.ai/api/pricing, checked 2026-11-28. USD per 1M tokens.
+# OpenAI-compatible Chat Completions: POST https://bettertoken.ai/v1/chat/completions
+# Reasoning and structured output follow providers/zhipuai/models/glm-5.2.toml.
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, toggle = true, effort = ["high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 1.05
+cache = { read = 0.195 }
+
+[cost.text.output]
+price = 3.3

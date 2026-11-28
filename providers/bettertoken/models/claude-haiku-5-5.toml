@@ -1,0 +1,31 @@
+# Prices from https://bettertoken.ai/api/pricing, checked 2026-11-28. USD per 1M tokens.
+# Anthropic Messages: POST https://bettertoken.ai/v1/messages
+# Reasoning and structured output follow providers/anthropic/models/claude-haiku-5-5.toml.
+# Toggle: thinking.type = adaptive|disabled (disabled at high effort or below)
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"], default = { type = "effort", value = "medium" } }
+structured_output = true
+cache = { explicit = { ttl = ["5m", "1h"] } }
+
+[api.messages]
+base_url = "https://bettertoken.ai/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.068
+cache = { read = 0.0068, write = { "5m" = 0.085, "1h" = 0.136 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.34
+cache = { read = 0.034, write = { "5m" = 0.425, "1h" = 0.68 } }
+
+[cost.text.output]
+price = 0.34
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 1.7

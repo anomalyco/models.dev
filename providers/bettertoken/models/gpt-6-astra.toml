@@ -1,0 +1,27 @@
+# Prices from https://bettertoken.ai/api/pricing, checked 2026-11-28. USD per 1M tokens.
+# OpenAI-compatible Chat Completions: POST https://bettertoken.ai/v1/chat/completions
+# Reasoning and structured output follow providers/openai/models/gpt-6-astra.toml.
+# Custom tool formats are unverified on BetterToken Chat Completions.
+schema = 2
+base_model = "openai/gpt-6-astra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 6.8
+cache = { read = 0.68 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 13.6
+cache = { read = 1.36 }
+
+[cost.text.output]
+price = 34
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 51
