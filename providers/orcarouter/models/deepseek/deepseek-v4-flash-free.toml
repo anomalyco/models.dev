@@ -1,11 +1,12 @@
-# Toggle: thinking true|false
+# Effort: reasoning_effort = none|low|high|max (live probe 2026-11-28: none = 0 reasoning tokens, max reasons).
+# This free alias has no boolean toggle: `thinking` takes { type = enabled|disabled }; `thinking: false` is a 400.
 schema = 2
 base_model = "deepseek/deepseek-v4-flash"
 family = "deepseek-flash-free"
 name = "DeepSeek V4 Flash (free)"
 
 [capabilities]
-reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
 [api.chat-completions]
