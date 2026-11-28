@@ -1,0 +1,33 @@
+# NVIDIA NIM (integrate.api.nvidia.com/v1) serves Moonshot's Kimi K3.1 Pro as
+# moonshotai/kimi-k3.1-pro (build.nvidia.com/moonshotai/kimi-k3_1-pro, listed
+# 2026-11-04). NIM's chat/completions schema takes top-level reasoning_effort =
+# "low" | "high" | "max" with serve-time default "low"; Moonshot documents
+# K3.1 Pro as always-on thinking, so there is no on/off toggle on this host.
+# Responses carry reasoning in message.reasoning_content.
+# https://build.nvidia.com/moonshotai/kimi-k3_1-pro/apireference
+# Pricing: NVIDIA API Trial Terms of Service — every model is a free trial, so
+# no per-token rate is published and prices are 0.
+# Output limit: NVIDIA NIM caps max_tokens at 65,536 for this model.
+# https://docs.api.nvidia.com/nim/reference/moonshotai-kimi-k3_1-pro-infer
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = [
+    "low",
+    "high",
+    "max",
+], default = { type = "effort", value = "low" } }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
+
+[limit]
+output = 65_536
