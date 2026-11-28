@@ -1,0 +1,15 @@
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+name = "Kimi K2.6 (EU)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
+
+[cost.text.input]
+price = 0.8
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 3.5
