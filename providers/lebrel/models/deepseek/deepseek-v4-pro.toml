@@ -1,0 +1,69 @@
+# Sources (accessed 2026-11-17):
+# - Models table, limits and routed-model notes: https://lebrel.ai/docs
+# - Prices, limits and data note: https://lebrel.ai/api/models and https://attested.lebrel.ai/v1/models
+# - How the router maps reasoning switches and efforts: https://github.com/LEBREL-AI/router (README section
+#   "Production: Alibaba Model Studio first", routes.production.json and internal/router/server.go)
+# Relayed by Lebrel's router. First upstream: alibaba/model-studio (deepseek-v4-pro-0813). The model's data note
+# names the fallbacks, and the signed route receipt names which upstream served.
+# Snapshot: every upstream serves DeepSeek-V4-Pro-0813. Model Studio and OpenRouter take the dated ID, and
+# DeepSeek's own API serves it as deepseek-v4-pro (see providers/deepseek). So this builds on the dated lab
+# file and keeps the name Lebrel lists for the route.
+# Toggle: thinking.type = enabled|disabled (default enabled); enable_thinking true|false is also accepted.
+# Effort: reasoning_effort = low|high|max (default high).
+# top_k: off. The router forwards it unchanged, and neither Model Studio nor DeepSeek's own API takes it for the
+# DeepSeek series (see providers/alibaba and providers/deepseek). A request carrying it was still answered (probed
+# 2026-11-19 on DeepSeek V4.1 Flash); whether it has any effect was not measured.
+# Output cap: max_tokens. Model Studio takes max_completion_tokens too (probed 2026-11-19 on DeepSeek V4.1 Flash: a
+# cap of 16 was applied), but the router forwards the client's field as sent and DeepSeek's own API, the last
+# fallback, only takes max_tokens (see providers/deepseek). The fallback was not reached in the probes.
+# Tools: tool_choice auto, none, required and a named function each behaved as asked, reasoning off (probed
+# 2026-11-19). The first required request failed with HTTP 400 from Model Studio (grammar compile timed out);
+# the second returned the tool call.
+# Structured output: a JSON Schema response_format was enforced against a prompt asking for a haiku on the
+# second of two attempts (probed 2026-11-19); the first failed with the same grammar timeout. Plain JSON mode
+# (json_object) also worked.
+# Peak schedule: Lebrel's rates double on weekdays 01:00-04:00 and 06:00-10:00 UTC, except Chinese public holidays.
+# Input: input_modalities in /v1/models lists text and file. Text only is declared, as in the lab file: no
+# document type was probed on this route.
+# Limits: output 393,216 as Lebrel's catalog lists it and as providers/llmgateway-providers lists for DeepSeek on
+# Model Studio; a request with max_tokens 393,216 was answered through Model Studio (probed 2026-11-19 on DeepSeek
+# V4.1 Flash). Context stays at the lab's 1,000,000, which the Model Studio entries here carry. Lebrel's catalog
+# admits 1,048,576, DeepSeek's own API figure, which was not probed through Model Studio.
+# Cache: Lebrel publishes a cached-input rate for this model and the upstream caches prefixes implicitly.
+# Stream usage: the router sets stream_options.include_usage on every streamed request itself, and a stream sent
+# with it ended with a usage chunk (probed 2026-11-19).
+# Checked live 2026-11-17: reasoning_effort low accepted, reasoning returned in reasoning_content.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 0.792
+cache = { read = 0.0264 }
+
+[cost.text.output]
+price = 2.376
+
+[[cost.multipliers]]
+factor = { text = 2 }
+
+[cost.multipliers.when]
+all = [
+  { utc_days = { in = ["mon", "tue", "wed", "thu", "fri"] } },
+  { not = { holiday = { equals = "CN" } } },
+  { any = [{ all = [{ utc_hours = { gte = "01:00" } }, { utc_hours = { lt = "04:00" } }] }, { all = [{ utc_hours = { gte = "06:00" } }, { utc_hours = { lt = "10:00" } }] }] },
+]
