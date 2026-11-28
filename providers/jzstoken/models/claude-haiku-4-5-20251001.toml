@@ -1,8 +1,10 @@
-# Pricing: https://jzstoken.com/model-pricing/claude-haiku-4-5-20251001 (2026-10-30).
+# Pricing: https://jzstoken.com/model-pricing/claude-haiku-4-5-20251001 (checked 2026-11-20).
 # Toggle: reasoning.enabled = true|false
 # Budget: thinking.budget_tokens >= 1024 (matches the lab and relay peers).
 # The host exposes an OpenAI-compatible relay baseline; it does not certify optional
 # features per model, so only the upstream control shape is recorded here.
+# https://jzstoken.com/model-pricing/claude-haiku-4-5-20251001 (checked 2026-11-20) lists 256K context.
+# This file inherits the lab window of 200_000 because a relay must not enlarge the lab window.
 schema = 2
 base_model = "anthropic/claude-haiku-4-5-20251001"
 
@@ -12,8 +14,8 @@ structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.0778
-cache = { read = 0.0078, write = 0.1168 }
+price = 0.1555
+cache = { read = 0.0155, write = 0.2332 }
 
 [cost.text.output]
-price = 0.3892
+price = 0.7773

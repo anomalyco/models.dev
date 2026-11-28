@@ -1,4 +1,4 @@
-# Pricing: https://jzstoken.com/model-pricing/glm-5.3 (2026-10-30).
+# Pricing: https://jzstoken.com/model-pricing/glm-5.3 (checked 2026-11-20).
 # Effort: reasoning_effort = low|high|max (default max).
 schema = 2
 base_model = "zhipuai/glm-5.3"
@@ -9,8 +9,8 @@ structured_output = true
 cache = { implicit = true }
 
 [cost.text.input]
-price = 0.6228
-cache = { read = 0.0623, write = 0.6228 }
+price = 0.6218
+cache = { read = 0.0622, write = 0.6218 }
 
 [cost.text.output]
 price = 3.11

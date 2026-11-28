@@ -1,0 +1,14 @@
+# Pricing: https://jzstoken.com/model-pricing/gpt-image-2.6-sunburst (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# Billed per generated image, not per token: $0.0194. Token rates on this page do not apply.
+# API: POST https://jzstoken.com/api/v1/images/generations.
+# v2_only: v1 prices are per text token, so a per-image price would be dropped and the v1 row would have no cost.
+schema = 2
+v2_only = true
+base_model = "openai/gpt-image-2.6-sunburst"
+
+[api.images]
+sdk = { opencodeai = "@opencode/ai/providers/openai-compatible/images" }
+
+[cost.image.output]
+unit = "image"
+price = 0.0194

@@ -1,0 +1,17 @@
+# Pricing: https://jzstoken.com/model-pricing/MiniMax-M2.7-highspeed (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: minimax/MiniMax-M2.7-highspeed
+# Upstream reasoning from providers/minimax/models/MiniMax-M2.7-highspeed.toml has no caller control (always on). JZSTOKEN does not certify reasoning per model.
+schema = 2
+base_model = "minimax/MiniMax-M2.7-highspeed"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0777
+cache = { read = 0.0078, write = 0.0389 }
+
+[cost.text.output]
+price = 0.3886

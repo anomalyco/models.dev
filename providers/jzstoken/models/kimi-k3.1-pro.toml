@@ -1,4 +1,4 @@
-# Pricing: https://jzstoken.com/model-pricing/kimi-k3.1-pro (2026-10-30).
+# Pricing: https://jzstoken.com/model-pricing/kimi-k3.1-pro (checked 2026-11-20).
 # Effort: reasoning_effort = low|high|max (default max); the model always thinks.
 schema = 2
 base_model = "moonshotai/kimi-k3.1-pro"
@@ -10,7 +10,7 @@ cache = { implicit = true }
 
 [cost.text.input]
 price = 1.17
-cache = { read = 0.0778, write = 1.17 }
+cache = { read = 0.0777, write = 1.17 }
 
 [cost.text.output]
-price = 5.84
+price = 5.83

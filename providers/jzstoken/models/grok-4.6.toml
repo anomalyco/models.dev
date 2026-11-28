@@ -1,0 +1,20 @@
+# Pricing: https://jzstoken.com/model-pricing/grok-4.6 (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: xai/grok-4.6
+# Cache read $0.4858 is higher than input $0.3886 on the official page. Recorded as published, not swapped.
+# Upstream control shape from providers/xai/models/grok-4.6.toml (JZSTOKEN does not certify reasoning per model):
+# Effort: reasoning_effort = low|medium|high|xhigh
+schema = 2
+base_model = "xai/grok-4.6"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3886
+cache = { read = 0.4858, write = 0.3886 }
+
+[cost.text.output]
+price = 1.94

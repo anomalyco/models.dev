@@ -1,0 +1,20 @@
+# Pricing: https://jzstoken.com/model-pricing/claude-opus-5-5 (checked 2026-11-20; row last updated 2026-11-20 00:17 UTC).
+# USD per 1M tokens, standard list price. Cache read/write apply when the upstream provider reports cached tokens.
+# base_model: anthropic/claude-opus-5-5
+# Distinct official id from claude-opus-5.5. Both pages were live on 2026-11-20 with the same list prices. models.dev has one lab file, anthropic/claude-opus-5-5.
+# Upstream control shape from providers/anthropic/models/claude-opus-5-5.toml (JZSTOKEN does not certify reasoning per model):
+# Effort: reasoning_effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.17
+cache = { read = 0.1166, write = 1.46 }
+
+[cost.text.output]
+price = 5.83
