@@ -1,0 +1,39 @@
+# Hosted NIM: https://build.nvidia.com/mistralai/mistral-large-4-1t-a52b
+# (model page updated 2026-10-29T14:10:58Z; API reference updated 2026-11-18T15:40:55Z):
+# https://build.nvidia.com/qc69jvmznzxy/mistral-large-4-1t-a52b/apireference.md
+# POST https://integrate.api.nvidia.com/v1/chat/completions, model id "mistralai/mistral-large-4-1t-a52b".
+# Host deltas vs models/mistral/mistral-large-4.toml: shared 262,144-token prompt+output window
+# ("The combined prompt and generated response must fit within the 262,144-token context window.");
+# input PNG/JPEG/WebP only ("PNG, JPEG, or WebP; at most eight images per request."), no GIF,
+# no video or audio ("Video and audio inputs are unsupported.").
+# reasoning_effort = none|high. The OpenAPI field's "default": "high" describes the playground
+# form, while its description says "a request that omits this field is served as none". The two
+# sources conflict, so no default is published here (AGENTS.md: leave out contradicted values).
+# "chat_template_kwargs.enable_thinking is not honored by this recipe."
+# Responses carry reasoning_content separately from the final content. The model page lists
+# Structured Output as Supported; the hosted request schema does not enumerate response_format or
+# nvext, so no concrete wire mechanism is claimed here. See PR review notes.
+# Pricing: 0 per NVIDIA free-trial convention (providers/nvidia/provider.toml; build.nvidia.com/llms.txt).
+schema = 2
+base_model = "mistral/mistral-large-4"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[limit]
+context = 262_144
+image = { max_per_request = 8 }
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
