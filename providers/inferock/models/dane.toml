@@ -1,0 +1,40 @@
+# Sources (accessed 2026-11-18):
+# - Request fields, limits and errors: https://inferock.ai/docs/dane/
+#   model, messages, max_tokens (an integer up to 4,096), reasoning_effort, stream, tool_choice ("none" only).
+#   tools return HTTP 400 unsupported_parameter; other fields, such as temperature or top_p, return HTTP 400.
+#   Context window 1,000,000 tokens; maximum output 4,096 tokens; text in, text out.
+# - https://inferock.ai/docs/dane/limits/ : no image input, no function tools, no Responses format.
+# - Price: https://inferock.ai/pricing/ and https://inferock.ai/dane/ : input 8 USD, output 30 USD per
+#   million billed tokens, all-in; usage.prompt_tokens and usage.completion_tokens are the billed tokens.
+# - API only, no weights published: https://huggingface.co/Inferock/DANE
+# - Release date 2026-11-05 ("Release date: November 5, 2026."): https://huggingface.co/Inferock/DANE
+# Effort: reasoning_effort = low|medium|high|xhigh|max (default high, https://inferock.ai/docs/dane/).
+schema = 2
+name = "Dane"
+description = "Frontier class model from Inferock, served through the Inferock API"
+open_weights = false
+release_date = "2026-11-05"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh", "max"] }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 1_000_000
+output = 4_096
+
+[api.chat-completions]
+compatibility = { max_tokens_field = "max_tokens" }
+
+[cost.text.input]
+price = 8
+
+[cost.text.output]
+price = 30
