@@ -120,6 +120,7 @@ export const ModelFamilyValues = [
   "qwen-asr",
   "qwen-tts-plus",
   "qwen-image-turbo",
+  "z-image-turbo",
   "qwen-vl-max",
   "qwen-mt-plus",
   "qwen-turbo",

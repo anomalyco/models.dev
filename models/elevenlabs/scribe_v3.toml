@@ -1,0 +1,26 @@
+# Model IDs: https://elevenlabs.io/docs/overview/models
+# Launched 2026-11-09 as scribe_v3: https://elevenlabs.io/docs/changelog/2026/11/9
+# Input formats: https://elevenlabs.io/docs/overview/capabilities/speech-to-text (FAQ "Which audio and video formats")
+schema = 2
+v2_only = true
+type = "transcription"
+name = "Scribe v3"
+description = "Speech-to-text model for recorded audio with speaker diarization, word timestamps and keyterm prompting in 90+ languages"
+family = "scribe"
+open_weights = false
+release_date = "2026-11-09"
+
+[modalities]
+input = ["audio/aac", "audio/aiff", "audio/flac", "audio/mp4", "audio/mpeg", "audio/ogg", "audio/opus", "audio/wav", "audio/webm", "video/mp4", "video/mpeg", "video/quicktime", "video/webm", "video/x-msvideo", "video/x-matroska", "video/x-ms-wmv", "video/x-flv", "video/3gpp"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0

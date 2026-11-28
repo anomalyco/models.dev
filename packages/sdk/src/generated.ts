@@ -595,4 +595,5 @@ export type ModelFamily =
   | "whisper"
   | "wizardlm"
   | "yi"
+  | "z-image-turbo"
   | "zephyr"

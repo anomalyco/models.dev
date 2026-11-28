@@ -55,6 +55,9 @@ skip = [
   # Kling v3 (video) has two lab files, kuaishou/kling-v3.0-std and kling-v3.0-pro, and the catalog row doesn't
   # say which mode it is (https://developers.cloudflare.com/ai/models/klingai/kling-v3/), so it stays skipped.
   "klingai/kling-v3",
+  # Kling v3 Motion Control spans the same two lab files (720p and 1080p in one row) and doesn't say which mode it is
+  # (https://developers.cloudflare.com/ai/models/klingai/kling-v3-motion-control/), so it stays skipped too.
+  "klingai/kling-v3-motion-control",
   "lightricks/ltx-2-3-fast",
   "lightricks/ltx-2-3-pro",
   "openai/decisions",
@@ -76,6 +79,13 @@ skip = [
   "topaz/starlight-precise-2-6",
   "vidu/q3-pro",
   "vidu/q3-turbo",
+  # No public Cloudflare model page or price (https://developers.cloudflare.com/ai/llms.txt doesn't list them) and no lab file.
+  "black-forest-labs/flux-1.1-pro",
+  "black-forest-labs/flux-fill-pro",
+  # Image and video utilities, not generative models: https://developers.cloudflare.com/ai/models/<id>/
+  "bria/rmbg-3.0", # background removal
+  "recraft/vectorize", # raster-to-SVG conversion
+  "topaz/proteus-4", # video upscaling and enhancement, no new detail generated
 ]
 
 # Leading comment lines for every model whose id starts with the key, written before the
@@ -752,6 +762,9 @@ base_model = "bytedance-seed/seedream-5.0-lite"
 [models."bytedance/seedream-5-pro"]
 base_model = "bytedance-seed/seedream-5.0-pro"
 
+[models."bytedance/seedream-5.5"]
+base_model = "bytedance-seed/seedream-5.5"
+
 [models."black-forest-labs/flux-1-kontext-pro"]
 base_model = "black-forest-labs/flux-kontext-pro"
 
@@ -882,6 +895,10 @@ base_model = "bytedance-seed/seedance-2.0-mini"
 [models."kwaivgi/kling-v2.6"]
 base_model = "kuaishou/kling-v2.6"
 
+# Motion control is a Kling 2.6 capability (https://kling.ai/document-api/guides/capability-map/video), covered by the lab file.
+[models."klingai/kling-v2-6-motion-control"]
+base_model = "kuaishou/kling-v2.6"
+
 # Kling ids as Kling's API names them (kling-v3-omni, kling-v4, ...): https://kling.ai/document-api/guides/capability-map/video
 [models."klingai/kling-v3-omni"]
 base_model = "kuaishou/kling-v3.0-omni"
@@ -894,6 +911,13 @@ base_model = "kuaishou/kling-v4.0-flash"
 
 [models."klingai/kling-v3-image"]
 base_model = "kuaishou/kling-image-v3.0"
+
+[models."klingai/kling-v4-image"]
+base_model = "kuaishou/kling-image-v4.0"
+
+# Pruna serves Tongyi-MAI's open-weights Z-Image-Turbo: https://docs.api.pruna.ai/guides/models/z-image-turbo
+[models."pruna/z-image-turbo"]
+base_model = "alibaba/z-image-turbo"
 
 [models."minimax/h3-image"]
 base_model = "minimax/MiniMax-H3-Image"
