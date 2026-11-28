@@ -1,0 +1,48 @@
+# Ricursive Ripple-65B Preview. Model card: https://huggingface.co/ricursiveAI/Ripple-65B-Preview
+#   Dense Transformer, 65B parameters, pretrained from scratch on 12T tokens; text in/out;
+#   up to 1M context; Apache 2.0; released 2026-11-04. Self-reported SOTA among US open-weight on Terminal-Bench 2.1 (80.52).
+# Announcement: https://www.ricursive.com/ripple
+schema = 2
+name = "Ripple-65B Preview"
+description = "Open-weight 65B dense model pretrained from scratch for agentic coding, with up to 1M context"
+family = "ripple"
+open_weights = true
+release_date = "2026-11-04"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/ricursiveAI/Ripple-65B-Preview"
+
+[[benchmarks]]
+name = "Terminal-Bench"
+score = 80.52
+metric = "success rate"
+version = "2.1"
+source = "https://www.ricursive.com/ripple"
+date = "2026-11-04"
+
+[[links]]
+label = "Model card"
+url = "https://huggingface.co/ricursiveAI/Ripple-65B-Preview"
+type = "model_card"
+
+[[links]]
+label = "Introducing Ripple-65B Preview"
+url = "https://www.ricursive.com/ripple"
+type = "announcement"
