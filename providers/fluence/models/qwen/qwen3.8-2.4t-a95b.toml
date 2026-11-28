@@ -1,0 +1,17 @@
+# Source: Fluence Inference public catalog (https://inference.fluence.cloud), snapshot 2026-11-25T13:35Z.
+# Prices are ceilings: Fluence prices float with supply, so each is the snapshot price rounded up to 2 significant figures.
+# Reasoning controls follow the same base model on peer hosts.
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.19 }
+
+[cost.text.output]
+price = 4.4

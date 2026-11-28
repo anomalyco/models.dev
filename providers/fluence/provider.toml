@@ -1,0 +1,11 @@
+# Sources: https://inference.fluence.cloud/docs and the public catalog at https://inference.fluence.cloud
+# (accessed 2026-11-25). Prices are USD per million tokens and are ceilings: Fluence prices float with
+# supply, so each listed price is the catalog price rounded up to 2 significant figures. Prices shown are
+# for standard requests; requests that send zdr: true can route to dearer providers.
+# Chat Completions only. Reasoning effort is passed through from the request.
+name = "Fluence"
+env = ["FLUENCE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.fluence.cloud/v1"
+doc = "https://inference.fluence.cloud/docs"

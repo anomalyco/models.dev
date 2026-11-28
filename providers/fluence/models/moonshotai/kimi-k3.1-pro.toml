@@ -1,0 +1,23 @@
+# Source: Fluence Inference public catalog (https://inference.fluence.cloud), snapshot 2026-11-25T13:35Z.
+# Prices are ceilings: Fluence prices float with supply, so each is the snapshot price rounded up to 2 significant figures.
+# Reasoning controls follow the same base model on peer hosts.
+# Input: above the long-context threshold the catalog input price rounds to the same ceiling as the base price,
+# so only the output price has a long-context override.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.3
+cache = { read = 0.13 }
+
+[cost.text.output]
+price = 6.2
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 1_000_000 } }
+price = 6.4

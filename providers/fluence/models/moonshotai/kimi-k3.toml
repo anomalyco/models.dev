@@ -1,0 +1,24 @@
+# Source: Fluence Inference public catalog (https://inference.fluence.cloud), snapshot 2026-11-25T13:35Z.
+# Prices are ceilings: Fluence prices float with supply, so each is the snapshot price rounded up to 2 significant figures.
+# Reasoning controls follow the same base model on peer hosts.
+# Context: the catalog lists a 1,000,000-token window for standard routes. Its rows above that size conflict with each
+# other (one prices output below the base rate), so no long-context prices are published.
+# Output: capped at the window because the schema does not allow output above context; the catalog publishes no output limit.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.2
+cache = { read = 0.044 }
+
+[cost.text.output]
+price = 2.2
