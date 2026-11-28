@@ -6,23 +6,7 @@
 # https://openrouter.ai/docs/guides/overview/multimodal/image-generation
 schema = 2
 v2_only = true
-type = "image"
-name = "Seedream 5.5"
-description = "Image generation model"
-open_weights = false
-release_date = "2026-11-12"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif"]
-output = ["image/png", "image/jpeg"]
-
-[capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
-
-[limit]
-context = 0
-output = 0
+base_model = "bytedance-seed/seedream-5.5"
 
 [api.images]
 base_url = "https://openrouter.ai/api/v1"
