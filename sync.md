@@ -29,6 +29,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync togetherai` syncs only Together AI.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync inference` syncs only Inference.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -424,6 +425,20 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - `context_length` only ever lowers the inherited context limit; it can report the lab's window rounded up (1048576 for 1M). Output limits, reasoning controls and other capabilities stay hand-authored.
 - `tools = false` overrides the lab's tool calling. Display names are not synced: the endpoint prefixes the lab name (`Z.ai: GLM 5.3`). Decision models (`decisions = true`) are skipped.
 - New models are not created automatically (`skipCreates`) and open no missing-model issues (`trackMissingModels: false`): the endpoint lists hundreds of models the catalog does not carry. It lists only models serving at that moment, so local files missing from a response are kept (`deleteMissing: false`) and reported.
+
+## Inference Notes
+
+- Inference is implemented in `packages/core/src/sync/providers/inference.ts`.
+- Source endpoint: `https://api.inference.net/v1/models`. No authentication is required.
+- Price (`pricing.*`, USD per token, scaled to per million), `context_length`, `input_modalities`, and `reasoning_efforts` are authoritative for this host. Other capabilities are inherited from the lab entry.
+- `image` input is written as the MIME types the vision docs list (`image/webp`, `image/png`, `image/gif`, `image/jpeg`; https://docs.inference.net/api/vision).
+- `max_completion_tokens` is advisory: several routes report the whole context window. `limit.output` is the lowest of it, the context window, and the lab figure.
+- `reasoning_efforts` is the exact set `reasoning_effort` accepts on this host, and `none` turns reasoning off, so it maps to one `effort` option. Routes without `none` are not known to expose a separate off switch, so no toggle is published. Levels the schema cannot describe are dropped.
+- A cache-read price no lower than the input price is not published.
+- A live model with no price or limits keeps its existing file unchanged.
+- New models are created as `base_model` overlays. Most IDs carry no namespace, so the lab is read from the family prefix (`claude-` → `anthropic`, `glm-` → `zhipuai`, …). A model with no lab entry opens a missing-model issue.
+- A reasoning model without `reasoning_efforts` keeps its hand-authored `capabilities.reasoning` (`{ supported = true }` when callers have no control), or fails for manual review.
+- A local model missing from the endpoint is retained (`deleteMissing: false`); retired routes are kept as `status = "deprecated"` files. The fetch also refuses a response with fewer than twenty models, so a truncated list cannot rewrite the catalog.
 
 ## OpenAI Notes
 

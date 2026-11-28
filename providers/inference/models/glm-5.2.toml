@@ -1,0 +1,19 @@
+# Reasoning (accessed 2026-10-31): https://api.inference.net/v1/models lists no
+# reasoning_efforts for this ID, and the API rejects reasoning_effort levels a
+# model does not list, so callers have no reasoning control on this host.
+# https://docs.inference.net/api/reasoning
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 1.3
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 4.4

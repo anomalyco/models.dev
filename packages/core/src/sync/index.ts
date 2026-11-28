@@ -50,6 +50,7 @@ import { hyper } from "./providers/hyper.js";
 import { hostingerRouter } from "./providers/hostinger-router.js";
 import { huggingface } from "./providers/huggingface.js";
 import { inceptron } from "./providers/inceptron.js";
+import { inference } from "./providers/inference.js";
 import { keln } from "./providers/keln.js";
 import { kenari } from "./providers/kenari.js";
 import { kilo } from "./providers/kilo.js";
@@ -242,6 +243,7 @@ export const providers: {
   "hostinger-router": SyncProvider<any>;
   huggingface: SyncProvider<any>;
   inceptron: SyncProvider<any>;
+  inference: SyncProvider<any>;
   keln: SyncProvider<any>;
   kenari: SyncProvider<any>;
   kilo: SyncProvider<any>;
@@ -304,6 +306,7 @@ export const providers: {
   "hostinger-router": hostingerRouter,
   huggingface,
   inceptron,
+  inference,
   keln,
   kenari,
   kilo,
@@ -362,7 +365,7 @@ export const groups = {
     "vercel",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
-  direct: ["aiand", "alibaba", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "deepseek", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "meta", "mistral", "moonshotai", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "thinkingmachines", "tinfoil", "togetherai", "venice", "wandb", "xai"],
+  direct: ["aiand", "alibaba", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "deepseek", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "inference", "meta", "mistral", "moonshotai", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "thinkingmachines", "tinfoil", "togetherai", "venice", "wandb", "xai"],
 } as const;
 
 type ProviderID = keyof typeof providers;

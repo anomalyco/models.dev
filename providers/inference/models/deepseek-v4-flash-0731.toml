@@ -1,0 +1,19 @@
+# Reasoning (accessed 2026-10-31): https://api.inference.net/v1/models lists no
+# reasoning_efforts for this ID, and the API rejects reasoning_effort levels a
+# model does not list, so callers have no reasoning control on this host.
+# https://docs.inference.net/api/reasoning
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 1_048_575
+
+[cost.text.input]
+price = 0.53
+cache = { read = 0.017 }
+
+[cost.text.output]
+price = 1.58

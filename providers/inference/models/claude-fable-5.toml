@@ -1,0 +1,16 @@
+schema = 2
+base_model = "anthropic/claude-fable-5"
+
+[modalities]
+input = ["text", "image/webp", "image/png", "image/gif", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 10
+cache = { read = 1 }
+
+[cost.text.output]
+price = 50
