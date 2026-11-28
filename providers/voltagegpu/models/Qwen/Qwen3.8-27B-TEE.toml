@@ -1,0 +1,43 @@
+# Toggle: chat_template_kwargs.enable_thinking = true|false (default on)
+# Effort: chat_template_kwargs.reasoning_effort = low|medium|xhigh
+# Tested live on POST https://api.voltagegpu.com/v1/chat/completions on 2026-11-19.
+# Toggle, one request per setting: reasoning_content carries text with true and none with false; with the field
+#   omitted it carries text. chat_template_kwargs.thinking had the same effect.
+# enable_thinking is the name the chat template reads (https://huggingface.co/Qwen/Qwen3.8-27B).
+# Effort, two requests per level at max_tokens 1200: every level was accepted (HTTP 200). No ordering between levels
+#   could be measured: completion tokens were 1200 and 1200 for low, 1200 and 1200 for medium, 929 and 1007 for xhigh,
+#   554 and 814 with the field omitted (1200 = cut at the cap). The levels listed are the lab's set, which the chat
+#   template reads; this test does not show a graded effect.
+# No budget is listed: chat_template_kwargs.thinking_budget = 64 did not shorten the reasoning. Two requests per value
+#   at max_tokens 3000, none cut at the cap: completion tokens were 1120 and 741 with 64, 718 and 933 with 2048, 549
+#   and 444 with no budget.
+# Top-level reasoning_effort and thinking_budget were not tested.
+# Id, context and prices (USD per million tokens): GET https://api.voltagegpu.com/v1/models, read 2026-11-19.
+# Output limit: 65,536 is where the VoltageGPU relay caps max_tokens for this id (the maximum output of the deployment
+#   serving it). GET /v1/models does not publish that value today. A request with max_tokens 200000 was answered 200
+#   on 2026-11-19: the cap is applied without an error.
+# Input: text and images, no video; image MIME types from the lab file. A PNG image (data URL) was accepted on
+#   2026-11-19; the other image types and video were not tested, so video is not listed.
+schema = 2
+base_model = "alibaba/qwen3.8-27b"
+name = "Qwen3.8 27B TEE"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, effort = ["low", "medium", "xhigh"] }
+structured_output = true
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.078
+
+[cost.text.output]
+price = 2.5
