@@ -5,12 +5,14 @@
 # Default effort: GET https://api.sarvam.ai/v2/models publishes reasoning.default_effort = "low" (accessed 2026-11-17).
 # Context: GET https://api.sarvam.ai/v2/models publishes context_length 128000 for this host, below the lab's 131072. The output cap follows the host's window.
 # max_tokens: this model rejects max_completion_tokens above 32,768 but accepts max_tokens up to the window, so consumers must send the older field.
+# Structured output: https://docs.sarvam.ai/api/token-factory/models says every chat model supports response_format (accessed 2026-11-27); json_schema (strict) and json_object verified on POST https://api.sarvam.ai/v2/chat/completions (2026-11-27).
 schema = 2
 base_model = "sarvam/sarvam-105b"
 name = "Sarvam-105B"
 
 [capabilities]
 reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"], default = { type = "effort", value = "low" } }
+structured_output = true
 cache = { implicit = true }
 
 [limit]

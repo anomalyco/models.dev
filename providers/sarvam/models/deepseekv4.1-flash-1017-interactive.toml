@@ -6,12 +6,14 @@
 # Default effort: GET https://api.sarvam.ai/v2/models publishes reasoning.default_effort = "high" (accessed 2026-11-17).
 # Image cap: GET https://api.sarvam.ai/v2/models publishes input_media.image.max_per_request = 999 (accessed 2026-11-17).
 # Context: GET https://api.sarvam.ai/v2/models publishes context_length 1048576 (accessed 2026-11-17).
+# Structured output: https://docs.sarvam.ai/api/token-factory/models says every chat model supports response_format (accessed 2026-11-27); json_schema (strict) and json_object verified on POST https://api.sarvam.ai/v2/chat/completions (2026-11-27).
 schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 name = "DeepSeek V4.1 Flash 1017 Interactive"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "high" } }
+structured_output = true
 cache = { implicit = true }
 
 [limit]
