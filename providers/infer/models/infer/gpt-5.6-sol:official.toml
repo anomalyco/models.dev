@@ -1,4 +1,4 @@
-# Source: https://infer.flow7.org/api/public/catalog (2026-09-12 UTC)
+# Source: https://infer.flow7.org/api/public/catalog (2026-11-14 UTC)
 # Exact selector: infer/gpt-5.6-sol:official
 # Responses request reasoning.effort follows the underlying OpenAI model.
 schema = 2
@@ -17,8 +17,8 @@ context = 271_999
 legacy_shape = "responses"
 
 [cost.text.input]
-price = 2.5
-cache = { read = 0.25, write = 3.125 }
+price = 5
+cache = { read = 0.5, write = 6.25 }
 
 [cost.text.output]
-price = 12.5
+price = 25
