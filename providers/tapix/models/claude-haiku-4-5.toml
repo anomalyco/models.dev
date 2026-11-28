@@ -1,0 +1,17 @@
+# Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
+# Relayed by Tapix AI (https://tapixai.com/v1); upstream model is anthropic/claude-haiku-4-5.
+# Reasoning: this host produces no reasoning for this model — a 2026-11-17 probe at reasoning_effort=high returned no reasoning_content and reasoning_tokens = 0, and the lab control (a thinking budget) is not a field we forward.
+# No reasoning output was observed on a default call.
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+
+[cost.text.input]
+price = 0.7
+
+[cost.text.output]
+price = 3.5
+

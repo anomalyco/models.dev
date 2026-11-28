@@ -1,0 +1,16 @@
+# Prices: Tapix public sell prices in USD per 1M tokens (https://tapixai.com/api/models, read 2026-11-17) — our own list prices, not a converted third-party list.
+# Relayed by Tapix AI (https://tapixai.com/v1); upstream model is anthropic/claude-fable-5-2.
+# Reasoning: request-side only — Tapix accepts reasoning_effort (per-model validation is real: claude-fable-5 rejects "none"), but this relay does not return the thinking text: a 2026-11-17 probe saw no reasoning field and reasoning_tokens = 0. No response field is declared for that reason.
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 2.09
+
+[cost.text.output]
+price = 9.18
+
