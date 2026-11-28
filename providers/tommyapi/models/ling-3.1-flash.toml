@@ -1,0 +1,12 @@
+# ling-3.1-flash on TommyAPI serves inclusionai/ling-3.1-flash (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "inclusionai/ling-3.1-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.0975
+
+[cost.text.output]
+price = 0.2925

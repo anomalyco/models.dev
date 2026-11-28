@@ -1,0 +1,12 @@
+# qwen3.8-omni-flash on TommyAPI serves alibaba/qwen3.8-omni-flash (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "alibaba/qwen3.8-omni-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "xhigh"] }
+
+[cost.text.input]
+price = 0.195
+
+[cost.text.output]
+price = 0.611

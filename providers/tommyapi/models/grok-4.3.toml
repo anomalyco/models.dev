@@ -1,0 +1,12 @@
+# grok-4.3 on TommyAPI serves xai/grok-4.3 (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "xai/grok-4.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.625
+
+[cost.text.output]
+price = 3.25

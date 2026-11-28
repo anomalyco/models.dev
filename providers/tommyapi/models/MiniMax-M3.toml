@@ -1,0 +1,12 @@
+# MiniMax-M3 on TommyAPI serves minimax/MiniMax-M3 (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.72
+
+[cost.text.output]
+price = 2.8224

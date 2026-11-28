@@ -1,0 +1,12 @@
+# nemotron-3-ultra-550b-a55b on TommyAPI serves nvidia/nemotron-3-ultra-550b-a55b (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"], budget = { min = -1, max = 32768 } }
+
+[cost.text.input]
+price = 0.78
+
+[cost.text.output]
+price = 3.12

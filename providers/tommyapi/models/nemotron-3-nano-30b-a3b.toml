@@ -1,0 +1,12 @@
+# nemotron-3-nano-30b-a3b on TommyAPI serves nvidia/nemotron-3-nano-30b-a3b (live-probed 2026-11-06: text only on this host).
+schema = 2
+base_model = "nvidia/nemotron-3-nano-30b-a3b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.078
+
+[cost.text.output]
+price = 0.312

@@ -1,0 +1,8 @@
+name = "TommyAPI"
+env = ["TOMMYAPI_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+# Multi-model relay (OpenAI Chat Completions on /v1/chat/completions, Anthropic Messages on /v1/messages).
+# Model ids are the bare upstream names; the whole catalog with live-measured capabilities is published at
+# https://tommyapi.com/opencode/tommyapi.json (models.dev v1 shape, refreshed hourly).
+api = "https://tommyapi.com/v1"
+doc = "https://tommyapi.com/docs/opencode/"

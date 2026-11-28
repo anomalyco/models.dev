@@ -1,0 +1,12 @@
+# fugu-max on TommyAPI serves sakana/fugu-max (live-probed 2026-11-06: image input verified).
+schema = 2
+base_model = "sakana/fugu-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 2.6
+
+[cost.text.output]
+price = 7.8
