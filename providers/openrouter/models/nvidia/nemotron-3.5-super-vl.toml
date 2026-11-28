@@ -13,6 +13,9 @@ tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, toggle = true }
 structured_output = true
 
+[limit]
+output = 131_072
+
 [api.chat-completions]
 
 [api.responses]
@@ -26,4 +29,4 @@ price = 0.15
 cache = { read = 0.02 }
 
 [cost.text.output]
-price = 0.47
+price = 0.45
