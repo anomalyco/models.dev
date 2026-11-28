@@ -1,0 +1,14 @@
+# Gemma 4 31B IT. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Toggle: reasoning_effort = "none" disables thinking (forwarded to DeepInfra).
+schema = 2
+base_model = "google/gemma-4-31b-it"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.208
+
+[cost.text.output]
+price = 0.416

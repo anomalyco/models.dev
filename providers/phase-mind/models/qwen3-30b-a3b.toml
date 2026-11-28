@@ -1,0 +1,17 @@
+# Qwen3 30B A3B. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Reasoning: always on, no caller control.
+schema = 2
+base_model = "alibaba/qwen3-30b-a3b"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.1248
+
+[cost.text.output]
+price = 0.52
+
+[limit]
+context = 40_960

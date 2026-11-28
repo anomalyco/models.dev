@@ -1,0 +1,22 @@
+# Kimi K3.1 Pro (reasoning). Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Effort: reasoning_effort = none|low|high|max (forwarded to OpenRouter).
+# Hosting: the only upstream host is Moonshot AI; prompts are processed in China.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+status = "beta"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+
+[cost.text.input]
+price = 4.3888
+
+[cost.text.output]
+price = 21.944
+
+[limit]
+output = 65_536

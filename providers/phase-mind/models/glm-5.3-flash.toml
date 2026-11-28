@@ -1,0 +1,22 @@
+# GLM 5.3 Flash. Price and limits: https://ai.phase.xyz/v1/models (accessed 2026-11-02).
+# Effort: reasoning_effort = low|high|max (forwarded to DeepInfra).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+status = "beta"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 0.156
+
+[cost.text.output]
+price = 0.52
+
+[limit]
+context = 1_048_576
+output = 65_536
