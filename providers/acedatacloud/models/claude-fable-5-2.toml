@@ -1,0 +1,33 @@
+# Ace model catalog and supported protocols: https://platform.acedata.cloud/api/v1/models/?type=chat
+# Exact upstream lab identity supplies baseline model metadata. The catalog does not establish host-specific limits.
+# Host request schema: https://platform.acedata.cloud/api/v1/apis/6b2b437b-b6d5-466c-8750-b16650072593
+# Effort: reasoning_effort, using the model baseline in providers/anthropic/models/claude-fable-5-2.toml.
+# Ace claude-fable-5-1 uses this effort surface, including a recorded max response.
+# Billing: https://platform.acedata.cloud/api/v1/apis/6b2b437b-b6d5-466c-8750-b16650072593/
+# USD per million tokens, 2026-11-24: the entry package is $7 per 40 Credits.
+# This model's own Credit rule is roughly twice the Fable 5.1 rate relative to Anthropic list prices.
+# Credits/MTok on 2026-11-24: input 33.639576, read 0.840989, 5m write 42.04947, 1h write 67.279152, output 168.19788.
+# Input: the host catalog lists vision for this ID and Chat Completions accepts image_url parts.
+# Image MIME types follow the reviewed text/image path and the matching lab model.
+# chat-completions: the API definition publishes /v1/chat/completions (path) and /claude/chat/completions (path2).
+# Cached usage is priced by the host. Caller-set cache policy is undocumented.
+schema = 2
+base_model = "anthropic/claude-fable-5-2"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 5.8869258
+cache = { read = 0.147173075, write = { "5m" = 7.35865725, "1h" = 11.7738516 } }
+
+[cost.text.output]
+price = 29.434629
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/v1"

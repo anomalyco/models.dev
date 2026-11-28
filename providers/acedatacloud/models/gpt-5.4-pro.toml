@@ -1,0 +1,25 @@
+# Public catalog: https://platform.acedata.cloud/models/gpt-5.4-pro
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/ed972a38-ecef-4fcb-af33-750de42d25dc
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort (Chat Completions), or reasoning.effort (Responses)
+# Custom-tool contract rechecked 2026-11-20 at the billing/protocol URL above:
+# components.schemas.ResponsesTool includes ResponsesCustomTool with optional format.
+# Raw text custom tools are documented; lark/regex grammar enforcement is not,
+# so only text is advertised on Responses. No new paid grammar probe was made.
+schema = 2
+base_model = "openai/gpt-5.4-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 11.037985875
+
+[cost.text.output]
+price = 66.22791525
+
+[api.responses]
+capabilities = { tools = { freeform = ["text"] } }
+base_url = "https://api.acedata.cloud/openai"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }

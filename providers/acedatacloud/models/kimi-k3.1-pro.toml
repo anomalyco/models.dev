@@ -1,0 +1,32 @@
+# Ace model catalog and supported protocols: https://platform.acedata.cloud/api/v1/models/?type=chat
+# Exact upstream lab identity supplies baseline model metadata. The catalog does not establish host-specific limits.
+# Host request schema: https://platform.acedata.cloud/api/v1/apis/5c4649ee-22c6-44ea-84d6-6ecc3674f998
+# Effort: reasoning_effort. Host-documented values intersected with providers/moonshotai/models/kimi-k3.1-pro.toml.
+# Billing: https://platform.acedata.cloud/api/v1/apis/5c4649ee-22c6-44ea-84d6-6ecc3674f998/
+# USD per million tokens, 2026-11-24: the entry package is $7 per 40 Credits.
+# Input: the host catalog lists vision for this ID and Chat Completions accepts image_url parts.
+# Image MIME types follow the reviewed text/image path and the matching lab model.
+# chat-completions: the API definition publishes /kimi/chat/completions (path) and /v1/chat/completions (path2).
+# Cached usage is priced by the host. Caller-set cache policy is undocumented.
+# Assistant tool-call history and Chat Completions responses both carry reasoning_content.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[cost.text.input]
+price = 3.675
+cache = { read = 0.3675 }
+
+[cost.text.output]
+price = 18.375
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+base_url = "https://api.acedata.cloud/v1"

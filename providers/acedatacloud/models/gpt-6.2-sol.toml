@@ -1,0 +1,49 @@
+# Ace model catalog and supported protocols: https://platform.acedata.cloud/api/v1/models/?type=chat
+# Exact upstream lab identity supplies baseline model metadata. The catalog does not establish host-specific limits.
+# Host request schema: https://platform.acedata.cloud/api/v1/apis/c9969b66-effb-4753-b504-a82c4d16f83f
+# Effort: reasoning_effort. Host-documented values intersected with providers/openai/models/gpt-6.2-sol.toml.
+# Billing: https://platform.acedata.cloud/api/v1/apis/c9969b66-effb-4753-b504-a82c4d16f83f/
+# USD per million tokens, 2026-11-24: the entry package is $7 per 40 Credits.
+# Input: the host catalog lists vision for this ID and Chat Completions accepts image_url parts.
+# Image MIME types follow the reviewed text/image path and the matching lab model.
+# Chat Completions: tools.items requires type=function and a function definition.
+# Responses: the host ResponsesCustomTool schema accepts type=custom with an optional format object.
+# Raw text is documented; no lark/regex grammar enforcement is established.
+# https://platform.acedata.cloud/api/v1/apis/ed972a38-ecef-4fcb-af33-750de42d25dc/
+# chat-completions: the API definition publishes /openai/chat/completions (path) and /v1/chat/completions (path2).
+# responses: the API definition publishes /openai/responses (path) and /v1/responses (path2).
+# Cached usage is priced by the host. Caller-set cache policy is undocumented.
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.735865725
+cache = { read = 0.036793225, write = { "5m" = 0.9198322 } }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272000 } }
+price = 1.47173145
+cache = { read = 0.073586625, write = { "5m" = 1.839664225 } }
+
+[cost.text.output]
+price = 3.679328625
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272000 } }
+price = 5.51899285
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/v1"
+
+[api.responses]
+capabilities = { tools = { freeform = ["text"] } }
+base_url = "https://api.acedata.cloud/v1"
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai/responses" }

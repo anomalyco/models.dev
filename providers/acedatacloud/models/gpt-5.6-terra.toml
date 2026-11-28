@@ -1,0 +1,36 @@
+# Public catalog: https://platform.acedata.cloud/models/gpt-5.6-terra
+# Billing and protocol: https://platform.acedata.cloud/api/v1/apis/c9969b66-effb-4753-b504-a82c4d16f83f
+# USD/MTok checked 2026-10-06: $7 / 40 Credits = $0.175/Credit.
+# Larger recharge packages and account discounts can lower effective prices.
+# reasoning_effort (Chat Completions), or reasoning.effort (Responses)
+# cache_write is the default 5-minute cache TTL.
+# No host-specific temperature rejection is documented; inherit the lab capability.
+# The host Chat Completions schema exposes temperature 0..2; this is not a new live probe.
+# API billing rechecked 2026-11-16: this endpoint uses a flat model rule with no context surcharge; do not copy the lab host tier.
+# Input scope: reviewed OpenAI-compatible text/image path, intersected with lab JPEG/PNG/GIF/WebP.
+# No model-specific PDF/audio/video contract is established here; those formats are not advertised.
+# Cached-token usage is conditionally billed and normalized by this API.
+# Cache policy/controls are not documented on this surface: implicit support only, not a hit/TTL guarantee.
+# Custom-tool contract rechecked 2026-11-20 at the billing/protocol URL above:
+# definition.paths[/openai/chat/completions].post.requestBody.content[application/json]
+# .schema.properties.tools.items requires type + function and restricts type to function.
+# The host documents function tools only; custom/freeform formats are not advertised.
+schema = 2
+base_model = "openai/gpt-5.6-terra"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.735865725
+cache = { read = 0.073586625, write = { "5m" = 0.9198322 } }
+
+[cost.text.output]
+price = 4.41519435
+
+[api.chat-completions]

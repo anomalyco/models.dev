@@ -1,0 +1,29 @@
+# Hosted ID and vision: https://platform.acedata.cloud/api/v1/models/catalog/?modality=chat
+# Chat Completions schema, including the unified /v1 alias and reasoning_effort:
+# https://platform.acedata.cloud/api/v1/apis/94b49b55-2ea8-4d46-a93c-eb308e1a52d5/
+# The shared host schema lists low/medium/high; a model-specific live Chat Completions
+# request with reasoning_effort=xhigh also succeeded, matching Google’s own Neon profile.
+# https://aistudio.google.com/docs/models/gemini-4-neon
+# USD per million tokens, using the public $7 / 40 Credits entry package (2026-11-27).
+# Exact model billing rule: https://platform.acedata.cloud/api/v1/apis/94b49b55-2ea8-4d46-a93c-eb308e1a52d5/
+# 6.307420 input, 31.537102 output and 0.315371 cached input Credits per million.
+schema = 2
+base_model = "google/gemini-4-neon"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["text"]
+
+[capabilities]
+cache = { implicit = true }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.1037985
+cache = { read = 0.055189925 }
+
+[cost.text.output]
+price = 5.51899285
+
+[api.chat-completions]
+base_url = "https://api.acedata.cloud/v1"
