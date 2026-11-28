@@ -1,7 +1,8 @@
 # Model card (https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct, accessed 2026-11-28): dense vision-language
 #   Instruct edition (Thinking is a separate checkpoint), image and video input, visual agent that "invokes tools",
-#   "Native 256K context, expandable to 1M"; generation settings out_seq_length = 32768 for text (16384 for VL);
-#   Apache-2.0.
+#   "Native 256K context, expandable to 1M"; Apache-2.0. Output: the card's evaluation settings use out_seq_length
+#   32,768 for text tasks (16,384 for its VL benchmarks); generation_config.json sets no length cap. 32,768 matches
+#   qwen3-vl-30b-a3b-instruct.
 # Release: https://github.com/QwenLM/Qwen3-VL (News: "2025.10.15: We have released the Qwen3-VL-4B ... and Qwen3-VL-8B").
 # Input MIME types: as qwen3-vl-30b-a3b-instruct, from https://www.alibabacloud.com/help/en/model-studio/vision
 #   (Image limits, Video limits; video lists extensions, registered MIME types used).
