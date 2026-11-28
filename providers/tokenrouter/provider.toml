@@ -2,10 +2,12 @@ name = "TokenRouter"
 env = ["TOKENROUTER_API_KEY"]
 npm = "@ai-sdk/openai-compatible"
 opencodeai = "@opencode/ai/providers/openai-compatible"
-# Raw HTTP reasoning controls (live-verified 2026-08-29):
-# Chat POST `/v1/chat/completions` accepts `reasoning_effort =
-# low|high|max` (verified set for z-ai/glm-5.3-free); thinking is
-# always on and reasoning returns in `reasoning_content`.
+# Raw HTTP reasoning controls (live-verified on the current free model
+# 2026-11-28): Chat POST `/v1/chat/completions` accepts `thinking.type =
+# enabled|disabled` (disabled -> 0 reasoning tokens) and `reasoning_effort =
+# low|high|max` (`none` returns 400), and returns reasoning in
+# `reasoning_content`. The previous free model z-ai/glm-5.3-free was removed
+# from the provider's catalog API by 2026-11-27.
 # https://www.tokenrouter.com
 api = "https://api.tokenrouter.com/v1"
 doc = "https://www.tokenrouter.com/docs/tokenrouter-feature-guide/"

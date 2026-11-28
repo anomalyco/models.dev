@@ -1,0 +1,26 @@
+# Serves DeepSeek-V4.1-Flash-1017 (the October 17, 2026 update) on TokenRouter's
+# free tier; the previous free model z-ai/glm-5.3-free is no longer offered by
+# the provider's catalog API (live check 2026-11-27: single free model).
+# Reasoning controls live-verified on this model on TokenRouter's Chat Completions
+# (2026-11-28): thinking.type = enabled|disabled (baseline 18 reasoning tokens,
+# disabled -> 0), reasoning_effort = low|high|max accepted, reasoning_effort =
+# none -> HTTP 400; reasoning returns in reasoning_content.
+# Toggle: thinking.type = enabled|disabled
+# Effort: reasoning_effort = low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+family = "deepseek-flash-free"
+name = "DeepSeek V4.1 Flash 1017 (free)"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
