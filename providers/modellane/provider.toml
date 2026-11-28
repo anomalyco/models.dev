@@ -1,0 +1,12 @@
+# API base, formats and key variable: https://usemodellane.com/docs (accessed 2026-11-28)
+# OpenAI Chat Completions (default) and OpenAI Responses at https://usemodellane.com/v1;
+# Anthropic Messages at POST /v1/messages on the same host:
+# https://usemodellane.com/docs/guides/responses-api, https://usemodellane.com/docs/guides/anthropic-api
+# Models, limits and prices: https://usemodellane.com/v1/public/models and https://usemodellane.com/docs/models-pricing
+# Logo: the Modellane mark, same path data as https://usemodellane.com/assets/logo-mark.svg, filled with currentColor.
+name = "Modellane"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["MODELLANE_API_KEY"]
+api = "https://usemodellane.com/v1"
+doc = "https://usemodellane.com/docs"
