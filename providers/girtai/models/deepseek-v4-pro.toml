@@ -1,0 +1,46 @@
+# Sources checked 2026-11-11:
+# - GirtAI model IDs, endpoints and public-beta status: https://www.girtai.com/zh/docs/
+# - Same upstream model versions: https://www.girtai.com/zh/faq/
+# - GirtAI USD / million token prices: https://www.girtai.com/zh/pricing/
+# - Upstream alias/version: https://api-docs.deepseek.com/quick_start/pricing/
+# GirtAI's operator confirms upstream capability and limit parity, except pricing.
+# This entry uses that confirmation and upstream documentation, not live API probes.
+# deepseek-v4-pro serves DeepSeek-V4-Pro-0813; Pro does not support image input.
+# Toggle: thinking.type = enabled|disabled; effort: reasoning_effort = low|high|max
+# (default high). Messages uses thinking.type and output_config.effort.
+# https://api-docs.deepseek.com/guides/thinking_mode/
+# https://api-docs.deepseek.com/guides/anthropic_api/
+# Exact limits and max_tokens field match providers/deepseek/models/deepseek-v4-pro.toml
+# and https://api-docs.deepseek.com/api/create-chat-completion/ (384K = 393216).
+# Cache is implicit; reasoning tokens use the output rate. GirtAI's Pro rates
+# are identical in peak and off-peak periods, so there is no time multiplier.
+schema = 2
+base_model = "deepseek/deepseek-v4-pro-0813"
+name = "DeepSeek V4 Pro"
+status = "beta"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, toggle = true, effort = ["low", "high", "max"] }
+structured_output = true
+top_k = false
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 393_216
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content", max_tokens_field = "max_tokens" }
+
+[api.messages]
+base_url = "https://girtai.com/v1"
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.66
+cache = { read = 0.022 }
+
+[cost.text.output]
+price = 1.98
+reasoning = 1.98
