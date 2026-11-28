@@ -1,0 +1,15 @@
+schema = 2
+base_model = "meta/llama-guard-4-12b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.18
+
+[cost.text.output]
+price = 0.18

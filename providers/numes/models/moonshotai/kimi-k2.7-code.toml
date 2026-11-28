@@ -1,0 +1,22 @@
+# Reasoning controls: always on (not declared by Numes; matches openrouter/moonshotai/kimi-k2.7-code, which exposes no caller control).
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.633
+cache = { read = 0.1266 }
+
+[cost.text.output]
+price = 3.165

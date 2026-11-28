@@ -1,0 +1,23 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/mistralai/mistral-large-4-0 (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = low|medium|high
+schema = 2
+base_model = "mistral/mistral-large-4"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.7385
+cache = { read = 0.07385 }
+
+[cost.text.output]
+price = 2.2155

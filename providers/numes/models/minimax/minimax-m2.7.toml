@@ -1,0 +1,18 @@
+# Reasoning controls: always on (not declared by Numes; matches openrouter/minimax/minimax-m2.7, which exposes no caller control).
+# Capabilities the catalog doesn't state (capabilities.structured_output, capabilities.cache) come from minimax/minimax-m2.5, this host's previous model in the family.
+schema = 2
+base_model = "minimax/MiniMax-M2.7"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 196_608
+
+[cost.text.input]
+price = 0.633
+
+[cost.text.output]
+price = 1.899

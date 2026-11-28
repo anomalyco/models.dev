@@ -1,0 +1,20 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/xiaomi/mimo-v2.6-pro-ultraspeed (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro-ultraspeed"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 4.58925
+cache = { read = 0.03798 }
+
+[cost.text.output]
+price = 9.1785

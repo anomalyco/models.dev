@@ -1,0 +1,13 @@
+schema = 2
+base_model = "openai/gpt-4.1-nano"
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0844
+cache = { read = 0.02532 }
+
+[cost.text.output]
+price = 0.3376

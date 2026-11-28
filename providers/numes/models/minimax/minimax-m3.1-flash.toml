@@ -1,0 +1,22 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/minimax/minimax-m3.1-flash (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = low|medium|high|xhigh|max
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.1875
+cache = { read = 0.01875 }
+
+[cost.text.output]
+price = 0.75

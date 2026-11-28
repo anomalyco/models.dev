@@ -1,0 +1,19 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/qwen/qwen3.7-max (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "alibaba/qwen3.7-max"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 256_000
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 3.75

@@ -1,0 +1,17 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/perplexity/sonar-reasoning-pro (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "perplexity/sonar-reasoning-pro"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 2.11
+
+[cost.text.output]
+price = 8.44

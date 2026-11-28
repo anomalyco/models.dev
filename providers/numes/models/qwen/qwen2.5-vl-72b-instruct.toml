@@ -1,0 +1,21 @@
+schema = 2
+base_model = "alibaba/qwen2-5-vl-72b-instruct"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.844
+cache = { read = 0.422 }
+
+[cost.text.output]
+price = 1.055

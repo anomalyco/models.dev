@@ -1,0 +1,11 @@
+schema = 2
+base_model = "mistral/mistral-nemo"
+
+[capabilities]
+structured_output = true
+
+[cost.text.input]
+price = 0.029
+
+[cost.text.output]
+price = 0.03

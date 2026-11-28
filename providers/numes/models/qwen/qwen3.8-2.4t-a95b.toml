@@ -1,0 +1,15 @@
+# Reasoning controls: always on (Numes /public/v1/models declares mandatory = true with no effort or budget controls).
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.25 }
+
+[cost.text.output]
+price = 6

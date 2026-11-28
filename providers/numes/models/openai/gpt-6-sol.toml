@@ -1,0 +1,22 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/openai/gpt-6-sol (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|low|medium|high|xhigh|max
+# Tools: custom (freeform) tools are not supported on Numes Chat Completions (tools accepts only function and hosted tools, per https://numes.ai/docs/api-reference/parameters), so freeform is left out.
+schema = 2
+base_model = "openai/gpt-6-sol"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+temperature = false
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.688
+cache = { read = 0.1688 }
+
+[cost.text.output]
+price = 8.44

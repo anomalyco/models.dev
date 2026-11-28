@@ -1,0 +1,15 @@
+# Reasoning controls: always on (not declared by Numes; matches openrouter/qwen/qwen3-235b-a22b-thinking-2507, which exposes no caller control).
+schema = 2
+base_model = "alibaba/qwen3-235b-a22b-thinking-2507"
+
+[capabilities]
+reasoning = { supported = true }
+
+[limit]
+context = 128_000
+
+[cost.text.input]
+price = 0.47475
+
+[cost.text.output]
+price = 3.6925

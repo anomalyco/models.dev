@@ -1,0 +1,16 @@
+# Reasoning controls: always on (Numes /public/v1/models declares mandatory = true with no effort or budget controls).
+# Capabilities the catalog doesn't state (capabilities.structured_output) come from inclusionai/ling-3.0-flash, this host's previous model in the family.
+schema = 2
+base_model = "inclusionai/ling-3.0-flash-sante"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.22

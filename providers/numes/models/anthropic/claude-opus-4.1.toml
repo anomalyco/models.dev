@@ -1,0 +1,19 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/anthropic/claude-opus-4.1 (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "anthropic/claude-opus-4-1"
+
+[modalities]
+input = ["text", "application/pdf"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 15.825
+cache = { read = 1.5825 }
+
+[cost.text.output]
+price = 79.125

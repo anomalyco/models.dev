@@ -1,0 +1,23 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/moonshotai/kimi-k2.5 (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "moonshotai/kimi-k2.5"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.5275
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.6375

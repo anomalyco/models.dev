@@ -1,0 +1,22 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/openai/gpt-5.4-nano (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|low|medium|high|xhigh
+# Tools: custom (freeform) tools are not supported on Numes Chat Completions (tools accepts only function and hosted tools, per https://numes.ai/docs/api-reference/parameters), so freeform is left out.
+schema = 2
+base_model = "openai/gpt-5.4-nano"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh"] }
+structured_output = true
+temperature = false
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.1688
+cache = { read = 0.01688 }
+
+[cost.text.output]
+price = 1.055

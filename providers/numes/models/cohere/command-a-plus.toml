@@ -1,0 +1,20 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/cohere/command-a-plus (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "cohere/command-a-plus-05-2026"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3165
+cache = { read = 0.15825 }
+
+[cost.text.output]
+price = 1.5825

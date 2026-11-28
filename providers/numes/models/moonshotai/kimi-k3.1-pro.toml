@@ -1,0 +1,23 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/moonshotai/kimi-k3.1-pro (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|low|high|max
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2 }
+
+[cost.text.output]
+price = 10

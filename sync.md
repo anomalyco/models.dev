@@ -29,6 +29,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync togetherai` syncs only Together AI.
 - `bun models:sync morph` syncs only Morph.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
+- `bun models:sync numes` syncs only Numes.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
 - `bun models:sync aggregators --new-only` creates new model files but skips updates and removals.
@@ -236,6 +237,17 @@ EmpirioLabs is implemented in `packages/core/src/sync/providers/empiriolabs.ts`.
 - Reasoning options come from the published `reasoning` object: `supported_efforts` becomes an effort option (with `none` when thinking can be switched off), an on/off-only model gets a toggle, and an always-on model with no published levels gets `[]`. Each file's header names the wire field.
 - Only rows whose `output_modalities` include `text` sync. Keln also lists decision-output models (e.g. `cloudflare/clef`); they cannot serve chat, so they are filtered out at parse time and their files are removed like retired models.
 - Rows without a lab base or published controls are reported and keep their files; models absent from the API are removed. Empty, malformed and duplicate-ID inventories fail before writes.
+
+## Numes Notes
+
+Numes is implemented in `packages/core/src/sync/providers/numes.ts`.
+
+- Run with `bun models:sync numes` or `bun numes:sync`. Registration enables the scheduled provider-specific workflow; no API key or workflow secret is required.
+- Source: the public paginated `https://api.numes.ai/public/v1/models` endpoint. Only chat models (`tasks` includes `"chat"`) are synced; end-to-end encrypted (`:e2ee`) models require the Numes client bridge and are skipped. Synchronous `:free` and `:batch` variants, as well as suffixed routes sharing a sibling's `base_model` (such as `-pro` and dated snapshots), keep their catalogue display names so pickers distinguish them, and `:free` routes use `<lab-family>-free` families so pickers keep them alongside paid models.
+- Prices are the lowest current fixed USD per-token rates across a model's offers, converted with exact decimal shifting to USD per million tokens. When a discounted `cached_prompt` read price is present, `capabilities.cache` defaults to `{ implicit = true }` while preserving any existing cache configuration.
+- Limits, modalities and `temperature` only narrow the canonical lab entry, and `limit.output` is capped at the gateway's 131,072-token `max_completion_tokens` ceiling. Narrowed modalities preserve the lab's exact MIME types. `preserveBaseModels` is `false` so `base_model_omit` stays in sync when host limits widen back to the lab's limits.
+- Reasoning controls come from each model's declared `reasoning` object (`reasoning.enabled`, `reasoning.effort`, `reasoning.max_tokens`). Undeclared reasoning models copy OpenRouter's controls for the same ID (including a `:free` peer when OpenRouter only lists the free variant), falling back to the lab's provider file; undeclared reasoning models with no peer fail closed via `MissingReasoningOptionsError` rather than guessing always-on controls. OpenAI GPT-5+ and `o3` files include a header note documenting that Numes Chat Completions accepts only function and hosted tools (no `freeform` custom tools).
+- Only models that resolve to an existing `models/` lab file via `base_model` are written; unmapped IDs are reported through `missingModelID`. `deleteMissing` is `false` because the public catalogue lists only models routable at that moment.
 
 ## OpenRouter Notes
 

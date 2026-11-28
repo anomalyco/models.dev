@@ -1,0 +1,21 @@
+# Reasoning controls: Numes /public/v1/models `reasoning` declaration for this model.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high
+schema = 2
+base_model = "meta/muse-glimmer-30b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.04 }
+
+[cost.text.output]
+price = 1.2

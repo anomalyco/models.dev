@@ -1,0 +1,15 @@
+# Reasoning: not supported on this host (not in Numes supported_parameters; matches openrouter/qwen/qwen-plus).
+schema = 2
+base_model = "alibaba/qwen-plus"
+
+[capabilities]
+reasoning = { supported = false }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.2743
+cache = { read = 0.05486 }
+
+[cost.text.output]
+price = 0.8229

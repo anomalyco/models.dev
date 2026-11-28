@@ -1,0 +1,21 @@
+# Reasoning controls: Numes /public/v1/models `reasoning` declaration for this model.
+# Toggle: reasoning.enabled = true|false
+# Effort: reasoning.effort = low|medium|high
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 262_144
+output = 16_384
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.1 }
+
+[cost.text.output]
+price = 2.2

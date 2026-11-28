@@ -1,0 +1,20 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/google/gemini-3-flash-preview (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = none|minimal|low|medium|high
+schema = 2
+base_model = "google/gemini-3-flash-preview"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.5275
+cache = { read = 0.05275 }
+
+[cost.text.output]
+price = 3.165

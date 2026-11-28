@@ -1,0 +1,16 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/openai/gpt-oss-safeguard-20b (Numes forwards the OpenRouter reasoning object).
+# Effort: reasoning.effort = low|medium|high
+schema = 2
+base_model = "openai/gpt-oss-safeguard-20b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0633
+cache = { read = 0.03165 }
+
+[cost.text.output]
+price = 0.2532

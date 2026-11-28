@@ -1,0 +1,16 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/inclusionai/ling-3.0-tiny (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "inclusionai/ling-3.0-tiny"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.015825
+cache = { read = 0.003165 }
+
+[cost.text.output]
+price = 0.047475

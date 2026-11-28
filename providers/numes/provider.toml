@@ -1,0 +1,22 @@
+# Numes is a multi-model inference marketplace with an OpenRouter-compatible
+# Chat Completions API. Reasoning (accessed 2026-11-22): requests take the
+# OpenRouter `reasoning` object (`enabled`, `effort`, `max_tokens`) and the
+# `reasoning_effort` / `include_reasoning` shorthands; a model's accepted
+# efforts are declared per model in the public catalogue. Streams carry
+# reasoning in `delta.reasoning` and `delta.reasoning_details`.
+# Prices: the public catalogue lists the lowest current USD price per token
+# meter across a model's offers, where default lowest-price-band routing starts.
+# Output limits are capped at the gateway's 131,072-token `max_completion_tokens`
+# ceiling, which the authenticated /api/v1/models applies and the public
+# catalogue does not.
+# End-to-end encrypted (`:e2ee`) models need the Numes client bridge and are
+# not listed here.
+# Sources:
+# https://api.numes.ai/public/v1/models
+# https://numes.ai/docs
+name = "Numes"
+env = ["NUMES_API_KEY"]
+npm = "@openrouter/ai-sdk-provider"
+opencodeai = "@opencode/ai/providers/openrouter"
+api = "https://api.numes.ai/api/v1"
+doc = "https://numes.ai/docs"

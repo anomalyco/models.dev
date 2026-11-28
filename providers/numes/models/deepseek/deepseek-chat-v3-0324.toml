@@ -1,0 +1,14 @@
+schema = 2
+base_model = "deepseek/deepseek-chat-v3-0324"
+
+[capabilities]
+structured_output = true
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.26375
+
+[cost.text.output]
+price = 1.055

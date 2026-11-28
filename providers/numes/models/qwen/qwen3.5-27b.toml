@@ -1,0 +1,18 @@
+# Reasoning controls: Numes /public/v1/models `reasoning` declaration for this model.
+# Toggle: reasoning.enabled = true|false
+schema = 2
+base_model = "alibaba/qwen3.5-27b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+
+[cost.text.input]
+price = 0.26
+
+[cost.text.output]
+price = 2.4

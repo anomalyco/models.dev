@@ -1,0 +1,17 @@
+schema = 2
+base_model = "openai/gpt-4o-2024-11-20"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 2.11
+cache = { read = 1.055 }
+
+[cost.text.output]
+price = 8.44

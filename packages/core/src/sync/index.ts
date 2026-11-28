@@ -61,6 +61,7 @@ import { nanoGpt } from "./providers/nano-gpt.js";
 import { nearai } from "./providers/nearai.js";
 import { nebius } from "./providers/nebius.js";
 import { novitaAi } from "./providers/novita-ai.js";
+import { numes } from "./providers/numes.js";
 import { ollamaCloud } from "./providers/ollama-cloud.js";
 import { openai } from "./providers/openai.js";
 import { ofox } from "./providers/ofox.js";
@@ -254,6 +255,7 @@ export const providers: {
   nearai: SyncProvider<any>;
   nebius: SyncProvider<any>;
   "novita-ai": SyncProvider<any>;
+  numes: SyncProvider<any>;
   obscurify: SyncProvider<any>;
   ofox: SyncProvider<any>;
   "ollama-cloud": SyncProvider<any>;
@@ -316,6 +318,7 @@ export const providers: {
   nearai,
   nebius,
   "novita-ai": novitaAi,
+  numes,
   obscurify,
   ofox,
   "ollama-cloud": ollamaCloud,
@@ -355,6 +358,7 @@ export const groups = {
     "merge-gateway",
     "nano-gpt",
     "novita-ai",
+    "numes",
     "ofox",
     "requesty",
     "openrouter",

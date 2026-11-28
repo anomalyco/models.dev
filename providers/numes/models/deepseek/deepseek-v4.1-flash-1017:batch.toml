@@ -1,0 +1,20 @@
+# Reasoning controls: Numes /public/v1/models `reasoning` declaration for this model.
+# Effort: reasoning.effort = none|low|high|max
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+name = "DeepSeek: DeepSeek V4.1 Flash 1017 (batch)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 131_072
+
+[cost.text.input]
+price = 0.036
+cache = { read = 0.003 }
+
+[cost.text.output]
+price = 0.15

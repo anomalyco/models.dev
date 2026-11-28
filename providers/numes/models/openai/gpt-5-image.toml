@@ -1,0 +1,20 @@
+# Reasoning controls: always on (not declared by Numes; matches openrouter/openai/gpt-5-image, which exposes no caller control).
+# Tools: custom (freeform) tools are not supported on Numes Chat Completions (tools accepts only function and hosted tools, per https://numes.ai/docs/api-reference/parameters), so freeform is left out.
+schema = 2
+base_model = "openai/gpt-5-image"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 8.44
+cache = { read = 1.055 }
+
+[cost.text.output]
+price = 8.44

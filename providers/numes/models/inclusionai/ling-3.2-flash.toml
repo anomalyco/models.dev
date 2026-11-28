@@ -1,0 +1,20 @@
+# Reasoning controls: not declared by Numes; copied from openrouter/inclusionai/ling-3.2-flash:free (Numes forwards the OpenRouter reasoning object).
+# Toggle: reasoning.enabled = true|false
+# Capabilities the catalog doesn't state (capabilities.cache) come from inclusionai/ling-3.1-flash, this host's previous model in the family.
+schema = 2
+base_model = "inclusionai/ling-3.2-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.3165
+
+[cost.text.output]
+price = 1.055
