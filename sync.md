@@ -10,6 +10,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
 - `bun models:sync aiand` syncs only ai&.
+- `bun models:sync bf16` syncs only bf16.ai.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
@@ -359,6 +360,16 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - The richer typed endpoints provide model IDs, creation timestamps, modalities, pricing for language models, and prompt/input limits where available.
 - Existing xAI models are updated from API-authoritative fields while local metadata is preserved for fields the API does not expose, especially output token limits and some feature/capability flags.
 - New xAI API models are not created automatically (`skipCreates`); each missing ID opens a deduped GitHub issue. Alias IDs of models already cataloged under their canonical ID are skipped silently and never reported as missing.
+
+## bf16.ai Notes
+
+- bf16.ai is implemented in `packages/core/src/sync/providers/bf16.ts`.
+- Source endpoint: `https://api.bf16.ai/v1/models` (public, no authentication required).
+- Existing bf16.ai models are updated from API-authoritative `bf16.pricing_usd_per_1m` (`input`, `cached_input`, `output`), `context_window`, `max_output_tokens`, `supports_reasoning`, `supports_tools`, `supports_json_schema`, and catalog availability.
+- Smart router aliases (`bf16.family === "router"` / `bf16/auto*`) are ignored silently.
+- Listed non-router models with non-active status (e.g., `degraded`) or incomplete pricing/context metadata are skipped by `translateModel` and reported via `missingModelID`, preserving any existing local file and opening a deduped issue for manual review instead of deleting hand-authored metadata or blocking removals of dropped models.
+- Hand-authored metadata that the public endpoint does not publish (`base_model`, exact image MIME lists, per-surface reasoning effort controls, and multi-protocol `[api.*]` entries) is preserved via `factorBaseModel`.
+- New active models are not created automatically (`skipCreates`); each missing ID opens a deduped missing-model issue for manual authoring.
 
 ## Tinfoil Notes
 
