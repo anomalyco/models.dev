@@ -1,11 +1,12 @@
 # Source: https://api.orcarouter.ai/api/pricing (z-ai/glm-5.3-flash-free, is_free_tier=true, free_base_model=z-ai/glm-5.3-flash, 1M/128k)
+# Effort: reasoning_effort = none|low|high|max; live probe 2026-11-28: none = 0 reasoning tokens.
 schema = 2
 base_model = "zhipuai/glm-5.3-flash"
 family = "glm-flash-free"
 name = "GLM-5.3-Flash (free)"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "high", "max"] }
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
 structured_output = true
 
 [limit]

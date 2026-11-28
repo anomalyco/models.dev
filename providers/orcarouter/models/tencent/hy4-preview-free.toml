@@ -1,0 +1,20 @@
+# Source: https://api.orcarouter.ai/api/pricing (tencent/hy4-preview-free, is_free_tier=true,
+#   free_base_model=tencent/hy4-preview, context 1_048_576, max output 64_000, zero cost; 2026-11-28).
+# Effort: reasoning_effort = none|low|high; live probe 2026-11-28: none = 0 reasoning tokens,
+#   low = 31 and high = 94 reasoning tokens on the same prompt.
+schema = 2
+base_model = "tencent/hy4-preview"
+family = "hy-free"
+name = "Hy4 preview (free)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high"] }
+
+[limit]
+output = 64_000
+
+[cost.text.input]
+price = 0
+
+[cost.text.output]
+price = 0
