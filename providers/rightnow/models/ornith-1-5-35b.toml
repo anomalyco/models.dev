@@ -1,0 +1,33 @@
+# Source: https://www.rightnowai.co/models and GET https://api.rightnowai.co/v1/models (id ornith-1-5-35b).
+# Pricing: USD per million tokens, standing rates; cache read is the cached input price.
+# Probed on https://api.rightnowai.co/v1 on 2026-11-26 with this id: a chat completion, a tool call (tool_choice
+# auto), a strict json_schema response and a repeated ~5.6k-token prompt that reported cached tokens.
+# Reasoning is on by default and reasoning_effort none turns it off: three requests with none returned no reasoning,
+# three without it did (2026-11-26). Reasoning is returned in reasoning_content.
+# output is the max_tokens the provider feed advertises for this model.
+# Image input: an inline data URL in png, jpeg, webp or gif, each answered on 2026-11-26; bmp and tiff are refused
+# with HTTP 400 naming those four.
+schema = 2
+base_model = "deepreinforce/ornith-1.5-35b-a3b"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.4

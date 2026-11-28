@@ -1,0 +1,29 @@
+# Source: https://www.rightnowai.co/models and GET https://api.rightnowai.co/v1/models (id deepseek-v4-1-flash-1017).
+# Pricing: USD per million tokens, standing rates; cache read is the cached input price.
+# Probed on https://api.rightnowai.co/v1 on 2026-11-26 with this id: a chat completion, a tool call (tool_choice
+# auto), a strict json_schema response and a repeated ~5.6k-token prompt that reported cached tokens.
+# Reasoning is on by default (high) and reasoning_effort sets it: GET /v1/models lists none, low, high, xhigh and
+# max for this id. Each was answered with HTTP 200 on 2026-11-27, three requests each: none returned no reasoning
+# (0 reasoning tokens); low, high, xhigh and max returned it. On a harder question, one request each, max reasoned
+# longest (143 reasoning tokens, against 120 at low and 118 at high). Reasoning is returned in the reasoning field.
+# Image input: an inline data URL in png, jpeg, webp or gif, each answered on 2026-11-26; bmp and tiff are refused
+# with HTTP 400 naming those four.
+# context is this deployment's window; output is the max_tokens the provider feed advertises for this model.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.6

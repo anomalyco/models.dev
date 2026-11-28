@@ -1,0 +1,35 @@
+# Source: https://www.rightnowai.co/models and GET https://api.rightnowai.co/v1/models (id kimi-k3-1-pro).
+# Pricing: USD per million tokens, standing rates; cache read is the cached input price.
+# Probed on https://api.rightnowai.co/v1 on 2026-11-26 with this id: a chat completion, a tool call (tool_choice
+# auto), a strict json_schema response and a repeated ~5.6k-token prompt that reported cached tokens.
+# Reasoning is always on. reasoning_effort low, high and max are served, max by default (GET /v1/models), and they
+# differ reproducibly: three requests each on the same question (2026-11-26) used 25 to 33 reasoning tokens at low,
+# 37 to 52 at high and 78 to 129 at max. Reasoning is returned in the reasoning field.
+# Image input: an inline data URL in png, jpeg, webp or gif, each answered on 2026-11-26; bmp and tiff are refused
+# with HTTP 400 naming those four.
+# Every other input is refused by the API before the model (HTTP 400 hosted_parameter_not_supported, 2026-11-27):
+# a video_url part and a file part (application/pdf), the message naming the part to remove, and an image/heic
+# data URL, the message naming png, jpeg, webp and gif. The provider's docs list the same four image types
+# (https://www.rightnowai.co/docs/open-models/messages).
+# output is the max_tokens the provider feed advertises for this model.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 32_768
+
+[cost.text.input]
+price = 1.6
+cache = { read = 0.16 }
+
+[cost.text.output]
+price = 8

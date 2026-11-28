@@ -1,0 +1,34 @@
+# Source: https://www.rightnowai.co/models and GET https://api.rightnowai.co/v1/models (id glm-5-3-flash).
+# Pricing: USD per million tokens, standing rates; cache read is the cached input price.
+# Probed on https://api.rightnowai.co/v1 on 2026-11-26 with this id: a chat completion, a tool call (tool_choice
+# auto), a strict json_schema response and a repeated ~5.6k-token prompt that reported cached tokens.
+# Reasoning cannot be disabled; the served vocabulary is low, high and max, max by default (GET /v1/models,
+# reasoning_efforts). Reasoning is returned in the reasoning field.
+# Image input: an inline data URL in png, jpeg, webp or gif, each answered on 2026-11-26; bmp and tiff are refused
+# with HTTP 400 naming those four.
+# Every other input is refused by the API before the model (HTTP 400 hosted_parameter_not_supported, 2026-11-27):
+# a video_url part and a file part (application/pdf), the message naming the part to remove, and an image/heic
+# data URL, the message naming png, jpeg, webp and gif. The provider's docs list the same four image types
+# (https://www.rightnowai.co/docs/open-models/messages).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.45
