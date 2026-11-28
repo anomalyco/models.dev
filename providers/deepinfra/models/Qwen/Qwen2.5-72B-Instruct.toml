@@ -1,0 +1,19 @@
+schema = 2
+base_model = "alibaba/qwen2.5-72b-instruct"
+
+[capabilities]
+structured_output = true
+service_tier = ["flex"]
+
+[limit]
+context = 32_768
+
+[cost.text.input]
+price = 0.36
+
+[cost.text.output]
+price = 0.4
+
+[[cost.multipliers]]
+when = { service_tier = { equals = "flex" } }
+factor = 0.8
