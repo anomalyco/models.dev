@@ -145,9 +145,12 @@ function installDirectory(root: HTMLElement) {
 
     if (synced) {
       const when = catalog.syncedAt?.slice(0, 10);
+      const iranrouter = catalog.iranrouter?.count
+        ? ` and ${formatNumber(catalog.iranrouter.count)} from the IranRouter marketplace`
+        : "";
       synced.textContent = when
-        ? `Latest versions from the official MCP registry, synced ${when}.`
-        : "Latest versions from the official MCP registry.";
+        ? `Latest versions from the official MCP registry${iranrouter}, synced ${when}.`
+        : `Latest versions from the official MCP registry${iranrouter}.`;
     }
 
     const query = normalize(filter.value);
@@ -250,9 +253,17 @@ function serverRow(server: McpServerRecord) {
   const name = document.createElement("th");
   name.scope = "row";
   const link = document.createElement("a");
-  link.className = "primary-link";
+  link.className = "primary-link provider-link";
   link.href = mcpServerHref(server.name);
-  link.textContent = mcpDisplayName(server);
+  const icon = safeHttpUrl(server.icon);
+  if (icon) {
+    const image = document.createElement("img");
+    image.className = "mcp-icon";
+    image.alt = "";
+    image.src = icon;
+    link.append(image);
+  }
+  link.append(mcpDisplayName(server));
   name.append(link);
   const id = document.createElement("span");
   id.className = "subtle mono";
@@ -288,9 +299,20 @@ function detailView(server: McpServerRecord) {
   crumbs.append(back);
   header.append(crumbs);
 
+  const titleRow = document.createElement("div");
+  titleRow.className = "provider-link";
+  const icon = safeHttpUrl(server.icon);
+  if (icon) {
+    const image = document.createElement("img");
+    image.className = "mcp-icon";
+    image.alt = "";
+    image.src = icon;
+    titleRow.append(image);
+  }
   const title = document.createElement("h2");
   title.textContent = mcpDisplayName(server);
-  header.append(title);
+  titleRow.append(title);
+  header.append(titleRow);
 
   if (server.description) {
     const description = document.createElement("p");
@@ -319,8 +341,12 @@ function detailView(server: McpServerRecord) {
   appendFact(facts, "Updated", server.updatedAt?.slice(0, 10) || "—");
   appendLinkFact(facts, "Website", safeHttpUrl(server.website), "Website");
   appendLinkFact(facts, "Repository", safeHttpUrl(server.repository), "Repository");
-  const registryUrl = `https://registry.modelcontextprotocol.io/v0.1/servers/${encodeURIComponent(server.name)}/versions/${encodeURIComponent(server.version || "latest")}`;
-  appendLinkFact(facts, "Registry", registryUrl, "Registry entry");
+  if (server.listing) {
+    appendLinkFact(facts, "Marketplace", safeHttpUrl(server.listing), "Marketplace entry");
+  } else {
+    const registryUrl = `https://registry.modelcontextprotocol.io/v0.1/servers/${encodeURIComponent(server.name)}/versions/${encodeURIComponent(server.version || "latest")}`;
+    appendLinkFact(facts, "Registry", registryUrl, "Registry entry");
+  }
   fragment.append(facts);
 
   const packages = server.packages ?? [];
@@ -337,6 +363,18 @@ function detailView(server: McpServerRecord) {
           item.runtimeHint || "—",
           item.transport || "—",
         ]),
+      ),
+    );
+  }
+
+  const tools = server.tools ?? [];
+  if (tools.length > 0) {
+    fragment.append(
+      tableSection(
+        "Tools",
+        tools.length,
+        ["Name", "Title", "Description"],
+        tools.map((tool) => [tool.name, tool.title || "—", tool.description || "—"]),
       ),
     );
   }
@@ -400,10 +438,14 @@ function tableSection(
         anchor.rel = "noopener noreferrer";
         anchor.textContent = value;
         cell.append(anchor);
-      } else if (index === 1 && title === "Packages") {
+      } else if (
+        (index === 1 && title === "Packages") ||
+        (index === 0 && title === "Tools")
+      ) {
         cell.className = "mono";
         cell.textContent = value;
       } else {
+        if (title === "Tools" && index === 2) cell.className = "mcp-description";
         cell.textContent = value;
       }
       row.append(cell);
@@ -543,6 +585,8 @@ function scoreServer(server: McpServerRecord, terms: string[]) {
     server.title ?? "",
     server.name,
     server.description,
+    ...(server.aliases ?? []),
+    ...(server.tools ?? []).flatMap((tool) => [tool.name, tool.title ?? "", tool.description ?? ""]),
     ...(server.packages ?? []).map((item) => item.identifier),
   ];
   let score = 0;
@@ -573,7 +617,7 @@ function scoreField(field: string, term: string) {
 }
 
 function normalize(value: string) {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  return value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 }
 
 function formatNumber(value: number) {

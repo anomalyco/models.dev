@@ -11,6 +11,12 @@ export interface McpRemote {
   url: string;
 }
 
+export interface McpTool {
+  name: string;
+  title?: string;
+  description?: string;
+}
+
 export interface McpServerRecord {
   name: string;
   title?: string;
@@ -23,14 +29,23 @@ export interface McpServerRecord {
   publishedAt?: string;
   updatedAt?: string;
   icon?: string;
+  origin?: string;
+  listing?: string;
+  aliases?: string[];
   packages?: McpPackage[];
   remotes?: McpRemote[];
+  tools?: McpTool[];
 }
 
 export interface McpCatalog {
   source: string;
   syncedAt: string;
   count: number;
+  iranrouter?: {
+    source: string;
+    mcpUrl: string;
+    count: number;
+  };
   servers: McpServerRecord[];
 }
 

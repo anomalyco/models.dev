@@ -1485,14 +1485,14 @@ function HelpDialog() {
         <p>
           <a href="/">Models.dev</a> is an open-source database of AI model
           specifications, pricing, and features, plus MCP servers from the
-          official registry.
+          official registry and the IranRouter marketplace.
         </p>
         <p>
           The homepage starts with provider-agnostic model metadata. Model pages
           list the providers serving that model; provider pages list every model
           available from that provider; lab pages group canonical models by
           author. The MCP section lists servers from the official Model Context
-          Protocol registry.
+          Protocol registry and the IranRouter marketplace.
         </p>
         <h2>API</h2>
         <p>

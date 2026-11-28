@@ -70,7 +70,7 @@ curl https://models.dev/catalog.json
 
 ### MCP servers
 
-MCP servers are a separate snapshot, not part of `api.json`, `models.json`, or `catalog.json`. The [MCP page](https://models.dev/mcp) lists the latest version of every server in the [official MCP registry](https://registry.modelcontextprotocol.io). The same snapshot is served as JSON:
+MCP servers are a separate snapshot, not part of `api.json`, `models.json`, or `catalog.json`. The [MCP page](https://models.dev/mcp) lists the latest version of every server in the [official MCP registry](https://registry.modelcontextprotocol.io), plus every service in the [IranRouter marketplace](https://iranrouter.net/marketplace). IranRouter services share one hub, `https://iranrouter.net/mcp`, and need an `ir-…` API key. The same snapshot is served as JSON:
 
 ```bash
 curl https://models.dev/mcp.json
@@ -82,7 +82,7 @@ The file is `mcp/servers.json`. Each server keeps its registry name (`namespace/
 bun run mcp:sync
 ```
 
-The sync reads `https://registry.modelcontextprotocol.io/v0.1/servers?version=latest`. If that host is unreachable, set `MCP_REGISTRY_PROXY` to a prefix such as `https://r.jina.ai/`.
+The sync reads `https://registry.modelcontextprotocol.io/v0.1/servers?version=latest` and `https://iranrouter.net/api/v1/mcp/catalog`. If the registry host is unreachable, set `MCP_REGISTRY_PROXY` to a prefix such as `https://r.jina.ai/`. `MCP_SYNC_ONLY=iranrouter` refreshes only the IranRouter records in an existing snapshot.
 
 ### Logos
 
