@@ -1,0 +1,33 @@
+# Catalog: GET https://api.naga.ac/v1/models (2026-11-23), id deepseek/deepseek-v4.1-flash: prices, context_window, input_modalities.
+# Reasoning controls: from providers/openrouter (providers/deepseek has no V4.1 Flash entry); NagaAI sends the nearest level the model has (https://docs.naga.ac/guides/reasoning).
+# Prices are the catalog's `price` (the route NagaAI picks by default); `max_price` caps a request served by another route:
+#   input_token 0.0975, cached_input_token 0.003, output_token 0.3825 USD per 1M.
+# Catalog `precision`: fp8.
+# NagaAI serves the 2026-09-10 release under this id (display name "DeepSeek V4.1 Flash 0910"); the 1017 release is a separate lab file.
+# Cache: billed at cached_input_token when the serving provider caches the prefix by itself (https://docs.naga.ac/guides/prompt-caching).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.056
+cache = { read = 0.00168 }
+
+[cost.text.output]
+price = 0.168

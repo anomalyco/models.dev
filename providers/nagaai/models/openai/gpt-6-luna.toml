@@ -1,0 +1,29 @@
+# Catalog: GET https://api.naga.ac/v1/models (2026-11-23), id openai/gpt-6-luna: prices, context_window, input_modalities.
+# Reasoning controls: from providers/openai; NagaAI sends the nearest level the model has (https://docs.naga.ac/guides/reasoning).
+# Prices are the catalog's `price` (the route NagaAI picks by default); `max_price` caps a request served by another route:
+#   input_token 0.05, cached_input_token 0.005, output_token 0.25 USD per 1M.
+# tools.freeform left out: NagaAI does not document custom (freeform) tools.
+# Cache: automatic, and cache_control becomes OpenAI's own breakpoint on GPT-5.6 and later (https://docs.naga.ac/guides/prompt-caching).
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = true, explicit = true }
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.025
+cache = { read = 0.0025, write = 0.03125 }
+
+[cost.text.output]
+price = 0.125

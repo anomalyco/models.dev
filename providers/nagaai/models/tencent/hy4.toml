@@ -1,0 +1,29 @@
+# Catalog: GET https://api.naga.ac/v1/models (2026-11-23), id tencent/hy4: prices, context_window, input_modalities.
+# Reasoning controls: from providers/tencent-tokenhub; NagaAI sends the nearest level the model has (https://docs.naga.ac/guides/reasoning).
+# Prices are the catalog's `price` (the route NagaAI picks by default); `max_price` caps a request served by another route:
+#   input_token 0.417, cached_input_token 0.021, output_token 1.2505 USD per 1M.
+# Catalog `precision`: nvfp4.
+# structured_output left unset, as in the lab-side entry (providers/tencent-tokenhub).
+# Cache: billed at cached_input_token when the serving provider caches the prefix by itself (https://docs.naga.ac/guides/prompt-caching).
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+cache = { implicit = true }
+
+[api.responses]
+
+[api.chat-completions]
+sdk = { aisdk = "@ai-sdk/openai-compatible", opencodeai = "@opencode/ai/providers/openai-compatible" }
+compatibility = { reasoning_field = "reasoning_details" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.2085
+cache = { read = 0.0105 }
+
+[cost.text.output]
+price = 0.62525
