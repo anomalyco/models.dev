@@ -1,0 +1,56 @@
+# Sources checked 2026-11-23: https://openany.si/models/qwen3.6-plus/
+# Embedded catalog snapshot priceId 96dfe0a6-65c6-4c6a-821d-3525a7bb03fa,
+# routeId 1a2bec9e-cfaa-44d6-aa18-2fc50bf3da97, provider Alibaba, routes=1,
+# active and isDefaultRoute. upstreamModel, request model and historical
+# response model are all qwen3.6-plus. Family manufacturer is Alibaba Cloud.
+# Host window contextWindowTokens=1000000 (same as the lab, so inherited) and
+# maxOutputTokens=64000 (overrides the lab's 65,536). Host modelReleaseDate
+# 2026-03-31 is not substituted for the lab release_date.
+# Toggle: request body /enable_thinking = true|false
+# Budget: request body /thinking_budget (integer). No min, max or default is
+# published: the host schema types the field and Alibaba's chat API describes
+# it as the thinking-process token maximum for the Qwen3.6 series, but this
+# host page does not state bounds. No reasoning_effort control is in the host
+# schema, so no effort list is copied from the lab API.
+# Historical response on that page documents choices[].message.reasoning_content.
+# That sample is not a new live call.
+# Prices are the route's customer prompt/completion micro-USD amounts divided
+# by 1,000,000. Unit: https://openany.si/guides/qwen-overseas-api-pricing-openany/
+# Bands: <=256K prompt/completion 224138/1344828; >256K to 1M 896552/5379310.
+# The page renders the base input as $0.224/1M. Partner and actual* fields are
+# not customer rates. Cache amounts are present but cache mode, syntax, TTL and
+# minimum are not, so no cache price is written. A same-day MCP get_api read
+# still quotes 0.232/1.393 and 0.929/5.571 USD per 1M without this routeId;
+# it is not blended in. These are catalog quotes, not a measured bill.
+# Input is narrowed to text and image_url. The schema requires a full modalities
+# table, so output text is restated; video and image MIME types are not inherited.
+# No live model call was made.
+schema = 2
+base_model = "alibaba/qwen3.6-plus"
+
+[modalities]
+input = ["text", "image"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+
+[limit]
+output = 64_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.224138
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 256_000 } }
+price = 0.896552
+
+[cost.text.output]
+price = 1.344828
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 256_000 } }
+price = 5.379310

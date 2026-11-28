@@ -1,0 +1,13 @@
+# OpenAny chat gateway: https://openany.si/AGENT.md
+# Model route and request URL: https://openany.si/models/qwen3.6-plus/
+# (POST https://api.openany.si/v1/chat/completions, Authorization: Bearer $OPENANY_API_KEY).
+# Logo geometry from https://blog.openany.si/logo.svg; fixed width/height removed and
+# fill changed from #111 to currentColor. No host-specific @opencode/ai package is
+# documented here, so the generic OpenAI-compatible entry point is used. That names
+# the adapter; it is not a runtime certification.
+name = "OpenAny"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["OPENANY_API_KEY"]
+api = "https://api.openany.si/v1"
+doc = "https://openany.si/AGENT.md"
