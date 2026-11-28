@@ -1,0 +1,20 @@
+# Source: https://septorlabs.com/models/grok-4.3
+# Effort: reasoning_effort = none|low|medium|high (https://septorlabs.com/docs/introduction)
+schema = 2
+base_model = "xai/grok-4.3"
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 900000
+
+[cost.text.input]
+price = 1.25
+cache = { read = 0.26 }
+
+[cost.text.output]
+price = 2.5
