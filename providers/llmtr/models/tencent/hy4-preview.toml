@@ -3,6 +3,7 @@
 # Toggle: reasoning_effort = none turns reasoning off; omit it to keep it on.
 schema = 2
 base_model = "tencent/hy4-preview"
+base_model_omit = ["limit.input"]
 
 [capabilities]
 reasoning = { supported = true, toggle = true }
