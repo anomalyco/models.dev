@@ -1,0 +1,19 @@
+# Radium: managed inference platform serving its own Hal, Clarke and Tycho model tiers.
+# OpenAI-compatible Chat Completions at POST https://api.radium.cloud/v1/chat/completions
+# and Anthropic-compatible Messages at POST https://api.radium.cloud/v1/messages (streaming,
+# tools, JSON mode and JSON schema, image input, cache_control). GET /v1/models lists the ids.
+# The Responses API, embeddings, batch and file upload are not supported.
+# Auth: Authorization: Bearer $RADIUM_API_KEY (the Anthropic format also takes x-api-key).
+# Sources (accessed 2026-11-16):
+# - https://docs.radium.cloud/llms.txt
+# - https://docs.radium.cloud/models/overview
+# - https://docs.radium.cloud/core-concepts/compatibility-and-limits
+# - https://docs.radium.cloud/core-concepts/chat-completions
+# - https://docs.radium.cloud/core-concepts/messages
+# - https://docs.radium.cloud/guides/provenance
+name = "Radium"
+env = ["RADIUM_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://api.radium.cloud/v1"
+doc = "https://docs.radium.cloud"
