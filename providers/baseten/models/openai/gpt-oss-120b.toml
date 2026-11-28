@@ -1,3 +1,5 @@
+# Status: deprecated. Baseten shuts openai/gpt-oss-120b down on 2026-12-18 at 5 PM PT; requests return an error after that.
+# Recommended replacement: Nemotron 3.5 Super VL (nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B). Source: https://docs.baseten.co/inference/model-apis/deprecation (accessed 2026-11-28).
 # Baseten now documents top-level reasoning_effort = none | minimal | low |
 # medium (default) | high | xhigh | max for GPT OSS 120B; reasoning is
 # otherwise enabled by default. The guide's Effective depth column runs every
@@ -13,6 +15,7 @@ schema = 2
 base_model = "openai/gpt-oss-120b"
 name = "OpenAI GPT 120B"
 description = "Open-weight GPT model for self-hosted reasoning and instruction-following workloads"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true }

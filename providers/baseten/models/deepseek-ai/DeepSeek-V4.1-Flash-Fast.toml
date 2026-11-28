@@ -1,3 +1,5 @@
+# Status: deprecated. Baseten shuts deepseek-ai/DeepSeek-V4.1-Flash-Fast down on 2026-12-18 at 5 PM PT; requests return an error after that.
+# Recommended replacement: DeepSeek V4.1 Flash 1017 Fast (deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast). Source: https://docs.baseten.co/inference/model-apis/deprecation (accessed 2026-11-28).
 # Baseten's Fast variants use the same weights as their base models. Baseten
 # accepts reasoning_effort = none | low | high (default) | max for DeepSeek V4.1
 # Flash Fast, but runs low at the default depth, so the distinct levels are
@@ -16,6 +18,7 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash"
 name = "DeepSeek V4.1 Flash Fast"
 description = "Fast DeepSeek model for efficient chat, coding help, and agent loops"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true }

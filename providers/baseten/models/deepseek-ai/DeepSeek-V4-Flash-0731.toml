@@ -1,3 +1,5 @@
+# Status: deprecated. Baseten shuts deepseek-ai/DeepSeek-V4-Flash-0731 down on 2026-12-18 at 5 PM PT; requests return an error after that.
+# Recommended replacement: DeepSeek V4.1 Flash 1017 (deepseek-ai/DeepSeek-V4.1-Flash-1017). Source: https://docs.baseten.co/inference/model-apis/deprecation (accessed 2026-11-28).
 # Baseten accepts top-level reasoning_effort = none | minimal | low | medium |
 # high (default) | xhigh | max for DeepSeek V4 Flash 0731, but runs minimal at
 # low, medium at high and xhigh at max, so the distinct levels are
@@ -10,6 +12,7 @@
 #   adding a tool between turns drops the cached prefix [cached/prompt tokens, control -> test: 15104/15353 -> 0/15404; 15104/15353 -> 0/15404]
 schema = 2
 base_model = "deepseek/deepseek-v4-flash-0731"
+status = "deprecated"
 
 [capabilities]
 tools = { supported = true }
