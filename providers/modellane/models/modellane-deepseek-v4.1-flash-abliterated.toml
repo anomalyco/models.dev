@@ -1,0 +1,41 @@
+# Sources (accessed 2026-11-28):
+# - https://usemodellane.com/v1/public/models for this ID: contextWindowTokens 1048576, maxOutputTokens 1000000,
+#   inputModalities text|image, features streaming, tools, json_mode, vision, reasoning;
+#   USD per 1M tokens input 0.24 / cached input 0.038 / output 0.9 (same table on https://usemodellane.com/docs/models-pricing).
+# - https://usemodellane.com/docs/api/chat-completions: reasoning arrives in reasoning_content; response_format takes text|json_object only;
+#   stream_options.include_usage adds a final usage chunk; unlisted fields (top_k included) are accepted and ignored.
+# - https://usemodellane.com/docs/guides/context-caching: caching is automatic, no parameter.
+# - https://usemodellane.com/docs/guides/vision: PNG, JPEG, WebP and GIF as base64 data URLs; no video or file parts.
+# - Same key and models on https://usemodellane.com/docs/guides/responses-api and https://usemodellane.com/docs/guides/anthropic-api.
+# Reasoning: always on, no caller control. reasoning_effort is not a Chat Completions field, reasoning.effort has no effect on
+#   Responses, and Messages thinking only chooses whether reasoning is returned (https://usemodellane.com/docs/integrations/codex).
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash"
+name = "DeepSeek V4.1 Flash Abliterated"
+description = "Abliterated variant of DeepSeek V4.1 Flash"
+
+[capabilities]
+reasoning = { supported = true }
+top_k = false
+stream_usage = true
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 1_000_000
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+
+[api.messages]
+sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }
+
+[cost.text.input]
+price = 0.24
+cache = { read = 0.038 }
+
+[cost.text.output]
+price = 0.9
