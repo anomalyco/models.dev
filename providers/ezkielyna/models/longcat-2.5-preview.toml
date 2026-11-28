@@ -1,0 +1,22 @@
+# Ezkielyna serves meituan/longcat-2.5-preview under the id `longcat-2.5-preview` (Standard key group, 1x).
+# Prices: public price list GET https://api.ezkielyna.store/api/pricing (read 2026-11-17 11:16 UTC),
+#   USD/MTok = model_ratio x 2 x group_ratio; output = input x completion_ratio; cache read = input x cache_ratio.
+#   Same prices in IDR: https://ezkielyna.store/harga-api-ai
+# Live status and success rate: https://api.ezkielyna.store/status
+# Reasoning controls follow the lab entry (providers/longcat/models/LongCat-2.5-Preview.toml) and the
+#   opencode relay peer, as AGENTS.md requires for relays; the gateway passes the request body through
+#   to an upstream serving the same model.
+# Toggle: thinking.type = enabled|disabled (forwarded unchanged)
+schema = 2
+base_model = "meituan/longcat-2.5-preview"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.9005
+cache = { read = 0.03801 }
+
+[cost.text.output]
+price = 7.47524
