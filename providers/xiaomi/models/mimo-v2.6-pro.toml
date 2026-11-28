@@ -1,5 +1,10 @@
 # Toggle: thinking.type = enabled|disabled (default enabled; Responses reasoning.effort only maps none -> off,
-#   every other level -> on, so no graded effort is authored)
+#   every other level -> on).
+# reasoning_effort (Chat Completions, top level — not in the published API reference but validated by the wire):
+#   exactly 'none'/'low'/'medium'/'high'; anything else 400s "Param Incorrect": "reasoning_effort must be one of
+#   'none', 'low', 'medium' or 'high'." Live 2026-11-16 (api.xiaomimimo.com): the enum error reproduces on
+#   mimo-v2.6-flash, mimo-v2.6-pro and mimo-v2.6-pro-ultraspeed; 'none' answers with empty reasoning_content
+#   (thinking off), 'low' with thinking on.
 # Sources (Xiaomi MiMo docs, accessed 2026-10-21):
 # - Overseas prices, USD per 1M tokens (https://mimo.mi.com/static/docs/price/pay-as-you-go.md). Cache writes are free for a limited
 #   time (no write surcharge). The Batch API (half price, separate base URL) is not modeled.
@@ -28,7 +33,7 @@ description = "MiMo Pro model for multimodal coding agents and long-context auto
 
 [capabilities]
 tools = { supported = true, strict = true, choice = ["auto"] }
-reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true, effort = ["none", "low", "medium", "high"] }
 structured_output = true
 top_k = false
 stream_usage = true
