@@ -1,0 +1,29 @@
+# Verified live against https://api.tokenlab.amd.com/v1:
+# - GET /v1/models lists DeepSeek-V4-Flash with context_length 1048576, input_modalities text, and
+#   supported_parameters temperature, max_tokens, top_p, stream, response_format, tools, tool_choice,
+#   reasoning_effort (no top_k).
+# - POST /v1/chat/completions validates reasoning_effort as none|minimal|low|medium|high|xhigh|max
+#   (other values return 400); a strict json_schema response_format returned schema-valid JSON;
+#   a request with tools/tool_choice returned finish_reason "tool_calls".
+# - Pricing: no per-token charge. Each AMD AI Developer Program key comes with 10 usage points, and
+#   requests deduct points based on the model and how much it is used (details:
+#   https://notebooks.amd.com/tokenlab), so every price is 0.
+# Reasoning controls follow the same models on providers/amd (AMD Token Factory), whose API applies
+# the same reasoning_effort validation.
+schema = 2
+base_model = "deepseek/deepseek-v4-flash-0731"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+top_k = false
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0

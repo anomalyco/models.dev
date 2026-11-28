@@ -1,0 +1,27 @@
+# Verified live against https://api.tokenlab.amd.com/v1:
+# - GET /v1/models lists Gemma-4-31B-IT with context_length 262144, input_modalities text, image, and
+#   supported_parameters temperature, max_tokens, top_p, stream, response_format, tools, tool_choice,
+#   reasoning_effort (no top_k).
+# - POST /v1/chat/completions validates reasoning_effort as none|minimal|low|medium|high|xhigh|max
+#   (other values return 400); a strict json_schema response_format returned schema-valid JSON;
+#   a request with tools/tool_choice returned finish_reason "tool_calls".
+# - An image_url (PNG) message was answered correctly ("Red" for a solid red image).
+# - Pricing: no per-token charge. Each AMD AI Developer Program key comes with 10 usage points, and
+#   requests deduct points based on the model and how much it is used (details:
+#   https://notebooks.amd.com/tokenlab), so every price is 0.
+# Reasoning controls follow the same models on providers/amd (AMD Token Factory), whose API applies
+# the same reasoning_effort validation.
+schema = 2
+base_model = "google/gemma-4-31b-it"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+top_k = false
+
+[cost.text.input]
+price = 0
+cache = { read = 0 }
+
+[cost.text.output]
+price = 0
