@@ -133,6 +133,9 @@ export const ModelFamilyValues = [
   "qwen-livetranslate",
   "qwen-tts",
 
+  // Bhajanlal
+  "bhajanlal",
+
   // DeepReinforce
   "ornith",
 
