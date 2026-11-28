@@ -1,0 +1,14 @@
+schema = 2
+base_model = "anthropic/claude-opus-4-8"
+
+[capabilities]
+reasoning = { supported = true }
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+
+[api.chat-completions]
+
+[cost.text.input]
+price = 3.5
+
+[cost.text.output]
+price = 17.5
