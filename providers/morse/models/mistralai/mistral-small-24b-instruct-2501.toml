@@ -1,0 +1,15 @@
+# Sources: Morse model catalog (https://api.trymorse.ai/v1/catalog) and https://trymorse.ai/inference/models, accessed 2026-11-23.
+schema = 2
+base_model = "mistral/mistral-small-24b-instruct-2501"
+
+[capabilities]
+top_k = false
+
+[limit]
+output = 8_192
+
+[cost.text.input]
+price = 0.1
+
+[cost.text.output]
+price = 0.3

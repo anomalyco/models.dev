@@ -1,0 +1,19 @@
+# Sources: Morse model catalog (https://api.trymorse.ai/v1/catalog) and https://trymorse.ai/inference/models, accessed 2026-11-23.
+# Input and reasoning: text only, no reasoning on Morse's endpoints (catalog: no image input, no reasoning efforts), though the lab model accepts images and reasons.
+schema = 2
+base_model = "alibaba/qwen3.6-35b-a3b"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = false }
+top_k = false
+
+[cost.text.input]
+price = 0.375
+
+[cost.text.output]
+price = 2.25

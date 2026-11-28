@@ -1,0 +1,13 @@
+# Sources: Morse model catalog (https://api.trymorse.ai/v1/catalog) and https://trymorse.ai/inference/models, accessed 2026-11-23.
+schema = 2
+base_model = "meta/llama-3.3-70b-instruct"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+top_k = false
+
+[cost.text.input]
+price = 0.125
+
+[cost.text.output]
+price = 0.4

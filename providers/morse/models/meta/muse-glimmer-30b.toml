@@ -1,0 +1,22 @@
+# Sources: Morse model catalog (https://api.trymorse.ai/v1/catalog) and https://trymorse.ai/inference/models, accessed 2026-11-23.
+schema = 2
+base_model = "meta/muse-glimmer-30b"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+top_k = false
+cache = { implicit = true }
+
+[limit]
+output = 16_384
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.375
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 1.5

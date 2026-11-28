@@ -1,0 +1,27 @@
+# Sources: Morse model catalog (https://api.trymorse.ai/v1/catalog) and https://trymorse.ai/inference/models, accessed 2026-11-23.
+schema = 2
+base_model = "thinkingmachines/inkling-small"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true, effort = ["none", "minimal", "low", "medium", "high", "max"] }
+top_k = false
+cache = { implicit = true }
+
+[limit]
+context = 524_288
+output = 131_072
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.5625
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 1.5

@@ -1,0 +1,15 @@
+# Sources: Morse model catalog (https://api.trymorse.ai/v1/catalog) and https://trymorse.ai/inference/models, accessed 2026-11-23.
+schema = 2
+base_model = "moonshotai/kimi-k2"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+top_k = false
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.57 }
+
+[cost.text.output]
+price = 2.5

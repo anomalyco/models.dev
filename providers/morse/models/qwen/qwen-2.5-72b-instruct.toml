@@ -1,0 +1,16 @@
+# Sources: Morse model catalog (https://api.trymorse.ai/v1/catalog) and https://trymorse.ai/inference/models, accessed 2026-11-23.
+schema = 2
+base_model = "alibaba/qwen2.5-72b-instruct"
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+top_k = false
+
+[limit]
+context = 32_768
+
+[cost.text.input]
+price = 0.45
+
+[cost.text.output]
+price = 0.5

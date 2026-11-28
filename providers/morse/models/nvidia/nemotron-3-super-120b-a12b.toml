@@ -1,0 +1,20 @@
+# Sources: Morse model catalog (https://api.trymorse.ai/v1/catalog) and https://trymorse.ai/inference/models, accessed 2026-11-23.
+schema = 2
+base_model = "nvidia/nemotron-3-super-120b-a12b"
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = true, effort = ["none", "low", "medium"] }
+top_k = false
+
+[limit]
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.0938
+
+[cost.text.output]
+price = 0.5

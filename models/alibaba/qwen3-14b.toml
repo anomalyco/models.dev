@@ -1,0 +1,28 @@
+# Sources: https://huggingface.co/Qwen/Qwen3-14B (context 32,768 native, 131,072 with YaRN). Output 16,384 is the Qwen3 family value used by the sibling lab files (qwen3-32b, qwen3-30b-a3b, qwen3-235b-a22b).
+schema = 2
+name = "Qwen3 14B"
+description = "Dense open Qwen model for self-hosted chat, reasoning, and tool use"
+family = "qwen"
+open_weights = true
+knowledge = "2025-04"
+release_date = "2025-04-28"
+license = "Apache 2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 131_072
+output = 16_384
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-14B"
