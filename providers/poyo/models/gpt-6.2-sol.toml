@@ -1,0 +1,16 @@
+# Sources:
+# - https://poyo.ai/models (pricing: PoYo bills credits at $0.005 each; per-1M-token prices converted to USD, accessed 2026-11-24)
+# - PoYo GET https://api.poyo.ai/v1/models lists "gpt-6.2-sol" (accessed 2026-11-24)
+# - Reasoning: PoYo forwards reasoning_effort on /v1/chat/completions to the upstream API (converted for Anthropic models); effort levels follow the first-party API
+schema = 2
+base_model = "openai/gpt-6.2-sol"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1.6
+cache = { read = 0.08, write = 2 }
+
+[cost.text.output]
+price = 8
