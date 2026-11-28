@@ -1,0 +1,32 @@
+# Model card (https://huggingface.co/microsoft/phi-4, accessed 2026-11-28): 14B dense decoder-only, text in and
+#   text out, "Context length: 16K tokens" (config.json max_position_embeddings 16,384), "cutoff dates of June 2024
+#   and earlier for publicly available data", "Release date: December 12, 2024", MIT. The card documents no function
+#   calling, so tools = false. No separate output cap is published, so output = context.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Phi-4"
+description = "Compact Microsoft model trained on synthetic data for reasoning, math, and coding in English"
+family = "phi"
+open_weights = true
+knowledge = "2024-06"
+release_date = "2024-12-12"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 16_384
+output = 16_384
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/microsoft/phi-4"

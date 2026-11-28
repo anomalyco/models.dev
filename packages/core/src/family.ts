@@ -417,6 +417,7 @@ export const ModelFamilyValues = [
   "seedance-mini",
   "seedance-flash",
   "seed-oss",
+  "ui-tars",
   "seed-pro",
 
   // Ray
@@ -513,6 +514,7 @@ export const ModelFamilyValues = [
 
   // TNG Tech
   "tngtech",
+  "chimera",
 
   // TopazLabs
   "topazlabs",

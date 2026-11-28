@@ -1,0 +1,31 @@
+# Model card (https://huggingface.co/tngtech/DeepSeek-TNG-R1T2-Chimera, accessed 2026-11-28): Assembly-of-Experts merge
+#   of DeepSeek R1-0528, R1 and V3-0324 (DeepSeek V3 architecture), reasoning in a <think> block, "Function calling is
+#   supported" (updated chat template since 2025-08-01), "Release Date: 2025-07-02", MIT. config.json:
+#   max_position_embeddings 163,840. No separate output cap is published, so output = context.
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "DeepSeek R1T2 Chimera"
+description = "Open TNG merge of DeepSeek R1-0528, R1 and V3-0324 that reasons with fewer output tokens"
+family = "chimera"
+open_weights = true
+release_date = "2025-07-02"
+license = "MIT"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 163_840
+output = 163_840
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/tngtech/DeepSeek-TNG-R1T2-Chimera"

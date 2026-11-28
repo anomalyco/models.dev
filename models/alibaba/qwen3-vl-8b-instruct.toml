@@ -1,0 +1,35 @@
+# Model card (https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct, accessed 2026-11-28): dense vision-language
+#   Instruct edition (Thinking is a separate checkpoint), image and video input, visual agent that "invokes tools",
+#   "Native 256K context, expandable to 1M"; Apache-2.0. Output: the card's evaluation settings use out_seq_length
+#   32,768 for text tasks (16,384 for its VL benchmarks); generation_config.json sets no length cap. 32,768 matches
+#   qwen3-vl-30b-a3b-instruct.
+# Release: https://github.com/QwenLM/Qwen3-VL (News: "2025.10.15: We have released the Qwen3-VL-4B ... and Qwen3-VL-8B").
+# Input MIME types: as qwen3-vl-30b-a3b-instruct, from https://www.alibabacloud.com/help/en/model-studio/vision
+#   (Image limits, Video limits; video lists extensions, registered MIME types used).
+# Sampling: open weights, so temperature/top_p/top_k are runtime features of the host.
+schema = 2
+name = "Qwen3 VL 8B Instruct"
+description = "Compact open vision-language model for image and video understanding, documents, and visual agents"
+family = "qwen-vl"
+open_weights = true
+release_date = "2025-10-15"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "video/mp4", "video/x-msvideo", "video/x-matroska", "video/quicktime", "video/x-flv", "video/x-ms-wmv"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 262_144
+output = 32_768
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct"
