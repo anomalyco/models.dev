@@ -1,0 +1,11 @@
+# API base, endpoints, authentication and accepted fields: https://commentllm.com/docs (accessed 2026-11-26)
+# OpenAI-compatible Chat Completions (default) and Responses share https://api.commentllm.com/v1.
+# Anthropic Messages is served at https://api.commentllm.com/v1/messages (Anthropic SDK base URL https://api.commentllm.com).
+# Authentication: Authorization: Bearer cllm_... or x-api-key.
+# Logo: the CommentLLM mark from https://commentllm.com/favicon.svg, drawn with currentColor.
+name = "CommentLLM"
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+env = ["COMMENTLLM_API_KEY"]
+api = "https://api.commentllm.com/v1"
+doc = "https://commentllm.com/docs"
