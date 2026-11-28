@@ -1,0 +1,57 @@
+# TokenSail entry for zhipuai/glm-5.2.
+# Reasoning controls - live-probed on api.tokensail.ai, 2026-11-17:
+#   toggle - declared. `reasoning_effort = "none"` returns no reasoning_content and
+#            reasoning_tokens 0; every other level turns thinking on. The route is declared
+#            `reasoning.mode = switchable` on every vendor path that carries it (glm,
+#            dashscope, volcengine), and only glm-5.3 is overridden to `mode = always`.
+#   effort - not declared, because the ladder is flat rather than graded. Six levels were
+#            measured three times each on one prompt: minimal, low, medium, high, xhigh and
+#            max all returned reasoning_tokens 55, completion_tokens 57 and 182 characters
+#            of reasoning_content - byte-identical. The gateway rewrites `reasoning_effort`
+#            into `thinking: {type: enabled|disabled}` on this vendor family and keeps no
+#            strength field, so a low|high|max list would promise depth the host cannot
+#            deliver. The sibling glm-5.3 measures flat as well (21 tokens at low, high and
+#            max), so neither route declares a ladder any more.
+#   budget - `thinking_budget_tokens` 1..131072 is honoured on the DashScope-compatible path
+#            (probe 2026-11-17: 64 -> reasoning_tokens 62, 512 -> 510; 262145 -> HTTP 400
+#            "the maximum for this model is 131072"), but the first-party Zhipu and
+#            Volcengine paths have no budget field and their adapter rejects the parameter
+#            with HTTP 400, so the capability is not declared. Combining it with
+#            `reasoning_effort` is rejected with HTTP 400.
+# top_k - false. Upstream disagrees with itself here: models/zhipuai/glm-5.2 declares
+#         top_k = true, while providers/zhipuai/models/glm-5.2 declares top_k = false and
+#         records that the Zhipu Chat API documents temperature and top_p only. The gateway
+#         forwards the raw JSON body, so on a Zhipu channel the value reaches the vendor and
+#         is ignored; advertising true would promise sampling control that is not delivered.
+#         Same judgement as the two glm-5.3 routes on this provider.
+# Cache - implicit only. Zhipu's prompt cache is automatic with no write price; hits are
+#         billed at the cache-read price below.
+# Limit - no override, canonical 1,000,000 / 131,072 inherited. TokenSail publishes
+#         contextWindow 1,048,576 (GET https://api.tokensail.ai/api/public/models), but a
+#         relay cannot enlarge a model's window and models/zhipuai/glm-5.2 declares
+#         1,000,000. Same judgement as the two glm-5.3 routes.
+# structured_output - omitted on purpose: the declared support for this route is
+#         `response_format(json_object)`; `json_schema` has not been verified here, and
+#         declaring it true would mislead JSON-schema clients.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape).
+# Sources: https://docs.z.ai/guides/overview/pricing (vendor list)
+#          https://api.tokensail.ai/api/public/models (published USD)
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.77772128
+cache = { read = 0.19443032 }
+
+[cost.text.output]
+price = 2.72202447

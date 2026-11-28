@@ -1,0 +1,62 @@
+# TokenSail entry for zhipuai/glm-5.3.
+# Reasoning controls (live-verified on api.tokensail.ai, 2026-11-16 and 2026-11-17):
+#   no toggle - this vendor requires thinking on. `thinking = { "type": "disabled" }`,
+#               `enable_thinking = false` and `reasoning_effort = "none"` all return
+#               HTTP 400 ("reasoning is always on for this model"), so no `toggle` is declared.
+#   effort - not declared, because the ladder is flat rather than graded. Probed 2026-11-17
+#            with three runs per level on one prompt: low, high and max all returned
+#            reasoning_tokens 21, completion_tokens 23 and 70 characters of reasoning_content,
+#            byte-identical. The gateway rewrites `reasoning_effort` into
+#            `thinking: {type: enabled}` on this vendor family and keeps no strength field,
+#            so the "minimal -> low, medium/xhigh -> high" mapping recorded here earlier
+#            described the accepted OpenAI vocabulary, not vendor behaviour, and is withdrawn.
+#   budget - accepted but not honoured on this route (probe 2026-11-17:
+#            `thinking_budget_tokens` 512 still returns reasoning_tokens 8190, the
+#            `max_tokens` ceiling). 1..131072 passes the gateway bound check, 262145 is
+#            rejected with HTTP 400 ("the maximum for this model is 131072"), and combining
+#            it with `reasoning_effort` is rejected with HTTP 400, so it is not declared.
+#   top_k - accepted and ignored. The gateway forwards the raw JSON body, but Zhipu
+#           documents no top_k support (providers/zhipuai sets top_k = false: temperature
+#           and top_p only) and a live probe with top_k = 5 returns HTTP 200 with no
+#           parameter error, so the value never reaches sampling. Declared false.
+# Cache - implicit only. Zhipu's prompt cache is automatic with no write price; hits are
+#         billed at the cache-read price below (1/4 of input).
+# Output cap - both fields are honored and behave the same (probe: either one set to 2
+#           -> total 2), so no `max_tokens_field` override is declared.
+# structured_output - live-probed 2026-11-16 with `response_format.type = "json_schema"`
+#         (strict): HTTP 200 and a schema-valid `{"capital": "Paris"}`. Declared true;
+#         `glm-5.3-flash` on the same host rejects the same request with HTTP 400, so this is
+#         a per-route difference and not a route-family default.
+# Limit - no override, canonical 1,000,000 / 131,072 inherited. TokenSail publishes
+#         contextWindow 1,048,576 (GET https://api.tokensail.ai/api/public/models), but a
+#         relay cannot enlarge a model's window, no first-party entry corroborates 2^20 for
+#         GLM-5.3 (models/zhipuai/glm-5.3 declares 1,000,000), and the corroboration the
+#         DeepSeek routes rely on (their own GET /models) has no GLM counterpart. Advertising
+#         the larger figure would promise prompts the vendor window cannot hold.
+# Pricing (read 2026-11-17): USD, transcribed from what TokenSail publishes for this model
+# (GET https://api.tokensail.ai/api/public/models -> priceShape). Measured against the
+# official list the same endpoint reports (officialShape: 1.4 / 0.26 / 4.4), the published
+# 0.83754599 / 0.20938650 / 2.93141097 are 59.8% / 80.5% / 66.6% of list. The earlier "70%"
+# was a rounded guess and is withdrawn; the cache read sits on a different step from the
+# token prices.
+# Sources: https://docs.z.ai/guides/overview/pricing (vendor list)
+#          https://tokensail.ai/pricing-compare (published USD)
+schema = 2
+v2_only = true
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true }
+structured_output = true
+top_k = false
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.83754599
+cache = { read = 0.2093865 }
+
+[cost.text.output]
+price = 2.93141097
