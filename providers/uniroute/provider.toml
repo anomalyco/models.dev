@@ -1,0 +1,11 @@
+# UniRoute multi-model AI gateway (OpenAI Chat Completions at /v1/chat/completions; Anthropic Messages at /v1/messages for Claude models).
+# Docs: https://uniroute.app/docs (accessed 2026-11-25)
+# Public pricing page: https://uniroute.app/pricing (accessed 2026-11-25)
+# Live text pricing JSON (pricing-only feed, no modalities/limits/reasoning metadata):
+# https://api.uniroute.app/api/v1/models/public-prices?category=text&scope=all_text (accessed 2026-11-25)
+name = "UniRoute"
+env = ["UNIROUTE_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+doc = "https://uniroute.app/docs"
+api = "https://api.uniroute.app/v1"
