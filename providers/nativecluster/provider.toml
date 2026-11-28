@@ -1,0 +1,13 @@
+# NativeCluster is a free Mac app (Apple silicon) that runs open models on a team's own Macs, behind one
+# OpenAI-compatible address. On a Mac running it, `nativecluster env` writes a file, readable only by that
+# person, that sets OPENAI_BASE_URL=http://localhost:8487/v1 and NATIVECLUSTER_API_KEY (their own session,
+# `nct_…`). The local address answers this Mac only (loopback).
+# https://www.nativecluster.com/docs/integrations/openai-compatible (accessed 2026-11-20)
+# Chat Completions only (no Responses or Messages API); the request fields it takes, `think`, pictures and its
+# errors: https://www.nativecluster.com/docs/api (accessed 2026-11-20)
+name = "NativeCluster"
+env = ["NATIVECLUSTER_API_KEY"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "http://localhost:8487/v1"
+doc = "https://www.nativecluster.com/docs/models"
