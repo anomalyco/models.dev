@@ -1,0 +1,26 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Reasoning is always on in Modellix Chat Completions.
+# The public catalog lists text and image input.
+# The public catalog gives a shared context of 262,000 tokens and no separate output limit.
+# This entry uses that context as its output ceiling. The input uses part of the same window.
+# https://platform.kimi.ai/docs/api/models-overview
+schema = 2
+base_model = "moonshotai/kimi-k2.7-code"
+
+[capabilities]
+reasoning = { supported = true }
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[limit]
+context = 262_000
+output = 262_000
+
+[cost.text.input]
+price = 0.95
+cache = { read = 0.19, write = 0 }
+
+[cost.text.output]
+price = 4

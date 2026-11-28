@@ -1,0 +1,15 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Toggle: thinking.type = adaptive|disabled
+# https://platform.claude.com/docs/en/build-with-claude/extended-thinking
+schema = 2
+base_model = "anthropic/claude-opus-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 4.5
+cache = { read = 0.45, write = 5.625 }
+
+[cost.text.output]
+price = 22.5

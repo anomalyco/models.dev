@@ -1,0 +1,16 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget (min 0, max 262144); do not send with reasoning_effort
+# https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262144 } }
+
+[cost.text.input]
+price = 0.16
+cache = { read = 0.016, write = 0.2 }
+
+[cost.text.output]
+price = 0.47

@@ -1,0 +1,13 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+schema = 2
+base_model = "anthropic/claude-sonnet-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 1.8
+cache = { read = 0.09, write = 2.25 }
+
+[cost.text.output]
+price = 9

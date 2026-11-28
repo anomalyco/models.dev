@@ -1,0 +1,16 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+schema = 2
+base_model = "google/gemini-3.6-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["minimal", "low", "medium", "high"] }
+
+[limit]
+context = 1_050_000
+
+[cost.text.input]
+price = 1.35
+cache = { read = 0.135, write = 0 }
+
+[cost.text.output]
+price = 6.75

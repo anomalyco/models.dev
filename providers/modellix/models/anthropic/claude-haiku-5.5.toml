@@ -1,0 +1,24 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Toggle: thinking.type = adaptive|disabled
+# https://platform.claude.com/docs/en/build-with-claude/extended-thinking
+schema = 2
+base_model = "anthropic/claude-haiku-5-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.009, write = 0.1125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 100_000 } }
+price = 0.45
+cache = { read = 0.045, write = 0.5625 }
+
+[cost.text.output]
+price = 0.45
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 100_000 } }
+price = 2.25

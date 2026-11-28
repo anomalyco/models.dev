@@ -1,0 +1,24 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Latest alias of openai/gpt-6.2-astra. Freeform formats follow the target.
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+
+[capabilities]
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4, write = 10 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16
+cache = { read = 0.8, write = 20 }
+
+[cost.text.output]
+price = 40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60

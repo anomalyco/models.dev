@@ -1,0 +1,13 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+schema = 2
+base_model = "tencent/hy4"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "high"] }
+
+[cost.text.input]
+price = 0.834
+cache = { read = 0.042, write = 0 }
+
+[cost.text.output]
+price = 2.501

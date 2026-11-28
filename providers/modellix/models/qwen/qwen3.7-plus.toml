@@ -1,0 +1,21 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Toggle: enable_thinking = true|false
+# Budget: thinking_budget
+# The public catalog lists text and image input.
+# https://www.alibabacloud.com/help/en/model-studio/qwen-api-via-openai-chat-completions
+schema = 2
+base_model = "alibaba/qwen3.7-plus"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = {} }
+
+[modalities]
+input = ["text", "image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic"]
+output = ["text"]
+
+[cost.text.input]
+price = 0.32
+cache = { read = 0.064, write = 0.4 }
+
+[cost.text.output]
+price = 1.28

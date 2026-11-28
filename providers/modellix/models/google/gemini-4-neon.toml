@@ -1,0 +1,13 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+schema = 2
+base_model = "google/gemini-4-neon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[cost.text.input]
+price = 3
+cache = { read = 0.15, write = 0 }
+
+[cost.text.output]
+price = 15

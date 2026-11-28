@@ -1,0 +1,16 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Toggle: thinking.type = enabled|disabled
+# Budget: thinking.budget_tokens (min 1024)
+# https://platform.claude.com/docs/en/build-with-claude/extended-thinking
+schema = 2
+base_model = "anthropic/claude-haiku-4-5"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, budget = { min = 1024 } }
+
+[cost.text.input]
+price = 0.9
+cache = { read = 0.09, write = 1.125 }
+
+[cost.text.output]
+price = 4.5

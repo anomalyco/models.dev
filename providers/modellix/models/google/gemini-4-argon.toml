@@ -1,0 +1,13 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 2
+cache = { read = 0.1, write = 0 }
+
+[cost.text.output]
+price = 10

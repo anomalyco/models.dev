@@ -1,0 +1,24 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Latest alias of openai/gpt-6-luna. Freeform formats follow the target.
+schema = 2
+base_model = "openai/gpt-6-luna"
+
+[capabilities]
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.09
+cache = { read = 0.009, write = 0.1125 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.18
+cache = { read = 0.018, write = 0.225 }
+
+[cost.text.output]
+price = 0.45
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.675

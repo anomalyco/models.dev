@@ -1,0 +1,21 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Effort: reasoning_effort = none|low|high|max (default high).
+# On Modellix Chat Completions (2026-11-27), thinking.type="disabled" still returned 18 reasoning tokens.
+# The same prompt with reasoning_effort="none" returned zero reasoning tokens and no reasoning content.
+# https://api-docs.deepseek.com/guides/thinking_mode/
+# Context override: public catalog context_window_tokens=1_050_000.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"], default = { type = "effort", value = "high" } }
+
+[limit]
+context = 1_050_000
+
+[cost.text.input]
+price = 0.44
+cache = { read = 0.014, write = 0 }
+
+[cost.text.output]
+price = 1.32

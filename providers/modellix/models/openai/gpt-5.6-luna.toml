@@ -1,0 +1,24 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Required tool calls returned LQ11 under Lark and ZZ000 under regex on Modellix Chat Completions (2026-11-26).
+schema = 2
+base_model = "openai/gpt-5.6-luna"
+
+[capabilities]
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 0.18
+cache = { read = 0.018, write = 0.225 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 0.36
+cache = { read = 0.036, write = 0.45 }
+
+[cost.text.output]
+price = 1.08
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 1.62

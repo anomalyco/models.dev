@@ -1,0 +1,20 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Effort: reasoning_effort = low|high|max
+# The public catalog gives a shared context of 1,000,000 tokens and no separate output limit.
+# This entry uses that context as its output ceiling. The input uses part of the same window.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 1_000_000
+output = 1_000_000
+
+[cost.text.input]
+price = 2
+cache = { read = 0.2, write = 0 }
+
+[cost.text.output]
+price = 10

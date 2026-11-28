@@ -1,0 +1,14 @@
+# Pricing: https://www.modellix.ai/portal/v1/llm-model-pricing
+# Latest alias of anthropic/claude-opus-5.5.
+schema = 2
+base_model = "anthropic/claude-opus-5-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[cost.text.input]
+price = 3.6
+cache = { read = 0.18, write = 2.25 }
+
+[cost.text.output]
+price = 18
