@@ -1,0 +1,32 @@
+# Limits and prices: GET https://api.lyceum.technology/openai/v1/models (2026-11-26) reports context_length 1,048,576, max_output_tokens 65,536
+#   and USD unit prices of 0.0000003 input, 0.000000075 cached input and 0.0000012 output, so 0.30 / 0.075 / 1.20 per million tokens.
+#   Same prices on https://lyceum.technology/models/ and https://lyceum.technology/models.md.
+# Effort: reasoning_effort none|low|medium|high|xhigh|max. Live check 2026-11-26: every level returned 200, "none" returned no reasoning tokens,
+#   an unknown value returned 400. The trace comes back in message.reasoning_content.
+# Images: JPEG and PNG data URLs answered correctly in the same live check. Video input isn't documented on Lyceum, so it isn't listed.
+# Cache: automatic prefix cache (https://docs.lyceum.technology/docs/inference/serverless#prompt-caching); a repeated 6,861-token prefix
+#   reported 6,784 cached tokens in the live check.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { implicit = true }
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 1.2
