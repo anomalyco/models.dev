@@ -28,6 +28,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync tinfoil` syncs only Tinfoil.
 - `bun models:sync togetherai` syncs only Together AI.
 - `bun models:sync morph` syncs only Morph.
+- `bun models:sync modular` syncs only Modular.
 - `bun models:sync nearai` syncs only NEAR AI Cloud.
 - `bun models:sync obscurify` syncs only Obscurify.ai.
 - `bun models:sync aggregators --dry-run` prints changes without writing model files.
@@ -390,6 +391,18 @@ xAI is implemented in `packages/core/src/sync/providers/xai.ts`.
 - New models are created as `base_model` overlays carrying the price, context, `structured_output` from the docs' "Structured outputs" column, and `tools = false` when "Function calling" says no. Hugging Face organisations map to lab directories in `LAB_PREFIXES`. A model without a lab file opens a missing-model issue. A reasoning model is never created: neither source states how a route turns reasoning on, off or up, so it opens an issue for its controls to be probed and authored.
 - Reasoning controls, modalities (exact MIME types), tools, `structured_output`, mid-conversation flags, limits other than context, display names and header comments are hand-authored and kept.
 - Image, video, audio, transcription, embedding, rerank and base (`language`, `code`) rows are ignored. `/v1/models` labels their types clearly, but their prices are estimates or free text (`example_price`, "0.006 - 0.165 per image"), and the catalog has no Together media models.
+
+## Modular Notes
+
+- Modular is implemented in `packages/core/src/sync/providers/modular.ts`.
+- Source endpoint: `https://console.modular.com/api/v1/docs/models`, the public catalog behind <https://docs.modular.com/models>.
+- No authentication is required; the catalog is public.
+- A catalog row is public only when `shared_endpoint` is true, `billing_type` is `token`, `gateway_model_id` is set, and both input and output prices are non-zero. Rows that are deployed but not yet sold on the shared endpoint carry `"0"` prices and are ignored.
+- Model IDs come from `gateway_model_id`, the ID the API serves, not the display `model_id`.
+- Existing Modular models are updated from catalog-authoritative input, output, and cached-input pricing. Context limits, reasoning controls, and modalities stay hand-authored: the catalog's context window is rounded display text (`"1M"`) and its modalities are incomplete.
+- New models are not created automatically (`skipCreates`) and do not open missing-model issues (`trackMissingModels: false`); Modular opens a PR with measured limits and reasoning controls instead.
+- Local models that leave the public set (unshared, unpriced, or gone from the catalog) are removed: the catalog is authoritative for what the shared endpoint sells. A catalog with no public models fails the sync instead of removing every file.
+- If the catalog is unreachable, returns an error status, or returns anything that is not the expected shape, the sync fails before writing, so existing files keep their last synced values until a later run succeeds. A well-formed response that is missing some rows is treated as those models being retired.
 
 ## Morph Notes
 
