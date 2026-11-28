@@ -1,0 +1,16 @@
+# Tapix AI relays this model over the OpenAI-compatible chat-completions API
+# (https://tapixai.com/v1). Reasoning is exposed only through the OpenAI
+# `reasoning_effort` request field; Tapix does not pass through Anthropic-style
+# thinking toggles or budget_tokens, so only the effort range is declared here.
+# Price verified 2026-11-26 against https://tapixai.com/pricing
+schema = 2
+base_model = "google/gemini-4-argon"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[cost.text.input]
+price = 1.4
+
+[cost.text.output]
+price = 7
