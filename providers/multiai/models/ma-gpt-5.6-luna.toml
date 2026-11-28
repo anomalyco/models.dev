@@ -1,0 +1,16 @@
+# Source: https://multiai.store/v1/models (2026-11-22).
+# Catalog model ID: ma-gpt-5.6-luna; supports_tools = true.
+# Effort levels: reasoning.levels in the MultiAI catalog, specific to this host.
+# Context: max_context_tokens. The catalog repeats it as max_input_tokens.
+# Drop the inherited input limit because it exceeds this host's context.
+schema = 2
+base_model = "openai/gpt-5.6-luna"
+base_model_omit = ["limit.input"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+
+[api.chat-completions]
+
+[limit]
+context = 353_000

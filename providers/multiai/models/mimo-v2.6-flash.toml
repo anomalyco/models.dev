@@ -1,0 +1,10 @@
+# Source: https://multiai.store/v1/models (2026-11-22).
+# Catalog model ID: mimo-v2.6-flash; supports_tools = true.
+# Effort levels: reasoning.levels in the MultiAI catalog, specific to this host.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+
+[api.chat-completions]

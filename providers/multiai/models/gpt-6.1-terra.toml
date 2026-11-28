@@ -1,0 +1,11 @@
+# Source: https://multiai.store/v1/models (2026-11-22).
+# Catalog model ID: gpt-6.1-terra; supports_tools = true.
+# Effort levels: reasoning.levels in the MultiAI catalog, specific to this host.
+# The catalog repeats the context as max_input_tokens. Inherit the lab input cap.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]

@@ -1,0 +1,16 @@
+# Source: https://multiai.store/v1/models (2026-11-22).
+# Catalog model ID: minimax-m3.1-flash; supports_tools = true.
+# Catalog reports a toggle ("none", "medium") without a request field.
+# Effort baseline: providers/minimax/models/MiniMax-M3.1-Flash.toml and
+# providers/openrouter/models/minimax/minimax-m3.1-flash.toml.
+# Host limits: max_context_tokens in the MultiAI catalog.
+schema = 2
+base_model = "minimax/MiniMax-M3.1-Flash"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+
+[api.chat-completions]
+
+[limit]
+context = 1_048_576
