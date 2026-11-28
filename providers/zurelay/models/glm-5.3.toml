@@ -1,0 +1,18 @@
+# Effort: reasoning_effort = low|high|max on POST /v1/chat/completions; default max.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-15)
+# Prices (USD per 1M tokens): https://zurelay.com/models/glm-5.3. Input, output and cache read follow
+# https://zurelay.com/prices.json (input_per_1m, output_per_1m, cached_input_per_1m), which the zurelay sync reads.
+# Zurelay sets its own cached price, so the cache read isn't a fixed share of input.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.38
+cache = { read = 0.038 }
+
+[cost.text.output]
+price = 1.21

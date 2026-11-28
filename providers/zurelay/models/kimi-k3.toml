@@ -1,0 +1,24 @@
+# Inputs on this host: text, images, in the formats Zurelay takes
+# (https://zurelay.com/docs/multimodal, accessed 2026-11-15).
+# Effort: reasoning_effort = low|high|max on POST /v1/chat/completions; default max.
+# Levels: https://zurelay.com/docs/chat#reasoning (accessed 2026-11-15)
+# Prices (USD per 1M tokens): https://zurelay.com/models/kimi-k3. Input, output and cache read follow
+# https://zurelay.com/prices.json (input_per_1m, output_per_1m, cached_input_per_1m), which the zurelay sync reads.
+# Zurelay sets its own cached price, so the cache read isn't a fixed share of input.
+schema = 2
+base_model = "moonshotai/kimi-k3"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"], default = { type = "effort", value = "max" } }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 1.27
+cache = { read = 0.127 }
+
+[cost.text.output]
+price = 6.37
