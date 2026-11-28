@@ -1,0 +1,23 @@
+# https://chat.jarv.tech/docs/api/openai#openai-reasoning
+# Chat Completions supports reasoning.effort and returns reasoning_content.
+# Toggle: reasoning.enabled = true|false.
+# Personal API keys cap output at 32,768 tokens.
+# JARV API OpenAIChatRequest accepts temperature and ignores top_p/top_k.
+# https://gitlab.com/jarv-group/jarv_new/-/blob/69fef674ed34dcff4cff683e90aa914497591b4d/services/public-api/src/jarv_public_api/api/openai_compat.py#L51-74
+# JARV Structured Outputs docs: “Поддержка зависит от выбранной модели.”
+# The deployed Chat Completions relay can return HTTP 200 with non-JSON even for
+# strict: true if upstream does. JARV does not publish a verified route for this model.
+# https://chat.jarv.tech/docs/api/structured (released-code HTTP fixture in PR #14394).
+schema = 2
+base_model = "tencent/hy4-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+top_p = false
+top_k = false
+
+[limit]
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }

@@ -1,0 +1,27 @@
+# https://chat.jarv.tech/docs/api/openai#openai-reasoning
+# Chat Completions supports reasoning.effort and returns reasoning_content.
+# Personal API keys cap output at 32,768 tokens.
+# JARV Chat Completions forwards image_url message parts (see PR #14394).
+# Publish only text and images. ModalitiesV2 requires both input and output.
+# JARV and Gateway2 forward temperature on this Gemini route (see PR #14394).
+# Same-model Google and OpenRouter catalog entries also enable temperature.
+# JARV Structured Outputs docs: “Поддержка зависит от выбранной модели.”
+# The deployed Chat Completions relay can return HTTP 200 with non-JSON even for
+# strict: true if upstream does. JARV does not publish a verified route for this model.
+# https://chat.jarv.tech/docs/api/structured (released-code HTTP fixture in PR #14394).
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+temperature = true
+reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh"] }
+
+[limit]
+output = 32_768
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
