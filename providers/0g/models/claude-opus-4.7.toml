@@ -1,0 +1,18 @@
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-24).
+# Reasoning probed 2026-11-24 through 0G's staging router on both rows mainnet serves the model from (anonymous1, anonymous2).
+# No caller control on Chat Completions: @anonymous1 refuses every request with reasoning_effort (400; high, 3 runs and a recheck),
+# while @anonymous2 accepts none, low, high and max (only max thinks: 198 completion tokens against 6, reasoning not reported;
+# rows pinned with X-0G-Provider-Identity). A request carrying reasoning_effort fails whenever it is routed to @anonymous1,
+# so no level is listed. Requests without it work on both rows.
+schema = 2
+base_model = "anthropic/claude-opus-4-7"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 5
+cache = { write = 6.25 }
+
+[cost.text.output]
+price = 25

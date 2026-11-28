@@ -1,0 +1,20 @@
+# Toggle: enable_thinking = true|false (chat_template_kwargs.enable_thinking works too)
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-24).
+# Reasoning probed 2026-11-24 through 0G's staging router (0g-router param-probe --reasoning, 3 runs per request)
+# on the rows mainnet serves the model from (aliyun).
+# Off by default on this row (0 reasoning tokens with no field and at reasoning_effort high); enable_thinking=true gave 1191.
+# Alibaba's own entry has thinking on by default; on 0G's row it is off.
+# reasoning_effort has no effect.
+# Budget: thinking_budget (reasoning tokens). Probed 2026-11-24 on @aliyun through 0G's staging router, one request each:
+# 64 gave 63 reasoning tokens, 1024 gave 1023. Bounds, if any, follow Alibaba's own entry.
+schema = 2
+base_model = "alibaba/qwen3.5-27b"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true, budget = {} }
+
+[cost.text.input]
+price = 0.0875
+
+[cost.text.output]
+price = 0.7

@@ -1,0 +1,18 @@
+# Toggle: thinking.type = disabled turns thinking off (it is on by default on Chat Completions)
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-24).
+# Reasoning probed 2026-11-24 through 0G's staging router (0g-router param-probe --reasoning, 3 runs per request)
+# on the rows mainnet serves the model from (minimax).
+# It thinks with no field (96-105 reasoning tokens); thinking.type=disabled gives 0; reasoning_effort, none to max, has no effect.
+# Its thinking comes back inside the answer text, in <think> tags, not in a separate reasoning field (rechecked 2026-11-24).
+# Reasoning block reviewed: 2026-11-24 (the block covers reasoning_effort only, which cannot turn thinking off; thinking.type can).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = true }, toggle = true }
+
+[cost.text.input]
+price = 0.27
+
+[cost.text.output]
+price = 1.08

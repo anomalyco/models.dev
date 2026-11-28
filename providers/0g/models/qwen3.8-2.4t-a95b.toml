@@ -1,0 +1,20 @@
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-24).
+# Reasoning controls: measured 2026-11-24 by 0g-router's param-probe --reasoning, through 0G's staging router, on every
+# row GET /v1/providers lists for the model on staging and on mainnet (mainnet serves the same rows). This is the router's
+# `reasoning` block, served on staging's /v1/models and not yet on mainnet's. Toggle, when listed: reasoning_effort = "none"
+# turns thinking off on every row; effort levels are the vendor's documented levels that every row accepts and that
+# measurably change how much the model thinks. No controls listed: reasoning_effort cannot turn thinking off.
+# Budget: thinking_budget (reasoning tokens). Probed 2026-11-24 on @aliyun through 0G's staging router, one request each:
+# 64 gave 64 reasoning tokens, 1024 gave 1024. Bounds, if any, follow Alibaba's own entry.
+# Reasoning block reviewed: 2026-11-24
+schema = 2
+base_model = "alibaba/qwen3.8-2.4t-a95b"
+
+[capabilities]
+reasoning = { supported = true, budget = { min = 0, max = 262_144 } }
+
+[cost.text.input]
+price = 3
+
+[cost.text.output]
+price = 9

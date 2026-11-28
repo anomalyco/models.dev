@@ -1,0 +1,15 @@
+# Verified on https://router-api.0g.ai/v1 (2026-11-18): chat and a tool call (get_weather), image input.
+# Price: GET https://router-api.0g.ai/v1/models pricing_usd (accessed 2026-11-18).
+# Reasoning probed 2026-11-18: every reasoning_effort value (none..max), chat_template_kwargs.enable_thinking=false and
+# thinking.type=disabled were accepted but ~575 reasoning tokens were spent each time: no caller control on this route.
+schema = 2
+base_model = "google/gemini-3.5-flash"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1.5
+
+[cost.text.output]
+price = 9
