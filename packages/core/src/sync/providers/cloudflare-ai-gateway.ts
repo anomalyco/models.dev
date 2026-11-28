@@ -583,7 +583,8 @@ export function routeModalities(
     const input = [
       ...(fields.some((field) => TEXT_FIELD.test(field)) ? ["text"] : []),
       ...kinds.flatMap(([kind, pattern]) => {
-        if (!fields.some((field) => pattern.test(field))) return [];
+        // A fixed enum is a setting (Kling Motion Control's audio: original|off), not a media input.
+        if (!fields.some((field) => pattern.test(field) && enumValues(properties[field]) === undefined)) return [];
         const mimes = labInput.filter((mime) => mime.startsWith(`${kind}/`));
         if (mimes.length === 0) throw new Error(`the route takes ${kind} input but the lab lists no ${kind} MIME types; curate modalities`);
         return mimes;
