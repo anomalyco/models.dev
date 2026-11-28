@@ -79,6 +79,7 @@ import { togetherai } from "./providers/togetherai.js";
 import { vercel } from "./providers/vercel.js";
 import { venice } from "./providers/venice.js";
 import { wandb } from "./providers/wandb.js";
+import { wiro } from "./providers/wiro.js";
 import { xai } from "./providers/xai.js";
 
 const ExistingModelType = AuthoredModelShape.partial()
@@ -272,6 +273,7 @@ export const providers: {
   vercel: SyncProvider<any>;
   venice: SyncProvider<any>;
   wandb: SyncProvider<any>;
+  wiro: SyncProvider<any>;
   xai: SyncProvider<any>;
 } = {
   aiand,
@@ -334,6 +336,7 @@ export const providers: {
   vercel,
   venice,
   wandb,
+  wiro,
   xai,
 };
 
@@ -360,6 +363,7 @@ export const groups = {
     "openrouter",
     "prime",
     "vercel",
+    "wiro",
   ],
   cloudflare: ["cloudflare-ai-gateway", "cloudflare-workers-ai"],
   direct: ["aiand", "alibaba", "amazon-bedrock", "ambient", "anthropic", "azure", "baseten", "cerebras", "chutes", "cortecs", "deepinfra", "deepseek", "digitalocean", "engy", "fireworks-ai", "friendli", "github-copilot", "google", "groq", "hyper", "meta", "mistral", "moonshotai", "morph", "nearai", "nebius", "obscurify", "ollama-cloud", "openai", "ovhcloud", "pioneer", "sambanova", "thinkingmachines", "tinfoil", "togetherai", "venice", "wandb", "xai"],
