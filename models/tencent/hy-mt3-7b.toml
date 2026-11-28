@@ -1,0 +1,46 @@
+# Source: model card https://huggingface.co/tencent/Hy-MT3-7B (accessed 2026-11-28).
+# Release: News section, "2026.11.24 We open-sourced Hy-MT3-1.8B/Hy-MT3-7B/Hy-MT3-30B-A3B"; also
+#   https://x.com/TencentHunyuan/status/2125170622049485093 (2026-11-24). License: card metadata, apache-2.0.
+# Description: card Model Introduction (third-generation Hy translation family, 102 languages: the 38 Hy-MT2 supports, i.e. 33 languages plus 5 Chinese minority languages/dialects, and 64 new ones)
+#   and model table ("Hy 7B translation model"); report https://arxiv.org/abs/2611.27673.
+# Limits: card "Inference and Deployment" section states max_context: 8192 and recommends max_tokens 4096.
+#   config.json's max_position_embeddings (262,144) is the architecture's position limit, not the supported context.
+# Tools/reasoning: the card documents prompt templates for translation only, and runs Hy-MT3 in non-thinking mode.
+# Sampling: the card recommends temperature 0.7, top_p 0.6, top_k 20 for 1.8B and 7B; generation_config.json sets
+#   temperature 0.7, top_p 0.8, top_k 20 (https://huggingface.co/tencent/Hy-MT3-7B/blob/main/generation_config.json).
+schema = 2
+name = "Hy-MT3-7B"
+description = "Tencent Hy third-generation 7B dense translation model covering 102 languages"
+family = "hy-mt"
+open_weights = true
+release_date = "2026-11-24"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = true
+top_p = true
+top_k = true
+
+[limit]
+context = 8_192
+output = 4_096
+
+[[links]]
+label = "Paper"
+url = "https://arxiv.org/abs/2611.27673"
+type = "paper"
+
+[[links]]
+label = "GitHub"
+url = "https://github.com/Tencent-Hunyuan/Hy-MT3"
+type = "docs"
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/tencent/Hy-MT3-7B"
