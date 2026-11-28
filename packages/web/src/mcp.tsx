@@ -32,7 +32,6 @@ export function McpDirectoryPage() {
                   <span class="sort-indicator" aria-hidden="true">↑</span>
                 </button>
               </th>
-              <th scope="col">Description</th>
               <th class="sortable" data-mcp-sort="version" data-type="text" scope="col">
                 <button type="button" class="sort-button">
                   Version
@@ -51,7 +50,7 @@ export function McpDirectoryPage() {
           </thead>
           <tbody id="mcp-rows">
             <tr>
-              <td colspan={6}>Loading MCP servers…</td>
+              <td colspan={5}>Loading MCP servers…</td>
             </tr>
           </tbody>
         </table>

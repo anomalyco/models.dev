@@ -278,6 +278,7 @@ export function htmlAssetPath(pathname: string) {
     return `${normalized}/index.html`;
   }
   if (normalized === "/mcp") return "/mcp/index.html";
+  if (normalized.startsWith("/mcp/detail/")) return undefined;
   if (normalized.startsWith("/mcp/")) return "/mcp/server/index.html";
   return undefined;
 }

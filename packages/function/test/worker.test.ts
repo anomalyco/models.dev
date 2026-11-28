@@ -38,6 +38,8 @@ describe("html asset paths", () => {
       "/models/openai/gpt-5/index.html",
     );
     expect(htmlAssetPath("/mcp.json")).toBeUndefined();
+    expect(htmlAssetPath("/mcp.web.json")).toBeUndefined();
+    expect(htmlAssetPath("/mcp/detail/12.json")).toBeUndefined();
   });
 });
 

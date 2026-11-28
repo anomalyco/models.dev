@@ -1,20 +1,24 @@
 import {
+  MCP_DETAIL_BUCKETS,
+  mcpDetailBucket,
+  type McpWebCatalog,
+  type McpWebServer,
+} from "./mcp-compact.js";
+import {
   mcpDisplayName,
-  mcpRegistries,
   mcpServerHref,
   mcpServerName,
-  mcpTransports,
   safeHttpUrl,
-  type McpCatalog,
   type McpServerRecord,
 } from "./mcp-shared.js";
 
 const PAGE_SIZE = 100;
 
-let catalog: McpCatalog | undefined;
+let catalog: McpWebCatalog | undefined;
 let catalogError: string | undefined;
 let loading: Promise<void> | undefined;
 const listeners = new Set<() => void>();
+const detailCache = new Map<number, McpServerRecord[]>();
 
 type SortKey = "name" | "version" | "updated";
 type SortDirection = "asc" | "desc";
@@ -26,10 +30,10 @@ export function onMcpCatalog(listener: () => void) {
 
 export function loadMcpCatalog() {
   if (catalog || catalogError) return Promise.resolve();
-  loading ??= fetch("/mcp.json")
+  loading ??= fetch("/mcp.web.json")
     .then((response) => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.json() as Promise<McpCatalog>;
+      return response.json() as Promise<McpWebCatalog>;
     })
     .then((parsed) => {
       if (!parsed || !Array.isArray(parsed.servers)) {
@@ -160,58 +164,78 @@ function installDetail(root: HTMLElement) {
   const mount = root.querySelector<HTMLElement>("#mcp-detail");
   if (!status || !mount) return;
 
-  const render = () => {
+  const render = async () => {
     if (catalogError) {
       status.hidden = false;
       status.textContent = catalogError;
       return;
     }
-    if (!catalog) return;
 
     const name = mcpServerName(window.location.pathname);
-    const server = name
-      ? catalog.servers.find((item) => item.name === name)
-      : undefined;
-    status.hidden = true;
-    if (!server) {
+    if (!name) {
       status.hidden = false;
       status.textContent = "This MCP server is not in the catalog.";
       mount.replaceChildren();
       return;
     }
-    document.title = `${mcpDisplayName(server)} | Models.dev`;
-    mount.replaceChildren(detailView(server));
+
+    status.hidden = false;
+    status.textContent = "Loading MCP server…";
+    try {
+      const server = await loadMcpDetail(name);
+      if (!server) {
+        status.hidden = false;
+        status.textContent = "This MCP server is not in the catalog.";
+        mount.replaceChildren();
+        return;
+      }
+      status.hidden = true;
+      document.title = `${mcpDisplayName(server)} | Models.dev`;
+      mount.replaceChildren(detailView(server));
+    } catch (error) {
+      status.hidden = false;
+      status.textContent = error instanceof Error ? error.message : "Failed to load";
+      mount.replaceChildren();
+    }
   };
 
-  onMcpCatalog(render);
+  void render();
 }
 
-function serverRow(server: McpServerRecord) {
+async function loadMcpDetail(name: string) {
+  const bucket = mcpDetailBucket(name, MCP_DETAIL_BUCKETS);
+  let shard = detailCache.get(bucket);
+  if (!shard) {
+    const response = await fetch(`/mcp/detail/${bucket}.json`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    shard = (await response.json()) as McpServerRecord[];
+    if (!Array.isArray(shard)) throw new Error("Invalid MCP detail shard");
+    detailCache.set(bucket, shard);
+  }
+  return shard.find((server) => server.name === name);
+}
+
+function serverRow(server: McpWebServer) {
   const row = document.createElement("tr");
   const name = document.createElement("th");
   name.scope = "row";
   const link = document.createElement("a");
   link.className = "primary-link";
-  link.href = mcpServerHref(server.name);
-  link.textContent = mcpDisplayName(server);
+  link.href = mcpServerHref(server.n);
+  link.textContent = server.t || server.n;
   name.append(link);
   const id = document.createElement("span");
   id.className = "subtle mono";
-  id.textContent = server.name;
+  id.textContent = server.n;
   name.append(id);
   row.append(name);
 
-  const description = document.createElement("td");
-  description.className = "mcp-description";
-  description.textContent = server.description || "—";
-  row.append(description);
-
-  row.append(cell(server.version || "—"));
-  row.append(cell(mcpTransports(server).join(", ") || "—"));
-  row.append(cell(mcpRegistries(server).join(", ") || "—"));
+  row.append(cell(server.v || "—"));
+  row.append(cell(server.tr?.replaceAll(",", ", ") || "—"));
+  row.append(cell(server.rg?.replaceAll(",", ", ") || "—"));
   const updated = document.createElement("td");
-  updated.textContent = server.updatedAt?.slice(0, 10) || "—";
-  if (server.status === "deprecated") updated.textContent += " · deprecated";
+  updated.textContent = server.u || "—";
+  if (server.s === "deprecated") updated.textContent += " · deprecated";
   row.append(updated);
   return row;
 }
@@ -270,12 +294,11 @@ function detailView(server: McpServerRecord) {
       tableSection(
         "Packages",
         packages.length,
-        ["Registry", "Identifier", "Version", "Runtime", "Transport"],
+        ["Registry", "Identifier", "Version", "Transport"],
         packages.map((item) => [
           item.registryType,
           item.identifier,
           item.version || "—",
-          item.runtimeHint || "—",
           item.transport || "—",
         ]),
       ),
@@ -437,7 +460,7 @@ function pagerButton(label: string, disabled: boolean, onClick: () => void) {
 function messageRow(text: string) {
   const row = document.createElement("tr");
   const cell = document.createElement("td");
-  cell.colSpan = 6;
+  cell.colSpan = 5;
   cell.textContent = text;
   row.append(cell);
   return row;
@@ -459,8 +482,8 @@ function writeDirectoryUrl(query: string, page: number) {
 }
 
 function compareServers(
-  a: McpServerRecord,
-  b: McpServerRecord,
+  a: McpWebServer,
+  b: McpWebServer,
   key: SortKey,
   direction: SortDirection,
 ) {
@@ -473,19 +496,14 @@ function compareServers(
   return direction === "asc" ? comparison : -comparison;
 }
 
-function sortValue(server: McpServerRecord, key: SortKey) {
-  if (key === "version") return server.version;
-  if (key === "updated") return server.updatedAt ?? "";
-  return mcpDisplayName(server);
+function sortValue(server: McpWebServer, key: SortKey) {
+  if (key === "version") return server.v;
+  if (key === "updated") return server.u ?? "";
+  return server.t || server.n;
 }
 
-function scoreServer(server: McpServerRecord, terms: string[]) {
-  const fields = [
-    server.title ?? "",
-    server.name,
-    server.description,
-    ...(server.packages ?? []).map((item) => item.identifier),
-  ];
+function scoreServer(server: McpWebServer, terms: string[]) {
+  const fields = [server.t ?? "", server.n, server.rg ?? "", server.tr ?? ""];
   let score = 0;
   for (const term of terms) {
     let best = 0;
@@ -495,8 +513,8 @@ function scoreServer(server: McpServerRecord, terms: string[]) {
     if (best <= 0) return 0;
     score += best;
   }
-  const title = normalize(mcpDisplayName(server));
-  const id = normalize(server.name);
+  const title = normalize(server.t || server.n);
+  const id = normalize(server.n);
   const query = terms.join(" ");
   if (title === query || id === query) score += 120;
   else if (title.startsWith(query)) score += 44;

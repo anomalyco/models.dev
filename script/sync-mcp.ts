@@ -24,7 +24,7 @@ const jsonlPath = path.join(stateDir, "servers.jsonl");
 const cursorPath = path.join(stateDir, "cursor.txt");
 const pageSize = 100;
 
-interface RegistryList {
+export interface RegistryList {
   servers?: RegistryEntry[];
   metadata?: { nextCursor?: string; count?: number };
   status?: number;
@@ -32,7 +32,7 @@ interface RegistryList {
   detail?: string;
 }
 
-interface RegistryEntry {
+export interface RegistryEntry {
   server?: {
     name?: string;
     title?: string;
@@ -61,78 +61,7 @@ interface RegistryEntry {
   };
 }
 
-const proxy = process.env.MCP_REGISTRY_PROXY ?? "";
-const stamps: number[] = [];
-
-mkdirSync(stateDir, { recursive: true });
-if (proxy) {
-  console.log(`mcp-sync using MCP_REGISTRY_PROXY ${proxy}`);
-} else {
-  console.log("mcp-sync using the registry directly");
-}
-
-let cursor = existsSync(cursorPath) ? readFileSync(cursorPath, "utf8").trim() : "";
-if (cursor === "DONE") cursor = "";
-if (!cursor && existsSync(jsonlPath)) rmSync(jsonlPath);
-
-let pages = 0;
-let kept = 0;
-
-for (;;) {
-  await pace();
-  const page = await fetchPage(cursor);
-  const servers = page.servers ?? [];
-  if (servers.length === 0 && !page.metadata?.nextCursor) break;
-
-  const lines: string[] = [];
-  for (const entry of servers) {
-    const record = compact(entry);
-    if (!record) continue;
-    lines.push(JSON.stringify(record));
-    kept++;
-  }
-  if (lines.length > 0) appendFileSync(jsonlPath, `${lines.join("\n")}\n`);
-
-  pages++;
-  const next = page.metadata?.nextCursor ?? "";
-  writeFileSync(cursorPath, next);
-  console.log(
-    `mcp-sync page ${pages} kept ${kept} batch ${servers.length} cursor ${next || "(end)"}`,
-  );
-  if (!next) break;
-  cursor = next;
-}
-
-const byName = new Map<string, Record<string, unknown>>();
-if (existsSync(jsonlPath)) {
-  for (const line of readFileSync(jsonlPath, "utf8").split("\n")) {
-    if (!line) continue;
-    const record = JSON.parse(line) as { name?: string; updatedAt?: string };
-    if (!record.name) continue;
-    const previous = byName.get(record.name) as { updatedAt?: string } | undefined;
-    if (!previous || (record.updatedAt ?? "") >= (previous.updatedAt ?? "")) {
-      byName.set(record.name, record);
-    }
-  }
-}
-
-const servers = [...byName.values()].sort((a, b) =>
-  String(a.name).localeCompare(String(b.name)),
-);
-mkdirSync(path.dirname(output), { recursive: true });
-const catalog = {
-  source: `${registryOrigin}/v0.1/servers?version=latest`,
-  syncedAt: new Date().toISOString(),
-  count: servers.length,
-  servers,
-};
-const temporary = `${output}.tmp`;
-writeFileSync(temporary, JSON.stringify(catalog));
-renameSync(temporary, output);
-writeFileSync(cursorPath, "DONE");
-console.log(`mcp-sync wrote ${servers.length} servers to ${output}`);
-
-function compact(entry: RegistryEntry) {
+export function compact(entry: RegistryEntry) {
   const server = entry.server;
   const meta = entry._meta?.["io.modelcontextprotocol.registry/official"];
   if (!server?.name || !server.name.includes("/")) return undefined;
@@ -174,7 +103,119 @@ function compact(entry: RegistryEntry) {
   return record;
 }
 
-async function fetchPage(cursor: string): Promise<RegistryList> {
+export function assertCatalogNotShrunk(
+  nextCount: number,
+  previousCount: number | undefined,
+  options: { allowShrink?: boolean; floorRatio?: number } = {},
+) {
+  const allowShrink = options.allowShrink ?? false;
+  const floorRatio = options.floorRatio ?? 0.95;
+  if (allowShrink || previousCount === undefined || previousCount <= 0) return;
+  const floor = Math.floor(previousCount * floorRatio);
+  if (nextCount < floor) {
+    throw new Error(
+      `mcp-sync refused to overwrite ${previousCount} servers with ${nextCount} (below ${floor}). Set MCP_SYNC_ALLOW_SHRINK=1 to override.`,
+    );
+  }
+}
+
+export function previousCatalogCount(file = output) {
+  if (!existsSync(file)) return undefined;
+  try {
+    const catalog = JSON.parse(readFileSync(file, "utf8")) as { count?: number; servers?: unknown[] };
+    if (typeof catalog.count === "number") return catalog.count;
+    if (Array.isArray(catalog.servers)) return catalog.servers.length;
+  } catch {
+    return undefined;
+  }
+  return undefined;
+}
+
+if (import.meta.main) {
+  await syncOfficial();
+}
+
+async function syncOfficial() {
+  const proxy = process.env.MCP_REGISTRY_PROXY ?? "";
+  const stamps: number[] = [];
+
+  mkdirSync(stateDir, { recursive: true });
+  if (proxy) {
+    console.log(`mcp-sync using MCP_REGISTRY_PROXY ${proxy}`);
+  } else {
+    console.log("mcp-sync using the registry directly");
+  }
+
+  let cursor = existsSync(cursorPath) ? readFileSync(cursorPath, "utf8").trim() : "";
+  if (cursor === "DONE") cursor = "";
+  if (!cursor && existsSync(jsonlPath)) rmSync(jsonlPath);
+
+  let pages = 0;
+  let kept = 0;
+
+  for (;;) {
+    await pace(proxy, stamps);
+    const page = await fetchPage(cursor, proxy, stamps);
+    const servers = page.servers ?? [];
+    if (servers.length === 0 && !page.metadata?.nextCursor) break;
+
+    const lines: string[] = [];
+    for (const entry of servers) {
+      const record = compact(entry);
+      if (!record) continue;
+      lines.push(JSON.stringify(record));
+      kept++;
+    }
+    if (lines.length > 0) appendFileSync(jsonlPath, `${lines.join("\n")}\n`);
+
+    pages++;
+    const next = page.metadata?.nextCursor ?? "";
+    writeFileSync(cursorPath, next);
+    console.log(
+      `mcp-sync page ${pages} kept ${kept} batch ${servers.length} cursor ${next || "(end)"}`,
+    );
+    if (!next) break;
+    cursor = next;
+  }
+
+  const byName = new Map<string, Record<string, unknown>>();
+  if (existsSync(jsonlPath)) {
+    for (const line of readFileSync(jsonlPath, "utf8").split("\n")) {
+      if (!line) continue;
+      const record = JSON.parse(line) as { name?: string; updatedAt?: string };
+      if (!record.name) continue;
+      const previous = byName.get(record.name) as { updatedAt?: string } | undefined;
+      if (!previous || (record.updatedAt ?? "") >= (previous.updatedAt ?? "")) {
+        byName.set(record.name, record);
+      }
+    }
+  }
+
+  const servers = [...byName.values()].sort((a, b) =>
+    String(a.name).localeCompare(String(b.name)),
+  );
+  assertCatalogNotShrunk(servers.length, previousCatalogCount(output), {
+    allowShrink: process.env.MCP_SYNC_ALLOW_SHRINK === "1",
+  });
+  mkdirSync(path.dirname(output), { recursive: true });
+  const catalog = {
+    source: `${registryOrigin}/v0.1/servers?version=latest`,
+    syncedAt: new Date().toISOString(),
+    count: servers.length,
+    servers,
+  };
+  const temporary = `${output}.tmp`;
+  writeFileSync(temporary, JSON.stringify(catalog));
+  renameSync(temporary, output);
+  writeFileSync(cursorPath, "DONE");
+  console.log(`mcp-sync wrote ${servers.length} servers to ${output}`);
+}
+
+async function fetchPage(
+  cursor: string,
+  proxy: string,
+  stamps: number[],
+): Promise<RegistryList> {
   const params = new URLSearchParams({ version: "latest", limit: String(pageSize) });
   if (cursor) params.set("cursor", cursor);
   const direct = `${registryOrigin}/v0.1/servers?${params}`;
@@ -225,7 +266,7 @@ async function fetchPage(cursor: string): Promise<RegistryList> {
   throw new Error("registry page failed");
 }
 
-async function pace() {
+async function pace(proxy: string, stamps: number[]) {
   if (!proxy) return;
   const now = Date.now();
   while (stamps.length > 0 && now - stamps[0]! >= 60_000) stamps.shift();

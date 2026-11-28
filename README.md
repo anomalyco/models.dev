@@ -76,13 +76,13 @@ The site also has an [MCP page](https://models.dev/mcp) with a snapshot of serve
 curl https://models.dev/mcp.json
 ```
 
-The file is `mcp/servers.json`. Refresh it from the registry API documented in [modelcontextprotocol/registry](https://github.com/modelcontextprotocol/registry):
+The file is `mcp/servers.json` (~35 MB). The website does not download that whole file for browsing: it serves a compact `/mcp.web.json` index plus small `/mcp/detail/{0..255}.json` shards built at deploy time. Refresh the snapshot from the registry API documented in [modelcontextprotocol/registry](https://github.com/modelcontextprotocol/registry):
 
 ```bash
 bun run mcp:sync
 ```
 
-The sync reads `https://registry.modelcontextprotocol.io/v0.1/servers?version=latest`. If that host is unreachable from your network, set `MCP_REGISTRY_PROXY` to a fetchable prefix such as `https://r.jina.ai/`.
+The sync reads `https://registry.modelcontextprotocol.io/v0.1/servers?version=latest`. If that host is unreachable from your network, set `MCP_REGISTRY_PROXY` to a fetchable prefix. A sync that would shrink the catalog by more than 5% fails closed unless `MCP_SYNC_ALLOW_SHRINK=1` is set.
 
 ### Logos
 
