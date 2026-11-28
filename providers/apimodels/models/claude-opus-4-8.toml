@@ -4,11 +4,12 @@
 #   Cache read is billed at 10% of the input price for this model.
 # - Model ID: https://api.apimodels.app/v1/models ("claude-opus-4-8")
 # Served on the Anthropic Messages API (https://api.apimodels.app/v1/messages); thinking and output_config.effort are passed through unchanged.
+# Toggle: thinking.type = adaptive|disabled. Live probe on POST https://api.apimodels.app/v1/messages (2026-11-28): thinking.type = disabled returned a text block only, thinking.type = adaptive returned a thinking block followed by text.
 schema = 2
 base_model = "anthropic/claude-opus-4-8"
 
 [capabilities]
-reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

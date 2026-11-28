@@ -4,12 +4,13 @@
 #   Input above 272K tokens bills the whole request at 2x input and cache read, 1.5x output.
 # - Model ID: https://api.apimodels.app/v1/models ("gpt-6-luna")
 # Served on Chat Completions; reasoning_effort is forwarded unchanged.
-# Custom (freeform) tools have not been probed on this host, so `freeform` is left out.
+# tools.freeform: live probe on POST https://api.apimodels.app/v1/chat/completions (2026-11-28, 3 runs): one custom tool with tool_choice = "required", formats text, regex `ZZ[0-9]{3}` and the equivalent lark grammar. All three were accepted and the grammars enforced (regex and lark both returned ZZ plus three digits; text returned the free sentence).
 schema = 2
 base_model = "openai/gpt-6-luna"
 
 [capabilities]
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+tools = { supported = true, freeform = ["text", "lark", "regex"] }
 
 [cost.text.input]
 price = 0.09
