@@ -6,28 +6,17 @@
 # tools.updates = false: tool_addition/tool_removal system blocks are accepted but have no effect on Chat Completions (live)
 # Cache: cache_control (top-level or per block), 4 breakpoints, 5m/1h TTL, 1h write = 2x input; min tokens per model (https://openrouter.ai/docs/guides/best-practices/prompt-caching#anthropic-claude)
 schema = 2
+base_model = "anthropic/claude-haiku-5-5"
 name = "Claude Haiku Latest"
 description = "Fast Claude model for responsive assistance, classification, and lightweight agents"
-family = "claude-haiku"
-open_weights = false
-release_date = "2026-04-27"
-
-[modalities]
-input = ["text", "image/png", "image/jpeg", "image/webp", "image/gif", "application/pdf"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-temperature = false
 system_updates = true
 effort_updates = true
 cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, min_tokens = 512 } }
-
-[limit]
-context = 1_000_000
-output = 128_000
 
 [api.chat-completions]
 

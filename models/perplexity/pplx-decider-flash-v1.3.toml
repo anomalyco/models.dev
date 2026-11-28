@@ -1,0 +1,32 @@
+# https://www.perplexity.ai/hub/blog/perplexity-decider (v1.3 release and distillation)
+# https://docs.perplexity.ai/docs/decisions/decisions (256K context, image formats and typed decisions)
+# https://huggingface.co/perplexity-ai/pplx-decider-flash-v1.3 (Apache-2.0 weights and zero generated tokens)
+# https://openrouter.ai/perplexity/pplx-decider-flash-v1.3:free (public release on 2026-11-12)
+schema = 2
+v2_only = true
+type = "decision"
+name = "pplx-decider-flash-v1.3"
+family = "pplx-decider-flash"
+description = "Smaller model distilled from Decider v1.3 for probabilistic classification and span extraction over text and images."
+open_weights = true
+release_date = "2026-11-12"
+license = "Apache-2.0"
+
+[modalities]
+input = ["text", "image/png", "image/jpeg", "image/webp"]
+output = ["decision"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 262_144
+output = 0
+
+[[weights]]
+label = "Hugging Face"
+url = "https://huggingface.co/perplexity-ai/pplx-decider-flash-v1.3"

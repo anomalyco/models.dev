@@ -1,24 +1,9 @@
 schema = 2
-type = "decision"
+base_model = "perplexity/pplx-decider-v1.3"
 name = "Decider V1.3 (free)"
-description = "Decision model for typed evaluation of shared state"
-family = "pplx-decider"
-open_weights = false
-release_date = "2026-11-12"
-
-[modalities]
-input = ["text", "image"]
-output = ["text"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
-temperature = false
-
-[limit]
-context = 262_144
-output = 0
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }

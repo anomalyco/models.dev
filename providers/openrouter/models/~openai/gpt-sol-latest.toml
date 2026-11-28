@@ -4,36 +4,25 @@
 # tools.updates = false: Chat Completions rejects tool_addition/tool_removal for non-Claude-4.8+ models (live 400)
 # Cache: automatic from 1,024 tokens; GPT-5.6+ explicit prompt_cache_breakpoint, 30m TTL (https://openrouter.ai/docs/guides/best-practices/prompt-caching#openai)
 # Live 2026-11-17 (@opencode/ai request shapes, every tool in additional_tools, 2 runs each on this model): tools.updates = ["add", "remove"] on [api.responses]: additions and removal announcements work; a redefinition keeps the old schema. Chat Completions has no mechanism.
+# OpenRouter gpt-6.2-sol.toml inherited its Responses freeform formats on 2026-11-18 from gpt-6.2-astra.toml, whose 2026-11-17 probe enforced lark and regex and accepted text.
 schema = 2
+base_model = "openai/gpt-6.2-sol"
 name = "GPT Sol Latest"
 description = "GPT model for general reasoning, writing, coding, and tool-assisted tasks"
-family = "gpt-sol"
-open_weights = false
-knowledge = "2026-02-16"
-release_date = "2026-09-11"
-
-[modalities]
-input = ["application/pdf", "image/png", "image/jpeg", "image/webp", "image/gif", "text"]
-output = ["text"]
 
 [capabilities]
 tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
 reasoning = { supported = true, effort = ["low", "medium", "high", "xhigh", "max"] }
 structured_output = true
-temperature = false
 system_updates = true
 effort_updates = true
 cache = { implicit = { min_tokens = 1_024 }, explicit = { ttl = ["30m"], min_tokens = 1_024 } }
-
-[limit]
-context = 1_050_000
-output = 128_000
 
 [api.chat-completions]
 
 [api.responses]
 sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
-capabilities = { tools = { updates = ["add", "remove"] } }
+capabilities = { tools = { freeform = ["text", "lark", "regex"], updates = ["add", "remove"] } }
 
 [api.messages]
 sdk = { aisdk = "@ai-sdk/anthropic", opencodeai = "@opencode/ai/providers/anthropic-compatible" }

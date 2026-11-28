@@ -86,6 +86,7 @@ const CANONICAL_PROVIDER_PREFIXES = {
   moonshotai: { provider: "moonshotai", metadata: "moonshotai" },
   openai: { provider: "openai", metadata: "openai" },
   nvidia: { provider: "nvidia", metadata: "nvidia" },
+  perplexity: { provider: "perplexity", metadata: "perplexity" },
   qwen: { provider: "alibaba", metadata: "alibaba" },
   sakana: { provider: "sakana", metadata: "sakana" },
   stepfun: { provider: "stepfun", metadata: "stepfun" },
@@ -152,6 +153,8 @@ export const OpenRouterVideoModels = z.object({
 
 export const OpenRouterModel = z.object({
   id: z.string(),
+  description: z.string().nullish(),
+  alias_target: z.object({ slug: z.string().nullish() }).nullish(),
   name: z.string(),
   created: z.number(),
   hugging_face_id: z.string().nullable(),
@@ -221,6 +224,8 @@ export type OpenRouterModel = z.infer<typeof OpenRouterModel>;
 export const openrouter = {
   id: "openrouter",
   name: "OpenRouter",
+  // The translator preserves fixed routes itself. A rolling alias can lose its target.
+  preserveBaseModels: false,
   modelsDir: "providers/openrouter/models",
   async fetchModels() {
     const headers = process.env.OPENROUTER_API_KEY
@@ -285,6 +290,9 @@ export const openrouter = {
     ];
   },
   translateModel(model, context) {
+    const alias = model.id.startsWith("~");
+    const slug = alias ? model.alias_target?.slug : undefined;
+    const targetBase = slug ? context.authored(slug)?.base_model : undefined;
     const type = mediaType(model);
     if (type !== undefined) {
       const current = context.v2?.(model.id);
@@ -293,7 +301,7 @@ export const openrouter = {
       }
       return {
         id: model.id,
-        v2: buildOpenRouterMediaModel(model, type, current),
+        v2: buildOpenRouterMediaModel(model, type, current, targetBase),
         header: MEDIA_HEADERS[type],
       };
     }
@@ -306,7 +314,9 @@ export const openrouter = {
       const authored = context.authored(model.id);
       return authored === undefined ? undefined : { id: model.id, model: authored as SyncedModel };
     }
-    const built = buildOpenRouterModel(model, context.existing(model.id));
+    // An alias keeps its own overrides, never facts inherited from its previous target.
+    const existing = alias ? context.authored(model.id) : context.existing(model.id);
+    const built = buildOpenRouterModel(model, existing, targetBase);
     // Factoring compares v1 modality kinds, which collapse all image formats.
     // Keep a real v2 host-format override when the catalog still lists those kinds.
     const formats = context.v2?.(model.id)?.modalities;
@@ -840,20 +850,37 @@ function isUnavailableMedia(model: OpenRouterModel) {
   return [prompt, completion, image, audio].some((value) => value !== undefined && Number(value) < 0);
 }
 
+function openRouterBaseModel(
+  model: OpenRouterModel,
+  existing: string | undefined,
+  targetBase: string | undefined,
+  resolve: (id: string) => string | undefined,
+) {
+  if (!model.id.startsWith("~")) return existing ?? targetBase ?? resolve(model.id);
+  const slug = model.alias_target?.slug;
+  if (slug == null) return resolve(model.id); // includes curated alias mappings
+  if (!/^[a-z0-9][\w.-]*\/[a-z0-9][\w.:-]*$/i.test(slug)) return undefined;
+  return targetBase ?? resolve(slug) ?? resolveModelMetadataBaseModel(slug);
+}
+
 export function buildOpenRouterMediaModel(
   model: OpenRouterModel,
   type: MediaType,
   current?: Record<string, unknown>,
+  targetBase?: string,
 ): Record<string, unknown> {
-  const base = typeof current?.base_model === "string" ? current.base_model : resolveMediaBaseModel(model.id);
+  const existingBase = typeof current?.base_model === "string" ? current.base_model : undefined;
+  const base = openRouterBaseModel(model, existingBase, targetBase, resolveMediaBaseModel);
   const lab = base === undefined ? undefined : rawLabModel(base);
   const doc: Record<string, unknown> = { schema: 2, v2_only: true };
   const modalities = mediaModalities(model, type);
   const context = model.context_length;
   const api = MEDIA_APIS[type];
 
+  const description = typeof current?.description === "string" ? current.description : model.description;
   if (base !== undefined && lab !== undefined) {
     doc.base_model = base;
+    if (model.id.startsWith("~") && description) doc.description = description;
     const labCapabilities = (lab.capabilities ?? {}) as Record<string, unknown>;
     const labContext = (lab.limit as { context?: number } | undefined)?.context;
     // A lab of another type (a chat model served on a transcription endpoint)
@@ -897,6 +924,7 @@ export function buildOpenRouterMediaModel(
     doc.name = model.name.replace(/^[^:]+:\s+/, "");
     doc.description = typeof current?.description === "string"
       ? current.description
+      : model.id.startsWith("~") && description ? description
       : type === "embedding" && modalities.input.length > 1
         ? "Multimodal embedding model"
         : MEDIA_DESCRIPTIONS[type];
@@ -1573,7 +1601,7 @@ export function buildOpenRouterModel(
         tiers: costTiers(model, existing),
       }
     : existing?.cost;
-  const canonical = existing?.base_model ?? baseModel ?? resolveCanonicalBaseModel(model.id);
+  const canonical = openRouterBaseModel(model, existing?.base_model, baseModel, resolveCanonicalBaseModel);
   const catalogOutput = isPlaceholderOutputLimit(model) ? undefined : model.top_provider.max_completion_tokens;
   const limit = {
     context,
@@ -1586,6 +1614,7 @@ export function buildOpenRouterModel(
       ?? existing?.limit?.output
       ?? context),
   };
+  const description = existing?.description ?? (model.id.startsWith("~") ? model.description ?? undefined : undefined);
 
   if (canonical !== undefined) {
     const canonicalOverride = canonicalBaseModelOverride(model.id);
@@ -1598,7 +1627,7 @@ export function buildOpenRouterModel(
           : undefined,
         family: freeFamily(canonical, existing?.family),
         // The lab describes a decision model; don't override it with a generic chat description.
-        description: decision ? existing?.description : existing?.description ?? describeModel({
+        description: decision ? description : description ?? describeModel({
           id: model.id,
           name,
           family: familyValue,
@@ -1630,7 +1659,7 @@ export function buildOpenRouterModel(
   return {
     type,
     name,
-    description: existing?.description ?? (decision ? DECISION_DESCRIPTION : describeModel({
+    description: description ?? (decision ? DECISION_DESCRIPTION : describeModel({
       id: model.id,
       name,
       family: familyValue,

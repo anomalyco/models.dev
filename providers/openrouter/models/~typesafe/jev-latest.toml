@@ -1,7 +1,8 @@
 # Modalities: OpenRouter says "Jev accepts only image/png and image/jpeg" (https://openrouter.ai/docs/guides/community/multimodal-decisions), matching the lab (https://docs.typesafe.ai/images.md)
 schema = 2
-base_model = "typesafe/jev-latest"
+base_model = "typesafe/jev-1.14.0"
 name = "Jev Latest"
+description = "This model always redirects to the latest model in the Jev family."
 
 [capabilities]
 structured_output = true

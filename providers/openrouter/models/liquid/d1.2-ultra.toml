@@ -1,24 +1,15 @@
+# OpenRouter lists text and image input. Image MIME types follow Liquid's d1.2 Image Requirements:
+# https://github.com/Liquid4All/docs/blob/d4c58eb76305b9d20d7167ee7d1fffcb976aea98/lfm/models/d1.mdx#L1220-L1224
+# https://openrouter.ai/api/v1/models?output_modalities=decisions
 schema = 2
-type = "decision"
-name = "d1.2-ultra"
-description = "Decision model for typed evaluation of shared state"
-family = "liquid"
-open_weights = false
-release_date = "2026-11-16"
+base_model = "liquid/d1.2-ultra"
 
 [modalities]
-input = ["text", "image"]
-output = ["text"]
+input = ["text", "image/jpeg", "image/png", "image/webp"]
+output = ["decision"]
 
 [capabilities]
-tools = { supported = false }
-reasoning = { supported = false }
 structured_output = false
-temperature = false
-
-[limit]
-context = 65_536
-output = 0
 
 [api.systemone]
 sdk = { aisdk = "@ai-sdk/typesafe-ai", opencodeai = "@opencode/ai/providers/openrouter/decisions" }
