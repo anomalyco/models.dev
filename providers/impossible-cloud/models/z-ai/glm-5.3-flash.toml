@@ -1,0 +1,21 @@
+# Model ID: GET https://inference.eu-west-3.impossibleapi.net/openai/v1/models (2026-11-26).
+# Limits and reasoning behaviour: provided by Impossible Cloud for its inference API (2026-11-27).
+# Effort: reasoning_effort low|high|max. none doesn't turn reasoning off, so it isn't listed.
+# Pricing: https://www.impossiblecloud.com/pricing#prices is the source of truth and prices change,
+#   so no [cost] tables are set here.
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[limit]
+context = 1_048_576
+output = 65_536
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
