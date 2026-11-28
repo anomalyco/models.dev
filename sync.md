@@ -10,6 +10,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
 - `bun models:sync aiand` syncs only ai&.
+- `bun models:sync aki-io` syncs only AKI.IO.
 - `bun models:sync openrouter` syncs only OpenRouter.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
@@ -558,9 +559,14 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - `interleaved` comes from the feed when published, else the authored value, else `{ field = "reasoning_content" }` for reasoners — every ai& reasoner streams thinking in `message.reasoning_content`, so a new reasoner is never created without its side channel.
 - A reasoner never gets an invented `[]`: an omitted feed list keeps the authored controls, and a non-empty list whose effort values the schema doesn't know yet does too; when neither yields a schema-valid set the model fails with `MissingReasoningOptionsError` — the runner preserves the local file and routes the id to the missing-model issue flow. Only an explicit `[]` published by the feed is written as "no caller control".
 
-## Groq Notes
+## AKI.IO Notes
 
-- Source endpoint: `https://api.groq.com/openai/v1/models`, which needs `GROQ_API_KEY` (the workflow reads it from AWS Secrets Manager as `models.dev/release/GROQ_API_KEY`).
-- Update-only for priced text models that already have a file: prices, the `input_cache_read` rate, `context_window` and `max_completion_tokens` come from the list. Reasoning efforts, service tiers, the Responses API and web search fees stay hand-authored, and new remote IDs open missing-model issues.
-- The list gives every model a cache rate at half its input price, even models Groq's [prompt caching page](https://console.groq.com/docs/prompt-caching) doesn't support, so the sync only updates a cache price the file already has.
-- Speech, transcription and unpriced models are left alone, and nothing is deleted when a model drops out of the list; mark it `status = "deprecated"` by hand.
+- Run it with `bun models:sync aki-io` or `bun aki-io:sync`.
+- Source endpoint: `https://aki.io/api/models`; no auth required.
+- Provider TOMLs are named after the OpenAI-compatible ID in `openai.id`, not the canonical catalog `id`, so the sync matches and writes that ID.
+- The endpoint lists EUR prices in `pricing.in_token_price`, `pricing.out_token_price` and `pricing.cached_token_price`, quoted per `pricing.in_token_unit` / `out_token_unit` / `cached_token_unit` tokens (1M today). They are scaled to per-1M tokens and converted to USD at the fixed ECB reference rate in the module (`1.0989 USD/EUR`, 2026-11-17), rounded to seven decimals. Refresh the constant when the catalog's hand-authored headers are updated.
+- Only existing TOMLs are updated (`skipCreates`, `trackMissingModels: false`): the endpoint lists trust-level variants and non-chat surfaces the catalog does not carry, and creating one would need hand-authored reasoning controls and lab metadata.
+- The public catalog omits retired routes, so local files missing from a response are removed (`deleteMissing: true`). The fetch refuses a response with fewer than twenty rows: a truncated list that still parses would otherwise be indistinguishable from a mass retirement and could delete curated files.
+- `cache_read` is written only when the API reports a positive cache price. A reported `0` does not add a cache price to a file that has none, and does not overwrite an authored one.
+- Every other authored field (limits, modalities, reasoning controls, headers) is preserved; the endpoint is only authoritative for token prices and the served-model list.
+

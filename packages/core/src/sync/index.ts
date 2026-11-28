@@ -23,6 +23,7 @@ import { MissingReasoningOptionsError } from "./missing-reasoning-options.js";
 import { aiand } from "./providers/aiand.js";
 import { alibaba } from "./providers/alibaba.js";
 import { aimlapi } from "./providers/aimlapi.js";
+import { akiIo } from "./providers/aki-io.js";
 import { ambient } from "./providers/ambient.js";
 import { amazonBedrock } from "./providers/amazon-bedrock.js";
 import { cerebras } from "./providers/cerebras.js";
@@ -215,6 +216,7 @@ export const providers: {
   aiand: SyncProvider<any>;
   alibaba: SyncProvider<any>;
   aimlapi: SyncProvider<any>;
+  "aki-io": SyncProvider<any>;
   ambient: SyncProvider<any>;
   "amazon-bedrock": SyncProvider<any>;
   azure: SyncProvider<any>;
@@ -277,6 +279,7 @@ export const providers: {
   aiand,
   alibaba,
   aimlapi,
+  "aki-io": akiIo,
   ambient,
   "amazon-bedrock": amazonBedrock,
   azure,
@@ -339,6 +342,7 @@ export const providers: {
 
 export const groups = {
   aggregators: [
+    "aki-io",
     "aimlapi",
     "concentrate",
     "crossmodel",

@@ -1,0 +1,26 @@
+# Output limit: is capped to aki.io supported limit for this model
+# modalities image/jpeg and image/png input are now supported. Vision capability is listed
+# at aki.io model catalog at https://aki.io/models (2026-11-17).
+# Prices: GET /api/models (checked 2026-11-17) list EUR per 1M tokens (net); converted
+# to USD at the ECB reference rate of 1.0989 USD/EUR (2026-11-17).
+schema = 2
+base_model = "zhipuai/glm-5.3-flash"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[limit]
+output = 81_920
+
+[cost.text.input]
+price = 0.1373625
+cache = { read = 0.0274725 }
+
+[cost.text.output]
+price = 0.43956
