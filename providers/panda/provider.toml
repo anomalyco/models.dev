@@ -1,0 +1,26 @@
+# Panda API: OpenAI Chat Completions at POST /v1/chat/completions and GET /v1/models, with a bearer
+# inference token (pnd_it_...) created on Panda's dashboard. This listing offers Panda's five models: Panda
+# Mini, Panda Auto, Panda Mix, Panda Mix Pro and Panda Max. In a mix, two models answer and one combines
+# their answers. No reasoning controls: each model keeps the thinking setting Panda chose for it, and
+# reasoning_effort is accepted and ignored. Text input only. Limits: 64 KiB of instructions, 1,024 messages
+# (1,022 caller messages when a request with tools runs a mix) and 8 MiB bodies.
+# Panda counts each byte of a request as a token, and a request must fit everything the model may run: one
+# that does not is refused with 400 context_length_exceeded, before any charge. A model's reference request
+# size is what fits for an agent at a 16,384-token output limit: tools and long instructions leave less
+# room, and without tools Panda Auto holds more. No limit.input: Panda limits a request's bytes, not its
+# tokens, so there is no exact token maximum. limit.context is the setup page's suggested agent context,
+# about a quarter of the reference request size: the context callers can rely on, and the setup page's
+# configs use it. On that 400, OpenCode, and Pi set up without the Panda package, compact the conversation
+# and send it again if their automatic compaction is on.
+# https://panda.repair/products/llm-api (accessed 2026-11-24)
+# https://panda.repair/products/llm-api/coding-agents/setup#agents-models ("Suggested agent context
+# (tokens)" and "Reference request size (bytes)", accessed 2026-11-24)
+# https://panda.repair/products/llm-api#llm-api-model-limits (accessed 2026-11-24)
+# Which providers process requests: Panda's privacy policy, https://panda.repair/privacy (accessed
+# 2026-11-24)
+name = "Panda"
+env = ["PANDA_API_TOKEN"]
+npm = "@ai-sdk/openai-compatible"
+opencodeai = "@opencode/ai/providers/openai-compatible"
+api = "https://app.panda.repair/v1"
+doc = "https://panda.repair/products/llm-api"

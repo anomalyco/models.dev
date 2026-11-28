@@ -1,0 +1,39 @@
+# Panda Mix Pro: the same mix as Panda Mix, with a stronger model combining the two answers into one reply
+# (with tools, the combining call alone makes the tool calls).
+# No [cost]: Panda charges each call that answers, up to three (two answers and the one that combines them,
+# with a pricier call to combine), 3/2 of what it cost Panda, worked out from the usage or cost its provider
+# reports, with a one-cent minimum per charged request. A refused or unusable answer costs nothing; when the
+# combining call fails, the answers that came back stay charged. So there is no per-token price.
+# Limits: Panda counts each byte of a request as a token and refuses a request past its reference request
+# size with 400 context_length_exceeded, before any charge. Panda Mix Pro's reference request size for
+# agents is 897,570 bytes at a 16,384-token output limit, a little less than one model holds, because the
+# combining call keeps room for the answers. limit.context is the setup page's suggested agent context,
+# about a quarter of that size: the context callers can rely on, and the setup page's configs use it.
+# Reasoning: some of its models think at a level Panda sets; there is no caller control.
+# https://panda.repair/products/llm-api (accessed 2026-11-24)
+# https://panda.repair/products/llm-api/coding-agents/setup#agents-models ("Suggested agent context
+# (tokens)" and "Reference request size (bytes)", accessed 2026-11-24)
+# https://panda.repair/products/llm-api#llm-api-model-limits (accessed 2026-11-24)
+schema = 2
+name = "Panda Mix Pro"
+description = "Two models answer, and a stronger model combines their answers"
+family = "model-router"
+open_weights = false
+release_date = "2026-11-18"
+last_updated = "2026-11-24"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true, choice = ["auto", "none", "required", "tool"] }
+reasoning = { supported = true }
+temperature = true
+top_p = true
+top_k = false
+
+[limit]
+context = 224_000
+output = 16_384
+request_bytes = 8_388_608
