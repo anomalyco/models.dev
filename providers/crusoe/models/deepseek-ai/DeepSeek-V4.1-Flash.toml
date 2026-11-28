@@ -1,0 +1,26 @@
+# Source: https://docs.crusoe.ai/serverless-inference/index.html and
+# https://www.crusoe.ai/cloud/pricing (accessed 2026-11-16).
+# Crusoe update identifies the served V4.1 Flash as the 1017 checkpoint:
+# https://docs.crusoe.ai/updates/index.html . GET /v1/models confirms the API ID.
+# Live: Chat Completions tool call, continuation, strict JSON schema and PNG vision.
+# Implicit cache live: second identical request reused 11,136 of 11,233 input tokens.
+# reasoning_effort none/low/high/max, three same-prompt runs: reasoning tokens
+# 0/0/0, 220/220/268, 306/306/306 and 274/346/340 respectively.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[modalities]
+input = ["text", "image/png"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "high", "max"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.29
+cache = { read = 0.007 }
+
+[cost.text.output]
+price = 1.20
