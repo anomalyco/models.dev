@@ -1,0 +1,16 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Free or higher; prices are PAYG USD per million tokens.
+# NVIDIA Chat Completions: top-level reasoning_budget -1..32768; effort cross-checked against OpenRouter.
+schema = 2
+base_model = "nvidia/nemotron-3-ultra-550b-a55b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "medium", "high"], budget = { min = -1, max = 32_768 } }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.125
+cache = { read = 0.125 }
+
+[cost.text.output]
+price = 0.55

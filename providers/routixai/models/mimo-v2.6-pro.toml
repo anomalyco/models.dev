@@ -1,0 +1,21 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Go or higher; prices are PAYG USD per million tokens.
+# Xiaomi Chat Completions thinking toggle; no graded effort.
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "xiaomi/mimo-v2.6-pro"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.109
+cache = { read = 0.001 }
+
+[cost.text.output]
+price = 0.2175

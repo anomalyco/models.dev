@@ -1,0 +1,17 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Free or higher; prices are PAYG USD per million tokens.
+# NVIDIA Nemotron Chat Completions template and OpenRouter toggle-only baseline.
+# Toggle: chat_template_kwargs.enable_thinking = true|false
+schema = 2
+base_model = "nvidia/nemotron-3.5-lightning"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0125
+cache = { read = 0.0125 }
+
+[cost.text.output]
+price = 0.05

@@ -1,0 +1,17 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Plus or higher; prices are PAYG USD per million tokens.
+# Zhipu Chat Completions: https://docs.bigmodel.cn/cn/guide/capabilities/thinking-mode
+# Toggle: thinking.type = enabled|disabled
+schema = 2
+base_model = "zhipuai/glm-5.2"
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["high", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.35
+cache = { read = 0.065 }
+
+[cost.text.output]
+price = 1.1

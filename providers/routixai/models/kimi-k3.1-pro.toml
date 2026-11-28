@@ -1,0 +1,20 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Plus or higher; prices are PAYG USD per million tokens.
+# Moonshot Chat Completions effort baseline, cross-checked against Model Studio and NanoGPT.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.5
+cache = { read = 0.05 }
+
+[cost.text.output]
+price = 2.5

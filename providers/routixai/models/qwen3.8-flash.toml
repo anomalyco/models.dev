@@ -1,0 +1,21 @@
+# Prices and endpoint capabilities: https://routixai.online/v1/catalog/models (snapshot 2026-11-25 UTC).
+# Access requires RoutixAI Plus or higher; prices are PAYG USD per million tokens.
+# Alibaba Model Studio Chat Completions: thinking_budget cannot be combined with reasoning_effort.
+# Toggle: enable_thinking = true|false
+schema = 2
+base_model = "alibaba/qwen3.8-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, toggle = true, effort = ["low", "medium", "xhigh"], budget = { min = 0, max = 262_144 } }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.0375
+cache = { read = 0.004 }
+
+[cost.text.output]
+price = 0.1175
