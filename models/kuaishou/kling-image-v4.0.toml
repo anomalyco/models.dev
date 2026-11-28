@@ -1,0 +1,34 @@
+# API released 2026-11-17: https://kling.ai/document-api/updates/api.md ("Kling Image 4.0 API Now Available"),
+#   https://kling.ai/blog/kling-image-4-stunningly-realistic-sharp-precise
+# Sources (accessed 2026-11-27):
+# - https://kling.ai/document-api/guides/capability-map/image (Kling Image 4.0, API ID kling-4.0: text and image input,
+#   2K/4K/8K output; aspect ratios 16:9, 9:16, 1:1, 4:3, 3:4, 3:2, 2:3, 21:9, auto)
+# - https://kling.ai/document-api/api/image/4-0/image-generation (refer_image .jpg/.jpeg/.png up to 30 MB)
+# Output: the API returns image URLs and doesn't document the file format, so output stays generic.
+schema = 2
+v2_only = true
+type = "image"
+name = "Kling IMAGE 4.0"
+family = "kling-image"
+description = "Kling 4.0 image model for text-to-image and image-to-image with reference images and native 8K output"
+open_weights = false
+release_date = "2026-11-17"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png"]
+output = ["image"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+url = "https://kling.ai/document-api/api/image/4-0/image-generation"
+type = "docs"

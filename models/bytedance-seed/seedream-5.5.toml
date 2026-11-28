@@ -1,0 +1,31 @@
+# Released 2026-11-09: https://seed.bytedance.com/en/blog/more-realistic-images-more-stable-editing-across-100-rounds-introducing-seedream-5-5/
+# BytePlus ModelArk tutorial (model id dola-seedream-5-5-261028): https://docs.byteplus.com/docs/en/modelark/seedream-5-5.md
+#   Text-to-image, single-image-to-image and multi-reference-to-image (up to 10 reference images).
+#   Image generation input formats jpeg, png, webp, bmp, tiff, gif, heic, heif; output_format png (default) or jpeg.
+schema = 2
+v2_only = true
+type = "image"
+name = "Seedream 5.5"
+description = "Image generation and multi-turn editing model with native RGBA output and layer decomposition"
+family = "seedream"
+open_weights = false
+release_date = "2026-11-09"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/webp", "image/bmp", "image/tiff", "image/gif", "image/heic", "image/heif"]
+output = ["image/png", "image/jpeg"]
+
+[capabilities]
+tools = { supported = false }
+reasoning = { supported = false }
+temperature = false
+top_p = false
+top_k = false
+
+[limit]
+context = 0
+output = 0
+
+[[links]]
+url = "https://docs.byteplus.com/docs/en/modelark/seedream-5-5"
+type = "docs"
