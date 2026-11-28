@@ -1,0 +1,21 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Served by Minimax through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
+# Reasoning: off. Thinking is off by default for this model (providers/minimax/models/MiniMax-M3.toml), and Ironlane documents reasoning_effort for OpenAI models only ("other models ignore it") and passes no other field to the provider (https://ironlane.ai/docs/api/chat-completions): no documented field turns it on.
+# Cache: implicit; cached input bills at Minimax's cached price (https://ironlane.ai/docs/api/chat-completions).
+# Limits: the lower of Ironlane's catalog and Minimax's own entry (providers/minimax/models/MiniMax-M3.toml); a request past the host's cap fails there.
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[limit]
+context = 1_000_000
+
+[cost.text.input]
+price = 0.3
+cache = { read = 0.06 }
+
+[cost.text.output]
+price = 1.2

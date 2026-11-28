@@ -1,0 +1,21 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Input: text only. Ironlane's request to this model's provider carries message text, not image or file parts.
+# Reasoning: no caller control. Ironlane sends no thinkingConfig.
+# Cache: implicit; cached input bills at Google's cached price (https://ironlane.ai/docs/api/chat-completions).
+schema = 2
+base_model = "google/gemini-3.8-flash"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.75
+cache = { read = 0.075 }
+
+[cost.text.output]
+price = 3.75

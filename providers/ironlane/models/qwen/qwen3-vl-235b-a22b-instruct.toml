@@ -1,0 +1,15 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Served by STACKIT AI Model Serving through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
+# Cache: none listed; STACKIT AI Model Serving has no cached-input price in Ironlane's catalog.
+# Limits: the lower of Ironlane's catalog and STACKIT AI Model Serving's own entry (providers/stackit/models/Qwen/Qwen3-VL-235B-A22B-Instruct-FP8.toml); a request past the host's cap fails there.
+schema = 2
+base_model = "alibaba/qwen3-vl-235b-a22b-instruct"
+
+[limit]
+output = 16_384
+
+[cost.text.input]
+price = 1.6725
+
+[cost.text.output]
+price = 1.95125

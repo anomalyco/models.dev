@@ -1,0 +1,11 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Served by Featherless through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
+# Cache: none listed; Featherless has no cached-input price in Ironlane's catalog.
+schema = 2
+base_model = "mistral/mistral-small-24b-instruct-2501"
+
+[cost.text.input]
+price = 0.175
+
+[cost.text.output]
+price = 0.29

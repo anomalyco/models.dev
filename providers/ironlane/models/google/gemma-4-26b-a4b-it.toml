@@ -1,0 +1,19 @@
+# Prices: Ironlane public model catalog (https://app-api.ironlane.ai/api/models), read 2026-11-18; the default provider's list price, USD per 1M tokens (or per stated unit).
+# Served by Featherless through Ironlane's OpenAI-compatible route: messages and content parts are passed on as sent.
+# Reasoning: off. Thinking is off by default for this model (providers/adaption/models/gemma-4-26b-a4b-it.toml), and Ironlane documents reasoning_effort for OpenAI models only ("other models ignore it") and passes no other field to the provider (https://ironlane.ai/docs/api/chat-completions): no documented field turns it on.
+# Cache: none listed; Featherless has no cached-input price in Ironlane's catalog.
+# Limits: Ironlane's catalog lists these, lower than the lab's.
+schema = 2
+base_model = "google/gemma-4-26b-a4b-it"
+
+[capabilities]
+reasoning = { supported = false }
+
+[limit]
+context = 32_768
+
+[cost.text.input]
+price = 0.07
+
+[cost.text.output]
+price = 0.34
