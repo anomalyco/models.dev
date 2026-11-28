@@ -1,0 +1,24 @@
+# Effort: reasoning_effort = none|low|medium|high. Thinking is ON by default, and
+# none turns it off. Live probes on 2026-09-23 returned 200 OK for every listed
+# level. The set matches the same-surface peer baseline (ovhcloud, scaleway,
+# digitalocean), because minimal, xhigh, and max showed no distinct effect.
+# The catalog reports supports_reasoning = false for this ID, and that is a false
+# negative. Traces arrive in reasoning_content. Cache: the catalog bills cached
+# input tokens and documents no explicit cache-control markers, so prompt
+# caching is implicit. The costs match the Nebul API on 2026-09-23.
+schema = 2
+base_model = "alibaba/qwen3.5-397b-a17b"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[cost.text.input]
+price = 0.63
+cache = { read = 0.15 }
+
+[cost.text.output]
+price = 3.78

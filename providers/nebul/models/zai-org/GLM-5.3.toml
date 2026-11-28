@@ -1,0 +1,25 @@
+# Effort: reasoning_effort = low|high|max. The set matches the catalog and the zai
+# and OpenRouter entries for the same model. Traces arrive in reasoning_content.
+# Cache: the catalog bills cached input tokens and documents no explicit
+# cache-control markers, so prompt caching is implicit.
+# The costs and context match https://api.inference.nebul.io/v1/model/info on
+# 2026-09-23.
+schema = 2
+base_model = "zhipuai/glm-5.3"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+cache = { implicit = true }
+
+[api.chat-completions]
+compatibility = { reasoning_field = "reasoning_content" }
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 1.47
+cache = { read = 0.35 }
+
+[cost.text.output]
+price = 4.62
