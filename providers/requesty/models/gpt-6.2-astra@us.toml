@@ -1,0 +1,24 @@
+schema = 2
+base_model = "openai/gpt-6.2-astra"
+name = "GPT-6.2 Astra (US)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+system_updates = true
+
+[cost.text.input]
+price = 8
+cache = { read = 0.4, write = 10 }
+
+[[cost.text.input.overrides]]
+when = { context = { gt = 272_000 } }
+price = 16
+cache = { read = 0.8, write = 20 }
+
+[cost.text.output]
+price = 40
+
+[[cost.text.output.overrides]]
+when = { context = { gt = 272_000 } }
+price = 60
