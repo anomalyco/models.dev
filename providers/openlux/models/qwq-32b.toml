@@ -1,0 +1,13 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.5), read 2026-11-26.
+schema = 2
+base_model = "alibaba/qwq-32b"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 1
+
+[cost.text.output]
+price = 3

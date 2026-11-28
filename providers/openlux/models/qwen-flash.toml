@@ -1,0 +1,15 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.5), read 2026-11-26.
+# Budget: thinking_budget is not forwarded by OpenLux, so no budget is listed (live 2026-11-27: thinking_budget 64 still gave 8000 reasoning tokens on qwen3.5-plus and qwen4-max).
+# Toggle: enable_thinking = true|false
+schema = 2
+base_model = "alibaba/qwen-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "toggle", value = false }, toggle = true }
+
+[cost.text.input]
+price = 0.025
+
+[cost.text.output]
+price = 0.2

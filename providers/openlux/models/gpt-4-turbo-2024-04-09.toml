@@ -1,0 +1,11 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.44), read 2026-11-26.
+schema = 2
+base_model = "openai/gpt-4-turbo"
+name = "GPT-4 Turbo (2024-04-09)"
+
+[cost.text.input]
+price = 4.4
+
+[cost.text.output]
+price = 13.2

@@ -1,0 +1,16 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.3), read 2026-11-26.
+# Reasoning: Served in non-thinking mode: with thinking.type enabled, disabled or omitted, the model gave the same short direct answer (about 170 completion tokens), with no reasoning field and no <think> block in content (live 2026-11-27).
+schema = 2
+base_model = "moonshotai/kimi-k2.6"
+
+[capabilities]
+reasoning = { supported = false }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.285
+cache = { read = 0.048 }
+
+[cost.text.output]
+price = 1.2

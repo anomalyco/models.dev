@@ -1,0 +1,16 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.5), read 2026-11-26.
+# Reasoning: Thinks by default and thinking.type=disabled is not honored on OpenLux (live 2026-11-26).
+schema = 2
+base_model = "minimax/MiniMax-M3"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = { min_tokens = 512 } }
+
+[cost.text.input]
+price = 0.15
+cache = { read = 0.03 }
+
+[cost.text.output]
+price = 0.6

@@ -1,0 +1,19 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.1), read 2026-11-26.
+# Reasoning: OpenAI o4-mini levels (no first-party entry; same set as relay peers). Not served in the cheapest group for o4-mini, so its price differs from o4-mini.
+# Effort: reasoning_effort on /v1/chat/completions, mapped by OpenLux to the upstream native control.
+schema = 2
+base_model = "openai/o4-mini"
+name = "o4-mini (2025-04-16)"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.11
+cache = { read = 0.0275 }
+
+[cost.text.output]
+price = 0.44

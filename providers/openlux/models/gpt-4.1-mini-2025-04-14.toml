@@ -1,0 +1,18 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.044), read 2026-11-26.
+# Cache read: 25% of input for this model ID. OpenLux bills each model ID separately;
+# gpt-4.1-mini is billed at 100%.
+schema = 2
+base_model = "openai/gpt-4.1-mini"
+name = "GPT-4.1 mini (2025-04-14)"
+
+[capabilities]
+structured_output = true
+cache = { implicit = { min_tokens = 1024 } }
+
+[cost.text.input]
+price = 0.0176
+cache = { read = 0.0044 }
+
+[cost.text.output]
+price = 0.0704

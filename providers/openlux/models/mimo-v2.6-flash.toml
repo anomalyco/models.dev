@@ -1,0 +1,16 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.3), read 2026-11-26.
+# Reasoning: thinking.type=disabled is not honored on OpenLux (live 2026-11-26); thinking is always on.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.042
+cache = { read = 0.00084 }
+
+[cost.text.output]
+price = 0.084

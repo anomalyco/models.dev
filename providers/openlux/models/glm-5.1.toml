@@ -1,0 +1,16 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.3), read 2026-11-26.
+# Reasoning: thinking.type=disabled is not reliably honored on OpenLux (live 2026-11-26), so no toggle; thinking is on.
+schema = 2
+base_model = "zhipuai/glm-5.1"
+
+[capabilities]
+reasoning = { supported = true }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.42
+cache = { read = 0.078 }
+
+[cost.text.output]
+price = 1.32

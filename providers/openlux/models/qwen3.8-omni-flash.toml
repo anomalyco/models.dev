@@ -1,0 +1,16 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.5), read 2026-11-26.
+# Effort: reasoning_effort on /v1/chat/completions, mapped by OpenLux to the upstream native control.
+schema = 2
+base_model = "alibaba/qwen3.8-omni-flash"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "xhigh" }, effort = ["none", "low", "medium", "xhigh"] }
+cache = { implicit = { min_tokens = 1024 } }
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.008 }
+
+[cost.text.output]
+price = 0.235

@@ -1,0 +1,17 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.44118), read 2026-11-26.
+# Effort: reasoning_effort on /v1/chat/completions, mapped by OpenLux to the upstream native control.
+schema = 2
+base_model = "google/gemini-4-hydrogen"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["low", "medium", "high", "xhigh"] }
+structured_output = true
+cache = { implicit = { min_tokens = 4096 } }
+
+[cost.text.input]
+price = 0.66177
+cache = { read = 0.033088 }
+
+[cost.text.output]
+price = 3.30885

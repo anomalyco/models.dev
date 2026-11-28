@@ -1,0 +1,19 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.03677), read 2026-11-26.
+# Custom tools: tools[].custom is rejected (400) or ignored on OpenLux /v1/chat/completions
+# (live 2026-11-26, regex/lark/text formats), so no freeform.
+# Effort: reasoning_effort on /v1/chat/completions, mapped by OpenLux to the upstream native control.
+schema = 2
+base_model = "openai/gpt-6.1-terra"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+cache = { implicit = { min_tokens = 1024 } }
+
+[cost.text.input]
+price = 0.03677
+cache = { read = 0.001838 }
+
+[cost.text.output]
+price = 0.18385

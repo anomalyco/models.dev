@@ -1,0 +1,18 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.1), read 2026-11-26.
+# Cache read: 25% of input for this model ID. OpenLux bills each model ID separately;
+# gpt-4.1-nano is billed at 100%.
+schema = 2
+base_model = "openai/gpt-4.1-nano"
+name = "GPT-4.1 nano (2025-04-14)"
+
+[capabilities]
+structured_output = true
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.01
+cache = { read = 0.0025 }
+
+[cost.text.output]
+price = 0.04

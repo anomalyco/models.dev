@@ -1,0 +1,17 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.3), read 2026-11-26.
+# Effort: reasoning_effort on /v1/chat/completions, mapped by OpenLux to the upstream native control.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[capabilities]
+reasoning = { supported = true, default = { type = "effort", value = "max" }, effort = ["low", "high", "max"] }
+structured_output = true
+cache = { implicit = { ttl = ["5m", "1h"] } }
+
+[cost.text.input]
+price = 0.6
+cache = { read = 0.06, write = { "5m" = 0.6, "1h" = 1.2 } }
+
+[cost.text.output]
+price = 3

@@ -1,0 +1,18 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.08824), read 2026-11-26.
+# Cache: cache_control breakpoints on /v1/chat/completions are honored. Live 2026-11-27: a repeated 7k-18k-token
+# system block marked with cache_control was read from cache on the next request on all 15 Claude IDs; ttl 1h was accepted too.
+# Effort: reasoning_effort on /v1/chat/completions, mapped by OpenLux to the upstream native control.
+schema = 2
+base_model = "anthropic/claude-sonnet-5"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+cache = { explicit = { ttl = ["5m", "1h"], max_breakpoints = 4, targets = ["tools", "system", "messages"], min_tokens = 1024 } }
+
+[cost.text.input]
+price = 0.17648
+cache = { read = 0.017648, write = { "5m" = 0.2206, "1h" = 0.35296 } }
+
+[cost.text.output]
+price = 0.8824

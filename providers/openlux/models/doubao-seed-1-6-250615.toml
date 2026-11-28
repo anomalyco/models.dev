@@ -1,0 +1,15 @@
+# Price: OpenLux pay-as-you-go list price in USD per 1M tokens, as shown by default on
+# https://www.openlux.ai/console/models?view=table (lowest-priced group, multiplier 0.75), read 2026-11-26.
+# Reasoning: thinking.type=disabled is not honored on OpenLux (live 2026-11-26); thinking is always on.
+schema = 2
+base_model = "bytedance-seed/seed-1-6"
+name = "Seed 1.6 (250615)"
+
+[capabilities]
+reasoning = { supported = true }
+
+[cost.text.input]
+price = 0.09
+
+[cost.text.output]
+price = 0.9
