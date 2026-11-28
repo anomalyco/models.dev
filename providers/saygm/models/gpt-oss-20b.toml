@@ -1,0 +1,18 @@
+# Prices: SayGM route_ceiling, the highest eligible offer and so the most a request can
+# settle at (https://api.saygm.com/v1/models, nano-dollars / 1e9, read 2026-11-25).
+# cache: live probe 2026-11-25 on /v1/chat/completions, a repeated 2,584-token prompt reported
+# 2,560 cached_tokens, billed at the cache-read rate.
+schema = 2
+base_model = "openai/gpt-oss-20b"
+
+[capabilities]
+structured_output = true
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+cache = { implicit = true }
+
+[cost.text.input]
+price = 0.068495
+cache = { read = 0.0342475 }
+
+[cost.text.output]
+price = 0.29355
