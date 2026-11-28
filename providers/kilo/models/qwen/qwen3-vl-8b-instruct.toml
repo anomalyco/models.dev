@@ -3,11 +3,9 @@
 # system_updates unset: Kilo routes each request to Vercel AI Gateway, OpenRouter or a direct upstream and doesn't document where a mid-conversation system message ends up.
 # Modalities: Kilo documents no formats; assumed to relay Alibaba's Qwen3-VL-8B-Instruct. Alibaba Model Studio image and video limits: https://www.alibabacloud.com/help/en/model-studio/vision
 schema = 2
+base_model = "alibaba/qwen3-vl-8b-instruct"
 name = "Qwen: Qwen3 VL 8B Instruct"
 description = "Qwen vision-language model for visual reasoning, documents, and agent tasks"
-family = "qwen-vl"
-open_weights = false
-release_date = "2025-10-14"
 
 [modalities]
 input = ["image/bmp", "image/jpeg", "image/png", "image/tiff", "image/webp", "image/heic", "text"]
@@ -17,10 +15,8 @@ output = ["text"]
 tools = { supported = true }
 reasoning = { supported = false }
 structured_output = true
-temperature = true
 
 [limit]
-context = 262_144
 output = 235_929
 
 [cost.text.input]
