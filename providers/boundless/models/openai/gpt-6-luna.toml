@@ -1,0 +1,35 @@
+# Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
+# Reasoning: reasoning_effort on Chat Completions (https://inference.boundless.network/docs/reasoning).
+# Values are the ones Boundless's gateway accepts for this model, from its deployed configuration (2026-11-27);
+# any other value gets a 400 `invalid_reasoning_effort` whose message lists the accepted set.
+# Boundless serves this model through OpenRouter and forwards the value, so the list is OpenRouter's for this model.
+# Live 2026-11-27 on /v1/chat/completions: none, low, medium, high, xhigh and max each return 200; an unknown value returns 400 `invalid_reasoning_effort`.
+# Tools per API (live 2026-11-27):
+#   /v1/responses: function tools work with reasoning.effort set; custom tools work in all three formats, and the grammar is enforced
+#   (regex `ZZ[0-9]{3}` and the same grammar in lark returned ZZ001 or ZZ123 for a prompt asking for an English greeting), so freeform sits on [api.responses].
+#   /v1/chat/completions: function tools work with every listed effort; custom tools get a 400 `custom_tools_unsupported` that points to /v1/responses.
+#   Responses is therefore the recommended API. Chat Completions stays first for v1 compatibility.
+schema = 2
+recommended_api = "responses"
+base_model = "openai/gpt-6-luna"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[api.chat-completions]
+
+[api.responses]
+sdk = { aisdk = "@ai-sdk/openai", opencodeai = "@opencode/ai/providers/openai-compatible/responses" }
+capabilities = { tools = { freeform = ["text", "lark", "regex"] } }
+
+[cost.text.input]
+price = 0.1
+cache = { read = 0.01 }
+
+[cost.text.output]
+price = 0.5

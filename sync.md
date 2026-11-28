@@ -11,6 +11,7 @@ The grouped sync targets are available for local convenience, but CI syncs each 
 - `bun models:sync aggregators` syncs every provider in the `aggregators` group.
 - `bun models:sync aiand` syncs only ai&.
 - `bun models:sync openrouter` syncs only OpenRouter.
+- `bun models:sync boundless` syncs Boundless prices and context windows, marks models with a retirement date `deprecated` and removes them once it passes.
 - `bun models:sync cloudflare-workers-ai` syncs only Cloudflare Workers AI.
 - `bun models:sync cloudflare-ai-gateway` syncs only Cloudflare AI Gateway's proxied catalog.
 - `bun models:sync cloudflare` syncs the Cloudflare sync group.
@@ -564,3 +565,12 @@ Some provider scripts in `packages/core/script/generate-*.ts` are not wired into
 - Update-only for priced text models that already have a file: prices, the `input_cache_read` rate, `context_window` and `max_completion_tokens` come from the list. Reasoning efforts, service tiers, the Responses API and web search fees stay hand-authored, and new remote IDs open missing-model issues.
 - The list gives every model a cache rate at half its input price, even models Groq's [prompt caching page](https://console.groq.com/docs/prompt-caching) doesn't support, so the sync only updates a cache price the file already has.
 - Speech, transcription and unpriced models are left alone, and nothing is deleted when a model drops out of the list; mark it `status = "deprecated"` by hand.
+
+## Boundless Notes
+
+- Source: `GET https://inference.boundless.network/api/catalog`, public, no key. It is the data behind https://inference.boundless.network/models.
+- A model is listed while its row has `serving: true`, prices and tool calling, up to its `retiresAt`. Boundless sets `retiresAt` when it announces a retirement and keeps serving the model until then, so the file stays and is marked `status = "deprecated"`; the first run after that time removes it. A retirement that is called off leaves `deprecated` in the file: remove it by hand.
+- Boundless can serve a smaller window than the lab. When the catalog's context is below the base model's `limit.input` and the file states no input limit of its own, the sync adds `base_model_omit = ["limit.input"]`, and removes it (with the context it wrote) once the window matches the lab's again. A file's own `limit.input` is capped at the context.
+- The sync updates token prices (input, cached input, output) and `limit.context` on existing files. Reasoning controls, modalities and display names stay hand-written.
+- New models are not created (`skipCreates`): they need reasoning controls and MIME modalities the catalog doesn't state, so they go through the missing-model issue flow.
+- `deleteMissing` is on, and `parseModels` throws when the catalog lists nothing, so an empty or broken response can't remove the provider's files.

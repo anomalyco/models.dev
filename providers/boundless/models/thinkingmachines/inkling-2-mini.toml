@@ -1,0 +1,26 @@
+# Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
+# Reasoning: reasoning_effort on Chat Completions (https://inference.boundless.network/docs/reasoning).
+# Values are the ones Boundless's gateway accepts for this model, from its deployed configuration (2026-11-27);
+# any other value gets a 400 `invalid_reasoning_effort` whose message lists the accepted set.
+# Boundless hosts the weights and maps each value onto the model's own levels in the gateway: low, medium and high are passed to the chat template as they are.
+# The model always reasons, so `none` returns a 400 `thinking_off_unsupported` and is not listed.
+# Live 2026-11-27 on /v1/chat/completions: low, medium and high return 200; minimal, xhigh and max return 400; a function tool call works with reasoning_effort low.
+# Input: text only on this host. The catalog row's `supports` is ["text", "reasoning", "tool-use"] (2026-11-28), without the
+# `image input` and `vision` labels the catalog gives the host's image models (z-ai/glm-5.3-flash, xiaomi/mimo-v2.6-flash), so the lab's image input is not carried over.
+schema = 2
+base_model = "thinkingmachines/inkling-2-mini"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+
+[cost.text.input]
+price = 0.075
+cache = { read = 0.015 }
+
+[cost.text.output]
+price = 0.3

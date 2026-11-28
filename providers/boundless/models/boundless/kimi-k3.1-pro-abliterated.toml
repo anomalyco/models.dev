@@ -1,0 +1,25 @@
+# Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
+# Boundless hosts an abliterated variant of the base model: the same model with its refusal behaviour removed.
+# Reasoning: reasoning_effort on Chat Completions (https://inference.boundless.network/docs/reasoning).
+# Values are the ones Boundless's gateway accepts for this model, from its deployed configuration (2026-11-27);
+# any other value gets a 400 `invalid_reasoning_effort` whose message lists the accepted set.
+# Boundless hosts the weights and maps each value onto the model's own levels in the gateway: none turns thinking off in the chat template (self-hosted weights, unlike Moonshot's API); low -> low, medium and high -> high, max -> max. `minimal` (-> low) and `xhigh` (-> max) are also accepted.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+name = "Kimi K3.1 Pro Abliterated"
+description = "Abliterated variant of Kimi K3.1 Pro hosted by Boundless"
+
+[modalities]
+input = ["text", "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp", "image/heic", "image/heif"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "max"] }
+structured_output = true
+
+[cost.text.input]
+price = 3
+cache = { read = 2 }
+
+[cost.text.output]
+price = 12

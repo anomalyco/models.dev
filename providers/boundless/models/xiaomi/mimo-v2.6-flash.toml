@@ -1,0 +1,15 @@
+# Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
+# Toggle: reasoning_effort = none (off) | high (on)
+# Live 2026-11-27 on /v1/chat/completions: none returns 0 reasoning tokens; low, medium and high all reason the same amount; minimal, xhigh and max return 400.
+schema = 2
+base_model = "xiaomi/mimo-v2.6-flash"
+
+[capabilities]
+reasoning = { supported = true, toggle = true }
+
+[cost.text.input]
+price = 0.14
+cache = { read = 0.0028 }
+
+[cost.text.output]
+price = 0.28

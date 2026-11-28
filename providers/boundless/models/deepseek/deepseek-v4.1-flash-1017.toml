@@ -1,0 +1,22 @@
+# Source: https://inference.boundless.network/models (GET https://inference.boundless.network/api/catalog), 2026-11-27
+# Reasoning: reasoning_effort on Chat Completions (https://inference.boundless.network/docs/reasoning).
+# Values are the ones Boundless's gateway accepts for this model, from its deployed configuration (2026-11-27);
+# any other value gets a 400 `invalid_reasoning_effort` whose message lists the accepted set.
+# Boundless hosts the weights and maps each value onto the model's own levels in the gateway: none turns thinking off; low -> low, medium and high -> high, xhigh -> xhigh, max -> max. `minimal` is also accepted (-> low).
+# Live 2026-11-27 on /v1/chat/completions: every listed value returns 200, and a function tool call works with reasoning_effort low.
+schema = 2
+base_model = "deepseek/deepseek-v4.1-flash-1017"
+
+[capabilities]
+reasoning = { supported = true, effort = ["none", "low", "medium", "high", "xhigh", "max"] }
+structured_output = true
+
+[limit]
+context = 1_048_576
+
+[cost.text.input]
+price = 0.24
+cache = { read = 0.0048 }
+
+[cost.text.output]
+price = 0.96
