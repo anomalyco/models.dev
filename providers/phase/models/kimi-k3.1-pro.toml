@@ -1,0 +1,27 @@
+# Source: https://router.phase.xyz/v1/models (accessed 2026-11-25): context_window 1048576, text-only
+# (no vision capability listed), capabilities streaming and tools only (no json_mode, so no
+# structured_output), phase.max_output 65536 (accessed 2026-11-26), phase.input_per_m 2110000 / phase.output_per_m 10550000 micro-USD per 1M
+# tokens. Plus $0.001 fixed fee per call.
+# Served via OpenRouter (moonshotai/kimi-k3.1-pro), falling back to DeepInfra (moonshotai/Kimi-K3.1-Pro).
+# Effort: reasoning_effort = low|high|max. The router forwards the OpenAI `reasoning_effort` field to the
+# upstream unchanged (other reasoning fields are not forwarded). OpenRouter also takes `none` (live
+# 2026-11-25: reasoning tokens 0 / 55 / 139 for none / low / max), but the DeepInfra fallback takes only
+# low|high|max (providers/deepinfra/models/moonshotai/Kimi-K3.1-Pro.toml), so `none` is not listed.
+schema = 2
+base_model = "moonshotai/kimi-k3.1-pro"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "max"] }
+
+[limit]
+output = 65_536
+
+[cost.text.input]
+price = 2.11
+
+[cost.text.output]
+price = 10.55

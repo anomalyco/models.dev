@@ -1,0 +1,33 @@
+# Phase Router's own routing model (unique to this host, so no base_model). Source:
+# https://router.phase.xyz/v1/models (accessed 2026-11-25): id "auto", context_window 262144, capabilities
+# streaming, tools, json_mode; per message the router picks a model by task complexity (simple / medium /
+# complex / reasoning, listed in the catalog's `phase.routes`) and bills that model's own per-token price
+# plus the $0.001 per-call fee, so there is no fixed per-token price to publish here.
+# limit.output 65536: phase.max_output of "auto" and of every routed model in the same listing (accessed 2026-11-26).
+# Routes (phase.routes, 2026-11-26): simple gpt-oss-120b / llama-3.3-70b; medium qwen3-235b / gpt-oss-120b;
+# complex gpt-5.6-terra / claude-sonnet-5 / deepseek-v3; reasoning deepseek-r1 / deepseek-v3.
+# Effort: reasoning_effort = low|medium|high. The router forwards the OpenAI `reasoning_effort` field to the
+# routed model unchanged. Live 2026-11-26 on model "auto": low / medium / high accepted on every route
+# (reasoning tokens 6 / 100 / 186 on a reasoning prompt); `none` is rejected where reasoning is mandatory and
+# `max` is not in every routed upstream's set, so only the levels every route accepts are listed.
+# release_date: the auto class was first served by the Phase gateway on 2026-09-07 (gateway source history).
+schema = 2
+name = "Auto"
+description = "Phase Router's balanced router: picks a model per message by task complexity and bills that model's own price"
+family = "auto"
+open_weights = false
+release_date = "2026-09-07"
+
+[modalities]
+input = ["text"]
+output = ["text"]
+
+[capabilities]
+tools = { supported = true }
+reasoning = { supported = true, effort = ["low", "medium", "high"] }
+structured_output = true
+temperature = true
+
+[limit]
+context = 262_144
+output = 65_536
