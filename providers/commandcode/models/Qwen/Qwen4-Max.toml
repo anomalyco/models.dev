@@ -1,0 +1,20 @@
+# Source: https://commandcode.ai/docs/provider (accessed 2026-11-17)
+# Live catalog: https://api.commandcode.ai/provider/v1/models
+# Pricing: https://commandcode.ai/models and https://commandcode.ai/docs/resources/pricing-limits
+# Reasoning: levels follow the lab (https://www.alibabacloud.com/help/en/model-studio/qwen4-max)
+#   and the same model on other hosts (providers/deepinfra/models/Qwen/Qwen4-Max.toml,
+#   providers/opencode-go/models/qwen4-max.toml), where the middle level is high, not medium.
+#   Effort is the host's normalized reasoning_effort, which rejects none/minimal (provider.toml),
+#   so none is left out. Not probed live here: no Command Code key was available.
+schema = 2
+base_model = "alibaba/qwen4-max"
+
+[capabilities]
+reasoning = { supported = true, effort = ["low", "high", "xhigh"] }
+
+[cost.text.input]
+price = 1.5
+cache = { read = 0.075, write = 1.875 }
+
+[cost.text.output]
+price = 4.5
