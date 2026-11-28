@@ -1,3 +1,6 @@
+# Exact limits: public Ark Docs MCP ark_get_model("deepseek-v4-1-flash-261017"), accessed 2026-11-25.
+# https://ark.volcengine.com/region:cn-beijing/docs/tutorials-mcp.md
+# Ark Chat API exposes temperature/top_p but no top_k: https://ark.volcengine.com/region:cn-beijing/docs/chat-api.md
 # Model ID, limits and capabilities: https://ark.volcengine.com/region:cn-beijing/docs/model-list.md (accessed 2026-11-24); not called live (no Ark key).
 # CNY list prices (在线推理（常规）): https://ark.volcengine.com/region:cn-beijing/docs/model-pricing.md (accessed 2026-11-24)
 # CNY→USD rate: 6.679299, 2026-11-24, source: https://open.er-api.com/v6/latest/USD
@@ -15,9 +18,15 @@ schema = 2
 base_model = "deepseek/deepseek-v4.1-flash-1017"
 
 [capabilities]
+top_k = false
 reasoning = { supported = true, default = { type = "effort", value = "high" }, effort = ["none", "low", "high", "max"] }
 cache = { implicit = true }
 structured_output = true
+
+[limit]
+context = 1_048_576
+input = 1_048_576
+output = 393_216
 
 [api.chat-completions]
 compatibility = { reasoning_field = "reasoning_content" }

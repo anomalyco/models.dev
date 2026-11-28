@@ -1,3 +1,6 @@
+# Exact token limits: public Ark Docs MCP ark_get_model("doubao-seed-2-1-pro-260915"), accessed 2026-11-25.
+# specifications.token_limits: context_window=1048576, max_output_token_length=262144.
+# https://ark.volcengine.com/region:cn-beijing/docs/tutorials-mcp.md
 # Sources (accessed 2026-08-14):
 # - https://seed.bytedance.com/en/seed2
 # - https://www.volcengine.com/docs/82379/1330310
@@ -45,5 +48,5 @@ top_p = true
 top_k = false
 
 [limit]
-context = 1_024_000
-output = 256_000
+context = 1_048_576
+output = 262_144
